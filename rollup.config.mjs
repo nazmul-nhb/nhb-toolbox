@@ -31,7 +31,7 @@ export default {
             declaration: true,
             declarationDir: './dist',
             module: 'esnext',
-            sourceMap: true
+            sourceMap: true,
         }),
         nodeResolve(),
         commonjs(),

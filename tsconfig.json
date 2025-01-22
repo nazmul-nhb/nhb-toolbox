@@ -5,7 +5,7 @@
 		"lib": ["DOM", "ESNext"], // Include DOM and modern ES features
 		"rootDir": "./src", // Root directory for source files
 		"outDir": "./dist", // Output directory
-		"declarationDir": "./dist/types", // Separate directory for types
+		"declarationDir": "./dist", // Separate directory for types
 		"declaration": true, // Generate .d.ts files
 		"declarationMap": true, // Map declarations to sources (useful for debugging in TS projects)
 		"esModuleInterop": true, // Compatibility with CommonJS
@@ -23,7 +23,8 @@
 		"checkJs": true, // Allow checks on JS files
 		"emitDeclarationOnly": false, // Emit both JavaScript and declaration files
 		"sourceMap": true, // Include source maps for debugging
-		"importHelpers": true // Reduce duplication for helpers like `__extends`
+		"importHelpers": true, // Reduce duplication for helpers like `__extends`
+		"noEmitHelpers": true
 	},
 	"include": ["src/**/*.ts", "src/**/*.d.ts"], // Include all TS files
 	"exclude": ["node_modules", "**/*.test.ts", "**/__tests__/**/*"] // Exclude test files

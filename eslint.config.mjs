@@ -58,14 +58,14 @@ export default [
           "caughtErrorsIgnorePattern": "^_",
           "destructuredArrayIgnorePattern": "^_",
           "varsIgnorePattern": "^_",
-          "ignoreTypeReferences": true,
           "ignoreRestSiblings": false
         }
-      ]
+      ],
+      "no-use-before-define": "off",
     },
   },
   {
-    files: ["src/app/modules/**/*.types.ts", "src/app/modules/**/*.interfaces.ts"],
+    files: ["src/**/*types.ts", "src/**/*interfaces.ts"],
     rules: { "no-unused-vars": "off" },
   },
   {

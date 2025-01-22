@@ -1,5 +1,5 @@
-import { add } from './dist';
+import { capitalizeString } from './dist';
 
-const result = add(2, 3);
+const result = capitalizeString('tHIS IS A tEST sTRING', false);
 
-console.log(result);
+console.info(result);
