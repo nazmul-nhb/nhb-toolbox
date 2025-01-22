@@ -73,7 +73,7 @@ export default [
     rules: { "@typescript-eslint/no-explicit-any": "off" }
   },
   {
-    files: ['dist/**/*.js'],
+    files: ['**/*.js', '**/*.cjs'],
     rules: { "@typescript-eslint/no-require-imports": "off" }
   }
 ];
