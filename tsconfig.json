@@ -23,8 +23,8 @@
 		"checkJs": true, // Allow checks on JS files
 		"emitDeclarationOnly": false, // Emit both JavaScript and declaration files
 		"sourceMap": true, // Include source maps for debugging
-		"importHelpers": true, // Reduce duplication for helpers like `__extends`
-		"noEmitHelpers": true
+		"importHelpers": false, // Reduce duplication for helpers like `__extends`
+		// "noEmitHelpers": false
 	},
 	"include": ["src/**/*.ts", "src/**/*.d.ts"], // Include all TS files
 	"exclude": ["node_modules", "**/*.test.ts", "**/__tests__/**/*"] // Exclude test files

@@ -1,1 +1,1 @@
-export * from './string';
+export { capitalizeString } from './string';
