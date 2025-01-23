@@ -10,11 +10,7 @@ import type { CapitalizeOptions } from './types';
  */
 export const capitalizeString = (
 	string: string,
-	options: CapitalizeOptions = {
-		capitalizeAll: false,
-		capitalizeEachFirst: false,
-		lowerCaseRest: true,
-	},
+	options?: CapitalizeOptions,
 ): string => {
 	if (typeof string !== 'string' || !string.trim()) return '';
 
@@ -24,7 +20,11 @@ export const capitalizeString = (
 
 	if (!trimmedString) return '';
 
-	const { capitalizeAll, capitalizeEachFirst, lowerCaseRest } = options;
+	const {
+		capitalizeAll = false,
+		capitalizeEachFirst = false,
+		lowerCaseRest = true,
+	} = options || {};
 
 	if (capitalizeAll) {
 		return trimmedString.toUpperCase();
@@ -42,12 +42,9 @@ export const capitalizeString = (
 	if (matchArray && matchArray.length === 4) {
 		const [_, leadingSymbols, firstLetter, rest] = matchArray;
 
-		return (
-			leadingSymbols +
-			firstLetter
-				.toUpperCase()
-				.concat(lowerCaseRest ? rest.toLowerCase() : rest)
-		);
+		return leadingSymbols
+			.concat(firstLetter.toUpperCase())
+			.concat(lowerCaseRest ? rest.toLowerCase() : rest);
 	}
 
 	return trimmedString

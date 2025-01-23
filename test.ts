@@ -1,8 +1,8 @@
 import { capitalizeString } from './src/string';
 
-const result = capitalizeString(`'tHIS IS A tEST sTRiNG'`, {
+const result = capitalizeString(`mo mOm`, {
 	capitalizeEachFirst: true,
-	lowerCaseRest: true,
+	capitalizeAll:true
 });
 
 console.info(result);
