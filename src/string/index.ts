@@ -1,7 +1,7 @@
-import type { CapitalizeOptions, RandomIDOptions } from './types';
+import type { CapitalizeOptions, RandomIdOptions } from './types';
 
 /**
- * Utility to convert the first letter of any string to uppercase and the rest lowercase (unless specified).
+ * * Utility to convert the first letter of any string to uppercase and the rest lowercase (unless specified).
  * Handles surrounding symbols like quotes or parentheses.
  *
  * @param string String to be capitalized.
@@ -56,7 +56,7 @@ export const capitalizeString = (
 };
 
 /**
- * Utility to truncate a string to a specified length.
+ * * Utility to truncate a string to a specified length.
  *
  * @param string The string to truncate.
  * @param maxLength The maximum length of the truncated string.
@@ -77,18 +77,18 @@ export const truncateString = (string: string, maxLength: number): string => {
 };
 
 /**
- * Generates a unique ID string composed of an optional `prefix`, `suffix`, a `timestamp`, `separator`, and a random alphanumeric string, separated by a customizable separator.
+ * * Generates a unique ID string composed of an optional `prefix`, `suffix`, a `timestamp`, `separator`, and a random alphanumeric string, separated by a customizable separator.
  *
  * @param options Configuration options for random ID generation.
- * @returns The generated ID string composed of the prefix, timestamp, random alphanumeric string, and suffix, separated by the specified separator.
+ * @returns The generated ID string composed of the random alphanumeric string, timestamp, prefix, and suffix, separated by the specified separator.
  */
-export const generateRandomID = (options?: RandomIDOptions): string => {
+export const generateRandomID = (options?: RandomIdOptions): string => {
 	const {
 		prefix = '',
 		suffix = '',
-		timeStamp = true,
-		length = 13,
-		separator = '.',
+		timeStamp = false,
+		length = 16,
+		separator = '',
 		caseOption = null,
 	} = options || {};
 
@@ -117,3 +117,4 @@ export const generateRandomID = (options?: RandomIDOptions): string => {
 		return ID;
 	}
 };
+

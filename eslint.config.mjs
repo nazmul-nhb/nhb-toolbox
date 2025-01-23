@@ -40,7 +40,7 @@ export default [
       "@typescript-eslint/no-empty-object-type": "off",
       '@typescript-eslint/no-unused-expressions': 'error',
       "@typescript-eslint/consistent-type-imports": ["warn", { "prefer": "type-imports" }],
-      "no-unused-vars": ["error", {
+      "no-unused-vars": ["off", {
         "args": "all",
         "argsIgnorePattern": "^_",
         "caughtErrors": "all",

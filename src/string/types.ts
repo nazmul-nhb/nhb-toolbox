@@ -1,4 +1,4 @@
-/** Options for capitalizeString function. */
+/** - Options for capitalizeString function. */
 export interface CapitalizeOptions {
 	/** If true, capitalizes the first letter of each word (space separated). Defaults to `false`. */
 	capitalizeEachFirst?: boolean;
@@ -8,21 +8,21 @@ export interface CapitalizeOptions {
 	lowerCaseRest?: boolean;
 }
 
-/** Configuration options for ID generation. */
-export interface RandomIDOptions {
+/** - Configuration options for ID generation. */
+export interface RandomIdOptions {
 	/** A string to prepend to the ID. Default is an empty string. */
 	prefix?: string;
 
 	/** A string to append to the ID. Default is an empty string.*/
 	suffix?: string;
 
-	/** Whether to include the current timestamp in the ID. Default is `true`. */
+	/** Whether to include the current timestamp in the ID. Default is `false`. */
 	timeStamp?: boolean;
 
-	/** The length of the random alphanumeric string. Default is `13`. */
+	/** The length of the random alphanumeric string. Default is `16`. */
 	length?: number;
 
-	/** The separator to use between parts of the ID. Default is a `period (.)`. */
+	/** The separator to use between parts of the ID. Default is an empty string. */
 	separator?: string;
 
 	/** Specifies the case for the random alphanumeric string. */
