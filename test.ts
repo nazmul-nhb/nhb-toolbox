@@ -1,8 +1,10 @@
-import { capitalizeString } from './src/string';
+import { capitalizeString, truncateString } from './src/string';
 
-const result = capitalizeString(`mo mOm`, {
+const result1 = capitalizeString(`mo mOm`, {
 	capitalizeEachFirst: true,
-	capitalizeAll:true
+	capitalizeAll: true,
 });
 
-console.info(result);
+const result2 = truncateString(`momOm`, 3);
+
+console.info(result2);

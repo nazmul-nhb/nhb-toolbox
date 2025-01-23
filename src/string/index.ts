@@ -12,9 +12,7 @@ export const capitalizeString = (
 	string: string,
 	options?: CapitalizeOptions,
 ): string => {
-	if (typeof string !== 'string' || !string.trim()) return '';
-
-	if (!string) return '';
+	if (typeof string !== 'string' || !string) return '';
 
 	const trimmedString = string.trim();
 
@@ -55,4 +53,24 @@ export const capitalizeString = (
 				? trimmedString.slice(1).toLowerCase()
 				: trimmedString.slice(1),
 		);
+};
+
+/**
+ * Utility to truncate a string to a specified length.
+ * @param string The string to truncate.
+ * @param maxLength The maximum length of the truncated string.
+ * @returns Truncated string;
+ */
+export const truncateString = (string: string, maxLength: number): string => {
+	if (typeof string !== 'string' || !string) return '';
+
+	const trimmedString = string.trim();
+
+	if (!trimmedString) return '';
+
+	if (!trimmedString) return '';
+
+	if (trimmedString.length <= maxLength) return trimmedString;
+
+	return trimmedString.slice(0, maxLength).concat('...');
 };
