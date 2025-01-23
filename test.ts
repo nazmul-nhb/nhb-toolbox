@@ -5,7 +5,8 @@ import {
 	// generateRandomID,
 	// truncateString,
 	// getColorForFirstCharacter,
-	generateQueryParams,
+	// generateQueryParams,
+	generateRandomColor,
 } from './src';
 
 // const result1 = capitalizeString(`mo mOm`, {
@@ -30,6 +31,8 @@ import {
 
 // const result6 = createSelectOptions(users, 'id', 'city');
 
-const result7 = generateQueryParams({ key1: ['value1', 'value2'], key2: 42 });
+// const result7 = generateQueryParams({ key1: ['value1', 'value2'], key2: 42 });
 
-console.info(result7);
+const result8 = generateRandomColor();
+
+console.info(result8);
