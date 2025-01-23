@@ -1,4 +1,4 @@
-import type { CapitalizeOptions } from './types';
+import type { CapitalizeOptions, RandomIDOptions } from './types';
 
 /**
  * Utility to convert the first letter of any string to uppercase and the rest lowercase (unless specified).
@@ -57,6 +57,7 @@ export const capitalizeString = (
 
 /**
  * Utility to truncate a string to a specified length.
+ *
  * @param string The string to truncate.
  * @param maxLength The maximum length of the truncated string.
  * @returns Truncated string;
@@ -73,4 +74,46 @@ export const truncateString = (string: string, maxLength: number): string => {
 	if (trimmedString.length <= maxLength) return trimmedString;
 
 	return trimmedString.slice(0, maxLength).concat('...');
+};
+
+/**
+ * Generates a unique ID string composed of an optional `prefix`, `suffix`, a `timestamp`, `separator`, and a random alphanumeric string, separated by a customizable separator.
+ *
+ * @param options Configuration options for random ID generation.
+ * @returns The generated ID string composed of the prefix, timestamp, random alphanumeric string, and suffix, separated by the specified separator.
+ */
+export const generateRandomID = (options?: RandomIDOptions): string => {
+	const {
+		prefix = '',
+		suffix = '',
+		timeStamp = true,
+		length = 13,
+		separator = '.',
+		caseOption = null,
+	} = options || {};
+
+	// generate timestamp
+	const date: number | string = timeStamp ? Date.now() : '';
+
+	// Generate a random string of alphanumeric characters
+	const randomString: string = Array.from({ length }, () =>
+		Math.random().toString(36).slice(2, 3),
+	).join('');
+
+	const ID: string = [
+		prefix && prefix.trim(),
+		date,
+		randomString,
+		suffix && suffix.trim(),
+	]
+		.filter(Boolean)
+		.join(separator);
+
+	if (caseOption === 'upper') {
+		return ID.toUpperCase();
+	} else if (caseOption === 'lower') {
+		return ID.toLowerCase();
+	} else {
+		return ID;
+	}
 };
