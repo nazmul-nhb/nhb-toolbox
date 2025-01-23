@@ -1,5 +1,7 @@
 export { capitalizeString, truncateString, generateRandomID } from './string';
 
+export { getRandomNumber } from './number';
+
 export { getColorForFirstCharacter } from './colors';
 
 export { generateRandomColor } from './colors/random';
