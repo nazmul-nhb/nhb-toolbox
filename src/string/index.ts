@@ -1,37 +1,61 @@
+import type { CapitalizeOptions } from './types';
+
 /**
  * Utility to convert the first letter of any string to uppercase and the rest lowercase (unless specified).
+ * Handles surrounding symbols like quotes or parentheses.
+ *
  * @param string String to be capitalized.
- * @param capEach If true, capitalizes the first letter of each word (space separated). Defaults to `false`.
- * @param lowerRest If true, ensures that the rest of the string is lowercase. Defaults to `true`.
+ * @param options Options to customize the capitalization.
  * @returns Capitalized string.
  */
 export const capitalizeString = (
 	string: string,
-	capEach: boolean = false,
-	lowerRest: boolean = true,
+	options: CapitalizeOptions = {
+		capitalizeAll: false,
+		capitalizeEachFirst: false,
+		lowerCaseRest: true,
+	},
 ): string => {
+	if (typeof string !== 'string' || !string.trim()) return '';
+
 	if (!string) return '';
 
 	const trimmedString = string.trim();
 
 	if (!trimmedString) return '';
 
-	if (capEach) {
-		return trimmedString
-			.split(' ')
-			.map((word) => capitalizeString(word, false, lowerRest))
-			.join(' ');
-	} else {
-		if (lowerRest) {
-			return trimmedString
-				.charAt(0)
-				.toUpperCase()
-				.concat(trimmedString.slice(1).toLowerCase());
-		}
+	const { capitalizeAll, capitalizeEachFirst, lowerCaseRest } = options;
 
-		return trimmedString
-			.charAt(0)
-			.toUpperCase()
-			.concat(trimmedString.slice(1));
+	if (capitalizeAll) {
+		return trimmedString.toUpperCase();
 	}
+
+	if (capitalizeEachFirst) {
+		return trimmedString
+			.split(/\s+/)
+			.map((word) => capitalizeString(word, { lowerCaseRest }))
+			.join(' ');
+	}
+
+	const matchArray = trimmedString.match(/^(\W*)(\w)(.*)$/);
+
+	if (matchArray && matchArray.length === 4) {
+		const [_, leadingSymbols, firstLetter, rest] = matchArray;
+
+		return (
+			leadingSymbols +
+			firstLetter
+				.toUpperCase()
+				.concat(lowerCaseRest ? rest.toLowerCase() : rest)
+		);
+	}
+
+	return trimmedString
+		.charAt(0)
+		.toUpperCase()
+		.concat(
+			lowerCaseRest
+				? trimmedString.slice(1).toLowerCase()
+				: trimmedString.slice(1),
+		);
 };

@@ -1,5 +1,8 @@
-import { capitalizeString } from './dist';
+import { capitalizeString } from './src/string';
 
-const result = capitalizeString('tHIS IS A tEST sTRING', false);
+const result = capitalizeString(`'tHIS IS A tEST sTRiNG'`, {
+	capitalizeEachFirst: true,
+	lowerCaseRest: true,
+});
 
 console.info(result);

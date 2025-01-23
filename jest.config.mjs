@@ -1,3 +1,4 @@
+/** @type {import('jest').Config} */
 export default {
     // Use 'ts-jest' preset to handle TypeScript files.
     // This preset configures Jest to work seamlessly with TypeScript.
@@ -17,7 +18,7 @@ export default {
 
     // This array specifies the file extensions Jest will recognize.
     // It helps Jest to understand which file types to include when running tests.
-    moduleFileExtensions: ['ts', 'tsx', 'js', 'ejs', 'cjs', 'mjs', 'jsx', 'json', 'node'], // Supported file extensions
+    moduleFileExtensions: ['ts', 'tsx', 'js', 'cjs', 'mjs', 'jsx', 'json', 'node'], // Supported file extensions
     testMatch: ['**/?(*.)+(spec|test).[tj]s?(x)'], // Pattern for test files
     coverageDirectory: 'coverage', // Output directory for coverage reports
     collectCoverage: true,
