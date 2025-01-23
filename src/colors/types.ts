@@ -2,7 +2,7 @@
 export type ColorInput = string | number;
 
 /** - An array of strings/numbers or nested arrays of strings/numbers for generating colors. */
-export type ColorInputArray = (ColorInput | ColorInputArray)[];
+export interface ColorInputArray extends Array<ColorInput | ColorInputArray> {}
 
 /** - Opacity options */
 export type OpacityValue =
