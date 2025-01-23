@@ -1,4 +1,12 @@
-import { convertToDecimal } from './src';
+import {
+	// convertToDecimal,
+	// deepClone,
+	// deepEqual,
+	// mergeObjects,
+	// flattenObject,
+	// isEmptyObject,
+	countObjectFields,
+} from './src';
 
 // const result1 = capitalizeString(`mo mOm`, {
 // 	capitalizeEachFirst: true,
@@ -56,6 +64,31 @@ import { convertToDecimal } from './src';
 
 // const result9 = getRandomNumber({ min: 20, max: 10 });
 
-const result10 = convertToDecimal(8, { decimalPlaces: 4, isString: true });
+// const result10 = convertToDecimal(8, { decimalPlaces: 4, isString: true });
 
-console.info(result10);
+// // Arrays
+// console.log(deepEqual([1, 2, 3], [1, 2, 3])); // true
+// console.log(deepEqual([1, 2, 3], [3, 2, 1])); // false
+
+// // Objects
+// console.log(deepEqual({ a: 1, b: 2 }, { a: 1, b: 2 })); // true
+// console.log(deepEqual({ a: 1, b: 2 }, { b: 2, a: 1 })); // true
+// console.log(deepEqual({ a: 1, b: 2 }, { a: 1, b: 3 })); // false
+
+// // Primitive values
+// console.log(deepEqual(5, 5)); // true
+// console.log(deepEqual('hello', 'world')); // false
+
+// const result11 = deepClone({ a: 1, b: 2 },);
+
+// const result12 = mergeObjects(
+// 	{ a: 1, b: 2 },
+// 	{ p: { c: 3 }, d: 4 },
+// 	{ e: 5, f: 6 },
+// );
+
+// const result13 = flattenObject({ p: { c: 3 }, d: 4 });
+// const result14 = isEmptyObject({a:1});
+const result15 = countObjectFields({ p: { c: 3 }, d: 4 });
+
+console.info(result15);

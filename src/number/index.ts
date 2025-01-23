@@ -62,9 +62,7 @@ export const getRandomNumber = (options?: RandomNumberOptions): number => {
  *
  * @param num - Number to round.
  * @param options - Options for rounding behavior, including decimal places and return type.
- * @param options.decimalPlaces - Number of decimal places to round to.
- * @param options.isString - Flag to determine if the result should be returned as a string (default: `false`).
- * @returns - Rounded number (as a `number`) or string (if `isString` is `true`).
+ * @returns Converted number (as a `number`) or string (if `isString` is `true`).
  */
 export const convertToDecimal = (
 	num: number,
@@ -73,8 +71,8 @@ export const convertToDecimal = (
 	const { decimalPlaces = 2, isString = false } = options || {};
 
 	if (isString) {
-		return num.toFixed(decimalPlaces); // Return as string
+		return num.toFixed(decimalPlaces);
 	}
 
-	return parseFloat(num.toFixed(decimalPlaces)); // Return as number
+	return parseFloat(num.toFixed(decimalPlaces));
 };
