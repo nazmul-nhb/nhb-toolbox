@@ -1,20 +1,4 @@
-import {
-	// convertHexToHsl,
-	// convertHexToRgb,
-	// convertHslToHex,
-	// convertHslToRgb,
-	// convertRgbToHex,
-	// convertRgbToHsl,
-	// capitalizeString,
-	// createSelectOptions,
-	// flattenArray,
-	// generateRandomID,
-	// truncateString,
-	// getColorForFirstCharacter,
-	// generateQueryParams,
-	// generateRandomColor,
-	getRandomNumber,
-} from './src';
+import { convertToDecimal } from './src';
 
 // const result1 = capitalizeString(`mo mOm`, {
 // 	capitalizeEachFirst: true,
@@ -70,6 +54,8 @@ import {
 // const rgbFromHex = convertHexToRgb(hexColor);
 // console.info({ rgbFromHex }); // rgb(60, 150, 60)
 
-const result9 = getRandomNumber({ min: 20, max: 10 });
+// const result9 = getRandomNumber({ min: 20, max: 10 });
 
-console.info(result9);
+const result10 = convertToDecimal(8, { decimalPlaces: 4, isString: true });
+
+console.info(result10);

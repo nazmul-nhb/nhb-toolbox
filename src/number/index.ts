@@ -1,4 +1,4 @@
-import type { RandomNumberOptions } from './types';
+import type { DecimalOptions, RandomNumberOptions } from './types';
 
 /**
  * * Utility to generate a random number between a given range.
@@ -20,8 +20,8 @@ export const getRandomNumber = (options?: RandomNumberOptions): number => {
 		maximum = max;
 
 	if (min > max) {
-        [minimum, maximum] = [max, min];
-        
+		[minimum, maximum] = [max, min];
+
 		return getRandomNumber({
 			min: minimum,
 			max: maximum,
@@ -55,4 +55,26 @@ export const getRandomNumber = (options?: RandomNumberOptions): number => {
 	}
 
 	return 0;
+};
+
+/**
+ * * Utility to round a number to a given decimal places.
+ *
+ * @param num - Number to round.
+ * @param options - Options for rounding behavior, including decimal places and return type.
+ * @param options.decimalPlaces - Number of decimal places to round to.
+ * @param options.isString - Flag to determine if the result should be returned as a string (default: `false`).
+ * @returns - Rounded number (as a `number`) or string (if `isString` is `true`).
+ */
+export const convertToDecimal = (
+	num: number,
+	options?: DecimalOptions,
+): number | string => {
+	const { decimalPlaces = 2, isString = false } = options || {};
+
+	if (isString) {
+		return num.toFixed(decimalPlaces); // Return as string
+	}
+
+	return parseFloat(num.toFixed(decimalPlaces)); // Return as number
 };
