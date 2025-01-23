@@ -1,4 +1,10 @@
 import {
+	convertHexToHsl,
+	convertHexToRgb,
+	convertHslToHex,
+	convertHslToRgb,
+	convertRgbToHex,
+	convertRgbToHsl,
 	// capitalizeString,
 	// createSelectOptions,
 	// flattenArray,
@@ -36,3 +42,31 @@ import {
 const result8 = generateRandomColor();
 
 console.info(result8);
+
+// const hslColor = 'hsl(120, 50%, 60%)';
+// const rgbColor = 'rgb(60, 150, 60)';
+const hexColor = '#3c963c';
+
+// HSL to RGB
+const rgbFromHsl = convertHslToRgb(120, 50, 60);
+console.info({ rgbFromHsl }); // rgb(60, 150, 60)
+
+// RGB to HSL
+const hslFromRgb = convertRgbToHsl(60, 150, 60);
+console.info({ hslFromRgb }); // hsl(120, 50%, 60%)
+
+// HSL to Hex
+const hexFromHsl = convertHslToHex(120, 50, 60);
+console.info({ hexFromHsl }); // #3C963C
+
+// Hex to HSL
+const hslFromHex = convertHexToHsl(hexColor);
+console.info({ hslFromHex }); // hsl(120, 50%, 60%)
+
+// RGB to Hex
+const hexFromRgb = convertRgbToHex(60, 150, 60);
+console.info({ hexFromRgb }); // #3C963C
+
+// Hex to RGB
+const rgbFromHex = convertHexToRgb(hexColor);
+console.info({ rgbFromHex }); // rgb(60, 150, 60)
