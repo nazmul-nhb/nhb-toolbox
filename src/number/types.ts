@@ -10,7 +10,7 @@ export interface RandomNumberOptions {
 	includeMax?: boolean;
 }
 
-/** Decimal options for converting to decimal */
+/** - Decimal options for converting to decimal */
 export interface DecimalOptions {
 	/** Number of decimal places to round to. Defaults to `2`. */
 	decimalPlaces?: number;

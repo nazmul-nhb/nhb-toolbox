@@ -1,12 +1,13 @@
 import {
+	createOptionsArray,
 	// convertToDecimal,
 	// cloneObject,
 	// isDeepEqual,
 	// mergeObjects,
-	flattenObject,
+	// flattenObject,
 	// isEmptyObject,
 	// countObjectFields,
-	mergeAndFlattenObjects,
+	// mergeAndFlattenObjects,
 } from './src';
 
 // const result1 = capitalizeString(`mo mOm`, {
@@ -22,14 +23,19 @@ import {
 
 // const result5 = flattenArray([5, [45, 75, ['a', { a: 2 }, 'd']]]);
 
-// const users = [
-// 	{ id: 1, name: 'Alice', city: 'Banguland' },
-// 	{ id: 2, name: null, city: 'Banguland' },
-// 	{ id: 3, name: undefined, city: undefined },
-// 	{ id: null, name: 'Bob', city: 'Banguland' },
-// ];
+const users = [
+	{ id: 1, name: 'Alice', city: 'Banguland' },
+	{ id: 2, name: null, city: 'Banguland' },
+	{ id: 3, name: undefined, city: undefined },
+	{ id: null, name: 'Bob', city: 'Banguland' },
+];
 
-// const result6 = createSelectOptions(users, 'id', 'city');
+const result6 = createOptionsArray(users, {
+	firstFieldKey: 'id',
+	secondFieldKey: 'city',
+	// firstFieldName: 'abul',
+	// secondFieldName: 'babul',
+});
 
 // const result7 = generateQueryParams({ key1: ['value1', 'value2'], key2: 42 });
 
@@ -91,25 +97,23 @@ import {
 // const result14 = isEmptyObject({a:1});
 // const result15 = countObjectFields({ p: { c: 3 }, d: 4 });
 
-const obj1 = {
-	user: {
-		name: 'Nazmul',
-		location: { city: 'Sirajganj', country: 'Bangladesh' },
-	},
-	role: 'Developer',
-};
+// const obj1 = {
+// 	user: {
+// 		name: 'Nazmul',
+// 		location: { city: 'Sirajganj', country: 'Bangladesh' },
+// 	},
+// 	role: 'Developer',
+// };
 
-const obj2 = {
-	user: {
-		name: 'Nazmul',
-		
-	},
-	role: 'Beggar',
-};
+// const obj2 = {
+// 	user: {
+// 		name: 'Nazmul',
+// 	},
+// 	role: 'Teacher',
+// };
 
-const result13 = flattenObject(obj1);
+// const result13 = flattenObject(obj1);
 
-const flattened = mergeAndFlattenObjects(obj1, obj2);
+// const flattened = mergeAndFlattenObjects(obj1, obj2);
 
-
-console.info({flattened, result13});
+console.info(result6);

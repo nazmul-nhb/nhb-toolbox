@@ -15,7 +15,10 @@ export {
 	convertRgbToHsl,
 } from './colors/convert';
 
-export { flattenArray, createSelectOptions } from './array';
+export {
+	flattenArray,
+	createOptionsArray,
+} from './array';
 
 export {
 	generateQueryParams,
