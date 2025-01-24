@@ -3,7 +3,7 @@ import type { ColorInput, ColorInputArray, OpacityValue } from './types';
 import { alphabetColorPalette, numberColorPalette } from './constants';
 
 /**
- *  * Generates a hex color based on the first character of a string or number.
+ *  * Generates a hex color based on the first character (initial) of a string or number.
  *
  * - For numbers, it uses 10 predefined colors (0-9).
  * - For letters, it uses 26 predefined colors (A-Z).
@@ -12,13 +12,13 @@ import { alphabetColorPalette, numberColorPalette } from './constants';
  * @param opacity - A value from 0 to 100 representing the opacity percentage.
  * @returns A hex color for the first character of the provided string/number.
  */
-export function getColorForFirstCharacter(
-	input?: ColorInput,
+export function getColorForInitial(
+	input: ColorInput,
 	opacity?: OpacityValue,
 ): string;
 
 /**
- *  * Generates an array of hex colors based on the first character of an array of strings/numbers or even nested arrays of strings/numbers.
+ *  * Generates an array of hex colors based on the first character (initial) of an array of strings/numbers or even nested arrays of strings/numbers.
  *
  * - For numbers, it uses 10 predefined colors (0-9).
  * - For letters, it uses 26 predefined colors (A-Z).
@@ -28,13 +28,14 @@ export function getColorForFirstCharacter(
  * @param opacity - A value from 0 to 100 representing the opacity percentage.
  * @returns A hex color for a string/number, or an array of hex colors for each element of the provided array.
  */
-export function getColorForFirstCharacter(
+export function getColorForInitial(
 	input: ColorInputArray,
 	opacity?: OpacityValue,
 ): string[];
 
 /**
- *  * Generates an array of hex colors based on the first character of an array of strings/numbers or even nested arrays of strings/numbers.
+ *  * Generates a hex color based on the first character (initial) of a string or number;
+ * or an array of hex colors based on the first character (initial) of an array of strings/numbers or even nested arrays of strings/numbers.
  *
  * - For numbers, it uses 10 predefined colors (0-9).
  * - For letters, it uses 26 predefined colors (A-Z).
@@ -44,7 +45,7 @@ export function getColorForFirstCharacter(
  * @param opacity - A value from 0 to 100 representing the opacity percentage.
  * @returns A hex color for a string/number, or an array of hex colors for each element of the provided array.
  */
-export function getColorForFirstCharacter(
+export function getColorForInitial(
 	input: ColorInput | ColorInputArray = '',
 	opacity: OpacityValue = 100,
 ): string | string[] {
@@ -100,9 +101,9 @@ export function getColorForFirstCharacter(
 		return input
 			.map((el) => {
 				if (Array.isArray(el)) {
-					return getColorForFirstCharacter(el, opacity);
+					return getColorForInitial(el, opacity);
 				}
-				return getColorForFirstCharacter(el, opacity);
+				return getColorForInitial(el, opacity);
 			})
 			.flat();
 	}

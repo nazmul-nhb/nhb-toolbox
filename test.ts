@@ -1,5 +1,6 @@
 import {
-	createOptionsArray,
+	// createOptionsArray,
+	// sortAnArray,
 	// convertToDecimal,
 	// cloneObject,
 	// isDeepEqual,
@@ -23,19 +24,19 @@ import {
 
 // const result5 = flattenArray([5, [45, 75, ['a', { a: 2 }, 'd']]]);
 
-const users = [
-	{ id: 1, name: 'Alice', city: 'Banguland' },
-	{ id: 2, name: null, city: 'Banguland' },
-	{ id: 3, name: undefined, city: undefined },
-	{ id: null, name: 'Bob', city: 'Banguland' },
-];
+// const users = [
+// 	{ id: 1, name: 'Alice', city: 'Banguland' },
+// 	{ id: 2, name: null, city: 'Banguland' },
+// 	{ id: 3, name: undefined, city: undefined },
+// 	{ id: null, name: 'Bob', city: 'Banguland' },
+// ];
 
-const result6 = createOptionsArray(users, {
-	firstFieldKey: 'id',
-	secondFieldKey: 'city',
-	// firstFieldName: 'abul',
-	// secondFieldName: 'babul',
-});
+// const result6 = createOptionsArray(users, {
+// 	firstFieldKey: 'id',
+// 	secondFieldKey: 'city',
+// 	// firstFieldName: 'abul',
+// 	// secondFieldName: 'babul',
+// });
 
 // const result7 = generateQueryParams({ key1: ['value1', 'value2'], key2: 42 });
 
@@ -116,4 +117,24 @@ const result6 = createOptionsArray(users, {
 
 // const flattened = mergeAndFlattenObjects(obj1, obj2);
 
-console.info(result6);
+// const strings = ['banana', 'apple', 'cherry'];
+// console.log(sortAnArray(strings)); // ["apple", "banana", "cherry"]
+
+// const numbers = [3, 1, 4, 1, 5, 9];
+// console.log(sortAnArray(numbers, { sortOrder: 'desc' })); // [9, 5, 4, 3, 1, 1]
+
+// const objects = [
+// 	{ id: 3, name: 'Banana' },
+// 	{ id: 1, name: 'Apple' },
+// 	{ id: 2, name: 'Cherry' },
+// ];
+// console.log(sortAnArray(objects, { sortByField: 'name' }));
+
+// const users = [
+// 	{ name: 'Alice', active: true },
+// 	{ name: 'Bob', active: false },
+// 	{ name: 'Charlie', active: true },
+// ];
+// console.log(sortAnArray(users, { sortOrder: 'asc', sortByField: 'active' }));
+
+// console.info(result6);

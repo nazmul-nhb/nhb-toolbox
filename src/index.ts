@@ -2,7 +2,7 @@ export { capitalizeString, truncateString, generateRandomID } from './string';
 
 export { getRandomNumber, convertToDecimal } from './number';
 
-export { getColorForFirstCharacter } from './colors';
+export { getColorForInitial } from './colors';
 
 export { generateRandomColor } from './colors/random';
 
@@ -15,10 +15,7 @@ export {
 	convertRgbToHsl,
 } from './colors/convert';
 
-export {
-	flattenArray,
-	createOptionsArray,
-} from './array';
+export { flattenArray, createOptionsArray, sortAnArray } from './array';
 
 export {
 	generateQueryParams,
