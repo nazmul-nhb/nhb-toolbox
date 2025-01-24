@@ -173,3 +173,33 @@ export function sortAnArray<T extends InputObject>(
 
 	throw new Error('Invalid array or missing "sortByField" for objects.');
 }
+
+/**
+ * * Filters an array of objects based on multiple conditions for specified keys.
+ *
+ * @template T - The type of objects in the array.
+ * @param array - The array of objects to filter.
+ * @param conditions - An object where keys represent the property names and values represent the filter conditions.
+ *                    The conditions can be a value, a range, or a function.
+ * @returns The filtered array of objects.
+ */
+export const filterArrayOfObjects = <T extends Record<string, unknown>>(
+	array: T[],
+	conditions: { [K in keyof T]?: (value: T[K]) => boolean },
+): T[] => {
+	if (!Array.isArray(array)) {
+		throw new Error('The provided input is not an array!');
+	}
+
+	return array.filter((item) =>
+		Object.entries(conditions).every(([key, conditionFn]) => {
+			// Ensure we only check the key in the object if the condition function is provided
+			if (conditionFn) {
+				// Type assertion for the value since it's unknown
+				return conditionFn(item[key as keyof T] as T[keyof T]);
+			}
+			// If no condition function, include all values for the key
+			return true;
+		})
+	);
+};

@@ -48,7 +48,7 @@ export interface ConfigOptions<
 	secondFieldName?: K2;
 }
 
-/** - Object type with string or number as value for each key. */
+/** - Object type with string or number or boolean as value for each key. */
 export type InputObject = Record<string, string | number | boolean>;
 
 /** - Option for sorting order. */
@@ -65,7 +65,8 @@ export interface OrderOption {
  * * Options for sorting an array of objects.
  * @template T - The type of objects in the array.
  */
-export interface SortOptions<T extends InputObject> extends OrderOption {
+export interface SortOptions<T extends Record<string, unknown>>
+	extends OrderOption {
 	/** The field by which to sort the objects in the array. */
 	sortByField?: keyof T;
 }

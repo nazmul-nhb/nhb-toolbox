@@ -1,6 +1,7 @@
 import {
+	filterArrayOfObjects,
 	// createOptionsArray,
-	sortAnArray,
+	// sortAnArray,
 	// convertToDecimal,
 	// cloneObject,
 	// isDeepEqual,
@@ -130,11 +131,29 @@ import {
 // ];
 // console.info(sortAnArray(objects, { sortByField: 'name' }));
 
-const users = [
-	{ name: 'Alice', active: true },
-	{ name: 'Bob', active: false },
-	{ name: 'Charlie', active: true },
+// const users = [
+// 	{ name: 'Alice', active: true },
+// 	{ name: 'Bob', active: false },
+// 	{ name: 'Charlie', active: true },
+// ];
+// console.info(sortAnArray(users, { sortOrder: 'asc', sortByField: 'active' }));
+
+const data = [
+	{ id: 1, name: 'Alice', isActive: true },
+	{ id: 2, name: 'Bob', isActive: false },
+	{ id: 3, name: 'Charlie', isActive: true },
 ];
-console.info(sortAnArray(users, { sortOrder: 'asc', sortByField: 'active' }));
+
+// Filter objects where `isActive` is true
+const activeUsers = filterArrayOfObjects(data, { isActive: (v) => !v });
+console.info(activeUsers);
+// Output: [{ id: 2, name: 'Bob', isActive: false }]
+
+// Filter objects where `name` starts with 'A'
+const namesStartingWithA = filterArrayOfObjects(data, {
+	name: (v) => v.startsWith('A'),
+});
+console.info(namesStartingWithA);
+// Output: [{ id: 1, name: 'Alice', isActive: true }]
 
 // console.info(result6);

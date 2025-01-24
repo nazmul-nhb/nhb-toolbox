@@ -15,7 +15,12 @@ export {
 	convertRgbToHsl,
 } from './colors/convert';
 
-export { flattenArray, createOptionsArray, sortAnArray } from './array';
+export {
+	flattenArray,
+	createOptionsArray,
+	sortAnArray,
+	filterArrayOfObjects,
+} from './array';
 
 export {
 	generateQueryParams,

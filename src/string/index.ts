@@ -77,10 +77,10 @@ export const truncateString = (string: string, maxLength: number): string => {
 };
 
 /**
- * * Generates a unique ID string composed of an optional `prefix`, `suffix`, a `timestamp`, `separator`, and a random alphanumeric string, separated by a customizable separator.
+ * * Generates a random alphanumeric (16 characters long, this length is customizable in the options) ID string composed of an optional `prefix`, `suffix`, a `timestamp`, and a customizable separator.
  *
  * @param options Configuration options for random ID generation.
- * @returns The generated ID string composed of the random alphanumeric string, timestamp, prefix, and suffix, separated by the specified separator.
+ * @returns The generated ID string composed of the random alphanumeric string of specified length with optional `timeStamp`, `prefix`, and `suffix`, `caseOption` and `separator`.
  */
 export const generateRandomID = (options?: RandomIdOptions): string => {
 	const {

@@ -1,4 +1,4 @@
-/** - Options for capitalizeString function. */
+/** - Options for `capitalizeString` function. */
 export interface CapitalizeOptions {
 	/** If true, capitalizes the first letter of each word (space separated). Defaults to `false`. */
 	capitalizeEachFirst?: boolean;
