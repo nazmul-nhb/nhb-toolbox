@@ -19,10 +19,11 @@ export { flattenArray, createSelectOptions } from './array';
 
 export {
 	generateQueryParams,
-	deepClone,
-	deepEqual,
+	cloneObject,
+	isDeepEqual,
 	mergeObjects,
 	flattenObject,
+	mergeAndFlattenObjects,
 	isEmptyObject,
 	countObjectFields,
 } from './object';

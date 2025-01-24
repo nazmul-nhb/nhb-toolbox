@@ -1,11 +1,12 @@
 import {
 	// convertToDecimal,
-	// deepClone,
-	// deepEqual,
+	// cloneObject,
+	// isDeepEqual,
 	// mergeObjects,
-	// flattenObject,
+	flattenObject,
 	// isEmptyObject,
-	countObjectFields,
+	// countObjectFields,
+	mergeAndFlattenObjects,
 } from './src';
 
 // const result1 = capitalizeString(`mo mOm`, {
@@ -87,8 +88,28 @@ import {
 // 	{ e: 5, f: 6 },
 // );
 
-// const result13 = flattenObject({ p: { c: 3 }, d: 4 });
 // const result14 = isEmptyObject({a:1});
-const result15 = countObjectFields({ p: { c: 3 }, d: 4 });
+// const result15 = countObjectFields({ p: { c: 3 }, d: 4 });
 
-console.info(result15);
+const obj1 = {
+	user: {
+		name: 'Nazmul',
+		location: { city: 'Sirajganj', country: 'Bangladesh' },
+	},
+	role: 'Developer',
+};
+
+const obj2 = {
+	user: {
+		name: 'Nazmul',
+		
+	},
+	role: 'Beggar',
+};
+
+const result13 = flattenObject(obj1);
+
+const flattened = mergeAndFlattenObjects(obj1, obj2);
+
+
+console.info({flattened, result13});

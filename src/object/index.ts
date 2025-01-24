@@ -39,7 +39,7 @@ export const generateQueryParams = <
  * @param obj Object to clone.
  * @returns Deep cloned object.
  */
-export const deepClone = <T extends Record<string, unknown>>(obj: T): T => {
+export const cloneObject = <T extends Record<string, unknown>>(obj: T): T => {
 	return JSON.parse(JSON.stringify(obj));
 };
 
@@ -118,21 +118,26 @@ export const mergeObjects = <T extends Record<string, unknown>>(
 
 /**
  * * Deeply merge objects and flatten nested objects.
+ * * Useful for flattening a single object or merging multiple objects with duplicate key(s).
+ * * If keys are duplicated, the last object's value will be used.
  *
  * @param objects Objects to merge.
  * @returns Merged object with flattened structure.
  */
-export const flattenObject = <T extends Record<string, unknown>>(
+export const mergeAndFlattenObjects = <T extends Record<string, unknown>>(
 	...objects: T[]
-): T => {
+): Record<string, unknown> => {
 	const map = new Map<string, unknown>();
 
-	const flattenObject = (obj: Record<string, unknown>, parentKey = '') => {
+	const _flattenObject = (
+		obj: Record<string, unknown>,
+		parentKey: keyof T = '',
+	) => {
 		for (const key in obj) {
-			const newKey = parentKey ? `${parentKey}.${key}` : key;
+			const newKey = parentKey ? `${String(parentKey)}.${key}` : key;
 			if (obj[key] instanceof Object && !Array.isArray(obj[key])) {
 				// Recursively flatten nested objects
-				flattenObject(obj[key] as Record<string, unknown>, newKey);
+				_flattenObject(obj[key] as Record<string, unknown>, newKey);
 			} else {
 				// Set the flattened key
 				map.set(newKey, obj[key]);
@@ -140,7 +145,7 @@ export const flattenObject = <T extends Record<string, unknown>>(
 		}
 	};
 
-	objects.forEach((obj) => flattenObject(obj));
+	objects.forEach((obj) => _flattenObject(obj));
 
 	const result = {} as T;
 
@@ -152,13 +157,55 @@ export const flattenObject = <T extends Record<string, unknown>>(
 };
 
 /**
+ * * Flattens a nested object into a dot notation format.
+ *
+ * @param object - The `object` to flatten.
+ * @returns A `flattened object` with dot notation keys.
+ */
+export const flattenObject = <T extends Record<string, unknown>>(
+	object: T,
+): Record<string, unknown> => {
+	/**
+	 * * Recursively flattens an object, transforming nested structures into dot-notation keys.
+	 *
+	 * @param source - The `object` to be flattened.
+	 * @param prefix - The prefix to prepend to each key. Used for nested objects.
+	 * @returns A flattened version of the input object.
+	 */
+	const _flattenObject = (
+		source: T,
+		prefix: keyof T = '',
+	): Record<string, unknown> => {
+		const flattened: Record<string, unknown> = {};
+
+		for (const [key, value] of Object.entries(source)) {
+			// Construct the dot-notation key
+			const newKey = prefix ? `${String(prefix)}.${key}` : key;
+
+			if (value && typeof value === 'object' && !Array.isArray(value)) {
+				// Recursively process nested objects
+				Object.assign(flattened, _flattenObject(value as T, newKey));
+			} else {
+				// Directly assign non-object values
+				flattened[newKey] = value;
+			}
+		}
+
+		return flattened;
+	};
+
+	// Call the recursive function with an empty prefix initially
+	return _flattenObject(object);
+};
+
+/**
  * * Deeply compare two values (arrays, objects, or primitive values).
  *
  * @param a First value to compare.
  * @param b Second value to compare.
  * @returns Whether the values are deeply equal.
  */
-export const deepEqual = <T>(a: T, b: T): boolean => {
+export const isDeepEqual = <T>(a: T, b: T): boolean => {
 	// If both values are strictly equal (handles primitive types and same references)
 	if (a === b) return true;
 
@@ -171,7 +218,7 @@ export const deepEqual = <T>(a: T, b: T): boolean => {
 	// Check for array equality
 	if (Array.isArray(a) && Array.isArray(b)) {
 		if (a.length !== b.length) return false;
-		return a.every((element, index) => deepEqual(element, b[index]));
+		return a.every((element, index) => isDeepEqual(element, b[index]));
 	}
 
 	// Check for object equality
@@ -182,7 +229,7 @@ export const deepEqual = <T>(a: T, b: T): boolean => {
 		if (aKeys.length !== bKeys.length) return false;
 
 		return aKeys.every((key) =>
-			deepEqual(
+			isDeepEqual(
 				(a as Record<string, unknown>)[key],
 				(b as Record<string, unknown>)[key],
 			),
