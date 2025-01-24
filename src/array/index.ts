@@ -167,9 +167,9 @@ export function sortAnArray<T extends InputObject>(
 					: Number(keyA) - Number(keyB);
 			}
 
-			throw new Error('Cannot compare non-string/non-number properties.');
+			throw new Error('Cannot compare non-string/non-number/non-boolean properties.');
 		});
 	}
 
-	throw new Error('Invalid array or missing sortByField for objects.');
+	throw new Error('Invalid array or missing "sortByField" for objects.');
 }

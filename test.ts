@@ -1,6 +1,6 @@
 import {
 	// createOptionsArray,
-	// sortAnArray,
+	sortAnArray,
 	// convertToDecimal,
 	// cloneObject,
 	// isDeepEqual,
@@ -75,17 +75,17 @@ import {
 // const result10 = convertToDecimal(8, { decimalPlaces: 4, isString: true });
 
 // // Arrays
-// console.log(deepEqual([1, 2, 3], [1, 2, 3])); // true
-// console.log(deepEqual([1, 2, 3], [3, 2, 1])); // false
+// console.info(deepEqual([1, 2, 3], [1, 2, 3])); // true
+// console.info(deepEqual([1, 2, 3], [3, 2, 1])); // false
 
 // // Objects
-// console.log(deepEqual({ a: 1, b: 2 }, { a: 1, b: 2 })); // true
-// console.log(deepEqual({ a: 1, b: 2 }, { b: 2, a: 1 })); // true
-// console.log(deepEqual({ a: 1, b: 2 }, { a: 1, b: 3 })); // false
+// console.info(deepEqual({ a: 1, b: 2 }, { a: 1, b: 2 })); // true
+// console.info(deepEqual({ a: 1, b: 2 }, { b: 2, a: 1 })); // true
+// console.info(deepEqual({ a: 1, b: 2 }, { a: 1, b: 3 })); // false
 
 // // Primitive values
-// console.log(deepEqual(5, 5)); // true
-// console.log(deepEqual('hello', 'world')); // false
+// console.info(deepEqual(5, 5)); // true
+// console.info(deepEqual('hello', 'world')); // false
 
 // const result11 = deepClone({ a: 1, b: 2 },);
 
@@ -118,23 +118,23 @@ import {
 // const flattened = mergeAndFlattenObjects(obj1, obj2);
 
 // const strings = ['banana', 'apple', 'cherry'];
-// console.log(sortAnArray(strings)); // ["apple", "banana", "cherry"]
+// console.info(sortAnArray(strings)); // ["apple", "banana", "cherry"]
 
 // const numbers = [3, 1, 4, 1, 5, 9];
-// console.log(sortAnArray(numbers, { sortOrder: 'desc' })); // [9, 5, 4, 3, 1, 1]
+// console.info(sortAnArray(numbers, { sortOrder: 'desc' })); // [9, 5, 4, 3, 1, 1]
 
 // const objects = [
 // 	{ id: 3, name: 'Banana' },
 // 	{ id: 1, name: 'Apple' },
 // 	{ id: 2, name: 'Cherry' },
 // ];
-// console.log(sortAnArray(objects, { sortByField: 'name' }));
+// console.info(sortAnArray(objects, { sortByField: 'name' }));
 
-// const users = [
-// 	{ name: 'Alice', active: true },
-// 	{ name: 'Bob', active: false },
-// 	{ name: 'Charlie', active: true },
-// ];
-// console.log(sortAnArray(users, { sortOrder: 'asc', sortByField: 'active' }));
+const users = [
+	{ name: 'Alice', active: true },
+	{ name: 'Bob', active: false },
+	{ name: 'Charlie', active: true },
+];
+console.info(sortAnArray(users, { sortOrder: 'asc', sortByField: 'active' }));
 
 // console.info(result6);

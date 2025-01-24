@@ -62,7 +62,7 @@ export interface OrderOption {
 }
 
 /**
- * - Options for sorting an array of objects.
+ * * Options for sorting an array of objects.
  * @template T - The type of objects in the array.
  */
 export interface SortOptions<T extends InputObject> extends OrderOption {
