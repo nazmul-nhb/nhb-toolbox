@@ -19,3 +19,7 @@ export interface SanitizeOptions<T extends GenericObject> {
 	/** Whether to exclude nullish (null or undefined) values. Defaults to `false` */
 	ignoreNullish?: boolean;
 }
+
+export type SanitizedData<T> = {
+	[P in keyof T]?: T[P] extends object ? SanitizedData<T[P]> : T[P];
+};
