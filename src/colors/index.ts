@@ -34,8 +34,7 @@ export function getColorForInitial(
 ): string[];
 
 /**
- *  * Generates a hex color based on the first character (initial) of a string or number;
- * or an array of hex colors based on the first character (initial) of an array of strings/numbers or even nested arrays of strings/numbers.
+ *  * Generates a hex color based on the first character (initial) of a string or number; or an array of hex colors based on the first character (initial) of an array of strings/numbers or even nested arrays of strings/numbers.
  *
  * - For numbers, it uses 10 predefined colors (0-9).
  * - For letters, it uses 26 predefined colors (A-Z).

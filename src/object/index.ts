@@ -1,7 +1,7 @@
-import type { ObjectToSanitize, SanitizeOptions } from './types';
+import type { GenericObject } from './types';
 
 /**
- * * Utility function to generate query parameters from an object.
+ * * Utility to generate query parameters from an object.
  *
  * @template T - A generic type extending `Record<string, string | number | string[] | number[]>`.
  * @param params - Object containing query parameters.
@@ -41,7 +41,7 @@ export const generateQueryParams = <
  * @param obj Object to clone.
  * @returns Deep cloned object.
  */
-export const cloneObject = <T extends Record<string, unknown>>(obj: T): T => {
+export const cloneObject = <T extends GenericObject>(obj: T): T => {
 	return JSON.parse(JSON.stringify(obj));
 };
 
@@ -51,10 +51,8 @@ export const cloneObject = <T extends Record<string, unknown>>(obj: T): T => {
  * @param obj Object to check.
  * @returns Whether the object is empty.
  */
-export const isEmptyObject = <T extends Record<string, unknown>>(
-	obj: T,
-): boolean => {
-	return Object.keys(obj).length === 0;
+export const isEmptyObject = <T extends GenericObject>(obj: T): boolean => {
+	return Object.keys(obj).length === 0 && obj.constructor === Object;
 };
 
 /**
@@ -63,9 +61,7 @@ export const isEmptyObject = <T extends Record<string, unknown>>(
  * @param obj Object to check.
  * @returns Number of fields in the object.
  */
-export const countObjectFields = <T extends Record<string, unknown>>(
-	obj: T,
-): number => {
+export const countObjectFields = <T extends GenericObject>(obj: T): number => {
 	return Object.keys(obj).length;
 };
 
@@ -75,9 +71,7 @@ export const countObjectFields = <T extends Record<string, unknown>>(
  * @param objects Objects to merge.
  * @returns Merged object.
  */
-export const mergeObjects = <T extends Record<string, unknown>>(
-	...objects: T[]
-): T => {
+export const mergeObjects = <T extends GenericObject>(...objects: T[]): T => {
 	const map = new Map<string, unknown>();
 
 	objects.forEach((obj) => {
@@ -94,8 +88,8 @@ export const mergeObjects = <T extends Record<string, unknown>>(
 					map.set(
 						key,
 						mergeObjects(
-							existingValue as Record<string, unknown>,
-							obj[key] as Record<string, unknown>,
+							existingValue as GenericObject,
+							obj[key] as GenericObject,
 						),
 					);
 				} else {
@@ -126,20 +120,17 @@ export const mergeObjects = <T extends Record<string, unknown>>(
  * @param objects Objects to merge.
  * @returns Merged object with flattened structure.
  */
-export const mergeAndFlattenObjects = <T extends Record<string, unknown>>(
+export const mergeAndFlattenObjects = <T extends GenericObject>(
 	...objects: T[]
-): Record<string, unknown> => {
+): GenericObject => {
 	const map = new Map<string, unknown>();
 
-	const _flattenObject = (
-		obj: Record<string, unknown>,
-		parentKey: keyof T = '',
-	) => {
+	const _flattenObject = (obj: GenericObject, parentKey: keyof T = '') => {
 		for (const key in obj) {
 			const newKey = parentKey ? `${String(parentKey)}.${key}` : key;
 			if (obj[key] instanceof Object && !Array.isArray(obj[key])) {
 				// Recursively flatten nested objects
-				_flattenObject(obj[key] as Record<string, unknown>, newKey);
+				_flattenObject(obj[key] as GenericObject, newKey);
 			} else {
 				// Set the flattened key
 				map.set(newKey, obj[key]);
@@ -164,9 +155,9 @@ export const mergeAndFlattenObjects = <T extends Record<string, unknown>>(
  * @param object - The `object` to flatten.
  * @returns A `flattened object` with dot notation keys.
  */
-export const flattenObject = <T extends Record<string, unknown>>(
+export const flattenObject = <T extends GenericObject>(
 	object: T,
-): Record<string, unknown> => {
+): GenericObject => {
 	/**
 	 * * Recursively flattens an object, transforming nested structures into dot-notation keys.
 	 *
@@ -174,11 +165,8 @@ export const flattenObject = <T extends Record<string, unknown>>(
 	 * @param prefix - The prefix to prepend to each key. Used for nested objects.
 	 * @returns A flattened version of the input object.
 	 */
-	const _flattenObject = (
-		source: T,
-		prefix: keyof T = '',
-	): Record<string, unknown> => {
-		const flattened: Record<string, unknown> = {};
+	const _flattenObject = (source: T, prefix: keyof T = ''): GenericObject => {
+		const flattened: GenericObject = {};
 
 		for (const [key, value] of Object.entries(source)) {
 			// Construct the dot-notation key
@@ -231,94 +219,9 @@ export const isDeepEqual = <T>(a: T, b: T): boolean => {
 		if (aKeys.length !== bKeys.length) return false;
 
 		return aKeys.every((key) =>
-			isDeepEqual(
-				(a as Record<string, unknown>)[key],
-				(b as Record<string, unknown>)[key],
-			),
+			isDeepEqual((a as GenericObject)[key], (b as GenericObject)[key]),
 		);
 	}
 
 	return false;
 };
-
-/**
- * * Processes an object by ignoring specified keys and trimming string values based on options provided.
- * * Also excludes nullish values (null, undefined) if specified.
- *
- * @param object - The object to process.
- * @param options - Options that define which keys to ignore, whether to trim string values, and whether to exclude nullish values.
- * @returns A new object with the specified modifications.
- */
-export function sanitizeData<T extends ObjectToSanitize>(
-	object: T,
-	options?: SanitizeOptions<T>,
-): T;
-
-/**
- * * Processes an array of objects by ignoring specified keys and trimming string values based on options provided.
- * * Also excludes nullish values (null, undefined) if specified.
- *
- * @param object - The object to process.
- * @param options - Options that define which keys to ignore, whether to trim string values, and whether to exclude nullish values.
- * @returns A new array of objects with the specified modifications.
- */
-export function sanitizeData<T extends ObjectToSanitize>(
-	array: T[],
-	options?: SanitizeOptions<T>,
-): T[];
-
-/**
- * Processes an object or array of objects by ignoring specified keys and trimming string values.
- * Also excludes nullish values (null, undefined) if specified.
- *
- * @param input - The object or array of objects to process.
- * @param options - Options for processing.
- * @returns A new object or array of objects with the specified modifications.
- */
-export function sanitizeData<T extends ObjectToSanitize>(
-	input: T | T[],
-	options?: SanitizeOptions<T>,
-): T | T[] {
-	const {
-		ignoreKeys = [],
-		trimStrings = true,
-		ignoreNullish = false,
-	} = options || {};
-
-	// Helper function to process a single object
-	const _processObject = (obj: T): T =>
-		Object.entries(obj).reduce((acc, [key, value]) => {
-			// Skip ignored keys 
-			if (ignoreKeys.includes(key as keyof T)) {
-				return acc;
-			}
-
-			// Exclude nullish values if specified
-			if (ignoreNullish && (value === null || value === undefined)) {
-				return acc;
-			}
-
-			// Trim string values if enabled
-			if (typeof value === 'string' && trimStrings) {
-				acc[key as keyof T] = value.trim().replace(/\s+/g, ' ') as T[keyof T];
-			} else if (value && typeof value === 'object' && !Array.isArray(value)) {
-				// Recursively process nested objects
-				acc[key as keyof T] = _processObject(value as T) as T[keyof T];
-			} else {
-				// Add other values as-is
-				acc[key as keyof T] = value as T[keyof T];
-			}
-
-			return acc;
-		}, {} as T);
-
-	// Process the input
-	if (Array.isArray(input)) {
-		return input.map((obj) => _processObject(obj));
-	} else if (typeof input === 'object' && input !== null) {
-		return _processObject(input);
-	}
-
-	// Return input as-it-is if not an object or array
-	return input;
-}

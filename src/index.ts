@@ -36,5 +36,6 @@ export {
 	mergeAndFlattenObjects,
 	isEmptyObject,
 	countObjectFields,
-	sanitizeData,
 } from './object';
+
+export { sanitizeData } from './object/sanitize';
