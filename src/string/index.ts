@@ -118,3 +118,42 @@ export const generateRandomID = (options?: RandomIdOptions): string => {
 	}
 };
 
+/**
+ * * Trims all the words in a string.
+ *
+ * @param input The string to trim.
+ * @returns Trimmed string.
+ */
+export function trimString(input: string): string;
+
+/**
+ * * Trims all the words in an array of strings.
+ *
+ * @param input The array of strings to trim.
+ * @returns Trimmed array of strings.
+ */
+export function trimString(input: string[]): string[];
+
+/**
+ * * Trims all the words in a string or an array of strings.
+ *
+ * @param input String or array of strings.
+ * @returns Trimmed string or array of strings.
+ */
+export function trimString(input: string | string[]): string | string[] {
+	if (!input) return '';
+
+	// If the input is a string, trim each word
+	if (typeof input === 'string' && !Array.isArray(input)) {
+		return input.trim().replace(/\s+/g, ' ');
+	}
+
+	// If the input is an array of strings, trim each string in the array
+	if (Array.isArray(input)) {
+		return input.map((str) =>
+			typeof str === 'string' ? str.trim().replace(/\s+/g, ' ') : str,
+		);
+	}
+
+	throw new Error('Invalid input type. Expected string or array of strings!');
+}

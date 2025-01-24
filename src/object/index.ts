@@ -1,3 +1,5 @@
+import type { ObjectToSanitize, SanitizeOptions } from './types';
+
 /**
  * * Utility function to generate query parameters from an object.
  *
@@ -238,3 +240,85 @@ export const isDeepEqual = <T>(a: T, b: T): boolean => {
 
 	return false;
 };
+
+/**
+ * * Processes an object by ignoring specified keys and trimming string values based on options provided.
+ * * Also excludes nullish values (null, undefined) if specified.
+ *
+ * @param object - The object to process.
+ * @param options - Options that define which keys to ignore, whether to trim string values, and whether to exclude nullish values.
+ * @returns A new object with the specified modifications.
+ */
+export function sanitizeData<T extends ObjectToSanitize>(
+	object: T,
+	options?: SanitizeOptions<T>,
+): T;
+
+/**
+ * * Processes an array of objects by ignoring specified keys and trimming string values based on options provided.
+ * * Also excludes nullish values (null, undefined) if specified.
+ *
+ * @param object - The object to process.
+ * @param options - Options that define which keys to ignore, whether to trim string values, and whether to exclude nullish values.
+ * @returns A new array of objects with the specified modifications.
+ */
+export function sanitizeData<T extends ObjectToSanitize>(
+	array: T[],
+	options?: SanitizeOptions<T>,
+): T[];
+
+/**
+ * Processes an object or array of objects by ignoring specified keys and trimming string values.
+ * Also excludes nullish values (null, undefined) if specified.
+ *
+ * @param input - The object or array of objects to process.
+ * @param options - Options for processing.
+ * @returns A new object or array of objects with the specified modifications.
+ */
+export function sanitizeData<T extends ObjectToSanitize>(
+	input: T | T[],
+	options?: SanitizeOptions<T>,
+): T | T[] {
+	const {
+		ignoreKeys = [],
+		trimStrings = true,
+		ignoreNullish = false,
+	} = options || {};
+
+	// Helper function to process a single object
+	const _processObject = (obj: T): T =>
+		Object.entries(obj).reduce((acc, [key, value]) => {
+			// Skip ignored keys 
+			if (ignoreKeys.includes(key as keyof T)) {
+				return acc;
+			}
+
+			// Exclude nullish values if specified
+			if (ignoreNullish && (value === null || value === undefined)) {
+				return acc;
+			}
+
+			// Trim string values if enabled
+			if (typeof value === 'string' && trimStrings) {
+				acc[key as keyof T] = value.trim().replace(/\s+/g, ' ') as T[keyof T];
+			} else if (value && typeof value === 'object' && !Array.isArray(value)) {
+				// Recursively process nested objects
+				acc[key as keyof T] = _processObject(value as T) as T[keyof T];
+			} else {
+				// Add other values as-is
+				acc[key as keyof T] = value as T[keyof T];
+			}
+
+			return acc;
+		}, {} as T);
+
+	// Process the input
+	if (Array.isArray(input)) {
+		return input.map((obj) => _processObject(obj));
+	} else if (typeof input === 'object' && input !== null) {
+		return _processObject(input);
+	}
+
+	// Return input as-it-is if not an object or array
+	return input;
+}

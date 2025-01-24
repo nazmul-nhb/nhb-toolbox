@@ -1,5 +1,7 @@
 import {
-	filterArrayOfObjects,
+	sanitizeData,
+	// filterArrayOfObjects,
+	// trimString,
 	// createOptionsArray,
 	// sortAnArray,
 	// convertToDecimal,
@@ -141,19 +143,30 @@ import {
 const data = [
 	{ id: 1, name: 'Alice', isActive: true },
 	{ id: 2, name: 'Bob', isActive: false },
-	{ id: 3, name: 'Charlie', isActive: true },
+	{ id: 3, name: 'Charlie     ', isActive: undefined },
+	{ id: 3, name: 'Charlie     ', mamu: undefined },
 ];
 
-// Filter objects where `isActive` is true
-const activeUsers = filterArrayOfObjects(data, { isActive: (v) => !v });
-console.info(activeUsers);
-// Output: [{ id: 2, name: 'Bob', isActive: false }]
+// // Filter objects where `isActive` is true
+// const activeUsers = filterArrayOfObjects(data, { isActive: (v) => !v });
+// console.info(activeUsers);
+// // Output: [{ id: 2, name: 'Bob', isActive: false }]
 
-// Filter objects where `name` starts with 'A'
-const namesStartingWithA = filterArrayOfObjects(data, {
-	name: (v) => v.startsWith('A'),
-});
-console.info(namesStartingWithA);
+// // Filter objects where `name` starts with 'A'
+// const namesStartingWithA = filterArrayOfObjects(data, {
+// 	name: (v) => v.startsWith('A'),
+// });
+// console.info(namesStartingWithA);
 // Output: [{ id: 1, name: 'Alice', isActive: true }]
 
-// console.info(result6);
+// const result14 = trimString([' Hello  World!  ', 'mellow world']);
+
+const result15 = sanitizeData({
+	id: 3,
+	name: 'Charlie     ',
+	isActive: { money: 200, office: 'Dhaka ', mama: { hama: 'k  ' } },
+});
+
+const result16 = sanitizeData(data);
+
+console.info({ result15: JSON.stringify(result15), result16 });

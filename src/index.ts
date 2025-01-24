@@ -1,4 +1,9 @@
-export { capitalizeString, truncateString, generateRandomID } from './string';
+export {
+	capitalizeString,
+	truncateString,
+	generateRandomID,
+	trimString,
+} from './string';
 
 export { getRandomNumber, convertToDecimal } from './number';
 
@@ -31,4 +36,5 @@ export {
 	mergeAndFlattenObjects,
 	isEmptyObject,
 	countObjectFields,
+	sanitizeData,
 } from './object';

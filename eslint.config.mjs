@@ -69,7 +69,7 @@ export default [
     rules: { "no-unused-vars": "off" },
   },
   {
-    files: ['src/classes/**/*.ts'],
+    files: ['src/classes/**/*.ts', "src/**/*types.ts"],
     rules: { "@typescript-eslint/no-explicit-any": "off" }
   },
   {
