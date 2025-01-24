@@ -3,53 +3,61 @@ import { trimString } from '../string';
 import type { DotNotationKey, GenericObject, SanitizeOptions } from './types';
 
 /**
- * * Processes an object by ignoring specified keys and trimming string values based on options provided.
+ * * Sanitizes an object by ignoring specified keys and trimming string values based on options provided.
  * * Also excludes nullish values (null, undefined) if specified. Always ignores empty nested object(s).
  *
- * @param object - The object to process.
+ * @param object - The object to sanitize.
  * @param options - Options that define which keys to ignore, whether to trim string values, and whether to exclude nullish values.
  * @returns A new object with the specified modifications.
  */
 export function sanitizeData<T extends GenericObject>(
 	object: T,
 	options?: SanitizeOptions<T>,
-): T;
+): GenericObject;
 
 /**
- * * Processes an array of objects by ignoring specified keys and trimming string values based on options provided.
+ * * Sanitizes an array of objects by ignoring specified keys and trimming string values based on options provided.
  * * Also excludes nullish values (null, undefined) if specified. Always ignores empty nested object(s).
  *
- * @param object - The object to process.
+ * @param object - The object to sanitize.
  * @param options - Options that define which keys to ignore, whether to trim string values, and whether to exclude nullish values.
  * @returns A new array of objects with the specified modifications.
  */
 export function sanitizeData<T extends GenericObject>(
 	array: T[],
 	options?: SanitizeOptions<T>,
-): T[];
+): GenericObject[];
 
 /**
- * * Trims all the words in a string or an array of strings.
+ * * Trims all the words in a string.
  *
- * @param input String or array of strings.
- * @returns Trimmed string or array of strings.
+ * @param input String to sanitize.
+ * @returns Sanitized string .
  */
-export function sanitizeData(input: string | string[]): string | string[];
+export function sanitizeData(input: string): string;
 
 /**
- * * Processes a string, array of strings, an object or array of objects by ignoring specified keys and trimming string values.
+ * * Trims all the words in an array of strings.
+ *
+ * @param input Array of strings to sanitize.
+ * @returns Sanitized array of strings.
+ */
+export function sanitizeData(input: string[]): string[];
+
+/**
+ * * Sanitizes a string, array of strings, an object or array of objects by ignoring specified keys and trimming string values.
  * * Also excludes nullish values (null, undefined) if specified. Always ignores empty nested object(s).
  *
- * @param input - The object or array of objects to process.
+ * @param input - The string, object or array of strings or objects to sanitize.
  * @param options - Options for processing.
- * @returns A new string, array of strings, object or array of objects with the specified modifications.
+ * @returns A new string, object or array of strings or objects with the specified modifications.
  */
 export function sanitizeData<T extends GenericObject>(
 	input: string | string[] | T | T[],
 	options?: SanitizeOptions<T>,
-): string | string[] | T | T[] {
+): string | string[] | GenericObject | GenericObject[] {
 	const {
-		ignoreKeys = [],
+		keysToIgnore: ignoreKeys = [],
 		trimStrings = true,
 		ignoreNullish = false,
 	} = options || {};

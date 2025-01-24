@@ -13,7 +13,7 @@ export type DotNotationKey<T> = T extends object
 /** - Options for `sanitizeData` */
 export interface SanitizeOptions<T extends GenericObject> {
 	/** Keys to ignore */
-	ignoreKeys?: DotNotationKey<T>[];
+	keysToIgnore?: DotNotationKey<T>[];
 	/** Whether to trim string values. Defaults to `true` */
 	trimStrings?: boolean;
 	/** Whether to exclude nullish (null or undefined) values. Defaults to `false` */

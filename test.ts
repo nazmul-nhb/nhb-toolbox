@@ -1,6 +1,6 @@
 import {
 	isEmptyObject,
-	// sanitizeData,
+	sanitizeData,
 	// filterArrayOfObjects,
 	// trimString,
 	// createOptionsArray,
@@ -141,12 +141,12 @@ import {
 // ];
 // console.info(sortAnArray(users, { sortOrder: 'asc', sortByField: 'active' }));
 
-// const data = [
-// 	{ id: 1, name: 'Alice', isActive: true },
-// 	{ id: 2, name: 'Bob', isActive: false },
-// 	{ id: 3, name: 'Charlie     ', isActive: undefined },
-// 	{ id: 3, name: 'Charlie     ', mamu: { mama: 1 } },
-// ];
+const data = [
+	{ id: 1, name: 'Alice', isActive: true },
+	{ id: 2, name: 'Bob', isActive: false },
+	{ id: 3, name: 'Charlie     ', isActive: undefined },
+	{ id: 3, name: 'Charlie     ', mamu: { mama: 1 } },
+];
 
 // // Filter objects where `isActive` is true
 // const activeUsers = filterArrayOfObjects(data, { isActive: (v) => !v });
@@ -162,26 +162,32 @@ import {
 
 // const result14 = trimString([' Hello  World!  ', 'mellow world']);
 
-// const result15 = sanitizeData(
-// 	{
-// 		id: 3,
-// 		name: 'Charlie     ',
-// 		isActive: {
-// 			money: 200,
-// 			office: 'Dhaka ',
-// 			mama: { hama: 'k  ', kaka: 75 },
-// 		},
-// 	},
-// 	{ ignoreKeys: ['isActive.mama', 'id'] },
-// );
+const result15 = sanitizeData(
+	{
+		id: 3,
+		name: 'Charlie     ',
+		isActive: {
+			money: 200,
+			office: 'Dhaka ',
+			mama: { hama: 'k  ', kaka: 75 },
+		},
+	},
+	{ keysToIgnore: ['isActive.mama', 'id'] },
+);
 
-// const result16 = sanitizeData(data, {
-// 	ignoreNullish: true,
-// 	ignoreKeys: ['mamu.mama'],
-// });
+const result16 = sanitizeData(data, {
+	ignoreNullish: true,
+	keysToIgnore: ['mamu.mama'],
+});
 
-// const result17 = sanitizeData({ name: 'uuu' }, { ignoreKeys: ['name'] });
+const result17 = sanitizeData({ name: 'uuu' }, { keysToIgnore: ['name'] });
+const result18 = sanitizeData(['kj   dada     ']);
 
-// console.info({ result17, result16, result15: JSON.stringify(result15) });
+console.info({
+	result17,
+	result16,
+	result18,
+	result15: JSON.stringify(result15),
+});
 
 console.info(isEmptyObject({ a: 2 }));
