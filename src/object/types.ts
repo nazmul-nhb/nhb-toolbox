@@ -1,7 +1,7 @@
 /** - Generic object type */
 export type GenericObject = Record<string, unknown>;
 
-/** - Recursive type to generate dot-notation keys for nested objects. */
+/** - Dot-notation keys for nested objects. */
 export type DotNotationKey<T> = T extends object
 	? {
 			[K in keyof T & string]: T[K] extends object
@@ -20,6 +20,7 @@ export interface SanitizeOptions<T extends GenericObject> {
 	ignoreNullish?: boolean;
 }
 
+/** - Data after sanitization. */
 export type SanitizedData<T> = {
 	[P in keyof T]?: T[P] extends object ? SanitizedData<T[P]> : T[P];
 };
