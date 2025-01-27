@@ -61,7 +61,7 @@ export default [
           "ignoreRestSiblings": false
         }
       ],
-      "no-use-before-define": "off",
+      // "no-use-before-define": "off",
     },
   },
   {
@@ -69,7 +69,7 @@ export default [
     rules: { "no-unused-vars": "off" },
   },
   {
-    files: ['src/classes/**/*.ts', "src/**/*types.ts"],
+    files: ['src/classes/**/*.ts', "src/**/*types.ts", "src/**/types/*.ts"],
     rules: { "@typescript-eslint/no-explicit-any": "off" }
   },
   {

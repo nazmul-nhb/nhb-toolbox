@@ -39,3 +39,5 @@ export {
 } from './object';
 
 export { sanitizeData } from './object/sanitize';
+
+export { convertObjectValues } from './object/convert';
