@@ -1,6 +1,5 @@
 import type { UncontrolledAny } from '../types';
 import type {
-	ConvertedData,
 	DotNotationKey,
 	GenericObject,
 	Numberified,
@@ -8,63 +7,44 @@ import type {
 } from './types';
 
 /**
- * * Converts the values of specified keys in an object to strings.
- * * Supports nested objects using dot-notation keys.
- *
- * @param data The object to convert.
- * @param options Options object specifying the conversion mapping.
- *   - `keys`: The keys in the object to be converted (dot-notation supported).
- *   - `convertTo`: Must be "string".
- * @returns The modified object with the converted values as strings.
- */
-export function convertObjectValues<T extends GenericObject>(
-	data: T,
-	options: { keys: DotNotationKey<T>[]; convertTo: 'string' },
-): Stringified<T>;
-
-/**
  * * Converts the values of specified keys in an object to numbers.
  * * Supports nested objects using dot-notation keys.
  *
  * @param data The object to convert.
  * @param options Options object specifying the conversion mapping.
- *   - `keys`: The keys in the object to be converted (dot-notation supported).
- *   - `convertTo`: Must be "number".
- * @returns The modified object with the converted values as numbers.
+ *   - `keys`: The keys in the objects to be converted (dot-notation supported).
+ *   - `convertTo`: The target type, either `"string"` or `"number"`.
+ * @returns The modified object with the converted values as `"string"` or `"number"`.
  */
-export function convertObjectValues<T extends GenericObject>(
+export function convertObjectValues<
+	T extends GenericObject,
+	C extends 'string' | 'number',
+>(
 	data: T,
-	options: { keys: DotNotationKey<T>[]; convertTo: 'number' },
-): Numberified<T>;
+	options: { keys: DotNotationKey<T>[]; convertTo: C },
+): C extends 'string' ? Stringified<T>
+: C extends 'number' ? Numberified<T>
+: never;
 
 /**
- * * Converts the values of specified keys in an array of objects to strings.
+ * * Converts the values of specified keys in an array of objects to numbers or strings.
  * * Supports nested objects using dot-notation keys.
  *
  * @param data The array of objects to convert.
  * @param options Options object specifying the conversion mapping.
  *   - `keys`: The keys in the objects to be converted (dot-notation supported).
- *   - `convertTo`: Must be "string".
- * @returns The modified array of objects with the converted values as strings.
+ *   - `convertTo`: The target type, either `"string"` or `"number"`.
+ * @returns The modified array of objects with the converted values as `"string"` or `"number"`.
  */
-export function convertObjectValues<T extends GenericObject>(
+export function convertObjectValues<
+	T extends GenericObject,
+	C extends 'string' | 'number',
+>(
 	data: T[],
-	options: { keys: DotNotationKey<T>[]; convertTo: 'string' },
-): Stringified<T>[];
-
-/**
- * * Converts the values of specified keys in an array of objects to numbers.
- * * Supports nested objects using dot-notation keys.
- * @param data The array of objects to convert.
- * @param options Options object specifying the conversion mapping.
- *   - `keys`: The keys in the objects to be converted (dot-notation supported).
- *   - `convertTo`: Must be "number".
- * @returns The modified array of objects with the converted values as numbers.
- */
-export function convertObjectValues<T extends GenericObject>(
-	data: T[],
-	options: { keys: DotNotationKey<T>[]; convertTo: 'number' },
-): Numberified<T>[];
+	options: { keys: DotNotationKey<T>[]; convertTo: C },
+): C extends 'string' ? Stringified<T>[]
+: C extends 'number' ? Numberified<T>[]
+: never;
 
 /**
  * * Converts the values of specified keys in an object or array of objects to either string or number.
@@ -82,14 +62,15 @@ export function convertObjectValues<
 >(
 	data: T | T[],
 	options: { keys: DotNotationKey<T>[]; convertTo: C },
-): ConvertedData<T, C> {
+): C extends 'string' ? Stringified<T> | Stringified<T>[]
+: C extends 'number' ? Numberified<T> | Numberified<T>[]
+: never {
 	const { keys, convertTo } = options;
 
 	/** * Helper function to determine if value should be preserved. */
 	const _shouldPreserveValue = (value: unknown): boolean =>
 		convertTo === 'number' &&
-		typeof value === 'string' &&
-		isNaN(Number(value));
+		(typeof value !== 'string' || isNaN(Number(value)));
 
 	/** * Helper function to resolve a dot-notation key path and modify the corresponding value in the object. */
 	const _setValueAtPath = (
@@ -113,7 +94,8 @@ export function convertObjectValues<
 					current[key] = String(value);
 				} else if (
 					convertTo === 'number' &&
-					typeof value !== 'number'
+					typeof value !== 'number' &&
+					!isNaN(Number(value))
 				) {
 					current[key] = Number(value);
 				}
@@ -131,8 +113,8 @@ export function convertObjectValues<
 	};
 
 	/** * Recursively process a single object. */
-	const convertValue = (obj: T): T => {
-		let newObj = { ...obj };
+	const _convertValue = (obj: T): T => {
+		let newObj = structuredClone(obj);
 
 		keys.forEach((key) => {
 			newObj = _setValueAtPath(newObj, key, convertTo);
@@ -142,8 +124,14 @@ export function convertObjectValues<
 	};
 
 	if (Array.isArray(data)) {
-		return data.map((d) => convertValue(d)) as ConvertedData<T, C>;
+		return data.map((d) => _convertValue(d)) as C extends 'string' ?
+			Stringified<T>[]
+		: C extends 'number' ? Numberified<T>[]
+		: never;
 	}
 
-	return convertValue(data) as ConvertedData<T, C>;
+	return _convertValue(data) as C extends 'string' ?
+		Stringified<T> | Stringified<T>[]
+	: C extends 'number' ? Numberified<T> | Numberified<T>[]
+	: never;
 }

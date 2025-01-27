@@ -26,7 +26,10 @@ export type SanitizedData<T> = {
 	[P in keyof T]?: T[P] extends GenericObject ? SanitizedData<T[P]> : T[P];
 };
 
-/** - Dot-notation keys for nested objects. */
+/**
+ * - Dot-notation keys for nested objects.
+ * ! Unused
+ */
 export type KeyConversion<T> =
 	T extends GenericObject ?
 		{
@@ -39,6 +42,7 @@ export type KeyConversion<T> =
 	:	never;
 
 /**
+ * ! Unused
  * * Determines the return type of `convertObjectValues` based on the `ConvertTo` type.
  * @template T The object type.
  * @template C The conversion type, either "string" or "number".

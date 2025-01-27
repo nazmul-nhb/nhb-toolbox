@@ -49,9 +49,9 @@ export const capitalizeString = (
 		.charAt(0)
 		.toUpperCase()
 		.concat(
-			lowerCaseRest
-				? trimmedString.slice(1).toLowerCase()
-				: trimmedString.slice(1),
+			lowerCaseRest ?
+				trimmedString.slice(1).toLowerCase()
+			:	trimmedString.slice(1),
 		);
 };
 

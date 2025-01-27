@@ -1,6 +1,7 @@
 import {
-	isEmptyObject,
-	sanitizeData,
+	convertObjectValues,
+	// isEmptyObject,
+	// sanitizeData,
 	// filterArrayOfObjects,
 	// trimString,
 	// createOptionsArray,
@@ -28,12 +29,19 @@ import {
 
 // const result5 = flattenArray([5, [45, 75, ['a', { a: 2 }, 'd']]]);
 
-// const users = [
-// 	{ id: 1, name: 'Alice', city: 'Banguland' },
-// 	{ id: 2, name: null, city: 'Banguland' },
-// 	{ id: 3, name: undefined, city: undefined },
-// 	{ id: null, name: 'Bob', city: 'Banguland' },
-// ];
+const users = [
+	{ id: 1, name: 'Alice', city: 'Banguland' },
+	{ id: 2, name: null, city: 'Banguland' },
+	{ id: 3, name: true, city: undefined },
+	{ id: null, name: 'Bob', city: 'Banguland' },
+];
+
+const sanitized = convertObjectValues(users, {
+	keys: ['city'],
+	convertTo: 'number',
+});
+
+console.info({ users, sanitized });
 
 // const result6 = createOptionsArray(users, {
 // 	firstFieldKey: 'id',
@@ -162,17 +170,17 @@ import {
 
 // const result14 = trimString([' Hello  World!  ', 'mellow world']);
 
-const result15 = sanitizeData(
-	{
-		id: 3,
-		name: 'Charlie     ',
-		isActive: {
-			money: '200',
-			office: 'Dhaka ',
-			mama: { hama: 'k  ', kaka: 75 },
-		},
-	},
-);
+// const result15 = sanitizeData(
+// 	{
+// 		id: 3,
+// 		name: 'Charlie     ',
+// 		isActive: {
+// 			money: '200',
+// 			office: 'Dhaka ',
+// 			mama: { hama: 'k  ', kaka: 75 },
+// 		},
+// 	},
+// );
 
 // const result16 = sanitizeData(data, {
 // 	ignoreNullish: true,
@@ -182,10 +190,10 @@ const result15 = sanitizeData(
 // const result17 = sanitizeData({ name: 'uuu' }, { keysToIgnore: ['name'] });
 // const result18 = sanitizeData(['kj   dada     ']);
 
-console.info(
-	// result17,
-	// result16,
-	// result18,
-	result15);
+// console.info(
+// 	// result17,
+// 	// result16,
+// 	// result18,
+// 	result15);
 
-console.info(isEmptyObject({ a: 2 }));
+// console.info(isEmptyObject({ a: 2 }));

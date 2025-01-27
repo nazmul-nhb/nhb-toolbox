@@ -19,16 +19,14 @@ export const generateQueryParams = <
 	const queryParams = Object.entries(params)
 		.filter(([_, value]) => value !== undefined && value !== null)
 		.flatMap(([key, value]) =>
-			Array.isArray(value)
-				? value.map(
-						(v) =>
-							`${encodeURIComponent(key)}=${encodeURIComponent(
-								String(v),
-							)}`,
-					)
-				: `${encodeURIComponent(key)}=${encodeURIComponent(
-						String(value),
-					)}`,
+			Array.isArray(value) ?
+				value.map(
+					(v) =>
+						`${encodeURIComponent(key)}=${encodeURIComponent(
+							String(v),
+						)}`,
+				)
+			:	`${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`,
 		)
 		.join('&');
 
