@@ -1,31 +1,42 @@
-import type { GenericObject } from './types';
+import type { GenericObject, QueryObject } from './types';
 
 /**
  * * Utility to generate query parameters from an object.
  *
- * @template T - A generic type extending `Record<string, string | number | string[] | number[]>`.
+ * @template T - A generic type extending `Record<string, string | number | (string | number | null | undefined)[]>` (`QueryObject`).
  * @param params - Object containing query parameters.
  * @returns A query string as a URL-encoded string, e.g., `?key1=value1&key2=value2`.
  *
  * @example
  * generateQueryParams({ key1: 'value1', key2: 42 }); // "?key1=value1&key2=42"
  * generateQueryParams({ key1: ['value1', 'value2'], key2: 42 }); // "?key1=value1&key1=value2&key2=42"
+ * generateQueryParams({ key1: '', key2: null }); // ""
  */
-export const generateQueryParams = <
-	T extends Record<string, string | number | string[] | number[]>,
->(
+export const generateQueryParams = <T extends QueryObject>(
 	params: T = {} as T,
 ): string => {
 	const queryParams = Object.entries(params)
-		.filter(([_, value]) => value !== undefined && value !== null)
+		.filter(
+			([_, value]) =>
+				value !== undefined &&
+				value !== null &&
+				!(typeof value === 'string' && value.trim() === ''),
+		)
 		.flatMap(([key, value]) =>
 			Array.isArray(value) ?
-				value.map(
-					(v) =>
-						`${encodeURIComponent(key)}=${encodeURIComponent(
-							String(v),
-						)}`,
-				)
+				value
+					.filter(
+						(v) =>
+							v !== undefined &&
+							v !== null &&
+							!(typeof v === 'string' && v.trim() === ''),
+					)
+					.map(
+						(v) =>
+							`${encodeURIComponent(key)}=${encodeURIComponent(
+								String(v),
+							)}`,
+					)
 			:	`${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`,
 		)
 		.join('&');

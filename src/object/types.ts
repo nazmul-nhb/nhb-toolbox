@@ -1,6 +1,12 @@
 /** - Generic object type */
 export type GenericObject = Record<string, unknown>;
 
+/** - Query object type `Record<string, string | number | string[] | number[]` */
+export type QueryObject = Record<
+	string,
+	string | number | null | undefined | (string | number | null | undefined)[]
+>;
+
 /** - Dot-notation keys for nested objects */
 export type DotNotationKey<T> =
 	T extends GenericObject ?

@@ -1,5 +1,6 @@
 import {
-	convertObjectValues,
+	// convertObjectValues,
+	generateQueryParams,
 	// isEmptyObject,
 	// sanitizeData,
 	// filterArrayOfObjects,
@@ -29,19 +30,19 @@ import {
 
 // const result5 = flattenArray([5, [45, 75, ['a', { a: 2 }, 'd']]]);
 
-const users = [
-	{ id: 1, name: 'Alice', city: 'Banguland' },
-	{ id: 2, name: null, city: 'Banguland' },
-	{ id: 3, name: true, city: undefined },
-	{ id: null, name: 'Bob', city: 'Banguland' },
-];
+// const users = [
+// 	{ id: 1, name: 'Alice', city: 'Banguland' },
+// 	{ id: 2, name: null, city: 'Banguland' },
+// 	{ id: 3, name: true, city: undefined },
+// 	{ id: null, name: 'Bob', city: 'Banguland' },
+// ];
 
-const sanitized = convertObjectValues(users, {
-	keys: ['city'],
-	convertTo: 'number',
-});
+// const sanitized = convertObjectValues(users, {
+// 	keys: ['city'],
+// 	convertTo: 'number',
+// });
 
-console.info({ users, sanitized });
+// console.info({ users, sanitized });
 
 // const result6 = createOptionsArray(users, {
 // 	firstFieldKey: 'id',
@@ -197,3 +198,20 @@ console.info({ users, sanitized });
 // 	result15);
 
 // console.info(isEmptyObject({ a: 2 }));
+
+const res1 = generateQueryParams({ key1: 'value1', key2: 42 });
+// Output: "?key1=value1&key2=42"
+
+const res2 = generateQueryParams({ key1: ['value1', 'value2'], key2: 42 });
+// Output: "?key1=value1&key1=value2&key2=42"
+
+const res3 = generateQueryParams({ key1: '   6', key2: null, key3: 'valid   ' });
+// Output: "?key3=valid"
+
+const res4 = generateQueryParams({
+	key1: null,
+	key2: '',
+});
+// Output: "?key1=value1"
+
+console.info({ res1, res2, res3, res4 });
