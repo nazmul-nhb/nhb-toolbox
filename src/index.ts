@@ -1,13 +1,15 @@
 export {
 	capitalizeString,
-	truncateString,
 	generateRandomID,
 	trimString,
-} from './string';
+	truncateString,
+} from './string/basics';
 
-export { getRandomNumber, convertToDecimal } from './number';
+export { convertToDecimal, getRandomNumber } from './number/basics';
 
-export { getColorForInitial } from './colors';
+export { numberToWords } from './number/convert';
+
+export { getColorForInitial } from './colors/initials';
 
 export { generateRandomColor } from './colors/random';
 
@@ -21,22 +23,22 @@ export {
 } from './colors/convert';
 
 export {
-	flattenArray,
 	createOptionsArray,
-	sortAnArray,
 	filterArrayOfObjects,
-} from './array';
+	flattenArray,
+	sortAnArray,
+} from './array/basics';
 
 export {
-	generateQueryParams,
 	cloneObject,
-	isDeepEqual,
-	mergeObjects,
-	flattenObject,
-	mergeAndFlattenObjects,
-	isEmptyObject,
 	countObjectFields,
-} from './object';
+	flattenObject,
+	generateQueryParams,
+	isDeepEqual,
+	isEmptyObject,
+	mergeAndFlattenObjects,
+	mergeObjects,
+} from './object/basics';
 
 export { sanitizeData } from './object/sanitize';
 

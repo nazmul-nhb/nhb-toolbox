@@ -1,5 +1,5 @@
-import { isEmptyObject } from './index';
-import { trimString } from '../string';
+import { trimString } from '../string/basics';
+import { isEmptyObject } from './basics';
 import type {
 	DotNotationKey,
 	GenericObject,
