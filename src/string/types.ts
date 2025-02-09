@@ -28,3 +28,11 @@ export interface RandomIdOptions {
 	/** Specifies the case for the random alphanumeric string. */
 	caseOption?: 'upper' | 'lower' | null;
 }
+
+/** - Options for generating anagrams. */
+export interface AnagramOptions {
+	/** Limit the anagrams output. Default is `100`. */
+	limit?: number | 'all';
+	/** Whether to lookup in the dictionary. Default is `false`. */
+	validWords?: boolean;
+}

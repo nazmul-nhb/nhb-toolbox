@@ -1,4 +1,5 @@
 import {
+	generateAnagrams,
 	// convertObjectValues,
 	generateQueryParams,
 	// isEmptyObject,
@@ -212,6 +213,9 @@ const res4 = generateQueryParams({
 	key1: null,
 	key2: '',
 });
-// Output: "?key1=value1"
+// Output: ""
 
 console.info({ res1, res2, res3, res4 });
+
+console.info(generateAnagrams('listen', 800).length);
+

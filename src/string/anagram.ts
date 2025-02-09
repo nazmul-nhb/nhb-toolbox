@@ -1,8 +1,8 @@
 /**
- * * Efficiently generates unique anagrams of a word.
+ * * Utility to generate unique anagrams of a word.
  * @param word The word for generating anagrams.
  * @param limit The maximum number of anagrams to return ('all' for unlimited). Default is `100`.
- * @returns A list of generated anagrams.
+ * @returns An array of generated anagrams. The first element is always the given word.
  */
 export function generateAnagrams(
 	word: string,
@@ -17,23 +17,23 @@ export function generateAnagrams(
 	 * @param str Current permutation being formed.
 	 * @param remaining Remaining characters to process.
 	 */
-	const permute = (str: string, remaining: string) => {
+	const _permute = (str: string, remaining: string) => {
 		if (!remaining.length) {
 			uniqueAnagrams.add(str);
 			return;
 		}
 
 		for (let i = 0; i < remaining.length; i++) {
-			permute(
+			if (limit !== 'all' && uniqueAnagrams.size >= limit) return;
+
+			_permute(
 				str + remaining[i],
 				remaining.slice(0, i) + remaining.slice(i + 1),
 			);
-
-			if (limit !== 'all' && uniqueAnagrams.size >= limit) return;
 		}
 	};
 
-	permute('', word);
+	_permute('', word.toLowerCase());
 
 	return Array.from(uniqueAnagrams);
 }
