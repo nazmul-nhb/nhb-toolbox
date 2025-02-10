@@ -24,6 +24,8 @@ export {
 	convertHslToRgb,
 	convertRgbToHex,
 	convertRgbToHsl,
+	convertColorCode,
+	extractNumbersFromColor,
 } from './colors/convert';
 
 export {

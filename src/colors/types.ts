@@ -107,3 +107,54 @@ export type OpacityValue =
 	| 98
 	| 99
 	| 100;
+
+/**
+ * * Represents a hexadecimal color code.
+ * Format: `#3C6945`
+ */
+export type Hex = `#${string}`;
+
+/**
+ * * Represents an RGB color string.
+ * * Format: `rgb(R, G, B)`
+ *
+ * - R (Red): 0-255
+ * - G (Green): 0-255
+ * - B (Blue): 0-255
+ */
+export type RGB = `rgb(${number}, ${number}, ${number})`;
+
+/**
+ * * Represents an HSL color string.
+ * * Format: `hsl(H, S%, L%)`
+ *
+ * - H (Hue): 0-360
+ * - S (Saturation): 0-100%
+ * - L (Lightness): 0-100%
+ */
+export type HSL = `hsl(${number}, ${number}%, ${number}%)`;
+
+/** * Union type representing a color in Hex, RGB, or HSL format. */
+export type Color = Hex | RGB | HSL;
+
+/** * Represents a tuple of three numerical values corresponding to RGB or HSL color components. */
+export type ColorNumbers = [number, number, number];
+
+/**
+ * * Represents the converted color formats for a given color type.
+ *
+ * - If the input is `Hex`, the output includes `RGB` and `HSL`.
+ * - If the input is `RGB`, the output includes `Hex` and `HSL`.
+ * - If the input is `HSL`, the output includes `Hex` and `RGB`.
+ *
+ * @template T The input color type (`Hex`, `RGB`, or `HSL`).
+ */
+export interface ConvertedColors<T extends Color>
+	extends Record<string, Hex | RGB | HSL> {
+	/** - The Hex representation (excluded if the input is already Hex). */
+	hex: T extends Hex ? never : Hex;
+	/** - The RGB representation (excluded if the input is already RGB). */
+	rgb: T extends RGB ? never : RGB;
+	/** - The HSL representation (excluded if the input is already HSL). */
+	hsl: T extends HSL ? never : HSL;
+}

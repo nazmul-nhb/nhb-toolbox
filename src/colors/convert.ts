@@ -1,12 +1,21 @@
+import type {
+	Color,
+	ColorNumbers,
+	ConvertedColors,
+	Hex,
+	HSL,
+	RGB,
+} from './types';
+
 /**
- * Converts HSL to RGB color format.
+ * * Converts HSL to RGB color format.
  *
  * @param h - The hue component of the HSL color, in degrees (0 to 360).
  * @param s - The saturation component of the HSL color, as a percentage (0 to 100).
  * @param l - The lightness component of the HSL color, as a percentage (0 to 100).
  * @returns A string representing the color in RGB format (e.g., `rgb(255, 0, 0)`).
  */
-export const convertHslToRgb = (h: number, s: number, l: number): string => {
+export const convertHslToRgb = (h: number, s: number, l: number): RGB => {
 	// Normalize the HSL values
 	s /= 100;
 	l /= 100;
@@ -33,14 +42,14 @@ export const convertHslToRgb = (h: number, s: number, l: number): string => {
 };
 
 /**
- * Converts RGB to HSL color format.
+ * * Converts RGB to HSL color format.
  *
  * @param r - The red component of the RGB color, in the range 0 to 255.
  * @param g - The green component of the RGB color, in the range 0 to 255.
  * @param b - The blue component of the RGB color, in the range 0 to 255.
  * @returns A string representing the color in HSL format (e.g., `hsl(0, 100%, 50%)`).
  */
-export const convertRgbToHsl = (r: number, g: number, b: number): string => {
+export const convertRgbToHsl = (r: number, g: number, b: number): HSL => {
 	r /= 255;
 	g /= 255;
 	b /= 255;
@@ -50,8 +59,8 @@ export const convertRgbToHsl = (r: number, g: number, b: number): string => {
 
 	let h = 0,
 		s = 0;
-	
-	const 	l = (max + min) / 2;
+
+	const l = (max + min) / 2;
 
 	if (max !== min) {
 		const diff = max - min;
@@ -69,34 +78,34 @@ export const convertRgbToHsl = (r: number, g: number, b: number): string => {
 				h = (r - g) / diff + 4;
 				break;
 		}
-		
+
 		h *= 60;
 	}
 
-	return `hsl(${Math.round(h)}, ${(s * 100).toFixed(2)}%, ${(l * 100).toFixed(2)}%)`;
+	return `hsl(${Math.round(h)}, ${Number((s * 100).toFixed(2))}%, ${Number((l * 100).toFixed(2))}%)`;
 };
 
 /**
- * Converts HSL to Hex color format.
+ * * Converts HSL to Hex color format.
  *
  * @param h - The hue component of the HSL color, in degrees (0 to 360).
  * @param s - The saturation component of the HSL color, as a percentage (0 to 100).
  * @param l - The lightness component of the HSL color, as a percentage (0 to 100).
  * @returns A string representing the color in Hex format (e.g., `#FF0000`).
  */
-export const convertHslToHex = (h: number, s: number, l: number): string => {
+export const convertHslToHex = (h: number, s: number, l: number): Hex => {
 	const rgb = convertHslToRgb(h, s, l).match(/\d+/g)!.map(Number);
 
 	return convertRgbToHex(rgb[0], rgb[1], rgb[2]);
 };
 
 /**
- * Converts Hex to HSL color format.
+ * * Converts Hex to HSL color format.
  *
  * @param hex - A string representing the color in Hex format (e.g., `#FF0000`).
  * @returns A string representing the color in HSL format (e.g., `hsl(0, 100%, 50%)`).
  */
-export const convertHexToHsl = (hex: string): string => {
+export const convertHexToHsl = (hex: Hex | string): HSL => {
 	let newHex = hex.replace('#', '');
 
 	if (newHex.length === 3) {
@@ -114,14 +123,14 @@ export const convertHexToHsl = (hex: string): string => {
 };
 
 /**
- * Converts RGB to Hex color format.
+ * * Converts RGB to Hex color format.
  *
  * @param r - The red component of the RGB color, in the range 0 to 255.
  * @param g - The green component of the RGB color, in the range 0 to 255.
  * @param b - The blue component of the RGB color, in the range 0 to 255.
  * @returns A string representing the color in Hex format (e.g., `#FF0000`).
  */
-export const convertRgbToHex = (r: number, g: number, b: number): string => {
+export const convertRgbToHex = (r: number, g: number, b: number): Hex => {
 	return `#${[r, g, b]
 		.map((v) => v.toString(16).padStart(2, '0'))
 		.join('')
@@ -129,12 +138,12 @@ export const convertRgbToHex = (r: number, g: number, b: number): string => {
 };
 
 /**
- * Converts Hex to RGB color format.
+ * * Converts Hex to RGB color format.
  *
  * @param hex - A string representing the color in Hex format (e.g., `#FF0000`).
  * @returns A string representing the color in RGB format (e.g., `rgb(255, 0, 0)`).
  */
-export const convertHexToRgb = (hex: string): string => {
+export const convertHexToRgb = (hex: Hex | string): RGB => {
 	// Remove the # if present
 	let newHex = hex.replace('#', '');
 
@@ -151,3 +160,87 @@ export const convertHexToRgb = (hex: string): string => {
 
 	return `rgb(${r}, ${g}, ${b})`;
 };
+
+/**
+ * * Extracts numbers from a color string like `rgb(66, 103, 69)` or `hsl(120, 42.86%, 41.18%)`.
+ * * Converts percentage values to decimal (e.g., `42.86%` → `42.86`).
+ *
+ * @param colorString The color string in RGB or HSL format.
+ * @returns An array of extracted numbers.
+ */
+export const extractNumbersFromColor = (
+	colorString: HSL | RGB,
+): ColorNumbers => {
+	return (colorString.match(/[\d.]+%?/g) || []).map((value) =>
+		parseFloat(value),
+	) as ColorNumbers;
+};
+
+/**
+ * * Converts a `Hex` color code to `RGB` and `HSL` formats.
+ *
+ * @param color The `Hex` color code (e.g., `#3c6945`).
+ * @returns An object containing the `RGB` and `HSL` formats of the given `Hex` color.
+ */
+export function convertColorCode(color: Hex): {
+	rgb: RGB;
+	hsl: HSL;
+};
+
+/**
+ * * Converts an `RGB` color to `Hex` and `HSL` formats.
+ *
+ * @param color The `RGB` color string (e.g., `rgb(60, 105, 69)`).
+ * @returns An object containing the `Hex` and `HSL` formats of the given `RGB` color.
+ */
+export function convertColorCode(color: RGB): {
+	hex: Hex;
+	hsl: HSL;
+};
+
+/**
+ * * Converts an `HSL` color to `Hex` and `RGB` formats.
+ *
+ * @param color The `HSL` color string (e.g., `hsl(132, 27.27%, 32.35%)`).
+ * @returns An object containing the `Hex` and `RGB` formats of the given `HSL` color.
+ */
+export function convertColorCode(color: HSL): {
+	hex: Hex;
+	rgb: RGB;
+};
+
+/**
+ * * Converts a color from `Hex`, `RGB`, or `HSL` format to its equivalent representations.
+ *
+ * @param color The color string in `Hex`, `RGB`, or `HSL` format.
+ * @returns The converted color representations excluding the input format.
+ * @throws If the color format is unrecognized throws `Error`.
+ */
+export function convertColorCode(color: Color): ConvertedColors<Color> {
+	if (color.startsWith('#')) {
+		return {
+			rgb: convertHexToRgb(color),
+			hsl: convertHexToHsl(color),
+		} as ConvertedColors<Hex>;
+	}
+
+	if (color.startsWith('rgb')) {
+		return {
+			hex: convertRgbToHex(...extractNumbersFromColor(color as RGB)),
+			hsl: convertRgbToHsl(...extractNumbersFromColor(color as RGB)),
+		} as ConvertedColors<RGB>;
+	}
+
+	if (color.startsWith('hsl')) {
+		return {
+			hex: convertHslToHex(...extractNumbersFromColor(color as HSL)),
+			rgb: convertHslToRgb(...extractNumbersFromColor(color as HSL)),
+		} as ConvertedColors<HSL>;
+	}
+
+	throw new Error(`Unrecognized Color Format: ${color}`);
+}
+
+console.info(convertColorCode('#3c6945'));
+console.info(convertColorCode('rgb(60, 105, 69)'));
+console.info(convertColorCode('hsl(132, 27.27%, 32.35%)'));
