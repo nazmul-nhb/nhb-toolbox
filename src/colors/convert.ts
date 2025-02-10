@@ -18,28 +18,13 @@ export const convertHslToRgb = (h: number, s: number, l: number): string => {
 	let r = 0,
 		g = 0,
 		b = 0;
+	if (h >= 0 && h < 60) [r, g] = [c, x];
+	else if (h >= 60 && h < 120) [r, g] = [x, c];
+	else if (h >= 120 && h < 180) [g, b] = [c, x];
+	else if (h >= 180 && h < 240) [g, b] = [x, c];
+	else if (h >= 240 && h < 300) [r, b] = [x, c];
+	else if (h >= 300 && h < 360) [r, b] = [c, x];
 
-	if (h >= 0 && h < 60) {
-		r = c;
-		g = x;
-	} else if (h >= 60 && h < 120) {
-		r = x;
-		g = c;
-	} else if (h >= 120 && h < 180) {
-		g = c;
-		b = x;
-	} else if (h >= 180 && h < 240) {
-		g = x;
-		b = c;
-	} else if (h >= 240 && h < 300) {
-		r = x;
-		b = c;
-	} else if (h >= 300 && h < 360) {
-		r = c;
-		b = x;
-	}
-
-	// Convert RGB to 0-255 range and apply m
 	r = Math.round((r + m) * 255);
 	g = Math.round((g + m) * 255);
 	b = Math.round((b + m) * 255);
@@ -56,41 +41,39 @@ export const convertHslToRgb = (h: number, s: number, l: number): string => {
  * @returns A string representing the color in HSL format (e.g., `hsl(0, 100%, 50%)`).
  */
 export const convertRgbToHsl = (r: number, g: number, b: number): string => {
-	// Normalize the RGB values
 	r /= 255;
 	g /= 255;
 	b /= 255;
 
 	const max = Math.max(r, g, b);
 	const min = Math.min(r, g, b);
-	const delta = max - min;
 
 	let h = 0,
-		s = 0,
-		l = (max + min) / 2;
-
-	if (delta !== 0) {
-		if (max === r) {
-			h = (g - b) / delta;
-		} else if (max === g) {
-			h = (b - r) / delta + 2;
-		} else {
-			h = (r - g) / delta + 4;
-		}
-
-		s = delta / (1 - Math.abs(2 * l - 1));
-
-		h *= 60;
-		if (s === 0) l = Math.round(l * 100); // for pure colors
-	} else {
 		s = 0;
+	
+	const 	l = (max + min) / 2;
+
+	if (max !== min) {
+		const diff = max - min;
+
+		s = l > 0.5 ? diff / (2 - max - min) : diff / (max + min);
+
+		switch (max) {
+			case r:
+				h = (g - b) / diff + (g < b ? 6 : 0);
+				break;
+			case g:
+				h = (b - r) / diff + 2;
+				break;
+			case b:
+				h = (r - g) / diff + 4;
+				break;
+		}
+		
+		h *= 60;
 	}
 
-	h = Math.round(h);
-	s = Math.round(s * 100);
-	l = Math.round(l * 100);
-
-	return `hsl(${h}, ${s}%, ${l}%)`;
+	return `hsl(${Math.round(h)}, ${(s * 100).toFixed(2)}%, ${(l * 100).toFixed(2)}%)`;
 };
 
 /**
@@ -102,10 +85,9 @@ export const convertRgbToHsl = (r: number, g: number, b: number): string => {
  * @returns A string representing the color in Hex format (e.g., `#FF0000`).
  */
 export const convertHslToHex = (h: number, s: number, l: number): string => {
-	const rgb = convertHslToRgb(h, s, l);
-	const [r, g, b] = rgb.match(/\d+/g)!.map((value) => parseInt(value, 10));
+	const rgb = convertHslToRgb(h, s, l).match(/\d+/g)!.map(Number);
 
-	return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1).toUpperCase().padStart(6, '0')}`;
+	return convertRgbToHex(rgb[0], rgb[1], rgb[2]);
 };
 
 /**
@@ -115,14 +97,19 @@ export const convertHslToHex = (h: number, s: number, l: number): string => {
  * @returns A string representing the color in HSL format (e.g., `hsl(0, 100%, 50%)`).
  */
 export const convertHexToHsl = (hex: string): string => {
-	const hexCode = hex.replace('#', '');
+	let newHex = hex.replace('#', '');
 
-	// Parse the hex value
-	const r: number = parseInt(hexCode.slice(0, 2), 16);
-	const g: number = parseInt(hexCode.slice(2, 4), 16);
-	const b: number = parseInt(hexCode.slice(4, 6), 16);
+	if (newHex.length === 3) {
+		newHex = newHex
+			.split('')
+			.map((char) => char + char)
+			.join('');
+	}
 
-	// Convert RGB to HSL
+	const r = parseInt(newHex.slice(0, 2), 16);
+	const g = parseInt(newHex.slice(2, 4), 16);
+	const b = parseInt(newHex.slice(4, 6), 16);
+
 	return convertRgbToHsl(r, g, b);
 };
 
@@ -135,7 +122,10 @@ export const convertHexToHsl = (hex: string): string => {
  * @returns A string representing the color in Hex format (e.g., `#FF0000`).
  */
 export const convertRgbToHex = (r: number, g: number, b: number): string => {
-	return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1).toUpperCase().padStart(6, '0')}`;
+	return `#${[r, g, b]
+		.map((v) => v.toString(16).padStart(2, '0'))
+		.join('')
+		.toUpperCase()}`;
 };
 
 /**
@@ -146,12 +136,18 @@ export const convertRgbToHex = (r: number, g: number, b: number): string => {
  */
 export const convertHexToRgb = (hex: string): string => {
 	// Remove the # if present
-	hex = hex.replace('#', '');
+	let newHex = hex.replace('#', '');
 
-	// Parse the hex value
-	const r: number = parseInt(hex.slice(0, 2), 16);
-	const g: number = parseInt(hex.slice(2, 4), 16);
-	const b: number = parseInt(hex.slice(4, 6), 16);
+	if (newHex.length === 3) {
+		newHex = newHex
+			.split('')
+			.map((char) => char + char)
+			.join('');
+	}
+
+	const r = parseInt(newHex.slice(0, 2), 16);
+	const g = parseInt(newHex.slice(2, 4), 16);
+	const b = parseInt(newHex.slice(4, 6), 16);
 
 	return `rgb(${r}, ${g}, ${b})`;
 };

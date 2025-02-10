@@ -1,9 +1,15 @@
 import {
-	findPrimeNumbers,
-	generateAnagrams,
+	convertHexToHsl,
+	convertHexToRgb,
+	convertHslToHex,
+	convertHslToRgb,
+	convertRgbToHex,
+	convertRgbToHsl,
+	// findPrimeNumbers,
+	// generateAnagrams,
 	// convertObjectValues,
-	generateQueryParams,
-	isPrime,
+	// generateQueryParams,
+	// isPrime,
 	// isEmptyObject,
 	// sanitizeData,
 	// filterArrayOfObjects,
@@ -58,33 +64,36 @@ import {
 
 // const result8 = generateRandomColor();
 
-// const hslColor = 'hsl(120, 50%, 60%)';
-// const rgbColor = 'rgb(60, 150, 60)';
-// const hexColor = '#3c963c';
+// * HSL to RGB
+// const hslColor = 'hsl(125, 22%, 33%)';
+const rgbFromHsl = convertHslToRgb(125, 22, 33);
+console.info({ rgbFromHsl }); // rgb(66, 103, 69)
 
-// HSL to RGB
-// const rgbFromHsl = convertHslToRgb(120, 50, 60);
-// console.info({ rgbFromHsl }); // rgb(60, 150, 60)
+// ! RGB to HSL
+// const rgbColor = 'rgb(66, 103, 69)';
+const hslFromRgb = convertRgbToHsl(66, 103, 69);
+console.info({ hslFromRgb }); // expected: hsl(125, 21.90%, 33.10%) got: hsl(125, 21.89%, 33.14%)
 
-// // RGB to HSL
-// const hslFromRgb = convertRgbToHsl(60, 150, 60);
-// console.info({ hslFromRgb }); // hsl(120, 50%, 60%)
+// ! HSL to Hex
+// const hsl = 'hsl(125, 50%, 60%)';
+const hexFromHsl = convertHslToHex(125, 50, 60);
+console.info({ hexFromHsl }); // expected: #66cc6e got: #66CC6F
 
-// // HSL to Hex
-// const hexFromHsl = convertHslToHex(120, 50, 60);
-// console.info({ hexFromHsl }); // #3C963C
+// ! Hex to HSL
+const hexColor = '#3c963c';
+const hslFromHex = convertHexToHsl(hexColor);
+console.info({ hslFromHex }); // expected: hsl(120, 42.90%, 41.20%) got: hsl(120, 42.86%, 41.18%)
 
-// // Hex to HSL
-// const hslFromHex = convertHexToHsl(hexColor);
-// console.info({ hslFromHex }); // hsl(120, 50%, 60%)
+// * RGB to Hex
+// const rgbColor = 'rgb(66, 103, 69)';
+// const rgbColor = 'rgb(60, 105, 69)';
+const hexFromRgb1 = convertRgbToHex(66, 103, 69);
+const hexFromRgb2 = convertRgbToHex(60, 105, 69);
+console.info({ hexFromRgb1, hexFromRgb2 }); // #426745 & #3c6945
 
-// // RGB to Hex
-// const hexFromRgb = convertRgbToHex(60, 150, 60);
-// console.info({ hexFromRgb }); // #3C963C
-
-// // Hex to RGB
-// const rgbFromHex = convertHexToRgb(hexColor);
-// console.info({ rgbFromHex }); // rgb(60, 150, 60)
+// * Hex to RGB
+const rgbFromHex = convertHexToRgb(hexColor);
+console.info({ rgbFromHex }); // rgb(60, 150, 60)
 
 // const result9 = getRandomNumber({ min: 20, max: 10 });
 
@@ -202,24 +211,24 @@ import {
 
 // console.info(isEmptyObject({ a: 2 }));
 
-const res1 = generateQueryParams({ key1: 'value1', key2: 42 });
-// Output: "?key1=value1&key2=42"
+// const res1 = generateQueryParams({ key1: 'value1', key2: 42 });
+// // Output: "?key1=value1&key2=42"
 
-const res2 = generateQueryParams({ key1: ['value1', 'value2'], key2: 42 });
-// Output: "?key1=value1&key1=value2&key2=42"
+// const res2 = generateQueryParams({ key1: ['value1', 'value2'], key2: 42 });
+// // Output: "?key1=value1&key1=value2&key2=42"
 
-const res3 = generateQueryParams({ key1: '   6', key2: null, key3: 'valid   ' });
-// Output: "?key3=valid"
+// const res3 = generateQueryParams({ key1: '   6', key2: null, key3: 'valid   ' });
+// // Output: "?key3=valid"
 
-const res4 = generateQueryParams({
-	key1: null,
-	key2: '',
-});
-// Output: ""
+// const res4 = generateQueryParams({
+// 	key1: null,
+// 	key2: '',
+// });
+// // Output: ""
 
-console.info({ res1, res2, res3, res4 });
+// console.info({ res1, res2, res3, res4 });
 
-console.info(generateAnagrams('listen', 800).length);
+// console.info(generateAnagrams('listen', 800).length);
 
-console.info(isPrime(19));
-console.info(findPrimeNumbers(37, 79));
+// console.info(isPrime(19));
+// console.info(findPrimeNumbers(37, 79));
