@@ -1,7 +1,9 @@
 import {
+	findPrimeNumbers,
 	generateAnagrams,
 	// convertObjectValues,
 	generateQueryParams,
+	isPrime,
 	// isEmptyObject,
 	// sanitizeData,
 	// filterArrayOfObjects,
@@ -219,3 +221,5 @@ console.info({ res1, res2, res3, res4 });
 
 console.info(generateAnagrams('listen', 800).length);
 
+console.info(isPrime(19));
+console.info(findPrimeNumbers(37, 79));

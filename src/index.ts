@@ -11,6 +11,8 @@ export { convertToDecimal, getRandomNumber } from './number/basics';
 
 export { numberToWords } from './number/convert';
 
+export { isPrime, findPrimeNumbers } from './number/prime';
+
 export { getColorForInitial } from './colors/initials';
 
 export { generateRandomColor } from './colors/random';
