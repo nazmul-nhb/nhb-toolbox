@@ -1,4 +1,4 @@
-import type { OpacityValue } from './types';
+import type { ColorNumbers, HSL, OpacityValue, RGB } from './types';
 
 /**
  * * Converts opacity percentage (0-100) to a 2-digit hex string.
@@ -6,7 +6,7 @@ import type { OpacityValue } from './types';
  * @param opacity - The opacity value as a percentage (0-100).
  * @returns A 2-digit hex string representing the alpha value.
  */
-export const convertOpacityToHex = (opacity: OpacityValue): string => {
+export const _convertOpacityToHex = (opacity: OpacityValue): string => {
 	// Ensure opacity is between 0 and 100
 	const validOpacity = Math.min(100, Math.max(0, opacity));
 	// Convert to a value between 0 and 255, then to a hex string
@@ -21,7 +21,7 @@ export const convertOpacityToHex = (opacity: OpacityValue): string => {
  * @param opacity The opacity value as a percentage (0-100).
  * @returns The color string with the opacity value applied.
  */
-export const applyOpacity = (color: string, opacity: string): string => {
+export const _applyOpacity = (color: string, opacity: string): string => {
 	return color.concat(opacity);
 };
 
@@ -30,7 +30,7 @@ export const applyOpacity = (color: string, opacity: string): string => {
  *
  * @returns A random HSL color string.
  */
-export const generateColorHSL = (): string => {
+export const _generateRandomHSL = (): HSL => {
 	const hue = Math.floor(Math.random() * 360);
 	const saturation = 75 + Math.floor(Math.random() * 25);
 	const lightness = 50 + Math.floor(Math.random() * 15);
@@ -45,7 +45,7 @@ export const generateColorHSL = (): string => {
  * @param newColor - The new color to compare.
  * @returns `Boolean` : `true` if the new color is similar to the previous one.
  */
-export const isSimilarToLast = (
+export const _isSimilarToLast = (
 	recentColors: string[],
 	newColor: string,
 ): boolean => {
@@ -75,4 +75,19 @@ export const isSimilarToLast = (
 		saturationDifference < 24 &&
 		lightnessDifference < 16
 	);
+};
+
+/**
+ * * Extracts numbers from a color string like `rgb(66, 103, 69)` or `hsl(120, 42.86%, 41.18%)`.
+ * * Converts percentage values to decimal (e.g., `42.86%` → `42.86`).
+ *
+ * @param colorString The color string in RGB or HSL format.
+ * @returns An array of extracted numbers.
+ */
+export const extractNumbersFromColor = (
+	colorString: HSL | RGB,
+): ColorNumbers => {
+	return (colorString.match(/[\d.]+%?/g) || []).map((value) =>
+		parseFloat(value),
+	) as ColorNumbers;
 };

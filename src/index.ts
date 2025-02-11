@@ -15,7 +15,10 @@ export { findPrimeNumbers, isPrime } from './number/prime';
 
 export { getColorForInitial } from './colors/initials';
 
-export { generateRandomColor } from './colors/random';
+export {
+	generateRandomColorInHexRGB,
+	generateRandomHSLColor,
+} from './colors/random';
 
 export {
 	convertColorCode,
@@ -25,8 +28,9 @@ export {
 	convertHslToRgb,
 	convertRgbToHex,
 	convertRgbToHsl,
-	extractNumbersFromColor,
 } from './colors/convert';
+
+export { extractNumbersFromColor } from './colors/helpers';
 
 export {
 	createOptionsArray,

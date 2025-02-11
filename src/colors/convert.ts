@@ -1,11 +1,5 @@
-import type {
-	Color,
-	ColorNumbers,
-	ConvertedColors,
-	Hex,
-	HSL,
-	RGB,
-} from './types';
+import { extractNumbersFromColor } from './helpers';
+import type { Color, ConvertedColors, Hex, HSL, RGB } from './types';
 
 /**
  * * Converts HSL to RGB color format.
@@ -174,21 +168,6 @@ export const convertHexToRgb = (hex: Hex | string): RGB => {
 	const b = parseInt(newHex.slice(4, 6), 16);
 
 	return `rgb(${r}, ${g}, ${b})`;
-};
-
-/**
- * * Extracts numbers from a color string like `rgb(66, 103, 69)` or `hsl(120, 42.86%, 41.18%)`.
- * * Converts percentage values to decimal (e.g., `42.86%` → `42.86`).
- *
- * @param colorString The color string in RGB or HSL format.
- * @returns An array of extracted numbers.
- */
-export const extractNumbersFromColor = (
-	colorString: HSL | RGB,
-): ColorNumbers => {
-	return (colorString.match(/[\d.]+%?/g) || []).map((value) =>
-		parseFloat(value),
-	) as ColorNumbers;
 };
 
 /**

@@ -1,13 +1,9 @@
 import {
-	convertHexToHsl,
-	convertHexToRgb,
+	convertColorCode,
 	convertHslToHex,
-	convertHslToRgb,
-	convertRgbToHex,
-	convertRgbToHsl,
-	extractNewFields,
-	extractUpdatedAndNewFields,
-	extractUpdatedFields,
+	extractNumbersFromColor,
+	generateRandomColorInHexRGB,
+	generateRandomHSLColor,
 } from './src';
 
 // const result1 = capitalizeString(`mo mOm`, {
@@ -48,36 +44,36 @@ import {
 
 // const result8 = generateRandomColor();
 
-// * HSL to RGB
-// const hslColor = 'hsl(125, 22%, 33%)';
-const rgbFromHsl = convertHslToRgb(125, 22, 33);
-console.info({ rgbFromHsl }); // rgb(66, 103, 69)
+// // * HSL to RGB
+// // const hslColor = 'hsl(125, 22%, 33%)';
+// const rgbFromHsl = convertHslToRgb(125, 22, 33);
+// console.info({ rgbFromHsl }); // rgb(66, 103, 69)
 
-// ! RGB to HSL
-// const rgbColor = 'rgb(66, 103, 69)';
-const hslFromRgb = convertRgbToHsl(66, 103, 69);
-console.info({ hslFromRgb }); // expected: hsl(125, 21.90%, 33.10%) got: hsl(125, 21.89%, 33.14%)
+// // ! RGB to HSL
+// // const rgbColor = 'rgb(66, 103, 69)';
+// const hslFromRgb = convertRgbToHsl(66, 103, 69);
+// console.info({ hslFromRgb }); // expected: hsl(125, 21.90%, 33.10%) got: hsl(125, 21.89%, 33.14%)
 
-// ! HSL to Hex
-// const hsl = 'hsl(125, 50%, 60%)';
-const hexFromHsl = convertHslToHex(125, 50, 60);
-console.info({ hexFromHsl }); // expected: #66cc6e got: #66CC6F
+// // ! HSL to Hex
+// // const hsl = 'hsl(125, 50%, 60%)';
+// const hexFromHsl = convertHslToHex(125, 50, 60);
+// console.info({ hexFromHsl }); // expected: #66cc6e got: #66CC6F
 
-// ! Hex to HSL
-const hexColor = '#3c963c';
-const hslFromHex = convertHexToHsl(hexColor);
-console.info({ hslFromHex }); // expected: hsl(120, 42.90%, 41.20%) got: hsl(120, 42.86%, 41.18%)
+// // ! Hex to HSL
+// const hexColor = '#3c963c';
+// const hslFromHex = convertHexToHsl(hexColor);
+// console.info({ hslFromHex }); // expected: hsl(120, 42.90%, 41.20%) got: hsl(120, 42.86%, 41.18%)
 
-// * RGB to Hex
-// const rgbColor = 'rgb(66, 103, 69)';
-// const rgbColor = 'rgb(60, 105, 69)';
-const hexFromRgb1 = convertRgbToHex(66, 103, 69);
-const hexFromRgb2 = convertRgbToHex(60, 105, 69);
-console.info({ hexFromRgb1, hexFromRgb2 }); // #426745 & #3c6945
+// // * RGB to Hex
+// // const rgbColor = 'rgb(66, 103, 69)';
+// // const rgbColor = 'rgb(60, 105, 69)';
+// const hexFromRgb1 = convertRgbToHex(66, 103, 69);
+// const hexFromRgb2 = convertRgbToHex(60, 105, 69);
+// console.info({ hexFromRgb1, hexFromRgb2 }); // #426745 & #3c6945
 
-// * Hex to RGB
-const rgbFromHex = convertHexToRgb(hexColor);
-console.info({ rgbFromHex }); // rgb(60, 150, 60)
+// // * Hex to RGB
+// const rgbFromHex = convertHexToRgb(hexColor);
+// console.info({ rgbFromHex }); // rgb(60, 150, 60)
 
 // const result9 = getRandomNumber({ min: 20, max: 10 });
 
@@ -217,48 +213,56 @@ console.info({ rgbFromHex }); // rgb(60, 150, 60)
 // console.info(isPrime(19));
 // console.info(findPrimeNumbers(37, 79));
 
-const baseObject = {
-	name: 'John Doe',
-	age: 30,
-	country: 'USA',
-	address: {
-		city: 'New York',
-		zip: 10001,
-	},
-};
+// const baseObject = {
+// 	name: 'John Doe',
+// 	age: 30,
+// 	country: 'USA',
+// 	address: {
+// 		city: 'New York',
+// 		zip: 10001,
+// 	},
+// };
 
-const updatedObject = {
-	name: 'John Doe',
-	age: 31, // Changed
-	country: 'USA',
-	profession: 'Software Engineer', // New key
-	address: {
-		city: 'Nevada', // Changed inside nested object
-		zip: 1002, // Changed inside nested object
-		hola: 'moo',
-	},
-	manush: { man: 'mortal', ii: { boom: true } },
-};
+// const updatedObject = {
+// 	name: 'John Doe',
+// 	age: 31, // Changed
+// 	country: 'USA',
+// 	profession: 'Software Engineer', // New key
+// 	address: {
+// 		city: 'Nevada', // Changed inside nested object
+// 		zip: 1002, // Changed inside nested object
+// 		hola: 'moo',
+// 	},
+// 	manush: { man: 'mortal', ii: { boom: true } },
+// };
 
-// Test extractUpdatedFields
-console.info(extractUpdatedFields(baseObject, updatedObject));
-// Expected Output: { age: 31, address: { city: 'Nevada', zip: 1002 } }
+// // Test extractUpdatedFields
+// console.info(extractUpdatedFields(baseObject, updatedObject));
+// // Expected Output: { age: 31, address: { city: 'Nevada', zip: 1002 } }
 
-// Test extractNewFields
-console.info(extractNewFields(baseObject, updatedObject));
-// Expected Output: 
-// {
-//   profession: 'Software Engineer',
-//   address: { hola: 'moo' },
-//   manush: { man: 'mortal', ii: { boom: true } }
-// }
+// // Test extractNewFields
+// console.info(extractNewFields(baseObject, updatedObject));
+// // Expected Output:
+// // {
+// //   profession: 'Software Engineer',
+// //   address: { hola: 'moo' },
+// //   manush: { man: 'mortal', ii: { boom: true } }
+// // }
 
-// Test extractUpdatedAndNewFields
-console.info(extractUpdatedAndNewFields(baseObject, updatedObject));
-// Expected Output:
-// {
-//   age: 31,
-//   address: { city: 'Nevada', zip: 1002, hola: 'moo' },
-//   profession: 'Software Engineer',
-//   manush: { man: 'mortal', ii: { boom: true } }
-// }
+// // Test extractUpdatedAndNewFields
+// console.info(extractUpdatedAndNewFields(baseObject, updatedObject));
+// // Expected Output:
+// // {
+// //   age: 31,
+// //   address: { city: 'Nevada', zip: 1002, hola: 'moo' },
+// //   profession: 'Software Engineer',
+// //   manush: { man: 'mortal', ii: { boom: true } }
+// // }
+
+const hsl = generateRandomHSLColor();
+
+const hex = convertHslToHex(...extractNumbersFromColor(hsl));
+
+const colors = convertColorCode(hsl);
+
+console.info(hsl, hex, colors, generateRandomColorInHexRGB());

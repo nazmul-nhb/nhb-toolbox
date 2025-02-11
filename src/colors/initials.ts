@@ -1,6 +1,6 @@
-import { applyOpacity, convertOpacityToHex } from './helpers';
-import type { ColorInput, ColorInputArray, OpacityValue } from './types';
 import { alphabetColorPalette, numberColorPalette } from './constants';
+import { _applyOpacity, _convertOpacityToHex } from './helpers';
+import type { ColorInput, ColorInputArray, OpacityValue } from './types';
 
 /**
  *  * Generates a hex color based on the first character (initial) of a string or number.
@@ -50,12 +50,12 @@ export function getColorForInitial(
 ): string | string[] {
 	let initial: string;
 
-	const hexOpacity = convertOpacityToHex(opacity);
+	const hexOpacity = _convertOpacityToHex(opacity);
 
 	const numbers = '0123456789';
 
 	// Handle empty string case
-	if (!input) return applyOpacity('#010514', hexOpacity);
+	if (!input) return _applyOpacity('#010514', hexOpacity);
 
 	// Handle string input
 	if (typeof input === 'string') {
@@ -63,7 +63,7 @@ export function getColorForInitial(
 
 		// Handle number as string
 		if (numbers.includes(initial)) {
-			return applyOpacity(
+			return _applyOpacity(
 				numberColorPalette[parseInt(initial, 10)],
 				hexOpacity,
 			);
@@ -74,27 +74,27 @@ export function getColorForInitial(
 
 		// Validate alphabet
 		if (index >= 0 && index < alphabetColorPalette.length) {
-			return applyOpacity(alphabetColorPalette[index], hexOpacity);
+			return _applyOpacity(alphabetColorPalette[index], hexOpacity);
 		}
 
-		return applyOpacity('#010514', hexOpacity);
+		return _applyOpacity('#010514', hexOpacity);
 		// Handle number input
 	} else if (typeof input === 'number' && !isNaN(input)) {
 		initial = input.toString()[0];
 
 		if (numbers.includes(initial)) {
-			return applyOpacity(
+			return _applyOpacity(
 				numberColorPalette[parseInt(initial, 10)],
 				hexOpacity,
 			);
 		}
 
-		return applyOpacity('#010514', hexOpacity);
+		return _applyOpacity('#010514', hexOpacity);
 		// Handle array of strings/numbers
 	} else if (Array.isArray(input)) {
 		if (input.length < 1)
 			return [...alphabetColorPalette, ...numberColorPalette].map(
-				(color) => applyOpacity(color, hexOpacity),
+				(color) => _applyOpacity(color, hexOpacity),
 			);
 
 		return input
@@ -107,5 +107,5 @@ export function getColorForInitial(
 			.flat();
 	}
 
-	return applyOpacity('#010514', hexOpacity);
+	return _applyOpacity('#010514', hexOpacity);
 }
