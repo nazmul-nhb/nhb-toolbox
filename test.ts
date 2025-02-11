@@ -5,25 +5,9 @@ import {
 	convertHslToRgb,
 	convertRgbToHex,
 	convertRgbToHsl,
-	// findPrimeNumbers,
-	// generateAnagrams,
-	// convertObjectValues,
-	// generateQueryParams,
-	// isPrime,
-	// isEmptyObject,
-	// sanitizeData,
-	// filterArrayOfObjects,
-	// trimString,
-	// createOptionsArray,
-	// sortAnArray,
-	// convertToDecimal,
-	// cloneObject,
-	// isDeepEqual,
-	// mergeObjects,
-	// flattenObject,
-	// isEmptyObject,
-	// countObjectFields,
-	// mergeAndFlattenObjects,
+	extractNewFields,
+	extractUpdatedAndNewFields,
+	extractUpdatedFields,
 } from './src';
 
 // const result1 = capitalizeString(`mo mOm`, {
@@ -232,3 +216,49 @@ console.info({ rgbFromHex }); // rgb(60, 150, 60)
 
 // console.info(isPrime(19));
 // console.info(findPrimeNumbers(37, 79));
+
+const baseObject = {
+	name: 'John Doe',
+	age: 30,
+	country: 'USA',
+	address: {
+		city: 'New York',
+		zip: 10001,
+	},
+};
+
+const updatedObject = {
+	name: 'John Doe',
+	age: 31, // Changed
+	country: 'USA',
+	profession: 'Software Engineer', // New key
+	address: {
+		city: 'Nevada', // Changed inside nested object
+		zip: 1002, // Changed inside nested object
+		hola: 'moo',
+	},
+	manush: { man: 'mortal', ii: { boom: true } },
+};
+
+// Test extractUpdatedFields
+console.info(extractUpdatedFields(baseObject, updatedObject));
+// Expected Output: { age: 31, address: { city: 'Nevada', zip: 1002 } }
+
+// Test extractNewFields
+console.info(extractNewFields(baseObject, updatedObject));
+// Expected Output: 
+// {
+//   profession: 'Software Engineer',
+//   address: { hola: 'moo' },
+//   manush: { man: 'mortal', ii: { boom: true } }
+// }
+
+// Test extractUpdatedAndNewFields
+console.info(extractUpdatedAndNewFields(baseObject, updatedObject));
+// Expected Output:
+// {
+//   age: 31,
+//   address: { city: 'Nevada', zip: 1002, hola: 'moo' },
+//   profession: 'Software Engineer',
+//   manush: { man: 'mortal', ii: { boom: true } }
+// }

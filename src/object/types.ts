@@ -1,5 +1,8 @@
-/** - Generic object type */
+/** - Generic object with `unknown` value */
 export type GenericObject = Record<string, unknown>;
+
+/** - Generic object but with `any` value */
+export type LooseObject = Record<string, any>;
 
 /** - Query object type `Record<string, string | number | string[] | number[]` */
 export type QueryObject = Record<

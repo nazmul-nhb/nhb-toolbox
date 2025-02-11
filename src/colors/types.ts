@@ -134,8 +134,12 @@ export type RGB = `rgb(${number}, ${number}, ${number})`;
  */
 export type HSL = `hsl(${number}, ${number}%, ${number}%)`;
 
+export type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
+
+export type HSLA = `hsla(${number}, ${number}%, ${number}%, ${number})`;
+
 /** * Union type representing a color in Hex, RGB, or HSL format. */
-export type Color = Hex | RGB | HSL;
+export type Color = Hex | RGB | HSL | RGBA | HSLA;
 
 /** * Represents a tuple of three numerical values corresponding to RGB or HSL color components. */
 export type ColorNumbers = [number, number, number];

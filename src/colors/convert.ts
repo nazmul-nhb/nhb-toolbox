@@ -128,13 +128,28 @@ export const convertHexToHsl = (hex: Hex | string): HSL => {
  * @param r - The red component of the RGB color, in the range 0 to 255.
  * @param g - The green component of the RGB color, in the range 0 to 255.
  * @param b - The blue component of the RGB color, in the range 0 to 255.
+ * @param a - The alpha opacity of the RGB color, in the range 0 to 255.
  * @returns A string representing the color in Hex format (e.g., `#FF0000`).
  */
-export const convertRgbToHex = (r: number, g: number, b: number): Hex => {
-	return `#${[r, g, b]
+export const convertRgbToHex = (
+	r: number,
+	g: number,
+	b: number,
+	a?: number,
+): Hex => {
+	let hex = [r, g, b]
 		.map((v) => v.toString(16).padStart(2, '0'))
 		.join('')
-		.toUpperCase()}`;
+		.toUpperCase();
+
+	if (a !== undefined) {
+		const alphaHex = Math.round(a * 255)
+			.toString(16)
+			.padStart(2, '0');
+		hex += alphaHex;
+	}
+
+	return `#${hex}`;
 };
 
 /**
@@ -240,7 +255,3 @@ export function convertColorCode(color: Color): ConvertedColors<Color> {
 
 	throw new Error(`Unrecognized Color Format: ${color}`);
 }
-
-console.info(convertColorCode('#3c6945'));
-console.info(convertColorCode('rgb(60, 105, 69)'));
-console.info(convertColorCode('hsl(132, 27.27%, 32.35%)'));
