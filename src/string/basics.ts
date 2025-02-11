@@ -60,14 +60,12 @@ export const capitalizeString = (
  *
  * @param string The string to truncate.
  * @param maxLength The maximum length of the truncated string.
- * @returns Truncated string;
+ * @returns Truncated string with ellipsis (`...`) (only if it has more length than `maxLength`).
  */
 export const truncateString = (string: string, maxLength: number): string => {
 	if (typeof string !== 'string' || !string) return '';
 
 	const trimmedString = string.trim();
-
-	if (!trimmedString) return '';
 
 	if (!trimmedString) return '';
 
@@ -77,7 +75,7 @@ export const truncateString = (string: string, maxLength: number): string => {
 };
 
 /**
- * * Generates a random alphanumeric (16 characters long, this length is customizable in the options) ID string composed of an optional `prefix`, `suffix`, a `timestamp`, and a customizable separator.
+ * * Generates a random alphanumeric (16 characters long, this length is customizable in the options) ID string composed of an optional `prefix`, `suffix`, a `timestamp`, `caseOption` and a customizable `separator`.
  *
  * @param options Configuration options for random ID generation.
  * @returns The generated ID string composed of the random alphanumeric string of specified length with optional `timeStamp`, `prefix`, and `suffix`, `caseOption` and `separator`.
@@ -109,12 +107,13 @@ export const generateRandomID = (options?: RandomIdOptions): string => {
 		.filter(Boolean)
 		.join(separator);
 
-	if (caseOption === 'upper') {
-		return ID.toUpperCase();
-	} else if (caseOption === 'lower') {
-		return ID.toLowerCase();
-	} else {
-		return ID;
+	switch (caseOption) {
+		case 'upper':
+			return ID.toUpperCase();
+		case 'lower':
+			return ID.toLowerCase();
+		default:
+			return ID;
 	}
 };
 

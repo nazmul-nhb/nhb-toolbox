@@ -1,10 +1,4 @@
-import {
-	convertColorCode,
-	convertHslToHex,
-	extractNumbersFromColor,
-	generateRandomColorInHexRGB,
-	generateRandomHSLColor,
-} from './src';
+import { generateRandomID, truncateString } from './src';
 
 // const result1 = capitalizeString(`mo mOm`, {
 // 	capitalizeEachFirst: true,
@@ -259,10 +253,14 @@ import {
 // //   manush: { man: 'mortal', ii: { boom: true } }
 // // }
 
-const hsl = generateRandomHSLColor();
+// const hsl = generateRandomHSLColor();
 
-const hex = convertHslToHex(...extractNumbersFromColor(hsl));
+// const hex = convertHslToHex(...extractNumbersFromColor(hsl));
 
-const colors = convertColorCode(hsl);
+// const colors = convertColorCode(hsl);
 
-console.info(hsl, hex, colors, generateRandomColorInHexRGB());
+// console.info(hsl, hex, colors, generateRandomColorInHexRGB());
+
+console.info(truncateString('abh', 2));
+
+console.info(generateRandomID({caseOption: 'upper'}));

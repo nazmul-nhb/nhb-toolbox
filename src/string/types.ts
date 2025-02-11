@@ -25,7 +25,7 @@ export interface RandomIdOptions {
 	/** The separator to use between parts of the ID. Default is an empty string. */
 	separator?: string;
 
-	/** Specifies the case for the random alphanumeric string. */
+	/** Specifies the case for the random alphanumeric string. Default is `null`. */
 	caseOption?: 'upper' | 'lower' | null;
 }
 
