@@ -16,7 +16,7 @@ export type OptionInput = Record<string, string | number | null | undefined>;
  * @typeParam K1 - The name of the key for the first field in the output (default: `'value'`).
  * @typeParam K2 - The name of the key for the second field in the output (default: `'label'`).
  */
-export interface ConfigOptions<
+export interface OptionsConfig<
 	T extends Record<string, string | number | null | undefined>,
 	K1 extends string = 'value',
 	K2 extends string = 'label',

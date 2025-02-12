@@ -33,11 +33,18 @@ export {
 export { extractNumbersFromColor } from './colors/helpers';
 
 export {
-	createOptionsArray,
 	filterArrayOfObjects,
 	flattenArray,
-	sortAnArray,
+	isValidButEmptyArray,
 } from './array/basics';
+
+export { sortAnArray } from './array/sort';
+
+export { createOptionsArray } from './array/transform';
+
+export { convertIntoFormData, isEmptyFormData } from './form/convert';
+
+export { createControlledFormData } from './form/transform';
 
 export {
 	cloneObject,
