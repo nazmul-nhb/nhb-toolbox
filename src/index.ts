@@ -30,6 +30,8 @@ export {
 	convertRgbToHsl,
 } from './colors/convert';
 
+export { Color } from './colors/Color';
+
 export { extractNumbersFromColor } from './colors/helpers';
 
 export {

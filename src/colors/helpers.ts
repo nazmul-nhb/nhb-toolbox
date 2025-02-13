@@ -1,4 +1,11 @@
-import type { ColorNumbers, HSL, OpacityValue, RGB } from './types';
+import type {
+	ColorNumbers,
+	ColorType,
+	Hex,
+	HSL,
+	OpacityValue,
+	RGB,
+} from './types';
 
 /**
  * * Converts opacity percentage (0-100) to a 2-digit hex string.
@@ -91,3 +98,33 @@ export const extractNumbersFromColor = (
 		parseFloat(value),
 	) as ColorNumbers;
 };
+
+/**
+ * * Checks if a color is in `Hex` format.
+ *
+ * @param color Color to check.
+ * @returns Boolean: `true` if it's a `Hex` color, `false` if not.
+ */
+export function _isHex(color: ColorType): color is Hex {
+	return /^#[0-9A-Fa-f]{6}$/.test(color);
+}
+
+/**
+ * * Checks if a color is in `RGB` format.
+ *
+ * @param color Color to check.
+ * @returns Boolean: `true` if it's an `RGB` color, `false` if not.
+ */
+export function _isRGB(color: ColorType): color is RGB {
+	return /^rgb\(\d{1,3}, \d{1,3}, \d{1,3}\)$/.test(color);
+}
+
+/**
+ * * Checks if a color is in `HSL` format.
+ *
+ * @param color Color to check.
+ * @returns Boolean: `true` if it's an `HSL` color, `false` if not.
+ */
+export function _isHSL(color: ColorType): color is HSL {
+	return /^hsl\(\d{1,3}, \d{1,3}%, \d{1,3}%\)$/.test(color);
+}

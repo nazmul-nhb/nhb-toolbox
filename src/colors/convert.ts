@@ -1,5 +1,5 @@
-import { extractNumbersFromColor } from './helpers';
-import type { Color, ConvertedColors, Hex, HSL, RGB } from './types';
+import { _isHex, _isHSL, _isRGB, extractNumbersFromColor } from './helpers';
+import type { ColorType, ConvertedColors, Hex, HSL, RGB } from './types';
 
 /**
  * * Converts HSL to RGB color format.
@@ -210,22 +210,22 @@ export function convertColorCode(color: HSL): {
  * @returns The converted color representations excluding the input format.
  * @throws If the color format is unrecognized throws `Error`.
  */
-export function convertColorCode(color: Color): ConvertedColors<Color> {
-	if (color.startsWith('#')) {
+export function convertColorCode(color: ColorType): ConvertedColors<ColorType> {
+	if (_isHex(color)) {
 		return {
 			rgb: convertHexToRgb(color),
 			hsl: convertHexToHsl(color),
 		} as ConvertedColors<Hex>;
 	}
 
-	if (color.startsWith('rgb')) {
+	if (_isRGB(color)) {
 		return {
 			hex: convertRgbToHex(...extractNumbersFromColor(color as RGB)),
 			hsl: convertRgbToHsl(...extractNumbersFromColor(color as RGB)),
 		} as ConvertedColors<RGB>;
 	}
 
-	if (color.startsWith('hsl')) {
+	if (_isHSL(color)) {
 		return {
 			hex: convertHslToHex(...extractNumbersFromColor(color as HSL)),
 			rgb: convertHslToRgb(...extractNumbersFromColor(color as HSL)),
