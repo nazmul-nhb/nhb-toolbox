@@ -1,4 +1,4 @@
-import { getNumbersInRange } from './src';
+import { convertStringCase } from './src';
 
 // const result1 = capitalizeString(`mo mOm`, {
 // 	capitalizeEachFirst: true,
@@ -267,11 +267,13 @@ import { getNumbersInRange } from './src';
 
 // console.info(convertToDecimal(2));
 
-console.info(
-	getNumbersInRange('prime', {
-		getAs: 'array',
-		min: -55,
-		max: 7,
-		multiples: 2,
-	}),
-);
+// console.info(
+// 	getNumbersInRange('prime', {
+// 		getAs: 'array',
+// 		min: -55,
+// 		max: 7,
+// 		multiples: 2,
+// 	}),
+// );
+
+console.info(convertStringCase('i want my labour*back', 'camelCase'));
