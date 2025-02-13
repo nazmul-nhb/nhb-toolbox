@@ -47,7 +47,10 @@ export {
 
 export { sortAnArray } from './array/sort';
 
-export { createOptionsArray } from './array/transform';
+export {
+	createOptionsArray,
+	removeDuplicatesFromArray,
+} from './array/transform';
 
 export { convertIntoFormData, isEmptyFormData } from './form/convert';
 

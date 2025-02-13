@@ -1,3 +1,4 @@
+import { isDeepEqual } from '../utils';
 import type { OptionInput, OptionsConfig } from './types';
 
 /**
@@ -31,3 +32,16 @@ export const createOptionsArray = <
 		return [];
 	}
 };
+
+/**
+ * * Removes duplicate values from an array, supporting deep comparison for objects and arrays.
+ *
+ * @param array - The array from which duplicates need to be removed.
+ * @returns A new array with duplicates removed.
+ */
+export function removeDuplicatesFromArray<T>(array: T[]): T[] {
+	return array.filter(
+		(item, index, self) =>
+			index === self.findIndex((el) => isDeepEqual(el, item)),
+	);
+}

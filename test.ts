@@ -1,4 +1,4 @@
-import { convertStringCase } from './src';
+import { convertStringCase, removeDuplicatesFromArray } from './src';
 
 // const result1 = capitalizeString(`mo mOm`, {
 // 	capitalizeEachFirst: true,
@@ -277,3 +277,17 @@ import { convertStringCase } from './src';
 // );
 
 console.info(convertStringCase('i want my labour*back', 'camelCase'));
+const test5 = [
+	[1, 2, [3, 4]],
+	[1, 2, [3, 4]],
+	[2, 3, [4, 5]],
+];
+console.info(removeDuplicatesFromArray(test5)); // Expected: [[1, 2, [3, 4]], [2, 3, [4, 5]]]
+
+const test6 = [
+	{ id: 1, name: 'John' },
+	{ id: 1, name: 'John' },
+	{ id: 2, name: 'Jane' },
+];
+const r6 = removeDuplicatesFromArray(test6);
+console.info(r6); // Expected: [{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }]
