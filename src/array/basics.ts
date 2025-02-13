@@ -56,3 +56,22 @@ export const filterArrayOfObjects = <T extends GenericObject>(
 export const isValidButEmptyArray = <T>(array: T[] | unknown): boolean => {
 	return Array.isArray(array) && array.length === 0;
 };
+
+/**
+ * * Shuffle the elements of an array.
+ *
+ * @param array Array to shuffle.
+ * @returns Shuffled array.
+ */
+export const shuffleArray = <T>(array: T[]): T[] => {
+	if (isValidButEmptyArray(array)) return array;
+
+	const shuffled = structuredClone(array);
+
+	for (let i = shuffled.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+	}
+
+	return shuffled;
+};

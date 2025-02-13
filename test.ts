@@ -1,4 +1,4 @@
-import { generateRandomID, truncateString } from './src';
+import { getNumbersInRange } from './src';
 
 // const result1 = capitalizeString(`mo mOm`, {
 // 	capitalizeEachFirst: true,
@@ -261,6 +261,17 @@ import { generateRandomID, truncateString } from './src';
 
 // console.info(hsl, hex, colors, generateRandomColorInHexRGB());
 
-console.info(truncateString('abh', 2));
+// console.info(truncateString('abh', 2));
 
-console.info(generateRandomID({caseOption: 'upper'}));
+// console.info(generateRandomID({ caseOption: 'upper' }));
+
+// console.info(convertToDecimal(2));
+
+console.info(
+	getNumbersInRange('prime', {
+		getAs: 'array',
+		min: -55,
+		max: 7,
+		multiples: 2,
+	}),
+);

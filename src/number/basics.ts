@@ -58,7 +58,7 @@ export const getRandomNumber = (options?: RandomNumberOptions): number => {
 };
 
 /**
- * * Utility to round a number to a given decimal places.
+ * * Utility to round a number to given decimal places.
  *
  * @param num - Number to round.
  * @param options - Options for rounding behavior, including decimal places and return type.

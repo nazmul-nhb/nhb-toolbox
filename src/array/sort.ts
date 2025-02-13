@@ -1,4 +1,4 @@
-import type { InputObject, OrderOption, SortOptions } from "./types";
+import type { InputObject, OrderOption, SortOptions } from './types';
 
 /**
  * * Sorts an array of strings.

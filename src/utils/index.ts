@@ -1,3 +1,4 @@
+import { isValidButEmptyArray } from '../array/basics';
 import type { LooseObject } from '../object/types';
 
 /**
@@ -36,4 +37,21 @@ export const isDeepEqual = <T>(a: T, b: T): boolean => {
 	}
 
 	return false;
+};
+
+/**
+ * * Utility to convert an array to string with custom separator.
+ *
+ * @param array Array to convert.
+ * @param separator Separate each element of the array. Can be `,`, `-`, `|` etc. Default is `,`.
+ * @returns Converted array in string format with the separator.
+ */
+export const convertArrayToString = <T>(
+	array: T[],
+	separator: string = ',',
+): string => {
+	if (!isValidButEmptyArray) {
+		throw new Error('Please, provide a valid array!');
+	}
+	return array.join(separator);
 };

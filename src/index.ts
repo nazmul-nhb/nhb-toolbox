@@ -13,6 +13,8 @@ export { numberToWords } from './number/convert';
 
 export { findPrimeNumbers, isPrime } from './number/prime';
 
+export { getNumbersInRange } from './number/range';
+
 export { getColorForInitial } from './colors/initials';
 
 export {
@@ -38,6 +40,7 @@ export {
 	filterArrayOfObjects,
 	flattenArray,
 	isValidButEmptyArray,
+	shuffleArray,
 } from './array/basics';
 
 export { sortAnArray } from './array/sort';
@@ -69,4 +72,4 @@ export { sanitizeData } from './object/sanitize';
 
 export { convertObjectValues } from './object/convert';
 
-export { isDeepEqual } from './utils';
+export { convertArrayToString, isDeepEqual } from './utils';
