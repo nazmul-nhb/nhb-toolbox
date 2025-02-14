@@ -1,3 +1,5 @@
+import type { Branded } from '../types';
+
 /** - A string, number for generating color. */
 export type ColorInput = string | number;
 
@@ -118,7 +120,7 @@ export type Hex = `#${string}`;
  * * Represents a hexadecimal color code.
  * * Format: `#3C6945`
  */
-export type Hex6 = `#${string}` & { __hex6Brand: never };
+export type Hex6 = Branded<`#${string}`, 'Hex6'>;
 
 /**
  * * Represents an RGB color string.
@@ -128,7 +130,9 @@ export type Hex6 = `#${string}` & { __hex6Brand: never };
  * - G (Green): 0-255
  * - B (Blue): 0-255
  */
-export type RGB = `rgb(${number}, ${number}, ${number})`;
+export type RGB =
+	| `rgb(${number}, ${number}, ${number})`
+	| `rgb(${number},${number},${number})`;
 
 /**
  * * Represents an HSL color string.
@@ -138,31 +142,40 @@ export type RGB = `rgb(${number}, ${number}, ${number})`;
  * - S (Saturation): 0-100%
  * - L (Lightness): 0-100%
  */
-export type HSL = `hsl(${number}, ${number}%, ${number}%)`;
+export type HSL =
+	| `hsl(${number}, ${number}%, ${number}%)`
+	| `hsl(${number},${number}%,${number}%)`;
 
 /**
  * * Represents a hexadecimal color code with optional alpha channel.
  * * Format: `#3C6945FF`
  */
-export type Hex8 = `#${string}` & { __hex8Brand: never };
+export type Hex8 = Branded<`#${string}`, 'Hex8'>;
 
 /**
  * * Represents an RGBA color string, now includes optional alpha (opacity).
  * * Format: `rgba(R, G, B, A)`
  */
-export type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
+export type RGBA =
+	| `rgba(${number}, ${number}, ${number}, ${number})`
+	| `rgba(${number},${number},${number},${number})`;
 
 /**
  * * Represents an HSLA color string with optional alpha channel.
  * * Format: `hsla(H, S%, L%, A)`
  */
-export type HSLA = `hsla(${number}, ${number}%, ${number}%, ${number})`;
+export type HSLA =
+	| `hsla(${number}, ${number}%, ${number}%, ${number})`
+	| `hsla(${number},${number}%,${number}%,${number})`;
 
 /** * Union type representing a color in Hex6, RGB, or HSL format. */
 export type ColorTypeSolid = Hex6 | RGB | HSL;
 
 /** * Union type representing a color in Hex8, RGBA, or HSLA format. */
 export type ColorTypeAlpha = Hex8 | RGBA | HSLA;
+
+/** * Union of Alpha & Solid `Hex`, `RGB` and `HSL` */
+export type ColorType = Hex | Hex6 | RGB | HSL | Hex8 | RGBA | HSLA;
 
 /** - Colors Object that includes `Hex8`, `RGBA` and `HSLA` formats of the same color. */
 export interface SolidColors {
@@ -177,8 +190,6 @@ export interface AlphaColors {
 	rgba: RGBA;
 	hsla: HSLA;
 }
-
-export type ColorType = ColorTypeSolid | ColorTypeAlpha | Hex;
 
 /** * Represents a tuple of three numerical values corresponding to RGB or HSL color components. */
 export type ColorNumbers = [number, number, number];
@@ -212,4 +223,4 @@ export interface ConvertedColors<T extends ColorType>
 }
 
 /** Represents an alpha value between 0 and 1 */
-export type AlphaValue = number & { __brand: 'AlphaValue' };
+export type AlphaValue = Branded<number, 'AlphaValue'>;

@@ -135,7 +135,7 @@ export function _isHex6(color: string): color is Hex6 {
  * @returns Boolean: `true` if it's an `RGB` color, `false` if not.
  */
 export function _isRGB(color: string): color is RGB {
-	return /^rgb\(\d{1,3}, \d{1,3}, \d{1,3}\)$/.test(color);
+	return /^rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)$/.test(color);
 }
 
 /**
@@ -145,7 +145,7 @@ export function _isRGB(color: string): color is RGB {
  * @returns Boolean: `true` if it's an `HSL` color, `false` if not.
  */
 export function _isHSL(color: string): color is HSL {
-	return /^hsl\(\d{1,3}, \d{1,3}%, \d{1,3}%\)$/.test(color);
+	return /^hsl\(\d{1,3},\s*\d{1,3}%,\s*\d{1,3}%\)$/.test(color);
 }
 
 /**
@@ -167,7 +167,9 @@ export function _isHex8(color: string): color is Hex8 {
  * @returns Boolean: `true` if it's an `RGBA` color, `false` if not.
  */
 export function _isRGBA(color: string): color is RGBA {
-	return /^rgba\(\d{1,3}, \d{1,3}, \d{1,3}, (0|1|0?\.\d+)\)$/.test(color);
+	return /^rgba\(\d{1,3},\s*\d{1,3},\s*\d{1,3},\s*(0|1|0?\.\d+)\)$/.test(
+		color,
+	);
 }
 
 /**
@@ -178,7 +180,9 @@ export function _isRGBA(color: string): color is RGBA {
  * @returns Boolean: `true` if it's an `HSLA` color, `false` if not.
  */
 export function _isHSLA(color: string): color is HSLA {
-	return /^hsla\(\d{1,3}, \d{1,3}%, \d{1,3}%, (0|1|0?\.\d+)\)$/.test(color);
+	return /^hsla\(\d{1,3},\s*\d{1,3}%,\s*\d{1,3}%,\s*(0|1|0?\.\d+)\)$/.test(
+		color,
+	);
 }
 
 /**

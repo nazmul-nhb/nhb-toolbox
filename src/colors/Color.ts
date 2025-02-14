@@ -23,7 +23,8 @@ const hexRGB = convertColorCode(hsl);
 
 /**
  * * Class representing a color and its conversions between Hex, RGB, and HSL formats.
- * * It has  3 static methods that can be used to check if a color is in `Hex`, `RGB` or `HSL` format.
+ * * It has 1 instance method to apply opacity to `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` or `HSLA` color.
+ * * It has 6 static methods that can be used to check if a color is in `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` or `HSLA` format.
  *
  * @property {Hex} hex - The color in `Hex` format.
  * @property {RGB} rgb - The color in `RGB` format.
@@ -129,27 +130,13 @@ export class Color {
 	}
 
 	/**
-	 * Creates a new Color instance from a hex string
-	 * @param hex The hex color string
-	 */
-	public static fromHex(hex: string): Color {
-		if (this.isHex6(hex as ColorType)) {
-			return new Color(hex as Hex6);
-		}
-		if (this.isHex8(hex as ColorType)) {
-			return new Color(hex as Hex8);
-		}
-		throw new Error(`Unrecognized Hex Format: ${hex}`);
-	}
-
-	/**
 	 * @static
 	 * Checks if a color is in `Hex6` format.
 	 *
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's a `Hex6` color, `false` if not.
 	 */
-	public static isHex6(color: ColorType): color is Hex6 {
+	public static isHex6(color: string): color is Hex6 {
 		return /^#[0-9A-Fa-f]{6}$/.test(color);
 	}
 
@@ -160,7 +147,7 @@ export class Color {
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's a `Hex8` color, `false` if not.
 	 */
-	public static isHex8(color: ColorType): color is Hex8 {
+	public static isHex8(color: string): color is Hex8 {
 		return /^#[0-9A-Fa-f]{8}$/.test(color);
 	}
 
@@ -171,8 +158,8 @@ export class Color {
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's an `RGB` color, `false` if not.
 	 */
-	public static isRGB(color: ColorType): color is RGB {
-		return /^rgb\(\d{1,3}, \d{1,3}, \d{1,3}\)$/.test(color);
+	public static isRGB(color: string): color is RGB {
+		return /^rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)$/.test(color);
 	}
 
 	/**
@@ -182,8 +169,10 @@ export class Color {
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's an `RGBA` color, `false` if not.
 	 */
-	public static isRGBA(color: ColorType): color is RGBA {
-		return /^rgba\(\d{1,3}, \d{1,3}, \d{1,3}, (0|1|0?\.\d+)\)$/.test(color);
+	public static isRGBA(color: string): color is RGBA {
+		return /^rgba\(\d{1,3},\s*\d{1,3},\s*\d{1,3},\s*(0|1|0?\.\d+)\)$/.test(
+			color,
+		);
 	}
 
 	/**
@@ -193,8 +182,8 @@ export class Color {
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's an `HSL` color, `false` if not.
 	 */
-	public static isHSL(color: ColorType): color is HSL {
-		return /^hsl\(\d{1,3}, \d{1,3}%, \d{1,3}%\)$/.test(color);
+	public static isHSL(color: string): color is HSL {
+		return /^hsl\(\d{1,3},\s*\d{1,3}%,\s*\d{1,3}%\)$/.test(color);
 	}
 
 	/**
@@ -204,8 +193,8 @@ export class Color {
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's an `HSLA` color, `false` if not.
 	 */
-	public static isHSLA(color: ColorType): color is HSLA {
-		return /^hsla\(\d{1,3}, \d{1,3}%, \d{1,3}%, (0|1|0?\.\d+)\)$/.test(
+	public static isHSLA(color: string): color is HSLA {
+		return /^hsla\(\d{1,3},\s*\d{1,3}%,\s*\d{1,3}%,\s*(0|1|0?\.\d+)\)$/.test(
 			color,
 		);
 	}
@@ -238,6 +227,6 @@ export class Color {
 			return { hex8, rgba, hsla: color };
 		}
 
-		throw new Error(`Unrecognized Color Format: ${color}`);
+		throw new Error(`Unrecognized Color Format! ${color}`);
 	}
 }

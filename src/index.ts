@@ -26,9 +26,11 @@ export {
 
 export {
 	convertColorCode,
+	convertHex8ToHsla,
 	convertHex8ToRgba,
 	convertHexToHsl,
 	convertHexToRgb,
+	convertHslaToHex8,
 	convertHslaToRgba,
 	convertHslToHex,
 	convertHslToRgb,

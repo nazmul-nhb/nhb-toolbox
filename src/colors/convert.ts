@@ -194,14 +194,15 @@ export const convertRgbToRgba = (
 	b: number,
 	a: number = 1,
 ): RGBA => {
+	let newAlpha = a;
+
 	if (!_isValidAlpha(a)) {
-		a = 1;
-		console.warn(
-			`You provided alpha value as ${a}, which is not between 0-1, so converted to 1!`,
-		);
+		newAlpha = 1;
+
+		console.warn(`Alpha value must be between 0-1, ${a} converted to 1!`);
 	}
 
-	return `rgba(${r}, ${g}, ${b}, ${parseFloat(a.toFixed(1))})`;
+	return `rgba(${r}, ${g}, ${b}, ${parseFloat(newAlpha.toFixed(1))})`;
 };
 
 /**
@@ -219,21 +220,19 @@ export const convertRgbaToHex8 = (
 	b: number,
 	a: number = 1,
 ): Hex8 => {
+	let newAlpha = a;
+
 	if (!_isValidAlpha(a)) {
-		a = 1;
-		console.warn(
-			`You provided alpha value as ${a}, which is not between 0-1, so converted to 1!`,
-		);
+		newAlpha = 1;
+
+		console.warn(`Alpha value must be between 0-1, ${a} converted to 1!`);
 	}
 
-	const alphaHex = Math.round(parseFloat(a.toFixed(1)) * 255)
-		.toString(16)
-		.padStart(2, '0');
+	const hex = convertRgbToHex(r, g, b);
 
-	const hex = [r, g, b]
-		.map((v) => v.toString(16).padStart(2, '0'))
-		.join('')
-		.toUpperCase();
+	const alphaHex = _convertOpacityToHex(
+		Math.round(newAlpha * 100) as OpacityValue,
+	);
 
 	return `#${hex}${alphaHex}` as Hex8;
 };
@@ -253,11 +252,12 @@ export const convertHslaToRgba = (
 	l: number,
 	a: number = 1,
 ): RGBA => {
+	let newAlpha = a;
+
 	if (!_isValidAlpha(a)) {
-		a = 1;
-		console.warn(
-			`You provided alpha value as ${a}, which is not between 0-1, so converted to 1!`,
-		);
+		newAlpha = 1;
+
+		console.warn(`Alpha value must be between 0-1, ${a} converted to 1!`);
 	}
 
 	const rgb = convertHslToRgb(h, s, l);
@@ -267,7 +267,7 @@ export const convertHslaToRgba = (
 		rgbNumbers[0],
 		rgbNumbers[1],
 		rgbNumbers[2],
-		parseFloat(a.toFixed(1)),
+		parseFloat(newAlpha.toFixed(1)),
 	);
 };
 
@@ -286,17 +286,18 @@ export const convertRgbaToHsla = (
 	b: number,
 	a: number = 1,
 ): HSLA => {
+	let newAlpha = a;
+
 	if (!_isValidAlpha(a)) {
-		a = 1;
-		console.warn(
-			`You provided alpha value as ${a}, which is not between 0-1, so converted to 1!`,
-		);
+		newAlpha = 1;
+
+		console.warn(`Alpha value must be between 0-1, ${a} converted to 1!`);
 	}
 
 	const hsl = convertRgbToHsl(r, g, b);
 	const hslNumbers = _extractSolidColorValues(hsl);
 
-	return `hsla(${hslNumbers[0]}, ${hslNumbers[1]}%, ${hslNumbers[2]}%, ${parseFloat(a.toFixed(1))})`;
+	return `hsla(${hslNumbers[0]}, ${hslNumbers[1]}%, ${hslNumbers[2]}%, ${parseFloat(newAlpha.toFixed(1))})`;
 };
 
 /**
@@ -313,6 +314,50 @@ export const convertHex8ToRgba = (hex8: Hex8): RGBA => {
 	const a = parseInt(hex.slice(6, 8), 16) / 255;
 
 	return `rgba(${r}, ${g}, ${b}, ${parseFloat(a.toFixed(1))})`;
+};
+
+/**
+ * * Converts HSLA to Hex8 color format, including alpha channel.
+ *
+ * @param h - The hue component of the HSL color, in degrees (0 to 360).
+ * @param s - The saturation component of the HSL color, as a percentage (0 to 100).
+ * @param l - The lightness component of the HSL color, as a percentage (0 to 100).
+ * @param a - The alpha (opacity) value, in the range 0 to 1.
+ * @returns A string representing the color in Hex8 format (e.g., `#658789DF`).
+ */
+export const convertHslaToHex8 = (
+	h: number,
+	s: number,
+	l: number,
+	a: number = 1,
+): Hex8 => {
+	let newAlpha = a;
+
+	if (!_isValidAlpha(a)) {
+		newAlpha = 1;
+
+		console.warn(`Alpha value must be between 0-1, ${a} converted to 1!`);
+	}
+
+	const hex = convertHslToHex(h, s, l);
+
+	const alphaHex = _convertOpacityToHex(
+		Math.round(newAlpha * 100) as OpacityValue,
+	);
+
+	return `#${hex}${alphaHex}` as Hex8;
+};
+
+/**
+ * * Converts Hex8 to HSLA color format.
+ *
+ * @param hex - A string representing the color in Hex format (e.g., `#FF0000DE`).
+ * @returns A string representing the color in HSLA format..
+ */
+export const convertHex8ToHsla = (hex8: Hex8): HSLA => {
+	const rgba = convertHex8ToRgba(hex8);
+
+	return convertRgbaToHsla(..._extractAlphaColorValues(rgba as RGBA));
 };
 
 /**
@@ -397,53 +442,47 @@ export function convertColorCode(color: ColorType): ConvertedColors<ColorType> {
 	}
 
 	if (_isRGB(color)) {
+		const rgbValues = _extractSolidColorValues(color as RGB);
+
 		return {
-			hex: convertRgbToHex(..._extractSolidColorValues(color as RGB)),
-			hsl: convertRgbToHsl(..._extractSolidColorValues(color as RGB)),
+			hex: convertRgbToHex(...rgbValues),
+			hsl: convertRgbToHsl(...rgbValues),
 		} as ConvertedColors<RGB>;
 	}
 
 	if (_isHSL(color)) {
+		const hslValues = _extractSolidColorValues(color as HSL);
+
 		return {
-			hex: convertHslToHex(..._extractSolidColorValues(color as HSL)),
-			rgb: convertHslToRgb(..._extractSolidColorValues(color as HSL)),
+			hex: convertHslToHex(...hslValues),
+			rgb: convertHslToRgb(...hslValues),
 		} as ConvertedColors<HSL>;
 	}
 
 	if (_isHex8(color)) {
-		const rgba = convertHex8ToRgba(color);
-
 		return {
-			rgba: rgba,
-			hsla: convertRgbaToHsla(..._extractAlphaColorValues(rgba as RGBA)),
+			rgba: convertHex8ToRgba(color),
+			hsla: convertHex8ToHsla(color),
 		} as ConvertedColors<Hex8>;
 	}
 
 	if (_isRGBA(color)) {
+		const rgbaValues = _extractAlphaColorValues(color as RGBA);
+
 		return {
-			hex8: convertRgbaToHex8(..._extractAlphaColorValues(color as RGBA)),
-			hsla: convertRgbaToHsla(..._extractAlphaColorValues(color as RGBA)),
+			hex8: convertRgbaToHex8(...rgbaValues),
+			hsla: convertRgbaToHsla(...rgbaValues),
 		} as ConvertedColors<RGBA>;
 	}
 
 	if (_isHSLA(color)) {
 		const hslaValues = _extractAlphaColorValues(color as HSLA);
 
-		const hex = convertHslToHex(
-			hslaValues[0],
-			hslaValues[1],
-			hslaValues[2],
-		);
-
-		const alphaHex = _convertOpacityToHex(
-			Math.round(hslaValues[3] * 100) as OpacityValue,
-		);
-
 		return {
-			hex8: `#${hex}${alphaHex}`,
-			rgba: convertHslaToRgba(..._extractAlphaColorValues(color as HSLA)),
+			hex8: convertHslaToHex8(...hslaValues),
+			rgba: convertHslaToRgba(...hslaValues),
 		} as ConvertedColors<HSLA>;
 	}
 
-	throw new Error(`Unrecognized Color Format: ${color}`);
+	throw new Error(`Unrecognized Color Format! ${color}`);
 }
