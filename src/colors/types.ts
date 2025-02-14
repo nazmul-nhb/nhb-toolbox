@@ -210,3 +210,6 @@ export interface ConvertedColors<T extends ColorType>
 	/** - The HSLA representation (excluded if the input is already HSLA). */
 	hsla: T extends HSLA | ColorTypeSolid ? never : HSLA;
 }
+
+/** Represents an alpha value between 0 and 1 */
+export type AlphaValue = number & { __brand: 'AlphaValue' };

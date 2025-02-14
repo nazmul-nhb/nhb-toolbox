@@ -1,4 +1,4 @@
-import { Color } from './src';
+import { Color, convertRgbaToHsla } from './src';
 
 // const result1 = capitalizeString(`mo mOm`, {
 // 	capitalizeEachFirst: true,
@@ -292,6 +292,13 @@ import { Color } from './src';
 // const r6 = removeDuplicatesFromArray(test6);
 // console.info(r6); // Expected: [{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }]
 
-const color = new Color('#3C6945DE').applyOpacity(40);
+const color = new Color('#3C694580');
 
 console.info(color);
+
+const hsla = convertRgbaToHsla(25, 30, 50, 5);
+
+console.info(hsla);
+
+// hsla(228, 33.33%, 14.71%, 0.5)
+// rgba(25, 30, 50, 0.5)

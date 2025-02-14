@@ -1,4 +1,5 @@
 import type {
+	AlphaValue,
 	ColorNumbers,
 	ColorNumbersAlpha,
 	Hex6,
@@ -178,4 +179,13 @@ export function _isRGBA(color: string): color is RGBA {
  */
 export function _isHSLA(color: string): color is HSLA {
 	return /^hsla\(\d{1,3}, \d{1,3}%, \d{1,3}%, (0|1|0?\.\d+)\)$/.test(color);
+}
+
+/**
+ * * Type guard to validate alpha value.
+ * @param value Alpha value to check.
+ * @returns Boolean: `true` if it's a valid alpha value, `false` if not.
+ */
+export function _isValidAlpha(value: number): value is AlphaValue {
+	return value >= 0 && value <= 1 && !isNaN(value);
 }

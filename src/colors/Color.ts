@@ -220,22 +220,22 @@ export class Color {
 	private _convertColorToOthers(color: ColorType): SolidColors | AlphaColors {
 		if (Color.isHex6(color)) {
 			const { rgb, hsl } = convertColorCode(color);
-			return { hex: color, rgb: rgb, hsl: hsl };
+			return { hex: color, rgb, hsl };
 		} else if (Color.isRGB(color)) {
 			const { hex, hsl } = convertColorCode(color);
-			return { hex: hex, rgb: color, hsl: hsl };
+			return { hex, rgb: color, hsl };
 		} else if (Color.isHSL(color)) {
 			const { hex, rgb } = convertColorCode(color);
-			return { hex: hex, rgb: rgb, hsl: color };
+			return { hex, rgb, hsl: color };
 		} else if (Color.isHex8(color)) {
 			const { rgba, hsla } = convertColorCode(color);
-			return { hex8: color, rgba: rgba, hsla: hsla };
-		} else if (Color.isHSLA(color)) {
-			const { hex8, rgba } = convertColorCode(color);
-			return { hex8: hex8, rgba: rgba, hsla: color };
+			return { hex8: color, rgba, hsla };
 		} else if (Color.isRGBA(color)) {
 			const { hex8, hsla } = convertColorCode(color);
-			return { hex8: hex8, rgba: color, hsla: hsla };
+			return { hex8, rgba: color, hsla };
+		} else if (Color.isHSLA(color)) {
+			const { hex8, rgba } = convertColorCode(color);
+			return { hex8, rgba, hsla: color };
 		}
 
 		throw new Error(`Unrecognized Color Format: ${color}`);

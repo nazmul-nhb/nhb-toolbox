@@ -8,6 +8,7 @@ import {
 	_isHSLA,
 	_isRGB,
 	_isRGBA,
+	_isValidAlpha,
 } from './helpers';
 import type {
 	ColorType,
@@ -41,6 +42,7 @@ export const convertHslToRgb = (h: number, s: number, l: number): RGB => {
 	let r = 0,
 		g = 0,
 		b = 0;
+
 	if (h >= 0 && h < 60) [r, g] = [c, x];
 	else if (h >= 60 && h < 120) [r, g] = [x, c];
 	else if (h >= 120 && h < 180) [g, b] = [c, x];
@@ -192,7 +194,14 @@ export const convertRgbToRgba = (
 	b: number,
 	a: number = 1,
 ): RGBA => {
-	return `rgba(${r}, ${g}, ${b}, ${a})`;
+	if (!_isValidAlpha(a)) {
+		a = 1;
+		console.warn(
+			`You provided alpha value as ${a}, which is not between 0-1, so converted to 1!`,
+		);
+	}
+
+	return `rgba(${r}, ${g}, ${b}, ${parseFloat(a.toFixed(1))})`;
 };
 
 /**
@@ -210,9 +219,17 @@ export const convertRgbaToHex8 = (
 	b: number,
 	a: number = 1,
 ): Hex8 => {
-	const alphaHex = Math.round(a * 255)
+	if (!_isValidAlpha(a)) {
+		a = 1;
+		console.warn(
+			`You provided alpha value as ${a}, which is not between 0-1, so converted to 1!`,
+		);
+	}
+
+	const alphaHex = Math.round(parseFloat(a.toFixed(1)) * 255)
 		.toString(16)
 		.padStart(2, '0');
+
 	const hex = [r, g, b]
 		.map((v) => v.toString(16).padStart(2, '0'))
 		.join('')
@@ -236,9 +253,22 @@ export const convertHslaToRgba = (
 	l: number,
 	a: number = 1,
 ): RGBA => {
+	if (!_isValidAlpha(a)) {
+		a = 1;
+		console.warn(
+			`You provided alpha value as ${a}, which is not between 0-1, so converted to 1!`,
+		);
+	}
+
 	const rgb = convertHslToRgb(h, s, l);
 	const rgbNumbers = _extractSolidColorValues(rgb);
-	return convertRgbToRgba(rgbNumbers[0], rgbNumbers[1], rgbNumbers[2], a);
+
+	return convertRgbToRgba(
+		rgbNumbers[0],
+		rgbNumbers[1],
+		rgbNumbers[2],
+		parseFloat(a.toFixed(1)),
+	);
 };
 
 /**
@@ -254,11 +284,19 @@ export const convertRgbaToHsla = (
 	r: number,
 	g: number,
 	b: number,
-	a: number = 1, // Default to 1 (fully opaque)
+	a: number = 1,
 ): HSLA => {
+	if (!_isValidAlpha(a)) {
+		a = 1;
+		console.warn(
+			`You provided alpha value as ${a}, which is not between 0-1, so converted to 1!`,
+		);
+	}
+
 	const hsl = convertRgbToHsl(r, g, b);
 	const hslNumbers = _extractSolidColorValues(hsl);
-	return `hsla(${hslNumbers[0]}, ${hslNumbers[1]}%, ${hslNumbers[2]}%, ${a})`;
+
+	return `hsla(${hslNumbers[0]}, ${hslNumbers[1]}%, ${hslNumbers[2]}%, ${parseFloat(a.toFixed(1))})`;
 };
 
 /**
@@ -274,7 +312,7 @@ export const convertHex8ToRgba = (hex8: Hex8): RGBA => {
 	const b = parseInt(hex.slice(4, 6), 16);
 	const a = parseInt(hex.slice(6, 8), 16) / 255;
 
-	return `rgba(${r}, ${g}, ${b}, ${a})`;
+	return `rgba(${r}, ${g}, ${b}, ${parseFloat(a.toFixed(1))})`;
 };
 
 /**
