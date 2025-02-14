@@ -26,17 +26,20 @@ export {
 
 export {
 	convertColorCode,
+	convertHex8ToRgba,
 	convertHexToHsl,
 	convertHexToRgb,
+	convertHslaToRgba,
 	convertHslToHex,
 	convertHslToRgb,
+	convertRgbaToHex8,
+	convertRgbaToHsla,
 	convertRgbToHex,
 	convertRgbToHsl,
+	convertRgbToRgba,
 } from './colors/convert';
 
 export { Color } from './colors/Color';
-
-export { extractNumbersFromColor } from './colors/helpers';
 
 export {
 	filterArrayOfObjects,

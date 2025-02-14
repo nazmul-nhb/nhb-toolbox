@@ -1,6 +1,6 @@
 import { convertColorCode } from './convert';
 import { _generateRandomHSL, _isSimilarToLast } from './helpers';
-import type { Hex, HSL, RGB } from './types';
+import type { Hex6, HSL, RGB } from './types';
 
 /** Track previously generated colors. */
 const generatedColors = new Set<string>();
@@ -46,7 +46,7 @@ export const generateRandomHSLColor = (maxColors: number = 16): HSL => {
 export const generateRandomColorInHexRGB = (
 	maxColors: number = 16,
 ): {
-	hex: Hex;
+	hex: Hex6;
 	rgb: RGB;
 } => {
 	return convertColorCode(generateRandomHSLColor(maxColors));

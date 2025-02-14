@@ -1,5 +1,25 @@
-import { _isHex, _isHSL, _isRGB, extractNumbersFromColor } from './helpers';
-import type { ColorType, ConvertedColors, Hex, HSL, RGB } from './types';
+import {
+	_convertOpacityToHex,
+	_extractAlphaColorValues,
+	_extractSolidColorValues,
+	_isHex6,
+	_isHex8,
+	_isHSL,
+	_isHSLA,
+	_isRGB,
+	_isRGBA,
+} from './helpers';
+import type {
+	ColorType,
+	ConvertedColors,
+	Hex6,
+	Hex8,
+	HSL,
+	HSLA,
+	OpacityValue,
+	RGB,
+	RGBA,
+} from './types';
 
 /**
  * * Converts HSL to RGB color format.
@@ -87,7 +107,7 @@ export const convertRgbToHsl = (r: number, g: number, b: number): HSL => {
  * @param l - The lightness component of the HSL color, as a percentage (0 to 100).
  * @returns A string representing the color in Hex format (e.g., `#FF0000`).
  */
-export const convertHslToHex = (h: number, s: number, l: number): Hex => {
+export const convertHslToHex = (h: number, s: number, l: number): Hex6 => {
 	const rgb = convertHslToRgb(h, s, l).match(/\d+/g)!.map(Number);
 
 	return convertRgbToHex(rgb[0], rgb[1], rgb[2]);
@@ -99,7 +119,7 @@ export const convertHslToHex = (h: number, s: number, l: number): Hex => {
  * @param hex - A string representing the color in Hex format (e.g., `#FF0000`).
  * @returns A string representing the color in HSL format (e.g., `hsl(0, 100%, 50%)`).
  */
-export const convertHexToHsl = (hex: Hex | string): HSL => {
+export const convertHexToHsl = (hex: Hex6 | string): HSL => {
 	let newHex = hex.replace('#', '');
 
 	if (newHex.length === 3) {
@@ -122,28 +142,15 @@ export const convertHexToHsl = (hex: Hex | string): HSL => {
  * @param r - The red component of the RGB color, in the range 0 to 255.
  * @param g - The green component of the RGB color, in the range 0 to 255.
  * @param b - The blue component of the RGB color, in the range 0 to 255.
- * @param a - The alpha opacity of the RGB color, in the range 0 to 255.
  * @returns A string representing the color in Hex format (e.g., `#FF0000`).
  */
-export const convertRgbToHex = (
-	r: number,
-	g: number,
-	b: number,
-	a?: number,
-): Hex => {
-	let hex = [r, g, b]
+export const convertRgbToHex = (r: number, g: number, b: number): Hex6 => {
+	const hex = [r, g, b]
 		.map((v) => v.toString(16).padStart(2, '0'))
 		.join('')
 		.toUpperCase();
 
-	if (a !== undefined) {
-		const alphaHex = Math.round(a * 255)
-			.toString(16)
-			.padStart(2, '0');
-		hex += alphaHex;
-	}
-
-	return `#${hex}`;
+	return `#${hex}` as Hex6;
 };
 
 /**
@@ -152,7 +159,7 @@ export const convertRgbToHex = (
  * @param hex - A string representing the color in Hex format (e.g., `#FF0000`).
  * @returns A string representing the color in RGB format (e.g., `rgb(255, 0, 0)`).
  */
-export const convertHexToRgb = (hex: Hex | string): RGB => {
+export const convertHexToRgb = (hex: Hex6 | string): RGB => {
 	// Remove the # if present
 	let newHex = hex.replace('#', '');
 
@@ -171,12 +178,112 @@ export const convertHexToRgb = (hex: Hex | string): RGB => {
 };
 
 /**
+ * * Converts RGB to RGBA format, adding alpha (opacity).
+ *
+ * @param r - The red component of the RGB color, in the range 0 to 255.
+ * @param g - The green component of the RGB color, in the range 0 to 255.
+ * @param b - The blue component of the RGB color, in the range 0 to 255.
+ * @param a - The alpha (opacity) value, in the range 0 to 1.
+ * @returns A string representing the color in RGBA format (e.g., `rgba(255, 0, 0, 0.5)`).
+ */
+export const convertRgbToRgba = (
+	r: number,
+	g: number,
+	b: number,
+	a: number = 1,
+): RGBA => {
+	return `rgba(${r}, ${g}, ${b}, ${a})`;
+};
+
+/**
+ * * Converts RGBA to Hex format, including alpha channel as part of Hex8.
+ *
+ * @param r - The red component of the RGB color, in the range 0 to 255.
+ * @param g - The green component of the RGB color, in the range 0 to 255.
+ * @param b - The blue component of the RGB color, in the range 0 to 255.
+ * @param a - The alpha (opacity) value, in the range 0 to 1.
+ * @returns A string representing the color in Hex8 format (e.g., `#FF000080`).
+ */
+export const convertRgbaToHex8 = (
+	r: number,
+	g: number,
+	b: number,
+	a: number = 1,
+): Hex8 => {
+	const alphaHex = Math.round(a * 255)
+		.toString(16)
+		.padStart(2, '0');
+	const hex = [r, g, b]
+		.map((v) => v.toString(16).padStart(2, '0'))
+		.join('')
+		.toUpperCase();
+
+	return `#${hex}${alphaHex}` as Hex8;
+};
+
+/**
+ * * Converts HSLA to RGBA color format, including alpha channel.
+ *
+ * @param h - The hue component of the HSL color, in degrees (0 to 360).
+ * @param s - The saturation component of the HSL color, as a percentage (0 to 100).
+ * @param l - The lightness component of the HSL color, as a percentage (0 to 100).
+ * @param a - The alpha (opacity) value, in the range 0 to 1.
+ * @returns A string representing the color in RGBA format (e.g., `rgba(255, 0, 0, 0.5)`).
+ */
+export const convertHslaToRgba = (
+	h: number,
+	s: number,
+	l: number,
+	a: number = 1,
+): RGBA => {
+	const rgb = convertHslToRgb(h, s, l);
+	const rgbNumbers = _extractSolidColorValues(rgb);
+	return convertRgbToRgba(rgbNumbers[0], rgbNumbers[1], rgbNumbers[2], a);
+};
+
+/**
+ * * Converts RGBA to HSLA color format, including alpha channel.
+ *
+ * @param r - The red component of the RGB color, in the range 0 to 255.
+ * @param g - The green component of the RGB color, in the range 0 to 255.
+ * @param b - The blue component of the RGB color, in the range 0 to 255.
+ * @param a - The alpha (opacity) value, in the range 0 to 1.
+ * @returns A string representing the color in HSLA format (e.g., `hsla(0, 100%, 50%, 0.5)`).
+ */
+export const convertRgbaToHsla = (
+	r: number,
+	g: number,
+	b: number,
+	a: number = 1, // Default to 1 (fully opaque)
+): HSLA => {
+	const hsl = convertRgbToHsl(r, g, b);
+	const hslNumbers = _extractSolidColorValues(hsl);
+	return `hsla(${hslNumbers[0]}, ${hslNumbers[1]}%, ${hslNumbers[2]}%, ${a})`;
+};
+
+/**
+ * * Converts Hex8 to RGBA color format, including alpha channel.
+ *
+ * @param hex8 - A string representing the color in Hex8 format (e.g., `#FF000080`).
+ * @returns A string representing the color in RGBA format (e.g., `rgba(255, 0, 0, 0.5)`).
+ */
+export const convertHex8ToRgba = (hex8: Hex8): RGBA => {
+	const hex = hex8.replace('#', '');
+	const r = parseInt(hex.slice(0, 2), 16);
+	const g = parseInt(hex.slice(2, 4), 16);
+	const b = parseInt(hex.slice(4, 6), 16);
+	const a = parseInt(hex.slice(6, 8), 16) / 255;
+
+	return `rgba(${r}, ${g}, ${b}, ${a})`;
+};
+
+/**
  * * Converts a `Hex` color code to `RGB` and `HSL` formats.
  *
  * @param color The `Hex` color code (e.g., `#3c6945`).
  * @returns An object containing the `RGB` and `HSL` formats of the given `Hex` color.
  */
-export function convertColorCode(color: Hex): {
+export function convertColorCode(color: Hex6): {
 	rgb: RGB;
 	hsl: HSL;
 };
@@ -188,7 +295,7 @@ export function convertColorCode(color: Hex): {
  * @returns An object containing the `Hex` and `HSL` formats of the given `RGB` color.
  */
 export function convertColorCode(color: RGB): {
-	hex: Hex;
+	hex: Hex6;
 	hsl: HSL;
 };
 
@@ -199,8 +306,41 @@ export function convertColorCode(color: RGB): {
  * @returns An object containing the `Hex` and `RGB` formats of the given `HSL` color.
  */
 export function convertColorCode(color: HSL): {
-	hex: Hex;
+	hex: Hex6;
 	rgb: RGB;
+};
+
+/**
+ * * Converts a `Hex8` color code to `RGB` and `HSL` formats.
+ *
+ * @param color The `Hex8` color code (e.g., `#3c6945`).
+ * @returns An object containing the `RGB` and `HSL` formats of the given `Hex8` color.
+ */
+export function convertColorCode(color: Hex8): {
+	rgba: RGBA;
+	hsla: HSLA;
+};
+
+/**
+ * * Converts an `RGBA` color to `Hex8` and `HSLA` formats.
+ *
+ * @param color The `RGBA` color string (e.g., `rgb(60, 105, 69)`).
+ * @returns An object containing the `Hex8` and `HSLA` formats of the given `RGBA` color.
+ */
+export function convertColorCode(color: RGBA): {
+	hex8: Hex8;
+	hsla: HSLA;
+};
+
+/**
+ * * Converts an `HSLA` color to `Hex8` and `RGBA` formats.
+ *
+ * @param color The `HSLA` color string (e.g., `hsl(132, 27.27%, 32.35%)`).
+ * @returns An object containing the `Hex8` and `RGBA` formats of the given `HSLA` color.
+ */
+export function convertColorCode(color: HSLA): {
+	hex8: Hex8;
+	rgba: RGBA;
 };
 
 /**
@@ -211,25 +351,60 @@ export function convertColorCode(color: HSL): {
  * @throws If the color format is unrecognized throws `Error`.
  */
 export function convertColorCode(color: ColorType): ConvertedColors<ColorType> {
-	if (_isHex(color)) {
+	if (_isHex6(color)) {
 		return {
 			rgb: convertHexToRgb(color),
 			hsl: convertHexToHsl(color),
-		} as ConvertedColors<Hex>;
+		} as ConvertedColors<Hex6>;
 	}
 
 	if (_isRGB(color)) {
 		return {
-			hex: convertRgbToHex(...extractNumbersFromColor(color as RGB)),
-			hsl: convertRgbToHsl(...extractNumbersFromColor(color as RGB)),
+			hex: convertRgbToHex(..._extractSolidColorValues(color as RGB)),
+			hsl: convertRgbToHsl(..._extractSolidColorValues(color as RGB)),
 		} as ConvertedColors<RGB>;
 	}
 
 	if (_isHSL(color)) {
 		return {
-			hex: convertHslToHex(...extractNumbersFromColor(color as HSL)),
-			rgb: convertHslToRgb(...extractNumbersFromColor(color as HSL)),
+			hex: convertHslToHex(..._extractSolidColorValues(color as HSL)),
+			rgb: convertHslToRgb(..._extractSolidColorValues(color as HSL)),
 		} as ConvertedColors<HSL>;
+	}
+
+	if (_isHex8(color)) {
+		const rgba = convertHex8ToRgba(color);
+
+		return {
+			rgba: rgba,
+			hsla: convertRgbaToHsla(..._extractAlphaColorValues(rgba as RGBA)),
+		} as ConvertedColors<Hex8>;
+	}
+
+	if (_isRGBA(color)) {
+		return {
+			hex8: convertRgbaToHex8(..._extractAlphaColorValues(color as RGBA)),
+			hsla: convertRgbaToHsla(..._extractAlphaColorValues(color as RGBA)),
+		} as ConvertedColors<RGBA>;
+	}
+
+	if (_isHSLA(color)) {
+		const hslaValues = _extractAlphaColorValues(color as HSLA);
+
+		const hex = convertHslToHex(
+			hslaValues[0],
+			hslaValues[1],
+			hslaValues[2],
+		);
+
+		const alphaHex = _convertOpacityToHex(
+			Math.round(hslaValues[3] * 100) as OpacityValue,
+		);
+
+		return {
+			hex8: `#${hex}${alphaHex}`,
+			rgba: convertHslaToRgba(..._extractAlphaColorValues(color as HSLA)),
+		} as ConvertedColors<HSLA>;
 	}
 
 	throw new Error(`Unrecognized Color Format: ${color}`);

@@ -1,10 +1,13 @@
 import type {
 	ColorNumbers,
-	ColorType,
-	Hex,
+	ColorNumbersAlpha,
+	Hex6,
+	Hex8,
 	HSL,
+	HSLA,
 	OpacityValue,
 	RGB,
+	RGBA,
 } from './types';
 
 /**
@@ -91,7 +94,7 @@ export const _isSimilarToLast = (
  * @param colorString The color string in RGB or HSL format.
  * @returns An array of extracted numbers.
  */
-export const extractNumbersFromColor = (
+export const _extractSolidColorValues = (
 	colorString: HSL | RGB,
 ): ColorNumbers => {
 	return (colorString.match(/[\d.]+%?/g) || []).map((value) =>
@@ -100,12 +103,27 @@ export const extractNumbersFromColor = (
 };
 
 /**
+ * * Extracts numbers from a color string like `rgba(66, 103, 69, 0.6)` or `hsla(120, 42.86%, 41.18%, 0.9)`.
+ * * Converts percentage values to decimal (e.g., `42.86%` → `42.86`).
+ *
+ * @param colorString The color string in RGB or HSL format.
+ * @returns An array of extracted numbers.
+ */
+export const _extractAlphaColorValues = (
+	colorString: HSLA | RGBA,
+): ColorNumbersAlpha => {
+	return (colorString.match(/[\d.]+%?/g) || []).map((value) =>
+		parseFloat(value),
+	) as ColorNumbersAlpha;
+};
+
+/**
  * * Checks if a color is in `Hex` format.
  *
  * @param color Color to check.
  * @returns Boolean: `true` if it's a `Hex` color, `false` if not.
  */
-export function _isHex(color: ColorType): color is Hex {
+export function _isHex6(color: string): color is Hex6 {
 	return /^#[0-9A-Fa-f]{6}$/.test(color);
 }
 
@@ -115,7 +133,7 @@ export function _isHex(color: ColorType): color is Hex {
  * @param color Color to check.
  * @returns Boolean: `true` if it's an `RGB` color, `false` if not.
  */
-export function _isRGB(color: ColorType): color is RGB {
+export function _isRGB(color: string): color is RGB {
 	return /^rgb\(\d{1,3}, \d{1,3}, \d{1,3}\)$/.test(color);
 }
 
@@ -125,6 +143,39 @@ export function _isRGB(color: ColorType): color is RGB {
  * @param color Color to check.
  * @returns Boolean: `true` if it's an `HSL` color, `false` if not.
  */
-export function _isHSL(color: ColorType): color is HSL {
+export function _isHSL(color: string): color is HSL {
 	return /^hsl\(\d{1,3}, \d{1,3}%, \d{1,3}%\)$/.test(color);
+}
+
+/**
+ * @static
+ * Checks if a color is in `Hex8` format.
+ *
+ * @param color Color to check.
+ * @returns Boolean: `true` if it's a `Hex8` color, `false` if not.
+ */
+export function _isHex8(color: string): color is Hex8 {
+	return /^#[0-9A-Fa-f]{8}$/.test(color);
+}
+
+/**
+ * @static
+ * Checks if a color is in `RGBA` format.
+ *
+ * @param color Color to check.
+ * @returns Boolean: `true` if it's an `RGBA` color, `false` if not.
+ */
+export function _isRGBA(color: string): color is RGBA {
+	return /^rgba\(\d{1,3}, \d{1,3}, \d{1,3}, (0|1|0?\.\d+)\)$/.test(color);
+}
+
+/**
+ * @static
+ * Checks if a color is in `HSLA` format.
+ *
+ * @param color Color to check.
+ * @returns Boolean: `true` if it's an `HSLA` color, `false` if not.
+ */
+export function _isHSLA(color: string): color is HSLA {
+	return /^hsla\(\d{1,3}, \d{1,3}%, \d{1,3}%, (0|1|0?\.\d+)\)$/.test(color);
 }

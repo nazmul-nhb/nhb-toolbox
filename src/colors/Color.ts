@@ -1,6 +1,22 @@
 import { convertColorCode } from './convert';
+import {
+	_convertOpacityToHex,
+	_extractAlphaColorValues,
+	_extractSolidColorValues,
+} from './helpers';
 import { generateRandomHSLColor } from './random';
-import type { Colors, ColorType, Hex, HSL, RGB } from './types';
+import type {
+	AlphaColors,
+	ColorType,
+	Hex6,
+	Hex8,
+	HSL,
+	HSLA,
+	OpacityValue,
+	RGB,
+	RGBA,
+	SolidColors,
+} from './types';
 
 const hsl = generateRandomHSLColor();
 const hexRGB = convertColorCode(hsl);
@@ -23,9 +39,9 @@ const hexRGB = convertColorCode(hsl);
  * console.log(randomColor.hex, randomColor.rgb, randomColor.hsl);
  */
 export class Color {
-	public hex: Hex;
-	public rgb: RGB;
-	public hsl: HSL;
+	public hex: Hex6 | Hex8;
+	public rgb: RGB | RGBA;
+	public hsl: HSL | HSLA;
 
 	/** - Iterates over the color representations (Hex, RGB, HSL). */
 	*[Symbol.iterator]() {
@@ -41,10 +57,21 @@ export class Color {
 	 */
 	constructor(toConvert?: ColorType) {
 		if (toConvert) {
-			this.hex = this._convertColorToOthers(toConvert).hex;
-			this.rgb = this._convertColorToOthers(toConvert).rgb;
-			this.hsl = this._convertColorToOthers(toConvert).hsl;
+			const converted = this._convertColorToOthers(toConvert);
+
+			if ('hex8' in converted) {
+				// Handle alpha colors (Hex8, RGBA, HSLA)
+				this.hex = converted.hex8;
+				this.rgb = converted.rgba;
+				this.hsl = converted.hsla;
+			} else {
+				// Handle solid colors (Hex, RGB, HSL)
+				this.hex = converted.hex;
+				this.rgb = converted.rgb;
+				this.hsl = converted.hsl;
+			}
 		} else {
+			// Generate random color
 			this.hex = hexRGB.hex;
 			this.rgb = hexRGB.rgb;
 			this.hsl = hsl;
@@ -52,45 +79,89 @@ export class Color {
 	}
 
 	/**
-	 * - Converts the given color to all other formats while preserving the original.
+	 * * Applies or modifies the opacity of a color.
+	 * - For solid colors (Hex6/RGB/HSL): Adds an alpha channel with the specified opacity
+	 * - For alpha colors (Hex8/RGBA/HSLA): Updates the existing alpha channel
 	 *
-	 * @private
-	 * @param color - The color to convert.
-	 * @returns An object containing Hex, RGB, and HSL representations.
+	 * @param opacity - A number between 0-100 representing the opacity percentage
+	 * @returns An object containing all color formats with the applied opacity
+	 *
+	 * @example
+	 * const color = new Color("#ff0000");
+	 * const alpha50 = color.applyOpacity(50); // 50% opacity
+	 * console.log(alpha50.rgba); // rgba(255, 0, 0, 0.5)
+	 *
+	 * @example
+	 * const alphaColor = new Color("#ff000080"); // Color with 50% opacity
+	 * const alpha75 = alphaColor.applyOpacity(75); // Change to 75% opacity
+	 * console.log(alpha75.hex8); // #ff0000bf
 	 */
-	private _convertColorToOthers(color: ColorType): Colors {
-		if (Color.isHex(color)) {
+	applyOpacity(opacity: OpacityValue): SolidColors & AlphaColors {
+		const validOpacity = Math.min(100, Math.max(0, opacity));
+		const alphaHex = _convertOpacityToHex(opacity);
+		const alphaDecimal = validOpacity / 100;
+
+		if (Color.isHex8(this.hex)) {
+			const rgbaValues = _extractAlphaColorValues(this.rgb as RGBA);
+			const hslaValues = _extractAlphaColorValues(this.hsl as HSLA);
+
 			return {
-				hex: color,
-				rgb: convertColorCode(color).rgb,
-				hsl: convertColorCode(color).hsl,
-			};
-		} else if (Color.isRGB(color)) {
-			return {
-				hex: convertColorCode(color).hex,
-				rgb: color,
-				hsl: convertColorCode(color).hsl,
-			};
-		} else if (Color.isHSL(color)) {
-			return {
-				hex: convertColorCode(color).hex,
-				rgb: convertColorCode(color).rgb,
-				hsl: color,
+				hex: this.hex.slice(0, 7) as Hex6,
+				hex8: `${this.hex.slice(0, 7)}${alphaHex}` as Hex8,
+				rgb: `rgba(${rgbaValues[0]}, ${rgbaValues[1]}, ${rgbaValues[2]})` as RGB,
+				rgba: `rgba(${rgbaValues[0]}, ${rgbaValues[1]}, ${rgbaValues[2]}, ${alphaDecimal})` as RGBA,
+				hsl: `hsla(${hslaValues[0]}, ${hslaValues[1]}%, ${hslaValues[2]}%)` as HSL,
+				hsla: `hsla(${hslaValues[0]}, ${hslaValues[1]}%, ${hslaValues[2]}%, ${alphaDecimal})` as HSLA,
 			};
 		}
 
-		throw new Error(`Unrecognized Color Format: ${color}`);
+		const rgbValues = _extractSolidColorValues(this.rgb as RGB);
+		const hslValues = _extractSolidColorValues(this.hsl as HSL);
+
+		return {
+			hex: this.hex as Hex6,
+			hex8: `${this.hex}${alphaHex}` as Hex8,
+			rgb: this.rgb as RGB,
+			rgba: `rgba(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]}, ${alphaDecimal})` as RGBA,
+			hsl: this.hsl as HSL,
+			hsla: `hsla(${hslValues[0]}, ${hslValues[1]}%, ${hslValues[2]}%, ${alphaDecimal})` as HSLA,
+		};
+	}
+
+	/**
+	 * Creates a new Color instance from a hex string
+	 * @param hex The hex color string
+	 */
+	public static fromHex(hex: string): Color {
+		if (this.isHex6(hex as ColorType)) {
+			return new Color(hex as Hex6);
+		}
+		if (this.isHex8(hex as ColorType)) {
+			return new Color(hex as Hex8);
+		}
+		throw new Error(`Unrecognized Hex Format: ${hex}`);
 	}
 
 	/**
 	 * @static
-	 * Checks if a color is in `Hex` format.
+	 * Checks if a color is in `Hex6` format.
 	 *
 	 * @param color Color to check.
-	 * @returns Boolean: `true` if it's a `Hex` color, `false` if not.
+	 * @returns Boolean: `true` if it's a `Hex6` color, `false` if not.
 	 */
-	public static isHex(color: string): color is Hex {
+	public static isHex6(color: ColorType): color is Hex6 {
 		return /^#[0-9A-Fa-f]{6}$/.test(color);
+	}
+
+	/**
+	 * @static
+	 * Checks if a color is in `Hex8` format.
+	 *
+	 * @param color Color to check.
+	 * @returns Boolean: `true` if it's a `Hex8` color, `false` if not.
+	 */
+	public static isHex8(color: ColorType): color is Hex8 {
+		return /^#[0-9A-Fa-f]{8}$/.test(color);
 	}
 
 	/**
@@ -100,8 +171,19 @@ export class Color {
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's an `RGB` color, `false` if not.
 	 */
-	public static isRGB(color: string): color is RGB {
+	public static isRGB(color: ColorType): color is RGB {
 		return /^rgb\(\d{1,3}, \d{1,3}, \d{1,3}\)$/.test(color);
+	}
+
+	/**
+	 * @static
+	 * Checks if a color is in `RGBA` format.
+	 *
+	 * @param color Color to check.
+	 * @returns Boolean: `true` if it's an `RGBA` color, `false` if not.
+	 */
+	public static isRGBA(color: ColorType): color is RGBA {
+		return /^rgba\(\d{1,3}, \d{1,3}, \d{1,3}, (0|1|0?\.\d+)\)$/.test(color);
 	}
 
 	/**
@@ -111,7 +193,51 @@ export class Color {
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's an `HSL` color, `false` if not.
 	 */
-	public static isHSL(color: string): color is HSL {
+	public static isHSL(color: ColorType): color is HSL {
 		return /^hsl\(\d{1,3}, \d{1,3}%, \d{1,3}%\)$/.test(color);
+	}
+
+	/**
+	 * @static
+	 * Checks if a color is in `HSLA` format.
+	 *
+	 * @param color Color to check.
+	 * @returns Boolean: `true` if it's an `HSLA` color, `false` if not.
+	 */
+	public static isHSLA(color: ColorType): color is HSLA {
+		return /^hsla\(\d{1,3}, \d{1,3}%, \d{1,3}%, (0|1|0?\.\d+)\)$/.test(
+			color,
+		);
+	}
+
+	/**
+	 * - Converts the given color to all other formats while preserving the original.
+	 *
+	 * @private
+	 * @param color - The color to convert.
+	 * @returns An object containing Hex, RGB, and HSL representations.
+	 */
+	private _convertColorToOthers(color: ColorType): SolidColors | AlphaColors {
+		if (Color.isHex6(color)) {
+			const { rgb, hsl } = convertColorCode(color);
+			return { hex: color, rgb: rgb, hsl: hsl };
+		} else if (Color.isRGB(color)) {
+			const { hex, hsl } = convertColorCode(color);
+			return { hex: hex, rgb: color, hsl: hsl };
+		} else if (Color.isHSL(color)) {
+			const { hex, rgb } = convertColorCode(color);
+			return { hex: hex, rgb: rgb, hsl: color };
+		} else if (Color.isHex8(color)) {
+			const { rgba, hsla } = convertColorCode(color);
+			return { hex8: color, rgba: rgba, hsla: hsla };
+		} else if (Color.isHSLA(color)) {
+			const { hex8, rgba } = convertColorCode(color);
+			return { hex8: hex8, rgba: rgba, hsla: color };
+		} else if (Color.isRGBA(color)) {
+			const { hex8, hsla } = convertColorCode(color);
+			return { hex8: hex8, rgba: color, hsla: hsla };
+		}
+
+		throw new Error(`Unrecognized Color Format: ${color}`);
 	}
 }
