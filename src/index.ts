@@ -73,7 +73,8 @@ export {
 	extractNewFields,
 	extractUpdatedAndNewFields,
 	extractUpdatedFields,
-	flattenObject,
+	flattenObjectDotNotation,
+	flattenObjectKeyValue,
 	mergeAndFlattenObjects,
 	mergeObjects,
 } from './object/objectify';

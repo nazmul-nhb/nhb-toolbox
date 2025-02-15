@@ -87,12 +87,38 @@ export const mergeAndFlattenObjects = <T extends GenericObject>(
 };
 
 /**
+ * * Flattens a nested object into key-value format.
+ *
+ * @param object - The `object` to flatten.
+ * @returns A `flattened object` in key-value format.
+ */
+export const flattenObjectKeyValue = <T extends LooseObject>(object: T): T => {
+	const flattened: LooseObject = {};
+
+	for (const [key, value] of Object.entries(object)) {
+		if (
+			typeof value === 'object' &&
+			value !== null &&
+			!Array.isArray(value)
+		) {
+			// Recursively flatten nested objects
+			const nestedFlattened = flattenObjectKeyValue(value);
+			Object.assign(flattened, nestedFlattened);
+		} else {
+			// Directly assign non-object values
+			flattened[key] = value;
+		}
+	}
+
+	return flattened as T;
+};
+/**
  * * Flattens a nested object into a dot notation format.
  *
  * @param object - The `object` to flatten.
  * @returns A `flattened object` with dot notation keys.
  */
-export const flattenObject = <T extends GenericObject>(
+export const flattenObjectDotNotation = <T extends GenericObject>(
 	object: T,
 ): GenericObject => {
 	/**
@@ -109,7 +135,12 @@ export const flattenObject = <T extends GenericObject>(
 			// Construct the dot-notation key
 			const newKey = prefix ? `${String(prefix)}.${key}` : key;
 
-			if (value && typeof value === 'object' && !Array.isArray(value)) {
+			if (
+				value &&
+				typeof value === 'object' &&
+				!Array.isArray(value) &&
+				value !== null
+			) {
 				// Recursively process nested objects
 				Object.assign(flattened, _flattenObject(value as T, newKey));
 			} else {

@@ -1,4 +1,4 @@
-import { Color } from './src';
+import { generateQueryParams } from './src';
 
 // const result1 = capitalizeString(`mo mOm`, {
 // 	capitalizeEachFirst: true,
@@ -112,7 +112,7 @@ import { Color } from './src';
 // 	role: 'Teacher',
 // };
 
-// const result13 = flattenObject(obj1);
+// const result13 = flattenObjectDotNotation(obj1);
 
 // const flattened = mergeAndFlattenObjects(obj1, obj2);
 
@@ -292,8 +292,11 @@ import { Color } from './src';
 // const r6 = removeDuplicatesFromArray(test6);
 // console.info(r6); // Expected: [{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }]
 
-const color = new Color('#3c694544').applyOpacity(50);
+// const color = new Color('#3c694544').applyOpacity(50);
 
-console.info(color);
+// console.info(color);
+// generateQueryParams({ filters: { category: 'laptop', price: [1,2,3] } });
 
-console.info(Color.isRGB(color.hex));
+console.info(
+	generateQueryParams({ filters: { category: 'laptop', price: [1, 2, 3] } }),
+);

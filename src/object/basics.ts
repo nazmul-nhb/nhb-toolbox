@@ -1,9 +1,10 @@
+import { flattenObjectKeyValue } from './objectify';
 import type { GenericObject, QueryObject } from './types';
 
 /**
  * * Utility to generate query parameters from an object.
  *
- * @template T - A generic type extending `Record<string, string | number | (string | number | null | undefined)[]>` (`QueryObject`).
+ * @template T - A generic type extending `QueryObject`.
  * @param params - Object containing query parameters.
  * @returns A query string as a URL-encoded string, e.g., `?key1=value1&key2=value2`.
  *
@@ -11,11 +12,17 @@ import type { GenericObject, QueryObject } from './types';
  * generateQueryParams({ key1: 'value1', key2: 42 }); // "?key1=value1&key2=42"
  * generateQueryParams({ key1: ['value1', 'value2'], key2: 42 }); // "?key1=value1&key1=value2&key2=42"
  * generateQueryParams({ key1: '', key2: null }); // ""
+ * generateQueryParams({ key1: true, key2: false }); // "?key1=true&key2=false"
+ * generateQueryParams({ filters: { category: 'laptop', price: 1000 } }); // "?category=laptop&price=1000"
  */
 export const generateQueryParams = <T extends QueryObject>(
 	params: T = {} as T,
 ): string => {
-	const queryParams = Object.entries(params)
+	// Flatten the nested object into key-value pairs
+	const flattenedParams = flattenObjectKeyValue(params);
+
+	// Generate the query string
+	const queryParams = Object.entries(flattenedParams)
 		.filter(
 			([_, value]) =>
 				value !== undefined &&
@@ -34,16 +41,17 @@ export const generateQueryParams = <T extends QueryObject>(
 					.map(
 						(v) =>
 							`${encodeURIComponent(key)}=${encodeURIComponent(
-								String(v),
+								typeof v === 'boolean' ? String(v) : String(v),
 							)}`,
 					)
-			:	`${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`,
+			:	`${encodeURIComponent(key)}=${encodeURIComponent(
+					typeof value === 'boolean' ? String(value) : String(value),
+				)}`,
 		)
 		.join('&');
 
 	return queryParams ? `?${queryParams}` : '';
 };
-
 /**
  * * Deep clone an object.
  *

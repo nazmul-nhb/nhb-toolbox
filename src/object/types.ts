@@ -1,14 +1,22 @@
+import type { Primitive } from '../types';
+
 /** - Generic object with `unknown` value */
 export type GenericObject = Record<string, unknown>;
 
 /** - Generic object but with `any` value */
 export type LooseObject = Record<string, any>;
 
-/** - Query object type `Record<string, string | number | string[] | number[]` */
-export type QueryObject = Record<
-	string,
-	string | number | null | undefined | (string | number | null | undefined)[]
->;
+/**
+ * * Represents a value that can be used in a query object.
+ * - Can be a primitive, an array of primitives, or a nested query object.
+ */
+export type QueryObjectValue = Primitive | Primitive[] | QueryObject;
+
+/**
+ * * Represents a query object with string keys and `QueryObjectValue` values.
+ * - Supports nested objects and arrays.
+ */
+export type QueryObject = { [key: string]: QueryObjectValue };
 
 /** - Dot-notation keys for nested objects */
 export type DotNotationKey<T> =

@@ -6,3 +6,6 @@ type Brand<B> = { [__brand]: B };
 
 /** Create a branded type. */
 export type Branded<T, B> = T & Brand<B>;
+
+/** Union of Primitive Types */
+export type Primitive = string | number | boolean | null | undefined;
