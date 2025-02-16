@@ -1,4 +1,4 @@
-import { isValidEmptyArray } from '../src'; // Adjust path as needed
+import { isValidEmptyArray } from '../../src'; // Adjust path as needed
 
 describe('isValidEmptyArray', () => {
 	test('should return true for an empty array', () => {

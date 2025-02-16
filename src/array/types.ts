@@ -1,3 +1,5 @@
+import type { Primitive } from '../types';
+
 /**
  *  * Flatten Array or Wrap in Array
  *
@@ -6,7 +8,7 @@
 export type Flattened<T> = T extends (infer U)[] ? Flattened<U> : T;
 
 /** - Input for `createOptionsArray`. */
-export type OptionInput = Record<string, string | number | null | undefined>;
+export type OptionInput = Record<string, Primitive>;
 
 /**
  * - Configuration for `createOptionsArray`.
@@ -16,11 +18,7 @@ export type OptionInput = Record<string, string | number | null | undefined>;
  * @typeParam K1 - The name of the key for the first field in the output (default: `'value'`).
  * @typeParam K2 - The name of the key for the second field in the output (default: `'label'`).
  */
-export interface OptionsConfig<
-	T extends Record<string, string | number | null | undefined>,
-	K1 extends string = 'value',
-	K2 extends string = 'label',
-> {
+export interface OptionsConfig<T, K1, K2> {
 	/**
 	 * - The key in the input objects to use for the first field of the option.
 	 * @example If the input objects have an `id` field and you want to use it as the `value` field in the output, set createOptionsArray(data, {firstFieldKey: 'id'}).

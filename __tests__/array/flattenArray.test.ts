@@ -1,4 +1,4 @@
-import { flattenArray } from '../src';
+import { flattenArray } from '../../src';
 
 describe('flattenArray', () => {
 	test('should flatten a deeply nested array', () => {

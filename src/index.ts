@@ -1,5 +1,3 @@
-import { isValidEmptyArray } from './array/basics';
-
 export {
 	capitalizeString,
 	generateRandomID,
@@ -86,5 +84,3 @@ export { sanitizeData } from './object/sanitize';
 export { convertObjectValues } from './object/convert';
 
 export { convertArrayToString, isDeepEqual } from './utils';
-
-isValidEmptyArray(null);

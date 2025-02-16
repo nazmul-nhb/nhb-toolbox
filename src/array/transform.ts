@@ -23,6 +23,7 @@ export const createOptionsArray = <
 		firstFieldName = 'value' as K1,
 		secondFieldName = 'label' as K2,
 	} = config || {};
+
 	if (data && data.length) {
 		return data.map((datum) => ({
 			[firstFieldName]: String(datum[firstFieldKey] ?? ''),

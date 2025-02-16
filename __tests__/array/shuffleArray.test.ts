@@ -1,4 +1,4 @@
-import { shuffleArray } from '../src';
+import { shuffleArray } from '../../src';
 
 describe('shuffleArray', () => {
 	it('should return the same array if it is empty', () => {

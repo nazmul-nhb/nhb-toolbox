@@ -1,4 +1,4 @@
-import { filterArrayOfObjects } from '../src';
+import { filterArrayOfObjects } from '../../src';
 
 describe('filterArrayOfObjects', () => {
 	const sampleData = [
