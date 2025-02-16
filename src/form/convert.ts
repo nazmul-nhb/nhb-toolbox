@@ -1,4 +1,4 @@
-import { isValidButEmptyArray } from '../array/basics';
+import { isValidEmptyArray } from '../array/basics';
 
 /**
  * * Utility to convert object into FormData.
@@ -10,7 +10,7 @@ export const convertIntoFormData = <T extends object>(data: T): FormData => {
 	const formData = new FormData();
 
 	Object.entries(data).forEach(([key, value]) => {
-		if (!isValidButEmptyArray(value) && value[0]?.originFileObj) {
+		if (!isValidEmptyArray(value) && value[0]?.originFileObj) {
 			formData.append(key, value[0].originFileObj);
 		} else if (value !== undefined && value !== null && value !== '') {
 			formData.append(key, value as string | Blob);

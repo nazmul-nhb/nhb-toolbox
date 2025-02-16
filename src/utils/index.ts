@@ -1,4 +1,4 @@
-import { isValidButEmptyArray } from '../array/basics';
+import { isValidEmptyArray } from '../array/basics';
 import type { LooseObject } from '../object/types';
 
 /**
@@ -50,7 +50,7 @@ export const convertArrayToString = <T>(
 	array: T[],
 	separator: string = ',',
 ): string => {
-	if (!isValidButEmptyArray) {
+	if (!isValidEmptyArray) {
 		throw new Error('Please, provide a valid array!');
 	}
 	return array.join(separator);

@@ -1,6 +1,6 @@
 {
 	"name": "nhb-toolbox",
-	"version": "2.0.7",
+	"version": "2.1.1",
 	"description": "A versatile collection of smart, efficient, and reusable utility functions for everyday development needs.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -8,7 +8,7 @@
 		"clean": "rimraf dist",
 		"build": "node build.mjs",
 		"prepublishOnly": "node build.mjs",
-		"test": "jest --coverage",
+		"test": "jest --coverage --verbose",
 		"format": "prettier --write src/",
 		"lint": "node lint.mjs",
 		"fix": "node fix.mjs"

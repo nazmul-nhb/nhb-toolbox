@@ -1,3 +1,5 @@
+import { isValidEmptyArray } from './array/basics';
+
 export {
 	capitalizeString,
 	generateRandomID,
@@ -46,7 +48,7 @@ export { Color } from './colors/Color';
 export {
 	filterArrayOfObjects,
 	flattenArray,
-	isValidButEmptyArray,
+	isValidEmptyArray,
 	shuffleArray,
 } from './array/basics';
 
@@ -84,3 +86,5 @@ export { sanitizeData } from './object/sanitize';
 export { convertObjectValues } from './object/convert';
 
 export { convertArrayToString, isDeepEqual } from './utils';
+
+isValidEmptyArray(null);

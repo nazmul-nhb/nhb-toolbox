@@ -22,39 +22,48 @@ export const flattenArray = <T>(input: T | T[]): Flattened<T>[] => {
  *
  * @template T - The type of objects in the array.
  * @param array - The array of objects to filter.
- * @param conditions - An object where keys represent the property names and values represent the filter conditions.
- *                     The conditions can be a value, a range, or a function.
+ * @param conditions - An object where keys represent the property names and values represent filter conditions.
+ *                     The conditions can be a function `(value: T[K]) => boolean`.
  * @returns The filtered array of objects.
+ * @throws {Error} If the input is not a valid array.
  */
 export const filterArrayOfObjects = <T extends GenericObject>(
 	array: T[],
-	conditions: { [K in keyof T]?: (value: T[K]) => boolean },
+	conditions: { [K in keyof T]?: (value: T[K] | undefined) => boolean },
 ): T[] => {
 	if (!Array.isArray(array)) {
-		throw new Error('The provided input is not an array!');
+		throw new Error('The provided input is not a valid array!');
 	}
 
 	return array.filter((item) =>
 		Object.entries(conditions).every(([key, conditionFn]) => {
-			// Ensure only check the key in the object if the condition function is provided
-			if (conditionFn) {
-				// Type assertion for the value since it's unknown
-				return conditionFn(item[key as keyof T] as T[keyof T]);
+			if (typeof conditionFn === 'function') {
+				return conditionFn(
+					item[key as keyof T] as T[keyof T] | undefined,
+				);
 			}
-			// If no condition function, include all values for the key
 			return true;
 		}),
 	);
 };
 
 /**
- * * Check if an array is empty.
+ * * Checks if a value is an empty array or an array with only empty values.
  *
- * @param array Array to check.
- * @returns Whether the array is empty.
+ * @param value - The value to check.
+ * @returns `true` if the value is not an array, an empty array, or an array containing only `null`, `undefined`, empty objects, or empty arrays.
  */
-export const isValidButEmptyArray = <T>(array: T[] | unknown): boolean => {
-	return Array.isArray(array) && array.length === 0;
+export const isValidEmptyArray = <T>(value: T | T[]): boolean => {
+	if (!Array.isArray(value)) return true;
+
+	if (value.length === 0) return true;
+
+	return value.every(
+		(item) =>
+			item == null || // null or undefined
+			(Array.isArray(item) && item.length === 0) || // Empty array
+			(typeof item === 'object' && Object.keys(item || {}).length === 0), // Empty object
+	);
 };
 
 /**
@@ -64,7 +73,7 @@ export const isValidButEmptyArray = <T>(array: T[] | unknown): boolean => {
  * @returns Shuffled array.
  */
 export const shuffleArray = <T>(array: T[]): T[] => {
-	if (isValidButEmptyArray(array)) return array;
+	if (isValidEmptyArray(array)) return array;
 
 	const shuffled = structuredClone(array);
 
