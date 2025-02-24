@@ -7,7 +7,7 @@ export {
 
 export { generateAnagrams } from './string/anagram';
 
-export { convertStringCase } from './string/convert';
+export { convertStringCase, replaceAllInString } from './string/convert';
 
 export { convertToDecimal, getRandomNumber } from './number/basics';
 

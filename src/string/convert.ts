@@ -40,3 +40,37 @@ export function convertStringCase(
 			return formattedString;
 	}
 }
+
+/**
+ * Replaces all occurrences of a string or pattern in the given input string.
+ *
+ * - If `find` is a string, it is converted into a global regular expression (`/find/g`).
+ * - If `find` is a `RegExp`, the global (`g`) flag is ensured.
+ * - Trims the input before performing replacements.
+ *
+ * @param input - The string in which replacements should be performed.
+ * @param find - The substring or regex pattern to search for.
+ * @param replace - The string to replace matches with.
+ * @returns The modified/refined string with replacements applied.
+ */
+export const replaceAllInString = (
+	input: string,
+	find: string | RegExp,
+	replace: string,
+): string => {
+	if (!input) return '';
+
+	const trimmedString = input?.trim();
+
+	if (!trimmedString) return '';
+
+	const regex =
+		typeof find === 'string' ?
+			new RegExp(find, 'g')
+		:	new RegExp(
+				find,
+				find.flags.includes('g') ? find.flags : find.flags + 'g',
+			);
+
+	return trimmedString?.replace(regex, replace);
+};
