@@ -1,3 +1,4 @@
+import { _find2NumbersHCF, _find2NumbersLCM } from './helpers';
 import type { DecimalOptions, RandomNumberOptions } from './types';
 
 /**
@@ -75,4 +76,36 @@ export const convertToDecimal = (
 	}
 
 	return parseFloat(num.toFixed(decimalPlaces));
+};
+
+/**
+ * * Calculate the HCF/GCD of multiple numbers.
+ *
+ * @param numbers - List of numbers to find the HCF/GCD for.
+ * @returns The HCF/GCD of all the provided numbers.
+ */
+export const calculateHCF = (...numbers: number[]): number => {
+	let hcf = numbers[0];
+
+	for (let i = 1; i < numbers.length; i++) {
+		hcf = _find2NumbersHCF(hcf, numbers[i]);
+	}
+
+	return hcf;
+};
+
+/**
+ * * Calculate the LCM/LCD of multiple numbers.
+ *
+ * @param numbers - List of numbers to find the LCM/LCD for.
+ * @returns The LCM/LCD of all the provided numbers.
+ */
+export const calculateLCM = (...numbers: number[]): number => {
+	let lcm = numbers[0];
+
+	for (let i = 1; i < numbers.length; i++) {
+		lcm = _find2NumbersLCM(lcm, numbers[i]);
+	}
+
+	return lcm;
 };

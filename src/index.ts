@@ -9,7 +9,14 @@ export { generateAnagrams } from './string/anagram';
 
 export { convertStringCase, replaceAllInString } from './string/convert';
 
-export { convertToDecimal, getRandomNumber } from './number/basics';
+export {
+	calculateHCF as calculateGCD,
+	calculateHCF,
+	calculateLCM as calculateLCD,
+	calculateLCM,
+	convertToDecimal,
+	getRandomNumber,
+} from './number/basics';
 
 export { numberToWords } from './number/convert';
 
