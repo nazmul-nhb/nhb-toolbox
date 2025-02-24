@@ -1,5 +1,6 @@
 import { isValidEmptyArray } from '../array/basics';
 import type { LooseObject } from '../object/types';
+import type { DelayedFn, GenericFn, ThrottledFn } from '../types';
 
 /**
  * * Deeply compare two values (arrays, objects, or primitive values).
@@ -54,4 +55,65 @@ export const convertArrayToString = <T>(
 		throw new Error('Please, provide a valid array!');
 	}
 	return array.join(separator);
+};
+
+/**
+ * * A generic debounce function that delays the execution of a callback.
+ *
+ * @param callback - The function to debounce.
+ * @param delay - The delay in milliseconds. Default is `300ms`.
+ * @returns A debounced version of the callback function.
+ *
+ * @example
+ * const debouncedSearch = debounceAction((query: string) => {
+ *   console.log(`Searching for: ${query}`);
+ * }, 300);
+ *
+ * debouncedSearch('laptop'); // Executes after 300ms of inactivity.
+ */
+export const debounceAction = <T extends GenericFn>(
+	callback: T,
+	delay = 300,
+): DelayedFn<T> => {
+	let timeoutId: ReturnType<typeof setTimeout> | undefined = undefined;
+
+	return (...args: Parameters<T>) => {
+		// Clear the previous timeout
+		clearTimeout(timeoutId);
+
+		// Set a new timeout
+		timeoutId = setTimeout(() => {
+			callback(...args);
+		}, delay);
+	};
+};
+
+/**
+ * * A generic throttle function that ensures a callback is executed at most once per specified interval.
+ *
+ * @param callback - The function to throttle.
+ * @param delay - The delay in milliseconds. Default is `150ms`.
+ * @returns A throttled version of the callback function.
+ *
+ * @example
+ * const throttledResize = throttleAction(() => {
+ *   console.log('Resized');
+ * }, 300);
+ *
+ * window.addEventListener('resize', throttledResize);
+ */
+export const throttleAction = <T extends GenericFn>(
+	callback: T,
+	delay = 150,
+): ThrottledFn<T> => {
+	let lastCall = 0;
+
+	return (...args: Parameters<T>) => {
+		const now = Date.now();
+
+		if (now - lastCall >= delay) {
+			lastCall = now;
+			callback(...args);
+		}
+	};
 };

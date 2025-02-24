@@ -83,4 +83,9 @@ export { sanitizeData } from './object/sanitize';
 
 export { convertObjectValues } from './object/convert';
 
-export { convertArrayToString, isDeepEqual } from './utils';
+export {
+	convertArrayToString,
+	debounceAction,
+	isDeepEqual,
+	throttleAction,
+} from './utils';
