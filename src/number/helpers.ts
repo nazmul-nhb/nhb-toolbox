@@ -1,3 +1,47 @@
+import { ones, teens, tens } from './constants';
+
+/**
+ * Apply multiples of a number if there is any.
+ * @param array Array of numbers to apply the condition on.
+ * @param multiples The multiples of which number.
+ * @returns Array of multiples of the desired number
+ */
+export const _applyMultiples = (
+	array: number[],
+	multiples?: number,
+): number[] => {
+	if (!multiples) return array;
+	return array.filter((n) => n % multiples === 0);
+};
+
+/**
+ * - Converts a number less than 1000 to words.
+ * @param num - The number to convert (less than 1000).
+ * @param isLast - Whether this is the last group (thousands, millions, etc.).
+ * @returns Numbers less than 1000 in words.
+ */
+export function _convertLessThanThousand(num: number, isLast: boolean): string {
+	if (num < 10) return ones[num];
+
+	if (num < 20) return teens[num - 10];
+
+	let result = tens[Math.floor(num / 10)];
+
+	const remainder = num % 10;
+
+	if (remainder > 0) result += `-${ones[remainder]}`;
+
+	if (num >= 100) {
+		const hundredsPart = `${ones[Math.floor(num / 100)]} hundred`;
+
+		return num % 100 === 0 ?
+				hundredsPart
+			:	`${hundredsPart} ${isLast ? 'and' : ''} ${_convertLessThanThousand(num % 100, false)}`;
+	}
+
+	return result;
+}
+
 /**
  * * Calculate the HCF (Highest Common Factor) of two numbers using the Euclidean algorithm.
  *

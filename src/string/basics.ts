@@ -1,22 +1,26 @@
-import type { CapitalizeOptions, RandomIdOptions } from './types';
+import type {
+	CapitalizeOptions,
+	CapitalizeResult,
+	RandomIdOptions,
+} from './types';
 
 /**
  * * Utility to convert the first letter of any string to uppercase and the rest lowercase (unless specified).
- * Handles surrounding symbols like quotes or parentheses.
+ * * Handles surrounding symbols like quotes or parentheses.
  *
  * @param string String to be capitalized.
  * @param options Options to customize the capitalization.
- * @returns Capitalized string.
+ * @returns Capitalized string or fully uppercased string depending on `capitalizeAll` option.
  */
-export const capitalizeString = (
-	string: string,
-	options?: CapitalizeOptions,
-): string => {
-	if (typeof string !== 'string' || !string) return '';
+export function capitalizeString<T extends string, O extends CapitalizeOptions>(
+	string: T,
+	options?: O,
+): CapitalizeResult<T, O> {
+	if (typeof string !== 'string' || !string)
+		return '' as CapitalizeResult<T, O>;
 
 	const trimmedString = string.trim();
-
-	if (!trimmedString) return '';
+	if (!trimmedString) return '' as CapitalizeResult<T, O>;
 
 	const {
 		capitalizeAll = false,
@@ -25,24 +29,25 @@ export const capitalizeString = (
 	} = options || {};
 
 	if (capitalizeAll) {
-		return trimmedString.toUpperCase();
+		return trimmedString.toUpperCase() as CapitalizeResult<T, O>;
 	}
 
 	if (capitalizeEachFirst) {
 		return trimmedString
 			.split(/\s+/)
 			.map((word) => capitalizeString(word, { lowerCaseRest }))
-			.join(' ');
+			.join(' ') as CapitalizeResult<T, O>;
 	}
 
 	const matchArray = trimmedString.match(/^(\W*)(\w)(.*)$/);
 
 	if (matchArray && matchArray.length === 4) {
 		const [_, leadingSymbols, firstLetter, rest] = matchArray;
-
 		return leadingSymbols
 			.concat(firstLetter.toUpperCase())
-			.concat(lowerCaseRest ? rest.toLowerCase() : rest);
+			.concat(
+				lowerCaseRest ? rest.toLowerCase() : rest,
+			) as CapitalizeResult<T, O>;
 	}
 
 	return trimmedString
@@ -52,8 +57,8 @@ export const capitalizeString = (
 			lowerCaseRest ?
 				trimmedString.slice(1).toLowerCase()
 			:	trimmedString.slice(1),
-		);
-};
+		) as CapitalizeResult<T, O>;
+}
 
 /**
  * * Utility to truncate a string to a specified length.

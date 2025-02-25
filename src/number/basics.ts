@@ -79,7 +79,7 @@ export const convertToDecimal = (
 };
 
 /**
- * * Calculate the HCF/GCD of multiple numbers.
+ * * Calculates the HCF/GCD of multiple numbers.
  *
  * @param numbers - List of numbers to find the HCF/GCD for.
  * @returns The HCF/GCD of all the provided numbers.
@@ -95,7 +95,7 @@ export const calculateHCF = (...numbers: number[]): number => {
 };
 
 /**
- * * Calculate the LCM/LCD of multiple numbers.
+ * * Calculates the LCM/LCD of multiple numbers.
  *
  * @param numbers - List of numbers to find the LCM/LCD for.
  * @returns The LCM/LCD of all the provided numbers.
@@ -108,4 +108,35 @@ export const calculateLCM = (...numbers: number[]): number => {
 	}
 
 	return lcm;
+};
+
+/**
+ * * Check if a number is even or not.
+ *
+ * @param input The number to check.
+ * @returns Boolean: `true` if even and `false` if not even.
+ */
+export const isEven = (input: number): boolean => {
+	return input % 2 === 0;
+};
+
+/**
+ * * Checks if a number is odd or not.
+ *
+ * @param input The number to check.
+ * @returns Boolean: `true` if odd and `false` if not odd.
+ */
+export const isOdd = (input: number): boolean => {
+	return input % 2 !== 0;
+};
+
+/**
+ * * Checks if a number is a multiple of another number.
+ *
+ * @param input - The number to check.
+ * @param multipleOf - The number to check against.
+ * @returns `true` if `input` is a multiple of `multipleOf`, otherwise `false`.
+ */
+export const isMultiple = (input: number, multipleOf: number): boolean => {
+	return input % multipleOf === 0;
 };

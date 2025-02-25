@@ -8,6 +8,23 @@ export interface CapitalizeOptions {
 	lowerCaseRest?: boolean;
 }
 
+/** - Capitalizes the first letter of each word. */
+type CapitalizeWords<T extends string, LowerCaseRest extends boolean> =
+	T extends `${infer First} ${infer Rest}` ?
+		`${Capitalize<First>} ${CapitalizeWords<Rest, LowerCaseRest>}`
+	:	Capitalize<T>;
+
+/** - Determines the correct return type based on the provided options. */
+export type CapitalizeResult<T extends string, O extends CapitalizeOptions> =
+	O['capitalizeAll'] extends true ? Uppercase<T>
+	: O['capitalizeEachFirst'] extends true ?
+		CapitalizeWords<
+			O['lowerCaseRest'] extends false ? T : Lowercase<T>,
+			O['lowerCaseRest'] extends boolean ? O['lowerCaseRest'] : true
+		>
+	: O['lowerCaseRest'] extends false ? Capitalize<T>
+	: Capitalize<Lowercase<T>>;
+
 /** - Configuration options for ID generation. */
 export interface RandomIdOptions {
 	/** A string to prepend to the ID. Default is an empty string. */

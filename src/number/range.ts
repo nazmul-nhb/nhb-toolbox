@@ -1,6 +1,7 @@
 import { shuffleArray } from '../array/basics';
 import { convertArrayToString } from '../utils';
-import { getRandomNumber } from './basics';
+import { getRandomNumber, isEven, isOdd } from './basics';
+import { _applyMultiples } from './helpers';
 import { isPrime } from './prime';
 import type { GetAs, NumberType, RangedNumbers, RangeOptions } from './types';
 
@@ -29,17 +30,6 @@ export function getNumbersInRange<T extends GetAs>(
 	let output: number[] = [];
 
 	/**
-	 * Apply multiples of a number if there is any.
-	 * @param array Array of numbers to apply the condition on.
-	 * @param multiples The multiples of which number.
-	 * @returns Array of multiples of the desired number
-	 */
-	const _applyMultiples = (array: number[], multiples?: number): number[] => {
-		if (!multiples) return array;
-		return array.filter((n) => n % multiples === 0);
-	};
-
-	/**
 	 * Helper function to apply range and get array of numbers in that range.
 	 *
 	 * @param start The start of the range.
@@ -58,10 +48,10 @@ export function getNumbersInRange<T extends GetAs>(
 
 		for (let i = startNumber; i <= endNumber; i++) {
 			if (
-				i >= min &&
-				i <= max &&
-				(includeMin || i > min) &&
-				(includeMax || i < max)
+				i >= startNumber &&
+				i <= endNumber &&
+				(includeMin || i > startNumber) &&
+				(includeMax || i < endNumber)
 			) {
 				numbers.push(i);
 			}
@@ -94,11 +84,11 @@ export function getNumbersInRange<T extends GetAs>(
 			break;
 
 		case 'odd':
-			output = _applyRangeOptions(min, max).filter((i) => i % 2 !== 0);
+			output = _applyRangeOptions(min, max).filter(isOdd);
 			break;
 
 		case 'even':
-			output = _applyRangeOptions(min, max).filter((i) => i % 2 === 0);
+			output = _applyRangeOptions(min, max).filter(isEven);
 			break;
 
 		case 'natural':

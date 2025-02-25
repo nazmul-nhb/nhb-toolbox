@@ -1,3 +1,4 @@
+// ! String Utilities
 export {
 	capitalizeString,
 	generateRandomID,
@@ -9,6 +10,7 @@ export { generateAnagrams } from './string/anagram';
 
 export { convertStringCase, replaceAllInString } from './string/convert';
 
+// ! Number Utilities
 export {
 	calculateHCF as calculateGCD,
 	calculateHCF,
@@ -16,6 +18,9 @@ export {
 	calculateLCM,
 	convertToDecimal,
 	getRandomNumber,
+	isEven,
+	isMultiple,
+	isOdd,
 } from './number/basics';
 
 export { numberToWords } from './number/convert';
@@ -24,6 +29,7 @@ export { findPrimeNumbers, isPrime } from './number/prime';
 
 export { getNumbersInRange } from './number/range';
 
+// ! Color Utilities
 export { getColorForInitial } from './colors/initials';
 
 export {
@@ -50,6 +56,7 @@ export {
 
 export { Color } from './colors/Color';
 
+// ! Array Utilities
 export {
 	filterArrayOfObjects,
 	flattenArray,
@@ -64,10 +71,12 @@ export {
 	removeDuplicatesFromArray,
 } from './array/transform';
 
+// ! Form Utilities
 export { convertIntoFormData, isEmptyFormData } from './form/convert';
 
 export { createControlledFormData } from './form/transform';
 
+// ! Object Utilities
 export {
 	cloneObject,
 	countObjectFields,
@@ -90,6 +99,7 @@ export { sanitizeData } from './object/sanitize';
 
 export { convertObjectValues } from './object/convert';
 
+// ! Other Utilities
 export {
 	convertArrayToString,
 	debounceAction,
