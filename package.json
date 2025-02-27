@@ -1,6 +1,6 @@
 {
 	"name": "nhb-toolbox",
-	"version": "2.3.3",
+	"version": "2.3.4",
 	"description": "A versatile collection of smart, efficient, and reusable utility functions for everyday development needs.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",

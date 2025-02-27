@@ -1,14 +1,19 @@
 /**
- * * Converts a string to `camelCase`, `snake_case`, or `kebab-case`.
+ * * Converts a string to `camelCase`, `snake_case`, `kebab-case`, `PascalCase`, `Title Case`.
  *
  * @param string - The input string to be converted. Words should be separated by **non-alphanumeric characters** (e.g., spaces, hyphens, underscores, dots, slashes, etc.).
- * @param format - The format to convert the string to (`'camelCase'`, `'snake_case'`, or `'kebab-case'`).
+ * @param format - The format to convert the string to (`'camelCase'`, `'snake_case'`, `'kebab-case'`, `PascalCase`, or `Title Case`).
  * @returns The formatted string in the specified case format.
  */
 
 export function convertStringCase(
 	string: string,
-	format: 'camelCase' | 'snake_case' | 'kebab-case',
+	format:
+		| 'camelCase'
+		| 'snake_case'
+		| 'kebab-case'
+		| 'PascalCase'
+		| 'Title Case',
 ): string {
 	if (!string || typeof string !== 'string') return '';
 
@@ -34,6 +39,17 @@ export function convertStringCase(
 		case 'kebab-case':
 			return formattedString.replace(/[A-Z]/g, (letter, index) =>
 				index === 0 ? letter.toLowerCase() : `-${letter.toLowerCase()}`,
+			);
+
+		case 'PascalCase':
+			return (
+				formattedString.charAt(0).toUpperCase() +
+				formattedString.slice(1)
+			);
+
+		case 'Title Case':
+			return formattedString.replace(/[A-Z]/g, (letter, index) =>
+				index === 0 ? letter.toUpperCase() : ` ${letter.toUpperCase()}`,
 			);
 
 		default:
