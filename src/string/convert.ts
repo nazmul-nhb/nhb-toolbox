@@ -1,21 +1,56 @@
-/**
- * * Converts a string to `camelCase`, `snake_case`, `kebab-case`, `PascalCase`, `Title Case`.
- *
- * @param string - The input string to be converted. Words should be separated by **non-alphanumeric characters** (e.g., spaces, hyphens, underscores, dots, slashes, etc.).
- * @param format - The format to convert the string to (`'camelCase'`, `'snake_case'`, `'kebab-case'`, `PascalCase`, or `Title Case`).
- * @returns The formatted string in the specified case format.
- */
+import { LOWERCASE } from './constants';
+import type { CaseFormat } from './types';
 
-export function convertStringCase(
-	string: string,
-	format:
-		| 'camelCase'
-		| 'snake_case'
-		| 'kebab-case'
-		| 'PascalCase'
-		| 'Title Case',
-): string {
+/**
+ * Converts a string to a specified case format such as `camelCase`, `snake_case`, `kebab-case`, `PascalCase`, `Title Case`, `lowercase`, or `UPPERCASE`.
+ *
+ * This function handles non-alphanumeric characters (e.g., spaces, hyphens, underscores, dots, slashes) as word delimiters. For `Title Case`, prepositions, articles, conjunctions, and auxiliary verbs are not capitalized unless they appear at the start of the title.
+ * You can also convert the string to `lowercase` or `UPPERCASE`, but it's recommended to use default string methods like `string.toLowerCase()` and `string.toUpperCase()` for these cases.
+ *
+ * @param string The input string to be converted. The string should have words separated by non-alphanumeric characters (e.g., spaces, hyphens, underscores, etc.).
+ * @param format The format to convert the string to. The available formats are:
+ *   - `'camelCase'`: Converts to camelCase (e.g., `myVariableName`).
+ *   - `'snake_case'`: Converts to snake_case (e.g., `my_variable_name`).
+ *   - `'kebab-case'`: Converts to kebab-case (e.g., `my-variable-name`).
+ *   - `'PascalCase'`: Converts to PascalCase (e.g., `MyVariableName`).
+ *   - `'Title Case'`: Converts to Title Case (e.g., `My Variable Name`), where certain words like `prepositions, articles, conjunctions and auxiliary verbs` are not capitalized unless at the start.
+ *   - `'lowercase'`: Converts the string to all lowercase characters.
+ *   - `'UPPERCASE'`: Converts the string to all uppercase characters.
+ * @returns The formatted string in the specified case format.
+ * @example
+ * convertStringCase('my-example_string', 'camelCase'); // returns 'myExampleString'
+ * convertStringCase('my-example_string', 'snake_case'); // returns 'my_example_string'
+ * convertStringCase('my-example_string', 'kebab-case'); // returns 'my-example-string'
+ * convertStringCase('my example string', 'Title Case'); // returns 'My Example String'
+ * convertStringCase('my example string', 'lowercase'); // returns 'my example string'
+ * convertStringCase('my example string', 'UPPERCASE'); // returns 'MY EXAMPLE STRING'
+ */
+export function convertStringCase(string: string, format: CaseFormat): string {
 	if (!string || typeof string !== 'string') return '';
+
+	const start = string.match(/^[^\d\w\s]+/)?.[0] || '';
+	const end = string.match(/[^\d\w\s]+$/)?.[0] || '';
+	const core = string.replace(/^[^\d\w\s]+|[^\w\s]+$/g, '').trim();
+
+	const titleCase = core
+		.split(/\s+/g)
+		.map((part) => {
+			const startSymbol = part.match(/^[^\d\w\s]+/)?.[0] || ''; // Capture leading symbols
+			const endSymbol = part.match(/[^\d\w\s]+$/)?.[0] || ''; // Capture trailing symbols
+			const coreWord = part.replace(/^[^\d\w\s]+|[^\d\w\s]+$/g, ''); // Remove them for processing
+
+			if (LOWERCASE.includes(coreWord.toLowerCase())) {
+				return startSymbol + coreWord.toLowerCase() + endSymbol;
+			}
+
+			return (
+				startSymbol +
+				coreWord.charAt(0).toUpperCase() +
+				coreWord.slice(1) +
+				endSymbol
+			);
+		})
+		.join(' ');
 
 	const formattedString = string.replace(
 		/[^a-zA-Z0-9]+(.)?/g,
@@ -26,6 +61,9 @@ export function convertStringCase(
 
 	switch (format) {
 		case 'camelCase':
+			// return formattedString.replace(/[A-Z]/g, (letter, index) =>
+			// 	index === 0 ? letter.toUpperCase() : letter.toLowerCase(),
+			// );
 			return (
 				formattedString.charAt(0).toLowerCase() +
 				formattedString.slice(1)
@@ -48,9 +86,18 @@ export function convertStringCase(
 			);
 
 		case 'Title Case':
-			return formattedString.replace(/[A-Z]/g, (letter, index) =>
-				index === 0 ? letter.toUpperCase() : ` ${letter.toUpperCase()}`,
+			return (
+				start +
+				titleCase.charAt(0).toUpperCase() +
+				titleCase.slice(1) +
+				end
 			);
+
+		case 'lowercase':
+			return start + core.toLowerCase() + end;
+
+		case 'UPPERCASE':
+			return start + core.toUpperCase() + end;
 
 		default:
 			return formattedString;

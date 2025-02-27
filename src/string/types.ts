@@ -53,3 +53,13 @@ export interface AnagramOptions {
 	/** Whether to lookup in the dictionary. Default is `false`. */
 	validWords?: boolean;
 }
+
+/** - Case formats for converting a string */
+export type CaseFormat =
+	| 'camelCase'
+	| 'snake_case'
+	| 'kebab-case'
+	| 'PascalCase'
+	| 'Title Case'
+	| 'UPPERCASE'
+	| 'lowercase';
