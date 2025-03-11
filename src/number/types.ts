@@ -11,12 +11,15 @@ export interface RandomNumberOptions {
 }
 
 /** - Decimal options for converting to decimal */
-export interface DecimalOptions {
+export interface DecimalOptions<T extends boolean | undefined = false> {
 	/** Number of decimal places to round to. Defaults to `2`. */
 	decimalPlaces?: number;
 	/** If the return value is in `string` or `number`. Defaults to `false`. */
-	isString?: boolean;
+	isString?: T;
 }
+
+/** - Converted decimal type either `number` or `string`. */
+export type ConvertedDecimal<T> = T extends true ? string : number;
 
 /** - Type of numbers to generate */
 export type NumberType =

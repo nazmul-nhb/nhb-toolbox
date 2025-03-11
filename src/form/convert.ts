@@ -23,14 +23,15 @@ export const convertIntoFormData = <T extends object>(data: T): FormData => {
 /**
  * * Check if a formdata object is empty.
  *
- * @param obj FormData to check.
- * @returns Whether the formdata is empty.
+ * @param data FormData to check.
+ * @returns Boolean (`true`/`false`) Whether the formdata is empty.
  */
 export const isEmptyFormData = (data: FormData): boolean => {
 	if ('entries' in data && typeof data.entries === 'function') {
 		return Array.from(data.entries()).length === 0;
 	}
+
 	throw new Error(
-		'`FormData.entries()` is not supported in this environment.',
+		'`FormData.entries()` is not supported in this environment!',
 	);
 };

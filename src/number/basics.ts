@@ -1,5 +1,9 @@
 import { _find2NumbersHCF, _find2NumbersLCM } from './helpers';
-import type { DecimalOptions, RandomNumberOptions } from './types';
+import type {
+	ConvertedDecimal,
+	DecimalOptions,
+	RandomNumberOptions,
+} from './types';
 
 /**
  * * Utility to generate a random number between a given range.
@@ -61,21 +65,27 @@ export const getRandomNumber = (options?: RandomNumberOptions): number => {
 /**
  * * Utility to round a number to given decimal places.
  *
- * @param num - Number to round.
+ * @param input - Number or `stringified` number to round.
  * @param options - Options for rounding behavior, including decimal places and return type.
- * @returns Converted number (as a `number`) or string (if `isString` is `true`).
+ * @returns Converted number as `number` (default) or `string` (if `isString` is `true`).
  */
-export const convertToDecimal = (
-	num: number,
-	options?: DecimalOptions,
-): number | string => {
+export const convertToDecimal = <T extends boolean | undefined = false>(
+	input: number | `${number}`,
+	options?: DecimalOptions<T>,
+): ConvertedDecimal<T> => {
 	const { decimalPlaces = 2, isString = false } = options || {};
 
-	if (isString) {
-		return num.toFixed(decimalPlaces);
+	let number: number;
+
+	if (typeof input === 'number') {
+		number = input;
+	} else {
+		number = Number(input);
 	}
 
-	return parseFloat(num.toFixed(decimalPlaces));
+	return isString ?
+			(number.toFixed(decimalPlaces) as ConvertedDecimal<T>)
+		:	(Number(number.toFixed(decimalPlaces)) as ConvertedDecimal<T>);
 };
 
 /**
