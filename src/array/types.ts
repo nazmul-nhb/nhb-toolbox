@@ -1,4 +1,4 @@
-import type { Primitive } from '../types';
+import type { PrimitiveKey, UncontrolledAny } from '../types';
 
 /**
  *  * Flatten Array or Wrap in Array
@@ -8,7 +8,7 @@ import type { Primitive } from '../types';
 export type Flattened<T> = T extends (infer U)[] ? Flattened<U> : T;
 
 /** - Input for `createOptionsArray`. */
-export type OptionInput = Record<string, Primitive>;
+export type OptionInput = Record<string, UncontrolledAny>;
 
 /**
  * - Configuration for `createOptionsArray`.
@@ -23,13 +23,13 @@ export interface OptionsConfig<T, K1, K2> {
 	 * - The key in the input objects to use for the first field of the option.
 	 * @example If the input objects have an `id` field and you want to use it as the `value` field in the output, set createOptionsArray(data, {firstFieldKey: 'id'}).
 	 */
-	firstFieldKey: keyof T;
+	firstFieldKey: PrimitiveKey<T>;
 
 	/**
 	 * - The key in the input objects to use for the second field of the option.
 	 * @example If the input objects have a `name` field and you want to use it as the `label` field in the output, set createOptionsArray(data, {firstFieldKey: 'id', secondFieldKey: 'name'}).
 	 */
-	secondFieldKey: keyof T;
+	secondFieldKey: PrimitiveKey<T>;
 
 	/**
 	 * - The name of the first field in the output object.

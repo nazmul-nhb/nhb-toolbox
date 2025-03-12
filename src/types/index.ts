@@ -10,6 +10,11 @@ export type Branded<T, B> = T & Brand<B>;
 /** Union of Primitive Types */
 export type Primitive = string | number | boolean | null | undefined;
 
+/** Extract primitive key(s) from an object */
+export type PrimitiveKey<T> = {
+	[K in keyof T]: T[K] extends Primitive ? K : never;
+}[keyof T];
+
 /** Generic function type */
 export type GenericFn = (...args: any[]) => void;
 

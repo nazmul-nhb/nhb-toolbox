@@ -84,3 +84,13 @@ export const shuffleArray = <T>(array: T[]): T[] => {
 
 	return shuffled;
 };
+
+/**
+ * * Get the last element of an array.
+ *
+ * @param array Array to get the last element from.
+ * @returns The last element or `undefined` if the array is empty.
+ */
+export const getLastArrayElement = <T>(array: T[]): T | undefined => {
+	return array?.length > 0 ? array[array?.length - 1] : undefined;
+};
