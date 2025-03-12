@@ -62,6 +62,7 @@ export {
 	flattenArray,
 	isValidEmptyArray,
 	shuffleArray,
+	getLastArrayElement,
 } from './array/basics';
 
 export { sortAnArray } from './array/sort';
