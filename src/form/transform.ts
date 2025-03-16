@@ -1,10 +1,6 @@
 import { isValidEmptyArray } from '../array/basics';
 import { isEmptyObject } from '../object/basics';
-import type {
-	DotNotationKey,
-	GenericObject,
-	LooseObject,
-} from '../object/types';
+import type { DotNotationKey, LooseObject } from '../object/types';
 import type { UncontrolledAny } from '../types';
 import type { FormDataConfigs } from './types';
 
@@ -16,7 +12,7 @@ import type { FormDataConfigs } from './types';
  *
  * @returns FormData instance containing the sanitized and transformed data
  */
-export const createControlledFormData = <T extends GenericObject>(
+export const createControlledFormData = <T extends LooseObject>(
 	data: T,
 	configs?: FormDataConfigs<T>,
 ): FormData => {
