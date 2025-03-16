@@ -1,67 +1,107 @@
+import { isValidEmptyArray } from '../array/basics';
 import { isEmptyObject } from '../object/basics';
-import type { LooseObject } from '../object/types';
+import type {
+	DotNotationKey,
+	GenericObject,
+	LooseObject,
+} from '../object/types';
 import type { UncontrolledAny } from '../types';
 import type { FormDataConfigs } from './types';
 
 /**
- * * Utility to  convert object into FormData in a controlled way.
+ * Utility to convert object into FormData in a controlled way.
  *
  * @param data - The source object to control and convert to FormData.
  * @param configs - Configuration options to control the formData.
  *
  * @returns FormData instance containing the sanitized and transformed data
  */
-export const createControlledFormData = <T extends LooseObject>(
+export const createControlledFormData = <T extends GenericObject>(
 	data: T,
 	configs?: FormDataConfigs<T>,
 ): FormData => {
 	const formData = new FormData();
 
 	const addToFormData = (key: string, value: UncontrolledAny) => {
-		if (value instanceof File) {
-			formData.append(key, value);
+		const transformedKey =
+			(
+				configs?.lowerCaseKeys === '*' ||
+				configs?.lowerCaseKeys?.includes(key as DotNotationKey<T>)
+			) ?
+				key.toLowerCase()
+			:	key;
+
+		if (!isValidEmptyArray(value) && value[0]?.originFileObj) {
+			formData.append(transformedKey, value[0].originFileObj);
 		} else if (Array.isArray(value)) {
 			value.forEach((item, index) => {
-				addToFormData(`${key}[${index}]`, item);
+				addToFormData(`${transformedKey}[${index}]`, item);
 			});
-		} else if (typeof value === 'object' && !isEmptyObject(value)) {
+		} else if (
+			typeof value === 'object' &&
+			value !== null &&
+			!isEmptyObject(value)
+		) {
+			// Handle nested object by converting it into a string representation like 'name.first'
 			Object.entries(value).forEach(([nestedKey, nestedValue]) => {
 				addToFormData(`${key}.${nestedKey}`, nestedValue);
 			});
 		} else {
-			formData.append(key, value);
+			const isRequired =
+				configs?.requiredKeys === '*' ||
+				configs?.requiredKeys?.includes(key as DotNotationKey<T>);
+			const isNotNullish = value != null && value !== '';
+
+			if (isNotNullish || isRequired) {
+				formData.append(transformedKey, value);
+			}
 		}
 	};
 
-	const isPathPreserved = (key: string) => {
-		return configs?.preservePaths?.some((path) => key.startsWith(path));
+	// Helper function to check if a key matches a preserved path
+	const isPathPreserved = (fullKey: DotNotationKey<T>) => {
+		if (Array.isArray(configs?.preservePaths))
+			return configs?.preservePaths?.some(
+				(path) => fullKey === path || fullKey.startsWith(`${path}.`),
+			);
+
+		return configs?.preservePaths === '*';
 	};
 
-	Object.entries(data).forEach(([key, value]) => {
-		// 1. Skip keys that are in ignoreKeys
-		if (configs?.ignoreKeys?.includes(key as keyof T)) return;
+	const processObject = (obj: LooseObject, parentKey = '') => {
+		Object.entries(obj).forEach(([key, value]) => {
+			const fullKey = (
+				parentKey ?
+					`${parentKey}.${key}`
+				:	key) as DotNotationKey<T>;
 
-		// 2. Trim string values if trimStrings is enabled
-		if (configs?.trimStrings && typeof value === 'string') {
-			value = value.trim();
-		}
+			// Skip keys that are in ignoreKeys
+			if (configs?.ignoreKeys?.includes(fullKey)) return;
 
-		// 3. Ensure requiredKeys are included even if falsy
-		if (configs?.requiredKeys?.includes(key as keyof T) && value == null) {
-			value = ''; // Make sure it's an empty string for falsy values
-		}
+			// Trim string values if trimStrings is enabled
+			if (configs?.trimStrings && typeof value === 'string') {
+				value = value.trim();
+			}
 
-		// 4. Check preservePaths, if true, preserve values for nested paths
-		if (isPathPreserved(key)) {
-			addToFormData(key, value);
-		} else {
-			const transformedKey =
-				configs?.lowerCaseKeys?.includes(key as keyof T) ?
-					key.toLowerCase()
-				:	key;
-			addToFormData(transformedKey, value);
-		}
-	});
+			// Check if this key is preserved
+			if (isPathPreserved(fullKey)) {
+				// If it's a preserved path, we need to append the value directly as the key
+				addToFormData(fullKey, value);
+			} else if (
+				typeof value === 'object' &&
+				!Array.isArray(value) &&
+				value != null
+			) {
+				// Process nested objects
+				processObject(value, key);
+			} else {
+				// For other cases, just append as key-value
+				addToFormData(key, value);
+			}
+		});
+	};
+
+	processObject(data);
 
 	return formData;
 };
