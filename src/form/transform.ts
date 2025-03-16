@@ -1,8 +1,8 @@
 import { isValidEmptyArray } from '../array/basics';
 import { isEmptyObject } from '../object/basics';
-import type { DotNotationKey, LooseObject } from '../object/types';
+import type { LooseObject } from '../object/types';
 import type { UncontrolledAny } from '../types';
-import type { FormDataConfigs } from './types';
+import type { AnyDotNotationKey, FormDataConfigs } from './types';
 
 /**
  * Utility to convert object into FormData in a controlled way.
@@ -22,7 +22,7 @@ export const createControlledFormData = <T extends LooseObject>(
 		const transformedKey =
 			(
 				configs?.lowerCaseKeys === '*' ||
-				configs?.lowerCaseKeys?.includes(key as DotNotationKey<T>)
+				configs?.lowerCaseKeys?.includes(key as AnyDotNotationKey<T>)
 			) ?
 				key.toLowerCase()
 			:	key;
@@ -45,7 +45,7 @@ export const createControlledFormData = <T extends LooseObject>(
 		} else {
 			const isRequired =
 				configs?.requiredKeys === '*' ||
-				configs?.requiredKeys?.includes(key as DotNotationKey<T>);
+				configs?.requiredKeys?.includes(key as AnyDotNotationKey<T>);
 			const isNotNullish = value != null && value !== '';
 
 			if (isNotNullish || isRequired) {
@@ -55,7 +55,7 @@ export const createControlledFormData = <T extends LooseObject>(
 	};
 
 	// Helper function to check if a key matches a preserved path
-	const isPathPreserved = (fullKey: DotNotationKey<T>) => {
+	const isPathPreserved = (fullKey: AnyDotNotationKey<T>) => {
 		if (Array.isArray(configs?.preservePaths))
 			return configs?.preservePaths?.some(
 				(path) => fullKey === path || fullKey.startsWith(`${path}.`),
@@ -69,7 +69,7 @@ export const createControlledFormData = <T extends LooseObject>(
 			const fullKey = (
 				parentKey ?
 					`${parentKey}.${key}`
-				:	key) as DotNotationKey<T>;
+				:	key) as AnyDotNotationKey<T>;
 
 			// Skip keys that are in ignoreKeys
 			if (configs?.ignoreKeys?.includes(fullKey)) return;
