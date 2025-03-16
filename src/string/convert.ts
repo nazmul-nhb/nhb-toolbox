@@ -70,14 +70,22 @@ export function convertStringCase(string: string, format: CaseFormat): string {
 			);
 
 		case 'snake_case':
-			return formattedString.replace(/[A-Z]/g, (letter, index) =>
-				index === 0 ? letter.toLowerCase() : `_${letter.toLowerCase()}`,
-			);
+			return /[^a-zA-Z0-9]/.test(string) ?
+					string.split(/\W+/g).join('_').toLowerCase()
+				:	formattedString.replace(/[A-Z]/g, (letter, index) =>
+						index === 0 ?
+							letter.toLowerCase()
+						:	`_${letter.toLowerCase()}`,
+					);
 
 		case 'kebab-case':
-			return formattedString.replace(/[A-Z]/g, (letter, index) =>
-				index === 0 ? letter.toLowerCase() : `-${letter.toLowerCase()}`,
-			);
+			return /[^a-zA-Z0-9]/.test(string) ?
+					string.split(/\W+/g).join('-').toLowerCase()
+				:	formattedString.replace(/[A-Z]/g, (letter, index) =>
+						index === 0 ?
+							letter.toLowerCase()
+						:	`-${letter.toLowerCase()}`,
+					);
 
 		case 'PascalCase':
 			return (
