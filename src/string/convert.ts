@@ -46,7 +46,7 @@ export function convertStringCase(string: string, format: CaseFormat): string {
 			return (
 				startSymbol +
 				coreWord.charAt(0).toUpperCase() +
-				coreWord.slice(1) +
+				coreWord.slice(1).toLowerCase() +
 				endSymbol
 			);
 		})
