@@ -1,5 +1,5 @@
 import type { GenericObjectAny } from '../object/types';
-import type { OrderOption, SortOptions } from './types';
+import type { OrderOption, SortByOption, SortOptions } from './types';
 
 /**
  * * Sorts an array of strings.
@@ -40,7 +40,7 @@ export function sortAnArray(array: boolean[], options?: OrderOption): boolean[];
  */
 export function sortAnArray<T extends GenericObjectAny>(
 	array: T[],
-	options: SortOptions<T>,
+	options: SortByOption<T>,
 ): T[];
 
 /**
@@ -88,12 +88,24 @@ export function sortAnArray<T extends GenericObjectAny>(
 		);
 	}
 
-	// Handle object arrays
+	// Handle array of objects
 	if (options?.sortByField) {
 		return [...array].sort((a, b) => {
-			const key = options.sortByField as keyof T;
-			const keyA = (a as T)[key];
-			const keyB = (b as T)[key];
+			// const key = options.sortByField as keyof T;
+			// const keyA = (a as T)[key];
+			// const keyB = (b as T)[key];
+
+			const getKeyValue = (obj: T, path: string): unknown =>
+				path
+					.split('.')
+					.reduce<unknown>((acc, key) => (acc as T)?.[key], obj);
+
+			const keyA = getKeyValue(a as T, options.sortByField as string);
+			const keyB = getKeyValue(b as T, options.sortByField as string);
+
+			if (keyA == null || keyB == null) {
+				return keyA == null ? 1 : -1;
+			}
 
 			if (typeof keyA === 'string' && typeof keyB === 'string') {
 				return options?.sortOrder === 'desc' ?
@@ -113,11 +125,9 @@ export function sortAnArray<T extends GenericObjectAny>(
 					:	Number(keyA) - Number(keyB);
 			}
 
-			throw new Error(
-				'Cannot compare non-string/non-number/non-boolean properties.',
-			);
+			return 0;
 		});
 	}
 
-	throw new Error('Invalid array or missing "sortByField" for objects.');
+	return array;
 }

@@ -41,6 +41,18 @@ export type DotNotationKeyAny<T> =
 		}[keyof T & string]
 	:	never;
 
+/** - Extract only primitive keys from an object, including nested dot-notation keys. */
+export type NestedPrimitiveKey<T> =
+	T extends GenericObjectAny ?
+		{
+			[K in keyof T & string]: T[K] extends Primitive ?
+				K // Direct primitive key
+			: T[K] extends GenericObjectAny ?
+				`${K}.${NestedPrimitiveKey<T[K]>}` // Nested primitive key
+			:	never;
+		}[keyof T & string]
+	:	never;
+
 /** - Options for `sanitizeData` */
 export interface SanitizeOptions<T extends GenericObjectAny> {
 	/** Keys to ignore */
