@@ -117,6 +117,7 @@ export const flattenObjectKeyValue = <T extends GenericObjectAny>(
 
 	return flattened as T;
 };
+
 /**
  * * Flattens a nested object into a dot notation format.
  *
@@ -172,7 +173,7 @@ export const flattenObjectDotNotation = <T extends GenericObjectAny>(
  * @returns A new object containing only the changed fields.
  */
 export const extractUpdatedFields = <T extends GenericObjectAny>(
-	baseObject: T,
+	baseObject: T | Partial<T>,
 	updatedObject: Partial<T>,
 ): Partial<T> => {
 	const updatedFields: Partial<T> = {};
@@ -184,7 +185,7 @@ export const extractUpdatedFields = <T extends GenericObjectAny>(
 		) {
 			if (updatedObject[key] && isObject(updatedObject[key])) {
 				updatedFields[key] = extractUpdatedFields(
-					baseObject[key],
+					baseObject[key] as T,
 					updatedObject[key],
 				) as T[keyof T];
 
@@ -207,25 +208,29 @@ export const extractUpdatedFields = <T extends GenericObjectAny>(
  * @param updatedObject The modified object containing potential new fields.
  * @returns A new object containing only the new fields.
  */
-export const extractNewFields = <T extends GenericObjectAny>(
-	baseObject: T,
-	updatedObject: Partial<T> & GenericObjectAny,
-): GenericObjectAny => {
-	const newFields: GenericObjectAny = {};
+export const extractNewFields = <
+	T extends GenericObjectAny,
+	U extends GenericObjectAny,
+>(
+	baseObject: T | Partial<T>,
+	updatedObject: Partial<T> & Partial<U>,
+): Partial<U> => {
+	const newFields: Partial<U> = {};
 
 	for (const key in updatedObject) {
 		if (!(key in baseObject)) {
 			// Directly assign new fields
-			newFields[key] = updatedObject[key];
+			newFields[key as keyof Partial<U>] = updatedObject[key];
 		} else if (isObject(updatedObject[key]) && isObject(baseObject[key])) {
 			// Recursively extract new fields inside nested objects
 			const nestedNewFields = extractNewFields(
-				baseObject[key] as GenericObjectAny,
-				updatedObject[key] as GenericObjectAny,
+				baseObject[key] as T,
+				updatedObject[key] as Partial<T> & Partial<U>,
 			);
 
 			if (!isEmptyObject(nestedNewFields)) {
-				newFields[key] = nestedNewFields as T[keyof T];
+				newFields[key as keyof Partial<U>] =
+					nestedNewFields as T[keyof T];
 			}
 		}
 	}
@@ -240,20 +245,23 @@ export const extractNewFields = <T extends GenericObjectAny>(
  * @param updatedObject The modified object containing potential updates.
  * @returns An object containing modified fields and new fields separately.
  */
-export const extractUpdatedAndNewFields = <T extends GenericObjectAny>(
-	baseObject: T,
-	updatedObject: Partial<T> & GenericObjectAny,
-): Partial<T> & GenericObjectAny => {
+export const extractUpdatedAndNewFields = <
+	T extends GenericObjectAny,
+	U extends GenericObjectAny,
+>(
+	baseObject: T | Partial<T>,
+	updatedObject: Partial<T> & Partial<U>,
+): Partial<T> & Partial<U> => {
 	const updatedFields: Partial<T> = {};
-	const newFields: GenericObjectAny = {};
+	const newFields: Partial<U> = {};
 
 	for (const key in updatedObject) {
 		if (!(key in baseObject)) {
-			newFields[key] = updatedObject[key];
+			newFields[key as keyof Partial<U>] = updatedObject[key];
 		} else if (!isDeepEqual(updatedObject[key], baseObject[key])) {
 			if (updatedObject[key] && isObject(updatedObject[key])) {
 				updatedFields[key as keyof T] = extractUpdatedAndNewFields(
-					baseObject[key],
+					baseObject[key] as T,
 					updatedObject[key],
 				) as T[keyof T];
 
