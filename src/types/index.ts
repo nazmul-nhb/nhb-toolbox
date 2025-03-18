@@ -15,6 +15,11 @@ export type PrimitiveKey<T> = {
 	[K in keyof T]: T[K] extends Primitive ? K : never;
 }[keyof T];
 
+/** Extract primitive (string, number or boolean) key(s) from an object */
+export type NonNullishPrimitiveKey<T> = {
+	[K in keyof T]: T[K] extends string | number | boolean ? K : never;
+}[keyof T];
+
 /** Generic function type */
 export type GenericFn = (...args: any[]) => void;
 

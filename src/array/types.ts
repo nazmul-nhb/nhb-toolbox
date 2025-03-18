@@ -8,9 +8,6 @@ import type { PrimitiveKey } from '../types';
  *  */
 export type Flattened<T> = T extends (infer U)[] ? Flattened<U> : T;
 
-/** - Input for `createOptionsArray`. */
-export type OptionInput = Record<string, any>;
-
 /**
  * - Configuration for `createOptionsArray`.
  * - Defines the mapping between keys in the input objects and the keys in the output options.
@@ -47,9 +44,6 @@ export interface OptionsConfig<T, K1, K2> {
 	secondFieldName?: K2;
 }
 
-/** - Object type with string or number or boolean as value for each key. */
-export type InputObject = Record<string, string | number | boolean>;
-
 /** - Option for sorting order. */
 export interface OrderOption {
 	/**
@@ -66,5 +60,5 @@ export interface OrderOption {
  */
 export interface SortOptions<T extends GenericObjectAny> extends OrderOption {
 	/** The field by which to sort the objects in the array. */
-	sortByField?: keyof T;
+	sortByField?: PrimitiveKey<T>;
 }

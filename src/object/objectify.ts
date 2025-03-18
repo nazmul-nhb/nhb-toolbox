@@ -1,6 +1,7 @@
+import type { UncontrolledAny } from '../types';
 import { isDeepEqual } from '../utils';
 import { isEmptyObject, isObject } from './basics';
-import type { GenericObjectAny, GenericObjectStrict } from './types';
+import type { GenericObjectAny } from './types';
 
 /**
  * * Deeply merge two or more objects using `Map`.
@@ -8,16 +9,16 @@ import type { GenericObjectAny, GenericObjectStrict } from './types';
  * @param objects Objects to merge.
  * @returns Merged object.
  */
-export const mergeObjects = <T extends GenericObjectStrict>(
+export const mergeObjects = <T extends GenericObjectAny>(
 	...objects: T[]
 ): T => {
-	const map = new Map<string, unknown>();
+	const map = new Map<string, UncontrolledAny>();
 
 	objects.forEach((obj) => {
 		for (const key in obj) {
 			const existingValue = map.get(key);
 
-			if (obj[key] instanceof Object && !Array.isArray(obj[key])) {
+			if ((obj[key] as T) instanceof Object && !Array.isArray(obj[key])) {
 				// If the key already exists in the map and both are objects, merge them
 				if (
 					existingValue &&
@@ -27,8 +28,8 @@ export const mergeObjects = <T extends GenericObjectStrict>(
 					map.set(
 						key,
 						mergeObjects(
-							existingValue as GenericObjectStrict,
-							obj[key] as GenericObjectStrict,
+							existingValue as GenericObjectAny,
+							obj[key] as GenericObjectAny,
 						),
 					);
 				} else {
@@ -59,20 +60,17 @@ export const mergeObjects = <T extends GenericObjectStrict>(
  * @param objects Objects to merge.
  * @returns Merged object with flattened structure.
  */
-export const mergeAndFlattenObjects = <T extends GenericObjectStrict>(
+export const mergeAndFlattenObjects = <T extends GenericObjectAny>(
 	...objects: T[]
-): GenericObjectStrict => {
+): GenericObjectAny => {
 	const map = new Map<string, unknown>();
 
-	const _flattenObject = (
-		obj: GenericObjectStrict,
-		parentKey: keyof T = '',
-	) => {
+	const _flattenObject = (obj: GenericObjectAny, parentKey: keyof T = '') => {
 		for (const key in obj) {
 			const newKey = parentKey ? `${String(parentKey)}.${key}` : key;
 			if (obj[key] instanceof Object && !Array.isArray(obj[key])) {
 				// Recursively flatten nested objects
-				_flattenObject(obj[key] as GenericObjectStrict, newKey);
+				_flattenObject(obj[key] as GenericObjectAny, newKey);
 			} else {
 				// Set the flattened key
 				map.set(newKey, obj[key]);
@@ -125,9 +123,9 @@ export const flattenObjectKeyValue = <T extends GenericObjectAny>(
  * @param object - The `object` to flatten.
  * @returns A `flattened object` with dot notation keys.
  */
-export const flattenObjectDotNotation = <T extends GenericObjectStrict>(
+export const flattenObjectDotNotation = <T extends GenericObjectAny>(
 	object: T,
-): GenericObjectStrict => {
+): GenericObjectAny => {
 	/**
 	 * * Recursively flattens an object, transforming nested structures into dot-notation keys.
 	 *
@@ -138,8 +136,8 @@ export const flattenObjectDotNotation = <T extends GenericObjectStrict>(
 	const _flattenObject = (
 		source: T,
 		prefix: keyof T = '',
-	): GenericObjectStrict => {
-		const flattened: GenericObjectStrict = {};
+	): GenericObjectAny => {
+		const flattened: GenericObjectAny = {};
 
 		for (const [key, value] of Object.entries(source)) {
 			// Construct the dot-notation key
@@ -211,9 +209,9 @@ export const extractUpdatedFields = <T extends GenericObjectAny>(
  */
 export const extractNewFields = <T extends GenericObjectAny>(
 	baseObject: T,
-	updatedObject: Partial<T>,
-): Partial<T> => {
-	const newFields: Partial<T> = {};
+	updatedObject: Partial<T> & GenericObjectAny,
+): GenericObjectAny => {
+	const newFields: GenericObjectAny = {};
 
 	for (const key in updatedObject) {
 		if (!(key in baseObject)) {

@@ -1,5 +1,6 @@
+import type { GenericObjectAny } from '../object/types';
 import { isDeepEqual } from '../utils';
-import type { OptionInput, OptionsConfig } from './types';
+import type { OptionsConfig } from './types';
 
 /**
  * * Converts an array of objects into a formatted array of options.
@@ -10,7 +11,7 @@ import type { OptionInput, OptionsConfig } from './types';
  * @returns An array of options, where each option has `value` and `label` fields as default or as specified by user in the config options.
  */
 export const createOptionsArray = <
-	T extends OptionInput,
+	T extends GenericObjectAny,
 	K1 extends string = 'value',
 	K2 extends string = 'label',
 >(

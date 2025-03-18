@@ -18,6 +18,9 @@ export type QueryObjectValue = Primitive | Primitive[] | QueryObject;
  */
 export type QueryObject = { [key: string]: QueryObjectValue };
 
+/** - Object type with string or number or boolean as value for each key. */
+export type GenericObjectPrimitive = Record<string, string | number | boolean>;
+
 /** - Dot-notation keys for nested objects */
 export type DotNotationKeyStrict<T> =
 	T extends GenericObjectStrict ?
@@ -39,9 +42,9 @@ export type DotNotationKeyAny<T> =
 	:	never;
 
 /** - Options for `sanitizeData` */
-export interface SanitizeOptions<T extends GenericObjectStrict> {
+export interface SanitizeOptions<T extends GenericObjectAny> {
 	/** Keys to ignore */
-	keysToIgnore?: DotNotationKeyStrict<T>[];
+	keysToIgnore?: DotNotationKeyAny<T>[];
 	/** Whether to trim string values. Defaults to `true` */
 	trimStrings?: boolean;
 	/** Whether to exclude nullish (null or undefined) values. Defaults to `false` */
@@ -50,8 +53,7 @@ export interface SanitizeOptions<T extends GenericObjectStrict> {
 
 /** - Data after sanitization. */
 export type SanitizedData<T> = {
-	[P in keyof T]?: T[P] extends GenericObjectStrict ? SanitizedData<T[P]>
-	:	T[P];
+	[P in keyof T]?: T[P] extends GenericObjectAny ? SanitizedData<T[P]> : T[P];
 };
 
 /**
