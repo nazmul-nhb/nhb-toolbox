@@ -1,7 +1,7 @@
 import type { UncontrolledAny } from '../types';
 import type {
-	DotNotationKey,
-	GenericObject,
+	DotNotationKeyStrict,
+	GenericObjectStrict,
 	Numberified,
 	Stringified,
 } from './types';
@@ -17,11 +17,11 @@ import type {
  * @returns The modified object with the converted values as `"string"` or `"number"`.
  */
 export function convertObjectValues<
-	T extends GenericObject,
+	T extends GenericObjectStrict,
 	C extends 'string' | 'number',
 >(
 	data: T,
-	options: { keys: DotNotationKey<T>[]; convertTo: C },
+	options: { keys: DotNotationKeyStrict<T>[]; convertTo: C },
 ): C extends 'string' ? Stringified<T>
 : C extends 'number' ? Numberified<T>
 : never;
@@ -37,11 +37,11 @@ export function convertObjectValues<
  * @returns The modified array of objects with the converted values as `"string"` or `"number"`.
  */
 export function convertObjectValues<
-	T extends GenericObject,
+	T extends GenericObjectStrict,
 	C extends 'string' | 'number',
 >(
 	data: T[],
-	options: { keys: DotNotationKey<T>[]; convertTo: C },
+	options: { keys: DotNotationKeyStrict<T>[]; convertTo: C },
 ): C extends 'string' ? Stringified<T>[]
 : C extends 'number' ? Numberified<T>[]
 : never;
@@ -57,11 +57,11 @@ export function convertObjectValues<
  * @returns The modified object or array of objects with the converted values, with updated types.
  */
 export function convertObjectValues<
-	T extends GenericObject,
+	T extends GenericObjectStrict,
 	C extends 'string' | 'number',
 >(
 	data: T | T[],
-	options: { keys: DotNotationKey<T>[]; convertTo: C },
+	options: { keys: DotNotationKeyStrict<T>[]; convertTo: C },
 ): C extends 'string' ? Stringified<T> | Stringified<T>[]
 : C extends 'number' ? Numberified<T> | Numberified<T>[]
 : never {

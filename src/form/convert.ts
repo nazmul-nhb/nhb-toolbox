@@ -1,5 +1,5 @@
 import { isValidEmptyArray } from '../array/basics';
-import type { LooseObject } from '../object/types';
+import type { GenericObjectAny } from '../object/types';
 
 /**
  * * Utility to convert object into FormData.
@@ -7,7 +7,7 @@ import type { LooseObject } from '../object/types';
  * @param data Data to convert into FormData.
  * @returns Converted FormData.
  */
-export const convertIntoFormData = <T extends LooseObject>(
+export const convertIntoFormData = <T extends GenericObjectAny>(
 	data: T,
 ): FormData => {
 	const formData = new FormData();

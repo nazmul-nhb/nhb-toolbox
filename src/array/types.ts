@@ -1,4 +1,5 @@
-import type { PrimitiveKey, UncontrolledAny } from '../types';
+import type { GenericObjectAny } from '../object/types';
+import type { PrimitiveKey } from '../types';
 
 /**
  *  * Flatten Array or Wrap in Array
@@ -8,7 +9,7 @@ import type { PrimitiveKey, UncontrolledAny } from '../types';
 export type Flattened<T> = T extends (infer U)[] ? Flattened<U> : T;
 
 /** - Input for `createOptionsArray`. */
-export type OptionInput = Record<string, UncontrolledAny>;
+export type OptionInput = Record<string, any>;
 
 /**
  * - Configuration for `createOptionsArray`.
@@ -63,8 +64,7 @@ export interface OrderOption {
  * * Options for sorting an array of objects.
  * @template T - The type of objects in the array.
  */
-export interface SortOptions<T extends Record<string, unknown>>
-	extends OrderOption {
+export interface SortOptions<T extends GenericObjectAny> extends OrderOption {
 	/** The field by which to sort the objects in the array. */
 	sortByField?: keyof T;
 }

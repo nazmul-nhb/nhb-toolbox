@@ -1,5 +1,5 @@
 import { flattenObjectKeyValue } from './objectify';
-import type { GenericObject, QueryObject } from './types';
+import type { GenericObjectStrict, QueryObject } from './types';
 
 /**
  * * Utility to generate query parameters from an object.
@@ -58,7 +58,7 @@ export const generateQueryParams = <T extends QueryObject>(
  * @param obj Object to clone.
  * @returns Deep cloned object.
  */
-export const cloneObject = <T extends GenericObject>(obj: T): T => {
+export const cloneObject = <T extends GenericObjectStrict>(obj: T): T => {
 	return JSON.parse(JSON.stringify(obj));
 };
 
@@ -68,7 +68,9 @@ export const cloneObject = <T extends GenericObject>(obj: T): T => {
  * @param obj Object to check.
  * @returns Whether the object is empty.
  */
-export const isEmptyObject = <T extends GenericObject>(obj: T): boolean => {
+export const isEmptyObject = <T extends GenericObjectStrict>(
+	obj: T,
+): boolean => {
 	if (obj != null) return countObjectFields(obj) === 0;
 
 	return false;
@@ -80,7 +82,9 @@ export const isEmptyObject = <T extends GenericObject>(obj: T): boolean => {
  * @param obj Object to check.
  * @returns Number of fields in the object.
  */
-export const countObjectFields = <T extends GenericObject>(obj: T): number => {
+export const countObjectFields = <T extends GenericObjectStrict>(
+	obj: T,
+): number => {
 	if (obj != null) return Object.keys(obj).length;
 
 	return 0;

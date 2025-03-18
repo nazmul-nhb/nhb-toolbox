@@ -1,24 +1,14 @@
-import type { LooseObject } from '../object/types';
-
-/** - Dot-notation keys for nested objects */
-export type AnyDotNotationKey<T> =
-	T extends LooseObject ?
-		{
-			[K in keyof T & string]: T[K] extends LooseObject ?
-				`${K}` | `${K}.${AnyDotNotationKey<T[K]>}`
-			:	`${K}`;
-		}[keyof T & string]
-	:	never;
+import type { DotNotationKeyAny } from '../object/types';
 
 export interface FormDataConfigs<T> {
 	/** - Keys to exclude from processing. Ignored keys are ignored even if they're in other options */
-	ignoreKeys?: AnyDotNotationKey<T>[];
+	ignoreKeys?: DotNotationKeyAny<T>[];
 	/** - Keys to preserve even if falsy. `*` to include all keys */
-	requiredKeys?: '*' | AnyDotNotationKey<T>[];
+	requiredKeys?: '*' | DotNotationKeyAny<T>[];
 	/**  - Keys to convert to lowercase. `*` to include all keys */
-	lowerCaseKeys?: '*' | AnyDotNotationKey<T>[];
+	lowerCaseKeys?: '*' | DotNotationKeyAny<T>[];
 	/** - Dot-notation paths to preserve (e.g., 'user.settings.theme'). `*` to include all keys */
-	preservePaths?: '*' | AnyDotNotationKey<T>[];
+	preservePaths?: '*' | DotNotationKeyAny<T>[];
 	/** - Whether to trim string values */
 	trimStrings?: boolean;
 }

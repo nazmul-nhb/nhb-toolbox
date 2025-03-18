@@ -1,10 +1,10 @@
 import type { Primitive } from '../types';
 
 /** - Generic object with `unknown` value */
-export type GenericObject = Record<string, unknown>;
+export type GenericObjectStrict = Record<string, unknown>;
 
 /** - Generic object but with `any` value */
-export type LooseObject = Record<string, any>;
+export type GenericObjectAny = Record<string, any>;
 
 /**
  * * Represents a value that can be used in a query object.
@@ -19,19 +19,29 @@ export type QueryObjectValue = Primitive | Primitive[] | QueryObject;
 export type QueryObject = { [key: string]: QueryObjectValue };
 
 /** - Dot-notation keys for nested objects */
-export type DotNotationKey<T> =
-	T extends GenericObject ?
+export type DotNotationKeyStrict<T> =
+	T extends GenericObjectStrict ?
 		{
-			[K in keyof T & string]: T[K] extends GenericObject ?
-				`${K}` | `${K}.${DotNotationKey<T[K]>}`
+			[K in keyof T & string]: T[K] extends GenericObjectStrict ?
+				`${K}` | `${K}.${DotNotationKeyStrict<T[K]>}`
+			:	`${K}`;
+		}[keyof T & string]
+	:	never;
+
+/** - Dot-notation keys for nested objects */
+export type DotNotationKeyAny<T> =
+	T extends GenericObjectAny ?
+		{
+			[K in keyof T & string]: T[K] extends GenericObjectAny ?
+				`${K}` | `${K}.${DotNotationKeyAny<T[K]>}`
 			:	`${K}`;
 		}[keyof T & string]
 	:	never;
 
 /** - Options for `sanitizeData` */
-export interface SanitizeOptions<T extends GenericObject> {
+export interface SanitizeOptions<T extends GenericObjectStrict> {
 	/** Keys to ignore */
-	keysToIgnore?: DotNotationKey<T>[];
+	keysToIgnore?: DotNotationKeyStrict<T>[];
 	/** Whether to trim string values. Defaults to `true` */
 	trimStrings?: boolean;
 	/** Whether to exclude nullish (null or undefined) values. Defaults to `false` */
@@ -40,7 +50,8 @@ export interface SanitizeOptions<T extends GenericObject> {
 
 /** - Data after sanitization. */
 export type SanitizedData<T> = {
-	[P in keyof T]?: T[P] extends GenericObject ? SanitizedData<T[P]> : T[P];
+	[P in keyof T]?: T[P] extends GenericObjectStrict ? SanitizedData<T[P]>
+	:	T[P];
 };
 
 /**
@@ -48,10 +59,10 @@ export type SanitizedData<T> = {
  * ! Unused
  */
 export type KeyConversion<T> =
-	T extends GenericObject ?
+	T extends GenericObjectStrict ?
 		{
 			[K in keyof T & string]: K extends string ?
-				T[K] extends GenericObject ?
+				T[K] extends GenericObjectStrict ?
 					`${K}` | `${K}.${KeyConversion<T[K]>}`
 				:	`${K}`
 			:	never;

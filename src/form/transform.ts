@@ -1,8 +1,8 @@
 import { isValidEmptyArray } from '../array/basics';
 import { isEmptyObject } from '../object/basics';
-import type { LooseObject } from '../object/types';
+import type { DotNotationKeyAny, GenericObjectAny } from '../object/types';
 import type { UncontrolledAny } from '../types';
-import type { AnyDotNotationKey, FormDataConfigs } from './types';
+import type { FormDataConfigs } from './types';
 
 /**
  * Utility to convert object into FormData in a controlled way.
@@ -12,7 +12,7 @@ import type { AnyDotNotationKey, FormDataConfigs } from './types';
  *
  * @returns FormData instance containing the sanitized and transformed data
  */
-export const createControlledFormData = <T extends LooseObject>(
+export const createControlledFormData = <T extends GenericObjectAny>(
 	data: T,
 	configs?: FormDataConfigs<T>,
 ): FormData => {
@@ -22,7 +22,7 @@ export const createControlledFormData = <T extends LooseObject>(
 		const transformedKey =
 			(
 				configs?.lowerCaseKeys === '*' ||
-				configs?.lowerCaseKeys?.includes(key as AnyDotNotationKey<T>)
+				configs?.lowerCaseKeys?.includes(key as DotNotationKeyAny<T>)
 			) ?
 				key.toLowerCase()
 			:	key;
@@ -45,7 +45,7 @@ export const createControlledFormData = <T extends LooseObject>(
 		} else {
 			const isRequired =
 				configs?.requiredKeys === '*' ||
-				configs?.requiredKeys?.includes(key as AnyDotNotationKey<T>);
+				configs?.requiredKeys?.includes(key as DotNotationKeyAny<T>);
 			const isNotNullish = value != null && value !== '';
 
 			if (isNotNullish || isRequired) {
@@ -55,7 +55,7 @@ export const createControlledFormData = <T extends LooseObject>(
 	};
 
 	// Helper function to check if a key matches a preserved path
-	const isPathPreserved = (fullKey: AnyDotNotationKey<T>) => {
+	const isPathPreserved = (fullKey: DotNotationKeyAny<T>) => {
 		if (Array.isArray(configs?.preservePaths))
 			return configs?.preservePaths?.some(
 				(path) => fullKey === path || fullKey.startsWith(`${path}.`),
@@ -64,12 +64,12 @@ export const createControlledFormData = <T extends LooseObject>(
 		return configs?.preservePaths === '*';
 	};
 
-	const processObject = (obj: LooseObject, parentKey = '') => {
+	const processObject = (obj: GenericObjectAny, parentKey = '') => {
 		Object.entries(obj).forEach(([key, value]) => {
 			const fullKey = (
 				parentKey ?
 					`${parentKey}.${key}`
-				:	key) as AnyDotNotationKey<T>;
+				:	key) as DotNotationKeyAny<T>;
 
 			// Skip keys that are in ignoreKeys
 			if (configs?.ignoreKeys?.includes(fullKey)) return;

@@ -1,8 +1,8 @@
 import { trimString } from '../string/basics';
 import { isEmptyObject } from './basics';
 import type {
-	DotNotationKey,
-	GenericObject,
+	DotNotationKeyStrict,
+	GenericObjectStrict,
 	SanitizedData,
 	SanitizeOptions,
 } from './types';
@@ -15,7 +15,7 @@ import type {
  * @param options - Options that define which keys to ignore, whether to trim string values, and whether to exclude nullish values.
  * @returns A new object with the specified modifications.
  */
-export function sanitizeData<T extends GenericObject>(
+export function sanitizeData<T extends GenericObjectStrict>(
 	object: T,
 	options?: SanitizeOptions<T>,
 ): SanitizedData<T>;
@@ -28,7 +28,7 @@ export function sanitizeData<T extends GenericObject>(
  * @param options - Options that define which keys to ignore, whether to trim string values, and whether to exclude nullish values.
  * @returns A new array of objects with the specified modifications.
  */
-export function sanitizeData<T extends GenericObject>(
+export function sanitizeData<T extends GenericObjectStrict>(
 	array: T[],
 	options?: SanitizeOptions<T>,
 ): SanitizedData<T>[];
@@ -57,7 +57,7 @@ export function sanitizeData(input: string[]): string[];
  * @param options - Options for processing.
  * @returns A new string, object or array of strings or objects with the specified modifications.
  */
-export function sanitizeData<T extends GenericObject>(
+export function sanitizeData<T extends GenericObjectStrict>(
 	input: string | string[] | T | T[],
 	options?: SanitizeOptions<T>,
 ): string | string[] | SanitizedData<T> | SanitizedData<T>[] {
@@ -82,7 +82,7 @@ export function sanitizeData<T extends GenericObject>(
 			const fullKeyPath = parentPath ? `${parentPath}.${key}` : key;
 
 			// Skip ignored keys
-			if (ignoreKeySet.has(fullKeyPath as DotNotationKey<T>)) {
+			if (ignoreKeySet.has(fullKeyPath as DotNotationKeyStrict<T>)) {
 				return acc;
 			}
 

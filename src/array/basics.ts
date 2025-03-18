@@ -1,4 +1,4 @@
-import type { GenericObject } from '../object/types';
+import type { GenericObjectAny } from '../object/types';
 import type { Flattened } from './types';
 
 /**
@@ -27,7 +27,7 @@ export const flattenArray = <T>(input: T | T[]): Flattened<T>[] => {
  * @returns The filtered array of objects.
  * @throws {Error} If the input is not a valid array.
  */
-export const filterArrayOfObjects = <T extends GenericObject>(
+export const filterArrayOfObjects = <T extends GenericObjectAny>(
 	array: T[],
 	conditions: { [K in keyof T]?: (value: T[K] | undefined) => boolean },
 ): T[] => {

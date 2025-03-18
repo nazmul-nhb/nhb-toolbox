@@ -1,4 +1,5 @@
-import type { InputObject, OrderOption, SortOptions } from './types';
+import type { GenericObjectAny } from '../object/types';
+import type { OrderOption, SortOptions } from './types';
 
 /**
  * * Sorts an array of strings.
@@ -37,7 +38,7 @@ export function sortAnArray(array: boolean[], options?: OrderOption): boolean[];
  * @param options - Sorting options.
  * @returns The sorted array.
  */
-export function sortAnArray<T extends InputObject>(
+export function sortAnArray<T extends GenericObjectAny>(
 	array: T[],
 	options: SortOptions<T>,
 ): T[];
@@ -54,7 +55,7 @@ export function sortAnArray<T extends InputObject>(
  * @param options - Sorting options for objects.
  * @returns The sorted array.
  */
-export function sortAnArray<T extends InputObject>(
+export function sortAnArray<T extends GenericObjectAny>(
 	array: (number | string | boolean | T)[],
 	options?: SortOptions<T>,
 ): (number | string | boolean | T)[] {
