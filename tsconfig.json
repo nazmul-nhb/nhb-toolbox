@@ -21,7 +21,7 @@
 		"forceConsistentCasingInFileNames": true, // Case sensitivity for imports
 		"allowJs": true, // Allow including JavaScript files
 		"checkJs": true, // Allow checks on JS files
-		"emitDeclarationOnly": false, // Emit both JavaScript and declaration files
+		"emitDeclarationOnly": false // Emit both JavaScript and declaration files
 	},
 	"include": ["src/**/*.ts", "src/**/*.d.ts"], // Include all TS files
 	"exclude": ["node_modules", "**/*.test.ts", "**/__tests__/**/*"] // Exclude test files
