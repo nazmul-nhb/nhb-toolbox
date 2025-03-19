@@ -37,10 +37,17 @@ jobs:
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-              # Create a GitHub release
+            # Create a Git tag for the release
+            - name: Create Git Tag
+              run: |
+                  VERSION=$(node -p "require('./package.json').version")
+                  git tag "v$VERSION"
+                  git push origin "v$VERSION"
+
+            # Create GitHub Release
             - name: Create Release
               uses: softprops/action-gh-release@v1
               with:
-                  tag_name: ${{ steps.publish.outputs.version }} # Or use any other step for version
+                  tag_name: 'v${{ steps.create_git_tag.outputs.version }}' # Reference the version tag
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Use the GitHub token for authentication
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Use GitHub token for authentication
