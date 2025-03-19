@@ -7,7 +7,8 @@ on:
     workflow_dispatch:
 
 permissions:
-    contents: read
+    contents: write # Grant read and write access to read repo and create releases
+    id-token: write # Grant access to GitHub token for authentication
 
 jobs:
     publish:
@@ -35,3 +36,28 @@ jobs:
               run: pnpm publish --access public
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            # Extract version from package.json
+            - name: Get version from package.json
+              id: get_version
+              run: |
+                  VERSION=$(jq -r .version package.json)
+                  echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+            # Create a Git tag with the version
+            - name: Create Git tag
+              run: |
+                  git tag v${{ env.VERSION }}
+                  git push origin v${{ env.VERSION }}
+
+            # Create a GitHub release with the version
+            - name: Create GitHub release
+              uses: gh actions/create-release@v1
+              with:
+                  tag_name: v${{ env.VERSION }}
+                  release_name: Release ${{ env.VERSION }}
+                  body: 'Automated release for version ${{ env.VERSION }}'
+                  draft: false
+                  prerelease: false
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
