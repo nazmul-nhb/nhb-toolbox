@@ -70,7 +70,7 @@ async function runFormatter() {
                 });
             });
 
-        await execPromise("node scripts/format.mjs");
+        await execPromise("npm run format");
         console.info(chalk.magenta("🎨 Code formatting completed with format.mjs!"));
     } catch (error) {
         console.error(chalk.red("🛑 Error running format.mjs:", error));
