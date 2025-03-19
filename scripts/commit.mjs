@@ -23,7 +23,7 @@ async function updateVersion(newVersion) {
         console.info(chalk.green(`✅ Version updated to ${newVersion}`));
     } catch (error) {
         console.error(chalk.red("🛑 Error updating package.json:", error));
-        process.exit(1);
+        throw error;
     }
 }
 
@@ -52,6 +52,7 @@ async function commitAndPush(commitMessage) {
         console.info(chalk.blue(`🚀 Changes committed & pushed with message: "${commitMessage}"`));
     } catch (error) {
         console.error(chalk.red("🛑 Git error:", error));
+        throw error;
     }
 }
 
@@ -70,10 +71,11 @@ async function runFormatter() {
                 });
             });
 
-        await execPromise("npm run format");
-        console.info(chalk.magenta("🎨 Code formatting completed with format.mjs!"));
+        await execPromise("prettier --write src/ package.json");
+        console.info(chalk.magenta("🎨 Code formatting completed with prettier!"));
     } catch (error) {
-        console.error(chalk.red("🛑 Error running format.mjs:", error));
+        console.error(chalk.red("🛑 Error running prettier:", error));
+        throw error;
     }
 }
 
