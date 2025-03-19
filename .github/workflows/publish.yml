@@ -55,8 +55,8 @@ jobs:
               uses: softprops/action-gh-release@v1
               with:
                   tag_name: 'v${{ env.VERSION }}'
-                  release_name: 'Release v${{ env.VERSION }}'
+                  release_name: 'Release of v${{ env.VERSION }}'
                   body: |
-                      This is an automatically created release for version ${{ env.VERSION }}.
+                      Find in [NPM Registry](https://www.npmjs.com/package/nhb-toolbox).
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Use GitHub token for authentication
