@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import fs from 'fs/promises';
 import readline from 'readline/promises';
+import { execa } from 'execa';
 import progressEstimator from 'progress-estimator';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
@@ -45,26 +46,19 @@ async function updateVersion(newVersion) {
  */
 async function commitAndPush(commitMessage) {
 	try {
-		const { exec } = await import('child_process');
-		const execPromise = (cmd) =>
-			new Promise((resolve, reject) => {
-				exec(cmd, (error, stdout, stderr) => {
-					if (error) {
-						reject(error);
-					} else {
-						resolve(stdout || stderr);
-					}
-				});
-			});
+		console.info(chalk.blue('📤 Committing and pushing changes...'));
 
-		await execPromise('git add .');
-		await execPromise(`git commit -m "${commitMessage}"`);
-		await execPromise('git push');
+		await estimator(
+			execa('git', ['add', '.']).then(() =>
+				execa('git', ['commit', '-m', commitMessage]).then(() =>
+					execa('git', ['push'], { stdio: 'inherit' }),
+				),
+			),
+			chalk.blue('Committing & pushing...'),
+		);
 
 		console.info(
-			chalk.blue(
-				`🚀 Changes committed & pushed with message: "${commitMessage}"`,
-			),
+			chalk.green(`✅ Changes pushed with message: "${commitMessage}"`),
 		);
 	} catch (error) {
 		console.error(chalk.red('🛑 Git error:', error));
@@ -75,25 +69,14 @@ async function commitAndPush(commitMessage) {
 /** * Runs prettier to format the codebase. */
 async function runFormatter() {
 	try {
-		const { exec } = await import('child_process');
-		const execPromise = (cmd) =>
-			new Promise((resolve, reject) => {
-				exec(cmd, (error, stdout, stderr) => {
-					if (error) {
-						reject(error);
-					} else {
-						resolve(stdout || stderr);
-					}
-				});
-			});
+		console.info(chalk.magenta('🎨 Running Prettier to format code...'));
 
 		await estimator(
-			await execPromise('prettier --write .'),
-			chalk.magenta('🎨 Formatting code with Prettier...'),
+			execa('prettier', ['--write', '.'], { stdio: 'inherit' }),
+			chalk.magenta('Formatting in progress...'),
 		);
 
-		// await execPromise("prettier --write .");
-		// console.info(chalk.magenta("🎨 Code formatting completed with prettier!"));
+		console.info(chalk.green('✅ Formatting complete!'));
 	} catch (error) {
 		console.error(chalk.red('🛑 Error running prettier:', error));
 		throw error;
