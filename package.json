@@ -1,6 +1,6 @@
 {
   "name": "nhb-toolbox",
-  "version": "2.4.8",
+  "version": "2.4.9",
   "description": "A versatile collection of smart, efficient, and reusable utility functions for everyday development needs.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,7 +12,7 @@
     "format": "prettier --write src/",
     "lint": "node scripts/.mjs",
     "fix": "node scripts/fix.mjs",
-    "bump": "node scripts/bump.mjs"
+    "commit": "node scripts/commit.mjs"
   },
   "publishConfig": {
     "access": "public"

@@ -29,9 +29,9 @@ async function updateVersion(newVersion) {
 
 /**
  * * Runs Git commands to commit and push version changes.
- * @param {string} newVersion - The new version for commit message.
+ * @param {string} commitMessage - The commit message for version update.
  */
-async function commitAndPush(newVersion) {
+async function commitAndPush(commitMessage) {
     try {
         const { exec } = await import("child_process");
         const execPromise = (cmd) =>
@@ -46,16 +46,38 @@ async function commitAndPush(newVersion) {
             });
 
         await execPromise("git add .");
-        await execPromise(`git commit -m "chore: updated version to ${newVersion}"`);
+        await execPromise(`git commit -m "${commitMessage}"`);
         await execPromise("git push");
 
-        console.info(chalk.blue(`🚀 Version ${newVersion} committed & pushed successfully!`));
+        console.info(chalk.blue(`🚀 Changes committed & pushed with message: "${commitMessage}"`));
     } catch (error) {
         console.error(chalk.red("🛑 Git error:", error));
     }
 }
 
-/** * Main function to prompt for version, update `package.json`, and commit changes. */
+/** * Runs `node format.mjs`. */
+async function runFormatter() {
+    try {
+        const { exec } = await import("child_process");
+        const execPromise = (cmd) =>
+            new Promise((resolve, reject) => {
+                exec(cmd, (error, stdout, stderr) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(stdout || stderr);
+                    }
+                });
+            });
+
+        await execPromise("node format.mjs");
+        console.info(chalk.magenta("🎨 Code formatting completed with format.mjs!"));
+    } catch (error) {
+        console.error(chalk.red("🛑 Error running format.mjs:", error));
+    }
+}
+
+/** * Main function to handle version bump, commit, and formatting. */
 async function main() {
     try {
         const packageJsonPath = "./package.json";
@@ -64,15 +86,17 @@ async function main() {
         const currentVersion = packageJson.version;
 
         const newVersion = await rl.question(chalk.cyan(`Current version: ${chalk.yellow(currentVersion)}\nEnter new version: `));
-        rl.close();
-
         if (!/^\d+\.\d+\.\d+$/.test(newVersion)) {
-            console.info(chalk.yellow("⚠ Invalid version format! Use semver (e.g., 2.4.7)."));
+            console.info(chalk.yellow("⚠ Invalid version format! Use semver (e.g., 1.2.3)."));
             process.exit(1);
         }
 
+        const commitMessage = await rl.question(chalk.cyan("Enter commit message: "));
+        rl.close();
+
         await updateVersion(newVersion);
-        await commitAndPush(newVersion);
+        await runFormatter();
+        await commitAndPush(commitMessage);
     } catch (error) {
         console.error(chalk.red("🛑 Unexpected error:", error));
     }
