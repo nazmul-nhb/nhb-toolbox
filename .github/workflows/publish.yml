@@ -17,6 +17,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # Install pnpm first to avoid 'pnpm not found' error
+      - name: Install PNPM
+        run: npm install -g pnpm
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -24,13 +28,10 @@ jobs:
           registry-url: 'https://registry.npmjs.org/'
           cache: 'pnpm'
 
-      - name: Install PNPM
-        run: npm install -g pnpm
-
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile --store-dir ~/.pnpm-store
 
-      - name: Publish to npm
+      - name: Publish to NPM
         run: pnpm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
