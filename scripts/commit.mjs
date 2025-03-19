@@ -1,10 +1,35 @@
 import chalk from 'chalk';
-import fs from 'fs/promises';
-import readline from 'readline/promises';
 import { execa } from 'execa';
-import progressEstimator from 'progress-estimator';
-import { fileURLToPath } from 'url';
+import fs from 'fs/promises';
 import { dirname, join } from 'path';
+import progressEstimator from 'progress-estimator';
+import readline from 'readline/promises';
+import { fileURLToPath } from 'url';
+
+/**
+ * @typedef {Object} PackageJson
+ *
+ * @property {string} name - The name of the package.
+ * @property {string} version - The version of the package.
+ * @property {string} description - The description of the package.
+ * @property {string} main - The main entry point of the package.
+ * @property {string} types - The type definitions entry point of the package.
+ * @property {Record<string, string>} scripts - The scripts for running various commands.
+ * @property {Object} publishConfig - Configuration related to publishing the package.
+ * @property {string} publishConfig.access - The publish access level (e.g., "public").
+ * @property {string[]} files - List of files to include when publishing the package.
+ * @property {Object} repository - Information about the repository.
+ * @property {string} repository.type - The type of the version control system (e.g., "git").
+ * @property {string} repository.url - The URL of the repository.
+ * @property {string[]} keywords - Keywords related to the package.
+ * @property {Object} author - Information about the package author.
+ * @property {string} author.name - The name of the author.
+ * @property {string} author.email - The email of the author.
+ * @property {string} license - The license for the package.
+ * @property {Object} devDependencies - The development dependencies of the package.
+ * @property {Record<string, string>} devDependencies - List of dev dependencies with their versions.
+ * @property {string} packageManager - The package manager used (e.g., "pnpm").
+ */
 
 const rl = readline.createInterface({
 	input: process.stdin,
@@ -25,6 +50,8 @@ async function updateVersion(newVersion) {
 	try {
 		const packageJsonPath = './package.json';
 		const packageData = await fs.readFile(packageJsonPath, 'utf-8');
+
+		/** @type {PackageJson} */
 		const packageJson = JSON.parse(packageData);
 
 		packageJson.version = newVersion;
@@ -84,10 +111,12 @@ async function runFormatter() {
 }
 
 /** * Main function to handle version bump, commit, and formatting. */
-async function main() {
+(async () => {
 	try {
 		const packageJsonPath = './package.json';
 		const packageData = await fs.readFile(packageJsonPath, 'utf-8');
+
+		/** @type {PackageJson} */
 		const packageJson = JSON.parse(packageData);
 		const currentVersion = packageJson.version;
 
@@ -117,6 +146,4 @@ async function main() {
 		console.error(chalk.red('🛑 Unexpected Error:', error));
 		process.exit(1);
 	}
-}
-
-main();
+})();

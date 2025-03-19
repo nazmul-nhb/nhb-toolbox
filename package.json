@@ -1,6 +1,6 @@
 {
 	"name": "nhb-toolbox",
-	"version": "2.5.4",
+	"version": "2.5.5",
 	"description": "A versatile collection of smart, efficient, and reusable utility functions for everyday development needs.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -9,7 +9,7 @@
 		"build": "node scripts/build.mjs",
 		"prepublishOnly": "node scripts/build.mjs",
 		"test": "jest --coverage --verbose",
-		"format": "prettier --write src/",
+		"format": "prettier --write .",
 		"lint": "node scripts/.mjs",
 		"fix": "node scripts/fix.mjs",
 		"commit": "node scripts/commit.mjs"
