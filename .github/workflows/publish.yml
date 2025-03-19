@@ -39,8 +39,10 @@ jobs:
 
             # Create a Git tag for the release
             - name: Create Git Tag
+              id: create_git_tag
               run: |
                   VERSION=$(node -p "require('./package.json').version")
+                  echo "VERSION=$VERSION"
                   git tag "v$VERSION"
                   git push origin "v$VERSION"
 
@@ -48,6 +50,10 @@ jobs:
             - name: Create Release
               uses: softprops/action-gh-release@v1
               with:
-                  tag_name: 'v${{ steps.create_git_tag.outputs.version }}' # Reference the version tag
+                  tag_name: 'v${{ steps.create_git_tag.outputs.VERSION }}' # Reference the correct version tag
+                  release_name: 'Release v${{ steps.create_git_tag.outputs.VERSION }}' # Optional: You can add a release name
+                  body: |
+                      This is an automatically created release for version ${{ steps.create_git_tag.outputs.VERSION }}.
+                      You can update the description if necessary.
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Use GitHub token for authentication
