@@ -45,7 +45,7 @@ jobs:
                   echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
             # Create a Git tag with the version
-            - name: Create Git tag
+            - name: Create Git Tag
               run: |
                   git tag v${{ env.VERSION }}
                   git push origin v${{ env.VERSION }}
@@ -55,8 +55,9 @@ jobs:
               uses: softprops/action-gh-release@v1
               with:
                   tag_name: 'v${{ env.VERSION }}'
-                  release_name: 'Release of v${{ env.VERSION }}'
+                  name: 'Release of Version ${{ env.VERSION }}'
                   body: |
                       Find in [NPM Registry](https://www.npmjs.com/package/nhb-toolbox).
+                      Full Docs at [Official Docs](https://nhb-toolbox.vercel.app)
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Use GitHub token for authentication
