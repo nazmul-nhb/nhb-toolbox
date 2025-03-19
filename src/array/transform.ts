@@ -1,4 +1,4 @@
-import type { GenericObjectAny } from '../object/types';
+import type { GenericObject } from '../object/types';
 import { isDeepEqual } from '../utils';
 import type { OptionsConfig } from './types';
 
@@ -11,7 +11,7 @@ import type { OptionsConfig } from './types';
  * @returns An array of options, where each option has `value` and `label` fields as default or as specified by user in the config options.
  */
 export const createOptionsArray = <
-	T extends GenericObjectAny,
+	T extends GenericObject,
 	K1 extends string = 'value',
 	K2 extends string = 'label',
 >(

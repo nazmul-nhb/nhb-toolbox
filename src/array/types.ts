@@ -1,4 +1,4 @@
-import type { GenericObjectAny, NestedPrimitiveKey } from '../object/types';
+import type { GenericObject, NestedPrimitiveKey } from '../object/types';
 import type { PrimitiveKey } from '../types';
 
 /**
@@ -58,7 +58,7 @@ export interface OrderOption {
  * * Options for setting sortByField for sorting an array of objects.
  * @template T - The type of objects in the array.
  */
-export interface SortByOption<T extends GenericObjectAny> extends OrderOption {
+export interface SortByOption<T extends GenericObject> extends OrderOption {
 	/** The field by which to sort the objects in the array. */
 	sortByField: NestedPrimitiveKey<T>;
 }
@@ -67,5 +67,5 @@ export interface SortByOption<T extends GenericObjectAny> extends OrderOption {
  * * Options for sorting an array of objects.
  * @template T - The type of objects in the array.
  */
-export interface SortOptions<T extends GenericObjectAny>
+export interface SortOptions<T extends GenericObject>
 	extends Partial<SortByOption<T>> {}

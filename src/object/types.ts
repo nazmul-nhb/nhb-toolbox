@@ -4,7 +4,7 @@ import type { Primitive } from '../types';
 export type GenericObjectStrict = Record<string, unknown>;
 
 /** - Generic object but with `any` value */
-export type GenericObjectAny = Record<string, any>;
+export type GenericObject = Record<string, any>;
 
 /**
  * * Represents a value that can be used in a query object.
@@ -32,31 +32,31 @@ export type DotNotationKeyStrict<T> =
 	:	never;
 
 /** - Dot-notation keys for nested objects */
-export type DotNotationKeyAny<T> =
-	T extends GenericObjectAny ?
+export type DotNotationKey<T> =
+	T extends GenericObject ?
 		{
-			[K in keyof T & string]: T[K] extends GenericObjectAny ?
-				`${K}` | `${K}.${DotNotationKeyAny<T[K]>}`
+			[K in keyof T & string]: T[K] extends GenericObject ?
+				`${K}` | `${K}.${DotNotationKey<T[K]>}`
 			:	`${K}`;
 		}[keyof T & string]
 	:	never;
 
 /** - Extract only primitive keys from an object, including nested dot-notation keys. */
 export type NestedPrimitiveKey<T> =
-	T extends GenericObjectAny ?
+	T extends GenericObject ?
 		{
 			[K in keyof T & string]: T[K] extends Primitive ?
 				K // Direct primitive key
-			: T[K] extends GenericObjectAny ?
+			: T[K] extends GenericObject ?
 				`${K}.${NestedPrimitiveKey<T[K]>}` // Nested primitive key
 			:	never;
 		}[keyof T & string]
 	:	never;
 
 /** - Options for `sanitizeData` */
-export interface SanitizeOptions<T extends GenericObjectAny> {
+export interface SanitizeOptions<T extends GenericObject> {
 	/** Keys to ignore */
-	keysToIgnore?: DotNotationKeyAny<T>[];
+	keysToIgnore?: DotNotationKey<T>[];
 	/** Whether to trim string values. Defaults to `true` */
 	trimStrings?: boolean;
 	/** Whether to exclude nullish (null or undefined) values. Defaults to `false` */
@@ -65,7 +65,7 @@ export interface SanitizeOptions<T extends GenericObjectAny> {
 
 /** - Data after sanitization. */
 export type SanitizedData<T> = {
-	[P in keyof T]?: T[P] extends GenericObjectAny ? SanitizedData<T[P]> : T[P];
+	[P in keyof T]?: T[P] extends GenericObject ? SanitizedData<T[P]> : T[P];
 };
 
 /**

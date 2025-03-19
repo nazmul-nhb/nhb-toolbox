@@ -1,6 +1,6 @@
 import { isValidEmptyArray } from '../array/basics';
 import { isEmptyObject } from '../object/basics';
-import type { DotNotationKeyAny, GenericObjectAny } from '../object/types';
+import type { DotNotationKey, GenericObject } from '../object/types';
 import type { UncontrolledAny } from '../types';
 import type { FormDataConfigs } from './types';
 
@@ -12,7 +12,7 @@ import type { FormDataConfigs } from './types';
  *
  * @returns FormData instance containing the sanitized and transformed data
  */
-export const createControlledFormData = <T extends GenericObjectAny>(
+export const createControlledFormData = <T extends GenericObject>(
 	data: T,
 	configs?: FormDataConfigs<T>,
 ): FormData => {
@@ -22,7 +22,7 @@ export const createControlledFormData = <T extends GenericObjectAny>(
 		const transformedKey =
 			(
 				configs?.lowerCaseKeys === '*' ||
-				configs?.lowerCaseKeys?.includes(key as DotNotationKeyAny<T>)
+				configs?.lowerCaseKeys?.includes(key as DotNotationKey<T>)
 			) ?
 				key.toLowerCase()
 			:	key;
@@ -45,7 +45,7 @@ export const createControlledFormData = <T extends GenericObjectAny>(
 		} else {
 			const isRequired =
 				configs?.requiredKeys === '*' ||
-				configs?.requiredKeys?.includes(key as DotNotationKeyAny<T>);
+				configs?.requiredKeys?.includes(key as DotNotationKey<T>);
 			const isNotNullish = value != null && value !== '';
 
 			if (isNotNullish || isRequired) {
@@ -55,7 +55,7 @@ export const createControlledFormData = <T extends GenericObjectAny>(
 	};
 
 	// Helper function to check if a key matches a preserved path
-	const isPathPreserved = (fullKey: DotNotationKeyAny<T>) => {
+	const isPathPreserved = (fullKey: DotNotationKey<T>) => {
 		if (Array.isArray(configs?.preservePaths))
 			return configs?.preservePaths?.some(
 				(path) => fullKey === path || fullKey.startsWith(`${path}.`),
@@ -64,12 +64,12 @@ export const createControlledFormData = <T extends GenericObjectAny>(
 		return configs?.preservePaths === '*';
 	};
 
-	const processObject = (obj: GenericObjectAny, parentKey = '') => {
+	const processObject = (obj: GenericObject, parentKey = '') => {
 		Object.entries(obj).forEach(([key, value]) => {
 			const fullKey = (
 				parentKey ?
 					`${parentKey}.${key}`
-				:	key) as DotNotationKeyAny<T>;
+				:	key) as DotNotationKey<T>;
 
 			// Skip keys that are in ignoreKeys
 			if (configs?.ignoreKeys?.includes(fullKey)) return;

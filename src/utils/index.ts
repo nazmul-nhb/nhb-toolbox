@@ -1,5 +1,5 @@
 import { isValidEmptyArray } from '../array/basics';
-import type { GenericObjectAny } from '../object/types';
+import type { GenericObject } from '../object/types';
 import type { DelayedFn, GenericFn, ThrottledFn } from '../types';
 
 /**
@@ -33,10 +33,7 @@ export const isDeepEqual = <T>(a: T, b: T): boolean => {
 		if (aKeys.length !== bKeys.length) return false;
 
 		return aKeys.every((key) =>
-			isDeepEqual(
-				(a as GenericObjectAny)[key],
-				(b as GenericObjectAny)[key],
-			),
+			isDeepEqual((a as GenericObject)[key], (b as GenericObject)[key]),
 		);
 	}
 
