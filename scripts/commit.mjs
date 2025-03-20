@@ -110,6 +110,25 @@ async function runFormatter() {
 	}
 }
 
+/**
+ * * Checks if the new version is greater than the current version.
+ * @param {string} newVersion - The new version entered.
+ * @param {string} oldVersion - The current version.
+ * @returns {boolean} True if newVersion is greater, otherwise false.
+ */
+function isValidVersion(newVersion, oldVersion) {
+	if (newVersion === oldVersion) return false;
+
+	const [major1, minor1, patch1] = newVersion.split('.').map(Number);
+	const [major2, minor2, patch2] = oldVersion.split('.').map(Number);
+
+	return (
+		major1 > major2 ||
+		(major1 === major2 && minor1 > minor2) ||
+		(major1 === major2 && minor1 === minor2 && patch1 > patch2)
+	);
+}
+
 /** * Main function to handle version bump, commit, and formatting. */
 (async () => {
 	try {
@@ -120,23 +139,41 @@ async function runFormatter() {
 		const packageJson = JSON.parse(packageData);
 		const currentVersion = packageJson.version;
 
-		const newVersion = await rl.question(
-			chalk.cyan(
-				`Current version: ${chalk.yellow(currentVersion)}\nEnter new version: `,
-			),
-		);
-		if (!/^\d+\.\d+\.\d+$/.test(newVersion)) {
-			console.info(
-				chalk.yellow(
-					'⚠ Invalid version format! Use semver (e.g., 1.2.3).',
+		/** @type {string} */
+		let newVersion;
+
+		while (true) {
+			newVersion = await rl.question(
+				chalk.cyan(
+					`Current version: ${chalk.yellow(currentVersion)}\nEnter new version: `,
 				),
 			);
-			process.exit(1);
+
+			if (!/^\d+\.\d+\.\d+$/.test(newVersion)) {
+				console.info(
+					chalk.yellow(
+						'⚠ Invalid version format! Use semver (e.g., 1.2.3).',
+					),
+				);
+				continue;
+			}
+
+			if (!isValidVersion(newVersion, currentVersion)) {
+				console.info(
+					chalk.yellow(
+						'⚠ New version must be greater than the current version!',
+					),
+				);
+				continue;
+			}
+
+			break;
 		}
 
 		const commitMessage = await rl.question(
 			chalk.cyan('Enter commit message: '),
 		);
+
 		rl.close();
 
 		await updateVersion(newVersion);

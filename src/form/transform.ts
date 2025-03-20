@@ -5,7 +5,7 @@ import type { UncontrolledAny } from '../types';
 import type { FormDataConfigs } from './types';
 
 /**
- * Utility to convert object into FormData in a controlled way.
+ * * Utility to convert object into FormData in a controlled way.
  *
  * @param data - The source object to control and convert to FormData.
  * @param configs - Configuration options to control the formData.
