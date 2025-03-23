@@ -1,9 +1,11 @@
+// @ts-check
+
 import chalk from 'chalk';
 import { execa } from 'execa';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-import progressEstimator from 'progress-estimator';
 import { globby } from 'globby';
+import { dirname, extname, join } from 'path';
+import progressEstimator from 'progress-estimator';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,10 +15,23 @@ const estimator = progressEstimator({
 	storagePath: join(__dirname, '.estimator'),
 });
 
-// Function to determine icon based on file extension
+/**
+ * * Get the icon for the file.
+ * @param {string} filePath - The path of the file.
+ * @returns {string} - The icon for the file.
+ */
 const getFileIcon = (filePath) => {
-	const ext = filePath.split('.').pop()?.toLowerCase();
-	return ext === 'js' ? '📄' : '📁';
+	switch (extname(filePath)) {
+		case '.js':
+			return '🟨';
+		case '.ts':
+			return '🟦';
+		case '.map':
+			return '🟩';
+
+		default:
+			return '🗃️ ';
+	}
 };
 
 (async () => {
@@ -32,7 +47,10 @@ const getFileIcon = (filePath) => {
 		);
 
 		// Gather Transformed Files
-		const outputFiles = await globby(['dist/**/*'], { stats: true });
+		const outputFiles = await globby(['dist/**/*'], {
+			stats: true,
+			objectMode: true,
+		});
 
 		// Log Transformed Files
 		console.info(chalk.green('\n✓ Transformed Files:'));
@@ -45,6 +63,7 @@ const getFileIcon = (filePath) => {
 			totalSize += sizeInKB;
 
 			const fileIcon = getFileIcon(path);
+
 			return [
 				chalk.yellow(`${fileIcon} ${path}`),
 				chalk.cyan(`${sizeInKB.toFixed(2)} kB`),
