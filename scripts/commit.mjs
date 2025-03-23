@@ -70,8 +70,9 @@ async function updateVersion(newVersion) {
 /**
  * * Runs Git commands to commit and push version changes.
  * @param {string} commitMessage - The commit message for version update.
+ * @param {string} version - The updated version number.
  */
-async function commitAndPush(commitMessage) {
+async function commitAndPush(commitMessage, version) {
 	try {
 		console.info(chalk.blue('📤 Committing and pushing changes...'));
 
@@ -85,7 +86,9 @@ async function commitAndPush(commitMessage) {
 		);
 
 		console.info(
-			chalk.green(`✅ Changes pushed with message: "${commitMessage}"`),
+			chalk.green(
+				`✅ Version ${version} pushed with message: "${commitMessage}"`,
+			),
 		);
 	} catch (error) {
 		console.error(chalk.red('🛑 Git error:', error));
@@ -178,7 +181,7 @@ function isValidVersion(newVersion, oldVersion) {
 
 		await updateVersion(newVersion);
 		await runFormatter();
-		await commitAndPush(commitMessage);
+		await commitAndPush(commitMessage, newVersion);
 	} catch (error) {
 		console.error(chalk.red('🛑 Unexpected Error:', error));
 		process.exit(1);
