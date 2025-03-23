@@ -18,6 +18,28 @@ export const createControlledFormData = <T extends GenericObject>(
 ): FormData => {
 	const formData = new FormData();
 
+	const { stringifyNested = '*' } = configs || {};
+
+	/** Helper function to check if a key matches a dotNotation path to preserve. */
+	const shouldDotNotate = (fullKey: string) => {
+		if (Array.isArray(configs?.dotNotateNested)) {
+			return configs?.dotNotateNested?.some(
+				(path) => fullKey === path || fullKey.startsWith(`${path}.`),
+			);
+		}
+		return configs?.dotNotateNested === '*';
+	};
+
+	/** - Helper function to check if a key matches a stringifyNested key. */
+	const shouldStringifyNested = (fullKey: string) => {
+		if (Array.isArray(stringifyNested)) {
+			return stringifyNested?.some(
+				(path) => fullKey === path || fullKey.startsWith(`${path}.`),
+			);
+		}
+		return stringifyNested === '*';
+	};
+
 	const addToFormData = (key: string, value: UncontrolledAny) => {
 		const transformedKey =
 			(
@@ -38,10 +60,13 @@ export const createControlledFormData = <T extends GenericObject>(
 			value !== null &&
 			!isEmptyObject(value)
 		) {
-			// Handle nested object by converting it into a string representation like 'name.first'
-			Object.entries(value).forEach(([nestedKey, nestedValue]) => {
-				addToFormData(`${key}.${nestedKey}`, nestedValue);
-			});
+			if (shouldStringifyNested(key) && !shouldDotNotate(key)) {
+				formData.append(transformedKey, JSON.stringify(value));
+			} else {
+				Object.entries(value).forEach(([nestedKey, nestedValue]) => {
+					addToFormData(`${key}.${nestedKey}`, nestedValue);
+				});
+			}
 		} else {
 			const isRequired =
 				configs?.requiredKeys === '*' ||
@@ -52,16 +77,6 @@ export const createControlledFormData = <T extends GenericObject>(
 				formData.append(transformedKey, value);
 			}
 		}
-	};
-
-	// Helper function to check if a key matches a preserved path
-	const isPathPreserved = (fullKey: DotNotationKey<T>) => {
-		if (Array.isArray(configs?.preservePaths))
-			return configs?.preservePaths?.some(
-				(path) => fullKey === path || fullKey.startsWith(`${path}.`),
-			);
-
-		return configs?.preservePaths === '*';
 	};
 
 	const processObject = (obj: GenericObject, parentKey = '') => {
@@ -80,13 +95,14 @@ export const createControlledFormData = <T extends GenericObject>(
 			}
 
 			// Check if this key is preserved
-			if (isPathPreserved(fullKey)) {
+			if (shouldDotNotate(fullKey)) {
 				// If it's a preserved path, we need to append the value directly as the key
 				addToFormData(fullKey, value);
 			} else if (
 				typeof value === 'object' &&
 				!Array.isArray(value) &&
-				value != null
+				value != null &&
+				!stringifyNested
 			) {
 				// Process nested objects
 				processObject(value, key);

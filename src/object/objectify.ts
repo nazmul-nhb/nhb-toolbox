@@ -168,7 +168,7 @@ export const flattenObjectDotNotation = <T extends GenericObject>(
  * @returns A new object containing only the changed fields.
  */
 export const extractUpdatedFields = <T extends GenericObject>(
-	baseObject: T | Partial<T>,
+	baseObject: T,
 	updatedObject: Partial<T>,
 ): Partial<T> => {
 	const updatedFields: Partial<T> = {};
@@ -207,7 +207,7 @@ export const extractNewFields = <
 	T extends GenericObject,
 	U extends GenericObject,
 >(
-	baseObject: T | Partial<T>,
+	baseObject: T,
 	updatedObject: Partial<T> & Partial<U>,
 ): Partial<U> => {
 	const newFields: Partial<U> = {};
@@ -244,7 +244,7 @@ export const extractUpdatedAndNewFields = <
 	T extends GenericObject,
 	U extends GenericObject,
 >(
-	baseObject: T | Partial<T>,
+	baseObject: T,
 	updatedObject: Partial<T> & Partial<U>,
 ): Partial<T> & Partial<U> => {
 	const updatedFields: Partial<T> = {};
