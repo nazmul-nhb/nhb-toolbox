@@ -55,7 +55,7 @@ jobs:
               uses: softprops/action-gh-release@v1
               with:
                   tag_name: 'v${{ env.VERSION }}'
-                  name: 'Release of Version ${{ env.VERSION }}'
+                  name: 'Version ${{ env.VERSION }}'
                   body: |
                       Find in [NPM Registry](https://www.npmjs.com/package/nhb-toolbox).
                       Full Docs at [Official Docs](https://nhb-toolbox.vercel.app)
