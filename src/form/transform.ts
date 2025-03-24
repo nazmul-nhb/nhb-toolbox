@@ -71,9 +71,7 @@ export const createControlledFormData = <T extends GenericObject>(
 					transformedKey,
 					value.file.originFileObj as UncontrolledAny,
 				);
-			}
-
-			if (value.fileList) {
+			} else if (value.fileList) {
 				formData.append(
 					transformedKey,
 					value.fileList[0].originFileObj as UncontrolledAny,
