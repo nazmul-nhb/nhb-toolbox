@@ -1,50 +1,100 @@
 import type { DotNotationKey } from '../object/types';
 
-/** - Configuration options to control the formData. */
+/** - Configuration options to control FormData generation behavior. */
 export interface FormDataConfigs<T> {
-	/** - Keys to exclude from processing. Ignored keys are ignored even if they're in other options. */
+	/**
+	 * * An array of dot-notation keys to exclude from processing.
+	 * * Ignored keys are omitted entirely, even if included in other options.
+	 */
 	ignoreKeys?: DotNotationKey<T>[];
-	/** - Keys to preserve even if falsy. `*` to include all keys. */
+
+	/**
+	 * * Specifies which keys should be included even if their values are falsy.
+	 * * Use `*` to preserve all keys.
+	 */
 	requiredKeys?: '*' | DotNotationKey<T>[];
-	/**  - Keys to convert to lowercase. `*` to include all keys. */
+
+	/**
+	 * * Defines which keys should be converted to lowercase.
+	 * * Use `*` to apply to all keys.
+	 */
 	lowerCaseKeys?: '*' | DotNotationKey<T>[];
-	/** - Dot-notation paths to preserve (e.g., 'user.settings'). `*` to include all keys. In this case `user` is an object and `settings` should also be an object. If `dotNotateNested` and `stringifyNested` both have the same key(s) or `*` it will prioritize `dotNotateNested`. */
+
+	/**
+	 * * An array of dot-notation paths to preserve in their original structure.
+	 * - Example: `'user.settings'` ensures `user` remains an object, and `settings` is not flattened.
+	 * - Use `*` to preserve all keys in their dot-notation format.
+	 * - If a key exists in both `dotNotateNested` and `stringifyNested`, `dotNotateNested` takes precedence.
+	 */
 	dotNotateNested?: '*' | DotNotationKey<T>[];
-	/** - Dot-notation paths to stringify nested objects instead of flattening or dot-notate them. Defaults to `*`, use `*` to stringify every nested object. In this case the value of the last part of the key should also be an object. If `dotNotateNested` and `stringifyNested` both have the same key(s) or `*` it will prioritize `dotNotateNested`. */
+
+	/**
+	 * * Specifies which nested objects should be stringified instead of being flattened or dot-notated.
+	 * - Defaults to `*`, meaning all nested objects will be stringified. Which is standard in modern form submissions.
+	 * - Use `*` to stringify all nested objects.
+	 * - If a key exists in both `dotNotateNested` and `stringifyNested`, `dotNotateNested` takes precedence.
+	 */
 	stringifyNested?: '*' | DotNotationKey<T>[];
-	/** - Break arrays in the format `{key[0]: value, key[0]: value,}` for specific key(s) or for all (`*`). `*` to include all keys. */
+
+	/**
+	 * * Controls how arrays should be serialized in FormData.
+	 * - If a key is included, the array will be broken into individual key-value pairs (`key[0]: value, key[1]: value`).
+	 * - Use `*` to apply this behavior to all array keys.
+	 */
 	breakArray?: '*' | DotNotationKey<T>[];
-	/** - Whether to trim string values */
+
+	/** - Enables automatic trimming of string values before appending them to FormData. */
 	trimStrings?: boolean;
 }
 
-/** - Interface for file-type in some upload libraries like `FilePond` or `Ant-Design's Upload` */
+/** * Represents a file upload operation, commonly used in libraries like `FilePond` or `Ant Design Upload`. */
 export interface FileUpload {
+	/** The primary file being uploaded. */
 	file: CustomFile;
+	/** The list of files associated with the upload. */
 	fileList: CustomFile[];
 }
 
+/** * Represents a custom file structure used in file upload components. */
 export interface CustomFile {
+	/** Unique identifier for the file. */
 	uid: string;
+	/** The timestamp (milliseconds) when the file was last modified. */
 	lastModified: number;
+	/** A string representation of the last modified date. */
 	lastModifiedDate: string;
+	/** The name of the file. */
 	name: string;
+	/** The size of the file in bytes. */
 	size: number;
+	/** The MIME type of the file. */
 	type: string;
+	/** Upload progress percentage (0-100). */
 	percent: number;
+	/** The original file object before any transformations. */
 	originFileObj: OriginFileObj;
+	/** The URL for a thumbnail preview of the file. */
 	thumbUrl: string;
+	/** Optional error information if the upload fails. */
 	error?: FileError;
+	/** Optional server response after a successful upload. */
 	response?: string;
+	/** Optional status of the file upload (e.g., "uploading", "done", "error"). */
 	status?: string;
 }
 
+/** * Represents the original file object before any modifications. */
 export interface OriginFileObj {
+	/** Unique identifier for the original file. */
 	uid: string;
 }
 
+/** * Represents an error that occurs during a file upload. */
 export interface FileError {
+	/** HTTP status code of the error. */
 	status: number;
+	/** The HTTP method used for the request (e.g., "POST", "PUT"). */
 	method: string;
+	/** The URL where the upload was attempted. */
 	url: string;
 }

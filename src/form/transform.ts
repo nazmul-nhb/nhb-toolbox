@@ -21,37 +21,35 @@ export const createControlledFormData = <T extends GenericObject>(
 
 	const { stringifyNested = '*' } = configs || {};
 
-	/** Helper function to check if a key matches a dotNotation path to preserve. */
-	const shouldDotNotate = (fullKey: string) => {
-		if (Array.isArray(configs?.dotNotateNested)) {
-			return configs?.dotNotateNested?.some(
-				(path) => fullKey === path || fullKey.startsWith(`${path}.`),
-			);
-		}
-		return configs?.dotNotateNested === '*';
+	/** - Helper function to check if a key matches a dotNotation path to preserve. */
+	const shouldDotNotate = (key: string) => {
+		return Array.isArray(configs?.dotNotateNested) ?
+				configs.dotNotateNested.some(
+					(path) => key === path || key.startsWith(`${path}.`),
+				)
+			:	configs?.dotNotateNested === '*';
 	};
 
 	/** - Helper function to check if a key matches a stringifyNested key. */
-	const shouldStringifyNested = (fullKey: string) => {
-		if (Array.isArray(stringifyNested)) {
-			return stringifyNested?.some(
-				(path) => fullKey === path || fullKey.startsWith(`${path}.`),
-			);
-		}
-		return stringifyNested === '*';
+	const shouldStringify = (key: string) => {
+		return Array.isArray(stringifyNested) ?
+				stringifyNested.some(
+					(path) => key === path || key.startsWith(`${path}.`),
+				)
+			:	stringifyNested === '*';
 	};
 
 	/** - Helper function to check if a key matches a breakArray key. */
-	const shouldBreakArray = (fullKey: string) => {
-		if (Array.isArray(configs?.breakArray)) {
-			return configs?.breakArray?.some(
-				(path) => fullKey === path || fullKey.startsWith(`${path}.`),
-			);
-		}
-		return configs?.breakArray === '*';
+	const shouldBreakArray = (key: string) => {
+		return Array.isArray(configs?.breakArray) ?
+				configs.breakArray.some(
+					(path) => key === path || key.startsWith(`${path}.`),
+				)
+			:	configs?.breakArray === '*';
 	};
 
-	const addToFormData = (key: string, value: UncontrolledAny) => {
+	/** * Helper function to add values to formData */
+	const _addToFormData = (key: string, value: UncontrolledAny) => {
 		const transformedKey =
 			(
 				configs?.lowerCaseKeys === '*' ||
@@ -77,10 +75,12 @@ export const createControlledFormData = <T extends GenericObject>(
 					value.fileList[0].originFileObj as UncontrolledAny,
 				);
 			}
+		} else if (value instanceof Blob || value instanceof File) {
+			formData.append(transformedKey, value);
 		} else if (Array.isArray(value) && !isValidEmptyArray(value)) {
 			if (shouldBreakArray(key)) {
 				value.forEach((item, index) => {
-					addToFormData(`${transformedKey}[${index}]`, item);
+					_addToFormData(`${transformedKey}[${index}]`, item);
 				});
 			} else {
 				formData.append(transformedKey, JSON.stringify(value));
@@ -90,11 +90,11 @@ export const createControlledFormData = <T extends GenericObject>(
 			value !== null &&
 			!isEmptyObject(value)
 		) {
-			if (shouldStringifyNested(key) && !shouldDotNotate(key)) {
+			if (shouldStringify(key) && !shouldDotNotate(key)) {
 				formData.append(transformedKey, JSON.stringify(value));
 			} else {
 				Object.entries(value).forEach(([nestedKey, nestedValue]) => {
-					addToFormData(`${key}.${nestedKey}`, nestedValue);
+					_addToFormData(`${key}.${nestedKey}`, nestedValue);
 				});
 			}
 		} else {
@@ -104,12 +104,18 @@ export const createControlledFormData = <T extends GenericObject>(
 			const isNotNullish = value != null && value !== '';
 
 			if (isNotNullish || isRequired) {
-				formData.append(transformedKey, value);
+				formData.append(
+					transformedKey,
+					typeof value === 'boolean' ?
+						String(value)
+					:	String(value ?? ''),
+				);
 			}
 		}
 	};
 
-	const processObject = (obj: GenericObject, parentKey = '') => {
+	/** - Helper to process object */
+	const _processObject = (obj: GenericObject, parentKey = '') => {
 		Object.entries(obj).forEach(([key, value]) => {
 			const fullKey = (
 				parentKey ?
@@ -126,8 +132,8 @@ export const createControlledFormData = <T extends GenericObject>(
 
 			// Check if this key is preserved
 			if (shouldDotNotate(fullKey)) {
-				// If it's a preserved path, we need to append the value directly as the key
-				addToFormData(fullKey, value);
+				// If it's a preserved path, append the value directly
+				_addToFormData(fullKey, value);
 			} else if (
 				typeof value === 'object' &&
 				!Array.isArray(value) &&
@@ -135,15 +141,15 @@ export const createControlledFormData = <T extends GenericObject>(
 				!stringifyNested
 			) {
 				// Process nested objects
-				processObject(value, key);
+				_processObject(value, key);
 			} else {
 				// For other cases, just append as key-value
-				addToFormData(key, value);
+				_addToFormData(key, value);
 			}
 		});
 	};
 
-	processObject(data);
+	_processObject(data);
 
 	return formData;
 };
