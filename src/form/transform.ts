@@ -40,6 +40,16 @@ export const createControlledFormData = <T extends GenericObject>(
 		return stringifyNested === '*';
 	};
 
+	/** - Helper function to check if a key matches a breakArray key. */
+	const shouldBreakArray = (fullKey: string) => {
+		if (Array.isArray(configs?.breakArray)) {
+			return configs?.breakArray?.some(
+				(path) => fullKey === path || fullKey.startsWith(`${path}.`),
+			);
+		}
+		return configs?.breakArray === '*';
+	};
+
 	const addToFormData = (key: string, value: UncontrolledAny) => {
 		const transformedKey =
 			(
@@ -52,16 +62,20 @@ export const createControlledFormData = <T extends GenericObject>(
 		if (!isValidEmptyArray(value) && value[0]?.originFileObj) {
 			formData.append(transformedKey, value[0].originFileObj);
 		} else if (Array.isArray(value)) {
-			value.forEach((item, index) => {
-				addToFormData(`${transformedKey}[${index}]`, item);
-			}); // fix later
+			if (shouldBreakArray(key)) {
+				value.forEach((item, index) => {
+					addToFormData(`${transformedKey}[${index}]`, item);
+				});
+			} else {
+				formData.append(transformedKey, JSON.stringify(value));
+			}
 		} else if (
 			typeof value === 'object' &&
 			value !== null &&
 			!isEmptyObject(value)
 		) {
 			if (shouldStringifyNested(key) && !shouldDotNotate(key)) {
-				formData.append(transformedKey, value); // JSON.stringify if needed
+				formData.append(transformedKey, JSON.stringify(value));
 			} else {
 				Object.entries(value).forEach(([nestedKey, nestedValue]) => {
 					addToFormData(`${key}.${nestedKey}`, nestedValue);
