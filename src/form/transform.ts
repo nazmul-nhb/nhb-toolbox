@@ -104,12 +104,7 @@ export const createControlledFormData = <T extends GenericObject>(
 			const isNotNullish = value != null && value !== '';
 
 			if (isNotNullish || isRequired) {
-				formData.append(
-					transformedKey,
-					typeof value === 'boolean' ?
-						String(value)
-					:	String(value ?? ''),
-				);
+				formData.append(transformedKey, value);
 			}
 		}
 	};
