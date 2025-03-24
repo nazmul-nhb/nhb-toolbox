@@ -1,4 +1,4 @@
-import { isValidEmptyArray } from '../array/basics';
+import { isInvalidOrEmptyArray } from '../array/basics';
 import type { GenericObject } from '../object/types';
 import type { DelayedFn, GenericFn, ThrottledFn } from '../types';
 
@@ -51,7 +51,7 @@ export const convertArrayToString = <T>(
 	array: T[],
 	separator: string = ',',
 ): string => {
-	if (!isValidEmptyArray) {
+	if (!isInvalidOrEmptyArray) {
 		throw new Error('Please, provide a valid array!');
 	}
 	return array.join(separator);

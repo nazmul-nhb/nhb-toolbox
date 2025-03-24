@@ -60,9 +60,10 @@ export { Color } from './colors/Color';
 export {
 	filterArrayOfObjects,
 	flattenArray,
-	isValidEmptyArray,
-	shuffleArray,
 	getLastArrayElement,
+	isInvalidOrEmptyArray,
+	isInvalidOrEmptyArray as isValidEmptyArray,
+	shuffleArray,
 } from './array/basics';
 
 export { sortAnArray } from './array/sort';

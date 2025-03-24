@@ -1,4 +1,4 @@
-import { isValidEmptyArray } from '../array/basics';
+import { isInvalidOrEmptyArray } from '../array/basics';
 import type { GenericObject } from '../object/types';
 
 /**
@@ -13,7 +13,7 @@ export const convertIntoFormData = <T extends GenericObject>(
 	const formData = new FormData();
 
 	Object.entries(data).forEach(([key, value]) => {
-		if (!isValidEmptyArray(value) && value[0]?.originFileObj) {
+		if (!isInvalidOrEmptyArray(value) && value[0]?.originFileObj) {
 			formData.append(key, value[0].originFileObj);
 		} else if (value !== undefined && value !== null && value !== '') {
 			formData.append(key, value as string | Blob);

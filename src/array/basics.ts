@@ -53,7 +53,7 @@ export const filterArrayOfObjects = <T extends GenericObject>(
  * @param value - The value to check.
  * @returns `true` if the value is not an array, an empty array, or an array containing only `null`, `undefined`, empty objects, or empty arrays.
  */
-export const isValidEmptyArray = <T>(value: T | T[]): boolean => {
+export const isInvalidOrEmptyArray = <T>(value: T): boolean => {
 	if (!Array.isArray(value)) return true;
 
 	if (value.length === 0) return true;
@@ -73,7 +73,7 @@ export const isValidEmptyArray = <T>(value: T | T[]): boolean => {
  * @returns Shuffled array.
  */
 export const shuffleArray = <T>(array: T[]): T[] => {
-	if (isValidEmptyArray(array)) return array;
+	if (isInvalidOrEmptyArray(array)) return array;
 
 	const shuffled = structuredClone(array);
 

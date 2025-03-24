@@ -1,4 +1,4 @@
-import { isValidEmptyArray } from '../array/basics';
+import { isInvalidOrEmptyArray } from '../array/basics';
 import { isEmptyObject } from '../object/basics';
 import type { DotNotationKey, GenericObject } from '../object/types';
 import type { UncontrolledAny } from '../types';
@@ -77,7 +77,7 @@ export const createControlledFormData = <T extends GenericObject>(
 			}
 		} else if (value instanceof Blob || value instanceof File) {
 			formData.append(transformedKey, value);
-		} else if (Array.isArray(value) && !isValidEmptyArray(value)) {
+		} else if (Array.isArray(value) && !isInvalidOrEmptyArray(value)) {
 			if (shouldBreakArray(key)) {
 				value.forEach((item, index) => {
 					_addToFormData(`${transformedKey}[${index}]`, item);
