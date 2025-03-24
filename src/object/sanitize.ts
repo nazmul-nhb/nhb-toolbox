@@ -1,11 +1,6 @@
 import { trimString } from '../string/basics';
 import { isEmptyObject } from './basics';
-import type {
-	DotNotationKey,
-	GenericObject,
-	SanitizedData,
-	SanitizeOptions,
-} from './types';
+import type { DotNotationKey, GenericObject, SanitizeOptions } from './types';
 
 /**
  * * Sanitizes an object by ignoring specified keys and trimming string values based on options provided.
@@ -18,7 +13,7 @@ import type {
 export function sanitizeData<T extends GenericObject>(
 	object: T,
 	options?: SanitizeOptions<T>,
-): SanitizedData<T>;
+): Partial<T>;
 
 /**
  * * Sanitizes an array of objects by ignoring specified keys and trimming string values based on options provided.
@@ -31,7 +26,7 @@ export function sanitizeData<T extends GenericObject>(
 export function sanitizeData<T extends GenericObject>(
 	array: T[],
 	options?: SanitizeOptions<T>,
-): SanitizedData<T>[];
+): Partial<T>[];
 
 /**
  * * Trims all the words in a string.
@@ -60,7 +55,7 @@ export function sanitizeData(input: string[]): string[];
 export function sanitizeData<T extends GenericObject>(
 	input: string | string[] | T | T[],
 	options?: SanitizeOptions<T>,
-): string | string[] | SanitizedData<T> | SanitizedData<T>[] {
+): string | string[] | Partial<T> | Partial<T>[] {
 	const {
 		keysToIgnore: ignoreKeys = [],
 		trimStrings = true,
@@ -76,7 +71,7 @@ export function sanitizeData<T extends GenericObject>(
 	 * @param object The object to process.
 	 * @param parentPath The parent path of a key.
 	 *  */
-	const _processObject = (object: T, parentPath = ''): SanitizedData<T> =>
+	const _processObject = (object: T, parentPath = ''): Partial<T> =>
 		Object.entries(object).reduce((acc, [key, value]) => {
 			// Compute the full key path
 			const fullKeyPath = parentPath ? `${parentPath}.${key}` : key;

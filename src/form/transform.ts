@@ -2,6 +2,7 @@ import { isValidEmptyArray } from '../array/basics';
 import { isEmptyObject } from '../object/basics';
 import type { DotNotationKey, GenericObject } from '../object/types';
 import type { UncontrolledAny } from '../types';
+import { isCustomFileArray, isFileUpload } from './guards';
 import type { FormDataConfigs } from './types';
 
 /**
@@ -59,9 +60,26 @@ export const createControlledFormData = <T extends GenericObject>(
 				key.toLowerCase()
 			:	key;
 
-		if (!isValidEmptyArray(value) && value[0]?.originFileObj) {
-			formData.append(transformedKey, value[0].originFileObj);
-		} else if (Array.isArray(value)) {
+		if (isCustomFileArray(value)) {
+			formData.append(
+				transformedKey,
+				value[0].originFileObj as UncontrolledAny,
+			);
+		} else if (isFileUpload(value)) {
+			if (value.file) {
+				formData.append(
+					transformedKey,
+					value.file.originFileObj as UncontrolledAny,
+				);
+			}
+
+			if (value.fileList) {
+				formData.append(
+					transformedKey,
+					value.fileList[0].originFileObj as UncontrolledAny,
+				);
+			}
+		} else if (Array.isArray(value) && !isValidEmptyArray(value)) {
 			if (shouldBreakArray(key)) {
 				value.forEach((item, index) => {
 					addToFormData(`${transformedKey}[${index}]`, item);

@@ -63,7 +63,9 @@ export interface SanitizeOptions<T extends GenericObject> {
 	ignoreNullish?: boolean;
 }
 
-/** - Data after sanitization. */
+/** - Data after sanitization.
+ * ! Unused
+ */
 export type SanitizedData<T> = {
 	[P in keyof T]?: T[P] extends GenericObject ? SanitizedData<T[P]> : T[P];
 };
