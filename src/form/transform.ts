@@ -54,14 +54,14 @@ export const createControlledFormData = <T extends GenericObject>(
 		} else if (Array.isArray(value)) {
 			value.forEach((item, index) => {
 				addToFormData(`${transformedKey}[${index}]`, item);
-			});
+			}); // fix later
 		} else if (
 			typeof value === 'object' &&
 			value !== null &&
 			!isEmptyObject(value)
 		) {
 			if (shouldStringifyNested(key) && !shouldDotNotate(key)) {
-				formData.append(transformedKey, JSON.stringify(value));
+				formData.append(transformedKey, value); // JSON.stringify if needed
 			} else {
 				Object.entries(value).forEach(([nestedKey, nestedValue]) => {
 					addToFormData(`${key}.${nestedKey}`, nestedValue);
