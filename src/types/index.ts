@@ -26,11 +26,24 @@ export type NonNullishPrimitiveKey<T> = {
 	[K in keyof T]: T[K] extends string | number | boolean ? K : never;
 }[keyof T];
 
+/** Falsy primitive type  */
+export type FalsyPrimitive = false | 0 | '' | null | undefined;
+
 /** Generic function type */
-export type GenericFn = (...args: any[]) => void;
+export type GenericFn = (...args: unknown[]) => unknown;
+
+/** Generic function type that returns `void` */
+export type VoidFunction = (...args: any[]) => void;
 
 /** Debounced function type after certain delay */
-export type DelayedFn<T extends GenericFn> = (...args: Parameters<T>) => void;
+export type DelayedFn<T extends VoidFunction> = (
+	...args: Parameters<T>
+) => void;
 
 /** Throttled function type after specific delay */
-export type ThrottledFn<T extends GenericFn> = (...args: Parameters<T>) => void;
+export type ThrottledFn<T extends VoidFunction> = (
+	...args: Parameters<T>
+) => void;
+
+/** Asynchronous function type */
+export type AsyncFunction<T> = (...args: unknown[]) => Promise<T>;

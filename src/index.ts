@@ -78,6 +78,13 @@ export { convertIntoFormData, isEmptyFormData } from './form/convert';
 
 export { createControlledFormData } from './form/transform';
 
+export {
+	isCustomFile,
+	isCustomFileArray,
+	isFileUpload,
+	isOriginFileObj,
+} from './form/guards';
+
 // ! Object Utilities
 export {
 	cloneObject,
@@ -108,3 +115,60 @@ export {
 	isDeepEqual,
 	throttleAction,
 } from './utils';
+
+// ! Primitive Type Guards
+export {
+	isBoolean,
+	isFalsy,
+	isInteger,
+	isNonEmptyString,
+	isNull,
+	isNumber,
+	isPositiveInteger,
+	isPrimitive,
+	isString,
+	isSymbol,
+	isTruthy,
+	isUndefined,
+} from './guards/primitives';
+
+// ! Non-Primitive Type Guards
+export {
+	isArray,
+	isArrayOfType,
+	isBigInt,
+	isDate,
+	isError,
+	isFunction,
+	isJSON,
+	isJSON as isValidJSON,
+	isJSON as isJSONObject,
+	isMap,
+	isMap as isValidMap,
+	isEmptyObject as isObjectEmpty,
+	isObjectWithKeys,
+	isPromise,
+	isRegExp,
+	isReturningPromise,
+	isSet,
+	isSet as isValidSet,
+	isObject as isValidObject,
+} from './guards/non-primitives';
+
+// ! Special Type Guards
+export {
+	isBrowser,
+	isDateString,
+	isEmail,
+	isEmail as isValidEmail,
+	isEmailArray,
+	isUUID,
+	isBase64,
+	isEnvironment,
+	isIPAddress,
+	isNode,
+	isNumericString,
+	isPhoneNumber,
+	isURL,
+	isURL as isValidURL,
+} from './guards/specials';

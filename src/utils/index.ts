@@ -1,6 +1,6 @@
 import { isInvalidOrEmptyArray } from '../array/basics';
 import type { GenericObject } from '../object/types';
-import type { DelayedFn, GenericFn, ThrottledFn } from '../types';
+import type { DelayedFn, ThrottledFn, VoidFunction } from '../types';
 
 /**
  * * Deeply compare two values (arrays, objects, or primitive values).
@@ -71,7 +71,7 @@ export const convertArrayToString = <T>(
  *
  * debouncedSearch('laptop'); // Executes after 300ms of inactivity.
  */
-export const debounceAction = <T extends GenericFn>(
+export const debounceAction = <T extends VoidFunction>(
 	callback: T,
 	delay = 300,
 ): DelayedFn<T> => {
@@ -102,7 +102,7 @@ export const debounceAction = <T extends GenericFn>(
  *
  * window.addEventListener('resize', throttledResize);
  */
-export const throttleAction = <T extends GenericFn>(
+export const throttleAction = <T extends VoidFunction>(
 	callback: T,
 	delay = 150,
 ): ThrottledFn<T> => {
