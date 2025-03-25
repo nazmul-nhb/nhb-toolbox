@@ -1,4 +1,4 @@
-import type { UncontrolledAny } from '../types';
+import type { FlattenPartial, UncontrolledAny } from '../types';
 import { isDeepEqual } from '../utils';
 import { isEmptyObject, isObject } from './basics';
 import type { GenericObject } from './types';
@@ -169,9 +169,9 @@ export const flattenObjectDotNotation = <T extends GenericObject>(
  */
 export const extractUpdatedFields = <T extends GenericObject>(
 	baseObject: T,
-	updatedObject: Partial<T>,
-): Partial<T> => {
-	const updatedFields: Partial<T> = {};
+	updatedObject: FlattenPartial<T>,
+): FlattenPartial<T> => {
+	const updatedFields: FlattenPartial<T> = {};
 
 	for (const key in updatedObject) {
 		if (
@@ -208,23 +208,23 @@ export const extractNewFields = <
 	U extends GenericObject,
 >(
 	baseObject: T,
-	updatedObject: Partial<T> & Partial<U>,
-): Partial<U> => {
-	const newFields: Partial<U> = {};
+	updatedObject: FlattenPartial<T> & FlattenPartial<U>,
+): FlattenPartial<U> => {
+	const newFields: FlattenPartial<U> = {};
 
 	for (const key in updatedObject) {
 		if (!(key in baseObject)) {
 			// Directly assign new fields
-			newFields[key as keyof Partial<U>] = updatedObject[key];
+			newFields[key as keyof FlattenPartial<U>] = updatedObject[key];
 		} else if (isObject(updatedObject[key]) && isObject(baseObject[key])) {
 			// Recursively extract new fields inside nested objects
 			const nestedNewFields = extractNewFields(
 				baseObject[key] as T,
-				updatedObject[key] as Partial<T> & Partial<U>,
+				updatedObject[key] as FlattenPartial<T> & FlattenPartial<U>,
 			);
 
 			if (!isEmptyObject(nestedNewFields)) {
-				newFields[key as keyof Partial<U>] =
+				newFields[key as keyof FlattenPartial<U>] =
 					nestedNewFields as T[keyof T];
 			}
 		}
@@ -245,14 +245,14 @@ export const extractUpdatedAndNewFields = <
 	U extends GenericObject,
 >(
 	baseObject: T,
-	updatedObject: Partial<T> & Partial<U>,
-): Partial<T> & Partial<U> => {
-	const updatedFields: Partial<T> = {};
-	const newFields: Partial<U> = {};
+	updatedObject: FlattenPartial<T> & FlattenPartial<U>,
+): FlattenPartial<T> & FlattenPartial<U> => {
+	const updatedFields: FlattenPartial<T> = {};
+	const newFields: FlattenPartial<U> = {};
 
 	for (const key in updatedObject) {
 		if (!(key in baseObject)) {
-			newFields[key as keyof Partial<U>] = updatedObject[key];
+			newFields[key as keyof FlattenPartial<U>] = updatedObject[key];
 		} else if (!isDeepEqual(updatedObject[key], baseObject[key])) {
 			if (updatedObject[key] && isObject(updatedObject[key])) {
 				updatedFields[key as keyof T] = extractUpdatedAndNewFields(
