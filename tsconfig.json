@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
-		"target": "ES2023", // Target the latest features
-		"module": "CommonJS", // Output as commonJS modules
+		"target": "ESNext", // Target the latest features
+		"module": "ESNext", // Output as commonJS modules
 		"lib": ["DOM", "ESNext"], // Include DOM and modern ES features
 		"rootDir": "./src", // Root directory for source files
 		"outDir": "./dist", // Output directory
