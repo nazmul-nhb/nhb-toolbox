@@ -19,8 +19,10 @@ export {
 	convertToDecimal,
 	getRandomNumber,
 	isEven,
+	isEven as isEvenNumber,
 	isMultiple,
 	isOdd,
+	isOdd as isOddNumber,
 } from './number/basics';
 
 export { numberToWords } from './number/convert';
@@ -54,7 +56,7 @@ export {
 	convertRgbToRgba,
 } from './colors/convert';
 
-export { Color } from './colors/Color';
+export { Color, Color as Colour } from './colors/Color';
 
 // ! Array Utilities
 export {
@@ -134,41 +136,47 @@ export {
 
 // ! Non-Primitive Type Guards
 export {
+	isReturningPromise as doesReturnPromise,
 	isArray,
 	isArrayOfType,
 	isBigInt,
 	isDate,
+	isEmptyObject as isEmptyObjectGuard,
 	isError,
 	isFunction,
 	isJSON,
-	isJSON as isValidJSON,
 	isJSON as isJSONObject,
 	isMap,
-	isMap as isValidMap,
 	isEmptyObject as isObjectEmpty,
 	isObjectWithKeys,
 	isPromise,
 	isRegExp,
+	isRegExp as isRegularExpression,
 	isReturningPromise,
 	isSet,
-	isSet as isValidSet,
+	isJSON as isValidJSON,
+	isMap as isValidMap,
 	isObject as isValidObject,
+	isSet as isValidSet,
 } from './guards/non-primitives';
 
 // ! Special Type Guards
 export {
+	isBase64,
 	isBrowser,
 	isDateString,
 	isEmail,
-	isEmail as isValidEmail,
 	isEmailArray,
-	isUUID,
-	isBase64,
 	isEnvironment,
+	isEnvironment as isExpectedNodeENV,
 	isIPAddress,
 	isNode,
+	isEnvironment as isNodeENV,
+	isEnvironment as isNodeEnvironment,
 	isNumericString,
 	isPhoneNumber,
 	isURL,
+	isUUID,
+	isEmail as isValidEmail,
 	isURL as isValidURL,
 } from './guards/specials';
