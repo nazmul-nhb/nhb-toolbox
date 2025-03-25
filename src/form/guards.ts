@@ -36,7 +36,9 @@ export function isCustomFile(value: unknown): value is CustomFile {
  * @returns `true` if the value is a valid `CustomFile[]`, otherwise `false`.
  */
 export function isCustomFileArray(value: unknown): value is CustomFile[] {
-	return Array.isArray(value) && value.length !== 0 && isCustomFile(value[0]);
+	return (
+		Array.isArray(value) && value.length > 0 && value.every(isCustomFile)
+	);
 }
 
 /**

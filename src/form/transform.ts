@@ -1,8 +1,7 @@
 import { isInvalidOrEmptyArray } from '../array/basics';
 import { isEmptyObject } from '../object/basics';
 import type { DotNotationKey, GenericObject } from '../object/types';
-import type { UncontrolledAny } from '../types';
-import { isCustomFileArray, isFileUpload } from './guards';
+import { isCustomFile, isCustomFileArray, isFileUpload } from './guards';
 import type { FormDataConfigs } from './types';
 
 /**
@@ -49,7 +48,7 @@ export const createControlledFormData = <T extends GenericObject>(
 	};
 
 	/** * Helper function to add values to formData */
-	const _addToFormData = (key: string, value: UncontrolledAny) => {
+	const _addToFormData = (key: string, value: unknown) => {
 		const transformedKey =
 			(
 				configs?.lowerCaseKeys === '*' ||
@@ -59,21 +58,20 @@ export const createControlledFormData = <T extends GenericObject>(
 			:	key;
 
 		if (isCustomFileArray(value)) {
-			formData.append(
-				transformedKey,
-				value[0].originFileObj as UncontrolledAny,
+			value.forEach((file) =>
+				formData.append(transformedKey, file.originFileObj),
 			);
 		} else if (isFileUpload(value)) {
-			if (value.file) {
-				formData.append(
-					transformedKey,
-					value.file.originFileObj as UncontrolledAny,
+			if (value.fileList) {
+				value.fileList.forEach((file) =>
+					formData.append(transformedKey, file.originFileObj),
 				);
-			} else if (value.fileList) {
-				formData.append(
-					transformedKey,
-					value.fileList[0].originFileObj as UncontrolledAny,
-				);
+			} else if (value.file) {
+				if (isCustomFile(value.file)) {
+					formData.append(transformedKey, value.file.originFileObj);
+				} else {
+					formData.append(transformedKey, value.file);
+				}
 			}
 		} else if (value instanceof Blob || value instanceof File) {
 			formData.append(transformedKey, value);
@@ -104,7 +102,7 @@ export const createControlledFormData = <T extends GenericObject>(
 			const isNotNullish = value != null && value !== '';
 
 			if (isNotNullish || isRequired) {
-				formData.append(transformedKey, value);
+				formData.append(transformedKey, value as string | Blob | File);
 			}
 		}
 	};

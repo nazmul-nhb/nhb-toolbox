@@ -50,7 +50,7 @@ export interface FormDataConfigs<T> {
 /** * Represents a file upload operation, commonly used in libraries like `FilePond` or `Ant Design Upload`. */
 export interface FileUpload {
 	/** The primary file being uploaded. */
-	file: CustomFile;
+	file: File | CustomFile;
 	/** The list of files associated with the upload. */
 	fileList: CustomFile[];
 }
@@ -62,7 +62,7 @@ export interface CustomFile {
 	/** The timestamp (milliseconds) when the file was last modified. */
 	lastModified: number;
 	/** A string representation of the last modified date. */
-	lastModifiedDate: string;
+	lastModifiedDate: Date;
 	/** The name of the file. */
 	name: string;
 	/** The size of the file in bytes. */
@@ -84,13 +84,13 @@ export interface CustomFile {
 }
 
 /** * Represents the original file object before any modifications. */
-export interface OriginFileObj {
+export interface OriginFileObj extends File {
 	/** Unique identifier for the original file. */
 	uid: string;
 }
 
 /** * Represents an error that occurs during a file upload. */
-export interface FileError {
+export interface FileError extends Error {
 	/** HTTP status code of the error. */
 	status: number;
 	/** The HTTP method used for the request (e.g., "POST", "PUT"). */
