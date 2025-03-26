@@ -13,6 +13,7 @@ import {
 import type {
 	ColorType,
 	ConvertedColors,
+	Hex,
 	Hex6,
 	Hex8,
 	HSL,
@@ -121,7 +122,7 @@ export const convertHslToHex = (h: number, s: number, l: number): Hex6 => {
  * @param hex - A string representing the color in Hex format (e.g., `#FF0000`).
  * @returns A string representing the color in HSL format (e.g., `hsl(0, 100%, 50%)`).
  */
-export const convertHexToHsl = (hex: Hex6 | string): HSL => {
+export const convertHexToHsl = (hex: Hex6 | Hex): HSL => {
 	let newHex = hex.replace('#', '');
 
 	if (newHex.length === 3) {
@@ -161,7 +162,7 @@ export const convertRgbToHex = (r: number, g: number, b: number): Hex6 => {
  * @param hex - A string representing the color in Hex format (e.g., `#FF0000`).
  * @returns A string representing the color in RGB format (e.g., `rgb(255, 0, 0)`).
  */
-export const convertHexToRgb = (hex: Hex6 | string): RGB => {
+export const convertHexToRgb = (hex: Hex6 | Hex | string): RGB => {
 	// Remove the # if present
 	let newHex = hex.replace('#', '');
 
@@ -302,6 +303,8 @@ export const convertRgbaToHsla = (
 
 /**
  * * Converts Hex8 to RGBA color format, including alpha channel.
+ * - `Special Note:` Cast the parameter to `Hex8` before converting to `RGBA`.
+ * @example convertHex8ToRgba('#FFF122DE' as Hex8)
  *
  * @param hex8 - A string representing the color in Hex8 format (e.g., `#FF000080`).
  * @returns A string representing the color in RGBA format (e.g., `rgba(255, 0, 0, 0.5)`).
@@ -350,6 +353,8 @@ export const convertHslaToHex8 = (
 
 /**
  * * Converts Hex8 to HSLA color format.
+ * - `Special Note:` Cast the parameter to `Hex8` before converting to `HSLA`.
+ * @example convertHex8ToHsla('#FFF122DE' as Hex8)
  *
  * @param hex - A string representing the color in Hex format (e.g., `#FF0000DE`).
  * @returns A string representing the color in HSLA format..
@@ -362,6 +367,8 @@ export const convertHex8ToHsla = (hex8: Hex8): HSLA => {
 
 /**
  * * Converts a `Hex` color code to `RGB` and `HSL` formats.
+ * - `Special Note:` Cast the parameter to `Hex6` before converting to `RGB` and `HSL`.
+ * @example convertColorCode('#FFF122' as Hex6)
  *
  * @param color The `Hex` color code (e.g., `#3c6945`).
  * @returns An object containing the `RGB` and `HSL` formats of the given `Hex` color.
@@ -395,6 +402,8 @@ export function convertColorCode(color: HSL): {
 
 /**
  * * Converts a `Hex8` color code to `RGB` and `HSL` formats.
+ * - `Special Note:` Cast the parameter to `Hex8` before converting to `RGBA` and `HSLA`.
+ * @example convertColorCode('#FFF122DE' as Hex8)
  *
  * @param color The `Hex8` color code (e.g., `#3c6945`).
  * @returns An object containing the `RGB` and `HSL` formats of the given `Hex8` color.
