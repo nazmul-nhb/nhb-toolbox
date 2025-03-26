@@ -24,7 +24,7 @@ export function getNumbersInRange<T extends GetAs>(
 		includeMin = true,
 		includeMax = true,
 		separator = ',',
-		multiples,
+		multiplesOf: multiples,
 	} = options || {};
 
 	let output: number[] = [];

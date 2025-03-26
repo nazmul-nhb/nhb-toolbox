@@ -33,3 +33,39 @@ export function numberToWords(number: number): string {
 
 	return isNegative ? `minus ${finalResult}` : finalResult;
 }
+
+/**
+ * * Converts a number to a Roman numeral.
+ * @param num - The number to convert.
+ * @returns The Roman numeral representation.
+ * @example convertToRomanNumerals(29) → "XXIX"
+ */
+export const convertToRomanNumerals = (num: number): string => {
+	if (num <= 0 || num >= 4000)
+		throw new RangeError('Number must be between 1 and 3999');
+
+	const romanMap: [number, string][] = [
+		[1000, 'M'],
+		[900, 'CM'],
+		[500, 'D'],
+		[400, 'CD'],
+		[100, 'C'],
+		[90, 'XC'],
+		[50, 'L'],
+		[40, 'XL'],
+		[10, 'X'],
+		[9, 'IX'],
+		[5, 'V'],
+		[4, 'IV'],
+		[1, 'I'],
+	];
+
+	let result = '';
+	for (const [value, numeral] of romanMap) {
+		while (num >= value) {
+			result += numeral;
+			num -= value;
+		}
+	}
+	return result;
+};

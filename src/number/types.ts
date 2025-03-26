@@ -1,3 +1,9 @@
+import type {
+	CURRENCY_CODES,
+	CURRENCY_LOCALES,
+	LOCALE_CODES,
+} from './constants';
+
 /** - Options for random number generator */
 export interface RandomNumberOptions {
 	/** Minimum number to start with. */
@@ -38,7 +44,7 @@ export interface RangeOptions<T extends GetAs> extends RandomNumberOptions {
 	/** Separator for the string format if `getAs` is `'string'`. Defaults to `,`. */
 	separator?: string;
 	/** The multiples of which number to consider in the result. */
-	multiples?: number;
+	multiplesOf?: number;
 	/** The format for the result - either `'array'` or `'string'`. Default is `array` */
 	getAs?: T;
 }
@@ -46,3 +52,13 @@ export interface RangeOptions<T extends GetAs> extends RandomNumberOptions {
 /** - The return type of the `getNumbersInRange` function */
 export type RangedNumbers<T extends GetAs> =
 	T extends 'array' ? number[] : string;
+
+/** List of ISO 4217 currency codes. */
+export type CurrencyCode =
+	| keyof typeof CURRENCY_LOCALES
+	| (typeof CURRENCY_CODES)[number];
+
+/** - List of all supported BCP 47 locales */
+export type LocaleCode =
+	| (typeof CURRENCY_LOCALES)[keyof typeof CURRENCY_LOCALES]
+	| (typeof LOCALE_CODES)[number];

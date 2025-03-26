@@ -38,13 +38,29 @@ export {
 	isOdd as isOddNumber,
 } from './number/basics';
 
-export { numberToWords } from './number/convert';
+export {
+	numberToWords as convertNumberToWords,
+	convertToRomanNumerals,
+	numberToWords,
+} from './number/convert';
 
 export {
 	findPrimeNumbers,
 	isPrime,
 	isPrime as isPrimeNumber,
 } from './number/prime';
+
+export {
+	clampNumber,
+	formatCurrency as convertNumberToCurrency,
+	formatCurrency,
+	getRandomFloat as getRandomDecimal,
+	getRandomFloat,
+	roundToNearest as roundNumber,
+	roundToNearest as roundNumberToNearestInterval,
+	roundToNearest,
+	roundToNearest as roundToNearestInterval,
+} from './number/utilities';
 
 export { getNumbersInRange } from './number/range';
 
