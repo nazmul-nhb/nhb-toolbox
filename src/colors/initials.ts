@@ -13,7 +13,7 @@ import type { ColorInput, ColorInputArray, OpacityValue } from './types';
  * @returns A hex color for the first character of the provided string/number.
  */
 export function getColorForInitial(
-	input: ColorInput,
+	input: string | number,
 	opacity?: OpacityValue,
 ): string;
 

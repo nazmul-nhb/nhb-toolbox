@@ -51,7 +51,7 @@ export function isObjectWithKeys<T extends Record<string, unknown>>(
 }
 
 /**
- * Type guard to check if a value is an empty object.
+ * * Type guard to check if a value is an empty object.
  * @param value - The value to check.
  * @returns `true` if the value is an empty object, otherwise `false`.
  */
@@ -62,7 +62,7 @@ export function isEmptyObject(
 }
 
 /**
- * Type guard to check if a value is an array of a specific type.
+ * * Type guard to check if a value is an array of a specific type.
  * @param value - The value to check.
  * @param typeCheck - The type guard function to check each item of the array.
  * @returns `true` if the value is an array of the specified type, otherwise `false`.
@@ -75,7 +75,7 @@ export function isArrayOfType<T>(
 }
 
 /**
- * Type guard to check if a value is a Promise.
+ * * Type guard to check if a value is a Promise.
  * @param value - The value to check.
  * @returns `true` if the value is a Promise, otherwise `false`.
  */
@@ -84,7 +84,7 @@ export function isPromise(value: unknown): value is Promise<unknown> {
 }
 
 /**
- * Type guard to check if a value is a Set.
+ * * Type guard to check if a value is a Set.
  * @param value - The value to check.
  * @returns `true` if the value is a Set, otherwise `false`.
  */
@@ -93,7 +93,7 @@ export function isSet<T>(value: unknown): value is Set<T> {
 }
 
 /**
- * Type guard to check if a value is a Map.
+ * * Type guard to check if a value is a Map.
  * @param value - The value to check.
  * @returns `true` if the value is a Map, otherwise `false`.
  */
@@ -102,7 +102,7 @@ export function isMap<K, V>(value: unknown): value is Map<K, V> {
 }
 
 /**
- * Type guard to check if a value is a RegExp.
+ * * Type guard to check if a value is a RegExp.
  * @param value - The value to check.
  * @returns `true` if the value is a RegExp, otherwise `false`.
  */
@@ -111,7 +111,7 @@ export function isRegExp(value: unknown): value is RegExp {
 }
 
 /**
- * Type guard to check if a value is an Error object.
+ * * Type guard to check if a value is an Error object.
  * @param value - The value to check.
  * @returns `true` if the value is an Error object, otherwise `false`.
  */
@@ -120,7 +120,7 @@ export function isError(value: unknown): value is Error {
 }
 
 /**
- * Type guard to check if a value is a BigInt.
+ * * Type guard to check if a value is a BigInt.
  * @param value - The value to check.
  * @returns `true` if the value is a BigInt, otherwise `false`.
  */
@@ -129,7 +129,7 @@ export function isBigInt(value: unknown): value is bigint {
 }
 
 /**
- * Type guard to check if a string is valid JSON.
+ * * Type guard to check if a string is valid JSON.
  * @param value - The value to check.
  * @returns `true` if the value is valid JSON, otherwise `false`.
  */
@@ -145,7 +145,7 @@ export function isJSON(value: unknown): value is string {
 }
 
 /**
- * Type guard to check if a function returns a Promise.
+ * * Type guard to check if a function returns a Promise.
  * @param fn - The function to check.
  * @returns `true` if the function returns a Promise, otherwise `false`.
  */

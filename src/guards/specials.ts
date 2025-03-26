@@ -2,7 +2,7 @@ import { isArray } from './non-primitives';
 import { isString } from './primitives';
 
 /**
- * Type guard to check if a value is a valid email string.
+ * * Type guard to check if a value is a valid email string.
  * @param value - The value to check.
  * @returns `true` if the value is a valid email, otherwise `false`.
  */
@@ -14,7 +14,7 @@ export function isEmail(value: unknown): value is string {
 }
 
 /**
- * Type guard to check if a value is an array of valid email strings.
+ * * Type guard to check if a value is an array of valid email strings.
  * @param value - The value to check.
  * @returns `true` if the value is an array of valid email strings, otherwise `false`.
  */
@@ -23,7 +23,7 @@ export function isEmailArray(value: unknown): value is string[] {
 }
 
 /**
- * Type guard to check if a value is a valid date string.
+ * * Type guard to check if a value is a valid date string.
  * @param value - The value to check.
  * @returns `true` if the value is a valid date string, otherwise `false`.
  */
@@ -32,7 +32,7 @@ export function isDateString(value: unknown): value is string {
 }
 
 /**
- * Type guard to check if a value is a valid UUID (v4).
+ * * Type guard to check if a value is a valid UUID (v4).
  * @param value - The value to check.
  * @returns `true` if the value is a valid UUID, otherwise `false`.
  */
@@ -46,7 +46,7 @@ export function isUUID(value: unknown): value is string {
 }
 
 /**
- * Type guard to check if the code is running in a browser environment.
+ * * Type guard to check if the code is running in a browser environment.
  * @returns `true` if the code is running in a browser, otherwise `false`.
  */
 export function isBrowser(): boolean {
@@ -54,7 +54,7 @@ export function isBrowser(): boolean {
 }
 
 /**
- * Type guard to check if the code is running in a Node.js environment.
+ * * Type guard to check if the code is running in a Node.js environment.
  * @returns `true` if the code is running in Node.js, otherwise `false`.
  */
 export function isNode(): boolean {
@@ -66,7 +66,7 @@ export function isNode(): boolean {
 }
 
 /**
- * Type guard to check if a value is a valid URL.
+ * * Type guard to check if a value is a valid URL.
  * @param value - The value to check.
  * @returns `true` if the value is a valid URL, otherwise `false`.
  */
@@ -80,7 +80,7 @@ export function isURL(value: unknown): value is string {
 }
 
 /**
- * Type guard to check if a value is a valid Base64 encoded string.
+ * * Type guard to check if a value is a valid Base64 encoded string.
  * @param value - The value to check.
  * @returns `true` if the value is a valid Base64 string, otherwise `false`.
  */
@@ -94,7 +94,7 @@ export function isBase64(value: unknown): value is string {
 }
 
 /**
- * Type guard to check if a value is a valid phone number.
+ * * Type guard to check if a value is a valid phone number.
  * @param value - The value to check.
  * @returns `true` if the value is a valid phone number, otherwise `false`.
  */
@@ -103,7 +103,7 @@ export function isPhoneNumber(value: unknown): value is string {
 }
 
 /**
- * Type guard to check if a value is a valid IP address (IPv4 or IPv6).
+ * * Type guard to check if a value is a valid IP address (IPv4 or IPv6).
  * @param value - The value to check.
  * @returns `true` if the value is a valid IP address, otherwise `false`.
  */
@@ -115,7 +115,7 @@ export function isIPAddress(value: unknown): value is string {
 }
 
 /**
- * Type guard to check if the current environment matches a given string.
+ * * Type guard to check if the current environment matches a given string.
  * @param env - The expected environment (e.g., "production", "development").
  * @returns `true` if the current environment matches, otherwise `false`.
  */
@@ -124,7 +124,7 @@ export function isEnvironment(env: string): boolean {
 }
 
 /**
- * Type guard to check if a value is a numeric string.
+ * * Type guard to check if a value is a numeric string.
  * @param value - The value to check.
  * @returns `true` if the value is a numeric string, otherwise `false`.
  */

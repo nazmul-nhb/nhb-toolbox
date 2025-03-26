@@ -27,7 +27,11 @@ export {
 
 export { numberToWords } from './number/convert';
 
-export { findPrimeNumbers, isPrime } from './number/prime';
+export {
+	findPrimeNumbers,
+	isPrime,
+	isPrime as isPrimeNumber,
+} from './number/prime';
 
 export { getNumbersInRange } from './number/range';
 
