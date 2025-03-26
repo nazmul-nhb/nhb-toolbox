@@ -63,3 +63,13 @@ export type CaseFormat =
 	| 'Title Case'
 	| 'UPPERCASE'
 	| 'lowercase';
+
+/** Options for masking a string. */
+export interface MaskOptions {
+	/** Number of characters to keep at the start. Defaults to `1`. */
+	start?: number;
+	/** Number of characters to keep at the end. Defaults to `1`. */
+	end?: number;
+	/** Character to use for masking. Defaults to `*`. */
+	maskCharacter?: string;
+}

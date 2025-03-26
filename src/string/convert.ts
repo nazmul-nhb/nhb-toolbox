@@ -1,5 +1,6 @@
+import { trimString } from './basics';
 import { LOWERCASE } from './constants';
-import type { CaseFormat } from './types';
+import type { CaseFormat, MaskOptions } from './types';
 
 /**
  * Converts a string to a specified case format such as `camelCase`, `snake_case`, `kebab-case`, `PascalCase`, `Title Case`, `lowercase`, or `UPPERCASE`.
@@ -129,11 +130,7 @@ export const replaceAllInString = (
 	find: string | RegExp,
 	replace: string,
 ): string => {
-	if (!input) return '';
-
-	const trimmedString = input?.trim();
-
-	if (!trimmedString) return '';
+	const trimmedString = trimString(input);
 
 	const regex =
 		typeof find === 'string' ?
@@ -144,4 +141,49 @@ export const replaceAllInString = (
 			);
 
 	return trimmedString?.replace(regex, replace);
+};
+
+/**
+ * * Converts a string into a URL-friendly slug.
+ * @param input - The string to be converted.
+ * @returns The slugified string.
+ */
+export const slugifyString = (input: string): Lowercase<string> => {
+	return trimString(input)
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/^-+|-+$/g, '') as Lowercase<string>;
+};
+
+/**
+ * * Masks part of a string for privacy.
+ * @param input - The string to mask.
+ * @param options - Options for masking a string.
+ * @returns The masked string.
+ */
+export const maskString = (input: string, options?: MaskOptions): string => {
+	const { start = 1, end = 1, maskCharacter: maskChar = '*' } = options || {};
+
+	const trimmedString = trimString(input);
+
+	if (trimmedString.length <= start + end) {
+		return maskChar.repeat(trimmedString.length);
+	}
+
+	return (
+		trimmedString.slice(0, start) +
+		maskChar.repeat(trimmedString.length - start - end) +
+		(end > 0 ? trimmedString.slice(-end) : '')
+	);
+};
+
+/**
+ * * Reverses a given string.
+ * @param input - The string to reverse.
+ * @returns The reversed string.
+ */
+export const reverseString = (input: string): string => {
+	const trimmedString = trimString(input);
+
+	return trimmedString.split('').reverse().join('');
 };

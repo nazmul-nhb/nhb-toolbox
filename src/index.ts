@@ -8,7 +8,20 @@ export {
 
 export { generateAnagrams } from './string/anagram';
 
-export { convertStringCase, replaceAllInString } from './string/convert';
+export {
+	convertStringCase,
+	maskString,
+	replaceAllInString,
+	reverseString,
+	slugifyString,
+} from './string/convert';
+
+export {
+	extractNumbersFromString,
+	getLevenshteinDistance,
+	isPalindrome,
+	getLevenshteinDistance as levenshteinDistance,
+} from './string/utilities';
 
 // ! Number Utilities
 export {
