@@ -25,7 +25,7 @@ export interface DecimalOptions<T extends boolean | undefined = false> {
 }
 
 /** - Converted decimal type either `number` or `string`. */
-export type ConvertedDecimal<T> = T extends true ? string : number;
+export type ConvertedDecimal<T> = T extends true ? `${number}` : number;
 
 /** - Type of numbers to generate */
 export type NumberType =

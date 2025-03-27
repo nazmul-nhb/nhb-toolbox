@@ -75,13 +75,7 @@ export const convertToDecimal = <T extends boolean | undefined = false>(
 ): ConvertedDecimal<T> => {
 	const { decimalPlaces = 2, isString = false } = options || {};
 
-	let number: number;
-
-	if (typeof input === 'number') {
-		number = input;
-	} else {
-		number = Number(input);
-	}
+	const number = typeof input === 'number' ? input : Number(input);
 
 	return isString ?
 			(number.toFixed(decimalPlaces) as ConvertedDecimal<T>)

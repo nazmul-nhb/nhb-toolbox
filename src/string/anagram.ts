@@ -7,7 +7,7 @@
 export function generateAnagrams(
 	word: string,
 	limit: number | 'all' = 100,
-): string[] {
+): (Lowercase<string> | string)[] {
 	if (word.length <= 1) return [word];
 
 	const uniqueAnagrams = new Set<string>();

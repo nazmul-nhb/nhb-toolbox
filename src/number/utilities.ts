@@ -22,7 +22,7 @@ export const roundToNearest = (value: number, interval = 5): number =>
  * @example formatCurrency(1234.56, "USD", "en-US") → "$1,234.56"
  */
 export const formatCurrency = (
-	value: number,
+	value: number | `${number}`,
 	currency: CurrencyCode = 'USD',
 	locale?: LocaleCode,
 ): string => {
