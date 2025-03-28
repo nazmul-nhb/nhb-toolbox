@@ -1,7 +1,7 @@
 import type {
 	DotNotationKey,
-	DotNotationKeyForArray,
-	DotNotationKeyForObject,
+	KeyForArray,
+	KeyForObject,
 } from '../object/types';
 
 /** - Configuration options to control FormData generation behavior. */
@@ -25,27 +25,26 @@ export interface FormDataConfigs<T> {
 	lowerCaseKeys?: '*' | DotNotationKey<T>[];
 
 	/**
-	 * * An array of dot-notation paths to preserve in their original structure.
-	 * - Example: `'user.settings'` ensures `user` remains an object, and `settings` is not flattened.
-	 * - Use `*` to preserve all keys in their dot-notation format.
+	 * * An array of keys (values must be object) to preserve in their original structure.
+	 * - Use `*` to preserve all keys with object values in their dot-notation format.
 	 * - If a key exists in both `dotNotateNested` and `stringifyNested`, `dotNotateNested` takes precedence.
 	 */
-	dotNotateNested?: '*' | DotNotationKeyForObject<T>[];
+	dotNotateNested?: '*' | KeyForObject<T>[];
 
 	/**
-	 * * Specifies which nested objects should be stringified instead of being flattened or dot-notated.
-	 * - Defaults to `*`, meaning all nested objects will be stringified. Which is standard in modern form submissions.
+	 * * Specifies which keys (values must be objects) should be stringified instead of being dot-notated.
+	 * - Defaults to `*`, meaning all keys with object values will be stringified. Which is standard in modern form submissions.
 	 * - Use `*` to stringify all nested objects.
 	 * - If a key exists in both `dotNotateNested` and `stringifyNested`, `dotNotateNested` takes precedence.
 	 */
-	stringifyNested?: '*' | DotNotationKeyForObject<T>[];
+	stringifyNested?: '*' | KeyForObject<T>[];
 
 	/**
 	 * * Controls how arrays should be serialized in FormData.
 	 * - If a key is included, the array will be broken into individual key-value pairs (`key[0]: value, key[1]: value`).
 	 * - Use `*` to apply this behavior to all array keys.
 	 */
-	breakArray?: '*' | DotNotationKeyForArray<T>[];
+	breakArray?: '*' | KeyForArray<T>[];
 
 	/** - Enables automatic trimming of string values before appending them to FormData. */
 	trimStrings?: boolean;

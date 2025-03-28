@@ -46,25 +46,22 @@ export type DotNotationKey<T> =
 	:	never;
 
 /** - Dot-notation keys where the value is an array (including optional properties) */
-export type DotNotationKeyForArray<T> =
+export type KeyForArray<T> =
 	T extends GenericObject ?
 		{
-			[K in keyof T & string]: NonNullable<T[K]> extends unknown[] ?
-				`${K}` | `${K}.${DotNotationKeyForArray<NonNullable<T[K]>>}`
+			[K in keyof T & string]: NonNullable<T[K]> extends unknown[] ? K
 			:	never;
 		}[keyof T & string]
 	:	never;
 
 /** - Dot-notation keys where the value is a non-array object (including optional properties) */
-export type DotNotationKeyForObject<T> =
+export type KeyForObject<T> =
 	T extends GenericObject ?
 		{
 			[K in keyof T & string]: NonNullable<T[K]> extends GenericObject ?
-				NonNullable<T[K]> extends (
-					unknown[] // Exclude arrays
-				) ?
+				NonNullable<T[K]> extends unknown[] ?
 					never
-				:	`${K}` | `${K}.${DotNotationKeyForObject<NonNullable<T[K]>>}`
+				:	K
 			:	never;
 		}[keyof T & string]
 	:	never;

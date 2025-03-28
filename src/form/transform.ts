@@ -1,6 +1,10 @@
 import { isInvalidOrEmptyArray } from '../array/basics';
 import { isEmptyObject } from '../object/basics';
-import type { DotNotationKey, GenericObject } from '../object/types';
+import type {
+	DotNotationKey,
+	GenericObject,
+	KeyForObject,
+} from '../object/types';
 import { isCustomFile, isCustomFileArray, isFileUpload } from './guards';
 import type { FormDataConfigs } from './types';
 
@@ -12,50 +16,117 @@ import type { FormDataConfigs } from './types';
  *
  * @returns FormData instance containing the sanitized and transformed data
  */
+// ... (previous imports remain the same)
+
 export const createControlledFormData = <T extends GenericObject>(
 	data: T,
 	configs?: FormDataConfigs<T>,
 ): FormData => {
 	const formData = new FormData();
-
 	const { stringifyNested = '*' } = configs || {};
+
+	/** Helper to check if a key should be lowercase */
+	const shouldLowercase = (key: string) => {
+		return Array.isArray(configs?.lowerCaseKeys) ?
+				configs.lowerCaseKeys.some(
+					(path) => key === path || key.startsWith(`${path}.`),
+				)
+			:	configs?.lowerCaseKeys === '*';
+	};
+
+	/** Transforms key to lowercase if needed */
+	const transformKey = (key: string) => {
+		return shouldLowercase(key) ? key.toLowerCase() : key;
+	};
+
+	/** - Helper function to check if a key matches a breakArray key. */
+	const isRequiredKey = (key: string) => {
+		const transformedKey = transformKey(key);
+
+		return Array.isArray(configs?.requiredKeys) ?
+				configs.requiredKeys.some(
+					(path) =>
+						transformedKey === path ||
+						transformedKey.startsWith(`${path}.`),
+				)
+			:	configs?.requiredKeys === '*';
+	};
 
 	/** - Helper function to check if a key matches a dotNotation path to preserve. */
 	const shouldDotNotate = (key: string) => {
+		const transformedKey = transformKey(key);
+
 		return Array.isArray(configs?.dotNotateNested) ?
-				configs.dotNotateNested.some(
-					(path) => key === path || key.startsWith(`${path}.`),
+				configs.dotNotateNested.includes(
+					transformedKey as KeyForObject<T>,
 				)
 			:	configs?.dotNotateNested === '*';
 	};
 
 	/** - Helper function to check if a key matches a stringifyNested key. */
 	const shouldStringify = (key: string) => {
+		const transformedKey = transformKey(key);
+
 		return Array.isArray(stringifyNested) ?
-				stringifyNested.some(
-					(path) => key === path || key.startsWith(`${path}.`),
-				)
+				stringifyNested.includes(transformedKey as KeyForObject<T>)
 			:	stringifyNested === '*';
 	};
 
 	/** - Helper function to check if a key matches a breakArray key. */
 	const shouldBreakArray = (key: string) => {
+		const transformedKey = transformKey(key);
 		return Array.isArray(configs?.breakArray) ?
-				configs.breakArray.some(
-					(path) => key === path || key.startsWith(`${path}.`),
-				)
+				configs.breakArray.includes(transformedKey as KeyForObject<T>)
 			:	configs?.breakArray === '*';
+	};
+
+	/** - Helper to clean object by removing null/undefined/empty values while respecting required keys */
+	const _cleanObject = (
+		obj: GenericObject,
+		parentKey = '',
+	): GenericObject => {
+		return Object.entries(obj).reduce((acc, [key, value]) => {
+			const transformedKey = transformKey(key);
+
+			const fullKey =
+				parentKey ? `${parentKey}.${transformedKey}` : transformedKey;
+
+			// Skip ignored keys (don't include them in the cleaned object)
+			if (configs?.ignoreKeys?.includes(fullKey as DotNotationKey<T>)) {
+				return acc;
+			}
+
+			// Keep value if:
+			// 1. It's required OR
+			// 2. It's not null/undefined AND not empty string/object
+			const shouldKeep =
+				isRequiredKey(fullKey) ||
+				(value != null &&
+					(typeof value !== 'string' || value !== '') &&
+					(typeof value !== 'object' || !isEmptyObject(value)));
+
+			if (shouldKeep) {
+				if (
+					typeof value === 'object' &&
+					value !== null &&
+					!Array.isArray(value)
+				) {
+					// Recursively clean nested objects
+					const cleaned = _cleanObject(value, fullKey);
+					if (isRequiredKey(fullKey) || !isEmptyObject(cleaned)) {
+						acc[transformKey(key)] = cleaned;
+					}
+				} else {
+					acc[transformKey(key)] = value;
+				}
+			}
+			return acc;
+		}, {} as GenericObject);
 	};
 
 	/** * Helper function to add values to formData */
 	const _addToFormData = (key: string, value: unknown) => {
-		const transformedKey =
-			(
-				configs?.lowerCaseKeys === '*' ||
-				configs?.lowerCaseKeys?.includes(key as DotNotationKey<T>)
-			) ?
-				key.toLowerCase()
-			:	key;
+		const transformedKey = transformKey(key);
 
 		if (isCustomFileArray(value)) {
 			value.forEach((file) =>
@@ -89,19 +160,22 @@ export const createControlledFormData = <T extends GenericObject>(
 			!isEmptyObject(value)
 		) {
 			if (shouldStringify(key) && !shouldDotNotate(key)) {
-				formData.append(transformedKey, JSON.stringify(value));
+				// Clean object before stringifying, preserving required keys
+				const cleanedValue = _cleanObject(value, key);
+				if (!isEmptyObject(cleanedValue) || isRequiredKey(key)) {
+					formData.append(
+						transformedKey,
+						JSON.stringify(cleanedValue),
+					);
+				}
 			} else {
 				Object.entries(value).forEach(([nestedKey, nestedValue]) => {
 					_addToFormData(`${key}.${nestedKey}`, nestedValue);
 				});
 			}
 		} else {
-			const isRequired =
-				configs?.requiredKeys === '*' ||
-				configs?.requiredKeys?.includes(key as DotNotationKey<T>);
 			const isNotNullish = value != null && value !== '';
-
-			if (isNotNullish || isRequired) {
+			if (isNotNullish || isRequiredKey(key)) {
 				formData.append(transformedKey, value as string | Blob | File);
 			}
 		}
@@ -110,13 +184,13 @@ export const createControlledFormData = <T extends GenericObject>(
 	/** - Helper to process object */
 	const _processObject = (obj: GenericObject, parentKey = '') => {
 		Object.entries(obj).forEach(([key, value]) => {
-			const fullKey = (
-				parentKey ?
-					`${parentKey}.${key}`
-				:	key) as DotNotationKey<T>;
+			const transformedKey = transformKey(key);
+			const fullKey =
+				parentKey ? `${parentKey}.${transformedKey}` : transformedKey;
 
 			// Skip keys that are in ignoreKeys
-			if (configs?.ignoreKeys?.includes(fullKey)) return;
+			if (configs?.ignoreKeys?.includes(fullKey as DotNotationKey<T>))
+				return;
 
 			// Trim string values if trimStrings is enabled
 			if (configs?.trimStrings && typeof value === 'string') {
@@ -130,8 +204,8 @@ export const createControlledFormData = <T extends GenericObject>(
 			} else if (
 				typeof value === 'object' &&
 				!Array.isArray(value) &&
-				value != null &&
-				!stringifyNested
+				value !== null &&
+				!shouldStringify(fullKey)
 			) {
 				// Process nested objects
 				_processObject(value, key);
