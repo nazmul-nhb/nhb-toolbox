@@ -1,4 +1,8 @@
-import type { DotNotationKey } from '../object/types';
+import type {
+	DotNotationKey,
+	DotNotationKeyForArray,
+	DotNotationKeyForObject,
+} from '../object/types';
 
 /** - Configuration options to control FormData generation behavior. */
 export interface FormDataConfigs<T> {
@@ -26,7 +30,7 @@ export interface FormDataConfigs<T> {
 	 * - Use `*` to preserve all keys in their dot-notation format.
 	 * - If a key exists in both `dotNotateNested` and `stringifyNested`, `dotNotateNested` takes precedence.
 	 */
-	dotNotateNested?: '*' | DotNotationKey<T>[];
+	dotNotateNested?: '*' | DotNotationKeyForObject<T>[];
 
 	/**
 	 * * Specifies which nested objects should be stringified instead of being flattened or dot-notated.
@@ -34,14 +38,14 @@ export interface FormDataConfigs<T> {
 	 * - Use `*` to stringify all nested objects.
 	 * - If a key exists in both `dotNotateNested` and `stringifyNested`, `dotNotateNested` takes precedence.
 	 */
-	stringifyNested?: '*' | DotNotationKey<T>[];
+	stringifyNested?: '*' | DotNotationKeyForObject<T>[];
 
 	/**
 	 * * Controls how arrays should be serialized in FormData.
 	 * - If a key is included, the array will be broken into individual key-value pairs (`key[0]: value, key[1]: value`).
 	 * - Use `*` to apply this behavior to all array keys.
 	 */
-	breakArray?: '*' | DotNotationKey<T>[];
+	breakArray?: '*' | DotNotationKeyForArray<T>[];
 
 	/** - Enables automatic trimming of string values before appending them to FormData. */
 	trimStrings?: boolean;

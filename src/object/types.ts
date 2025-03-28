@@ -23,7 +23,9 @@ export type GenericObjectPrimitive = Record<string, string | number | boolean>;
 
 /** - Dot-notation keys for nested objects */
 export type DotNotationKeyStrict<T> =
-	T extends GenericObjectStrict ?
+	T extends unknown[] ?
+		never // Exclude arrays
+	: T extends GenericObjectStrict ?
 		{
 			[K in keyof T & string]: T[K] extends GenericObjectStrict ?
 				`${K}` | `${K}.${DotNotationKeyStrict<T[K]>}`
@@ -31,13 +33,39 @@ export type DotNotationKeyStrict<T> =
 		}[keyof T & string]
 	:	never;
 
-/** - Dot-notation keys for nested objects */
+/** - Dot-notation keys for nested objects (including optional properties) */
 export type DotNotationKey<T> =
+	T extends unknown[] ?
+		never // Exclude arrays
+	: T extends GenericObject ?
+		{
+			[K in keyof T & string]: NonNullable<T[K]> extends GenericObject ?
+				`${K}` | `${K}.${DotNotationKey<NonNullable<T[K]>>}`
+			:	`${K}`;
+		}[keyof T & string]
+	:	never;
+
+/** - Dot-notation keys where the value is an array (including optional properties) */
+export type DotNotationKeyForArray<T> =
 	T extends GenericObject ?
 		{
-			[K in keyof T & string]: T[K] extends GenericObject ?
-				`${K}` | `${K}.${DotNotationKey<T[K]>}`
-			:	`${K}`;
+			[K in keyof T & string]: NonNullable<T[K]> extends unknown[] ?
+				`${K}` | `${K}.${DotNotationKeyForArray<NonNullable<T[K]>>}`
+			:	never;
+		}[keyof T & string]
+	:	never;
+
+/** - Dot-notation keys where the value is a non-array object (including optional properties) */
+export type DotNotationKeyForObject<T> =
+	T extends GenericObject ?
+		{
+			[K in keyof T & string]: NonNullable<T[K]> extends GenericObject ?
+				NonNullable<T[K]> extends (
+					unknown[] // Exclude arrays
+				) ?
+					never
+				:	`${K}` | `${K}.${DotNotationKeyForObject<NonNullable<T[K]>>}`
+			:	never;
 		}[keyof T & string]
 	:	never;
 

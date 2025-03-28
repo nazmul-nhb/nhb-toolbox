@@ -2,13 +2,15 @@
  * * Utility to generate unique anagrams of a word.
  * @param word The word for generating anagrams.
  * @param limit The maximum number of anagrams to return ('all' for unlimited). Default is `100`.
- * @returns An array of generated anagrams. The first element is always the given word.
+ * @returns An array of generated anagrams. The first element is always the given word. Generated angrams are always in lowercase.
  */
 export function generateAnagrams(
 	word: string,
 	limit: number | 'all' = 100,
-): (Lowercase<string> | string)[] {
-	if (word.length <= 1) return [word];
+): Lowercase<string>[] {
+	if (word.length <= 1) {
+		return [word.toLowerCase() as Lowercase<string>];
+	}
 
 	const uniqueAnagrams = new Set<string>();
 
@@ -35,5 +37,5 @@ export function generateAnagrams(
 
 	_permute('', word.toLowerCase());
 
-	return Array.from(uniqueAnagrams);
+	return Array.from(uniqueAnagrams) as Lowercase<string>[];
 }
