@@ -23,8 +23,7 @@ export type GenericObjectPrimitive = Record<string, string | number | boolean>;
 
 /** - Dot-notation keys for nested objects */
 export type DotNotationKeyStrict<T> =
-	T extends unknown[] ?
-		never // Exclude arrays
+	T extends unknown[] ? never
 	: T extends GenericObjectStrict ?
 		{
 			[K in keyof T & string]: T[K] extends GenericObjectStrict ?
@@ -35,8 +34,7 @@ export type DotNotationKeyStrict<T> =
 
 /** - Dot-notation keys for nested objects (including optional properties) */
 export type DotNotationKey<T> =
-	T extends unknown[] ?
-		never // Exclude arrays
+	T extends unknown[] ? never
 	: T extends GenericObject ?
 		{
 			[K in keyof T & string]: NonNullable<T[K]> extends GenericObject ?
@@ -62,6 +60,22 @@ export type KeyForObject<T> =
 				NonNullable<T[K]> extends unknown[] ?
 					never
 				:	K
+			:	never;
+		}[keyof T & string]
+	:	never;
+
+/** - Extract only keys with string values from an object, including nested dot-notation keys. */
+export type NestedKeyString<T> =
+	T extends GenericObject ?
+		{
+			[K in keyof T & string]: T[K] extends unknown[] ? never
+			: T[K] extends string ? K
+			: T[K] extends GenericObject ?
+				`${K}.${NestedKeyString<T[K]>}` extends infer R ?
+					R extends string ?
+						R
+					:	never
+				:	never
 			:	never;
 		}[keyof T & string]
 	:	never;

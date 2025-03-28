@@ -1,6 +1,26 @@
 import type { CustomFile, FileUpload, OriginFileObj } from './types';
 
 /**
+ * * Checks if a given value is a valid `FormData` & it's not empty.
+ * @param value - The value to check.
+ * @returns `true` if the value is a valid `FormData` and not empty, otherwise `false`.
+ */
+export function isValidFormData(value: unknown): value is FormData {
+	if (!(value instanceof FormData)) return false;
+
+	if ('entries' in value) {
+		if (typeof value.entries !== 'function') {
+			console.warn('`FormData.entries()` is not supported!');
+			return false;
+		}
+
+		return Array.from(value.entries()).length > 0;
+	}
+
+	return false;
+}
+
+/**
  * * Checks if a given value is an `OriginFileObj`.
  * @param value - The value to check.
  * @returns `true` if the value is a valid `OriginFileObj`, otherwise `false`.

@@ -2,6 +2,7 @@ import type {
 	DotNotationKey,
 	KeyForArray,
 	KeyForObject,
+	NestedKeyString,
 } from '../object/types';
 
 /** - Configuration options to control FormData generation behavior. */
@@ -23,6 +24,12 @@ export interface FormDataConfigs<T> {
 	 * * Use `*` to apply to all keys.
 	 */
 	lowerCaseKeys?: '*' | DotNotationKey<T>[];
+
+	/**
+	 * * Defines which values should be converted to lowercase.
+	 * * Use `*` to apply to all keys.
+	 */
+	lowerCaseValues?: '*' | NestedKeyString<T>[];
 
 	/**
 	 * * An array of keys (values must be object) to preserve in their original structure.

@@ -109,15 +109,17 @@ export {
 } from './array/transform';
 
 // ! Form Utilities
-export { convertIntoFormData, isEmptyFormData } from './form/convert';
-
-export { createControlledFormData } from './form/transform';
+export {
+	createControlledFormData as convertIntoFormData,
+	createControlledFormData,
+} from './form/convert';
 
 export {
 	isCustomFile,
 	isCustomFileArray,
 	isFileUpload,
 	isOriginFileObj,
+	isValidFormData,
 } from './form/guards';
 
 // ! Object Utilities
