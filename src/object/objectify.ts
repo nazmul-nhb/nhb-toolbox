@@ -1,6 +1,6 @@
+import { isEmptyObject, isNotEmptyObject } from '../guards/non-primitives';
 import type { FlattenPartial, UncontrolledAny } from '../types';
 import { isDeepEqual } from '../utils';
-import { isEmptyObject, isObject } from './basics';
 import type { GenericObject } from './types';
 
 /**
@@ -178,10 +178,10 @@ export const extractUpdatedFields = <T extends GenericObject>(
 			key in baseObject &&
 			!isDeepEqual(updatedObject[key], baseObject[key])
 		) {
-			if (updatedObject[key] && isObject(updatedObject[key])) {
+			if (updatedObject[key] && isNotEmptyObject(updatedObject[key])) {
 				updatedFields[key] = extractUpdatedFields(
-					baseObject[key] as T,
-					updatedObject[key],
+					baseObject[key],
+					updatedObject[key] as FlattenPartial<T>,
 				) as T[keyof T];
 
 				if (updatedFields[key] && isEmptyObject(updatedFields[key])) {
@@ -216,14 +216,17 @@ export const extractNewFields = <
 		if (!(key in baseObject)) {
 			// Directly assign new fields
 			newFields[key as keyof FlattenPartial<U>] = updatedObject[key];
-		} else if (isObject(updatedObject[key]) && isObject(baseObject[key])) {
+		} else if (
+			isNotEmptyObject(updatedObject[key]) &&
+			isNotEmptyObject(baseObject[key])
+		) {
 			// Recursively extract new fields inside nested objects
 			const nestedNewFields = extractNewFields(
 				baseObject[key] as T,
 				updatedObject[key] as FlattenPartial<T> & FlattenPartial<U>,
 			);
 
-			if (!isEmptyObject(nestedNewFields)) {
+			if (isNotEmptyObject(nestedNewFields)) {
 				newFields[key as keyof FlattenPartial<U>] =
 					nestedNewFields as T[keyof T];
 			}
@@ -254,7 +257,7 @@ export const extractUpdatedAndNewFields = <
 		if (!(key in baseObject)) {
 			newFields[key as keyof FlattenPartial<U>] = updatedObject[key];
 		} else if (!isDeepEqual(updatedObject[key], baseObject[key])) {
-			if (updatedObject[key] && isObject(updatedObject[key])) {
+			if (updatedObject[key] && isNotEmptyObject(updatedObject[key])) {
 				updatedFields[key as keyof T] = extractUpdatedAndNewFields(
 					baseObject[key] as T,
 					updatedObject[key],

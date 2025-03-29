@@ -1,6 +1,6 @@
+import { isNotEmptyObject } from '../guards/non-primitives';
 import { trimString } from '../string/basics';
 import type { FlattenPartial } from '../types';
-import { isEmptyObject } from './basics';
 import type { DotNotationKey, GenericObject, SanitizeOptions } from './types';
 
 /**
@@ -98,7 +98,7 @@ export function sanitizeData<T extends GenericObject>(
 				// Recursively process nested objects
 				const processedValue = _processObject(value as T, fullKeyPath);
 				// Only add the property if it's not an empty object
-				if (!isEmptyObject(processedValue)) {
+				if (isNotEmptyObject(processedValue)) {
 					acc[key as keyof T] = processedValue as T[keyof T];
 				}
 			} else {
@@ -124,7 +124,7 @@ export function sanitizeData<T extends GenericObject>(
 		// Process array of objects
 		return input
 			.map((obj) => _processObject(obj as T))
-			.filter((obj) => !isEmptyObject(obj));
+			.filter((obj) => isNotEmptyObject(obj));
 	}
 
 	// Process object
