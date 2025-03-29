@@ -63,18 +63,6 @@ export const cloneObject = <T extends GenericObject>(obj: T): T => {
 };
 
 /**
- * * Check if an object is empty.
- *
- * @param obj Object to check.
- * @returns Whether the object is empty.
- */
-export const isEmptyObject = <T extends GenericObject>(obj: T): boolean => {
-	if (obj != null) return countObjectFields(obj) === 0;
-
-	return false;
-};
-
-/**
  * * Count the number of fields in an object.
  *
  * @param obj Object to check.
@@ -84,14 +72,4 @@ export const countObjectFields = <T extends GenericObject>(obj: T): number => {
 	if (obj != null) return Object.keys(obj).length;
 
 	return 0;
-};
-
-/**
- * * Check whether data is object and not array.
- *
- * @param data Data to check if its an object and not array.
- * @returns Boolean: `true` if it's an object, `false` if not.
- */
-export const isObject = (data: unknown): boolean => {
-	return typeof data === 'object' && !Array.isArray(data);
 };

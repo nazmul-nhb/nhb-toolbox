@@ -47,3 +47,38 @@ export type ThrottledFn<T extends VoidFunction> = (
 
 /** Asynchronous function type */
 export type AsyncFunction<T> = (...args: unknown[]) => Promise<T>;
+
+/** Advanced non-primitive types */
+export type AdvancedTypes =
+	| Array<unknown>
+	| File
+	| FileList
+	| Blob
+	| ArrayBuffer
+	| Date
+	| RegExp
+	| WeakMap<any, any>
+	| WeakSet<any>
+	| Map<any, any>
+	| Set<any>
+	| GenericFn
+	| VoidFunction
+	| AsyncFunction<any>
+	| Promise<any>
+	| Error
+	| EvalError
+	| RangeError
+	| ReferenceError
+	| SyntaxError
+	| TypeError
+	| URIError
+	| Intl.Collator
+	| Intl.DateTimeFormat
+	| Intl.ListFormat
+	| Intl.Locale
+	| Intl.NumberFormat
+	| Intl.PluralRules
+	| Intl.RelativeTimeFormat
+	| Intl.Segmenter
+	| bigint
+	| symbol;

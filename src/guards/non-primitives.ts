@@ -2,7 +2,7 @@ import type { AsyncFunction, GenericFn } from '../types';
 import { isString } from './primitives';
 
 /**
- * Type guard to check if a value is an array.
+ * * Type guard to check if a value is an array.
  * @param value - The value to check.
  * @returns `true` if the value is an array, otherwise `false`.
  */
@@ -11,7 +11,16 @@ export function isArray<T>(value: unknown): value is Array<T> {
 }
 
 /**
- * Type guard to check if a value is an object (excluding null).
+ * * Type guard to check if a value is an array with length.
+ * @param value - The value to check.
+ * @returns `true` if the value is an array with length, otherwise `false`.
+ */
+export function isValidArray<T>(value: unknown): value is Array<T> {
+	return Array.isArray(value) && value.length > 0;
+}
+
+/**
+ * * Type guard to check if a value is an object (excluding null).
  * @param value - The value to check.
  * @returns `true` if the value is an object, otherwise `false`.
  */
@@ -20,7 +29,18 @@ export function isObject(value: unknown): value is Record<string, unknown> {
 }
 
 /**
- * Type guard to check if a value is a function.
+ * * Type guard to check if a value is an object (excluding null) and has keys in it.
+ * @param value - The value to check.
+ * @returns `true` if the value is an object with valid keys, otherwise `false`.
+ */
+export function isNotEmptyObject(
+	value: unknown,
+): value is Record<string, unknown> {
+	return isObject(value) && Object.keys(value).length > 0;
+}
+
+/**
+ * * Type guard to check if a value is a function.
  * @param value - The value to check.
  * @returns `true` if the value is a function, otherwise `false`.
  */
@@ -29,7 +49,7 @@ export function isFunction(value: unknown): value is GenericFn {
 }
 
 /**
- * Type guard to check if a value is a Date object.
+ * * Type guard to check if a value is a Date object.
  * @param value - The value to check.
  * @returns `true` if the value is a Date object, otherwise `false`.
  */
@@ -38,7 +58,7 @@ export function isDate(value: unknown): value is Date {
 }
 
 /**
- * Type guard to check if a value is an object with specific keys.
+ * * Type guard to check if a value is an object with specific keys.
  * @param value - The value to check.
  * @param keys - The set of keys the object should contain.
  * @returns `true` if the value is an object with the specified keys, otherwise `false`.

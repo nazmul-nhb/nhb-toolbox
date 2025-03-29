@@ -94,7 +94,7 @@ export function isPrimitive(
  * @returns `true` if the value is a non-empty string, otherwise `false`.
  */
 export function isNonEmptyString(value: unknown): value is string {
-	return isString(value) && value?.trim().length > 0;
+	return isString(value) && value?.length > 0;
 }
 
 /**

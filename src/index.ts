@@ -127,8 +127,6 @@ export {
 	cloneObject,
 	countObjectFields,
 	generateQueryParams,
-	isEmptyObject,
-	isObject,
 } from './object/basics';
 
 export {
@@ -174,14 +172,18 @@ export {
 	isReturningPromise as doesReturnPromise,
 	isArray,
 	isArrayOfType,
+	isValidArray as isArrayWithLength,
 	isBigInt,
 	isDate,
+	isEmptyObject,
 	isEmptyObject as isEmptyObjectGuard,
 	isError,
 	isFunction,
 	isJSON,
 	isJSON as isJSONObject,
 	isMap,
+	isNotEmptyObject,
+	isObject,
 	isEmptyObject as isObjectEmpty,
 	isObjectWithKeys,
 	isPromise,
@@ -189,9 +191,10 @@ export {
 	isRegExp as isRegularExpression,
 	isReturningPromise,
 	isSet,
+	isValidArray,
 	isJSON as isValidJSON,
 	isMap as isValidMap,
-	isObject as isValidObject,
+	isNotEmptyObject as isValidObject,
 	isSet as isValidSet,
 } from './guards/non-primitives';
 
