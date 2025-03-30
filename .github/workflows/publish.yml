@@ -42,8 +42,10 @@ jobs:
             - name: Get latest Git tag
               id: get_latest_tag
               run: |
+                  git fetch --tags  # Ensure we have all remote tags
                   LATEST_TAG=$(git tag -l 'v*' --sort=-v:refname | head -n 1)
                   echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
+                  echo "Latest tag found: $LATEST_TAG"
 
             # Compare versions and skip if same
             - name: Check if version changed
@@ -51,8 +53,10 @@ jobs:
               run: |
                   if [ "v${{ env.VERSION }}" = "${{ env.LATEST_TAG }}" ]; then
                       echo "VERSION_UNCHANGED=true" >> $GITHUB_ENV
+                      echo "No new version to publish"
                   else
                       echo "VERSION_UNCHANGED=false" >> $GITHUB_ENV
+                      echo "New version detected: v${{ env.VERSION }}"
                   fi
 
             # Publish only if version is different
