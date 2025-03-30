@@ -41,38 +41,37 @@ jobs:
             # Get the latest Git tag (fetch first to ensure remote tags are available)
             - name: Get latest Git tag
               id: get_latest_tag
-              run: |
-                  git fetch --tags --quiet  # Fetch remote tags to ensure latest is available
-                  LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-                  echo "LATEST_TAG=${LATEST_TAG}" >> $GITHUB_ENV
+              uses: WyriHaximus/github-action-get-previous-tag@v1
+              with:
+                  fallback: 1.0.0
 
             # Compare versions and skip if same
             - name: Check if version changed
               id: check_version
               run: |
-                  if [ "v${{ env.VERSION }}" = "${{ env.LATEST_TAG }}" ]; then
-                      echo "SKIP_PUBLISH=true" >> $GITHUB_ENV
+                  if [ "v${{ env.VERSION }}" = "${{ steps.get_latest_tag.outputs.tag }}" ]; then
+                      echo "VERSION_UNCHANGED=true" >> $GITHUB_ENV
                   else
-                      echo "SKIP_PUBLISH=false" >> $GITHUB_ENV
+                      echo "VERSION_UNCHANGED=false" >> $GITHUB_ENV
                   fi
 
             # Publish only if version is different
             - name: Publish to NPM
-              if: env.SKIP_PUBLISH == 'false'
+              if: env.VERSION_UNCHANGED == 'false'
               run: pnpm publish --access public
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
             # Create a Git tag if version is different
             - name: Create Git Tag
-              if: env.SKIP_PUBLISH == 'false'
+              if: env.VERSION_UNCHANGED == 'false'
               run: |
                   git tag v${{ env.VERSION }}
                   git push origin v${{ env.VERSION }}
 
             # Create GitHub Release if version is different
             - name: Create Release
-              if: env.SKIP_PUBLISH == 'false'
+              if: env.VERSION_UNCHANGED == 'false'
               uses: softprops/action-gh-release@v1
               with:
                   tag_name: 'v${{ env.VERSION }}'
