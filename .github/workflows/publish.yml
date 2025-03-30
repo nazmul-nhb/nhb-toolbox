@@ -38,10 +38,11 @@ jobs:
                   VERSION=$(jq -r .version package.json)
                   echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
-            # Get the latest Git tag (if exists)
+            # Get the latest Git tag (fetch first to ensure remote tags are available)
             - name: Get latest Git tag
               id: get_latest_tag
               run: |
+                  git fetch --tags --quiet  # Fetch remote tags to ensure latest is available
                   LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
                   echo "LATEST_TAG=${LATEST_TAG}" >> $GITHUB_ENV
 
