@@ -7,7 +7,7 @@ import readline from 'readline/promises';
 import { fileURLToPath } from 'url';
 
 /**
- * @typedef {Object} PackageJson
+ * @typedef {Object} PackageJson - Contents from `package.json`.
  *
  * @property {string} name - The name of the package.
  * @property {string} version - The version of the package.
@@ -142,7 +142,7 @@ function isValidVersion(newVersion, oldVersion) {
 		const packageJson = JSON.parse(packageData);
 		const currentVersion = packageJson.version;
 
-		/** @type {string} */
+		/** @type {string} - New Version */
 		let newVersion;
 
 		while (true) {
@@ -179,7 +179,16 @@ function isValidVersion(newVersion, oldVersion) {
 
 		rl.close();
 
-		await updateVersion(newVersion);
+		if (newVersion === currentVersion) {
+			console.info(
+				chalk.yellowBright(
+					`✅ No version change detected. Current version: ${newVersion}`,
+				),
+			);
+		} else {
+			await updateVersion(newVersion);
+		}
+
 		await runFormatter();
 		await commitAndPush(commitMessage, newVersion);
 	} catch (error) {
