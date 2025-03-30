@@ -60,9 +60,9 @@ export const isInvalidOrEmptyArray = <T>(value: T): boolean => {
 
 	return value.every(
 		(item) =>
-			item == null || // null or undefined
-			(Array.isArray(item) && item.length === 0) || // Empty array
-			(typeof item === 'object' && Object.keys(item || {}).length === 0), // Empty object
+			item == null ||
+			(Array.isArray(item) && item.length === 0) ||
+			(typeof item === 'object' && Object.keys(item || {}).length === 0),
 	);
 };
 

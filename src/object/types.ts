@@ -21,7 +21,7 @@ export type QueryObject = { [key: string]: QueryObjectValue };
 /** - Object type with string or number or boolean as value for each key. */
 export type GenericObjectPrimitive = Record<string, string | number | boolean>;
 
-/** - Dot-notation keys for nested objects */
+/** - Dot-notation keys for nested objects with unknown value (including optional properties) */
 export type DotNotationKeyStrict<T> =
 	T extends AdvancedTypes ? never
 	: T extends StrictObject ?
@@ -32,7 +32,7 @@ export type DotNotationKeyStrict<T> =
 		}[keyof T & string]
 	:	never;
 
-/** - Dot-notation keys for nested objects (including optional properties) */
+/** - Dot-notation keys for nested objects with `any` value (including optional properties) */
 export type DotNotationKey<T> =
 	T extends AdvancedTypes ? never
 	: T extends GenericObject ?
@@ -43,7 +43,7 @@ export type DotNotationKey<T> =
 		}[keyof T & string]
 	:	never;
 
-/** - Dot-notation keys where the value is an array (including optional properties) */
+/** - Object keys where the value is an array (including optional properties) */
 export type KeyForArray<T> =
 	T extends GenericObject ?
 		{
@@ -53,7 +53,7 @@ export type KeyForArray<T> =
 		}[keyof T & string]
 	:	never;
 
-/** - Dot-notation keys where the value is a non-array object (including optional properties) */
+/** - Object keys where the value is a non-array object (including optional properties) */
 export type KeyForObject<T> =
 	T extends GenericObject ?
 		{
@@ -67,7 +67,8 @@ export type KeyForObject<T> =
 
 /** - Extract only keys with string values from an object, including nested dot-notation keys. */
 export type NestedKeyString<T> =
-	T extends GenericObject ?
+	T extends AdvancedTypes ? never
+	: T extends GenericObject ?
 		{
 			[K in keyof T & string]: NonNullable<T[K]> extends string ? K
 			: NonNullable<T[K]> extends GenericObject ?

@@ -120,6 +120,8 @@ export {
 	isFileUpload,
 	isOriginFileObj,
 	isValidFormData,
+	isFileArray,
+	isFileList,
 } from './form/guards';
 
 // ! Object Utilities

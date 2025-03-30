@@ -1,3 +1,5 @@
+/// <reference lib="dom" />
+
 import {
 	isEmptyObject,
 	isNotEmptyObject,
@@ -9,7 +11,13 @@ import type {
 	GenericObject,
 	KeyForObject,
 } from '../object/types';
-import { isCustomFile, isCustomFileArray, isFileUpload } from './guards';
+import {
+	isCustomFile,
+	isCustomFileArray,
+	isFileArray,
+	isFileList,
+	isFileUpload,
+} from './guards';
 import type { FormDataConfigs } from './types';
 
 /**
@@ -112,7 +120,7 @@ export const createControlledFormData = <T extends GenericObject>(
 
 			// * Keep value if:
 			// * 1. It's required OR
-			// * 2. It's not null/undefined AND not empty string/object
+			// * 2. It's not null/undefined AND not empty string/object/array
 			const shouldKeep =
 				isRequiredKey(fullKey) ||
 				isNotNullish ||
@@ -126,21 +134,21 @@ export const createControlledFormData = <T extends GenericObject>(
 					const cleaned = _cleanObject(value, fullKey);
 
 					if (isRequiredKey(fullKey) || isNotEmptyObject(cleaned)) {
-						acc[_transformKey(key)] = cleaned;
+						acc[transformedKey] = cleaned;
 					}
 				} else {
 					if (typeof value === 'string') {
-						acc[_transformKey(key)] = value.toLowerCase();
+						acc[transformedKey] = value.toLowerCase();
 					} else if (Array.isArray(value)) {
 						if (isRequiredKey(fullKey) || isValidArray(value)) {
-							acc[_transformKey(key)] = value;
+							acc[transformedKey] = value;
 						}
 					} else if (isEmptyObject(value)) {
 						if (isRequiredKey(fullKey)) {
-							acc[_transformKey(key)] = value;
+							acc[transformedKey] = value;
 						}
 					} else {
-						acc[_transformKey(key)] = value;
+						acc[transformedKey] = value;
 					}
 				}
 			}
@@ -170,14 +178,22 @@ export const createControlledFormData = <T extends GenericObject>(
 			}
 		} else if (value instanceof Blob || value instanceof File) {
 			formData.append(transformedKey, value);
-		}
-		// else if (value instanceof FileList) {
-		// 	for (let i = 0; i < value.length; i++) {
-		// 		formData.append(transformedKey, value.item(i) as File);
-		// 	}
-		// }
-		else if (Array.isArray(value)) {
-			if (isValidArray(value)) {
+		} else if (isFileList(value)) {
+			for (let i = 0; i < value.length; i++) {
+				formData.append(transformedKey, value.item(i) as File);
+			}
+		} else if (Array.isArray(value)) {
+			if (isFileArray(value)) {
+				if (shouldBreakArray(key)) {
+					value.forEach((item, index) => {
+						_addToFormData(`${transformedKey}[${index}]`, item);
+					});
+				} else {
+					value.forEach((item) => {
+						formData.append(transformedKey, item);
+					});
+				}
+			} else if (isValidArray(value)) {
 				if (shouldBreakArray(key)) {
 					value.forEach((item, index) => {
 						_addToFormData(`${transformedKey}[${index}]`, item);
@@ -210,11 +226,7 @@ export const createControlledFormData = <T extends GenericObject>(
 			if (isNotNullish || isRequiredKey(key)) {
 				if (typeof value === 'string' && shouldLowercaseValue(key)) {
 					formData.append(transformedKey, value.toLowerCase());
-				}
-				// else if (isRequiredKey(key) || isNotEmptyObject(value)) {
-				// 	formData.append(transformedKey, JSON.stringify(value));
-				// }
-				else {
+				} else {
 					formData.append(
 						transformedKey,
 						value as string | Blob | File,
@@ -251,7 +263,20 @@ export const createControlledFormData = <T extends GenericObject>(
 				if (isRequiredKey(fullKey)) {
 					_addToFormData(key, JSON.stringify(value));
 				}
-			} else {
+			}
+			// else if (Array.isArray(value) && value.every(isNotEmptyObject)) {
+			// 	if (shouldDotNotate(fullKey)) {
+			// 		value.forEach((item, index) =>
+			// 			_addToFormData(`${fullKey}[${index}]`, item),
+			// 		);
+			// 	} else if (shouldStringify(fullKey)) {
+			// 		_addToFormData(
+			// 			key,
+			// 			value.map((item) => _processObject(item, parentKey)),
+			// 		);
+			// 	}
+			// }
+			else {
 				// * For other cases, just append as key-value
 				_addToFormData(key, value);
 			}

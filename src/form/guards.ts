@@ -62,6 +62,28 @@ export function isCustomFileArray(value: unknown): value is CustomFile[] {
 }
 
 /**
+ * * Checks if a given value is an array of `File` objects.
+ * @param value - The value to check.
+ * @returns `true` if the value is a valid `File[]`, otherwise `false`.
+ */
+export function isFileArray(value: unknown): value is File[] {
+	return (
+		Array.isArray(value) &&
+		value.length > 0 &&
+		value.every((v) => v instanceof File)
+	);
+}
+
+/**
+ * * Checks if a given value is an instance of `FileList`.
+ * @param value - The value to check.
+ * @returns `true` if the value is a valid `FileList`, otherwise `false`.
+ */
+export function isFileList(value: unknown): value is FileList {
+	return typeof FileList !== 'undefined' && value instanceof FileList;
+}
+
+/**
  * * Checks if a given value is a `FileUpload` object.
  * @param value - The value to check.
  * @returns `true` if the value is a valid `FileUpload`, otherwise `false`.
