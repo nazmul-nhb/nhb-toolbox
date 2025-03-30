@@ -7,8 +7,8 @@ on:
     workflow_dispatch:
 
 permissions:
-    contents: write # Grant read and write access to read repo and create releases
-    id-token: write # Grant access to GitHub token for authentication
+    contents: write
+    id-token: write
 
 jobs:
     publish:
@@ -18,7 +18,6 @@ jobs:
             - name: Checkout Repository
               uses: actions/checkout@v4
 
-            # Install pnpm first to avoid 'pnpm not found' error
             - name: Install PNPM
               run: npm install -g pnpm
 
@@ -32,26 +31,47 @@ jobs:
             - name: Install Dependencies
               run: pnpm install --frozen-lockfile --store-dir ~/.pnpm-store
 
-            - name: Publish to NPM
-              run: pnpm publish --access public
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-            # Extract version from package.json
+            # Get the current version from package.json
             - name: Get version from package.json
               id: get_version
               run: |
                   VERSION=$(jq -r .version package.json)
                   echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
-            # Create a Git tag with the version
+            # Get the latest Git tag (if exists)
+            - name: Get latest Git tag
+              id: get_latest_tag
+              run: |
+                  LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+                  echo "LATEST_TAG=${LATEST_TAG}" >> $GITHUB_ENV
+
+            # Compare versions and skip if same
+            - name: Check if version changed
+              id: check_version
+              run: |
+                  if [ "v${{ env.VERSION }}" = "${{ env.LATEST_TAG }}" ]; then
+                      echo "SKIP_PUBLISH=true" >> $GITHUB_ENV
+                  else
+                      echo "SKIP_PUBLISH=false" >> $GITHUB_ENV
+                  fi
+
+            # Publish only if version is different
+            - name: Publish to NPM
+              if: env.SKIP_PUBLISH == 'false'
+              run: pnpm publish --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            # Create a Git tag if version is different
             - name: Create Git Tag
+              if: env.SKIP_PUBLISH == 'false'
               run: |
                   git tag v${{ env.VERSION }}
                   git push origin v${{ env.VERSION }}
 
-            # Create GitHub Release
+            # Create GitHub Release if version is different
             - name: Create Release
+              if: env.SKIP_PUBLISH == 'false'
               uses: softprops/action-gh-release@v1
               with:
                   tag_name: 'v${{ env.VERSION }}'
@@ -60,4 +80,4 @@ jobs:
                       Find in [NPM Registry](https://www.npmjs.com/package/nhb-toolbox).
                       Full Docs at [Official Docs](https://nhb-toolbox.vercel.app)
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Use GitHub token for authentication
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

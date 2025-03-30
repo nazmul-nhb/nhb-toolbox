@@ -114,13 +114,13 @@ async function runFormatter() {
 }
 
 /**
- * * Checks if the new version is greater than the current version.
+ * * Checks if the new version is equal or greater than the current version.
  * @param {string} newVersion - The new version entered.
  * @param {string} oldVersion - The current version.
- * @returns {boolean} True if newVersion is greater, otherwise false.
+ * @returns {boolean} True if newVersion is equal or greater, otherwise false.
  */
 function isValidVersion(newVersion, oldVersion) {
-	if (newVersion === oldVersion) return false;
+	if (newVersion === oldVersion) return true;
 
 	const [major1, minor1, patch1] = newVersion.split('.').map(Number);
 	const [major2, minor2, patch2] = oldVersion.split('.').map(Number);
@@ -164,7 +164,7 @@ function isValidVersion(newVersion, oldVersion) {
 			if (!isValidVersion(newVersion, currentVersion)) {
 				console.info(
 					chalk.yellow(
-						'⚠ New version must be greater than the current version!',
+						'⚠ New version must be equal or greater than the current version!',
 					),
 				);
 				continue;
