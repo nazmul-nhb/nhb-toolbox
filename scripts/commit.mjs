@@ -179,10 +179,7 @@ function isValidVersion(newVersion, oldVersion) {
 
 		rl.close();
 
-		if (parseFloat(newVersion) > parseFloat(currentVersion)) {
-			await updateVersion(newVersion);
-		}
-
+		await updateVersion(newVersion);
 		await runFormatter();
 		await commitAndPush(commitMessage, newVersion);
 	} catch (error) {
