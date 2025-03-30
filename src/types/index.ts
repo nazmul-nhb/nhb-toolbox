@@ -57,14 +57,14 @@ export type AdvancedTypes =
 	| ArrayBuffer
 	| Date
 	| RegExp
-	| WeakMap<any, any>
-	| WeakSet<any>
-	| Map<any, any>
-	| Set<any>
+	| WeakMap<WeakKey, unknown>
+	| WeakSet<WeakKey>
+	| Map<unknown, unknown>
+	| Set<unknown>
 	| GenericFn
 	| VoidFunction
-	| AsyncFunction<any>
-	| Promise<any>
+	| AsyncFunction<unknown>
+	| Promise<unknown>
 	| Error
 	| EvalError
 	| RangeError
