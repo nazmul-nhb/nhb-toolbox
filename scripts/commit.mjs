@@ -179,7 +179,7 @@ function isValidVersion(newVersion, oldVersion) {
 
 		rl.close();
 
-		if (Number(newVersion) > Number(currentVersion)) {
+		if (parseFloat(newVersion) > parseFloat(currentVersion)) {
 			await updateVersion(newVersion);
 		}
 
