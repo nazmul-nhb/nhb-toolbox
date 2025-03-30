@@ -1,47 +1,11 @@
+import {
+	isArrayOfType,
+	isObject,
+	isValidArray,
+} from '../guards/non-primitives';
+import { isBoolean, isNumber, isString } from '../guards/primitives';
 import type { GenericObject } from '../object/types';
-import type { OrderOption, SortByOption, SortOptions } from './types';
-
-/**
- * * Sorts an array of strings.
- *
- * @param array - The array of strings to sort.
- * @param options - Sorting options.
- * @returns  The sorted array.
- */
-export function sortAnArray(array: string[], options?: OrderOption): string[];
-
-/**
- * * Sorts an array of numbers.
- *
- * @param array - The array of numbers to sort.
- * @param options - Sorting options.
- * @returns The sorted array.
- */
-export function sortAnArray(array: number[], options?: OrderOption): number[];
-
-/**
- * * Sorts an array of booleans.
- *
- * @param array - The array of booleans to sort.
- * @param options - Sorting options.
- * @returns The sorted array.
- */
-export function sortAnArray(array: boolean[], options?: OrderOption): boolean[];
-
-/**
- * * Sorts an array of objects.
- *
- * - Sorts array by the specified field.
- *
- * @template T - The type of objects in the array.
- * @param array - The array of objects to sort.
- * @param options - Sorting options.
- * @returns The sorted array.
- */
-export function sortAnArray<T extends GenericObject>(
-	array: T[],
-	options: SortByOption<T>,
-): T[];
+import type { SortOptions } from './types';
 
 /**
  * * Sorts an array of strings, numbers, booleans, or objects based on the provided options.
@@ -49,38 +13,35 @@ export function sortAnArray<T extends GenericObject>(
  * - If the array contains strings, it sorts them alphabetically.
  * - If the array contains numbers, it sorts them numerically.
  * - If the array contains booleans, it sorts them by their boolean value.
- * - If the array contains objects, it sorts them by the specified field.
- * @template T - The type of objects in the array.
+ * - If the array contains objects, it sorts them by the specified field in the options `sortByField`.
+ *
  * @param array - The array to sort.
  * @param options - Sorting options for objects.
  * @returns The sorted array.
  */
-export function sortAnArray<T extends GenericObject>(
-	array: (number | string | boolean | T)[],
-	options?: SortOptions<T>,
-): (number | string | boolean | T)[] {
-	if (!Array.isArray(array) || array.length === 0) return array;
+export function sortAnArray<
+	T extends number | string | boolean | GenericObject,
+>(array: T[], options?: SortOptions<T>): T[] {
+	if (!isValidArray(array)) return array;
 
 	// Check if the array contains strings
-	if (typeof array[0] === 'string') {
+	if (isArrayOfType(array, isString)) {
 		return [...array].sort((a, b) =>
 			options?.sortOrder === 'desc' ?
-				(b as string).localeCompare(a as string)
-			:	(a as string).localeCompare(b as string),
+				b.localeCompare(a)
+			:	a.localeCompare(b),
 		);
 	}
 
 	// Check if the array contains numbers
-	if (typeof array[0] === 'number') {
+	if (isArrayOfType(array, isNumber)) {
 		return [...array].sort((a, b) =>
-			options?.sortOrder === 'desc' ?
-				(b as number) - (a as number)
-			:	(a as number) - (b as number),
+			options?.sortOrder === 'desc' ? b - a : a - b,
 		);
 	}
 
 	// Check if the array contains booleans
-	if (typeof array[0] === 'boolean') {
+	if (isArrayOfType(array, isBoolean)) {
 		return [...array].sort((a, b) =>
 			options?.sortOrder === 'desc' ?
 				Number(b) - Number(a)
@@ -89,7 +50,7 @@ export function sortAnArray<T extends GenericObject>(
 	}
 
 	// Handle array of objects
-	if (options?.sortByField) {
+	if (isArrayOfType(array, isObject) && options && 'sortByField' in options) {
 		return [...array].sort((a, b) => {
 			// const key = options.sortByField as keyof T;
 			// const keyA = (a as T)[key];
@@ -98,10 +59,13 @@ export function sortAnArray<T extends GenericObject>(
 			const getKeyValue = (obj: T, path: string): unknown =>
 				path
 					.split('.')
-					.reduce<unknown>((acc, key) => (acc as T)?.[key], obj);
+					.reduce<unknown>(
+						(acc, key) => (acc as T)?.[key as keyof T],
+						obj,
+					);
 
-			const keyA = getKeyValue(a as T, options.sortByField as string);
-			const keyB = getKeyValue(b as T, options.sortByField as string);
+			const keyA = getKeyValue(a, options?.sortByField);
+			const keyB = getKeyValue(b, options?.sortByField);
 
 			if (keyA == null || keyB == null) {
 				return keyA == null ? 1 : -1;

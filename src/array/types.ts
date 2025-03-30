@@ -44,7 +44,7 @@ export interface OptionsConfig<T, K1, K2> {
 	secondFieldName?: K2;
 }
 
-/** - Option for sorting order. */
+/** * Option for sorting order. */
 export interface OrderOption {
 	/**
 	 * * The order in which to sort the array. Defaults to `'asc'`.
@@ -54,18 +54,11 @@ export interface OrderOption {
 	sortOrder?: 'asc' | 'desc';
 }
 
-/**
- * * Options for setting sortByField for sorting an array of objects.
- * @template T - The type of objects in the array.
- */
+/** * Options for setting sortByField for sorting an array of objects. */
 export interface SortByOption<T extends GenericObject> extends OrderOption {
 	/** The field by which to sort the objects in the array. */
 	sortByField: NestedPrimitiveKey<T>;
 }
 
-/**
- * * Options for sorting an array of objects.
- * @template T - The type of objects in the array.
- */
-export interface SortOptions<T extends GenericObject>
-	extends Partial<SortByOption<T>> {}
+export type SortOptions<T> =
+	T extends GenericObject ? SortByOption<T> : OrderOption;

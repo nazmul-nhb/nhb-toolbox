@@ -53,12 +53,13 @@ export type KeyForArray<T> =
 		}[keyof T & string]
 	:	never;
 
-/** - Object keys where the value is a non-array object (including optional properties) */
+/** - Object keys where the value is a non-array/non-advanced type object (including optional properties) */
 export type KeyForObject<T> =
-	T extends GenericObject ?
+	T extends AdvancedTypes ? never
+	: T extends GenericObject ?
 		{
 			[K in keyof T & string]: NonNullable<T[K]> extends GenericObject ?
-				NonNullable<T[K]> extends Array<unknown> ?
+				NonNullable<T[K]> extends AdvancedTypes ?
 					never
 				:	K
 			:	never;
@@ -79,7 +80,8 @@ export type NestedKeyString<T> =
 
 /** - Extract only primitive keys from an object, including nested dot-notation keys. */
 export type NestedPrimitiveKey<T> =
-	T extends GenericObject ?
+	T extends AdvancedTypes ? never
+	: T extends GenericObject ?
 		{
 			[K in keyof T & string]: NonNullable<T[K]> extends Primitive ? K
 			: NonNullable<T[K]> extends GenericObject ?
