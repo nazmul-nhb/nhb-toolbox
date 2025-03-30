@@ -41,15 +41,15 @@ jobs:
             # Get the latest Git tag (fetch first to ensure remote tags are available)
             - name: Get latest Git tag
               id: get_latest_tag
-              uses: WyriHaximus/github-action-get-previous-tag@v1
-              with:
-                  fallback: 1.0.0
+              run: |
+                  LATEST_TAG=$(git tag -l 'v*' --sort=-v:refname | head -n 1)
+                  echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
 
             # Compare versions and skip if same
             - name: Check if version changed
               id: check_version
               run: |
-                  if [ "v${{ env.VERSION }}" = "${{ steps.get_latest_tag.outputs.tag }}" ]; then
+                  if [ "v${{ env.VERSION }}" = "${{ env.LATEST_TAG }}" ]; then
                       echo "VERSION_UNCHANGED=true" >> $GITHUB_ENV
                   else
                       echo "VERSION_UNCHANGED=false" >> $GITHUB_ENV
