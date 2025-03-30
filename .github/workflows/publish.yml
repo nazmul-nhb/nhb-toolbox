@@ -42,7 +42,7 @@ jobs:
             - name: Get latest Git tag
               id: get_latest_tag
               run: |
-                  git fetch --tags  # Ensure we have all remote tags
+                  git fetch --tags
                   LATEST_TAG=$(git tag -l 'v*' --sort=-v:refname | head -n 1)
                   echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
                   echo "Latest tag found: $LATEST_TAG"
