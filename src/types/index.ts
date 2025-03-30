@@ -54,6 +54,7 @@ export type AdvancedTypes =
 	| File
 	| FileList
 	| Blob
+	| Buffer
 	| ArrayBuffer
 	| Date
 	| RegExp
@@ -72,13 +73,5 @@ export type AdvancedTypes =
 	| SyntaxError
 	| TypeError
 	| URIError
-	| Intl.Collator
-	| Intl.DateTimeFormat
-	| Intl.ListFormat
-	| Intl.Locale
-	| Intl.NumberFormat
-	| Intl.PluralRules
-	| Intl.RelativeTimeFormat
-	| Intl.Segmenter
 	| bigint
 	| symbol;
