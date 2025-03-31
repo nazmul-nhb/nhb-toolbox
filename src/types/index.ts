@@ -54,8 +54,6 @@ export type AdvancedTypes =
 	| File
 	| FileList
 	| Blob
-	| Buffer
-	| ArrayBuffer
 	| Date
 	| RegExp
 	| WeakMap<WeakKey, unknown>
