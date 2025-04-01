@@ -187,3 +187,30 @@ export const reverseString = (input: string): string => {
 
 	return trimmedString.split('').reverse().join('');
 };
+
+/**
+ * * Normalizes a string by removing diacritics (accents).
+ * @param str The input string.
+ * @returns The normalized string.
+ */
+export function normalizeString(str: string): string {
+	return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+/**
+ * * Extracts all email addresses from a string.
+ * @param str The input string.
+ * @returns An array of extracted email addresses.
+ */
+export function extractEmails(str: string): string[] {
+	return str.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g) || [];
+}
+
+/**
+ * * Extracts all URLs from a string.
+ * @param str The input string.
+ * @returns An array of extracted URLs.
+ */
+export function extractURLs(str: string): string[] {
+	return str.match(/https?:\/\/[^\s/$.?#].[^\s]*/g) || [];
+}

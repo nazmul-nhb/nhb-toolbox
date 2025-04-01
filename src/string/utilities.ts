@@ -1,5 +1,3 @@
-import { reverseString } from './convert';
-
 /**
  * * Extracts all numbers from a string as array of numbers.
  * @param input - The string to extract numbers from.
@@ -7,16 +5,6 @@ import { reverseString } from './convert';
  */
 export const extractNumbersFromString = (input: string): number[] => {
 	return (input.match(/\d+/g) || []).map(Number);
-};
-
-/**
- * * Checks if a string is a palindrome.
- * @param input - The string to check.
- * @returns True if the string is a palindrome, otherwise false.
- */
-export const isPalindrome = (input: string): boolean => {
-	const normalized = input.toLowerCase().replace(/[^a-z0-9]/g, '');
-	return normalized === reverseString(normalized);
 };
 
 /**

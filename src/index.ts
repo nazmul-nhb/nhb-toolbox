@@ -9,8 +9,20 @@ export {
 export { generateAnagrams } from './string/anagram';
 
 export {
+	isCamelCase,
+	isEmojiOnly,
+	isKebabCase,
+	isPalindrome,
+	isPascalCase,
+	isSnakeCase,
+} from './string/guards';
+
+export {
 	convertStringCase,
+	extractEmails,
+	extractURLs,
 	maskString,
+	normalizeString,
 	replaceAllInString,
 	reverseString,
 	slugifyString,
@@ -19,7 +31,6 @@ export {
 export {
 	extractNumbersFromString,
 	getLevenshteinDistance,
-	isPalindrome,
 	getLevenshteinDistance as levenshteinDistance,
 } from './string/utilities';
 
@@ -30,12 +41,21 @@ export {
 	calculateLCM as calculateLCD,
 	calculateLCM,
 	convertToDecimal,
+	getFibonacciSeries as getFibonacci,
+	getFibonacciSeries as getFibonacciNumbers,
+	getFibonacciSeries,
 	getRandomNumber,
 	isEven,
 	isEven as isEvenNumber,
+	isFibonacci,
+	isFibonacci as isParOfFibonacci,
+	isFibonacci as isParOfFibonacciSeries,
 	isMultiple,
 	isOdd,
 	isOdd as isOddNumber,
+	isPerfectSquare,
+	reverseNumber,
+	sumDigits,
 } from './number/basics';
 
 export {
@@ -105,7 +125,10 @@ export { sortAnArray } from './array/sort';
 
 export {
 	createOptionsArray,
+	moveArrayElement,
 	removeDuplicatesFromArray,
+	rotateArray,
+	splitArray,
 } from './array/transform';
 
 // ! Form Utilities

@@ -144,3 +144,69 @@ export const isOdd = (input: number): boolean => {
 export const isMultiple = (input: number, multipleOf: number): boolean => {
 	return input % multipleOf === 0;
 };
+
+/**
+ * * Checks if a number is a perfect square.
+ *
+ * @param num The number to check.
+ * @returns `true` if the number is a perfect square, otherwise `false`.
+ */
+export function isPerfectSquare(num: number): boolean {
+	return Number.isInteger(Math.sqrt(num));
+}
+
+/**
+ * * Checks if a number is part of the Fibonacci sequence.
+ *
+ * @param num The number to check.
+ * @returns `true` if the number is a Fibonacci number, otherwise `false`.
+ */
+export function isFibonacci(num: number): boolean {
+	return (
+		isPerfectSquare(5 * num * num + 4) || isPerfectSquare(5 * num * num - 4)
+	);
+}
+
+/**
+ * * Generates the first `n` Fibonacci numbers.
+ *
+ * @param n The number of Fibonacci numbers to generate.
+ * @returns An array containing the first `n` Fibonacci numbers.
+ */
+export function getFibonacciSeries(n: number): number[] {
+	const series: number[] = [0, 1];
+
+	for (let i = 2; i < n; i++) {
+		series.push(series[i - 1] + series[i - 2]);
+	}
+
+	return series.slice(0, n);
+}
+
+/**
+ * * Sums up all digits of a number.
+ *
+ * @param num The input number.
+ * @returns The sum of its digits.
+ */
+export function sumDigits(num: number): number {
+	return Math.abs(num)
+		.toString()
+		.split('')
+		.reduce((sum, digit) => sum + Number(digit), 0);
+}
+
+/**
+ * * Reverses a number (e.g., `123` → `321`).
+ *
+ * @param num The number to reverse.
+ * @returns The reversed number.
+ */
+export function reverseNumber(num: number): number {
+	const reversed = parseInt(
+		Math.abs(num).toString().split('').reverse().join(''),
+		10,
+	);
+
+	return num < 0 ? -reversed : reversed;
+}
