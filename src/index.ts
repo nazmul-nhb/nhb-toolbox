@@ -112,24 +112,21 @@ export {
 export {
 	createControlledFormData as convertIntoFormData,
 	createControlledFormData,
+	createControlledFormData as createFormData,
 } from './form/convert';
 
 export {
 	isCustomFile,
 	isCustomFileArray,
+	isFileArray,
+	isFileList,
 	isFileUpload,
 	isOriginFileObj,
 	isValidFormData,
-	isFileArray,
-	isFileList,
 } from './form/guards';
 
 // ! Object Utilities
-export {
-	cloneObject,
-	countObjectFields,
-	generateQueryParams,
-} from './object/basics';
+export { cloneObject, countObjectFields } from './object/basics';
 
 export {
 	extractNewFields,
@@ -144,6 +141,24 @@ export {
 export { sanitizeData } from './object/sanitize';
 
 export { convertObjectValues } from './object/convert';
+
+// ! DOM Utilities
+export {
+	generateQueryParams,
+	getQueryParams,
+	updateQueryParam,
+} from './dom/query';
+
+export { copyToClipboard, smoothScrollTo, toggleFullScreen } from './dom/utils';
+
+export {
+	getFromLocalStorage,
+	getFromSessionStorage,
+	removeFromLocalStorage,
+	removeFromSessionStorage,
+	saveToLocalStorage,
+	saveToSessionStorage,
+} from './dom/storage';
 
 // ! Other Utilities
 export {
