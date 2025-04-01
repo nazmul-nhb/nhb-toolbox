@@ -9,7 +9,7 @@ import type { PrimitiveKey } from '../types';
 export type Flattened<T> = T extends (infer U)[] ? Flattened<U> : T;
 
 /**
- * - Configuration for `createOptionsArray`.
+ * * Configuration for `createOptionsArray`.
  * - Defines the mapping between keys in the input objects and the keys in the output options.
  *
  * @typeParam T - The type of the objects in the input array.
@@ -60,5 +60,6 @@ export interface SortByOption<T extends GenericObject> extends OrderOption {
 	sortByField: NestedPrimitiveKey<T>;
 }
 
+/** * Options for sorting array. */
 export type SortOptions<T> =
 	T extends GenericObject ? SortByOption<T> : OrderOption;

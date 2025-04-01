@@ -52,20 +52,17 @@ export function sortAnArray<
 	// Handle array of objects
 	if (isArrayOfType(array, isObject) && options && 'sortByField' in options) {
 		return [...array].sort((a, b) => {
-			// const key = options.sortByField as keyof T;
-			// const keyA = (a as T)[key];
-			// const keyB = (b as T)[key];
-
-			const getKeyValue = (obj: T, path: string): unknown =>
-				path
+			const _getKeyValue = (obj: T, path: string): unknown => {
+				return path
 					.split('.')
 					.reduce<unknown>(
 						(acc, key) => (acc as T)?.[key as keyof T],
 						obj,
 					);
+			};
 
-			const keyA = getKeyValue(a, options?.sortByField);
-			const keyB = getKeyValue(b, options?.sortByField);
+			const keyA = _getKeyValue(a, options?.sortByField);
+			const keyB = _getKeyValue(b, options?.sortByField);
 
 			if (keyA == null || keyB == null) {
 				return keyA == null ? 1 : -1;
