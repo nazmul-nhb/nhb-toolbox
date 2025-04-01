@@ -4,7 +4,6 @@ import type { Flattened } from './types';
 /**
  * * Flattens a nested array recursively or wraps any non-array data type in an array.
  *
- * @typeParam T : The type of the input, which can be a nested array or a non-array value.
  * @param input - The input value, which can be a nested array or a non-array value.
  * @returns A fully flattened array of type `Flatten<T>`. If the input is not an array, it wraps it in a single-element array.
  */
@@ -20,12 +19,11 @@ export const flattenArray = <T>(input: T | T[]): Flattened<T>[] => {
 /**
  * * Filters an array of objects based on multiple conditions for specified keys.
  *
- * @template T - The type of objects in the array.
  * @param array - The array of objects to filter.
  * @param conditions - An object where keys represent the property names and values represent filter conditions.
  *                     The conditions can be a function `(value: T[K]) => boolean`.
  * @returns The filtered array of objects.
- * @throws {Error} If the input is not a valid array.
+ * @throws `Error` If the input is not a valid array.
  */
 export const filterArrayOfObjects = <T extends GenericObject>(
 	array: T[],

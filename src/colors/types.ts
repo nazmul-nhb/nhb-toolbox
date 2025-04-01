@@ -203,8 +203,6 @@ export type ColorNumbersAlpha = [number, number, number, number];
  * - If the input is `Hex`, the output includes `RGB` and `HSL`.
  * - If the input is `RGB`, the output includes `Hex` and `HSL`.
  * - If the input is `HSL`, the output includes `Hex` and `RGB`.
- *
- * @template T The input color type (`Hex`, `RGB`, or `HSL`).
  */
 export interface ConvertedColors<T extends ColorType>
 	extends Record<string, ColorType> {

@@ -12,7 +12,6 @@ import type { OrderOption, SortByOption, SortOptions } from './types';
  *
  * - Sorts array by the specified field.
  *
- * @template T - The type of objects in the array.
  * @param array - The array of objects to sort.
  * @param options - Sorting options.
  * @returns The sorted array.

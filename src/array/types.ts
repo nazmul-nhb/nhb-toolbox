@@ -1,11 +1,7 @@
 import type { GenericObject, NestedPrimitiveKey } from '../object/types';
 import type { PrimitiveKey } from '../types';
 
-/**
- *  * Flatten Array or Wrap in Array
- *
- *  @template T - The type of the input, which can be a nested array or a non-array value.
- *  */
+/** * Flatten Array or Wrap in Array */
 export type Flattened<T> = T extends (infer U)[] ? Flattened<U> : T;
 
 /**

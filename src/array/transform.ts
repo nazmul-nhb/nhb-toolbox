@@ -5,7 +5,6 @@ import type { OptionsConfig } from './types';
 /**
  * * Converts an array of objects into a formatted array of options.
  *
- * @typeParam T - The type of each object in the `data` array.
  * @param data - An array of objects to convert into options.
  * @param config - The configuration object to specify the keys for the `value` (firstFieldName) and `label` (secondFieldName) fields and rename as needed.
  * @returns An array of options, where each option has `value` and `label` fields as default or as specified by user in the config options.

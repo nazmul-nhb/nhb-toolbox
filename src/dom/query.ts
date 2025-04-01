@@ -4,7 +4,6 @@ import type { QueryObject } from '../object/types';
 /**
  * * Utility to generate query parameters from an object.
  *
- * @template T - A generic type extending `QueryObject`.
  * @param params - Object containing query parameters.
  * @returns A query string as a URL-encoded string, e.g., `?key1=value1&key2=value2`.
  *

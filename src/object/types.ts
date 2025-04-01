@@ -125,8 +125,6 @@ export type KeyConversion<T> =
 /**
  * ! Unused
  * * Determines the return type of `convertObjectValues` based on the `ConvertTo` type.
- * @template T The object type.
- * @template C The conversion type, either "string" or "number".
  */
 export type ConvertedData<T, C extends 'string' | 'number'> =
 	C extends 'string' ? Stringified<T> | Stringified<T>[] : T | T[];
