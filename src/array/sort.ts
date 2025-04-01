@@ -5,7 +5,34 @@ import {
 } from '../guards/non-primitives';
 import { isBoolean, isNumber, isString } from '../guards/primitives';
 import type { GenericObject } from '../object/types';
-import type { SortOptions } from './types';
+import type { OrderOption, SortByOption, SortOptions } from './types';
+
+/**
+ * * Sorts an array of objects.
+ *
+ * - Sorts array by the specified field.
+ *
+ * @template T - The type of objects in the array.
+ * @param array - The array of objects to sort.
+ * @param options - Sorting options.
+ * @returns The sorted array.
+ */
+export function sortAnArray<T extends GenericObject>(
+	array: T[],
+	options: SortByOption<T>,
+): T[];
+
+/**
+ * * Sorts an array of `strings`, `numbers` or `boolean`.
+ *
+ * @param array - The array of `strings`, `numbers` or `boolean` to sort.
+ * @param options - Sorting options.
+ * @returns  The sorted array.
+ */
+export function sortAnArray<T extends string | number | boolean>(
+	array: T[],
+	options?: OrderOption,
+): T[];
 
 /**
  * * Sorts an array of strings, numbers, booleans, or objects based on the provided options.
