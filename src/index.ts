@@ -45,10 +45,10 @@ export {
 	getFibonacciSeries as getFibonacciNumbers,
 	getFibonacciSeries,
 	getRandomNumber,
+	sumNumbers as getSumOfNumbers,
 	reverseNumber,
 	sumDigits,
 	sumNumbers,
-	sumNumbers as getSumOfNumbers,
 	sumNumbers as sumOfNumbers,
 } from './number/basics';
 
@@ -56,11 +56,11 @@ export {
 	isEven,
 	isEven as isEvenNumber,
 	isFibonacci,
-	isFibonacci as isParOfFibonacci,
-	isFibonacci as isParOfFibonacciSeries,
 	isMultiple,
 	isOdd,
 	isOdd as isOddNumber,
+	isFibonacci as isParOfFibonacci,
+	isFibonacci as isParOfFibonacciSeries,
 	isPerfectSquare,
 } from './number/guards';
 
@@ -117,6 +117,17 @@ export {
 } from './colors/convert';
 
 export { Color, Color as Colour } from './colors/Color';
+
+// ! Date & Time Utilities
+export {
+	getGreeting as generateGreeting,
+	getGreeting,
+	getGreeting as greet,
+} from './date/greet';
+
+export { isValidTime, isValidTime as isValidTimeString } from './date/guards';
+
+export { extractHourMinute, getTotalMinutes } from './date/utils';
 
 // ! Array Utilities
 export {

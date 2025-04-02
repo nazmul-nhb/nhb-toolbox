@@ -153,7 +153,7 @@ export function sumDigits(num: Numeric): number {
 export function sumNumbers(...numbers: Numeric[]): number {
 	return numbers
 		.map((num) => Number(num))
-		.reduce((sum, number) => sum + Number(number), 0);
+		.reduce((sum, number) => sum + number, 0);
 }
 
 /**
