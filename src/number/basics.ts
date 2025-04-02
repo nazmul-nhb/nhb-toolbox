@@ -1,3 +1,4 @@
+import type { Numeric } from '../types';
 import { _find2NumbersHCF, _find2NumbersLCM } from './helpers';
 import type {
 	ConvertedDecimal,
@@ -70,7 +71,7 @@ export const getRandomNumber = (options?: RandomNumberOptions): number => {
  * @returns Converted number as `number` (default) or `string` (if `isString` is `true`).
  */
 export const convertToDecimal = <T extends boolean | undefined = false>(
-	input: number | `${number}`,
+	input: Numeric,
 	options?: DecimalOptions<T>,
 ): ConvertedDecimal<T> => {
 	const { decimalPlaces = 2, isString = false } = options || {};
@@ -136,11 +137,23 @@ export function getFibonacciSeries(n: number): number[] {
  * @param num The input number.
  * @returns The sum of its digits.
  */
-export function sumDigits(num: number): number {
-	return Math.abs(num)
+export function sumDigits(num: Numeric): number {
+	return Math.abs(Number(num))
 		.toString()
 		.split('')
 		.reduce((sum, digit) => sum + Number(digit), 0);
+}
+
+/**
+ * * Sums up numbers.
+ *
+ * @param numbers The input numbers.
+ * @returns The sum of the numbers.
+ */
+export function sumNumbers(...numbers: Numeric[]): number {
+	return numbers
+		.map((num) => Number(num))
+		.reduce((sum, number) => sum + Number(number), 0);
 }
 
 /**
@@ -149,11 +162,11 @@ export function sumDigits(num: number): number {
  * @param num The number to reverse.
  * @returns The reversed number.
  */
-export function reverseNumber(num: number): number {
+export function reverseNumber(num: Numeric): number {
 	const reversed = parseInt(
-		Math.abs(num).toString().split('').reverse().join(''),
+		Math.abs(Number(num)).toString().split('').reverse().join(''),
 		10,
 	);
 
-	return num < 0 ? -reversed : reversed;
+	return Number(num) < 0 ? -reversed : reversed;
 }

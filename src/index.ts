@@ -47,6 +47,9 @@ export {
 	getRandomNumber,
 	reverseNumber,
 	sumDigits,
+	sumNumbers,
+	sumNumbers as getSumOfNumbers,
+	sumNumbers as sumOfNumbers,
 } from './number/basics';
 
 export {

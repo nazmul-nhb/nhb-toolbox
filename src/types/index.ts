@@ -13,6 +13,9 @@ export type FlattenPartial<T> = Partial<{ [K in keyof T]: T[K] }>;
 /** Utility type to flatten Partial type */
 // export type FlattenPartial<T> = T extends Partial<infer U> ? Partial<U> : Partial<T> & {};
 
+/** Union of `number` and numeric string */
+export type Numeric = number | `${number}`;
+
 /** Union of Primitive Types */
 export type Primitive = string | number | boolean | null | undefined;
 
