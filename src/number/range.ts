@@ -1,6 +1,7 @@
 import { shuffleArray } from '../array/basics';
 import { convertArrayToString } from '../utils';
-import { getRandomNumber, isEven, isOdd } from './basics';
+import { getRandomNumber } from './basics';
+import { isEven, isOdd } from './guards';
 import { _applyMultiples } from './helpers';
 import { isPrime } from './prime';
 import type { GetAs, NumberType, RangedNumbers, RangeOptions } from './types';

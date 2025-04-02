@@ -45,6 +45,11 @@ export {
 	getFibonacciSeries as getFibonacciNumbers,
 	getFibonacciSeries,
 	getRandomNumber,
+	reverseNumber,
+	sumDigits,
+} from './number/basics';
+
+export {
 	isEven,
 	isEven as isEvenNumber,
 	isFibonacci,
@@ -54,9 +59,7 @@ export {
 	isOdd,
 	isOdd as isOddNumber,
 	isPerfectSquare,
-	reverseNumber,
-	sumDigits,
-} from './number/basics';
+} from './number/guards';
 
 export {
 	numberToWords as convertNumberToWords,
@@ -66,6 +69,7 @@ export {
 
 export {
 	findPrimeNumbers,
+	findPrimeNumbers as getPrimeNumbers,
 	isPrime,
 	isPrime as isPrimeNumber,
 } from './number/prime';
