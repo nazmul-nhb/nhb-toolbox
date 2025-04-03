@@ -1,5 +1,9 @@
 import { isValidTime } from './guards';
-import { extractHourMinute, getTotalMinutes } from './utils';
+import {
+	extractHourMinute,
+	getCurrentDateTime,
+	getTotalMinutes,
+} from './utils';
 import type { GreetingConfigs } from './types';
 
 /**
@@ -30,9 +34,8 @@ export function getGreeting(configs?: GreetingConfigs): string {
 	if (currentTime && isValidTime(currentTime)) {
 		[hour, minute] = extractHourMinute(currentTime);
 	} else {
-		const now = new Date();
-		hour = now.getHours();
-		minute = now.getMinutes();
+		hour = getCurrentDateTime().getHours();
+		minute = getCurrentDateTime().getMinutes();
 	}
 
 	const currentTotalMinutes = hour * 60 + minute;

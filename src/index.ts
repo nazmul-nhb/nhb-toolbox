@@ -127,7 +127,12 @@ export {
 
 export { isValidTime, isValidTime as isValidTimeString } from './date/guards';
 
-export { extractHourMinute, getTotalMinutes } from './date/utils';
+export {
+	extractHourMinute,
+	getTotalMinutes,
+	getCurrentDateTime,
+	getCurrentDateTime as getCurrentTime,
+} from './date/utils';
 
 // ! Array Utilities
 export {

@@ -23,3 +23,13 @@ export function getTotalMinutes(time: Time): number {
 
 	return h * 60 + m;
 }
+
+/**
+ * * Returns the current date and time as `Date` object.
+ * - All the methods and properties of `new Date()` can be accessible.
+ *
+ * @returns The current date and time as a `Date` object.
+ */
+export function getCurrentDateTime(): Date {
+	return new Date();
+}
