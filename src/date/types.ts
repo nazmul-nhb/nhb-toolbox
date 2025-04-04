@@ -1,5 +1,17 @@
+import type {
+	DATE_FORMATS,
+	DAY_FORMATS,
+	HOUR_FORMATS,
+	MILLISECOND_FORMATS,
+	MINUTE_FORMATS,
+	MONTH_FORMATS,
+	SECOND_FORMATS,
+	TIME_FORMATS,
+	YEAR_FORMATS,
+} from './constants';
+
 /** - Minute in numeric string from `00` to `23` */
-export type Hour =
+export type Hours =
 	| '00'
 	| '01'
 	| '02'
@@ -26,7 +38,7 @@ export type Hour =
 	| '23';
 
 /** - Minute in numeric string from `00` to `59` */
-export type Minute =
+export type Minutes =
 	| '00'
 	| '01'
 	| '02'
@@ -89,7 +101,7 @@ export type Minute =
 	| '59';
 
 /** - Time in "HH:MM" format. */
-export type Time = `${Hour}:${Minute}`;
+export type Time = `${Hours}:${Minutes}`;
 
 /** - Configuration options for greeting. */
 export interface GreetingConfigs {
@@ -129,3 +141,34 @@ export interface GreetingConfigs {
 	/** Default greeting message if no period matches. */
 	defaultMessage?: string;
 }
+
+export type FormatType =
+	| 'year'
+	| 'month'
+	| 'day'
+	| 'date'
+	| 'hour'
+	| 'minute'
+	| 'second'
+	| 'millisecond';
+
+export type Year = (typeof YEAR_FORMATS)[number];
+export type Month = (typeof MONTH_FORMATS)[number];
+export type Day = (typeof DAY_FORMATS)[number];
+export type Date = (typeof DATE_FORMATS)[number];
+export type Hour = (typeof HOUR_FORMATS)[number];
+export type Minute = (typeof MINUTE_FORMATS)[number];
+export type Second = (typeof SECOND_FORMATS)[number];
+export type Millisecond = (typeof MILLISECOND_FORMATS)[number];
+export type TimeFormats = (typeof TIME_FORMATS)[number];
+
+export type ChronosFormat =
+	| Year
+	| Month
+	| Day
+	| Date
+	| Hour
+	| Minute
+	| Second
+	| Millisecond
+	| TimeFormats;

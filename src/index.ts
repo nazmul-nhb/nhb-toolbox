@@ -127,11 +127,13 @@ export {
 
 export { isValidTime, isValidTime as isValidTimeString } from './date/guards';
 
+export { Chronos, Chronos as Chronus } from './date/Chronos';
+
 export {
 	extractHourMinute,
-	getTotalMinutes,
 	getCurrentDateTime,
 	getCurrentDateTime as getCurrentTime,
+	getTotalMinutes,
 } from './date/utils';
 
 // ! Array Utilities

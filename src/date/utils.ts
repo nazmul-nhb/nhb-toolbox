@@ -26,7 +26,7 @@ export function getTotalMinutes(time: Time): number {
 
 /**
  * * Returns the current date and time as `Date` object.
- * - All the methods and properties of `new Date()` can be accessible.
+ * - All the methods and properties of `new Date()` are accessible.
  *
  * @returns The current date and time as a `Date` object.
  */
