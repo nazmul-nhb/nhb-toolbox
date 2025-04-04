@@ -8,8 +8,11 @@ export class Chronos {
 	 * * Creates a new immutable Chronos instance.
 	 * @param value - A date value (`timestamp`, `string`, or `Date`).
 	 */
-	constructor(value?: number | string | Date) {
-		const date = new Date(value ?? Date.now());
+	constructor(value?: number | string | Date | Chronos) {
+		const date =
+			value instanceof Chronos ?
+				value.toDate()
+			:	new Date(value ?? Date.now());
 
 		// Check if the date is invalid
 		if (isNaN(date.getTime())) {
@@ -21,10 +24,10 @@ export class Chronos {
 
 	/**
 	 * * Formats the date into a custom string format.
-	 * @param format - The desired format (e.g., "YYYY-MM-DD").
-	 * @returns Formatted date string.
+	 * @param format - The desired format (Default format is `DD-MM-YYYY` = `30-06-1995`).
+	 * @returns Formatted date string in desired format.
 	 */
-	format(format: string): string {
+	format(format: string = 'DD-MM-YYYY'): string {
 		const year = this._date.getFullYear();
 		const month = this._date.getMonth();
 		const day = this._date.getDay();
@@ -119,29 +122,32 @@ export class Chronos {
 		return this.addDays(-days);
 	}
 
+	/**
+	 * * Determines if the given date is today, tomorrow, yesterday or any relative day.
+	 * @param date - The date to compare (Date object).
+	 * @returns
+	 *  - `-1` if the date is yesterday.
+	 *  - `0` if the date is today.
+	 *  - `1` if the date is tomorrow.
+	 *  - Other positive or negative numbers for other relative days (e.g., `-2` for two days ago, `2` for two days ahead).
+	 */
+	getRelativeDay(): number {
+		const today = new Date();
+		// Set the time of today to 00:00:00 for comparison purposes
+		today.setHours(0, 0, 0, 0);
+
+		// Normalize the input date to 00:00:00
+		const inputDate = new Date(this._date);
+		inputDate.setHours(0, 0, 0, 0);
+
+		const diffTime = inputDate.getTime() - today.getTime();
+		const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+		return diffDays;
+	}
+
 	/** * Gets the native `Date` instance (read-only). */
 	toDate(): Date {
 		return new Date(this._date);
 	}
-
-	/**
-	 * * Extracts matched date/time format tokens from a string.
-	 * @param input The input string containing format tokens.
-	 * @returns An array of matched format tokens from the known formats.
-	 */
-	// private _extractFormatTokens(input: string): ChronosFormat[] {
-	// 	// Build regex pattern (escaped tokens joined by '|')
-	// 	const pattern = sortedFormats
-	// 		.map((f) => f.replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1'))
-	// 		.join('|');
-
-	// 	// Use matchAll to avoid partial replacements
-	// 	const regex = new RegExp(pattern, 'g');
-
-	// 	const matches = [...input.matchAll(regex)].map(
-	// 		(m) => m[0],
-	// 	) as ChronosFormat[];
-
-	// 	return matches;
-	// }
 }
