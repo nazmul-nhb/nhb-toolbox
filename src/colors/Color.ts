@@ -19,7 +19,7 @@ import type {
 } from './types';
 
 const hsl = generateRandomHSLColor();
-const hexRGB = convertColorCode(hsl);
+const { hex, rgb } = convertColorCode(hsl);
 
 /**
  * * Class representing a color and its conversions among `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` and `HSLA` formats.
@@ -78,8 +78,8 @@ export class Color {
 				const rgbaValues = _extractAlphaColorValues(colors.rgba);
 				const hslaValues = _extractAlphaColorValues(colors.hsla);
 
-				this.hex = colors.hex8.slice(0, 7) as Hex6;
-				this.hex8 = colors.hex8;
+				this.hex = colors.hex8.toUpperCase().slice(0, 7) as Hex6;
+				this.hex8 = colors.hex8.toUpperCase() as Hex8;
 				this.rgb = `rgb(${rgbaValues[0]}, ${rgbaValues[1]}, ${rgbaValues[2]})`;
 				this.rgba = colors.rgba;
 				this.hsl = `hsl(${hslaValues[0]}, ${hslaValues[1]}%, ${hslaValues[2]}%)`;
@@ -89,21 +89,23 @@ export class Color {
 				const rgbValues = _extractSolidColorValues(colors.rgb);
 				const hslValues = _extractSolidColorValues(colors.hsl);
 
-				this.hex = colors.hex;
-				this.hex8 = `${colors.hex}${_convertOpacityToHex(100)}` as Hex8;
+				this.hex = colors.hex.toUpperCase() as Hex6;
+				this.hex8 =
+					`${colors.hex.toUpperCase()}${_convertOpacityToHex(100)}` as Hex8;
 				this.rgb = colors.rgb;
 				this.rgba = `rgba(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]}, 1)`;
 				this.hsl = colors.hsl;
 				this.hsla = `hsla(${hslValues[0]}, ${hslValues[1]}%, ${hslValues[2]}%, 1)`;
 			}
 		} else {
-			const rgbValues = _extractSolidColorValues(hexRGB.rgb);
+			const rgbValues = _extractSolidColorValues(rgb);
 			const hslValues = _extractSolidColorValues(hsl);
 
 			// Generate random colors
-			this.hex = hexRGB.hex;
-			this.hex8 = `${hexRGB.hex}${_convertOpacityToHex(100)}` as Hex8;
-			this.rgb = hexRGB.rgb;
+			this.hex = hex.toUpperCase() as Hex6;
+			this.hex8 =
+				`${hex.toUpperCase()}${_convertOpacityToHex(100)}` as Hex8;
+			this.rgb = rgb;
 			this.rgba = `rgba(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]}, 1)`;
 			this.hsl = hsl;
 			this.hsla = `hsla(${hslValues[0]}, ${hslValues[1]}%, ${hslValues[2]}%, 1)`;
@@ -126,33 +128,19 @@ export class Color {
 	 * @example
 	 * const alphaColor = new Color("#ff000080"); // Color with 50% opacity
 	 * const alpha75 = alphaColor.applyOpacity(75); // Change to 75% opacity
-	 * console.log(alpha75.hex8); // #ff0000bf
+	 * console.log(alpha75.hex8); // #FF0000BF
 	 */
 	applyOpacity(opacity: OpacityValue): SolidColors & AlphaColors {
 		const validOpacity = Math.min(100, Math.max(0, opacity));
 		const alphaHex = _convertOpacityToHex(opacity);
 		const alphaDecimal = validOpacity / 100;
 
-		if (Color.isHex8(this.hex8)) {
-			const rgbaValues = _extractAlphaColorValues(this.rgba);
-			const hslaValues = _extractAlphaColorValues(this.hsla);
-
-			return {
-				hex: this.hex8.slice(0, 7) as Hex6,
-				hex8: `${this.hex8.slice(0, 7)}${alphaHex}` as Hex8,
-				rgb: `rgb(${rgbaValues[0]}, ${rgbaValues[1]}, ${rgbaValues[2]})` as RGB,
-				rgba: `rgba(${rgbaValues[0]}, ${rgbaValues[1]}, ${rgbaValues[2]}, ${alphaDecimal})` as RGBA,
-				hsl: `hsl(${hslaValues[0]}, ${hslaValues[1]}%, ${hslaValues[2]}%)` as HSL,
-				hsla: `hsla(${hslaValues[0]}, ${hslaValues[1]}%, ${hslaValues[2]}%, ${alphaDecimal})` as HSLA,
-			};
-		}
-
 		const rgbValues = _extractSolidColorValues(this.rgb);
 		const hslValues = _extractSolidColorValues(this.hsl);
 
 		return {
-			hex: this.hex.slice(0, 7) as Hex6,
-			hex8: `${this.hex.slice(0, 7)}${alphaHex}` as Hex8,
+			hex: this.hex.slice(0, 7).toUpperCase() as Hex6,
+			hex8: `${this.hex.slice(0, 7)}${alphaHex}`.toUpperCase() as Hex8,
 			rgb: `rgb(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]})` as RGB,
 			rgba: `rgba(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]}, ${alphaDecimal})` as RGBA,
 			hsl: `hsl(${hslValues[0]}, ${hslValues[1]}%, ${hslValues[2]}%)` as HSL,
