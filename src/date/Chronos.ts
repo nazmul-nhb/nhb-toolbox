@@ -2,11 +2,11 @@ import { DAYS, MONTHS, sortedFormats } from './constants';
 import type { ChronosFormat } from './types';
 
 export class Chronos {
-	private readonly _date: Date;
+	private readonly date: Date;
 
 	/**
 	 * * Creates a new immutable Chronos instance.
-	 * @param value - A date value (`timestamp`, `string`, or `Date`).
+	 * @param value - A date value (`timestamp`, `string`, `Date`, `Chronos`).
 	 */
 	constructor(value?: number | string | Date | Chronos) {
 		const date =
@@ -19,7 +19,32 @@ export class Chronos {
 			throw new Error('Invalid date provided!');
 		}
 
-		this._date = date;
+		this.date = date;
+	}
+
+	/** * Gets the native `Date` instance (read-only). */
+	toDate(): Date {
+		return new Date(this.date);
+	}
+
+	/** * Returns a string representation of a date. The format of the string depends on the locale. */
+	toString(): string {
+		return this.date.toString();
+	}
+
+	/** * Returns a date as a string value in ISO format. */
+	toISOString(): string {
+		return this.date.toISOString();
+	}
+
+	/** * Returns the time value in milliseconds since midnight, January 1, 1970 UTC. */
+	getTimeStamp(): number {
+		return this.date.getTime();
+	}
+
+	/** * Returns the number of milliseconds elapsed since midnight, January 1, 1970 Universal Coordinated Time (UTC). */
+	static now(): number {
+		return Date.now();
 	}
 
 	/**
@@ -28,14 +53,14 @@ export class Chronos {
 	 * @returns Formatted date string in desired format.
 	 */
 	format(format: string = 'DD-MM-YYYY'): string {
-		const year = this._date.getFullYear();
-		const month = this._date.getMonth();
-		const day = this._date.getDay();
-		const date = this._date.getDate();
-		const hours = this._date.getHours();
-		const minutes = this._date.getMinutes();
-		const seconds = this._date.getSeconds();
-		const milliseconds = this._date.getMilliseconds();
+		const year = this.date.getFullYear();
+		const month = this.date.getMonth();
+		const day = this.date.getDay();
+		const date = this.date.getDate();
+		const hours = this.date.getHours();
+		const minutes = this.date.getMinutes();
+		const seconds = this.date.getSeconds();
+		const milliseconds = this.date.getMilliseconds();
 
 		const dateComponents: Record<ChronosFormat, string> = {
 			YYYY: String(year),
@@ -108,7 +133,7 @@ export class Chronos {
 	 * @returns A new `Chronos` instance with the updated date.
 	 */
 	addDays(days: number): Chronos {
-		const newDate = new Date(this._date);
+		const newDate = new Date(this.date);
 		newDate.setDate(newDate.getDate() + days);
 		return new Chronos(newDate);
 	}
@@ -137,7 +162,7 @@ export class Chronos {
 		today.setHours(0, 0, 0, 0);
 
 		// Normalize the input date to 00:00:00
-		const inputDate = new Date(this._date);
+		const inputDate = new Date(this.date);
 		inputDate.setHours(0, 0, 0, 0);
 
 		const diffTime = inputDate.getTime() - today.getTime();
@@ -146,8 +171,15 @@ export class Chronos {
 		return diffDays;
 	}
 
-	/** * Gets the native `Date` instance (read-only). */
-	toDate(): Date {
-		return new Date(this._date);
+	/**
+	 * * Checks if the year is a leap year.
+	 * - A year is a leap year if it is divisible by 4, but not divisible by 100, unless it is also divisible by 400.
+	 * - For example, 2000 and 2400 are leap years, but 1900 and 2100 are not.
+	 * @returns `true` if the year is a leap year, `false` otherwise.
+	 */
+	isLeapYear(): boolean {
+		const year = this.date.getFullYear();
+
+		return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 	}
 }
