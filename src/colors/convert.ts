@@ -235,7 +235,7 @@ export const convertRgbaToHex8 = (
 		Math.round(newAlpha * 100) as OpacityValue,
 	);
 
-	return `#${hex}${alphaHex}` as Hex8;
+	return `${hex}${alphaHex}` as Hex8;
 };
 
 /**
@@ -348,7 +348,7 @@ export const convertHslaToHex8 = (
 		Math.round(newAlpha * 100) as OpacityValue,
 	);
 
-	return `#${hex}${alphaHex}` as Hex8;
+	return `${hex}${alphaHex}` as Hex8;
 };
 
 /**

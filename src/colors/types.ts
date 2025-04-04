@@ -6,7 +6,7 @@ export type ColorInput = string | number;
 /** - An array of strings/numbers or nested arrays of strings/numbers for generating colors. */
 export interface ColorInputArray extends Array<ColorInput | ColorInputArray> {}
 
-/** - Opacity options */
+/** - Opacity value in percentage `(0% - 100%)` without `%` symbol. */
 export type OpacityValue =
 	| 0
 	| 1
@@ -179,15 +179,21 @@ export type ColorType = Hex | Hex6 | RGB | HSL | Hex8 | RGBA | HSLA;
 
 /** - Colors Object that includes `Hex8`, `RGBA` and `HSLA` formats of the same color. */
 export interface SolidColors {
+	/** Represents a normal Hex color */
 	hex: Hex6;
+	/** Represents a normal RGB color */
 	rgb: RGB;
+	/** Represents a normal HSL color */
 	hsl: HSL;
 }
 
 /** - Colors Object that includes `Hex`, `RGB` and `HSL` formats of the same color. */
 export interface AlphaColors {
+	/** Represents a Hex color with alpha channel */
 	hex8: Hex8;
+	/** Represents a RGBA color with alpha channel */
 	rgba: RGBA;
+	/** Represents a HSLA color with alpha channel */
 	hsla: HSLA;
 }
 

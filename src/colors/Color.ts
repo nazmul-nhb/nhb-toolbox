@@ -22,60 +22,91 @@ const hsl = generateRandomHSLColor();
 const hexRGB = convertColorCode(hsl);
 
 /**
- * * Class representing a color and its conversions between Hex, RGB, and HSL formats.
- * * It has 1 instance method to apply opacity to `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` or `HSLA` color.
+ * * Class representing a color and its conversions among `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` and `HSLA` formats.
+ * * It has 1 instance method `applyOpacity()` to apply opacity to `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` or `HSLA` color.
  * * It has 6 static methods that can be used to check if a color is in `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` or `HSLA` format.
  *
  * @property {Hex} hex - The color in `Hex` format.
+ * @property {Hex8} hex8 - The color in `Hex8` format.
  * @property {RGB} rgb - The color in `RGB` format.
+ * @property {RGBA} rgba - The color in `RGBA` format.
  * @property {HSL} hsl - The color in `HSL` format.
+ * @property {HSLA} hsla - The color in `HSLA` format.
  *
  * @example
- * const color = new Color("#ff5733"); // Accepts a color in `Hex`, `RGB` or `HSL` format.
+ * const color = new Color("#ff5733"); // Accepts a color in `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` or `HSLA` format.
+ * console.log(color.hex); // Get Hex equivalent
+ * console.log(color.hex8); // Get Hex8 equivalent
  * console.log(color.rgb); // Get RGB equivalent
+ * console.log(color.rgba); // Get RGBA equivalent
  * console.log(color.hsl); // Get HSL equivalent
+ * console.log(color.hsla); // Get HSLA equivalent
  *
  * @example
  * const randomColor = new Color(); // Generate a random color
- * console.log(randomColor.hex, randomColor.rgb, randomColor.hsl);
+ * console.log(randomColor.hex, randomColor.rgb, randomColor.hsl, randomColor.hex8, randomColor.rgba, randomColor.hsla); // Get RGBA and HSLA equivalent
  */
 export class Color {
-	public hex: Hex6 | Hex8;
-	public rgb: RGB | RGBA;
-	public hsl: HSL | HSLA;
+	public hex: Hex6;
+	public hex8: Hex8;
+	public rgb: RGB;
+	public rgba: RGBA;
+	public hsl: HSL;
+	public hsla: HSLA;
 
 	/** - Iterates over the color representations (Hex, RGB, HSL). */
 	*[Symbol.iterator]() {
 		yield this.hex;
+		yield this.hex8;
 		yield this.rgb;
+		yield this.rgba;
 		yield this.hsl;
+		yield this.hsla;
 	}
 
 	/**
-	 * * Creates a new Color instance, optionally converting an input color.
+	 * * Creates a new `Color` instance, optionally converts an input color to other 5 different color formats.
 	 *
 	 * @param toConvert - The color to convert. If not provided, a random color is generated.
 	 */
 	constructor(toConvert?: ColorType) {
 		if (toConvert) {
-			const converted = this._convertColorToOthers(toConvert);
+			const colors = this._convertColorToOthers(toConvert);
 
-			if ('hex8' in converted) {
-				// Handle alpha colors (Hex8, RGBA, HSLA)
-				this.hex = converted.hex8;
-				this.rgb = converted.rgba;
-				this.hsl = converted.hsla;
+			if ('hex8' in colors) {
+				// Extract alpha color values (Hex8, RGBA, HSLA)
+				const rgbaValues = _extractAlphaColorValues(colors.rgba);
+				const hslaValues = _extractAlphaColorValues(colors.hsla);
+
+				this.hex = colors.hex8.slice(0, 7) as Hex6;
+				this.hex8 = colors.hex8;
+				this.rgb = `rgb(${rgbaValues[0]}, ${rgbaValues[1]}, ${rgbaValues[2]})`;
+				this.rgba = colors.rgba;
+				this.hsl = `hsl(${hslaValues[0]}, ${hslaValues[1]}%, ${hslaValues[2]}%)`;
+				this.hsla = colors.hsla;
 			} else {
-				// Handle solid colors (Hex, RGB, HSL)
-				this.hex = converted.hex;
-				this.rgb = converted.rgb;
-				this.hsl = converted.hsl;
+				// Extract solid color values (Hex, RGB, HSL)
+				const rgbValues = _extractSolidColorValues(colors.rgb);
+				const hslValues = _extractSolidColorValues(colors.hsl);
+
+				this.hex = colors.hex;
+				this.hex8 = `${colors.hex}${_convertOpacityToHex(100)}` as Hex8;
+				this.rgb = colors.rgb;
+				this.rgba = `rgba(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]}, 1)`;
+				this.hsl = colors.hsl;
+				this.hsla = `hsla(${hslValues[0]}, ${hslValues[1]}%, ${hslValues[2]}%, 1)`;
 			}
 		} else {
-			// Generate random color
+			const rgbValues = _extractSolidColorValues(hexRGB.rgb);
+			const hslValues = _extractSolidColorValues(hsl);
+
+			// Generate random colors
 			this.hex = hexRGB.hex;
+			this.hex8 = `${hexRGB.hex}${_convertOpacityToHex(100)}` as Hex8;
 			this.rgb = hexRGB.rgb;
+			this.rgba = `rgba(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]}, 1)`;
 			this.hsl = hsl;
+			this.hsla = `hsla(${hslValues[0]}, ${hslValues[1]}%, ${hslValues[2]}%, 1)`;
 		}
 	}
 
@@ -102,36 +133,35 @@ export class Color {
 		const alphaHex = _convertOpacityToHex(opacity);
 		const alphaDecimal = validOpacity / 100;
 
-		if (Color.isHex8(this.hex)) {
-			const rgbaValues = _extractAlphaColorValues(this.rgb as RGBA);
-			const hslaValues = _extractAlphaColorValues(this.hsl as HSLA);
+		if (Color.isHex8(this.hex8)) {
+			const rgbaValues = _extractAlphaColorValues(this.rgba);
+			const hslaValues = _extractAlphaColorValues(this.hsla);
 
 			return {
-				hex: this.hex.slice(0, 7) as Hex6,
-				hex8: `${this.hex.slice(0, 7)}${alphaHex}` as Hex8,
-				rgb: `rgba(${rgbaValues[0]}, ${rgbaValues[1]}, ${rgbaValues[2]})` as RGB,
+				hex: this.hex8.slice(0, 7) as Hex6,
+				hex8: `${this.hex8.slice(0, 7)}${alphaHex}` as Hex8,
+				rgb: `rgb(${rgbaValues[0]}, ${rgbaValues[1]}, ${rgbaValues[2]})` as RGB,
 				rgba: `rgba(${rgbaValues[0]}, ${rgbaValues[1]}, ${rgbaValues[2]}, ${alphaDecimal})` as RGBA,
-				hsl: `hsla(${hslaValues[0]}, ${hslaValues[1]}%, ${hslaValues[2]}%)` as HSL,
+				hsl: `hsl(${hslaValues[0]}, ${hslaValues[1]}%, ${hslaValues[2]}%)` as HSL,
 				hsla: `hsla(${hslaValues[0]}, ${hslaValues[1]}%, ${hslaValues[2]}%, ${alphaDecimal})` as HSLA,
 			};
 		}
 
-		const rgbValues = _extractSolidColorValues(this.rgb as RGB);
-		const hslValues = _extractSolidColorValues(this.hsl as HSL);
+		const rgbValues = _extractSolidColorValues(this.rgb);
+		const hslValues = _extractSolidColorValues(this.hsl);
 
 		return {
-			hex: this.hex as Hex6,
-			hex8: `${this.hex}${alphaHex}` as Hex8,
-			rgb: this.rgb as RGB,
+			hex: this.hex.slice(0, 7) as Hex6,
+			hex8: `${this.hex.slice(0, 7)}${alphaHex}` as Hex8,
+			rgb: `rgb(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]})` as RGB,
 			rgba: `rgba(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]}, ${alphaDecimal})` as RGBA,
-			hsl: this.hsl as HSL,
+			hsl: `hsl(${hslValues[0]}, ${hslValues[1]}%, ${hslValues[2]}%)` as HSL,
 			hsla: `hsla(${hslValues[0]}, ${hslValues[1]}%, ${hslValues[2]}%, ${alphaDecimal})` as HSLA,
 		};
 	}
 
 	/**
-	 * @static
-	 * Checks if a color is in `Hex6` format.
+	 * @static Checks if a color is in `Hex6` format.
 	 *
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's a `Hex6` color, `false` if not.
@@ -141,8 +171,7 @@ export class Color {
 	}
 
 	/**
-	 * @static
-	 * Checks if a color is in `Hex8` format.
+	 * @static Checks if a color is in `Hex8` format.
 	 *
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's a `Hex8` color, `false` if not.
@@ -152,8 +181,7 @@ export class Color {
 	}
 
 	/**
-	 * @static
-	 * Checks if a color is in `RGB` format.
+	 * @static Checks if a color is in `RGB` format.
 	 *
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's an `RGB` color, `false` if not.
@@ -163,8 +191,7 @@ export class Color {
 	}
 
 	/**
-	 * @static
-	 * Checks if a color is in `RGBA` format.
+	 * @static Checks if a color is in `RGBA` format.
 	 *
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's an `RGBA` color, `false` if not.
@@ -176,8 +203,7 @@ export class Color {
 	}
 
 	/**
-	 * @static
-	 * Checks if a color is in `HSL` format.
+	 * @static Checks if a color is in `HSL` format.
 	 *
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's an `HSL` color, `false` if not.
@@ -187,8 +213,7 @@ export class Color {
 	}
 
 	/**
-	 * @static
-	 * Checks if a color is in `HSLA` format.
+	 * @static Checks if a color is in `HSLA` format.
 	 *
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's an `HSLA` color, `false` if not.
@@ -200,9 +225,8 @@ export class Color {
 	}
 
 	/**
-	 * - Converts the given color to all other formats while preserving the original.
+	 * @private Converts the given color to all other formats while preserving the original.
 	 *
-	 * @private
 	 * @param color - The color to convert.
 	 * @returns An object containing Hex, RGB, and HSL representations.
 	 */
