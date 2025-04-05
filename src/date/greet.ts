@@ -20,6 +20,8 @@ export function getGreeting(configs?: GreetingConfigs): string {
 		eveningEnds = '23:59',
 		midnightEnds = '02:59',
 		currentTime,
+		appendMsg = '',
+		prependMsg = '',
 		morningMessage = 'Good Morning!',
 		noonMessage = 'Good Noon!',
 		afternoonMessage = 'Good Afternoon!',
@@ -47,16 +49,16 @@ export function getGreeting(configs?: GreetingConfigs): string {
 	const midnightEndMinutes = getTotalMinutes(midnightEnds);
 
 	if (currentTotalMinutes <= midnightEndMinutes) {
-		return midnightMessage;
+		return prependMsg.concat(midnightMessage.concat(appendMsg));
 	} else if (currentTotalMinutes <= morningEndMinutes) {
-		return morningMessage;
+		return prependMsg.concat(morningMessage.concat(appendMsg));
 	} else if (currentTotalMinutes <= noonEndMinutes) {
-		return noonMessage;
+		return prependMsg.concat(noonMessage.concat(appendMsg));
 	} else if (currentTotalMinutes <= afternoonEndMinutes) {
-		return afternoonMessage;
+		return prependMsg.concat(afternoonMessage.concat(appendMsg));
 	} else if (currentTotalMinutes <= eveningEndMinutes) {
-		return eveningMessage;
+		return prependMsg.concat(eveningMessage.concat(appendMsg));
 	} else {
-		return defaultMessage;
+		return prependMsg.concat(defaultMessage.concat(appendMsg));
 	}
 }

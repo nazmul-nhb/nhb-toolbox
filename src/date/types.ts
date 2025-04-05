@@ -123,6 +123,12 @@ export interface GreetingConfigs {
 	/** Current time in "HH:MM" format for some weird reason. Defaults to current time `new Date()` */
 	currentTime?: Time;
 
+	/** Optional string to append after each message */
+	appendMsg?: string;
+
+	/** Optional string to prepend before each message */
+	prependMsg?: string;
+
 	/** Custom greeting message for the morning period. */
 	morningMessage?: string;
 
