@@ -7,6 +7,7 @@ import type {
 	MONTH_FORMATS,
 	SECOND_FORMATS,
 	TIME_FORMATS,
+	TIME_ZONES,
 	YEAR_FORMATS,
 } from './constants';
 
@@ -178,3 +179,40 @@ export type ChronosFormat =
 	| Second
 	| Millisecond
 	| TimeFormats;
+
+export type TimeZone = keyof typeof TIME_ZONES;
+
+export type PositiveUTCHour =
+	| '+00'
+	| '+01'
+	| '+02'
+	| '+03'
+	| '+04'
+	| '+05'
+	| '+06'
+	| '+07'
+	| '+08'
+	| '+09'
+	| '+10'
+	| '+11'
+	| '+12'
+	| '+13'
+	| '+14';
+
+export type NegativeUTCHour =
+	| '-01'
+	| '-02'
+	| '-03'
+	| '-04'
+	| '-05'
+	| '-06'
+	| '-07'
+	| '-08'
+	| '-09'
+	| '-10'
+	| '-11'
+	| '-12';
+
+export type UTCMinute = '00' | '15' | '30' | '45';
+
+export type UTCOffSet = `UTC${PositiveUTCHour | NegativeUTCHour}:${UTCMinute}`;

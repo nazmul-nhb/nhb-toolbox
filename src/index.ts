@@ -125,7 +125,12 @@ export {
 	getGreeting as greet,
 } from './date/greet';
 
-export { isValidTime, isValidTime as isValidTimeString } from './date/guards';
+export {
+	isValidTime,
+	isValidTime as isValidTimeString,
+	isValidUTCOffSet as isValidUTC,
+	isValidUTCOffSet,
+} from './date/guards';
 
 export { Chronos, Chronos as Chronus } from './date/Chronos';
 
@@ -137,9 +142,17 @@ export {
 	chronos as chronusjs,
 	chronos as chronusts,
 	extractHourMinute,
+	extractMinutesFromUTC,
+	extractTimeFromUTC,
+	extractTimeFromUTC as extractTimeStringFromUTC,
+	getTotalMinutes as extractTotalMinutesFromTime,
 	getCurrentDateTime,
 	getCurrentDateTime as getCurrentTime,
+	extractMinutesFromUTC as getMinutesFromUTC,
+	extractTimeFromUTC as getTimeStringFromUTC,
 	getTotalMinutes,
+	getTotalMinutes as getTotalMinutesFromTime,
+	extractMinutesFromUTC as getTotalMinutesFromUTC,
 } from './date/utils';
 
 // ! Array Utilities

@@ -1,5 +1,7 @@
-import { DAYS, MONTHS, sortedFormats } from './constants';
-import type { ChronosFormat } from './types';
+import { DAYS, MONTHS, sortedFormats, TIME_ZONES } from './constants';
+import { isValidUTCOffSet } from './guards';
+import type { ChronosFormat, TimeZone, UTCOffSet } from './types';
+import { extractMinutesFromUTC } from './utils';
 
 export class Chronos {
 	readonly #date: Date;
@@ -115,19 +117,27 @@ export class Chronos {
 	}
 
 	/**
-	 * * Formats the date into a custom string format.
-	 * @param format - The desired format (Default format is `DD-MM-YYYY` = `30-06-1995`).
-	 * @returns Formatted date string in desired format.
+	 * @private Formats the current `Chronos` date using the specified template.
+	 *
+	 * @param format - The desired date format.
+	 * @param useUTC - Whether to use UTC or local time.
+	 * @returns Formatted date string.
 	 */
-	format(format: string = 'DD-MM-YYYY'): string {
-		const year = this.#date.getFullYear();
-		const month = this.#date.getMonth();
-		const day = this.#date.getDay();
-		const date = this.#date.getDate();
-		const hours = this.#date.getHours();
-		const minutes = this.#date.getMinutes();
-		const seconds = this.#date.getSeconds();
-		const milliseconds = this.#date.getMilliseconds();
+	#format(format: string, useUTC = false): string {
+		const year =
+			useUTC ? this.#date.getUTCFullYear() : this.#date.getFullYear();
+		const month = useUTC ? this.#date.getUTCMonth() : this.#date.getMonth();
+		const day = useUTC ? this.#date.getUTCDay() : this.#date.getDay();
+		const date = useUTC ? this.#date.getUTCDate() : this.#date.getDate();
+		const hours = useUTC ? this.#date.getUTCHours() : this.#date.getHours();
+		const minutes =
+			useUTC ? this.#date.getUTCMinutes() : this.#date.getMinutes();
+		const seconds =
+			useUTC ? this.#date.getUTCSeconds() : this.#date.getSeconds();
+		const milliseconds =
+			useUTC ?
+				this.#date.getUTCMilliseconds()
+			:	this.#date.getMilliseconds();
 
 		const dateComponents: Record<ChronosFormat, string> = {
 			YYYY: String(year),
@@ -195,6 +205,26 @@ export class Chronos {
 	}
 
 	/**
+	 * * Formats the date into a custom string format (local time).
+	 *
+	 * @param format - The desired format (Default format is `DD-MM-YYYY` = `30-06-1995`).
+	 * @returns Formatted date string in desired format (local time).
+	 */
+	format(format: string = 'DD-MM-YYYY'): string {
+		return this.#format(format, false);
+	}
+
+	/**
+	 * * Formats the date into a custom string format (UTC time).
+	 *
+	 * @param format - The desired format (Default format is `DD-MM-YYYY` = `30-06-1995`).
+	 * @returns Formatted date string in desired format (UTC time).
+	 */
+	formatUTC(format: string = 'DD-MM-YYYY'): string {
+		return this.#format(format, true);
+	}
+
+	/**
 	 * * Adds days and returns a new immutable instance.
 	 * @param days - Number of days to add.
 	 * @returns A new `Chronos` instance with the updated date.
@@ -248,5 +278,28 @@ export class Chronos {
 		const year = this.#date.getFullYear();
 
 		return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+	}
+
+	/**
+	 * * Create a new instance of `Chronos` in the specified timezone.
+	 *
+	 * @param zone - Standard timezone abbreviation (e.g., 'IST', 'UTC', 'EST') or UTC Offset in in `UTC-01:30` format.
+	 * @returns A new instance of `Chronos` with time in the given timezone. Invalid input sets time-zone to `UTC`.
+	 */
+	timeZone(zone: TimeZone | UTCOffSet): Chronos {
+		let offset: number;
+
+		if (isValidUTCOffSet(zone)) {
+			offset = extractMinutesFromUTC(zone);
+		} else {
+			offset = TIME_ZONES[zone] ?? 0;
+		}
+
+		const utc =
+			this.#date.getTime() + this.#date.getTimezoneOffset() * 60 * 1000;
+
+		const adjusted = new Date(utc + offset * 60 * 1000);
+
+		return new Chronos(adjusted);
 	}
 }

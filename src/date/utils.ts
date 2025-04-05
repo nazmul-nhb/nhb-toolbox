@@ -1,5 +1,5 @@
 import { Chronos } from './Chronos';
-import type { Time } from './types';
+import type { Time, UTCOffSet } from './types';
 
 /**
  * * Extracts the hour and minute from a time string in `HH:MM` format.
@@ -47,4 +47,24 @@ export function getCurrentDateTime(): Date {
  */
 export function chronos(date?: number | string | Date | Chronos) {
 	return new Chronos(date);
+}
+
+/**
+ * * Extract Time in `HH:MM` format from given UTC value.
+ *
+ * @param utc UTC value in `UTC-01:30` or `UTC+01:30` format.
+ * @returns The UTC value in `HH:MM` format.
+ */
+export function extractTimeFromUTC(utc: UTCOffSet): Time {
+	return utc.replace(/^UTC[+-]?/g, '') as Time;
+}
+
+/**
+ * * Converts a UTC value in `UTC-01:30` or `UTC+01:30` format into total minutes in number.
+ *
+ * @param time - UTC value in `UTC-01:30` or `UTC+01:30` format.
+ * @returns The total minutes elapsed since `00:00`.
+ */
+export function extractMinutesFromUTC(utc: UTCOffSet): number {
+	return getTotalMinutes(extractTimeFromUTC(utc));
 }
