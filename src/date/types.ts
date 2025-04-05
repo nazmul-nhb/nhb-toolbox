@@ -124,10 +124,10 @@ export interface GreetingConfigs {
 	currentTime?: Time;
 
 	/** Optional string to append after each message */
-	appendMsg?: string;
+	appendToMsg?: string;
 
 	/** Optional string to prepend before each message */
-	prependMsg?: string;
+	prependToMsg?: string;
 
 	/** Custom greeting message for the morning period. */
 	morningMessage?: string;

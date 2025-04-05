@@ -3,10 +3,16 @@ import type { ChronosFormat } from './types';
 
 export class Chronos {
 	readonly #date: Date;
+	// readonly preview: string;
 
 	/**
-	 * * Creates a new immutable Chronos instance.
-	 * @param value - A date value (`timestamp`, `string`, `Date`, `Chronos`).
+	 * * Creates a new immutable `Chronos` instance.
+	 *
+	 * @param value - A date value (`number`, `string`, `Date`, or `Chronos` object).
+	 * - If a string is provided, it should be in a format that can be parsed by the Date constructor.
+	 * - If a number is provided, it should be a timestamp (milliseconds since the Unix epoch).
+	 * - If a Date object is provided, it will be used as is.
+	 * - If a Chronos object is provided, it will be converted to a Date object.
 	 */
 	constructor(value?: number | string | Date | Chronos) {
 		const date =
@@ -16,10 +22,35 @@ export class Chronos {
 
 		// Check if the date is invalid
 		if (isNaN(date.getTime())) {
-			throw new Error('Invalid date provided!');
+			throw new Error('Provided date is invalid!');
 		}
 
 		this.#date = date;
+		// this.preview = this.toISOString();
+	}
+
+	get [Symbol.toStringTag](): string {
+		return this.toISOString();
+	}
+
+	/**
+	 * * Enables primitive coercion like `console.log`, `${chronos}`, etc.
+	 * @param hint - The type hint provided by the JS engine.
+	 * @returns The primitive value based on the hint.
+	 */
+	[Symbol.toPrimitive](hint: string): string | number {
+		if (hint === 'number') return this.valueOf();
+		return this.toString();
+	}
+
+	/** * Enables JSON.stringify and console logging to show readable output. */
+	toJSON(): string {
+		return this.toISOString();
+	}
+
+	/** * Enables arithmetic and comparison operations (e.g., +new Chronos()). */
+	valueOf(): number {
+		return this.getTimeStamp();
 	}
 
 	/** * Gets the native `Date` instance (read-only). */

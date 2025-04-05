@@ -1,10 +1,10 @@
 import { isValidTime } from './guards';
+import type { GreetingConfigs } from './types';
 import {
 	extractHourMinute,
 	getCurrentDateTime,
 	getTotalMinutes,
 } from './utils';
-import type { GreetingConfigs } from './types';
 
 /**
  * * Returns a greeting message based on the provided time or current time.
@@ -20,8 +20,8 @@ export function getGreeting(configs?: GreetingConfigs): string {
 		eveningEnds = '23:59',
 		midnightEnds = '02:59',
 		currentTime,
-		appendMsg = '',
-		prependMsg = '',
+		appendToMsg = '',
+		prependToMsg = '',
 		morningMessage = 'Good Morning!',
 		noonMessage = 'Good Noon!',
 		afternoonMessage = 'Good Afternoon!',
@@ -49,16 +49,16 @@ export function getGreeting(configs?: GreetingConfigs): string {
 	const midnightEndMinutes = getTotalMinutes(midnightEnds);
 
 	if (currentTotalMinutes <= midnightEndMinutes) {
-		return prependMsg.concat(midnightMessage.concat(appendMsg));
+		return prependToMsg.concat(midnightMessage.concat(appendToMsg));
 	} else if (currentTotalMinutes <= morningEndMinutes) {
-		return prependMsg.concat(morningMessage.concat(appendMsg));
+		return prependToMsg.concat(morningMessage.concat(appendToMsg));
 	} else if (currentTotalMinutes <= noonEndMinutes) {
-		return prependMsg.concat(noonMessage.concat(appendMsg));
+		return prependToMsg.concat(noonMessage.concat(appendToMsg));
 	} else if (currentTotalMinutes <= afternoonEndMinutes) {
-		return prependMsg.concat(afternoonMessage.concat(appendMsg));
+		return prependToMsg.concat(afternoonMessage.concat(appendToMsg));
 	} else if (currentTotalMinutes <= eveningEndMinutes) {
-		return prependMsg.concat(eveningMessage.concat(appendMsg));
+		return prependToMsg.concat(eveningMessage.concat(appendToMsg));
 	} else {
-		return prependMsg.concat(defaultMessage.concat(appendMsg));
+		return prependToMsg.concat(defaultMessage.concat(appendToMsg));
 	}
 }
