@@ -2,7 +2,7 @@ import { DAYS, MONTHS, sortedFormats } from './constants';
 import type { ChronosFormat } from './types';
 
 export class Chronos {
-	private readonly date: Date;
+	readonly #date: Date;
 
 	/**
 	 * * Creates a new immutable Chronos instance.
@@ -19,30 +19,66 @@ export class Chronos {
 			throw new Error('Invalid date provided!');
 		}
 
-		this.date = date;
+		this.#date = date;
 	}
 
 	/** * Gets the native `Date` instance (read-only). */
 	toDate(): Date {
-		return new Date(this.date);
+		return new Date(this.#date);
 	}
 
 	/** * Returns a string representation of a date. The format of the string depends on the locale. */
 	toString(): string {
-		return this.date.toString();
+		return this.#date.toString();
 	}
 
 	/** * Returns a date as a string value in ISO format. */
 	toISOString(): string {
-		return this.date.toISOString();
+		return this.#date.toISOString();
 	}
 
 	/** * Returns the time value in milliseconds since midnight, January 1, 1970 UTC. */
 	getTimeStamp(): number {
-		return this.date.getTime();
+		return this.#date.getTime();
 	}
 
-	/** * Returns the number of milliseconds elapsed since midnight, January 1, 1970 Universal Coordinated Time (UTC). */
+	/** * Returns the date value as a `Date` object. */
+	get date(): Date {
+		return this.#date;
+	}
+
+	/** * Returns the time value in milliseconds since midnight, January 1, 1970 UTC. */
+	get unix(): number {
+		return this.#date.getTime();
+	}
+
+	/**
+	 * @instance Returns the current date and time in a specified format.
+	 *
+	 * @param format - The desired format (Default format is `DD-MM-YYYY HH:mm:ss:mss` = `30-06-1995 15:55:58:775`).
+	 * @returns Formatted date string in desired format.
+	 */
+	today(format = 'DD-MM-YYYY HH:mm:ss:mss'): string {
+		const today = new Date();
+		return new Chronos(today).format(format);
+	}
+
+	/**
+	 * @static Returns the current date and time in a specified format.
+	 *
+	 * @param format - The desired format (Default format is `DD-MM-YYYY HH:mm:ss:mss` = `30-06-1995 15:55:58:775`).
+	 * @returns Formatted date string in desired format.
+	 */
+	static today(format = 'DD-MM-YYYY HH:mm:ss:mss'): string {
+		const today = new Date();
+		return new Chronos(today).format(format);
+	}
+
+	/**
+	 * * Returns the number of milliseconds elapsed since midnight, January 1, 1970 Universal Coordinated Time (UTC).
+	 * * It basically calls `Date.now()`.
+	 * @returns The number of milliseconds elapsed since the Unix epoch.
+	 */
 	static now(): number {
 		return Date.now();
 	}
@@ -53,14 +89,14 @@ export class Chronos {
 	 * @returns Formatted date string in desired format.
 	 */
 	format(format: string = 'DD-MM-YYYY'): string {
-		const year = this.date.getFullYear();
-		const month = this.date.getMonth();
-		const day = this.date.getDay();
-		const date = this.date.getDate();
-		const hours = this.date.getHours();
-		const minutes = this.date.getMinutes();
-		const seconds = this.date.getSeconds();
-		const milliseconds = this.date.getMilliseconds();
+		const year = this.#date.getFullYear();
+		const month = this.#date.getMonth();
+		const day = this.#date.getDay();
+		const date = this.#date.getDate();
+		const hours = this.#date.getHours();
+		const minutes = this.#date.getMinutes();
+		const seconds = this.#date.getSeconds();
+		const milliseconds = this.#date.getMilliseconds();
 
 		const dateComponents: Record<ChronosFormat, string> = {
 			YYYY: String(year),
@@ -133,7 +169,7 @@ export class Chronos {
 	 * @returns A new `Chronos` instance with the updated date.
 	 */
 	addDays(days: number): Chronos {
-		const newDate = new Date(this.date);
+		const newDate = new Date(this.#date);
 		newDate.setDate(newDate.getDate() + days);
 		return new Chronos(newDate);
 	}
@@ -162,7 +198,7 @@ export class Chronos {
 		today.setHours(0, 0, 0, 0);
 
 		// Normalize the input date to 00:00:00
-		const inputDate = new Date(this.date);
+		const inputDate = new Date(this.#date);
 		inputDate.setHours(0, 0, 0, 0);
 
 		const diffTime = inputDate.getTime() - today.getTime();
@@ -178,7 +214,7 @@ export class Chronos {
 	 * @returns `true` if the year is a leap year, `false` otherwise.
 	 */
 	isLeapYear(): boolean {
-		const year = this.date.getFullYear();
+		const year = this.#date.getFullYear();
 
 		return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 	}
