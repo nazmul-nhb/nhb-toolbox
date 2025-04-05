@@ -130,6 +130,7 @@ export {
 	isValidTime as isValidTimeString,
 	isValidUTCOffSet as isValidUTC,
 	isValidUTCOffSet,
+	isLeapYear,
 } from './date/guards';
 
 export { Chronos, Chronos as Chronus } from './date/Chronos';

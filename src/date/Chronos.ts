@@ -283,7 +283,7 @@ export class Chronos {
 	/**
 	 * * Create a new instance of `Chronos` in the specified timezone.
 	 *
-	 * @param zone - Standard timezone abbreviation (e.g., 'IST', 'UTC', 'EST') or UTC Offset in in `UTC-01:30` format.
+	 * @param zone - Standard timezone abbreviation (e.g., 'IST', 'UTC', 'EST') or UTC Offset in `UTC-01:30` format.
 	 * @returns A new instance of `Chronos` with time in the given timezone. Invalid input sets time-zone to `UTC`.
 	 */
 	timeZone(zone: TimeZone | UTCOffSet): Chronos {
@@ -292,7 +292,7 @@ export class Chronos {
 		if (isValidUTCOffSet(zone)) {
 			offset = extractMinutesFromUTC(zone);
 		} else {
-			offset = TIME_ZONES[zone] ?? 0;
+			offset = TIME_ZONES[zone] ?? TIME_ZONES['UTC'];
 		}
 
 		const utc =
