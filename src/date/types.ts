@@ -180,6 +180,9 @@ export type ChronosFormat =
 	| Millisecond
 	| TimeFormats;
 
+// export type DateFormat =
+// 	`${Day}, ${Month} ${Date}, ${Year} ${Hour}:${Minute}:${Second}:${Millisecond} ${TimeFormats}`;
+
 export type TimeZone = keyof typeof TIME_ZONES;
 
 export type PositiveUTCHour =
@@ -216,3 +219,11 @@ export type NegativeUTCHour =
 export type UTCMinute = '00' | '15' | '30' | '45';
 
 export type UTCOffSet = `UTC${PositiveUTCHour | NegativeUTCHour}:${UTCMinute}`;
+
+/** * Format options */
+export interface FormatOptions {
+	/** - The desired format (Default format is dd, `MMM DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55:379`). */
+	format?: string;
+	/** - Whether to use UTC time. Defaults to `false`. */
+	useUTC?: boolean;
+}

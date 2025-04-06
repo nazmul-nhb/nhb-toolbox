@@ -1,6 +1,11 @@
 import { DAYS, MONTHS, sortedFormats, TIME_ZONES } from './constants';
 import { isValidUTCOffSet } from './guards';
-import type { ChronosFormat, TimeZone, UTCOffSet } from './types';
+import type {
+	ChronosFormat,
+	FormatOptions,
+	TimeZone,
+	UTCOffSet,
+} from './types';
 import { extractMinutesFromUTC } from './utils';
 
 export class Chronos {
@@ -86,25 +91,29 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Returns the current date and time in a specified format.
-	 *
-	 * @param format - The desired format (Default format is `DD-MM-YYYY HH:mm:ss:mss` = `30-06-1995 15:55:58:775`).
+	 * @instance Returns the current date and time in a specified format in local time.
+	 * * Default format is dd, `MMM DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55:379`
+	 * @param options - Configure format string and whether to format using utc offset.
 	 * @returns Formatted date string in desired format.
 	 */
-	today(format = 'DD-MM-YYYY HH:mm:ss:mss'): string {
+	today(options?: FormatOptions): string {
+		const { format = 'dd, MMM DD, YYYY HH:mm:ss', useUTC = false } =
+			options || {};
 		const today = new Date();
-		return new Chronos(today).format(format);
+		return new Chronos(today).#format(format, useUTC);
 	}
 
 	/**
-	 * @static Returns the current date and time in a specified format.
-	 *
-	 * @param format - The desired format (Default format is `DD-MM-YYYY HH:mm:ss:mss` = `30-06-1995 15:55:58:775`).
+	 * @static Returns the current date and time in a specified format in local time.
+	 * * Default format is dd, `MMM DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55:379`
+	 * @param options - Configure format string and whether to format using utc offset.
 	 * @returns Formatted date string in desired format.
 	 */
-	static today(format = 'DD-MM-YYYY HH:mm:ss:mss'): string {
+	static today(options?: FormatOptions): string {
+		const { format = 'dd, MMM DD, YYYY HH:mm:ss', useUTC = false } =
+			options || {};
 		const today = new Date();
-		return new Chronos(today).format(format);
+		return new Chronos(today).#format(format, useUTC);
 	}
 
 	/**
@@ -153,7 +162,6 @@ export class Chronos {
 			d: DAYS[day].slice(0, 3),
 			dd: DAYS[day].slice(0, 3),
 			ddd: DAYS[day],
-			dddd: DAYS[day],
 			D: String(date),
 			DD: String(date).padStart(2, '0'),
 			H: String(hours),
@@ -207,20 +215,24 @@ export class Chronos {
 	/**
 	 * * Formats the date into a custom string format (local time).
 	 *
-	 * @param format - The desired format (Default format is `DD-MM-YYYY` = `30-06-1995`).
-	 * @returns Formatted date string in desired format (local time).
+	 * @param format - The desired format (Default format is `dd, MMM DD, YYYY HH:mm:ss:mss` = `Sun, Apr 06, 2025 16:11:55:379`).
+	 * @param useUTC - Optional `useUTC` to get the formatted time using UTC Offset, defaults to `false`.
+	 * @returns Formatted date string in desired format (in local time unless `useUTC` passed as `true`).
 	 */
-	format(format: string = 'DD-MM-YYYY'): string {
-		return this.#format(format, false);
+	format(
+		format: string = 'dd, MMM DD, YYYY HH:mm:ss:mss',
+		useUTC = false,
+	): string {
+		return this.#format(format, useUTC);
 	}
 
 	/**
 	 * * Formats the date into a custom string format (UTC time).
 	 *
-	 * @param format - The desired format (Default format is `DD-MM-YYYY` = `30-06-1995`).
+	 * @param format - The desired format (Default format is `dd, MMM DD, YYYY HH:mm:ss:mss` = `Sun, Apr 06, 2025 16:11:55:379`).
 	 * @returns Formatted date string in desired format (UTC time).
 	 */
-	formatUTC(format: string = 'DD-MM-YYYY'): string {
+	formatUTC(format: string = 'dd, MMM DD, YYYY HH:mm:ss:mss'): string {
 		return this.#format(format, true);
 	}
 

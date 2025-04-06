@@ -1,3 +1,4 @@
+import type { GenericObject } from '../object/types';
 import type { AsyncFunction, GenericFn } from '../types';
 import { isString } from './primitives';
 
@@ -40,24 +41,6 @@ export function isNotEmptyObject(
 }
 
 /**
- * * Type guard to check if a value is a function.
- * @param value - The value to check.
- * @returns `true` if the value is a function, otherwise `false`.
- */
-export function isFunction(value: unknown): value is GenericFn {
-	return typeof value === 'function';
-}
-
-/**
- * * Type guard to check if a value is a Date object.
- * @param value - The value to check.
- * @returns `true` if the value is a Date object, otherwise `false`.
- */
-export function isDate(value: unknown): value is Date {
-	return value instanceof Date;
-}
-
-/**
  * * Type guard to check if a value is an object with specific keys.
  * @param value - The value to check.
  * @param keys - The set of keys the object should contain.
@@ -75,10 +58,26 @@ export function isObjectWithKeys<T extends Record<string, unknown>>(
  * @param value - The value to check.
  * @returns `true` if the value is an empty object, otherwise `false`.
  */
-export function isEmptyObject(
-	value: unknown,
-): value is Record<string, unknown> {
+export function isEmptyObject<T extends GenericObject>(value: T): boolean {
 	return isObject(value) && Object.keys(value).length === 0;
+}
+
+/**
+ * * Type guard to check if a value is a function.
+ * @param value - The value to check.
+ * @returns `true` if the value is a function, otherwise `false`.
+ */
+export function isFunction(value: unknown): value is GenericFn {
+	return typeof value === 'function';
+}
+
+/**
+ * * Type guard to check if a value is a Date object.
+ * @param value - The value to check.
+ * @returns `true` if the value is a Date object, otherwise `false`.
+ */
+export function isDate(value: unknown): value is Date {
+	return value instanceof Date;
 }
 
 /**
