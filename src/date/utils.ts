@@ -2,27 +2,33 @@ import { Chronos } from './Chronos';
 import type { Time, UTCOffSet } from './types';
 
 /**
- * * Extracts the hour and minute from a time string in `HH:MM` format.
+ * * Extracts the hour and minute from a time string in `HH:MM` or `-HH:MM` format.
  *
  * @param time - The time string to extract from.
  * @return The extracted hour and minute as number tuple.
  */
-export function extractHourMinute(time: Time): [number, number] {
+export function extractHourMinute(time: `-${Time}` | Time): [number, number] {
 	const [hour, minute] = time.split(':').map(Number);
 
 	return [hour, minute];
 }
 
 /**
- * * Converts a time string `HH:MM` into total minutes from `00:00`.
+ * * Converts a time string `HH:MM` or `-HH:MM` into total minutes from `00:00`.
  *
- * @param time - The time in `HH:MM` format.
+ * @param time - The time in `HH:MM` or `-HH:MM` format.
  * @returns The total minutes elapsed since `00:00`.
  */
-export function getTotalMinutes(time: Time): number {
-	const [h, m] = extractHourMinute(time);
+export function getTotalMinutes(time: `-${Time}` | Time): number {
+	const isNegative = time.startsWith('-');
 
-	return h * 60 + m;
+	const [h, m] = extractHourMinute(
+		isNegative ? (time.slice(1) as Time) : time,
+	);
+
+	const total = h * 60 + m;
+
+	return isNegative ? -total : total;
 }
 
 /**
@@ -55,8 +61,8 @@ export function chronos(date?: number | string | Date | Chronos) {
  * @param utc UTC value in `UTC-01:30` or `UTC+01:30` format.
  * @returns The UTC value in `HH:MM` format.
  */
-export function extractTimeFromUTC(utc: UTCOffSet): Time {
-	return utc.replace(/^UTC[+-]?/g, '') as Time;
+export function extractTimeFromUTC(utc: UTCOffSet): `-${Time}` | Time {
+	return utc.replace(/^UTC[+]?/g, '') as `-${Time}` | Time;
 }
 
 /**

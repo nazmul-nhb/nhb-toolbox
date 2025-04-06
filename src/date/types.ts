@@ -203,6 +203,7 @@ export type PositiveUTCHour =
 	| '+14';
 
 export type NegativeUTCHour =
+	| '-00'
 	| '-01'
 	| '-02'
 	| '-03'
@@ -214,7 +215,9 @@ export type NegativeUTCHour =
 	| '-09'
 	| '-10'
 	| '-11'
-	| '-12';
+	| '-12'
+	| '-13'
+	| '-14';
 
 export type UTCMinute = '00' | '15' | '30' | '45';
 
