@@ -23,15 +23,7 @@ export class Chronos {
 	 * - If a Chronos object is provided, it will be converted to a Date object.
 	 */
 	constructor(value?: number | string | Date | Chronos) {
-		const date =
-			value instanceof Chronos ?
-				value.toDate()
-			:	new Date(value ?? Date.now());
-
-		// Check if the date is invalid
-		if (isNaN(date.getTime())) {
-			throw new Error('Provided date is invalid!');
-		}
+		const date = this.#toNewDate(value);
 
 		this.#date = date;
 		// this.preview = this.toISOString();
@@ -124,6 +116,20 @@ export class Chronos {
 	 */
 	static now(): number {
 		return Date.now();
+	}
+
+	#toNewDate(value?: number | string | Date | Chronos): Date {
+		const date =
+			value instanceof Chronos ?
+				value.toDate()
+			:	new Date(value ?? Date.now());
+
+		// Check if the date is invalid
+		if (isNaN(date.getTime())) {
+			throw new Error('Provided date is invalid!');
+		}
+
+		return date;
 	}
 
 	/**
@@ -313,15 +319,7 @@ export class Chronos {
 	 * @returns The difference as string, e.g., `2 years 1 month 9 days 18 hours 56 minutes 9 seconds ago`.
 	 */
 	fromNow(time?: string | number | Date | Chronos): string {
-		const now =
-			time instanceof Chronos ?
-				time.toDate()
-			:	new Date(time ?? Date.now());
-
-		// Check if the date is invalid
-		if (isNaN(now.getTime())) {
-			throw new Error('Provided date is invalid!');
-		}
+		const now = this.#toNewDate(time);
 
 		const target = this.#date;
 
@@ -376,31 +374,42 @@ export class Chronos {
 		return `${isFuture ? 'in ' : ''}${parts.join(' ')}${isFuture ? '' : ' ago'}`;
 	}
 
-	/** * Returns the number of full years between the input date and now. */
-	getRelativeYear(): number {
-		const now = new Date();
-		let years = now.getFullYear() - this.#date.getFullYear();
+	/**
+	 * * Returns the number of full years between the input date and now.
+	 * @param time Optional time to compare with the date/time.
+	 * @returns The difference in number.
+	 */
+	getRelativeYear(time?: string | number | Date | Chronos): number {
+		const now = this.#toNewDate(time);
 
-		const hasNotHadBirthday =
+		let years = this.#date.getFullYear() - now.getFullYear();
+
+		const noYearMonthDay =
 			now.getMonth() < this.#date.getMonth() ||
 			(now.getMonth() === this.#date.getMonth() &&
 				now.getDate() < this.#date.getDate());
 
-		if (hasNotHadBirthday) {
+		if (noYearMonthDay) {
 			years--;
 		}
 
 		return years;
 	}
 
-	/** * Returns the number of full months between the input date and now. */
-	getRelativeMonth(): number {
-		const now = new Date();
+	/**
+	 * * Returns the number of full months between the input date and now.
+	 * @param time Optional time to compare with the date/time.
+	 * @returns The difference in number.
+	 */
+	getRelativeMonth(time?: string | number | Date | Chronos): number {
+		const now = this.#toNewDate(time);
+
 		let months =
-			(now.getFullYear() - this.#date.getFullYear()) * 12 +
-			(now.getMonth() - this.#date.getMonth());
+			(this.#date.getFullYear() - now.getFullYear()) * 12 +
+			(this.#date.getMonth() - now.getMonth());
 
 		const hasNotHadMonthDay = now.getDate() < this.#date.getDate();
+
 		if (hasNotHadMonthDay) {
 			months--;
 		}
@@ -411,14 +420,15 @@ export class Chronos {
 	/**
 	 * * Determines if the given date is today, tomorrow, yesterday or any relative day.
 	 * @param date - The date to compare (Date object).
+	 * @param time Optional time to compare with the date/time.
 	 * @returns
 	 *  - `-1` if the date is yesterday.
 	 *  - `0` if the date is today.
 	 *  - `1` if the date is tomorrow.
 	 *  - Other positive or negative numbers for other relative days (e.g., `-2` for two days ago, `2` for two days ahead).
 	 */
-	getRelativeDay(): number {
-		const today = new Date();
+	getRelativeDay(time?: string | number | Date | Chronos): number {
+		const today = this.#toNewDate(time);
 		// Set the time of today to 00:00:00 for comparison purposes
 		today.setHours(0, 0, 0, 0);
 
@@ -432,49 +442,67 @@ export class Chronos {
 		return diffDays;
 	}
 
-	/** * Returns the number of full hours between the input date and now. */
-	getRelativeHour(): number {
-		const diff = new Date().getTime() - this.#date.getTime();
+	/**
+	 * * Returns the number of full hours between the input date and now.
+	 * @param time Optional time to compare with the date/time.
+	 * @returns The difference in number.
+	 */
+	getRelativeHour(time?: string | number | Date | Chronos): number {
+		const diff = this.#date.getTime() - this.#toNewDate(time).getTime();
 		return Math.floor(diff / (1000 * 60 * 60));
 	}
 
-	/** * Returns the number of full minutes between the input date and now. */
-	getRelativeMinute(): number {
-		const diff = new Date().getTime() - this.#date.getTime();
+	/**
+	 * * Returns the number of full minutes between the input date and now.
+	 * @param time Optional time to compare with the date/time.
+	 * @returns The difference in number.
+	 */
+	getRelativeMinute(time?: string | number | Date | Chronos): number {
+		const diff = this.#date.getTime() - this.#toNewDate(time).getTime();
 		return Math.floor(diff / (1000 * 60));
 	}
 
-	/** * Returns the number of full seconds between the input date and now. */
-	getRelativeSecond(): number {
-		const diff = new Date().getTime() - this.#date.getTime();
+	/**
+	 *  * Returns the number of full seconds between the input date and now.
+	 * @param time Optional time to compare with the date/time.
+	 * @returns The difference in number.
+	 */
+	getRelativeSecond(time?: string | number | Date | Chronos): number {
+		const diff = this.#date.getTime() - this.#toNewDate(time).getTime();
 		return Math.floor(diff / 1000);
 	}
 
 	/** * Returns the number of milliseconds between the input date and now. */
-	getRelativeMilliSecond(): number {
-		return new Date().getTime() - this.#date.getTime();
+	getRelativeMilliSecond(time?: string | number | Date | Chronos): number {
+		return this.#date.getTime() - this.#toNewDate(time).getTime();
 	}
 
 	/**
 	 * * Compares the stored date with now, returning the difference in the specified unit.
+	 *
 	 * @param unit The time unit to compare by. Defaults to 'minute'.
+	 * @param time Optional time to compare with the date/time.
+	 * @returns The difference in number.
 	 */
-	compare(unit: TimeUnit = 'minute'): number {
+	compare(
+		unit: TimeUnit = 'minute',
+		time?: string | number | Date | Chronos,
+	): number {
 		switch (unit) {
 			case 'year':
-				return this.getRelativeYear();
+				return this.getRelativeYear(time);
 			case 'month':
-				return this.getRelativeMonth();
+				return this.getRelativeMonth(time);
 			case 'day':
-				return this.getRelativeDay();
+				return this.getRelativeDay(time);
 			case 'hour':
-				return this.getRelativeHour();
+				return this.getRelativeHour(time);
 			case 'minute':
-				return this.getRelativeMinute();
+				return this.getRelativeMinute(time);
 			case 'second':
-				return this.getRelativeSecond();
+				return this.getRelativeSecond(time);
 			case 'millisecond':
-				return this.getRelativeMilliSecond();
+				return this.getRelativeMilliSecond(time);
 			default:
 				throw new Error(`Unsupported time unit: ${unit}`);
 		}
