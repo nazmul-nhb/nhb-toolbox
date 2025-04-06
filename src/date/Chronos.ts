@@ -376,8 +376,8 @@ export class Chronos {
 
 	/**
 	 * * Returns the number of full years between the input date and now.
-	 * @param time Optional time to compare with the date/time.
-	 * @returns The difference in number.
+	 * @param time Optional time to compare with the `Chronos` date/time.
+	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
 	 */
 	getRelativeYear(time?: string | number | Date | Chronos): number {
 		const now = this.#toNewDate(time);
@@ -398,8 +398,8 @@ export class Chronos {
 
 	/**
 	 * * Returns the number of full months between the input date and now.
-	 * @param time Optional time to compare with the date/time.
-	 * @returns The difference in number.
+	 * @param time Optional time to compare with the `Chronos` date/time.
+	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
 	 */
 	getRelativeMonth(time?: string | number | Date | Chronos): number {
 		const now = this.#toNewDate(time);
@@ -420,7 +420,7 @@ export class Chronos {
 	/**
 	 * * Determines if the given date is today, tomorrow, yesterday or any relative day.
 	 * @param date - The date to compare (Date object).
-	 * @param time Optional time to compare with the date/time.
+	 * @param time Optional time to compare with the `Chronos` date/time.
 	 * @returns
 	 *  - `-1` if the date is yesterday.
 	 *  - `0` if the date is today.
@@ -433,7 +433,7 @@ export class Chronos {
 		today.setHours(0, 0, 0, 0);
 
 		// Normalize the input date to 00:00:00
-		const inputDate = new Date(this.#date);
+		const inputDate = this.#date;
 		inputDate.setHours(0, 0, 0, 0);
 
 		const diffTime = inputDate.getTime() - today.getTime();
@@ -444,8 +444,8 @@ export class Chronos {
 
 	/**
 	 * * Returns the number of full hours between the input date and now.
-	 * @param time Optional time to compare with the date/time.
-	 * @returns The difference in number.
+	 * @param time Optional time to compare with the `Chronos` date/time.
+	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
 	 */
 	getRelativeHour(time?: string | number | Date | Chronos): number {
 		const diff = this.#date.getTime() - this.#toNewDate(time).getTime();
@@ -454,8 +454,8 @@ export class Chronos {
 
 	/**
 	 * * Returns the number of full minutes between the input date and now.
-	 * @param time Optional time to compare with the date/time.
-	 * @returns The difference in number.
+	 * @param time Optional time to compare with the `Chronos` date/time.
+	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
 	 */
 	getRelativeMinute(time?: string | number | Date | Chronos): number {
 		const diff = this.#date.getTime() - this.#toNewDate(time).getTime();
@@ -464,15 +464,19 @@ export class Chronos {
 
 	/**
 	 *  * Returns the number of full seconds between the input date and now.
-	 * @param time Optional time to compare with the date/time.
-	 * @returns The difference in number.
+	 * @param time Optional time to compare with the `Chronos` date/time.
+	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
 	 */
 	getRelativeSecond(time?: string | number | Date | Chronos): number {
 		const diff = this.#date.getTime() - this.#toNewDate(time).getTime();
 		return Math.floor(diff / 1000);
 	}
 
-	/** * Returns the number of milliseconds between the input date and now. */
+	/**
+	 * * Returns the number of milliseconds between the input date and now.
+	 * @param time Optional time to compare with the `Chronos` date/time.
+	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
+	 */
 	getRelativeMilliSecond(time?: string | number | Date | Chronos): number {
 		return this.#date.getTime() - this.#toNewDate(time).getTime();
 	}
@@ -481,8 +485,8 @@ export class Chronos {
 	 * * Compares the stored date with now, returning the difference in the specified unit.
 	 *
 	 * @param unit The time unit to compare by. Defaults to 'minute'.
-	 * @param time Optional time to compare with the date/time.
-	 * @returns The difference in number.
+	 * @param time Optional time to compare with the `Chronos` date/time.
+	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
 	 */
 	compare(
 		unit: TimeUnit = 'minute',
