@@ -3,6 +3,7 @@ import { isValidUTCOffSet } from './guards';
 import type {
 	ChronosFormat,
 	FormatOptions,
+	TimeUnit,
 	TimeZone,
 	UTCOffSet,
 } from './types';
@@ -257,30 +258,6 @@ export class Chronos {
 	}
 
 	/**
-	 * * Determines if the given date is today, tomorrow, yesterday or any relative day.
-	 * @param date - The date to compare (Date object).
-	 * @returns
-	 *  - `-1` if the date is yesterday.
-	 *  - `0` if the date is today.
-	 *  - `1` if the date is tomorrow.
-	 *  - Other positive or negative numbers for other relative days (e.g., `-2` for two days ago, `2` for two days ahead).
-	 */
-	getRelativeDay(): number {
-		const today = new Date();
-		// Set the time of today to 00:00:00 for comparison purposes
-		today.setHours(0, 0, 0, 0);
-
-		// Normalize the input date to 00:00:00
-		const inputDate = new Date(this.#date);
-		inputDate.setHours(0, 0, 0, 0);
-
-		const diffTime = inputDate.getTime() - today.getTime();
-		const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-		return diffDays;
-	}
-
-	/**
 	 * * Checks if the year is a leap year.
 	 * - A year is a leap year if it is divisible by 4, but not divisible by 100, unless it is also divisible by 400.
 	 * - For example, 2000 and 2400 are leap years, but 1900 and 2100 are not.
@@ -313,5 +290,193 @@ export class Chronos {
 		const adjusted = new Date(utc + offset * 60 * 1000);
 
 		return new Chronos(adjusted);
+	}
+
+	/** - Checks if the current date is today. */
+	isToday(): boolean {
+		return this.getRelativeDay() === 0;
+	}
+
+	/** - Checks if the current date is tomorrow. */
+	isTomorrow(): boolean {
+		return this.getRelativeDay() === 1;
+	}
+
+	/** - Checks if the current date is yesterday. */
+	isYesterday(): boolean {
+		return this.getRelativeDay() === -1;
+	}
+
+	/**
+	 * * Returns full time difference from now (or specified time) in years, months, days, hours, minutes, and seconds.
+	 * @param time An optional time value (`number`, `string`, `Date`, or `Chronos` object).
+	 * @returns The difference as string, e.g., `2 years 1 month 9 days 18 hours 56 minutes 9 seconds ago`.
+	 */
+	fromNow(time?: string | number | Date | Chronos): string {
+		const now =
+			time instanceof Chronos ?
+				time.toDate()
+			:	new Date(time ?? Date.now());
+
+		// Check if the date is invalid
+		if (isNaN(now.getTime())) {
+			throw new Error('Provided date is invalid!');
+		}
+
+		const target = this.#date;
+
+		const isFuture = target > now;
+		const from = isFuture ? now : target;
+		const to = isFuture ? target : now;
+
+		let years = to.getFullYear() - from.getFullYear();
+		let months = to.getMonth() - from.getMonth();
+		let days = to.getDate() - from.getDate();
+		let hours = to.getHours() - from.getHours();
+		let minutes = to.getMinutes() - from.getMinutes();
+		let seconds = to.getSeconds() - from.getSeconds();
+
+		// Adjust negative values
+		if (seconds < 0) {
+			seconds += 60;
+			minutes--;
+		}
+
+		if (minutes < 0) {
+			minutes += 60;
+			hours--;
+		}
+
+		if (hours < 0) {
+			hours += 24;
+			days--;
+		}
+
+		if (days < 0) {
+			const prevMonth = new Date(to.getFullYear(), to.getMonth(), 0);
+			days += prevMonth.getDate();
+			months--;
+		}
+
+		if (months < 0) {
+			months += 12;
+			years--;
+		}
+
+		const parts: string[] = [];
+		if (years > 0) parts.push(`${years} year${years > 1 ? 's' : ''}`);
+		if (months > 0) parts.push(`${months} month${months > 1 ? 's' : ''}`);
+		if (days > 0) parts.push(`${days} day${days > 1 ? 's' : ''}`);
+		if (hours > 0) parts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
+		if (minutes > 0)
+			parts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`);
+		if (seconds > 0 || parts.length === 0)
+			parts.push(`${seconds} second${seconds !== 1 ? 's' : ''}`);
+
+		return `${isFuture ? 'in ' : ''}${parts.join(' ')}${isFuture ? '' : ' ago'}`;
+	}
+
+	/** * Returns the number of full years between the input date and now. */
+	getRelativeYear(): number {
+		const now = new Date();
+		let years = now.getFullYear() - this.#date.getFullYear();
+
+		const hasNotHadBirthday =
+			now.getMonth() < this.#date.getMonth() ||
+			(now.getMonth() === this.#date.getMonth() &&
+				now.getDate() < this.#date.getDate());
+
+		if (hasNotHadBirthday) {
+			years--;
+		}
+
+		return years;
+	}
+
+	/** * Returns the number of full months between the input date and now. */
+	getRelativeMonth(): number {
+		const now = new Date();
+		let months =
+			(now.getFullYear() - this.#date.getFullYear()) * 12 +
+			(now.getMonth() - this.#date.getMonth());
+
+		const hasNotHadMonthDay = now.getDate() < this.#date.getDate();
+		if (hasNotHadMonthDay) {
+			months--;
+		}
+
+		return months;
+	}
+
+	/**
+	 * * Determines if the given date is today, tomorrow, yesterday or any relative day.
+	 * @param date - The date to compare (Date object).
+	 * @returns
+	 *  - `-1` if the date is yesterday.
+	 *  - `0` if the date is today.
+	 *  - `1` if the date is tomorrow.
+	 *  - Other positive or negative numbers for other relative days (e.g., `-2` for two days ago, `2` for two days ahead).
+	 */
+	getRelativeDay(): number {
+		const today = new Date();
+		// Set the time of today to 00:00:00 for comparison purposes
+		today.setHours(0, 0, 0, 0);
+
+		// Normalize the input date to 00:00:00
+		const inputDate = new Date(this.#date);
+		inputDate.setHours(0, 0, 0, 0);
+
+		const diffTime = inputDate.getTime() - today.getTime();
+		const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+		return diffDays;
+	}
+
+	/** * Returns the number of full hours between the input date and now. */
+	getRelativeHour(): number {
+		const diff = new Date().getTime() - this.#date.getTime();
+		return Math.floor(diff / (1000 * 60 * 60));
+	}
+
+	/** * Returns the number of full minutes between the input date and now. */
+	getRelativeMinute(): number {
+		const diff = new Date().getTime() - this.#date.getTime();
+		return Math.floor(diff / (1000 * 60));
+	}
+
+	/** * Returns the number of full seconds between the input date and now. */
+	getRelativeSecond(): number {
+		const diff = new Date().getTime() - this.#date.getTime();
+		return Math.floor(diff / 1000);
+	}
+
+	/** * Returns the number of milliseconds between the input date and now. */
+	getRelativeMilliSecond(): number {
+		return new Date().getTime() - this.#date.getTime();
+	}
+
+	/**
+	 * * Compares the stored date with now, returning the difference in the specified unit.
+	 * @param unit The time unit to compare by. Defaults to 'minute'.
+	 */
+	compare(unit: TimeUnit = 'minute'): number {
+		switch (unit) {
+			case 'year':
+				return this.getRelativeYear();
+			case 'month':
+				return this.getRelativeMonth();
+			case 'day':
+				return this.getRelativeDay();
+			case 'hour':
+				return this.getRelativeHour();
+			case 'minute':
+				return this.getRelativeMinute();
+			case 'second':
+				return this.getRelativeSecond();
+			case 'millisecond':
+				return this.getRelativeMilliSecond();
+			default:
+				throw new Error(`Unsupported time unit: ${unit}`);
+		}
 	}
 }

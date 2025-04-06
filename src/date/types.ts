@@ -149,11 +149,10 @@ export interface GreetingConfigs {
 	defaultMessage?: string;
 }
 
-export type FormatType =
+export type TimeUnit =
 	| 'year'
 	| 'month'
 	| 'day'
-	| 'date'
 	| 'hour'
 	| 'minute'
 	| 'second'
