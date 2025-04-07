@@ -3,6 +3,7 @@ import { DAYS, MONTHS, sortedFormats, TIME_ZONES } from './constants';
 import { isValidUTCOffSet } from './guards';
 import type {
 	ChronosFormat,
+	ChronosObject,
 	FormatOptions,
 	TimeUnit,
 	TimeZone,
@@ -10,9 +11,11 @@ import type {
 } from './types';
 import { extractMinutesFromUTC } from './utils';
 
+const ORIGIN = Symbol('origin');
+
 export class Chronos {
 	readonly #date: Date;
-	// readonly preview: string;
+	[ORIGIN]?: string;
 
 	/**
 	 * * Creates a new immutable `Chronos` instance.
@@ -27,11 +30,39 @@ export class Chronos {
 		const date = this.#toNewDate(value);
 
 		this.#date = date;
-		// this.preview = this.toISOString();
+		this[ORIGIN] = 'root';
+	}
+
+	*[Symbol.iterator](): IterableIterator<[string, number]> {
+		yield ['year', this.year];
+		yield ['month', this.month];
+		yield ['isoMonth', this.month + 1];
+		yield ['date', this.date];
+		yield ['day', this.day];
+		yield ['isoDay', this.day + 1];
+		yield ['hour', this.hour];
+		yield ['minute', this.minute];
+		yield ['second', this.second];
+		yield ['millisecond', this.millisecond];
+	}
+
+	#withOrigin(origin: string): Chronos {
+		const instance = new Chronos(this.#date);
+		instance[ORIGIN] = origin;
+		return instance;
 	}
 
 	get [Symbol.toStringTag](): string {
-		return this.toLocalISOString();
+		switch (this[ORIGIN]) {
+			case 'toUTC':
+			case 'utc':
+				return this.#toLocalISOString().replace(
+					this.getUTCOffset(),
+					'Z',
+				);
+			default:
+				return this.#toLocalISOString();
+		}
 	}
 
 	/**
@@ -42,6 +73,11 @@ export class Chronos {
 	[Symbol.toPrimitive](hint: string): string | number {
 		if (hint === 'number') return this.valueOf();
 		return this.toLocalISOString();
+	}
+
+	/** Returns a debug-friendly string for console.log or util.inspect */
+	public inspect(): string {
+		return `[Chronos ${this.toLocalISOString()}]`;
 	}
 
 	/** * Clones and returns a new Chronos instance with the same date. */
@@ -66,14 +102,59 @@ export class Chronos {
 
 	/** * Returns a string representation of a date. The format of the string depends on the locale. */
 	toString(): string {
-		return this.#date.toString();
+		switch (this[ORIGIN]) {
+			case 'toUTC':
+			case 'utc': {
+				const mins = extractMinutesFromUTC(
+					`UTC${this.getUTCOffset()}` as UTCOffSet,
+				);
+
+				const date = this.addMinutes(mins);
+
+				return date.toString();
+			}
+			default:
+				return this.#date.toString();
+		}
+	}
+
+	/** * Returns ISO string with local time zone offset */
+	#toLocalISOString(): string {
+		const pad = (n: number, p = 2) => String(n).padStart(p, '0');
+
+		return `${this.year}-${pad(this.month + 1)}-${pad(this.date)}T${pad(this.hour)}:${pad(this.minute)}:${pad(this.second)}.${pad(this.millisecond, 3)}${this.getUTCOffset()}`;
 	}
 
 	/** * Returns ISO string with local time zone offset */
 	toLocalISOString(): string {
-		const pad = (n: number, p = 2) => String(n).padStart(p, '0');
+		switch (this[ORIGIN]) {
+			case 'toUTC':
+			case 'utc': {
+				const mins = extractMinutesFromUTC(
+					`UTC${this.getUTCOffset()}` as UTCOffSet,
+				);
 
-		return `${this.year}-${pad(this.month + 1)}-${pad(this.date)}T${pad(this.hour)}:${pad(this.minute)}:${pad(this.second)}.${pad(this.millisecond, 3)}${this.getUTCOffset()}`;
+				const date = this.addMinutes(mins);
+
+				return date.#toLocalISOString();
+			}
+			default:
+				return this.#toLocalISOString();
+		}
+	}
+
+	/** * Returns a date as a string value in ISO format. */
+	toISOString(): string {
+		switch (this[ORIGIN]) {
+			case 'toUTC':
+			case 'utc':
+				return this.#toLocalISOString().replace(
+					this.getUTCOffset(),
+					'Z',
+				);
+			default:
+				return this.#date.toISOString();
+		}
 	}
 
 	/**
@@ -88,11 +169,6 @@ export class Chronos {
 		options?: Intl.DateTimeFormatOptions,
 	): string {
 		return this.#date.toLocaleString(locale, options);
-	}
-
-	/** * Returns a date as a string value in ISO format. */
-	toISOString(): string {
-		return this.#date.toISOString();
 	}
 
 	/** * Returns the time value in milliseconds since midnight, January 1, 1970 UTC. */
@@ -294,7 +370,13 @@ export class Chronos {
 	 * @returns Formatted date string in desired format (UTC time).
 	 */
 	formatUTC(format: string = 'dd, MMM DD, YYYY HH:mm:ss:mss'): string {
-		return this.#format(format, true);
+		switch (this[ORIGIN]) {
+			case 'toUTC':
+			case 'utc':
+				return this.#format(format, false);
+			default:
+				return this.#format(format, true);
+		}
 	}
 
 	/**
@@ -1016,32 +1098,13 @@ export class Chronos {
 	}
 
 	/** * Converts to object with all date unit parts */
-	toObject() {
-		return {
-			year: this.year,
-			month: this.month,
-			isoMonth: this.month + 1,
-			date: this.date,
-			day: this.day,
-			isoDay: this.day + 1,
-			hour: this.hour,
-			minute: this.minute,
-			second: this.second,
-			millisecond: this.millisecond,
-		};
+	toObject(): ChronosObject {
+		return Object.fromEntries([...this]) as unknown as ChronosObject;
 	}
 
 	/** * Converts to array with all date unit parts */
-	toArray(): [number, number, number, number, number, number, number] {
-		return [
-			this.year,
-			this.month,
-			this.date,
-			this.hour,
-			this.minute,
-			this.second,
-			this.millisecond,
-		];
+	toArray() {
+		return Object.values(this.toObject());
 	}
 
 	/** * Returns offset like +06:00 */
@@ -1067,30 +1130,18 @@ export class Chronos {
 	}
 
 	/** * Returns new Chronos instance in UTC */
-	// toUTC(): Chronos {
-	// 	// const utcDate = new Date(
-	// 	// 	Date.UTC(
-	// 	// 		this.#date.getFullYear(),
-	// 	// 		this.#date.getMonth(),
-	// 	// 		this.#date.getDate(),
-	// 	// 		this.#date.getHours(),
-	// 	// 		this.#date.getMinutes(),
-	// 	// 		this.#date.getSeconds(),
-	// 	// 		this.#date.getMilliseconds(),
-	// 	// 	),
-	// 	// );
-	// 	// return new Chronos(utcDate);
-	// 	const date = this.#date;
-	// 	const utc = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-	// 	return new Chronos(utc);
-	// }
+	toUTC(): Chronos {
+		const date = this.#date;
+		const utc = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+		return new Chronos(utc).#withOrigin('toUTC');
+	}
 
 	/** * Returns new Chronos instance in local time */
-	// toLocal(): Chronos {
-	// 	const date = new Date(this.#date.getTime());
-	// 	date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-	// 	return new Chronos(date);
-	// }
+	toLocal(): Chronos {
+		const date = this.#date;
+		const utc = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+		return new Chronos(utc).#withOrigin('toLocal');
+	}
 
 	/** @static Parses a date string with a given format (partial support) */
 	static parse(dateStr: string, format: string): Chronos {
@@ -1138,15 +1189,15 @@ export class Chronos {
 		);
 	}
 
-	// /**
-	//  * @static Creates UTC Chronos
-	//  * @param dateLike Date input to create utc time.
-	//  */
-	// static utc(dateLike: number | string | Date | Chronos): Chronos {
-	// 	const date = new Chronos(dateLike).toDate();
-	// 	const utc = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-	// 	return new Chronos(utc);
-	// }
+	/**
+	 * @static Creates UTC Chronos
+	 * @param dateLike Date input to create utc time.
+	 */
+	static utc(dateLike: number | string | Date | Chronos): Chronos {
+		const date = new Chronos(dateLike).#date;
+		const utc = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+		return new Chronos(utc).#withOrigin('utc');
+	}
 
 	/**
 	 * @static Returns earliest Chronos

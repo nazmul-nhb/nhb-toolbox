@@ -182,6 +182,19 @@ export type ChronosFormat =
 
 export type ChronosDate = number | string | Date | Chronos;
 
+export interface ChronosObject {
+	year: number;
+	month: number;
+	isoMonth: number;
+	date: number;
+	day: number;
+	isoDay: number;
+	hour: number;
+	minute: number;
+	second: number;
+	millisecond: number;
+}
+
 // export type DateFormat =
 // 	`${Day}, ${Month} ${Date}, ${Year} ${Hour}:${Minute}:${Second}:${Millisecond} ${TimeFormats}`;
 
