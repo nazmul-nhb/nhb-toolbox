@@ -1,3 +1,4 @@
+import type { LocaleCode } from '../number/types';
 import { DAYS, MONTHS, sortedFormats, TIME_ZONES } from './constants';
 import { isValidUTCOffSet } from './guards';
 import type {
@@ -66,6 +67,20 @@ export class Chronos {
 	/** * Returns a string representation of a date. The format of the string depends on the locale. */
 	toString(): string {
 		return this.#date.toString();
+	}
+
+	/**
+	 *  * Wrapper over native `toLocaleString`
+	 * @description Converts a date and time to a string by using the current or specified locale.
+	 *
+	 * @param locales A locale string, array of locale strings, Intl.Locale object, or array of Intl.Locale objects that contain one or more language or locale tags. If you include more than one locale string, list them in descending order of priority so that the first entry is the preferred locale. If you omit this parameter, the default locale of the JavaScript runtime is used.
+	 * @param options An object that contains one or more properties that specify comparison options.
+	 */
+	toLocaleString(
+		locale?: LocaleCode | Intl.Locale | (LocaleCode | Intl.Locale)[],
+		options?: Intl.DateTimeFormatOptions,
+	): string {
+		return this.#date.toLocaleString(locale, options);
 	}
 
 	/** * Returns a date as a string value in ISO format. */
@@ -834,5 +849,60 @@ export class Chronos {
 			this.startOf(unit).toDate().getTime() >
 			time.startOf(unit).toDate().getTime()
 		);
+	}
+
+	/**
+	 * * Returns a human-readable relative calendar time like "Today at 3:00 PM"
+	 * @param baseDate Optional base date to compare with.
+	 */
+	calendar(baseDate?: number | string | Date | Chronos): string {
+		const base = baseDate ? new Chronos(baseDate) : new Chronos();
+		const input = this.startOf('day');
+
+		const comparison = base.startOf('day');
+		const diff = input.diff(comparison, 'day');
+
+		const timeStr = this.toDate().toLocaleString(undefined, {
+			hour: 'numeric',
+			minute: '2-digit',
+		});
+
+		if (diff === 0) return `Today at ${timeStr}`;
+		if (diff === 1) return `Tomorrow at ${timeStr}`;
+		if (diff === -1) return `Yesterday at ${timeStr}`;
+
+		return this.toDate().toLocaleString(undefined, {
+			month: 'long',
+			day: '2-digit',
+			year: 'numeric',
+			weekday: 'long',
+			hour: 'numeric',
+			minute: '2-digit',
+		});
+	}
+
+	/** * Returns a short human-readable string like "2h ago", "in 5m" */
+	fromNowShort(): string {
+		const now = new Chronos();
+		const diffInSeconds = this.diff(now, 'second');
+
+		const abs = Math.abs(diffInSeconds);
+
+		const suffix = diffInSeconds >= 0 ? 'in ' : '';
+		const postfix = diffInSeconds < 0 ? ' ago' : '';
+
+		if (abs < 60) {
+			return `${suffix}${Math.floor(abs)}s${postfix}`;
+		} else if (abs < 3600) {
+			return `${suffix}${Math.floor(abs / 60)}m${postfix}`;
+		} else if (abs < 86400) {
+			return `${suffix}${Math.floor(abs / 3600)}h${postfix}`;
+		} else if (abs < 2592000) {
+			return `${suffix}${Math.floor(abs / 86400)}d${postfix}`;
+		} else if (abs < 31536000) {
+			return `${suffix}${Math.floor(abs / 2592000)}mo${postfix}`;
+		} else {
+			return `${suffix}${Math.floor(abs / 31536000)}y${postfix}`;
+		}
 	}
 }
