@@ -93,14 +93,41 @@ export class Chronos {
 		return this.#date.getTime();
 	}
 
-	/** * Returns the date value as a `Date` object. */
-	get date(): Date {
-		return this.#date;
-	}
-
 	/** * Returns the time value in milliseconds since midnight, January 1, 1970 UTC. */
 	get unix(): number {
 		return this.#date.getTime();
+	}
+
+	get year(): number {
+		return this.#date.getFullYear();
+	}
+	get month(): number {
+		return this.#date.getMonth();
+	}
+	get date(): number {
+		return this.#date.getDate();
+	}
+	get day(): number {
+		return this.#date.getDay();
+	}
+	get hour(): number {
+		return this.#date.getHours();
+	}
+	get minute(): number {
+		return this.#date.getMinutes();
+	}
+	get second(): number {
+		return this.#date.getSeconds();
+	}
+	get millisecond(): number {
+		return this.#date.getMilliseconds();
+	}
+
+	/** * ISO weekday: 1 = Monday, 7 = Sunday */
+	get isoWeekday(): number {
+		const day = this.day;
+
+		return day === 0 ? 7 : day;
 	}
 
 	/**
@@ -636,7 +663,7 @@ export class Chronos {
 	 * * Returns a new Chronos instance at the start of a given unit.
 	 * @param unit The unit to reset (e.g., year, month, day).
 	 */
-	public startOf(unit: TimeUnit): Chronos {
+	public startOf(unit: TimeUnit | 'week'): Chronos {
 		const d = new Date(this.#date);
 
 		switch (unit) {
@@ -648,6 +675,14 @@ export class Chronos {
 				d.setDate(1);
 				d.setHours(0, 0, 0, 0);
 				break;
+			case 'week': {
+				const day = d.getDay(); // 0 (Sun) - 6 (Sat)
+				const diff = (day + 6) % 7; // convert Sunday=0 to 6, Monday=1 to 0, etc.
+
+				d.setDate(d.getDate() - diff);
+				d.setHours(0, 0, 0, 0);
+				break;
+			}
 			case 'day':
 				d.setHours(0, 0, 0, 0);
 				break;
@@ -904,5 +939,74 @@ export class Chronos {
 		} else {
 			return `${suffix}${Math.floor(abs / 31536000)}y${postfix}`;
 		}
+	}
+
+	/** * Returns ISO week number */
+	getWeek(): number {
+		// ISO week starts on Monday
+		const target = this.startOf('week').add(3, 'day');
+
+		const firstThursday = new Chronos(new Date(target.year, 0, 4))
+			.startOf('week')
+			.add(3, 'day');
+
+		const daysDiff = target.diff(firstThursday, 'day');
+		const week = Math.floor(daysDiff / 7) + 1;
+
+		return week;
+	}
+
+	/** * Returns ISO week year */
+	getWeekYear(): number {
+		const d = this.startOf('week').add(3, 'day'); // Thursday of current ISO week
+		return d.year;
+	}
+
+	/** * Returns day of year (1 - 366) */
+	getDayOfYear(): number {
+		const start = new Date(this.year, 0, 1);
+		const diff = this.#date.getTime() - start.getTime();
+		return Math.floor(diff / 86400000) + 1;
+	}
+
+	/**
+	 * * Checks if the current date is between the given start and end dates.
+	 *
+	 * @param start - The start of the range.
+	 * @param end - The end of the range.
+	 * @param inclusive - Specifies whether the comparison is inclusive or exclusive:
+	 * - `'[]'`: inclusive of both start and end (≥ start and ≤ end)
+	 * - `'[)'`: inclusive of start, exclusive of end (≥ start and < end)
+	 * - `'(]'`: exclusive of start, inclusive of end (> start and ≤ end)
+	 * - `'()'`: exclusive of both start and end (> start and < end)
+	 *
+	 * @returns `true` if the current date is within the specified range based on the `inclusive` mode.
+	 */
+	isBetween(
+		start: number | string | Date | Chronos,
+		end: number | string | Date | Chronos,
+		inclusive: '[]' | '[)' | '(]' | '()' = '()',
+	): boolean {
+		const s = new Chronos(start).valueOf();
+		const e = new Chronos(end).valueOf();
+		const t = this.valueOf();
+
+		switch (inclusive) {
+			case '[]':
+				return t >= s && t <= e;
+			case '[)':
+				return t >= s && t < e;
+			case '(]':
+				return t > s && t <= e;
+			case '()':
+				return t > s && t < e;
+		}
+	}
+
+	/**
+	 * Returns number of days in current month
+	 */
+	daysInMonth(): number {
+		return new Date(this.year, this.month + 1, 0).getDate();
 	}
 }
