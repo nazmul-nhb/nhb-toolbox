@@ -31,7 +31,7 @@ export class Chronos {
 	}
 
 	get [Symbol.toStringTag](): string {
-		return this.toISOString();
+		return this.toLocalISOString();
 	}
 
 	/**
@@ -41,7 +41,7 @@ export class Chronos {
 	 */
 	[Symbol.toPrimitive](hint: string): string | number {
 		if (hint === 'number') return this.valueOf();
-		return this.toString();
+		return this.toLocalISOString();
 	}
 
 	/** * Clones and returns a new Chronos instance with the same date. */
@@ -51,7 +51,7 @@ export class Chronos {
 
 	/** * Enables JSON.stringify and console logging to show readable output. */
 	toJSON(): string {
-		return this.toISOString();
+		return this.toLocalISOString();
 	}
 
 	/** * Enables arithmetic and comparison operations (e.g., +new Chronos()). */
@@ -67,6 +67,13 @@ export class Chronos {
 	/** * Returns a string representation of a date. The format of the string depends on the locale. */
 	toString(): string {
 		return this.#date.toString();
+	}
+
+	/** * Returns ISO string with local time zone offset */
+	toLocalISOString(): string {
+		const pad = (n: number, p = 2) => String(n).padStart(p, '0');
+
+		return `${this.year}-${pad(this.month + 1)}-${pad(this.date)}T${pad(this.hour)}:${pad(this.minute)}:${pad(this.second)}.${pad(this.millisecond, 3)}${this.getUTCOffset()}`;
 	}
 
 	/**
@@ -1003,10 +1010,161 @@ export class Chronos {
 		}
 	}
 
-	/**
-	 * Returns number of days in current month
-	 */
+	/** * Returns number of days in current month */
 	daysInMonth(): number {
 		return new Date(this.year, this.month + 1, 0).getDate();
+	}
+
+	/** * Converts to object with all date unit parts */
+	toObject() {
+		return {
+			year: this.year,
+			month: this.month,
+			isoMonth: this.month + 1,
+			date: this.date,
+			day: this.day,
+			isoDay: this.day + 1,
+			hour: this.hour,
+			minute: this.minute,
+			second: this.second,
+			millisecond: this.millisecond,
+		};
+	}
+
+	/** * Converts to array with all date unit parts */
+	toArray(): [number, number, number, number, number, number, number] {
+		return [
+			this.year,
+			this.month,
+			this.date,
+			this.hour,
+			this.minute,
+			this.second,
+			this.millisecond,
+		];
+	}
+
+	/** * Returns offset like +06:00 */
+	getUTCOffset(): string {
+		const offset = -this.#date.getTimezoneOffset();
+		const sign = offset >= 0 ? '+' : '-';
+
+		const pad = (n: number) =>
+			String(Math.floor(Math.abs(n))).padStart(2, '0');
+
+		return `${sign}${pad(offset / 60)}:${pad(offset % 60)}`;
+	}
+
+	/** * Checks if currently in DST */
+	isDST(): boolean {
+		const jan = new Date(this.year, 0, 1);
+		const jul = new Date(this.year, 6, 1);
+
+		return (
+			Math.min(jan.getTimezoneOffset(), jul.getTimezoneOffset()) !==
+			this.#date.getTimezoneOffset()
+		);
+	}
+
+	/** * Returns new Chronos instance in UTC */
+	// toUTC(): Chronos {
+	// 	// const utcDate = new Date(
+	// 	// 	Date.UTC(
+	// 	// 		this.#date.getFullYear(),
+	// 	// 		this.#date.getMonth(),
+	// 	// 		this.#date.getDate(),
+	// 	// 		this.#date.getHours(),
+	// 	// 		this.#date.getMinutes(),
+	// 	// 		this.#date.getSeconds(),
+	// 	// 		this.#date.getMilliseconds(),
+	// 	// 	),
+	// 	// );
+	// 	// return new Chronos(utcDate);
+	// 	const date = this.#date;
+	// 	const utc = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+	// 	return new Chronos(utc);
+	// }
+
+	/** * Returns new Chronos instance in local time */
+	// toLocal(): Chronos {
+	// 	const date = new Date(this.#date.getTime());
+	// 	date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+	// 	return new Chronos(date);
+	// }
+
+	/** @static Parses a date string with a given format (partial support) */
+	static parse(dateStr: string, format: string): Chronos {
+		const formatMap = {
+			YYYY: 'year',
+			MM: 'month',
+			DD: 'date',
+			HH: 'hour',
+			mm: 'minute',
+			ss: 'second',
+		} as const;
+
+		const regex = format.replace(/YYYY|MM|DD|HH|mm|ss/g, (match) => {
+			return `(?<${match}>\\d{${match.length}})`;
+		});
+
+		const match = new RegExp(`^${regex}$`).exec(dateStr);
+
+		if (!match?.groups) {
+			throw new Error('Invalid date format');
+		}
+
+		const values = Object.entries(match.groups).reduce(
+			(acc, [key, val]) => {
+				const map = formatMap[key as keyof typeof formatMap];
+
+				if (map) {
+					acc[map] = Number(val);
+				}
+
+				return acc;
+			},
+			{} as Record<string, number>,
+		);
+
+		return new Chronos(
+			new Date(
+				values.year ?? 1970,
+				(values.month ?? 1) - 1,
+				values.date ?? 1,
+				values.hour ?? 0,
+				values.minute ?? 0,
+				values.second ?? 0,
+			),
+		);
+	}
+
+	// /**
+	//  * @static Creates UTC Chronos
+	//  * @param dateLike Date input to create utc time.
+	//  */
+	// static utc(dateLike: number | string | Date | Chronos): Chronos {
+	// 	const date = new Chronos(dateLike).toDate();
+	// 	const utc = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+	// 	return new Chronos(utc);
+	// }
+
+	/**
+	 * @static Returns earliest Chronos
+	 * @param dates Date inputs.
+	 */
+	static min(...dates: (number | string | Date | Chronos)[]): Chronos {
+		return new Chronos(
+			Math.min(...dates.map((d) => new Chronos(d).valueOf())),
+		);
+	}
+
+	/**
+	 * @static Returns latest Chronos
+	 * @param dates Date inputs.
+	 */
+	static max(...dates: (number | string | Date | Chronos)[]): Chronos {
+		return new Chronos(
+			Math.max(...dates.map((d) => new Chronos(d).valueOf())),
+		);
 	}
 }
