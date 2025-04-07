@@ -234,6 +234,7 @@ export {
 	debounceAction,
 	isDeepEqual,
 	throttleAction,
+	countClassMethods,
 } from './utils';
 
 // ! Primitive Type Guards

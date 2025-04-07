@@ -1,10 +1,10 @@
-import globals from 'globals';
 import jsConfig from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import tsParser from '@typescript-eslint/parser';
 import tsEslintPlugin from '@typescript-eslint/eslint-plugin';
-import prettier from 'eslint-plugin-prettier';
+import tsParser from '@typescript-eslint/parser';
 import prettierConfig from 'eslint-config-prettier';
+import prettier from 'eslint-plugin-prettier';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -76,6 +76,10 @@ export default [
 			],
 			// "no-use-before-define": "off",
 		},
+	},
+	{
+		files: ['src/**/utils/*.ts'],
+		rules: { '@typescript-eslint/no-unsafe-function-type': 'off' },
 	},
 	{
 		files: ['src/**/*types.ts', 'src/**/*interfaces.ts'],

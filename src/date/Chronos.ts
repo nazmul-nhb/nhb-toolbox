@@ -223,7 +223,7 @@ export class Chronos {
 	 * * Formats the date into a custom string format (local time).
 	 *
 	 * @param format - The desired format (Default format is `dd, MMM DD, YYYY HH:mm:ss:mss` = `Sun, Apr 06, 2025 16:11:55:379`).
-	 * @param useUTC - Optional `useUTC` to get the formatted time using UTC Offset, defaults to `false`.
+	 * @param useUTC - Optional `useUTC` to get the formatted time using UTC Offset, defaults to `false`. Equivalent to `formatUTC()` method if set to `true`.
 	 * @returns Formatted date string in desired format (in local time unless `useUTC` passed as `true`).
 	 */
 	format(
@@ -244,6 +244,39 @@ export class Chronos {
 	}
 
 	/**
+	 * * Adds seconds and returns a new immutable instance.
+	 * @param seconds - Number of seconds to add.
+	 * @returns A new `Chronos` instance with the updated date.
+	 */
+	addSeconds(seconds: number): Chronos {
+		const newDate = new Date(this.#date);
+		newDate.setSeconds(newDate.getSeconds() + seconds);
+		return new Chronos(newDate);
+	}
+
+	/**
+	 * * Adds minutes and returns a new immutable instance.
+	 * @param minutes - Number of minutes to add.
+	 * @returns A new `Chronos` instance with the updated date.
+	 */
+	addMinutes(minutes: number): Chronos {
+		const newDate = new Date(this.#date);
+		newDate.setMinutes(newDate.getMinutes() + minutes);
+		return new Chronos(newDate);
+	}
+
+	/**
+	 * * Adds hours and returns a new immutable instance.
+	 * @param hours - Number of hours to add.
+	 * @returns A new `Chronos` instance with the updated date.
+	 */
+	addHours(hours: number): Chronos {
+		const newDate = new Date(this.#date);
+		newDate.setHours(newDate.getHours() + hours);
+		return new Chronos(newDate);
+	}
+
+	/**
 	 * * Adds days and returns a new immutable instance.
 	 * @param days - Number of days to add.
 	 * @returns A new `Chronos` instance with the updated date.
@@ -251,6 +284,28 @@ export class Chronos {
 	addDays(days: number): Chronos {
 		const newDate = new Date(this.#date);
 		newDate.setDate(newDate.getDate() + days);
+		return new Chronos(newDate);
+	}
+
+	/**
+	 * * Adds months and returns a new immutable instance.
+	 * @param months - Number of months to add.
+	 * @returns A new `Chronos` instance with the updated date.
+	 */
+	addMonths(months: number): Chronos {
+		const newDate = new Date(this.#date);
+		newDate.setMonth(newDate.getMonth() + months);
+		return new Chronos(newDate);
+	}
+
+	/**
+	 * * Adds years and returns a new immutable instance.
+	 * @param years - Number of years to add.
+	 * @returns A new `Chronos` instance with the updated date.
+	 */
+	addYears(years: number): Chronos {
+		const newDate = new Date(this.#date);
+		newDate.setFullYear(newDate.getFullYear() + years);
 		return new Chronos(newDate);
 	}
 
@@ -314,16 +369,24 @@ export class Chronos {
 	}
 
 	/**
-	 * * Returns full time difference from now (or specified time) in years, months, days, hours, minutes, and seconds.
-	 * @param time An optional time value (`number`, `string`, `Date`, or `Chronos` object).
-	 * @returns The difference as string, e.g., `2 years 1 month 9 days 18 hours 56 minutes 9 seconds ago`.
+	 * * Returns full time difference from now (or a specified time) down to a given level.
+	 *
+	 * @param level Determines the smallest unit to include in the output (e.g., 'minute' will show up to minutes, ignoring seconds). Defaults to `minute`.
+	 * @param withSuffixPrefix If `true`, adds `"in"` or `"ago"` depending on whether the time is in the future or past. Defaults to `true`.
+	 * @param time An optional time value to compare with (`string`, `number`, `Date`, or `Chronos` instance). Defaults to `now`.
+	 * @returns The difference as a human-readable string, e.g., `2 years 1 month 9 days 18 hours 56 minutes ago`.
 	 */
-	fromNow(time?: string | number | Date | Chronos): string {
+	fromNow(
+		level: Exclude<TimeUnit, 'millisecond'> = 'minute',
+		withSuffixPrefix: boolean = true,
+		time?: string | number | Date | Chronos,
+	): string {
 		const now = this.#toNewDate(time);
 
 		const target = this.#date;
 
 		const isFuture = target > now;
+
 		const from = isFuture ? now : target;
 		const to = isFuture ? target : now;
 
@@ -352,6 +415,7 @@ export class Chronos {
 
 		if (days < 0) {
 			const prevMonth = new Date(to.getFullYear(), to.getMonth(), 0);
+
 			days += prevMonth.getDate();
 			months--;
 		}
@@ -361,17 +425,53 @@ export class Chronos {
 			years--;
 		}
 
-		const parts: string[] = [];
-		if (years > 0) parts.push(`${years} year${years > 1 ? 's' : ''}`);
-		if (months > 0) parts.push(`${months} month${months > 1 ? 's' : ''}`);
-		if (days > 0) parts.push(`${days} day${days > 1 ? 's' : ''}`);
-		if (hours > 0) parts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
-		if (minutes > 0)
-			parts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`);
-		if (seconds > 0 || parts.length === 0)
-			parts.push(`${seconds} second${seconds !== 1 ? 's' : ''}`);
+		const unitOrder = [
+			'year',
+			'month',
+			'day',
+			'hour',
+			'minute',
+			'second',
+		] as const;
 
-		return `${isFuture ? 'in ' : ''}${parts.join(' ')}${isFuture ? '' : ' ago'}`;
+		const lvlIdx = unitOrder.indexOf(level);
+
+		const parts: string[] = [];
+
+		if (lvlIdx >= 0 && years > 0 && lvlIdx >= unitOrder.indexOf('year')) {
+			parts.push(`${years} year${years > 1 ? 's' : ''}`);
+		}
+		if (lvlIdx >= unitOrder.indexOf('month') && months > 0) {
+			parts.push(`${months} month${months > 1 ? 's' : ''}`);
+		}
+		if (lvlIdx >= unitOrder.indexOf('day') && days > 0) {
+			parts.push(`${days} day${days > 1 ? 's' : ''}`);
+		}
+		if (lvlIdx >= unitOrder.indexOf('hour') && hours > 0) {
+			parts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
+		}
+		if (lvlIdx >= unitOrder.indexOf('minute') && minutes > 0) {
+			parts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`);
+		}
+		if (
+			lvlIdx >= unitOrder.indexOf('second') &&
+			(seconds > 0 || parts.length === 0)
+		) {
+			parts.push(`${seconds} second${seconds !== 1 ? 's' : ''}`);
+		}
+
+		let prefix = '';
+		let suffix = '';
+
+		if (withSuffixPrefix) {
+			if (isFuture) {
+				prefix = 'in ';
+			} else {
+				suffix = ' ago';
+			}
+		}
+
+		return `${prefix}${parts.join(' ')}${suffix}`;
 	}
 
 	/**

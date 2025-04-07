@@ -117,3 +117,19 @@ export const throttleAction = <T extends VoidFunction>(
 		}
 	};
 };
+
+/**
+ * * Counts the number of instance methods defined on a class prototype.
+ *
+ * @param cls The class constructor (not an instance).
+ * @returns Number of methods directly defined on the class prototype.
+ */
+export function countClassMethods(cls: Function): number {
+	const prototype = cls.prototype;
+
+	return Object.getOwnPropertyNames(prototype).filter((name) => {
+		if (name === 'constructor') return false;
+		const descriptor = Object.getOwnPropertyDescriptor(prototype, name);
+		return !!descriptor && typeof descriptor.value === 'function';
+	}).length;
+}
