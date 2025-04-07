@@ -1,3 +1,4 @@
+import type { Chronos } from './Chronos';
 import type {
 	DATE_FORMATS,
 	DAY_FORMATS,
@@ -178,6 +179,8 @@ export type ChronosFormat =
 	| Second
 	| Millisecond
 	| TimeFormats;
+
+export type ChronosDate = number | string | Date | Chronos;
 
 // export type DateFormat =
 // 	`${Day}, ${Month} ${Date}, ${Year} ${Hour}:${Minute}:${Second}:${Millisecond} ${TimeFormats}`;

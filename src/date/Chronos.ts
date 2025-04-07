@@ -43,6 +43,11 @@ export class Chronos {
 		return this.toString();
 	}
 
+	/** * Clones and returns a new Chronos instance with the same date. */
+	public clone(): Chronos {
+		return new Chronos(this.#date);
+	}
+
 	/** * Enables JSON.stringify and console logging to show readable output. */
 	toJSON(): string {
 		return this.toISOString();
@@ -379,7 +384,7 @@ export class Chronos {
 	fromNow(
 		level: Exclude<TimeUnit, 'millisecond'> = 'minute',
 		withSuffixPrefix: boolean = true,
-		time?: string | number | Date | Chronos,
+		time?: number | string | Date | Chronos,
 	): string {
 		const now = this.#toNewDate(time);
 
@@ -479,7 +484,7 @@ export class Chronos {
 	 * @param time Optional time to compare with the `Chronos` date/time.
 	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
 	 */
-	getRelativeYear(time?: string | number | Date | Chronos): number {
+	getRelativeYear(time?: number | string | Date | Chronos): number {
 		const now = this.#toNewDate(time);
 
 		let years = this.#date.getFullYear() - now.getFullYear();
@@ -501,7 +506,7 @@ export class Chronos {
 	 * @param time Optional time to compare with the `Chronos` date/time.
 	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
 	 */
-	getRelativeMonth(time?: string | number | Date | Chronos): number {
+	getRelativeMonth(time?: number | string | Date | Chronos): number {
 		const now = this.#toNewDate(time);
 
 		let months =
@@ -527,7 +532,7 @@ export class Chronos {
 	 *  - `1` if the date is tomorrow.
 	 *  - Other positive or negative numbers for other relative days (e.g., `-2` for two days ago, `2` for two days ahead).
 	 */
-	getRelativeDay(time?: string | number | Date | Chronos): number {
+	getRelativeDay(time?: number | string | Date | Chronos): number {
 		const today = this.#toNewDate(time);
 		// Set the time of today to 00:00:00 for comparison purposes
 		today.setHours(0, 0, 0, 0);
@@ -547,7 +552,7 @@ export class Chronos {
 	 * @param time Optional time to compare with the `Chronos` date/time.
 	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
 	 */
-	getRelativeHour(time?: string | number | Date | Chronos): number {
+	getRelativeHour(time?: number | string | Date | Chronos): number {
 		const diff = this.#date.getTime() - this.#toNewDate(time).getTime();
 		return Math.floor(diff / (1000 * 60 * 60));
 	}
@@ -557,7 +562,7 @@ export class Chronos {
 	 * @param time Optional time to compare with the `Chronos` date/time.
 	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
 	 */
-	getRelativeMinute(time?: string | number | Date | Chronos): number {
+	getRelativeMinute(time?: number | string | Date | Chronos): number {
 		const diff = this.#date.getTime() - this.#toNewDate(time).getTime();
 		return Math.floor(diff / (1000 * 60));
 	}
@@ -567,7 +572,7 @@ export class Chronos {
 	 * @param time Optional time to compare with the `Chronos` date/time.
 	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
 	 */
-	getRelativeSecond(time?: string | number | Date | Chronos): number {
+	getRelativeSecond(time?: number | string | Date | Chronos): number {
 		const diff = this.#date.getTime() - this.#toNewDate(time).getTime();
 		return Math.floor(diff / 1000);
 	}
@@ -577,7 +582,7 @@ export class Chronos {
 	 * @param time Optional time to compare with the `Chronos` date/time.
 	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
 	 */
-	getRelativeMilliSecond(time?: string | number | Date | Chronos): number {
+	getRelativeMilliSecond(time?: number | string | Date | Chronos): number {
 		return this.#date.getTime() - this.#toNewDate(time).getTime();
 	}
 
@@ -590,7 +595,7 @@ export class Chronos {
 	 */
 	compare(
 		unit: TimeUnit = 'minute',
-		time?: string | number | Date | Chronos,
+		time?: number | string | Date | Chronos,
 	): number {
 		switch (unit) {
 			case 'year':
@@ -610,5 +615,224 @@ export class Chronos {
 			default:
 				throw new Error(`Unsupported time unit: ${unit}`);
 		}
+	}
+
+	/**
+	 * * Returns a new Chronos instance at the start of a given unit.
+	 * @param unit The unit to reset (e.g., year, month, day).
+	 */
+	public startOf(unit: TimeUnit): Chronos {
+		const d = new Date(this.#date);
+
+		switch (unit) {
+			case 'year':
+				d.setMonth(0, 1);
+				d.setHours(0, 0, 0, 0);
+				break;
+			case 'month':
+				d.setDate(1);
+				d.setHours(0, 0, 0, 0);
+				break;
+			case 'day':
+				d.setHours(0, 0, 0, 0);
+				break;
+			case 'hour':
+				d.setMinutes(0, 0, 0);
+				break;
+			case 'minute':
+				d.setSeconds(0, 0);
+				break;
+			case 'second':
+				d.setMilliseconds(0);
+				break;
+			case 'millisecond':
+				break;
+		}
+		return new Chronos(d);
+	}
+
+	/**
+	 * * Returns a new Chronos instance at the end of a given unit.
+	 * @param unit The unit to adjust (e.g., year, month, day).
+	 */
+	public endOf(unit: TimeUnit): Chronos {
+		return this.startOf(unit).add(1, unit).add(-1, 'millisecond');
+	}
+
+	/**
+	 * * Returns a new Chronos instance with the specified unit added.
+	 * @param amount The amount to add (can be negative).
+	 * @param unit The time unit to add.
+	 */
+	public add(amount: number, unit: TimeUnit): Chronos {
+		const d = new Date(this.#date);
+
+		switch (unit) {
+			case 'millisecond':
+				d.setMilliseconds(d.getMilliseconds() + amount);
+				break;
+			case 'second':
+				d.setSeconds(d.getSeconds() + amount);
+				break;
+			case 'minute':
+				d.setMinutes(d.getMinutes() + amount);
+				break;
+			case 'hour':
+				d.setHours(d.getHours() + amount);
+				break;
+			case 'day':
+				d.setDate(d.getDate() + amount);
+				break;
+			case 'month':
+				d.setMonth(d.getMonth() + amount);
+				break;
+			case 'year':
+				d.setFullYear(d.getFullYear() + amount);
+				break;
+		}
+
+		return new Chronos(d);
+	}
+
+	/**
+	 * * Gets the value of a specific time unit from the date.
+	 * @param unit The unit to retrieve.
+	 */
+	public get(unit: TimeUnit): number {
+		switch (unit) {
+			case 'year':
+				return this.#date.getFullYear();
+			case 'month':
+				return this.#date.getMonth();
+			case 'day':
+				return this.#date.getDate();
+			case 'hour':
+				return this.#date.getHours();
+			case 'minute':
+				return this.#date.getMinutes();
+			case 'second':
+				return this.#date.getSeconds();
+			case 'millisecond':
+				return this.#date.getMilliseconds();
+		}
+	}
+
+	/**
+	 * Returns a new Chronos instance with the specified unit set to the given value.
+	 * @param unit The unit to modify.
+	 * @param value The value to set for the unit.
+	 */
+	public set(unit: TimeUnit, value: number): Chronos {
+		const d = new Date(this.#date);
+
+		switch (unit) {
+			case 'year':
+				d.setFullYear(value);
+				break;
+			case 'month':
+				d.setMonth(value);
+				break;
+			case 'day':
+				d.setDate(value);
+				break;
+			case 'hour':
+				d.setHours(value);
+				break;
+			case 'minute':
+				d.setMinutes(value);
+				break;
+			case 'second':
+				d.setSeconds(value);
+				break;
+			case 'millisecond':
+				d.setMilliseconds(value);
+				break;
+		}
+		return new Chronos(d);
+	}
+
+	/**
+	 * * Returns the difference between this and another date in the given unit.
+	 * @param other The other date to compare.
+	 * @param unit The unit in which to return the difference.
+	 */
+	public diff(
+		other: number | string | Date | Chronos,
+		unit: TimeUnit,
+	): number {
+		const time = new Chronos(other);
+
+		const msDiff = this.#date.getTime() - time.toDate().getTime();
+
+		switch (unit) {
+			case 'millisecond':
+				return msDiff;
+			case 'second':
+				return msDiff / 1e3;
+			case 'minute':
+				return msDiff / 6e4;
+			case 'hour':
+				return msDiff / 3.6e6;
+			case 'day':
+				return msDiff / 8.64e7;
+			case 'month':
+				return (
+					(this.get('year') - time.get('year')) * 12 +
+					(this.get('month') - time.get('month'))
+				);
+			case 'year':
+				return this.get('year') - time.get('year');
+		}
+	}
+
+	/**
+	 * * Checks if another date is the same as this one in a specific unit.
+	 * @param other The other date to compare.
+	 * @param unit The unit to compare.
+	 */
+	public isSame(
+		other: number | string | Date | Chronos,
+		unit: TimeUnit,
+	): boolean {
+		const time = new Chronos(other);
+
+		return (
+			this.startOf(unit).toDate().getTime() ===
+			time.startOf(unit).toDate().getTime()
+		);
+	}
+
+	/**
+	 * * Checks if this date is before another date in a specific unit.
+	 * @param other The other date to compare.
+	 * @param unit The unit to compare.
+	 */
+	public isBefore(
+		other: number | string | Date | Chronos,
+		unit: TimeUnit,
+	): boolean {
+		const time = new Chronos(other);
+
+		return (
+			this.startOf(unit).toDate().getTime() <
+			time.startOf(unit).toDate().getTime()
+		);
+	}
+
+	/**
+	 * * Checks if this date is after another date in a specific unit.
+	 * @param other The other date to compare.
+	 * @param unit The unit to compare.
+	 */
+	public isAfter(
+		other: number | string | Date | Chronos,
+		unit: TimeUnit,
+	): boolean {
+		const time = new Chronos(other);
+
+		return (
+			this.startOf(unit).toDate().getTime() >
+			time.startOf(unit).toDate().getTime()
+		);
 	}
 }
