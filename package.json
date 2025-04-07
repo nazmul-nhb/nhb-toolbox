@@ -13,7 +13,8 @@
 		"format": "prettier --write .",
 		"lint": "node scripts/lint.mjs",
 		"fix": "node scripts/fix.mjs",
-		"commit": "node scripts/commit.mjs"
+		"commit": "node scripts/commit.mjs",
+		"check": "node scripts/jsDoc.mjs"
 	},
 	"publishConfig": {
 		"access": "public"
