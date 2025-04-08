@@ -183,6 +183,32 @@ export type ChronosFormat =
 
 export type ChronosDate = number | string | Date | Chronos;
 
+/** * All valid granular parts. */
+export type DateParts =
+	| `${Day}, ${Exclude<Month, 'M' | 'MM' | 'MMM' | 'MMMM'>} ${Date}, ${Exclude<Year, 'yyyy' | 'yy'>}`
+	| `${Day}, ${Date} ${Exclude<Month, 'M' | 'MM' | 'MMM' | 'MMMM'>}, ${Exclude<Year, 'yyyy' | 'yy'>}`
+	| `${Date}/${Exclude<Month, 'MMM' | 'MMMM' | 'mmm' | 'mmmm'>}/${Exclude<Year, 'yyyy' | 'yy'>}`
+	| `${Exclude<Month, 'MMM' | 'MMMM' | 'mmm' | 'mmmm'>}/${Date}/${Exclude<Year, 'yyyy' | 'yy'>}`
+	| `${Date}-${Exclude<Month, 'MMM' | 'MMMM' | 'mmm' | 'mmmm'>}-${Exclude<Year, 'yyyy' | 'yy'>}`
+	| `${Exclude<Year, 'yyyy' | 'yy'>}-${Exclude<Month, 'MMM' | 'MMMM' | 'mmm' | 'mmmm'>}-${Date}`
+	| `${Day}, ${Date} ${Exclude<Month, 'M' | 'MM' | 'MMM' | 'MMMM'>}`;
+
+export type TimeParts =
+	| `${Exclude<Hour, 'h' | 'hh'>}:${Minute}`
+	| `${Exclude<Hour, 'H' | 'HH'>}:${Minute} ${TimeFormats}`
+	| `${Exclude<Hour, 'h' | 'hh'>}:${Minute}:${Second}`
+	| `${Exclude<Hour, 'H' | 'HH'>}:${Minute}:${Second} ${TimeFormats}`
+	| `${Exclude<Hour, 'h' | 'hh'>}:${Minute}:${Second}:${Millisecond}`
+	| `${Exclude<Hour, 'H' | 'HH'>}:${Minute}:${Second}:${Millisecond} ${TimeFormats}`;
+
+type DateTimeConnector = ', ' | ' ' | ' - ';
+
+/** Strict pre-defined types for formatting date and time. */
+export type StrictFormat =
+	| DateParts
+	| TimeParts
+	| `${DateParts}${DateTimeConnector}${TimeParts}`;
+
 export interface ChronosObject {
 	year: number;
 	month: number;

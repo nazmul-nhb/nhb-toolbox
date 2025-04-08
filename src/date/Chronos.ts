@@ -6,6 +6,7 @@ import type {
 	ChronosMethods,
 	ChronosObject,
 	FormatOptions,
+	StrictFormat,
 	TimeUnit,
 	TimeZone,
 	UTCOffSet,
@@ -128,7 +129,7 @@ export class Chronos {
 			MMMM: MONTHS[month],
 			mmm: MONTHS[month].slice(0, 3),
 			mmmm: MONTHS[month],
-			d: DAYS[day].slice(0, 3),
+			d: DAYS[day].slice(0, 2),
 			dd: DAYS[day].slice(0, 3),
 			ddd: DAYS[day],
 			D: String(date),
@@ -367,6 +368,21 @@ export class Chronos {
 		useUTC = false,
 	): string {
 		return this.#format(format, useUTC);
+	}
+
+	/**
+	 * @public @instance Formats the date into a strict custom string format (local time).
+	 * @description Select from over `23,000` pre-defined formats.
+	 *
+	 * @param format - The desired format (Default format is `dd, mmm DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55`).
+	 * @param useUTC - Optional `useUTC` to get the formatted time using UTC Offset, defaults to `false`. Equivalent to `formatUTC()` method if set to `true`.
+	 * @returns Formatted date string in desired strict format (in local time unless `useUTC` passed as `true`).
+	 */
+	formatStrict(
+		format: StrictFormat = 'dd, mmm DD, YYYY HH:mm:ss',
+		useUTC = false,
+	): string {
+		return this.format(format, useUTC);
 	}
 
 	/**
