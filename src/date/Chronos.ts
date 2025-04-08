@@ -372,7 +372,7 @@ export class Chronos {
 
 	/**
 	 * @public @instance Formats the date into a strict custom string format (local time).
-	 * @description Select from over `23,000` pre-defined formats.
+	 * @description Select from `5,100+` pre-defined formats.
 	 *
 	 * @param format - The desired format (Default format is `dd, mmm DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55`).
 	 * @param useUTC - Optional `useUTC` to get the formatted time using UTC Offset, defaults to `false`. Equivalent to `formatUTC()` method if set to `true`.
