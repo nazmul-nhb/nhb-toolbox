@@ -6,6 +6,7 @@ import type {
 	MILLISECOND_FORMATS,
 	MINUTE_FORMATS,
 	MONTH_FORMATS,
+	ORIGIN,
 	SECOND_FORMATS,
 	TIME_FORMATS,
 	TIME_ZONES,
@@ -187,16 +188,34 @@ export interface ChronosObject {
 	month: number;
 	isoMonth: number;
 	date: number;
-	day: number;
-	isoDay: number;
+	weekDay: number;
+	isoWeekDay: number;
 	hour: number;
 	minute: number;
 	second: number;
 	millisecond: number;
 }
 
-// export type DateFormat =
-// 	`${Day}, ${Month} ${Date}, ${Year} ${Hour}:${Minute}:${Second}:${Millisecond} ${TimeFormats}`;
+export type WithoutOrigin = Omit<Chronos, typeof ORIGIN>;
+
+/** Methods (both instance and static) in `Chronos` class that return `Chronos` instance. */
+export type ChronosMethods =
+	| {
+			// Instance methods that return `Chronos`
+			[K in keyof WithoutOrigin]: Chronos extends {
+				[key in K]: (...args: any[]) => Chronos;
+			} ?
+				K
+			:	never;
+	  }[keyof WithoutOrigin]
+	| {
+			// Static methods that return `Chronos`
+			[K in keyof typeof Chronos]: typeof Chronos extends {
+				[key in K]: (...args: any[]) => Chronos;
+			} ?
+				K
+			:	never;
+	  }[keyof typeof Chronos];
 
 export type TimeZone = keyof typeof TIME_ZONES;
 

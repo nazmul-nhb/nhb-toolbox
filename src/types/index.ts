@@ -7,6 +7,50 @@ type Brand<B> = { [__brand]: B };
 /** Create a branded type. */
 export type Branded<T, B> = T & Brand<B>;
 
+/** Utility type to extract only method names from a class.
+ * ! Unused
+ */
+export type ClassMethodNames<T> = {
+	[K in keyof T]: T[K] extends (...args: unknown[]) => unknown ? K : never;
+}[keyof T];
+
+/**
+ * Extracts instance method names from a class constructor.
+ * ! Unused
+ */
+export type InstanceMethodNames<T extends abstract new (...args: any) => any> =
+	{
+		[K in keyof InstanceType<T>]: InstanceType<T>[K] extends (
+			(...args: unknown[]) => unknown
+		) ?
+			K
+		:	never;
+	}[keyof InstanceType<T>];
+
+/**
+ * Extracts static method names from a class constructor.
+ * ! Unused
+ */
+export type StaticMethodNames<T extends abstract new (...args: any) => any> = {
+	[K in keyof T]: T[K] extends (...args: unknown[]) => unknown ? K : never;
+}[keyof T];
+
+/**
+ * Extracts all method names (instance + static) from a class constructor.
+ * ! Unused
+ */
+export type MethodNames<T extends abstract new (...args: any) => any> =
+	| InstanceMethodNames<T>
+	| StaticMethodNames<T>;
+
+/**
+ * Maps all instance method names to their method types from the class prototype.
+ * ! Unused
+ */
+export type MethodMap<T extends abstract new (...args: any) => any> = {
+	[K in InstanceMethodNames<T>]: InstanceType<T>[K];
+};
+
 /** Utility type to flatten Partial type */
 export type FlattenPartial<T> = Partial<{ [K in keyof T]: T[K] }>;
 

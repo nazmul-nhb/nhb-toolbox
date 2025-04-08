@@ -78,7 +78,7 @@ export default [
 		},
 	},
 	{
-		files: ['src/**/utils/*.ts'],
+		files: ['src/**/utils/*.ts', 'src/**/*types.ts', 'src/**/types/*.ts'],
 		rules: { '@typescript-eslint/no-unsafe-function-type': 'off' },
 	},
 	{

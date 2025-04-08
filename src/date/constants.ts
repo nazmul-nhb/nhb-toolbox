@@ -1,3 +1,5 @@
+export const ORIGIN = Symbol('origin');
+
 export const DAYS = [
 	'Sunday',
 	'Monday',
