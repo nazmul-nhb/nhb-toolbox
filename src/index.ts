@@ -126,11 +126,11 @@ export {
 } from './date/greet';
 
 export {
+	isLeapYear,
 	isValidTime,
 	isValidTime as isValidTimeString,
 	isValidUTCOffSet as isValidUTC,
 	isValidUTCOffSet,
-	isLeapYear,
 } from './date/guards';
 
 export { Chronos, Chronos as Chronus } from './date/Chronos';
@@ -208,7 +208,13 @@ export {
 
 export { sanitizeData } from './object/sanitize';
 
-export { convertObjectValues } from './object/convert';
+export {
+	convertObjectValues,
+	pickFields,
+	pickFields as pickObjectFields,
+	remapFields,
+	remapFields as remapObjectFields,
+} from './object/convert';
 
 // ! DOM Utilities
 export {
@@ -231,10 +237,10 @@ export {
 // ! Other Utilities
 export {
 	convertArrayToString,
+	countClassMethods,
 	debounceAction,
 	isDeepEqual,
 	throttleAction,
-	countClassMethods,
 } from './utils';
 
 // ! Primitive Type Guards

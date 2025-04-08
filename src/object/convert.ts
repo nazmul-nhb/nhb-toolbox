@@ -1,6 +1,7 @@
 import type { UncontrolledAny } from '../types';
 import type {
 	DotNotationKey,
+	FieldMap,
 	GenericObject,
 	Numberified,
 	Stringified,
@@ -134,4 +135,53 @@ export function convertObjectValues<
 		Stringified<T> | Stringified<T>[]
 	: C extends 'number' ? Numberified<T> | Numberified<T>[]
 	: never;
+}
+
+/**
+ * * Pick specific fields from an object and create a new object with specified fields.
+ *
+ * @description This function creates a new object containing only the specified fields from the source object.
+ * It is useful for creating a new object with a subset of properties from an existing object.
+ *
+ * @param T The type of the source object.
+ * @param U The type of the keys to pick from the source object.
+ *
+ * @param source The source object from which to pick fields.
+ * @param keys	The keys of the fields to pick from the source object.
+ *
+ * @returns An object containing only the picked fields.
+ */
+export function pickFields<T extends GenericObject, U extends keyof T>(
+	source: T,
+	keys: U[],
+): { [K in U]: T[K] } {
+	const result = {} as { [K in U]: T[K] };
+
+	keys.forEach((key) => {
+		result[key] = source[key];
+	});
+
+	return result;
+}
+
+/**
+ * * Remap fields from one object to another.
+ * @description This function creates a new object with fields remapped from the source object to the target object based on the provided field map.
+ *
+ * @param source The source object from which to remap fields.
+ * @param fieldMap  An object that maps target keys to source keys.
+ * @returns An object with fields remapped according to the field map.
+ */
+export function remapFields<
+	Source extends GenericObject,
+	Target extends GenericObject,
+>(source: Source, fieldMap: FieldMap<Source, Target>): Target {
+	const result = {} as GenericObject;
+
+	for (const targetKey in fieldMap) {
+		const sourceKey = fieldMap[targetKey];
+		result[targetKey] = source[sourceKey as keyof Source];
+	}
+
+	return result as Target;
 }

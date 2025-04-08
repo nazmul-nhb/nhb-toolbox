@@ -145,3 +145,8 @@ export type Numberified<T> = {
 	: T[K] extends number ? T[K]
 	: number;
 };
+
+/** - Type for mapped object fields to be created from another object interface/type */
+export type FieldMap<Source, Target> = {
+	[K in keyof Partial<Target>]: keyof Partial<Source>;
+};
