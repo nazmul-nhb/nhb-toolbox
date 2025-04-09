@@ -181,25 +181,27 @@ export type ChronosFormat =
 	| Millisecond
 	| TimeFormats;
 
-export type ChronosDate = number | string | Date | Chronos;
-
-/** * All valid granular parts. */
+/** Standard date formats. */
 export type DateParts =
-	| `${Date} ${Exclude<Month, 'M' | 'MM' | 'MMM' | 'MMMM'>}`
-	| `${Day}, ${Date} ${Exclude<Month, 'M' | 'MM' | 'MMM' | 'MMMM'>}`
-	| `${Exclude<Month, 'M' | 'MM' | 'MMM' | 'MMMM'>} ${Date}, ${Exclude<Year, 'yyyy' | 'yy'>}`
-	| `${Date} ${Exclude<Month, 'M' | 'MM' | 'MMM' | 'MMMM'>}, ${Exclude<Year, 'yyyy' | 'yy'>}`
-	| `${Day}, ${Exclude<Month, 'M' | 'MM' | 'MMM' | 'MMMM'>} ${Date}, ${Exclude<Year, 'yyyy' | 'yy'>}`
-	| `${Day}, ${Date} ${Exclude<Month, 'M' | 'MM' | 'MMM' | 'MMMM'>}, ${Exclude<Year, 'yyyy' | 'yy'>}`
-	| `${Date}/${Exclude<Month, 'MMM' | 'MMMM' | 'mmm' | 'mmmm'>}/${Exclude<Year, 'yyyy' | 'yy'>}`
-	| `${Exclude<Month, 'MMM' | 'MMMM' | 'mmm' | 'mmmm'>}/${Date}/${Exclude<Year, 'yyyy' | 'yy'>}`
-	| `${Exclude<Month, 'MMM' | 'MMMM' | 'mmm' | 'mmmm'>}-${Date}-${Exclude<Year, 'yyyy' | 'yy'>}`
-	| `${Date}-${Exclude<Month, 'MMM' | 'MMMM' | 'mmm' | 'mmmm'>}-${Exclude<Year, 'yyyy' | 'yy'>}`
-	| `${Exclude<Year, 'yyyy' | 'yy'>}-${Exclude<Month, 'MMM' | 'MMMM' | 'mmm' | 'mmmm'>}-${Date}`
-	| `${Exclude<Year, 'yyyy' | 'yy'>}/${Exclude<Month, 'MMM' | 'MMMM' | 'mmm' | 'mmmm'>}/${Date}`
-	| `${Exclude<Year, 'yyyy' | 'yy'>}-${Date}-${Exclude<Month, 'MMM' | 'MMMM' | 'mmm' | 'mmmm'>}`
-	| `${Exclude<Year, 'yyyy' | 'yy'>}/${Date}/${Exclude<Month, 'MMM' | 'MMMM' | 'mmm' | 'mmmm'>}`;
+	| `${Date} ${Exclude<Month, 'M' | 'MM'>}`
+	| `${Exclude<Month, 'M' | 'MM'>} ${Date}`
+	| `${Day}, ${Date} ${Exclude<Month, 'M' | 'MM'>}`
+	| `${Exclude<Month, 'M' | 'MM'>} ${Date}, ${Exclude<Year, 'yyyy' | 'yy'>}`
+	| `${Date} ${Exclude<Month, 'M' | 'MM'>}, ${Exclude<Year, 'yyyy' | 'yy'>}`
+	| `${Day}, ${Exclude<Month, 'M' | 'MM'>} ${Date}, ${Exclude<Year, 'yyyy' | 'yy'>}`
+	| `${Day}, ${Date} ${Exclude<Month, 'M' | 'MM'>}, ${Exclude<Year, 'yyyy' | 'yy'>}`
+	| `${Date}.${Exclude<Month, 'mmm' | 'mmmm'>}.${Exclude<Year, 'yyyy' | 'yy'>}`
+	| `${Exclude<Year, 'yyyy' | 'yy'>}.${Exclude<Month, 'mmm' | 'mmmm'>}.${Date}`
+	| `${Date}/${Exclude<Month, 'mmm' | 'mmmm'>}/${Exclude<Year, 'yyyy' | 'yy'>}`
+	| `${Date}-${Exclude<Month, 'mmm' | 'mmmm'>}-${Exclude<Year, 'yyyy' | 'yy'>}`
+	| `${Exclude<Month, 'mmm' | 'mmmm'>}/${Date}/${Exclude<Year, 'yyyy' | 'yy'>}`
+	| `${Exclude<Month, 'mmm' | 'mmmm'>}-${Date}-${Exclude<Year, 'yyyy' | 'yy'>}`
+	| `${Exclude<Year, 'yyyy' | 'yy'>}-${Exclude<Month, 'mmm' | 'mmmm'>}-${Date}`
+	| `${Exclude<Year, 'yyyy' | 'yy'>}/${Exclude<Month, 'mmm' | 'mmmm'>}/${Date}`
+	| `${Exclude<Year, 'yyyy' | 'yy'>}-${Date}-${Exclude<Month, 'mmm' | 'mmmm'>}`
+	| `${Exclude<Year, 'yyyy' | 'yy'>}/${Date}/${Exclude<Month, 'mmm' | 'mmmm'>}`;
 
+/** Standard Time Formats */
 export type TimeParts =
 	| `${Exclude<Hour, 'h' | 'hh' | 'H'>}:${Exclude<Minute, 'm'>}`
 	| `${Exclude<Hour, 'H' | 'HH' | 'h'>}:${Exclude<Minute, 'm'>} ${TimeFormats}`

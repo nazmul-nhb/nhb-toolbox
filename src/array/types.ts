@@ -59,3 +59,11 @@ export interface SortByOption<T extends GenericObject> extends OrderOption {
 /** * Options for sorting array. */
 export type SortOptions<T> =
 	T extends GenericObject ? SortByOption<T> : OrderOption;
+
+/** Optional settings to configure comparison behavior. */
+export interface SortNature {
+	/** If true, compares string chunks without case sensitivity. Defaults to `true`. */
+	caseInsensitive?: boolean;
+	/** If true, uses localeCompare for string chunk comparisons. Defaults to `false`. */
+	localeAware?: boolean;
+}

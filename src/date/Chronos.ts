@@ -125,8 +125,6 @@ export class Chronos {
 			yy: String(year).slice(-2),
 			M: String(month + 1),
 			MM: String(month + 1).padStart(2, '0'),
-			MMM: MONTHS[month].slice(0, 3),
-			MMMM: MONTHS[month],
 			mmm: MONTHS[month].slice(0, 3),
 			mmmm: MONTHS[month],
 			d: DAYS[day].slice(0, 2),
@@ -372,7 +370,7 @@ export class Chronos {
 
 	/**
 	 * @public @instance Formats the date into a strict custom string format (local time).
-	 * @description Select from `5,100+` pre-defined formats.
+	 * @description Select from `5,800+` pre-defined formats.
 	 *
 	 * @param format - The desired format (Default format is `dd, mmm DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55`).
 	 * @param useUTC - Optional `useUTC` to get the formatted time using UTC Offset, defaults to `false`. Equivalent to `formatUTC()` method if set to `true`.

@@ -6,6 +6,7 @@ import {
 import { isBoolean, isNumber, isString } from '../guards/primitives';
 import type { GenericObject } from '../object/types';
 import type { OrderOption, SortByOption, SortOptions } from './types';
+import { naturalSort } from './utils';
 
 /**
  * * Sorts an array of objects.
@@ -54,8 +55,8 @@ export function sortAnArray<
 	if (isArrayOfType(array, isString)) {
 		return [...array].sort((a, b) =>
 			options?.sortOrder === 'desc' ?
-				b.localeCompare(a)
-			:	a.localeCompare(b),
+				naturalSort(b, a)
+			:	naturalSort(a, b),
 		);
 	}
 
@@ -96,8 +97,8 @@ export function sortAnArray<
 
 			if (typeof keyA === 'string' && typeof keyB === 'string') {
 				return options?.sortOrder === 'desc' ?
-						keyB.localeCompare(keyA)
-					:	keyA.localeCompare(keyB);
+						naturalSort(keyB, keyA)
+					:	naturalSort(keyA, keyB);
 			}
 
 			if (typeof keyA === 'number' && typeof keyB === 'number') {

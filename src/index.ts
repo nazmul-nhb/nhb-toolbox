@@ -176,6 +176,8 @@ export {
 	splitArray,
 } from './array/transform';
 
+export { naturalSort } from './array/utils';
+
 // ! Form Utilities
 export {
 	createControlledFormData as convertIntoFormData,
