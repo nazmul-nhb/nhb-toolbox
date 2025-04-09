@@ -78,11 +78,17 @@ export {
 } from './number/prime';
 
 export {
+	getOrdinal as cardinalToOrdinal,
 	clampNumber,
 	formatCurrency as convertNumberToCurrency,
+	getOrdinal as convertNumberToOrdinal,
+	getOrdinal as convertToOrdinal,
 	formatCurrency,
+	getOrdinal,
+	getOrdinal as getOrdinalNumber,
 	getRandomFloat as getRandomDecimal,
 	getRandomFloat,
+	getOrdinal as numberToOrdinal,
 	roundToNearest as roundNumber,
 	roundToNearest as roundNumberToNearestInterval,
 	roundToNearest,
@@ -176,7 +182,12 @@ export {
 	splitArray,
 } from './array/transform';
 
-export { naturalSort } from './array/utils';
+export {
+	naturalSort as compareNaturally,
+	naturalSort as compareSorter,
+	naturalSort,
+	naturalSort as naturalSortForString,
+} from './array/utils';
 
 // ! Form Utilities
 export {

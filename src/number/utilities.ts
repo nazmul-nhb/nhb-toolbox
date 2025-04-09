@@ -1,3 +1,4 @@
+import type { Numeric } from '../types';
 import { CURRENCY_LOCALES } from './constants';
 import type { CurrencyCode, LocaleCode } from './types';
 
@@ -59,12 +60,31 @@ export const getRandomFloat = (min: number, max: number): number => {
 	return Math.random() * (max - min) + min;
 };
 
-export const getOrdinal = (n: number): string => {
-	const remainder10 = n % 10;
-	const remainder100 = n % 100;
+/**
+ * * Returns the ordinal suffix for a given number (e.g., 1 -> 'st', 2 -> 'nd', 3 -> 'rd', 4 -> 'th' etc.).
+ * @description The function handles special cases for 11, 12, and 13, which all use 'th' despite the last digit.
+ * If the `withNumber` parameter is `true`, the function returns the number along with its ordinal suffix (e.g., "1st").
+ * Otherwise, it returns only the ordinal suffix (e.g., "st").
+ *
+ * @param n - The number or number string to get the ordinal suffix for.
+ * @param withNumber - Whether to include the number along with its ordinal suffix (defaults to `true`).
+ * @returns The appropriate ordinal suffix, optionally with the number (e.g., '1st' or 'st`, '2nd' or 'nd' and so on.).
+ */
+export const getOrdinal = (n: Numeric, withNumber = true): string => {
+	const remainder10 = Number(n) % 10;
+	const remainder100 = Number(n) % 100;
 
-	if (remainder10 === 1 && remainder100 !== 11) return 'st';
-	if (remainder10 === 2 && remainder100 !== 12) return 'nd';
-	if (remainder10 === 3 && remainder100 !== 13) return 'rd';
-	return 'th';
+	let suffix: string;
+
+	if (remainder10 === 1 && remainder100 !== 11) {
+		suffix = 'st';
+	} else if (remainder10 === 2 && remainder100 !== 12) {
+		suffix = 'nd';
+	} else if (remainder10 === 3 && remainder100 !== 13) {
+		suffix = 'rd';
+	} else {
+		suffix = 'th';
+	}
+
+	return withNumber ? String(n).concat(suffix) : suffix;
 };

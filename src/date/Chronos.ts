@@ -134,7 +134,7 @@ export class Chronos {
 			ddd: DAYS[day],
 			D: String(date),
 			DD: String(date).padStart(2, '0'),
-			Do: String(date) + getOrdinal(date),
+			Do: getOrdinal(date),
 			H: String(hours),
 			HH: String(hours).padStart(2, '0'),
 			h: String(hours % 12 || 12),
