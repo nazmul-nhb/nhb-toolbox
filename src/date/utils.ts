@@ -74,3 +74,17 @@ export function extractTimeFromUTC(utc: UTCOffSet): `-${Time}` | Time {
 export function extractMinutesFromUTC(utc: UTCOffSet): number {
 	return getTotalMinutes(extractTimeFromUTC(utc));
 }
+
+/**
+ * * Converts a minute-based offset to a UTC offset string in the format `UTC±HH:MM`.
+ *
+ * @param minutes - The offset in minutes (positive or negative).
+ * @returns A formatted UTC offset string like `UTC+05:30` or `UTC-04:00`.
+ */
+export function formatUTCOffset(minutes: number): UTCOffSet {
+	const sign = minutes < 0 ? '-' : '+';
+	const abs = Math.abs(minutes);
+	const hours = String(Math.floor(abs / 60)).padStart(2, '0');
+	const mins = String(abs % 60).padStart(2, '0');
+	return `UTC${sign}${hours}:${mins}` as UTCOffSet;
+}

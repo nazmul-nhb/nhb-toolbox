@@ -257,6 +257,80 @@ export type ChronosMethods =
 			:	never;
 	  }[keyof typeof Chronos];
 
+export interface ChronosStatics {
+	(date?: number | string | Date | Chronos): Chronos;
+
+	/**
+	 * * Returns the current date and time in a specified format in local time.
+	 * * Default format is dd, `MMM DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55:379`
+	 * @param options - Configure format string and whether to format using utc offset.
+	 * @returns Formatted date string in desired format.
+	 */
+	today(options?: FormatOptions): string;
+
+	/**
+	 * * Returns the number of milliseconds elapsed since midnight, January 1, 1970 Universal Coordinated Time (UTC).
+	 * * It basically calls `Date.now()`.
+	 * @returns The number of milliseconds elapsed since the Unix epoch.
+	 */
+	now(): number;
+
+	/** * Parses a date string with a given format (partial support) */
+	parse(dateStr: string, format: string): Chronos;
+
+	/**
+	 * * Creates UTC Chronos
+	 * @param dateLike Date input to create utc time.
+	 */
+	utc(dateLike: number | string | Date | Chronos): Chronos;
+
+	/**
+	 * * Returns earliest Chronos
+	 * @param dates Date inputs.
+	 */
+	min(...dates: (number | string | Date | Chronos)[]): Chronos;
+
+	/**
+	 * * Returns latest Chronos
+	 * @param dates Date inputs.
+	 */
+	max(...dates: (number | string | Date | Chronos)[]): Chronos;
+
+	/**
+	 * * Checks if the year in the date string is a leap year.
+	 * - A year is a leap year if it is divisible by 4, but not divisible by 100, unless it is also divisible by 400.
+	 * - For example, 2000 and 2400 are leap years, but 1900 and 2100 are not.
+	 * @returns `true` if the year is a leap year, `false` otherwise.
+	 */
+	isLeapYear(date: number | string | Date | Chronos): boolean;
+
+	/**
+	 * * Checks if the given value is a valid `Date` object.
+	 * - A value is considered valid if it is an instance of the built-in `Date` class.
+	 * - This does not check whether the date itself is valid (e.g., `new Date('invalid')`).
+	 * @param value - The value to test.
+	 * @returns `true` if the value is a valid Date object, otherwise `false`.
+	 */
+	isValidDate(value: unknown): value is Date;
+
+	/**
+	 * * Checks if the given value is a valid date string.
+	 * - A value is considered a valid date string if it is a string and can be parsed by `Date.parse()`.
+	 * - This uses the native JavaScript date parser internally.
+	 * @param value - The value to test.
+	 * @returns `true` if the value is a valid date string, otherwise `false`.
+	 */
+	isDateString(value: unknown): value is string;
+
+	/**
+	 * * Checks if the given value is an instance of `Chronos`.
+	 * - Useful for verifying Chronos objects in type guards or validations.
+	 * @param value - The value to test.
+	 * @returns `true` if the value is an instance of `Chronos`, otherwise `false`.
+	 */
+	isValidChronos(value: unknown): value is Chronos;
+}
+
 export type TimeZone = keyof typeof TIME_ZONES;
 
 export type PositiveUTCHour =

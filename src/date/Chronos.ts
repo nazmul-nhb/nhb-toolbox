@@ -1,7 +1,14 @@
 import { isString } from '../guards/primitives';
 import type { LocaleCode } from '../number/types';
 import { getOrdinal } from '../number/utilities';
-import { DAYS, MONTHS, ORIGIN, sortedFormats, TIME_ZONES } from './constants';
+import {
+	DAYS,
+	MONTHS,
+	ORIGIN,
+	sortedFormats,
+	TIME_ZONE_LABELS,
+	TIME_ZONES,
+} from './constants';
 import { isValidUTCOffSet } from './guards';
 import type {
 	ChronosFormat,
@@ -13,10 +20,11 @@ import type {
 	TimeZone,
 	UTCOffSet,
 } from './types';
-import { extractMinutesFromUTC } from './utils';
+import { extractMinutesFromUTC, formatUTCOffset } from './utils';
 
 export class Chronos {
 	readonly #date: Date;
+	#offset: UTCOffSet;
 	[ORIGIN]?: ChronosMethods | 'root';
 
 	/**
@@ -33,6 +41,7 @@ export class Chronos {
 
 		this.#date = date;
 		this[ORIGIN] = 'root';
+		this.#offset = `UTC${this.getUTCOffset()}` as UTCOffSet;
 	}
 
 	*[Symbol.iterator](): IterableIterator<[string, number]> {
@@ -60,6 +69,8 @@ export class Chronos {
 
 	get [Symbol.toStringTag](): string {
 		switch (this[ORIGIN]) {
+			case 'timeZone':
+				return this.toISOString().replace('Z', this.#offset.slice(3));
 			case 'toUTC':
 			case 'utc':
 				return this.#toLocalISOString().replace(
@@ -72,9 +83,10 @@ export class Chronos {
 	}
 
 	/** @private @instance Method to tag origin of the `Chronos` instance. */
-	#withOrigin(origin: ChronosMethods): Chronos {
+	#withOrigin(origin: ChronosMethods, offset?: UTCOffSet): Chronos {
 		const instance = new Chronos(this.#date);
 		instance[ORIGIN] = origin;
+		if (offset) instance.#offset = offset;
 		return instance;
 	}
 
@@ -247,7 +259,7 @@ export class Chronos {
 		return this.#date.getTime();
 	}
 
-	/** @public @instance Returns a debug-friendly string for console.log or util.inspect */
+	/** @public @instance Returns a debug-friendly string for `console.log` or `util.inspect`. */
 	inspect(): string {
 		return `[Chronos ${this.toLocalISOString()}]`;
 	}
@@ -271,12 +283,33 @@ export class Chronos {
 
 	/** @public @instance Gets the native `Date` instance (read-only). */
 	toDate(): Date {
-		return new Date(this.#date);
+		switch (this[ORIGIN]) {
+			case 'toUTC':
+			case 'utc': {
+				const mins = extractMinutesFromUTC(
+					`UTC${this.getUTCOffset()}` as UTCOffSet,
+				);
+
+				const date = this.addMinutes(mins);
+
+				return date.toDate();
+			}
+			default:
+				return new Date(this.#date);
+		}
 	}
 
 	/** @public @instance Returns a string representation of a date. The format of the string depends on the locale. */
 	toString(): string {
 		switch (this[ORIGIN]) {
+			case 'timeZone': {
+				const gmt = this.#offset.replace('UTC', 'GMT').replace(':', '');
+				const label = TIME_ZONE_LABELS[this.#offset] ?? this.#offset;
+
+				return this.#date
+					.toString()
+					.replace(/GMT[+-]\d{4} \([^)]+\)/, `${gmt} (${label})`);
+			}
 			case 'toUTC':
 			case 'utc': {
 				const mins = extractMinutesFromUTC(
@@ -295,6 +328,7 @@ export class Chronos {
 	/** @public @instance Returns ISO string with local time zone offset */
 	toLocalISOString(): string {
 		switch (this[ORIGIN]) {
+			case 'timeZone':
 			case 'toUTC':
 			case 'utc': {
 				const mins = extractMinutesFromUTC(
@@ -313,6 +347,11 @@ export class Chronos {
 	/** @public @instance Returns a date as a string value in ISO format. */
 	toISOString(): string {
 		switch (this[ORIGIN]) {
+			case 'timeZone':
+				return this.#toLocalISOString().replace(
+					this.getUTCOffset(),
+					this.#offset.slice(3),
+				);
 			case 'toUTC':
 			case 'utc':
 				return this.#toLocalISOString().replace(
@@ -345,13 +384,13 @@ export class Chronos {
 
 	/**
 	 * @public @instance Returns the current date and time in a specified format in local time.
-	 * @description Default format is dd, `MMM DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55:379`
+	 * @description Default format is dd, `mmm DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55:379`
 	 *
 	 * @param options - Configure format string and whether to format using utc offset.
 	 * @returns Formatted date string in desired format.
 	 */
 	today(options?: FormatOptions): string {
-		const { format = 'dd, MMM DD, YYYY HH:mm:ss', useUTC = false } =
+		const { format = 'dd, mmm DD, YYYY HH:mm:ss', useUTC = false } =
 			options || {};
 		const today = new Date();
 		return new Chronos(today).#format(format, useUTC);
@@ -360,12 +399,12 @@ export class Chronos {
 	/**
 	 * @public @instance Formats the date into a custom string format (local time).
 	 *
-	 * @param format - The desired format (Default format is `dd, MMM DD, YYYY HH:mm:ss:mss` = `Sun, Apr 06, 2025 16:11:55:379`).
+	 * @param format - The desired format (Default format is `dd, mmm DD, YYYY HH:mm:ss:mss` = `Sun, Apr 06, 2025 16:11:55:379`).
 	 * @param useUTC - Optional `useUTC` to get the formatted time using UTC Offset, defaults to `false`. Equivalent to `formatUTC()` method if set to `true`.
 	 * @returns Formatted date string in desired format (in local time unless `useUTC` passed as `true`).
 	 */
 	format(
-		format: string = 'dd, MMM DD, YYYY HH:mm:ss:mss',
+		format: string = 'dd, mmm DD, YYYY HH:mm:ss:mss',
 		useUTC = false,
 	): string {
 		return this.#format(format, useUTC);
@@ -389,10 +428,10 @@ export class Chronos {
 	/**
 	 * @public @instance Formats the date into a custom string format (UTC time).
 	 *
-	 * @param format - The desired format (Default format is `dd, MMM DD, YYYY HH:mm:ss:mss` = `Sun, Apr 06, 2025 16:11:55:379`).
+	 * @param format - The desired format (Default format is `dd, mmm DD, YYYY HH:mm:ss:mss` = `Sun, Apr 06, 2025 16:11:55:379`).
 	 * @returns Formatted date string in desired format (UTC time).
 	 */
-	formatUTC(format: string = 'dd, MMM DD, YYYY HH:mm:ss:mss'): string {
+	formatUTC(format: string = 'dd, mmm DD, YYYY HH:mm:ss:mss'): string {
 		switch (this[ORIGIN]) {
 			case 'toUTC':
 			case 'utc':
@@ -476,11 +515,14 @@ export class Chronos {
 	 */
 	timeZone(zone: TimeZone | UTCOffSet): Chronos {
 		let offset: number;
+		let stringOffset: UTCOffSet;
 
 		if (isValidUTCOffSet(zone)) {
 			offset = extractMinutesFromUTC(zone);
+			stringOffset = zone;
 		} else {
 			offset = TIME_ZONES[zone] ?? TIME_ZONES['UTC'];
+			stringOffset = formatUTCOffset(offset);
 		}
 
 		const utc =
@@ -488,7 +530,7 @@ export class Chronos {
 
 		const adjusted = new Date(utc + offset * 60 * 1000);
 
-		return new Chronos(adjusted).#withOrigin('timeZone');
+		return new Chronos(adjusted).#withOrigin('timeZone', stringOffset);
 	}
 
 	/**
@@ -1161,12 +1203,12 @@ export class Chronos {
 
 	/**
 	 * @public @static Returns the current date and time in a specified format in local time.
-	 * * Default format is dd, `MMM DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55:379`
+	 * * Default format is dd, `mmm DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55:379`
 	 * @param options - Configure format string and whether to format using utc offset.
 	 * @returns Formatted date string in desired format.
 	 */
 	static today(options?: FormatOptions): string {
-		const { format = 'dd, MMM DD, YYYY HH:mm:ss', useUTC = false } =
+		const { format = 'dd, mmm DD, YYYY HH:mm:ss', useUTC = false } =
 			options || {};
 		const today = new Date();
 		return new Chronos(today).#format(format, useUTC);

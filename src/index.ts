@@ -148,11 +148,13 @@ export {
 	chronos as chronus,
 	chronos as chronusjs,
 	chronos as chronusts,
+	formatUTCOffset as convertMinutesToUTCOffset,
 	extractHourMinute,
 	extractMinutesFromUTC,
 	extractTimeFromUTC,
 	extractTimeFromUTC as extractTimeStringFromUTC,
 	getTotalMinutes as extractTotalMinutesFromTime,
+	formatUTCOffset,
 	getCurrentDateTime,
 	getCurrentDateTime as getCurrentTime,
 	extractMinutesFromUTC as getMinutesFromUTC,
@@ -160,6 +162,7 @@ export {
 	getTotalMinutes,
 	getTotalMinutes as getTotalMinutesFromTime,
 	extractMinutesFromUTC as getTotalMinutesFromUTC,
+	formatUTCOffset as minutesToUTCOffset,
 } from './date/utils';
 
 // ! Array Utilities
