@@ -58,3 +58,13 @@ export const clampNumber = (value: number, min: number, max: number): number =>
 export const getRandomFloat = (min: number, max: number): number => {
 	return Math.random() * (max - min) + min;
 };
+
+export const getOrdinal = (n: number): string => {
+	const remainder10 = n % 10;
+	const remainder100 = n % 100;
+
+	if (remainder10 === 1 && remainder100 !== 11) return 'st';
+	if (remainder10 === 2 && remainder100 !== 12) return 'nd';
+	if (remainder10 === 3 && remainder100 !== 13) return 'rd';
+	return 'th';
+};

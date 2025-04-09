@@ -1,4 +1,6 @@
+import { isString } from '../guards/primitives';
 import type { LocaleCode } from '../number/types';
+import { getOrdinal } from '../number/utilities';
 import { DAYS, MONTHS, ORIGIN, sortedFormats, TIME_ZONES } from './constants';
 import { isValidUTCOffSet } from './guards';
 import type {
@@ -132,6 +134,7 @@ export class Chronos {
 			ddd: DAYS[day],
 			D: String(date),
 			DD: String(date).padStart(2, '0'),
+			Do: String(date) + getOrdinal(date),
 			H: String(hours),
 			HH: String(hours).padStart(2, '0'),
 			h: String(hours % 12 || 12),
@@ -370,7 +373,7 @@ export class Chronos {
 
 	/**
 	 * @public @instance Formats the date into a strict custom string format (local time).
-	 * @description Select from `5,800+` pre-defined formats.
+	 * @description Select from `21,000+` pre-defined formats.
 	 *
 	 * @param format - The desired format (Default format is `dd, mmm DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55`).
 	 * @param useUTC - Optional `useUTC` to get the formatted time using UTC Offset, defaults to `false`. Equivalent to `formatUTC()` method if set to `true`.
@@ -380,7 +383,7 @@ export class Chronos {
 		format: StrictFormat = 'dd, mmm DD, YYYY HH:mm:ss',
 		useUTC = false,
 	): string {
-		return this.format(format, useUTC);
+		return this.#format(format, useUTC);
 	}
 
 	/**
@@ -1252,5 +1255,49 @@ export class Chronos {
 		return new Chronos(
 			Math.max(...dates.map((d) => new Chronos(d).valueOf())),
 		).#withOrigin('max');
+	}
+
+	/**
+	 * @public @static Checks if the year in the date string is a leap year.
+	 * - A year is a leap year if it is divisible by 4, but not divisible by 100, unless it is also divisible by 400.
+	 * - For example, 2000 and 2400 are leap years, but 1900 and 2100 are not.
+	 * @returns `true` if the year is a leap year, `false` otherwise.
+	 */
+	static isLeapYear(date: number | string | Date | Chronos): boolean {
+		const year = new Chronos(date).year;
+
+		return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+	}
+
+	/**
+	 * @public @static Checks if the given value is a valid `Date` object.
+	 * - A value is considered valid if it is an instance of the built-in `Date` class.
+	 * - This does not check whether the date itself is valid (e.g., `new Date('invalid')`).
+	 * @param value - The value to test.
+	 * @returns `true` if the value is a valid Date object, otherwise `false`.
+	 */
+	static isValidDate(value: unknown): value is Date {
+		return value instanceof Date;
+	}
+
+	/**
+	 * @public @static Checks if the given value is a valid date string.
+	 * - A value is considered a valid date string if it is a string and can be parsed by `Date.parse()`.
+	 * - This uses the native JavaScript date parser internally.
+	 * @param value - The value to test.
+	 * @returns `true` if the value is a valid date string, otherwise `false`.
+	 */
+	static isDateString(value: unknown): value is string {
+		return isString(value) && !isNaN(Date.parse(value));
+	}
+
+	/**
+	 * @public @static Checks if the given value is an instance of `Chronos`.
+	 * - Useful for verifying Chronos objects in type guards or validations.
+	 * @param value - The value to test.
+	 * @returns `true` if the value is an instance of `Chronos`, otherwise `false`.
+	 */
+	static isValidChronos(value: unknown): value is Chronos {
+		return value instanceof Chronos;
 	}
 }

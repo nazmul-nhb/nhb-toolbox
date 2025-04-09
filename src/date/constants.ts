@@ -27,7 +27,7 @@ export const MONTHS = [
 
 export const YEAR_FORMATS = ['YYYY', 'YY', 'yyyy', 'yy'] as const;
 export const MONTH_FORMATS = ['M', 'MM', 'mmm', 'mmmm'] as const;
-export const DATE_FORMATS = ['DD', 'D'] as const;
+export const DATE_FORMATS = ['DD', 'D', 'Do'] as const;
 export const DAY_FORMATS = ['d', 'dd', 'ddd'] as const;
 export const HOUR_FORMATS = ['H', 'HH', 'hh', 'h'] as const;
 export const MINUTE_FORMATS = ['mm', 'm'] as const;

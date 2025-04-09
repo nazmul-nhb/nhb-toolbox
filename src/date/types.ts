@@ -186,20 +186,25 @@ export type DateParts =
 	| `${Date} ${Exclude<Month, 'M' | 'MM'>}`
 	| `${Exclude<Month, 'M' | 'MM'>} ${Date}`
 	| `${Day}, ${Date} ${Exclude<Month, 'M' | 'MM'>}`
-	| `${Exclude<Month, 'M' | 'MM'>} ${Date}, ${Exclude<Year, 'yyyy' | 'yy'>}`
-	| `${Date} ${Exclude<Month, 'M' | 'MM'>}, ${Exclude<Year, 'yyyy' | 'yy'>}`
-	| `${Day}, ${Exclude<Month, 'M' | 'MM'>} ${Date}, ${Exclude<Year, 'yyyy' | 'yy'>}`
-	| `${Day}, ${Date} ${Exclude<Month, 'M' | 'MM'>}, ${Exclude<Year, 'yyyy' | 'yy'>}`
-	| `${Date}.${Exclude<Month, 'mmm' | 'mmmm'>}.${Exclude<Year, 'yyyy' | 'yy'>}`
-	| `${Exclude<Year, 'yyyy' | 'yy'>}.${Exclude<Month, 'mmm' | 'mmmm'>}.${Date}`
-	| `${Date}/${Exclude<Month, 'mmm' | 'mmmm'>}/${Exclude<Year, 'yyyy' | 'yy'>}`
-	| `${Date}-${Exclude<Month, 'mmm' | 'mmmm'>}-${Exclude<Year, 'yyyy' | 'yy'>}`
-	| `${Exclude<Month, 'mmm' | 'mmmm'>}/${Date}/${Exclude<Year, 'yyyy' | 'yy'>}`
-	| `${Exclude<Month, 'mmm' | 'mmmm'>}-${Date}-${Exclude<Year, 'yyyy' | 'yy'>}`
-	| `${Exclude<Year, 'yyyy' | 'yy'>}-${Exclude<Month, 'mmm' | 'mmmm'>}-${Date}`
-	| `${Exclude<Year, 'yyyy' | 'yy'>}/${Exclude<Month, 'mmm' | 'mmmm'>}/${Date}`
-	| `${Exclude<Year, 'yyyy' | 'yy'>}-${Date}-${Exclude<Month, 'mmm' | 'mmmm'>}`
-	| `${Exclude<Year, 'yyyy' | 'yy'>}/${Date}/${Exclude<Month, 'mmm' | 'mmmm'>}`;
+	| `${Day}, ${Exclude<Month, 'M' | 'MM'>} ${Date}`
+	| `${Exclude<Month, 'M' | 'MM'>} ${Date}, ${Year}`
+	| `${Date} ${Exclude<Month, 'M' | 'MM'>}, ${Year}`
+	| `${Exclude<Month, 'M' | 'MM'>} ${Date} ${Year}`
+	| `${Date} ${Exclude<Month, 'M' | 'MM'>} ${Year}`
+	| `${Day}, ${Exclude<Month, 'M' | 'MM'>} ${Date}, ${Year}`
+	| `${Day}, ${Date} ${Exclude<Month, 'M' | 'MM'>}, ${Year}`
+	| `${Day}, ${Exclude<Month, 'M' | 'MM'>} ${Date} ${Year}`
+	| `${Day}, ${Date} ${Exclude<Month, 'M' | 'MM'>} ${Year}`
+	| `${Exclude<Date, 'Do'>}.${Exclude<Month, 'mmm' | 'mmmm'>}.${Year}`
+	| `${Year}.${Exclude<Month, 'mmm' | 'mmmm'>}.${Exclude<Date, 'Do'>}`
+	| `${Exclude<Date, 'Do'>}/${Exclude<Month, 'mmm' | 'mmmm'>}/${Year}`
+	| `${Exclude<Date, 'Do'>}-${Exclude<Month, 'mmm' | 'mmmm'>}-${Year}`
+	| `${Exclude<Month, 'mmm' | 'mmmm'>}/${Exclude<Date, 'Do'>}/${Year}`
+	| `${Exclude<Month, 'mmm' | 'mmmm'>}-${Exclude<Date, 'Do'>}-${Year}`
+	| `${Year}-${Exclude<Month, 'mmm' | 'mmmm'>}-${Exclude<Date, 'Do'>}`
+	| `${Year}/${Exclude<Month, 'mmm' | 'mmmm'>}/${Exclude<Date, 'Do'>}`
+	| `${Year}-${Exclude<Date, 'Do'>}-${Exclude<Month, 'mmm' | 'mmmm'>}`
+	| `${Year}/${Exclude<Date, 'Do'>}/${Exclude<Month, 'mmm' | 'mmmm'>}`;
 
 /** Standard Time Formats */
 export type TimeParts =
