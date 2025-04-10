@@ -1,7 +1,12 @@
 import { isNotEmptyObject } from '../guards/non-primitives';
 import { trimString } from '../string/basics';
 import type { FlattenPartial } from '../types';
-import type { DotNotationKey, GenericObject, SanitizeOptions } from './types';
+import type {
+	DotNotationKey,
+	GenericObject,
+	SanitizeOptions,
+	StrictObject,
+} from './types';
 
 /**
  * * Sanitizes an object by ignoring specified keys and trimming string values based on options provided.
@@ -144,10 +149,8 @@ export function sanitizeData<T extends GenericObject>(
  * @param object - The object with potentially stringified primitive values.
  * @returns A new object with parsed values converted to their original types.
  */
-export function parseObjectValues(
-	object: GenericObject,
-): Record<string, unknown> {
-	const parsedBody: Record<string, unknown> = {};
+export function parseObjectValues(object: GenericObject): StrictObject {
+	const parsedBody: StrictObject = {};
 
 	if (isNotEmptyObject(object)) {
 		Object.entries(object).forEach(([key, value]) => {

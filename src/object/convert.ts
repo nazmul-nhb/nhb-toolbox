@@ -165,6 +165,34 @@ export function pickFields<T extends GenericObject, U extends keyof T>(
 }
 
 /**
+ * * Pick specific fields from an object based on a given condition.
+ *
+ * @description This function creates a new object containing only the fields that satisfy the given condition.
+ * The condition can be based on the field's value or type, depending on the implementation.
+ *
+ * @param T The type of the source object.
+ *
+ * @param source The source object from which to pick fields.
+ * @param condition A function that takes the key and value of a property and returns a boolean indicating whether the property should be picked.
+ *
+ * @returns An object containing only the fields that satisfy the condition.
+ */
+export function pickObjectFieldsByCondition<T extends GenericObject>(
+	source: T,
+	condition: (key: keyof T, value: T[keyof T]) => boolean,
+): Partial<T> {
+	const result: Partial<T> = {};
+
+	Object.entries(source).forEach(([key, value]) => {
+		if (condition(key as keyof T, value)) {
+			result[key as keyof T] = value;
+		}
+	});
+
+	return result;
+}
+
+/**
  * * Remap fields from one object to another.
  * @description This function creates a new object with fields remapped from the source object to the target object based on the provided field map.
  *

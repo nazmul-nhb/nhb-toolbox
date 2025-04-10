@@ -240,15 +240,17 @@ export {
 export {
 	convertObjectValues,
 	pickFields,
+	pickObjectFieldsByCondition as pickFieldsByCondition,
 	pickFields as pickObjectFields,
+	pickObjectFieldsByCondition,
 	remapFields,
 	remapFields as remapObjectFields,
 } from './object/convert';
 
 // ! DOM Utilities
 export {
-	generateQueryParams as formatQueryParams,
 	generateQueryParams as createQueryParams,
+	generateQueryParams as formatQueryParams,
 	generateQueryParams,
 	getQueryParams,
 	updateQueryParam,
