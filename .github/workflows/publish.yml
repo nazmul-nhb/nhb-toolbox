@@ -49,21 +49,22 @@ jobs:
                   fi
 
               # Install PNPM, Setup Node.js, and Install Dependencies only if version changed
-            - name: Setup Environment
+            - name: Install PNPM
               if: env.VERSION_UNCHANGED == 'false'
-              run: |
-                  # Install PNPM
-                  npm install -g pnpm
+              run: npm install -g pnpm
 
-                  # Setup Node.js using the GitHub Action
-                    - uses: actions/setup-node@v4
-                      with:
-                          node-version: 22
-                          registry-url: https://registry.npmjs.org/
-                          cache: 'pnpm'
+            - name: Setup Node.js
+              if: env.VERSION_UNCHANGED == 'false'
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  registry-url: 'https://registry.npmjs.org/'
+                  cache: 'pnpm'
 
-                  # Install Dependencies using PNPM
-                  pnpm install --frozen-lockfile --store-dir ~/.pnpm-store
+            # Install Dependencies
+            - name: Install Dependencies
+              if: env.VERSION_UNCHANGED == 'false'
+              run: pnpm install --frozen-lockfile --store-dir ~/.pnpm-store
 
             # Publish to NPM only if version is different
             - name: Publish to NPM
