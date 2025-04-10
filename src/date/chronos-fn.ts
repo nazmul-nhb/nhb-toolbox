@@ -55,15 +55,15 @@ Object.getOwnPropertyNames(Chronos).forEach((method) => {
 });
 
 // Add instance methods from Chronos prototype to chronos function
-Object.getOwnPropertyNames(Chronos.prototype).forEach((method) => {
-	// Skip the constructor method
-	if (method !== 'constructor') {
-		(chronos as Any)[method] = function (this: Chronos, ...args: Any[]) {
-			return this instanceof Chronos ?
-					(this as Any)[method](...args)
-				:	(new Chronos() as Any)[method](...args); // Fallback to new Chronos instance
-		};
-	}
-});
+// Object.getOwnPropertyNames(Chronos.prototype).forEach((method) => {
+// 	// Skip the constructor method
+// 	if (method !== 'constructor') {
+// 		(chronos as Any)[method] = function (this: Chronos, ...args: Any[]) {
+// 			return this instanceof Chronos ?
+// 					(this as Any)[method](...args)
+// 				:	(new Chronos() as Any)[method](...args); // Fallback to new Chronos instance
+// 		};
+// 	}
+// });
 
 export { chronos };
