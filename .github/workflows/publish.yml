@@ -15,6 +15,10 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
+            # Checkout Repository
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+
             # Get the current version from package.json
             - name: Get version from package.json
               id: get_version
@@ -43,10 +47,6 @@ jobs:
                       echo "VERSION_UNCHANGED=false" >> $GITHUB_ENV
                       echo "New version detected: v${{ env.VERSION }}"
                   fi
-
-            # Checkout Repository
-            - name: Checkout Repository
-              uses: actions/checkout@v4
 
             # Install PNPM
             - name: Install PNPM
