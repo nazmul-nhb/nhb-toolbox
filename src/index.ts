@@ -148,6 +148,9 @@ export {
 	chronos as chronus,
 	chronos as chronusjs,
 	chronos as chronusts,
+} from './date/chronos-fn';
+
+export {
 	formatUTCOffset as convertMinutesToUTCOffset,
 	extractHourMinute,
 	extractMinutesFromUTC,

@@ -1,4 +1,3 @@
-import { Chronos } from './Chronos';
 import type { Time, UTCOffSet } from './types';
 
 /**
@@ -41,19 +40,19 @@ export function getCurrentDateTime(): Date {
 	return new Date();
 }
 
-/**
- * * Converts a date into a Chronos object.
- *
- * @param date - A date value. It can be a `string`, `number`, `Date`, or `Chronos` object.
- * - If a string is provided, it should be in a format that can be parsed by the Date constructor.
- * - If a number is provided, it should be a timestamp (milliseconds since the Unix epoch).
- * - If a Date object is provided, it will be used as is.
- * - If a Chronos object is provided, it will be converted to a Date object.
- * @returns A new Chronos object representing the provided date.
- */
-export function chronos(date?: number | string | Date | Chronos) {
-	return new Chronos(date);
-}
+// /**
+//  * * Converts a date into a Chronos object.
+//  *
+//  * @param date - A date value. It can be a `string`, `number`, `Date`, or `Chronos` object.
+//  * - If a string is provided, it should be in a format that can be parsed by the Date constructor.
+//  * - If a number is provided, it should be a timestamp (milliseconds since the Unix epoch).
+//  * - If a Date object is provided, it will be used as is.
+//  * - If a Chronos object is provided, it will be converted to a Date object.
+//  * @returns A new Chronos object representing the provided date.
+//  */
+// export function chronos(date?: number | string | Date | Chronos) {
+// 	return new Chronos(date);
+// }
 
 /**
  * * Extract Time in `HH:MM` format from given UTC value.

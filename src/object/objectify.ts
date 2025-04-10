@@ -1,5 +1,5 @@
 import { isEmptyObject, isNotEmptyObject } from '../guards/non-primitives';
-import type { FlattenPartial, UncontrolledAny } from '../types';
+import type { Any, FlattenPartial } from '../types';
 import { isDeepEqual } from '../utils';
 import type { GenericObject } from './types';
 
@@ -10,7 +10,7 @@ import type { GenericObject } from './types';
  * @returns Merged object.
  */
 export const mergeObjects = <T extends GenericObject>(...objects: T[]): T => {
-	const map = new Map<string, UncontrolledAny>();
+	const map = new Map<string, Any>();
 
 	objects.forEach((obj) => {
 		for (const key in obj) {

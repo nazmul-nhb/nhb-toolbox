@@ -1,5 +1,5 @@
 /** Uncontrolled any to use for edge cases */
-export type UncontrolledAny = any;
+export type Any = any;
 
 declare const __brand: unique symbol;
 type Brand<B> = { [__brand]: B };

@@ -275,7 +275,29 @@ export interface ChronosStatics {
 	 */
 	now(): number;
 
-	/** * Parses a date string with a given format (partial support) */
+	/**
+	 * @public @static Parses a date string with a given format (partial support)
+	 *
+	 * * **Supported format tokens**:
+	 * - `YYYY`: Full year (e.g., 2023)
+	 * - `YY`: Two-digit year (e.g., 23 for 2023, 99 for 1999)
+	 * - `MM`: Month (01-12)
+	 * - `DD`: Day of the month (01-31)
+	 * - `HH`: Hour (00-23)
+	 * - `mm`: Minute (00-59)
+	 * - `ss`: Second (00-59)
+	 *
+	 * **Example**:
+	 * ```ts
+	 * Chronos.parse('23-12-31 15:30:45', 'YY-MM-DD HH:mm:ss');
+	 * // returns Chronos instance with the parsed date 2023-12-31T15:30:45
+	 * ```
+	 *
+	 * @param {string} dateStr - The date string to be parsed
+	 * @param {string} format - The format of the date string. Tokens like `YYYY`, `MM`, `DD`, `HH`, `mm`, `ss` are used to specify the structure.
+	 * @returns {Chronos} - A new `Chronos` instance representing the parsed date.
+	 * @throws {Error} - If the date string does not match the format.
+	 */
 	parse(dateStr: string, format: string): Chronos;
 
 	/**

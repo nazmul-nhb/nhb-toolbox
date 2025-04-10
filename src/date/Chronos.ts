@@ -67,6 +67,71 @@ export class Chronos {
 		return this.toLocalISOString();
 	}
 
+	[Symbol.replace](string: string, replacement: string): string {
+		switch (this[ORIGIN]) {
+			case 'timeZone':
+			case 'toUTC':
+			case 'utc':
+				return string.replace(
+					this.toISOString().replace(
+						/\.\d+(Z|[+-]\d{2}:\d{2})?$/,
+						'',
+					),
+					replacement,
+				);
+			default:
+				return string.replace(
+					this.toLocalISOString().replace(
+						/\.\d+(Z|[+-]\d{2}:\d{2})?$/,
+						'',
+					),
+					replacement,
+				);
+		}
+	}
+
+	[Symbol.search](string: string): number {
+		switch (this[ORIGIN]) {
+			case 'timeZone':
+			case 'toUTC':
+			case 'utc':
+				return string.indexOf(
+					this.toISOString().replace(
+						/\.\d+(Z|[+-]\d{2}:\d{2})?$/,
+						'',
+					),
+				);
+			default:
+				return string.indexOf(
+					this.toLocalISOString().replace(
+						/\.\d+(Z|[+-]\d{2}:\d{2})?$/,
+						'',
+					),
+				);
+		}
+	}
+
+	[Symbol.split](string: string): string[] {
+		switch (this[ORIGIN]) {
+			case 'timeZone':
+			case 'toUTC':
+			case 'utc':
+				return string.split(
+					this.toISOString().replace(
+						/\.\d+(Z|[+-]\d{2}:\d{2})?$/,
+						'',
+					),
+				);
+			default:
+				return string.split(
+					this.toLocalISOString().replace(
+						/\.\d+(Z|[+-]\d{2}:\d{2})?$/,
+						'',
+					),
+				);
+		}
+	}
+
 	get [Symbol.toStringTag](): string {
 		switch (this[ORIGIN]) {
 			case 'timeZone':
@@ -82,7 +147,13 @@ export class Chronos {
 		}
 	}
 
-	/** @private @instance Method to tag origin of the `Chronos` instance. */
+	/**
+	 * @private @instance Method to tag origin of the `Chronos` instance.
+	 *
+	 * @param origin Origin of the instance, the method name from where it was created.
+	 * @param offset Optional UTC offset in `UTC+12:00` format.
+	 * @returns The `Chronos` instance with the specified origin.
+	 */
 	#withOrigin(origin: ChronosMethods, offset?: UTCOffSet): Chronos {
 		const instance = new Chronos(this.#date);
 		instance[ORIGIN] = origin;
@@ -1223,10 +1294,33 @@ export class Chronos {
 		return Date.now();
 	}
 
-	/** @public @static Parses a date string with a given format (partial support) */
+	/**
+	 * @public @static Parses a date string with a given format (partial support)
+	 *
+	 * * **Supported format tokens**:
+	 * - `YYYY`: Full year (e.g., 2023)
+	 * - `YY`: Two-digit year (e.g., 23 for 2023, 99 for 1999)
+	 * - `MM`: Month (01-12)
+	 * - `DD`: Day of the month (01-31)
+	 * - `HH`: Hour (00-23)
+	 * - `mm`: Minute (00-59)
+	 * - `ss`: Second (00-59)
+	 *
+	 * **Example**:
+	 * ```ts
+	 * Chronos.parse('23-12-31 15:30:45', 'YY-MM-DD HH:mm:ss');
+	 * // returns Chronos instance with the parsed date 2023-12-31T15:30:45
+	 * ```
+	 *
+	 * @param {string} dateStr - The date string to be parsed
+	 * @param {string} format - The format of the date string. Tokens like `YYYY`, `MM`, `DD`, `HH`, `mm`, `ss` are used to specify the structure.
+	 * @returns {Chronos} - A new `Chronos` instance representing the parsed date.
+	 * @throws {Error} - If the date string does not match the format.
+	 */
 	static parse(dateStr: string, format: string): Chronos {
 		const formatMap = {
 			YYYY: 'year',
+			YY: 'year', // Support for two-digit year
 			MM: 'month',
 			DD: 'date',
 			HH: 'hour',
@@ -1234,8 +1328,8 @@ export class Chronos {
 			ss: 'second',
 		} as const;
 
-		const regex = format.replace(/YYYY|MM|DD|HH|mm|ss/g, (match) => {
-			return `(?<${match}>\\d{${match.length}})`;
+		const regex = format.replace(/YYYY|YY|MM|DD|HH|mm|ss/g, (match) => {
+			return `(?<${match}>\\d{${match.length}})`; // Adjust regex for each format token
 		});
 
 		const match = new RegExp(`^${regex}$`).exec(dateStr);
@@ -1256,6 +1350,12 @@ export class Chronos {
 			},
 			{} as Record<string, number>,
 		);
+
+		// Adjust for 2-digit year (YY) by assuming the year is in the 1900s or 2000s
+		if (values.year && values.year < 100) {
+			// Assuming 21st century for years < 100 (00-99 becomes 2000-2099)
+			values.year += 2000;
+		}
 
 		return new Chronos(
 			new Date(

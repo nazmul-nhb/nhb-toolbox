@@ -1,4 +1,4 @@
-import type { UncontrolledAny } from '../types';
+import type { Any } from '../types';
 import type {
 	DotNotationKey,
 	FieldMap,
@@ -81,7 +81,7 @@ export function convertObjectValues<
 	): T => {
 		const segments = path.split('.');
 
-		let current: UncontrolledAny = obj;
+		let current: Any = obj;
 
 		segments.forEach((key, index) => {
 			if (index === segments.length - 1) {
