@@ -248,6 +248,7 @@ export {
 // ! DOM Utilities
 export {
 	generateQueryParams as formatQueryParams,
+	generateQueryParams as createQueryParams,
 	generateQueryParams,
 	getQueryParams,
 	updateQueryParam,
