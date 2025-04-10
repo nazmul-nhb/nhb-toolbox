@@ -1,4 +1,4 @@
-name: Auto Publish to NPM
+name: Publish to NPM and Release with Tag
 
 on:
     push:
@@ -15,22 +15,6 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - name: Checkout Repository
-              uses: actions/checkout@v4
-
-            - name: Install PNPM
-              run: npm install -g pnpm
-
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 22
-                  registry-url: 'https://registry.npmjs.org/'
-                  cache: 'pnpm'
-
-            - name: Install Dependencies
-              run: pnpm install --frozen-lockfile --store-dir ~/.pnpm-store
-
             # Get the current version from package.json
             - name: Get version from package.json
               id: get_version
@@ -54,12 +38,33 @@ jobs:
                   if [ "v${{ env.VERSION }}" = "${{ env.LATEST_TAG }}" ]; then
                       echo "VERSION_UNCHANGED=true" >> $GITHUB_ENV
                       echo "No new version to publish"
+                      exit 0  # Exit early if version is unchanged
                   else
                       echo "VERSION_UNCHANGED=false" >> $GITHUB_ENV
                       echo "New version detected: v${{ env.VERSION }}"
                   fi
 
-            # Publish only if version is different
+            # Checkout Repository
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+
+            # Install PNPM
+            - name: Install PNPM
+              run: npm install -g pnpm
+
+            # Setup Node.js
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  registry-url: 'https://registry.npmjs.org/'
+                  cache: 'pnpm'
+
+            # Install Dependencies
+            - name: Install Dependencies
+              run: pnpm install --frozen-lockfile --store-dir ~/.pnpm-store
+
+            # Publish to NPM only if version is different
             - name: Publish to NPM
               if: env.VERSION_UNCHANGED == 'false'
               run: pnpm publish --access public
