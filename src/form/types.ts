@@ -4,6 +4,7 @@ import type {
 	KeyForObject,
 	NestedKeyString,
 } from '../object/types';
+import type { QueryString } from '../string/types';
 
 /** - Configuration options to control FormData generation behavior. */
 export interface FormDataConfigs<T> {
@@ -108,3 +109,11 @@ export interface FileError extends Error {
 	/** The URL where the upload was attempted. */
 	url: string;
 }
+
+/** THe return type of `serializeForm` wither as object or query string. */
+export type SerializedForm<T extends boolean> =
+	T extends false ? Record<string, string | string[]> : QueryString;
+
+export type ParsedFormData<T> =
+	T extends string ? Record<string, string | string[]>
+	:	Record<string, string | string[] | File | File[]>;

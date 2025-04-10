@@ -1,5 +1,6 @@
 import { flattenObjectKeyValue } from '../object/objectify';
 import type { QueryObject } from '../object/types';
+import type { QueryString } from '../string/types';
 
 /**
  * * Utility to generate query parameters from an object.
@@ -16,7 +17,7 @@ import type { QueryObject } from '../object/types';
  */
 export const generateQueryParams = <T extends QueryObject>(
 	params: T = {} as T,
-): `?${string}` | '' => {
+): QueryString => {
 	// Flatten the nested object into key-value pairs
 	const flattenedParams = flattenObjectKeyValue(params);
 

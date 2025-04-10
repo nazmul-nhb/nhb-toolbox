@@ -73,3 +73,6 @@ export interface MaskOptions {
 	/** Character to use for masking. Defaults to `*`. */
 	maskCharacter?: string;
 }
+
+/** Formatted query string as `?${string}` = `?key=value&...` or empty string. */
+export type QueryString = `?${string}` | '';

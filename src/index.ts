@@ -202,6 +202,8 @@ export {
 	createControlledFormData as createFormData,
 } from './form/convert';
 
+export { parseFormData, serializeForm } from './form/transform';
+
 export {
 	isCustomFile,
 	isCustomFileArray,
@@ -238,6 +240,7 @@ export {
 // ! DOM Utilities
 export {
 	generateQueryParams,
+	generateQueryParams as formatQueryParams,
 	getQueryParams,
 	updateQueryParam,
 } from './dom/query';
