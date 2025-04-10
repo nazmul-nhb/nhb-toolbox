@@ -1400,13 +1400,32 @@ export class Chronos {
 	}
 
 	/**
-	 * @public @static Checks if the year in the date string is a leap year.
+	 * @public @static Checks if the year in the date string or year (from 0 - 9999) is a leap year.
 	 * - A year is a leap year if it is divisible by 4, but not divisible by 100, unless it is also divisible by 400.
 	 * - For example, 2000 and 2400 are leap years, but 1900 and 2100 are not.
+	 *
+	 * @description
+	 * This method accepts different types of date inputs and extracts the year to check if it's a leap year.
+	 * If the provided date is a `number`, it will be treated as a year (must be a valid year from 0 to 9999).
+	 * If the year is out of this range (negative or larger than 9999), it will be treated as a Unix timestamp.
+	 * If the provided date is a string or a `Date` object, it will be parsed and the year will be extracted.
+	 * If a `Chronos` instance is passed, the year will be directly accessed from the instance.
+	 *
+	 * @param date - A `number` (year or Unix timestamp), `string`, `Date`, or `Chronos` instance representing a date.
 	 * @returns `true` if the year is a leap year, `false` otherwise.
 	 */
 	static isLeapYear(date: number | string | Date | Chronos): boolean {
-		const year = new Chronos(date).year;
+		let year: number;
+
+		if (typeof date === 'number') {
+			if (date > 0 && date <= 9999) {
+				year = date;
+			} else {
+				year = new Chronos(date).year;
+			}
+		} else {
+			year = date instanceof Chronos ? date.year : new Chronos(date).year;
+		}
 
 		return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 	}

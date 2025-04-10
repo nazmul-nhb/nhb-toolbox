@@ -3,7 +3,8 @@ import type { Any } from '../types';
 import type { ChronosStatics } from './types';
 
 /**
- * * Converts a date into a Chronos object.
+ * * Converts a date into a Chronos object and access to all `Chronos` methods.
+ *
  * @description
  * This function serves as a wrapper around the `Chronos` class constructor and allows you to create a new `Chronos` instance from various types of date representations.
  * The following types of input are supported:
