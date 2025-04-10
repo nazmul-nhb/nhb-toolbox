@@ -134,3 +134,44 @@ export function sanitizeData<T extends GenericObject>(
 
 	return input;
 }
+
+/**
+ * * Parse an object of stringified values into their appropriate primitive types.
+ *
+ * Attempts to convert string values into `boolean`, `number`, or JSON-parsed objects/arrays.
+ * Non-string values are left unchanged.
+ *
+ * @param object - The object with potentially stringified primitive values.
+ * @returns A new object with parsed values converted to their original types.
+ */
+export function parseObjectValues(
+	object: GenericObject,
+): Record<string, unknown> {
+	const parsedBody: Record<string, unknown> = {};
+
+	if (isNotEmptyObject(object)) {
+		Object.entries(object).forEach(([key, value]) => {
+			if (typeof value !== 'string') {
+				parsedBody[key] = value;
+				return;
+			}
+
+			try {
+				const parsedValue = JSON.parse(value);
+				parsedBody[key] = parsedValue;
+			} catch {
+				if (value === 'true') {
+					parsedBody[key] = true;
+				} else if (value === 'false') {
+					parsedBody[key] = false;
+				} else if (!isNaN(Number(value))) {
+					parsedBody[key] = Number(value);
+				} else {
+					parsedBody[key] = value;
+				}
+			}
+		});
+	}
+
+	return parsedBody;
+}

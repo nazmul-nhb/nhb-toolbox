@@ -1,4 +1,5 @@
 import { generateQueryParams } from '../dom/query';
+import { parseObjectValues } from '../object/sanitize';
 import type { ParsedFormData, SerializedForm } from './types';
 
 /**
@@ -36,53 +37,59 @@ export function serializeForm<T extends boolean = false>(
 }
 
 /**
- * * Parse form data from a query string or FormData object into a structured object format.
+ * * Parse form data from a `FormData` object or query string into a structured object format.
  *
- * @param formData - The FormData object or query string to parse.
+ * @param data - The `FormData` object or query string to parse.
+ * @param parsePrimitives - Whether to parse string values into primitive types (e.g., boolean, number, array, object). Defaults to `true`.
  * @returns The parsed form data as an object.
  */
 export function parseFormData<T extends FormData | string>(
-	formData: T,
+	data: T,
+	parsePrimitives = true,
 ): ParsedFormData<T> {
-	const data: Record<string, unknown> = {};
+	const parsed: Record<string, unknown> = {};
 
-	if (typeof formData === 'string') {
-		const params = new URLSearchParams(formData);
+	if (typeof data === 'string') {
+		const params = new URLSearchParams(data);
 
 		params.forEach((value, key) => {
-			const existing = data[key];
+			const existing = parsed[key];
 
 			if (typeof existing === 'string') {
-				data[key] = [existing, value];
+				parsed[key] = [existing, value];
 			} else if (Array.isArray(existing)) {
-				data[key] = [...existing, value];
+				parsed[key] = [...existing, value];
 			} else {
-				data[key] = value;
+				parsed[key] = value;
 			}
 		});
 	} else {
-		formData.forEach((value, key) => {
-			const existing = data[key];
+		data.forEach((value, key) => {
+			const existing = parsed[key];
 
 			if (value instanceof File) {
 				if (Array.isArray(existing)) {
-					data[key] = [...existing, value];
+					parsed[key] = [...existing, value];
 				} else if (existing instanceof File) {
-					data[key] = [existing, value];
+					parsed[key] = [existing, value];
 				} else {
-					data[key] = value;
+					parsed[key] = value;
 				}
 			} else {
 				if (typeof existing === 'string') {
-					data[key] = [existing, value];
+					parsed[key] = [existing, value];
 				} else if (Array.isArray(existing)) {
-					data[key] = [...existing, value];
+					parsed[key] = [...existing, value];
 				} else {
-					data[key] = value;
+					parsed[key] = value;
 				}
 			}
 		});
 	}
 
-	return data as ParsedFormData<T>;
+	if (parsePrimitives) {
+		return parseObjectValues(parsed) as ParsedFormData<T>;
+	} else {
+		return parsed as ParsedFormData<T>;
+	}
 }

@@ -227,7 +227,15 @@ export {
 	mergeObjects,
 } from './object/objectify';
 
-export { sanitizeData } from './object/sanitize';
+export {
+	parseObjectValues,
+	parseObjectValues as parsePrimitiveData,
+	parseObjectValues as parsePrimitives,
+	parseObjectValues as parseStringifiedObjectValues,
+	parseObjectValues as parseStringifiedPrimitives,
+	parseObjectValues as parseStringifiedValues,
+	sanitizeData,
+} from './object/sanitize';
 
 export {
 	convertObjectValues,
@@ -239,8 +247,8 @@ export {
 
 // ! DOM Utilities
 export {
-	generateQueryParams,
 	generateQueryParams as formatQueryParams,
+	generateQueryParams,
 	getQueryParams,
 	updateQueryParam,
 } from './dom/query';
