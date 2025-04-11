@@ -50,7 +50,7 @@ export function getCurrentDateTime(): Date {
 //  * - If a Chronos object is provided, it will be converted to a Date object.
 //  * @returns A new Chronos object representing the provided date.
 //  */
-// export function chronos(date?: number | string | Date | Chronos) {
+// export function chronos(date?: ChronosInput) {
 // 	return new Chronos(date);
 // }
 

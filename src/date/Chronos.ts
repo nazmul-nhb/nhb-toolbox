@@ -13,6 +13,7 @@ import {
 import { isLeapYear, isValidUTCOffSet } from './guards';
 import type {
 	ChronosFormat,
+	ChronosInput,
 	ChronosMethods,
 	ChronosObject,
 	FormatOptions,
@@ -23,6 +24,27 @@ import type {
 } from './types';
 import { extractMinutesFromUTC, formatUTCOffset } from './utils';
 
+/**
+ * * Creates a new immutable `Chronos` instance.
+ *
+ * @param value - A date value (`number`, `string`, `Date`, or `Chronos` object).
+ * - If a string is provided, it should be in a format that can be parsed by the Date constructor.
+ * - If a number is provided, it should be a timestamp (milliseconds since the Unix epoch).
+ * - If a Date object is provided, it will be used as is.
+ * - If a Chronos object is provided, it will be converted to a Date object.
+ *
+ * **It also accepts number values as following:**
+ * - **`year, month, date, hours, minutes, seconds, milliseconds`**: Individual components of a date-time to construct a `Chronos` instance.
+ *   - **`year`**: A number representing the year. If the year is between 0 and 99, it will be assumed to be the year 1900 + the provided year.
+ *   - **`month`**: A number between 1 and 12 representing the month (1 for January, 12 for December). It is adjusted internally to a 0-based index (0 for January, 11 for December).
+ *   - **`date`**: A number between 1 and 31 representing the day of the month.
+ *   - **`hours`**: A number between 0 and 23 representing the hour of the day.
+ *   - **`minutes`**: A number between 0 and 59 representing the minutes past the hour.
+ *   - **`seconds`**: A number between 0 and 59 representing the seconds past the minute.
+ *   - **`milliseconds`**: A number between 0 and 999 representing the milliseconds past the second.
+ *
+ * @returns Instance of `Chronos` with all methods and properties.
+ */
 export class Chronos {
 	#date: Date;
 	#offset: UTCOffSet;
@@ -31,16 +53,123 @@ export class Chronos {
 	/**
 	 * * Creates a new immutable `Chronos` instance.
 	 *
+	 * Accepts no arguments (defaults to now).
+	 *
+	 * @returns Instance of `Chronos` with all methods and properties.
+	 */
+	constructor();
+
+	/**
+	 * * Creates a new immutable `Chronos` instance.
+	 *
+	 * @param value - A date value in `number`, it should be a timestamp (milliseconds since the Unix epoch).
+	 *
+	 * @returns Instance of `Chronos` with all methods and properties.
+	 */
+	constructor(value: number);
+
+	/**
+	 * * Creates a new immutable `Chronos` instance.
+	 *
+	 * @param value - A date value in `string`, it should be in a format that can be parsed by the `Date` constructor.
+	 *
+	 * @returns Instance of `Chronos` with all methods and properties.
+	 */
+	constructor(value: string);
+
+	/**
+	 * * Creates a new immutable `Chronos` instance.
+	 *
+	 * @param value - A date value as `Date` object, it will be used as is.
+	 *
+	 * @returns Instance of `Chronos` with all methods and properties.
+	 */
+	constructor(value: Date);
+
+	/**
+	 * * Creates a new immutable `Chronos` instance.
+	 *
+	 * @param value - A date value as `Chronos` object.
+	 *
+	 * @returns Instance of `Chronos` with all methods and properties.
+	 */
+	constructor(value: Chronos);
+
+	/**
+	 * * Creates a new immutable `Chronos` instance.
+	 *
+	 * @param year The full year designation is required for cross-century date accuracy. If year is between 0 and 99 is used, then year is assumed to be 1900 + year.
+	 * @param month The month as a number between 1 and 12 (January to December).
+	 * @param date The date as a number between 1 and 31.
+	 * @param hours Must be supplied if minutes is supplied. A number from 0 to 23 (midnight to 11pm) that specifies the hour.
+	 * @param minutes Must be supplied if seconds is supplied. A number from 0 to 59 that specifies the minutes.
+	 * @param seconds Must be supplied if milliseconds is supplied. A number from 0 to 59 that specifies the seconds.
+	 * @param ms A number from 0 to 999 that specifies the milliseconds.
+	 *
+	 * @returns Instance of `Chronos` with all methods and properties.
+	 */
+	constructor(
+		year: number,
+		month: number,
+		date?: number,
+		hours?: number,
+		minutes?: number,
+		seconds?: number,
+		ms?: number,
+	);
+
+	/**
+	 * * Creates a new immutable `Chronos` instance.
+	 *
 	 * @param value - A date value (`number`, `string`, `Date`, or `Chronos` object).
-	 * - If a string is provided, it should be in a format that can be parsed by the Date constructor.
+	 * - If a string is provided, it should be in a format that can be parsed by the `Date` constructor.
 	 * - If a number is provided, it should be a timestamp (milliseconds since the Unix epoch).
 	 * - If a Date object is provided, it will be used as is.
-	 * - If a Chronos object is provided, it will be converted to a Date object.
+	 * - If a Chronos object is provided, it will be used directly.
+	 *
+	 * @returns Instance of `Chronos` with all methods and properties.
 	 */
-	constructor(value?: number | string | Date | Chronos) {
-		const date = this.#toNewDate(value);
+	constructor(value?: ChronosInput);
 
-		this.#date = date;
+	/**
+	 * * Creates a new immutable `Chronos` instance.
+	 *
+	 * @param valueOrYear The value in number, string, Date or Chronos format or the full year designation is required for cross-century date accuracy. If year is between 0 and 99 is used, then year is assumed to be 1900 + year.
+	 * @param month The month as a number between 1 and 12 (January to December).
+	 * @param date The date as a number between 1 and 31.
+	 * @param hours Must be supplied if minutes is supplied. A number from 0 to 23 (midnight to 11pm) that specifies the hour.
+	 * @param minutes Must be supplied if seconds is supplied. A number from 0 to 59 that specifies the minutes.
+	 * @param seconds Must be supplied if milliseconds is supplied. A number from 0 to 59 that specifies the seconds.
+	 * @param ms A number from 0 to 999 that specifies the milliseconds.
+	 *
+	 * @returns Instance of `Chronos` with all methods and properties.
+	 */
+	constructor(
+		valueOrYear?: ChronosInput,
+		month?: number,
+		date?: number,
+		hours?: number,
+		minutes?: number,
+		seconds?: number,
+		ms?: number,
+	) {
+		let newDate: Date;
+
+		if (typeof valueOrYear === 'number' && typeof month === 'number') {
+			newDate = new Date(
+				valueOrYear,
+				month - 1,
+				date ?? 1,
+				hours ?? 0,
+				minutes ?? 0,
+				seconds ?? 0,
+				ms ?? 0,
+			);
+		} else {
+			newDate = this.#toNewDate(valueOrYear);
+		}
+
+		this.#date = newDate;
 		this[ORIGIN] = 'root';
 		this.#offset = `UTC${this.getUTCOffset()}` as UTCOffSet;
 	}
@@ -149,25 +278,11 @@ export class Chronos {
 	}
 
 	/**
-	 * @private @instance Method to tag origin of the `Chronos` instance.
-	 *
-	 * @param origin Origin of the instance, the method name from where it was created.
-	 * @param offset Optional UTC offset in `UTC+12:00` format.
-	 * @returns The `Chronos` instance with the specified origin.
-	 */
-	#withOrigin(origin: ChronosMethods, offset?: UTCOffSet): Chronos {
-		const instance = new Chronos(this.#date);
-		instance[ORIGIN] = origin;
-		if (offset) instance.#offset = offset;
-		return instance;
-	}
-
-	/**
 	 * @private @instance Method to create native `Date` instance from date-like data types.
 	 * @param value The value to convert into `Date`.
 	 * @returns Instance of native Date object.
 	 */
-	#toNewDate(value?: number | string | Date | Chronos): Date {
+	#toNewDate(value?: ChronosInput): Date {
 		const date =
 			value instanceof Chronos ?
 				value.toDate()
@@ -179,6 +294,20 @@ export class Chronos {
 		}
 
 		return date;
+	}
+
+	/**
+	 * @private @instance Method to tag origin of the `Chronos` instance.
+	 *
+	 * @param origin Origin of the instance, the method name from where it was created.
+	 * @param offset Optional UTC offset in `UTC+12:00` format.
+	 * @returns The `Chronos` instance with the specified origin.
+	 */
+	#withOrigin(origin: ChronosMethods, offset?: UTCOffSet): Chronos {
+		const instance = new Chronos(this.#date);
+		instance[ORIGIN] = origin;
+		if (offset) instance.#offset = offset;
+		return instance;
 	}
 
 	/**
@@ -331,6 +460,11 @@ export class Chronos {
 		return this.#date.getTime();
 	}
 
+	/** Gets the time value in milliseconds since midnight, January 1, 1970 UTC. */
+	get timestamp(): number {
+		return this.#date.getTime();
+	}
+
 	/** @public @instance Returns a debug-friendly string for `console.log` or `util.inspect`. */
 	inspect(): string {
 		return `[Chronos ${this.toLocalISOString()}]`;
@@ -456,7 +590,7 @@ export class Chronos {
 
 	/**
 	 * @public @instance Returns the current date and time in a specified format in local time.
-	 * @description Default format is dd, `mmm DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55:379`
+	 * @description Default format is dd, `mmm DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55`
 	 *
 	 * @param options - Configure format string and whether to format using utc offset.
 	 * @returns Formatted date string in desired format.
@@ -648,7 +782,7 @@ export class Chronos {
 	 * @param other The other date to compare.
 	 * @param unit The unit to compare.
 	 */
-	isSame(other: number | string | Date | Chronos, unit: TimeUnit): boolean {
+	isSame(other: ChronosInput, unit: TimeUnit): boolean {
 		const time = new Chronos(other);
 
 		return (
@@ -662,7 +796,7 @@ export class Chronos {
 	 * @param other The other date to compare.
 	 * @param unit The unit to compare.
 	 */
-	isBefore(other: number | string | Date | Chronos, unit: TimeUnit): boolean {
+	isBefore(other: ChronosInput, unit: TimeUnit): boolean {
 		const time = new Chronos(other);
 
 		return (
@@ -676,7 +810,7 @@ export class Chronos {
 	 * @param other The other date to compare.
 	 * @param unit The unit to compare.
 	 */
-	isAfter(other: number | string | Date | Chronos, unit: TimeUnit): boolean {
+	isAfter(other: ChronosInput, unit: TimeUnit): boolean {
 		const time = new Chronos(other);
 
 		return (
@@ -699,8 +833,8 @@ export class Chronos {
 	 * @returns `true` if the current date is within the specified range based on the `inclusive` mode.
 	 */
 	isBetween(
-		start: number | string | Date | Chronos,
-		end: number | string | Date | Chronos,
+		start: ChronosInput,
+		end: ChronosInput,
 		inclusive: '[]' | '[)' | '(]' | '()' = '()',
 	): boolean {
 		const s = new Chronos(start).valueOf();
@@ -741,7 +875,7 @@ export class Chronos {
 	fromNow(
 		level: Exclude<TimeUnit, 'millisecond'> = 'minute',
 		withSuffixPrefix: boolean = true,
-		time?: number | string | Date | Chronos,
+		time?: ChronosInput,
 	): string {
 		const now = this.#toNewDate(time);
 
@@ -851,7 +985,7 @@ export class Chronos {
 	 * @param time Optional time to compare with the `Chronos` date/time.
 	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
 	 */
-	getRelativeYear(time?: number | string | Date | Chronos): number {
+	getRelativeYear(time?: ChronosInput): number {
 		const now = this.#toNewDate(time);
 
 		let years = this.#date.getFullYear() - now.getFullYear();
@@ -873,7 +1007,7 @@ export class Chronos {
 	 * @param time Optional time to compare with the `Chronos` date/time.
 	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
 	 */
-	getRelativeMonth(time?: number | string | Date | Chronos): number {
+	getRelativeMonth(time?: ChronosInput): number {
 		const now = this.#toNewDate(time);
 
 		let months =
@@ -899,7 +1033,7 @@ export class Chronos {
 	 *  - `1` if the date is tomorrow.
 	 *  - Other positive or negative numbers for other relative days (e.g., `-2` for two days ago, `2` for two days ahead).
 	 */
-	getRelativeDay(time?: number | string | Date | Chronos): number {
+	getRelativeDay(time?: ChronosInput): number {
 		const today = this.#toNewDate(time);
 		// Set the time of today to 00:00:00 for comparison purposes
 		today.setHours(0, 0, 0, 0);
@@ -919,7 +1053,7 @@ export class Chronos {
 	 * @param time Optional time to compare with the `Chronos` date/time.
 	 * @returns Difference in weeks; negative if past, positive if future.
 	 */
-	getRelativeWeek(time?: number | string | Date | Chronos): number {
+	getRelativeWeek(time?: ChronosInput): number {
 		const relativeDays = this.getRelativeDay(time);
 		return Math.floor(relativeDays / 7);
 	}
@@ -929,7 +1063,7 @@ export class Chronos {
 	 * @param time Optional time to compare with the `Chronos` date/time.
 	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
 	 */
-	getRelativeHour(time?: number | string | Date | Chronos): number {
+	getRelativeHour(time?: ChronosInput): number {
 		const diff = this.#date.getTime() - this.#toNewDate(time).getTime();
 		return Math.floor(diff / (1000 * 60 * 60));
 	}
@@ -939,7 +1073,7 @@ export class Chronos {
 	 * @param time Optional time to compare with the `Chronos` date/time.
 	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
 	 */
-	getRelativeMinute(time?: number | string | Date | Chronos): number {
+	getRelativeMinute(time?: ChronosInput): number {
 		const diff = this.#date.getTime() - this.#toNewDate(time).getTime();
 		return Math.floor(diff / (1000 * 60));
 	}
@@ -949,7 +1083,7 @@ export class Chronos {
 	 * @param time Optional time to compare with the `Chronos` date/time.
 	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
 	 */
-	getRelativeSecond(time?: number | string | Date | Chronos): number {
+	getRelativeSecond(time?: ChronosInput): number {
 		const diff = this.#date.getTime() - this.#toNewDate(time).getTime();
 		return Math.floor(diff / 1000);
 	}
@@ -959,7 +1093,7 @@ export class Chronos {
 	 * @param time Optional time to compare with the `Chronos` date/time.
 	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
 	 */
-	getRelativeMilliSecond(time?: number | string | Date | Chronos): number {
+	getRelativeMilliSecond(time?: ChronosInput): number {
 		return this.#date.getTime() - this.#toNewDate(time).getTime();
 	}
 
@@ -970,10 +1104,7 @@ export class Chronos {
 	 * @param time Optional time to compare with the `Chronos` date/time.
 	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
 	 */
-	compare(
-		unit: TimeUnit = 'minute',
-		time?: number | string | Date | Chronos,
-	): number {
+	compare(unit: TimeUnit = 'minute', time?: ChronosInput): number {
 		switch (unit) {
 			case 'year':
 				return this.getRelativeYear(time);
@@ -1164,7 +1295,7 @@ export class Chronos {
 	 * @param other The other date to compare.
 	 * @param unit The unit in which to return the difference.
 	 */
-	diff(other: number | string | Date | Chronos, unit: TimeUnit): number {
+	diff(other: ChronosInput, unit: TimeUnit): number {
 		const time = new Chronos(other);
 
 		const msDiff = this.#date.getTime() - time.toDate().getTime();
@@ -1196,7 +1327,7 @@ export class Chronos {
 	 * @public @instance Returns a human-readable relative calendar time like "Today at 3:00 PM"
 	 * @param baseDate Optional base date to compare with.
 	 */
-	calendar(baseDate?: number | string | Date | Chronos): string {
+	calendar(baseDate?: ChronosInput): string {
 		const base = baseDate ? new Chronos(baseDate) : new Chronos();
 		const input = this.startOf('day');
 
@@ -1271,29 +1402,6 @@ export class Chronos {
 		return new Chronos(d).#withOrigin('setWeek');
 	}
 
-	// /**
-	//  * @public @instance Sets the date to the Monday of the specified ISO week number and year.
-	//  * @param week ISO week number (1–53)
-	//  * @param isoYear Optional ISO week year. Defaults to the current ISO week year.
-	//  * @returns New Chronos instance set to the start of the specified ISO week.
-	//  */
-	// setISOWeek(week: number, isoYear?: number): Chronos {
-	// 	// ❗ Use calendar year instead of ISO week year unless explicitly provided
-	// 	const targetISOYear = isoYear ?? this.#date.getFullYear();
-
-	// 	const jan4 = new Date(Date.UTC(targetISOYear, 0, 4));
-	// 	const dayOfWeek = jan4.getUTCDay();
-	// 	const offset = (dayOfWeek + 6) % 7;
-
-	// 	const firstISOWeekStart = new Date(jan4);
-	// 	firstISOWeekStart.setUTCDate(jan4.getUTCDate() - offset);
-	// 	firstISOWeekStart.setUTCDate(
-	// 		firstISOWeekStart.getUTCDate() + (week - 1) * 7,
-	// 	);
-
-	// 	return new Chronos(firstISOWeekStart).#withOrigin('setISOWeek');
-	// }
-
 	/**
 	 * @public @instance Calculates the ISO week number of the year.
 	 * @returns Week number (1-53).
@@ -1316,16 +1424,6 @@ export class Chronos {
 		const d = this.startOf('week').add(3, 'day'); // Thursday of current ISO week
 		return d.year;
 	}
-
-	// /**
-	//  * @private @instance Gets the ISO week-numbering year.
-	//  * @returns The ISO year (can differ from calendar year).
-	//  */
-	// getISOWeekYear(): number {
-	// 	const date = new Date(this.#date);
-	// 	date.setDate(date.getDate() + 4 - (date.getDay() || 7)); // Thursday of the week
-	// 	return date.getFullYear();
-	// }
 
 	/** @public @instance Returns day of year (1 - 366) */
 	getDayOfYear(): number {
@@ -1376,7 +1474,7 @@ export class Chronos {
 
 	/**
 	 * @public @static Returns the current date and time in a specified format in local time.
-	 * * Default format is dd, `mmm DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55:379`
+	 * * Default format is dd, `mmm DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55`
 	 * @param options - Configure format string and whether to format using utc offset.
 	 * @returns Formatted date string in desired format.
 	 */
@@ -1414,15 +1512,15 @@ export class Chronos {
 	 * // returns Chronos instance with the parsed date 2023-12-31T15:30:45
 	 * ```
 	 *
-	 * @param {string} dateStr - The date string to be parsed
-	 * @param {string} format - The format of the date string. Tokens like `YYYY`, `MM`, `DD`, `HH`, `mm`, `ss` are used to specify the structure.
-	 * @returns {Chronos} - A new `Chronos` instance representing the parsed date.
-	 * @throws {Error} - If the date string does not match the format.
+	 * @param dateStr - The date string to be parsed
+	 * @param format - The format of the date string. Tokens like `YYYY`, `MM`, `DD`, `HH`, `mm`, `ss` are used to specify the structure.
+	 * @returns A new `Chronos` instance representing the parsed date.
+	 * @throws `Error` If the date string does not match the format.
 	 */
 	static parse(dateStr: string, format: string): Chronos {
 		const formatMap = {
 			YYYY: 'year',
-			YY: 'year', // Support for two-digit year
+			YY: 'year',
 			MM: 'month',
 			DD: 'date',
 			HH: 'hour',
@@ -1475,7 +1573,7 @@ export class Chronos {
 	 * @public @static Creates UTC Chronos
 	 * @param dateLike Date input to create utc time.
 	 */
-	static utc(dateLike: number | string | Date | Chronos): Chronos {
+	static utc(dateLike: ChronosInput): Chronos {
 		const date = new Chronos(dateLike).#date;
 		const utc = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
 		return new Chronos(utc).#withOrigin('utc');
@@ -1485,7 +1583,7 @@ export class Chronos {
 	 * @public @static Returns earliest Chronos
 	 * @param dates Date inputs.
 	 */
-	static min(...dates: (number | string | Date | Chronos)[]): Chronos {
+	static min(...dates: ChronosInput[]): Chronos {
 		return new Chronos(
 			Math.min(...dates.map((d) => new Chronos(d).valueOf())),
 		).#withOrigin('min');
@@ -1495,7 +1593,7 @@ export class Chronos {
 	 * @public @static Returns latest Chronos
 	 * @param dates Date inputs.
 	 */
-	static max(...dates: (number | string | Date | Chronos)[]): Chronos {
+	static max(...dates: ChronosInput[]): Chronos {
 		return new Chronos(
 			Math.max(...dates.map((d) => new Chronos(d).valueOf())),
 		).#withOrigin('max');
@@ -1516,7 +1614,7 @@ export class Chronos {
 	 * @param date - A `number` (year or Unix timestamp), `string`, `Date`, or `Chronos` instance representing a date.
 	 * @returns `true` if the year is a leap year, `false` otherwise.
 	 */
-	static isLeapYear(date: number | string | Date | Chronos): boolean {
+	static isLeapYear(date: ChronosInput): boolean {
 		let year: number;
 
 		if (typeof date === 'number') {

@@ -258,13 +258,100 @@ export type ChronosMethods =
 			:	never;
 	  }[keyof typeof Chronos];
 
+/** Accepted Input type for `Chronos` */
+export type ChronosInput = number | string | Date | Chronos;
+
 /** All the statics methods in `Chronos` class */
 export interface ChronosStatics {
-	(date?: number | string | Date | Chronos): Chronos;
+	/**
+	 * * Converts a date into a `Chronos` object and access to all `Chronos` methods and properties.
+	 *
+	 * @description
+	 * This function serves as a wrapper around the `Chronos` class constructor and allows you to create a new `Chronos` instance from various types of date representations.
+	 *
+	 * Accepts no arguments (defaults to now).
+	 *
+	 * @returns Instance of `Chronos` with all methods and properties.
+	 */
+	(): Chronos;
+
+	/**
+	 * * Converts a date into a `Chronos` object and access to all `Chronos` methods and properties.
+	 *
+	 * @description
+	 * This function serves as a wrapper around the `Chronos` class constructor and allows you to create a new `Chronos` instance from various types of date representations.
+	 *
+	 * @param value - A date value in `number`, it should be a timestamp (milliseconds since the Unix epoch).
+	 *
+	 * @returns Instance of `Chronos` with all methods and properties.
+	 */
+	(value: number): Chronos;
+
+	/**
+	 * * Converts a date into a `Chronos` object and access to all `Chronos` methods and properties.
+	 *
+	 * @description
+	 * This function serves as a wrapper around the `Chronos` class constructor and allows you to create a new `Chronos` instance from various types of date representations.
+	 *
+	 * @param value - A date value in `string`, it should be in a format that can be parsed by the `Date` constructor.
+	 *
+	 * @returns Instance of `Chronos` with all methods and properties.
+	 */
+	(value: string): Chronos;
+
+	/**
+	 * * Converts a date into a `Chronos` object and access to all `Chronos` methods and properties.
+	 *
+	 * @description
+	 * This function serves as a wrapper around the `Chronos` class constructor and allows you to create a new `Chronos` instance from various types of date representations.
+	 *
+	 * @param value - A date value as `Date` object, it will be used as is.
+	 *
+	 * @returns Instance of `Chronos` with all methods and properties.
+	 */
+	(value: Date): Chronos;
+
+	/**
+	 * * Converts a date into a `Chronos` object and access to all `Chronos` methods and properties.
+	 *
+	 * @description
+	 * This function serves as a wrapper around the `Chronos` class constructor and allows you to create a new `Chronos` instance from various types of date representations.
+	 *
+	 * @param value - A date value as `Chronos` object.
+	 *
+	 * @returns Instance of `Chronos` with all methods and properties.
+	 */
+	(value: Chronos): Chronos;
+
+	/**
+	 * * Converts a date into a `Chronos` object and access to all `Chronos` methods and properties.
+	 *
+	 * @description
+	 * This function serves as a wrapper around the `Chronos` class constructor and allows you to create a new `Chronos` instance from various types of date representations.
+	 *
+	 * @param year The full year designation is required for cross-century date accuracy. If year is between 0 and 99 is used, then year is assumed to be 1900 + year.
+	 * @param month The month as a number between 1 and 12 (January to December).
+	 * @param date The date as a number between 1 and 31.
+	 * @param hours Must be supplied if minutes is supplied. A number from 0 to 23 (midnight to 11pm) that specifies the hour.
+	 * @param minutes Must be supplied if seconds is supplied. A number from 0 to 59 that specifies the minutes.
+	 * @param seconds Must be supplied if milliseconds is supplied. A number from 0 to 59 that specifies the seconds.
+	 * @param ms A number from 0 to 999 that specifies the milliseconds.
+	 *
+	 * @returns Instance of `Chronos` with all methods and properties.
+	 */
+	(
+		year: number,
+		month: number,
+		date?: number,
+		hours?: number,
+		minutes?: number,
+		seconds?: number,
+		ms?: number,
+	): Chronos;
 
 	/**
 	 * * Returns the current date and time in a specified format in local time.
-	 * * Default format is dd, `MMM DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55:379`
+	 * * Default format is dd, `MMM DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55`
 	 * @param options - Configure format string and whether to format using utc offset.
 	 * @returns Formatted date string in desired format.
 	 */
@@ -295,10 +382,10 @@ export interface ChronosStatics {
 	 * // returns Chronos instance with the parsed date 2023-12-31T15:30:45
 	 * ```
 	 *
-	 * @param {string} dateStr - The date string to be parsed
-	 * @param {string} format - The format of the date string. Tokens like `YYYY`, `MM`, `DD`, `HH`, `mm`, `ss` are used to specify the structure.
-	 * @returns {Chronos} - A new `Chronos` instance representing the parsed date.
-	 * @throws {Error} - If the date string does not match the format.
+	 * @param dateStr - The date string to be parsed
+	 * @param format - The format of the date string. Tokens like `YYYY`, `MM`, `DD`, `HH`, `mm`, `ss` are used to specify the structure.
+	 * @returns A new `Chronos` instance representing the parsed date.
+	 * @throws `Error` If the date string does not match the format.
 	 */
 	parse(dateStr: string, format: string): Chronos;
 
@@ -306,19 +393,19 @@ export interface ChronosStatics {
 	 * * Creates UTC Chronos
 	 * @param dateLike Date input to create utc time.
 	 */
-	utc(dateLike: number | string | MonthDate | Chronos): Chronos;
+	utc(dateLike: ChronosInput): Chronos;
 
 	/**
 	 * * Returns earliest Chronos
 	 * @param dates Date inputs.
 	 */
-	min(...dates: (number | string | MonthDate | Chronos)[]): Chronos;
+	min(...dates: ChronosInput[]): Chronos;
 
 	/**
 	 * * Returns latest Chronos
 	 * @param dates Date inputs.
 	 */
-	max(...dates: (number | string | MonthDate | Chronos)[]): Chronos;
+	max(...dates: ChronosInput[]): Chronos;
 
 	/**
 	 * * Checks if the year in the date string or year (from 0 - 9999) is a leap year.
@@ -335,7 +422,7 @@ export interface ChronosStatics {
 	 * @param date - A `number` (year or Unix timestamp), `string`, `Date`, or `Chronos` instance representing a date.
 	 * @returns `true` if the year is a leap year, `false` otherwise.
 	 */
-	isLeapYear(date: number | string | MonthDate | Chronos): boolean;
+	isLeapYear(date: ChronosInput): boolean;
 
 	/**
 	 * * Checks if the given value is a valid `Date` object.
@@ -344,7 +431,7 @@ export interface ChronosStatics {
 	 * @param value - The value to test.
 	 * @returns `true` if the value is a valid Date object, otherwise `false`.
 	 */
-	isValidDate(value: unknown): value is MonthDate;
+	isValidDate(value: unknown): value is Date;
 
 	/**
 	 * * Checks if the given value is a valid date string.
@@ -406,7 +493,7 @@ export type UTCOffSet = `UTC${PositiveUTCHour | NegativeUTCHour}:${UTCMinute}`;
 
 /** * Format options */
 export interface FormatOptions {
-	/** - The desired format (Default format is dd, `MMM DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55:379`). */
+	/** - The desired format (Default format is dd, `MMM DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55). */
 	format?: string;
 	/** - Whether to use UTC time. Defaults to `false`. */
 	useUTC?: boolean;

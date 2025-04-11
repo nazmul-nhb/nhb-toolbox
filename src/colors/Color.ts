@@ -26,12 +26,12 @@ const { hex, rgb } = convertColorCode(hsl);
  * * It has 1 instance method `applyOpacity()` to apply opacity to `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` or `HSLA` color.
  * * It has 6 static methods that can be used to check if a color is in `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` or `HSLA` format.
  *
- * @property {Hex} hex - The color in `Hex` format.
- * @property {Hex8} hex8 - The color in `Hex8` format.
- * @property {RGB} rgb - The color in `RGB` format.
- * @property {RGBA} rgba - The color in `RGBA` format.
- * @property {HSL} hsl - The color in `HSL` format.
- * @property {HSLA} hsla - The color in `HSLA` format.
+ * @property hex - The color in `Hex` format.
+ * @property hex8 - The color in `Hex8` format.
+ * @property rgb - The color in `RGB` format.
+ * @property rgba - The color in `RGBA` format.
+ * @property hsl - The color in `HSL` format.
+ * @property hsla - The color in `HSLA` format.
  */
 export class Color {
 	public hex: Hex6;
@@ -41,15 +41,69 @@ export class Color {
 	public hsl: HSL;
 	public hsla: HSLA;
 
-	/** - Iterates over the color representations (Hex, RGB, HSL). */
-	*[Symbol.iterator]() {
-		yield this.hex;
-		yield this.hex8;
-		yield this.rgb;
-		yield this.rgba;
-		yield this.hsl;
-		yield this.hsla;
-	}
+	/**
+	 * * Creates a new `Color` instance with a random color and automatically converts the generated color to all other supported formats: `Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, and `HSLA`.
+	 *
+	 * @description
+	 * The `Color` class generates a random color in six common color representations:
+	 * - `Hex` (e.g., `#ff5733`)
+	 * - `Hex8` (Hex with opacity, e.g., `#ff573380`)
+	 * - `RGB` (e.g., `rgb(255, 87, 51)`)
+	 * - `RGBA` (e.g., `rgba(255, 87, 51, 1)`)
+	 * - `HSL` (e.g., `hsl(14, 100%, 60%)`)
+	 * - `HSLA` (e.g., `hsla(14, 100%, 60%, 1)`)
+	 *
+	 * Additionally:
+	 * - Use `.applyOpacity(opacity)` to modify or add opacity to the color.
+	 * - Use static methods like `Color.isHex6(color)` to validate color strings.
+	 *
+	 * @example
+	 * // Generate a random color
+	 * const randomColor = new Color();
+	 * console.log(randomColor.hex, randomColor.rgb, randomColor.hsl);
+	 *
+	 * @returns Instance of `Color`.
+	 */
+	constructor();
+
+	/**
+	 * * Creates a new `Color` instance with the input color and automatically converts it to all other supported formats: `Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, and `HSLA`.
+	 *
+	 * @description
+	 * The `Color` class allows seamless transformation between six common color representations:
+	 * - `Hex` (e.g., `#ff5733`)
+	 * - `Hex8` (Hex with opacity, e.g., `#ff573380`)
+	 * - `RGB` (e.g., `rgb(255, 87, 51)`)
+	 * - `RGBA` (e.g., `rgba(255, 87, 51, 1)`)
+	 * - `HSL` (e.g., `hsl(14, 100%, 60%)`)
+	 * - `HSLA` (e.g., `hsla(14, 100%, 60%, 1)`)
+	 *
+	 * You can create a color from any of these formats, and the class will populate the rest.
+	 *
+	 * Additionally:
+	 * - Use `.applyOpacity(opacity)` to modify or add opacity to the color.
+	 * - Use available 6 static methods like `Color.isHex6(color)` to validate color strings.
+	 *
+	 * @param toConvert - A color string in any supported format (`Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, or `HSLA`) to convert in all other formats (includes the current format).
+	 *
+	 * @example
+	 * // Convert an existing Hex color to all other formats
+	 * const color = new Color("#ff5733");
+	 * console.log(color.rgb); // 'rgb(255, 87, 51)'
+	 * console.log(color.hsl); // 'hsl(14, 100%, 60%)'
+	 * console.log(color.rgba); // 'rgba(255, 87, 51, 1)'
+	 * console.log(color.hsla); // 'hsla(14, 100%, 60%, 1)'
+	 * console.log(color.hex8); // '#FF5733FF'
+	 *
+	 * @example
+	 * // Handle a color with alpha
+	 * const alphaColor = new Color("rgba(255, 0, 0, 0.5)");
+	 * console.log(alphaColor.hex8); // '#FF000080'
+	 * console.log(alphaColor.hsla); // 'hsla(0, 100%, 50%, 0.5)'
+	 *
+	 * @returns Instance of `Color`.
+	 */
+	constructor(toConvert: ColorType);
 
 	/**
 	 * * Creates a new `Color` instance and automatically converts the input color to all other supported formats: `Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, and `HSLA`.
@@ -91,11 +145,12 @@ export class Color {
 	 * // Generate a random color
 	 * const randomColor = new Color();
 	 * console.log(randomColor.hex, randomColor.rgb, randomColor.hsl);
+	 *
+	 * @returns Instance of `Color`.
 	 */
-
 	constructor(toConvert?: ColorType) {
 		if (toConvert) {
-			const colors = this._convertColorToOthers(toConvert);
+			const colors = this.#convertColorToOthers(toConvert);
 
 			if ('hex8' in colors) {
 				// Extract alpha color values (Hex8, RGBA, HSLA)
@@ -134,6 +189,16 @@ export class Color {
 			this.hsl = hsl;
 			this.hsla = `hsla(${hslValues[0]}, ${hslValues[1]}%, ${hslValues[2]}%, 1)`;
 		}
+	}
+
+	/** - Iterates over the color representations (Hex, RGB, HSL). */
+	*[Symbol.iterator]() {
+		yield this.hex;
+		yield this.hex8;
+		yield this.rgb;
+		yield this.rgba;
+		yield this.hsl;
+		yield this.hsla;
 	}
 
 	/**
@@ -178,7 +243,7 @@ export class Color {
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's a `Hex6` color, `false` if not.
 	 */
-	public static isHex6(color: string): color is Hex6 {
+	static isHex6(color: string): color is Hex6 {
 		return /^#[0-9A-Fa-f]{6}$/.test(color);
 	}
 
@@ -188,7 +253,7 @@ export class Color {
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's a `Hex8` color, `false` if not.
 	 */
-	public static isHex8(color: string): color is Hex8 {
+	static isHex8(color: string): color is Hex8 {
 		return /^#[0-9A-Fa-f]{8}$/.test(color);
 	}
 
@@ -198,7 +263,7 @@ export class Color {
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's an `RGB` color, `false` if not.
 	 */
-	public static isRGB(color: string): color is RGB {
+	static isRGB(color: string): color is RGB {
 		return /^rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)$/.test(color);
 	}
 
@@ -208,7 +273,7 @@ export class Color {
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's an `RGBA` color, `false` if not.
 	 */
-	public static isRGBA(color: string): color is RGBA {
+	static isRGBA(color: string): color is RGBA {
 		return /^rgba\(\d{1,3},\s*\d{1,3},\s*\d{1,3},\s*(0|1|0?\.\d+)\)$/.test(
 			color,
 		);
@@ -220,7 +285,7 @@ export class Color {
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's an `HSL` color, `false` if not.
 	 */
-	public static isHSL(color: string): color is HSL {
+	static isHSL(color: string): color is HSL {
 		return /^hsl\(\d{1,3},\s*\d{1,3}%,\s*\d{1,3}%\)$/.test(color);
 	}
 
@@ -230,7 +295,7 @@ export class Color {
 	 * @param color Color to check.
 	 * @returns Boolean: `true` if it's an `HSLA` color, `false` if not.
 	 */
-	public static isHSLA(color: string): color is HSLA {
+	static isHSLA(color: string): color is HSLA {
 		return /^hsla\(\d{1,3},\s*\d{1,3}%,\s*\d{1,3}%,\s*(0|1|0?\.\d+)\)$/.test(
 			color,
 		);
@@ -242,7 +307,7 @@ export class Color {
 	 * @param color - The color to convert.
 	 * @returns An object containing Hex, RGB, and HSL representations.
 	 */
-	private _convertColorToOthers(color: ColorType): SolidColors | AlphaColors {
+	#convertColorToOthers(color: ColorType): SolidColors | AlphaColors {
 		if (Color.isHex6(color)) {
 			const { rgb, hsl } = convertColorCode(color);
 			return { hex: color, rgb, hsl };
