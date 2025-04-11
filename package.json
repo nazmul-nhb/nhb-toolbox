@@ -14,7 +14,8 @@
 		"lint": "node scripts/lint.mjs",
 		"fix": "node scripts/fix.mjs",
 		"commit": "node scripts/commit.mjs",
-		"check": "node scripts/jsDoc.mjs"
+		"check": "node scripts/jsDoc.mjs",
+		"count": "node scripts/exports.mjs"
 	},
 	"publishConfig": {
 		"access": "public"
