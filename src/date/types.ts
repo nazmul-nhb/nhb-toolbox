@@ -11,6 +11,7 @@ import type {
 	TIME_FORMATS,
 	TIME_ZONES,
 	YEAR_FORMATS,
+	ZODIAC_SIGNS,
 } from './constants';
 
 /** - Minute in numeric string from `00` to `23` */
@@ -526,3 +527,5 @@ export type DayPart =
 export type DayPartConfig = Record<DayPart, [Hours, Hours]>;
 
 export type Quarter = 1 | 2 | 3 | 4;
+
+export type ZodiacSign = (typeof ZODIAC_SIGNS)[number][0];

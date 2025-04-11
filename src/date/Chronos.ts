@@ -11,6 +11,7 @@ import {
 	sortedFormats,
 	TIME_ZONE_LABELS,
 	TIME_ZONES,
+	ZODIAC_SIGNS,
 } from './constants';
 import { isLeapYear, isValidUTCOffSet } from './guards';
 import type {
@@ -26,6 +27,7 @@ import type {
 	TimeUnit,
 	TimeZone,
 	UTCOffSet,
+	ZodiacSign,
 } from './types';
 import { extractMinutesFromUTC, formatUTCOffset } from './utils';
 
@@ -1513,6 +1515,23 @@ export class Chronos {
 		const start = new Date(this.year, 0, 1);
 		const diff = this.#date.getTime() - start.getTime();
 		return Math.floor(diff / 86400000) + 1;
+	}
+
+	/**
+	 * @instance Returns the zodiac sign for the current date.
+	 * @returns The Western zodiac sign.
+	 */
+	getZodiacSign(): ZodiacSign {
+		const day = this.#date.getDate();
+		const month = this.#date.getMonth() + 1;
+
+		for (const [sign, [m, d]] of ZODIAC_SIGNS) {
+			if (month === m && day <= d) {
+				return sign;
+			}
+		}
+
+		return 'Capricorn';
 	}
 
 	/** @instance Returns number of days in current month */

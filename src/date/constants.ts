@@ -406,3 +406,19 @@ export const DEFAULT_RANGES: Record<DayPart, [Hours, Hours]> = {
 	afternoon: ['12', '16'],
 	evening: ['17', '20'],
 } as const;
+
+export const ZODIAC_SIGNS = [
+	['Capricorn', [1, 19]],
+	['Aquarius', [2, 18]],
+	['Pisces', [3, 20]],
+	['Aries', [4, 19]],
+	['Taurus', [5, 20]],
+	['Gemini', [6, 20]],
+	['Cancer', [7, 22]],
+	['Leo', [8, 22]],
+	['Virgo', [9, 22]],
+	['Libra', [10, 22]],
+	['Scorpio', [11, 21]],
+	['Sagittarius', [12, 21]],
+	['Capricorn', [12, 31]],
+] as const;
