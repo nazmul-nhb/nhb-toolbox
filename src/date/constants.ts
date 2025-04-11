@@ -1,4 +1,4 @@
-import type { UTCOffSet } from './types';
+import type { DayPart, Hours, UTCOffSet } from './types';
 
 export const ORIGIN = Symbol('origin');
 
@@ -396,3 +396,13 @@ export const TIME_ZONE_LABELS: Record<UTCOffSet, string> = {
 	'UTC+13:45': 'Tokelau Time (Unofficial)',
 	'UTC+14:00': 'Line Islands Time',
 } as Record<UTCOffSet, string>;
+
+/** Ranges for day parts. */
+export const DEFAULT_RANGES: Record<DayPart, [Hours, Hours]> = {
+	night: ['21', '23'],
+	midnight: ['00', '01'],
+	lateNight: ['02', '04'],
+	morning: ['05', '11'],
+	afternoon: ['12', '16'],
+	evening: ['17', '20'],
+} as const;

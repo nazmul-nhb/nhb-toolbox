@@ -104,11 +104,13 @@ const chronos = ((
  *
  * ```ts
  * today(options?: FormatOptions): string
+ * yesterday(): Chronos;
+ * tomorrow(): Chronos
  * now(): number
  * parse(dateStr: string, format: string): Chronos
  * utc(dateLike: ChronosInput): Chronos
- * min(...dates: (ChronosInput)[]): Chronos
- * max(...dates: (ChronosInput)[]): Chronos
+ * min(...dates: ChronosInput[]): Chronos
+ * max(...dates: ChronosInput[]): Chronos
  * isLeapYear(date: ChronosInput): boolean
  * isValidDate(value: unknown): boolean
  * isDateString(value: unknown): boolean

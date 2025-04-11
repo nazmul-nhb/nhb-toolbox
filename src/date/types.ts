@@ -358,6 +358,20 @@ export interface ChronosStatics {
 	today(options?: FormatOptions): string;
 
 	/**
+	 * * Returns a new `Chronos` instance representing yesterday's date.
+	 *
+	 * @returns A `Chronos` instance for the next calendar day.
+	 */
+	yesterday(): Chronos;
+
+	/**
+	 * * Returns a new `Chronos` instance representing tomorrow's date.
+	 *
+	 * @returns A `Chronos` instance for the next calendar day.
+	 */
+	tomorrow(): Chronos;
+
+	/**
 	 * * Returns the number of milliseconds elapsed since midnight, January 1, 1970 Universal Coordinated Time (UTC).
 	 * * It basically calls `Date.now()`.
 	 * @returns The number of milliseconds elapsed since the Unix epoch.
@@ -498,3 +512,15 @@ export interface FormatOptions {
 	/** - Whether to use UTC time. Defaults to `false`. */
 	useUTC?: boolean;
 }
+
+/** Definition of day part names. */
+export type DayPart =
+	| 'night'
+	| 'midnight'
+	| 'lateNight'
+	| 'morning'
+	| 'afternoon'
+	| 'evening';
+
+/** Object type for extracting day parts. */
+export type DayPartConfig = Record<DayPart, [Hours, Hours]>;
