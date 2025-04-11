@@ -42,12 +42,11 @@ import type { ChronosStatics } from './types';
  * Chronos.parse("2023-12-31", "YYYY-MM-DD");
  * ```
  */
-
 const chronos = ((date?: number | string | Date | Chronos) => {
 	return new Chronos(date);
 }) as ChronosStatics;
 
-// Add static methods from Chronos class to the chronos function
+// ? Add static methods from Chronos class to the chronos function
 Object.getOwnPropertyNames(Chronos).forEach((method) => {
 	// Exclude non-method properties like `length`, `name`, `prototype`
 	if (method !== 'prototype' && method !== 'name' && method !== 'length') {
@@ -55,7 +54,7 @@ Object.getOwnPropertyNames(Chronos).forEach((method) => {
 	}
 });
 
-// Add instance methods from Chronos prototype to chronos function
+// ? Add instance methods from Chronos prototype to chronos function
 // Object.getOwnPropertyNames(Chronos.prototype).forEach((method) => {
 // 	// Skip the constructor method
 // 	if (method !== 'constructor') {

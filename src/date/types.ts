@@ -155,6 +155,7 @@ export type TimeUnit =
 	| 'year'
 	| 'month'
 	| 'day'
+	| 'week'
 	| 'hour'
 	| 'minute'
 	| 'second'
@@ -163,7 +164,7 @@ export type TimeUnit =
 export type Year = (typeof YEAR_FORMATS)[number];
 export type Month = (typeof MONTH_FORMATS)[number];
 export type Day = (typeof DAY_FORMATS)[number];
-export type Date = (typeof DATE_FORMATS)[number];
+export type MonthDate = (typeof DATE_FORMATS)[number];
 export type Hour = (typeof HOUR_FORMATS)[number];
 export type Minute = (typeof MINUTE_FORMATS)[number];
 export type Second = (typeof SECOND_FORMATS)[number];
@@ -174,7 +175,7 @@ export type ChronosFormat =
 	| Year
 	| Month
 	| Day
-	| Date
+	| MonthDate
 	| Hour
 	| Minute
 	| Second
@@ -183,28 +184,28 @@ export type ChronosFormat =
 
 /** Standard date formats. */
 export type DateParts =
-	| `${Date} ${Exclude<Month, 'M' | 'MM'>}`
-	| `${Exclude<Month, 'M' | 'MM'>} ${Date}`
-	| `${Day}, ${Date} ${Exclude<Month, 'M' | 'MM'>}`
-	| `${Day}, ${Exclude<Month, 'M' | 'MM'>} ${Date}`
-	| `${Exclude<Month, 'M' | 'MM'>} ${Date}, ${Year}`
-	| `${Date} ${Exclude<Month, 'M' | 'MM'>}, ${Year}`
-	| `${Exclude<Month, 'M' | 'MM'>} ${Date} ${Year}`
-	| `${Date} ${Exclude<Month, 'M' | 'MM'>} ${Year}`
-	| `${Day}, ${Exclude<Month, 'M' | 'MM'>} ${Date}, ${Year}`
-	| `${Day}, ${Date} ${Exclude<Month, 'M' | 'MM'>}, ${Year}`
-	| `${Day}, ${Exclude<Month, 'M' | 'MM'>} ${Date} ${Year}`
-	| `${Day}, ${Date} ${Exclude<Month, 'M' | 'MM'>} ${Year}`
-	| `${Exclude<Date, 'Do'>}.${Exclude<Month, 'mmm' | 'mmmm'>}.${Year}`
-	| `${Year}.${Exclude<Month, 'mmm' | 'mmmm'>}.${Exclude<Date, 'Do'>}`
-	| `${Exclude<Date, 'Do'>}/${Exclude<Month, 'mmm' | 'mmmm'>}/${Year}`
-	| `${Exclude<Date, 'Do'>}-${Exclude<Month, 'mmm' | 'mmmm'>}-${Year}`
-	| `${Exclude<Month, 'mmm' | 'mmmm'>}/${Exclude<Date, 'Do'>}/${Year}`
-	| `${Exclude<Month, 'mmm' | 'mmmm'>}-${Exclude<Date, 'Do'>}-${Year}`
-	| `${Year}-${Exclude<Month, 'mmm' | 'mmmm'>}-${Exclude<Date, 'Do'>}`
-	| `${Year}/${Exclude<Month, 'mmm' | 'mmmm'>}/${Exclude<Date, 'Do'>}`
-	| `${Year}-${Exclude<Date, 'Do'>}-${Exclude<Month, 'mmm' | 'mmmm'>}`
-	| `${Year}/${Exclude<Date, 'Do'>}/${Exclude<Month, 'mmm' | 'mmmm'>}`;
+	| `${MonthDate} ${Exclude<Month, 'M' | 'MM'>}`
+	| `${Exclude<Month, 'M' | 'MM'>} ${MonthDate}`
+	| `${Day}, ${MonthDate} ${Exclude<Month, 'M' | 'MM'>}`
+	| `${Day}, ${Exclude<Month, 'M' | 'MM'>} ${MonthDate}`
+	| `${Exclude<Month, 'M' | 'MM'>} ${MonthDate}, ${Year}`
+	| `${MonthDate} ${Exclude<Month, 'M' | 'MM'>}, ${Year}`
+	| `${Exclude<Month, 'M' | 'MM'>} ${MonthDate} ${Year}`
+	| `${MonthDate} ${Exclude<Month, 'M' | 'MM'>} ${Year}`
+	| `${Day}, ${Exclude<Month, 'M' | 'MM'>} ${MonthDate}, ${Year}`
+	| `${Day}, ${MonthDate} ${Exclude<Month, 'M' | 'MM'>}, ${Year}`
+	| `${Day}, ${Exclude<Month, 'M' | 'MM'>} ${MonthDate} ${Year}`
+	| `${Day}, ${MonthDate} ${Exclude<Month, 'M' | 'MM'>} ${Year}`
+	| `${Exclude<MonthDate, 'Do'>}.${Exclude<Month, 'mmm' | 'mmmm'>}.${Year}`
+	| `${Year}.${Exclude<Month, 'mmm' | 'mmmm'>}.${Exclude<MonthDate, 'Do'>}`
+	| `${Exclude<MonthDate, 'Do'>}/${Exclude<Month, 'mmm' | 'mmmm'>}/${Year}`
+	| `${Exclude<MonthDate, 'Do'>}-${Exclude<Month, 'mmm' | 'mmmm'>}-${Year}`
+	| `${Exclude<Month, 'mmm' | 'mmmm'>}/${Exclude<MonthDate, 'Do'>}/${Year}`
+	| `${Exclude<Month, 'mmm' | 'mmmm'>}-${Exclude<MonthDate, 'Do'>}-${Year}`
+	| `${Year}-${Exclude<Month, 'mmm' | 'mmmm'>}-${Exclude<MonthDate, 'Do'>}`
+	| `${Year}/${Exclude<Month, 'mmm' | 'mmmm'>}/${Exclude<MonthDate, 'Do'>}`
+	| `${Year}-${Exclude<MonthDate, 'Do'>}-${Exclude<Month, 'mmm' | 'mmmm'>}`
+	| `${Year}/${Exclude<MonthDate, 'Do'>}/${Exclude<Month, 'mmm' | 'mmmm'>}`;
 
 /** Standard Time Formats */
 export type TimeParts =
@@ -257,6 +258,7 @@ export type ChronosMethods =
 			:	never;
 	  }[keyof typeof Chronos];
 
+/** All the statics methods in `Chronos` class */
 export interface ChronosStatics {
 	(date?: number | string | Date | Chronos): Chronos;
 
@@ -304,19 +306,19 @@ export interface ChronosStatics {
 	 * * Creates UTC Chronos
 	 * @param dateLike Date input to create utc time.
 	 */
-	utc(dateLike: number | string | Date | Chronos): Chronos;
+	utc(dateLike: number | string | MonthDate | Chronos): Chronos;
 
 	/**
 	 * * Returns earliest Chronos
 	 * @param dates Date inputs.
 	 */
-	min(...dates: (number | string | Date | Chronos)[]): Chronos;
+	min(...dates: (number | string | MonthDate | Chronos)[]): Chronos;
 
 	/**
 	 * * Returns latest Chronos
 	 * @param dates Date inputs.
 	 */
-	max(...dates: (number | string | Date | Chronos)[]): Chronos;
+	max(...dates: (number | string | MonthDate | Chronos)[]): Chronos;
 
 	/**
 	 * * Checks if the year in the date string or year (from 0 - 9999) is a leap year.
@@ -333,7 +335,7 @@ export interface ChronosStatics {
 	 * @param date - A `number` (year or Unix timestamp), `string`, `Date`, or `Chronos` instance representing a date.
 	 * @returns `true` if the year is a leap year, `false` otherwise.
 	 */
-	isLeapYear(date: number | string | Date | Chronos): boolean;
+	isLeapYear(date: number | string | MonthDate | Chronos): boolean;
 
 	/**
 	 * * Checks if the given value is a valid `Date` object.
@@ -342,7 +344,7 @@ export interface ChronosStatics {
 	 * @param value - The value to test.
 	 * @returns `true` if the value is a valid Date object, otherwise `false`.
 	 */
-	isValidDate(value: unknown): value is Date;
+	isValidDate(value: unknown): value is MonthDate;
 
 	/**
 	 * * Checks if the given value is a valid date string.

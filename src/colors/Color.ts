@@ -32,19 +32,6 @@ const { hex, rgb } = convertColorCode(hsl);
  * @property {RGBA} rgba - The color in `RGBA` format.
  * @property {HSL} hsl - The color in `HSL` format.
  * @property {HSLA} hsla - The color in `HSLA` format.
- *
- * @example
- * const color = new Color("#ff5733"); // Accepts a color in `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` or `HSLA` format.
- * console.log(color.hex); // Get Hex equivalent
- * console.log(color.hex8); // Get Hex8 equivalent
- * console.log(color.rgb); // Get RGB equivalent
- * console.log(color.rgba); // Get RGBA equivalent
- * console.log(color.hsl); // Get HSL equivalent
- * console.log(color.hsla); // Get HSLA equivalent
- *
- * @example
- * const randomColor = new Color(); // Generate a random color
- * console.log(randomColor.hex, randomColor.rgb, randomColor.hsl, randomColor.hex8, randomColor.rgba, randomColor.hsla); // Get RGBA and HSLA equivalent
  */
 export class Color {
 	public hex: Hex6;
@@ -65,10 +52,47 @@ export class Color {
 	}
 
 	/**
-	 * * Creates a new `Color` instance, optionally converts an input color to other 5 different color formats.
+	 * * Creates a new `Color` instance and automatically converts the input color to all other supported formats: `Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, and `HSLA`.
 	 *
-	 * @param toConvert - The color to convert. If not provided, a random color is generated.
+	 * @description
+	 * The `Color` class allows seamless transformation between six common color representations:
+	 * - `Hex` (e.g., `#ff5733`)
+	 * - `Hex8` (Hex with opacity, e.g., `#ff573380`)
+	 * - `RGB` (e.g., `rgb(255, 87, 51)`)
+	 * - `RGBA` (e.g., `rgba(255, 87, 51, 1)`)
+	 * - `HSL` (e.g., `hsl(14, 100%, 60%)`)
+	 * - `HSLA` (e.g., `hsla(14, 100%, 60%, 1)`)
+	 *
+	 * You can create a color from any of these formats, and the class will populate the rest.
+	 * If no color is passed, a random color will be generated.
+	 *
+	 * Additionally:
+	 * - Use `.applyOpacity(opacity)` to modify or add opacity to the color.
+	 * - Use static methods like `Color.isHex6(color)` to validate color strings.
+	 *
+	 * @param toConvert - An optional input color string in any supported format (`Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, or `HSLA`) to convert in all other (includes the current format) formats.
+	 *
+	 * @example
+	 * // Convert an existing Hex color to all other formats
+	 * const color = new Color("#ff5733");
+	 * console.log(color.rgb); // 'rgb(255, 87, 51)'
+	 * console.log(color.hsl); // 'hsl(14, 100%, 60%)'
+	 * console.log(color.rgba); // 'rgba(255, 87, 51, 1)'
+	 * console.log(color.hsla); // 'hsla(14, 100%, 60%, 1)'
+	 * console.log(color.hex8); // '#FF5733FF'
+	 *
+	 * @example
+	 * // Handle a color with alpha
+	 * const alphaColor = new Color("rgba(255, 0, 0, 0.5)");
+	 * console.log(alphaColor.hex8); // '#FF000080'
+	 * console.log(alphaColor.hsla); // 'hsla(0, 100%, 50%, 0.5)'
+	 *
+	 * @example
+	 * // Generate a random color
+	 * const randomColor = new Color();
+	 * console.log(randomColor.hex, randomColor.rgb, randomColor.hsl);
 	 */
+
 	constructor(toConvert?: ColorType) {
 		if (toConvert) {
 			const colors = this._convertColorToOthers(toConvert);
@@ -239,6 +263,6 @@ export class Color {
 			return { hex8, rgba, hsla: color };
 		}
 
-		throw new Error(`Unrecognized Color Format! ${color}`);
+		throw new Error(`Unrecognized color format: ${color}`);
 	}
 }

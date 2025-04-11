@@ -26,6 +26,9 @@ export {
 	replaceAllInString,
 	reverseString,
 	slugifyString,
+	formatUnitWithPlural,
+	formatUnitWithPlural as formatWithPlural,
+	formatUnitWithPlural as formatNumberWithPluralUnit,
 } from './string/convert';
 
 export {

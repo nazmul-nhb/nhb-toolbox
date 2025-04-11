@@ -1,6 +1,7 @@
 import { isString } from '../guards/primitives';
 import type { LocaleCode } from '../number/types';
 import { getOrdinal } from '../number/utilities';
+import { formatUnitWithPlural } from '../string/convert';
 import {
 	DAYS,
 	MONTHS,
@@ -9,7 +10,7 @@ import {
 	TIME_ZONE_LABELS,
 	TIME_ZONES,
 } from './constants';
-import { isValidUTCOffSet } from './guards';
+import { isLeapYear, isValidUTCOffSet } from './guards';
 import type {
 	ChronosFormat,
 	ChronosMethods,
@@ -23,7 +24,7 @@ import type {
 import { extractMinutesFromUTC, formatUTCOffset } from './utils';
 
 export class Chronos {
-	readonly #date: Date;
+	#date: Date;
 	#offset: UTCOffSet;
 	[ORIGIN]?: ChronosMethods | 'root';
 
@@ -557,6 +558,17 @@ export class Chronos {
 	}
 
 	/**
+	 * @public @instance Adds weeks and returns a new immutable instance.
+	 * @param weeks - Number of weeks to add.
+	 * @returns A new `Chronos` instance with the updated date.
+	 */
+	addWeeks(weeks: number): Chronos {
+		const newDate = new Date(this.#date);
+		newDate.setDate(newDate.getDate() + weeks * 7);
+		return new Chronos(newDate).#withOrigin('addWeeks');
+	}
+
+	/**
 	 * @public @instance Adds months and returns a new immutable instance.
 	 * @param months - Number of months to add.
 	 * @returns A new `Chronos` instance with the updated date.
@@ -613,7 +625,7 @@ export class Chronos {
 	isLeapYear(): boolean {
 		const year = this.#date.getFullYear();
 
-		return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+		return isLeapYear(year);
 	}
 
 	/** @public @instance Checks if the current date is today. */
@@ -743,6 +755,7 @@ export class Chronos {
 		let years = to.getFullYear() - from.getFullYear();
 		let months = to.getMonth() - from.getMonth();
 		let days = to.getDate() - from.getDate();
+		let weeks = 0;
 		let hours = to.getHours() - from.getHours();
 		let minutes = to.getMinutes() - from.getMinutes();
 		let seconds = to.getSeconds() - from.getSeconds();
@@ -763,6 +776,11 @@ export class Chronos {
 			days--;
 		}
 
+		if (level === 'week' || level === 'day') {
+			weeks = Math.floor(days / 7);
+			days = days % 7;
+		}
+
 		if (days < 0) {
 			const prevMonth = new Date(to.getFullYear(), to.getMonth(), 0);
 
@@ -778,6 +796,7 @@ export class Chronos {
 		const unitOrder = [
 			'year',
 			'month',
+			'week',
 			'day',
 			'hour',
 			'minute',
@@ -789,25 +808,28 @@ export class Chronos {
 		const parts: string[] = [];
 
 		if (lvlIdx >= 0 && years > 0 && lvlIdx >= unitOrder.indexOf('year')) {
-			parts.push(`${years} year${years > 1 ? 's' : ''}`);
+			parts.push(formatUnitWithPlural(years, 'year'));
 		}
 		if (lvlIdx >= unitOrder.indexOf('month') && months > 0) {
-			parts.push(`${months} month${months > 1 ? 's' : ''}`);
+			parts.push(formatUnitWithPlural(months, 'month'));
+		}
+		if (lvlIdx >= unitOrder.indexOf('week') && weeks > 0) {
+			parts.push(formatUnitWithPlural(weeks, 'week'));
 		}
 		if (lvlIdx >= unitOrder.indexOf('day') && days > 0) {
-			parts.push(`${days} day${days > 1 ? 's' : ''}`);
+			parts.push(formatUnitWithPlural(days, 'day'));
 		}
 		if (lvlIdx >= unitOrder.indexOf('hour') && hours > 0) {
-			parts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
+			parts.push(formatUnitWithPlural(hours, 'hour'));
 		}
 		if (lvlIdx >= unitOrder.indexOf('minute') && minutes > 0) {
-			parts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`);
+			parts.push(formatUnitWithPlural(minutes, 'minute'));
 		}
 		if (
 			lvlIdx >= unitOrder.indexOf('second') &&
 			(seconds > 0 || parts.length === 0)
 		) {
-			parts.push(`${seconds} second${seconds !== 1 ? 's' : ''}`);
+			parts.push(formatUnitWithPlural(seconds, 'second'));
 		}
 
 		let prefix = '';
@@ -893,6 +915,16 @@ export class Chronos {
 	}
 
 	/**
+	 * @public @instance Determines how many full weeks apart the input date is from the `Chronos` instance.
+	 * @param time Optional time to compare with the `Chronos` date/time.
+	 * @returns Difference in weeks; negative if past, positive if future.
+	 */
+	getRelativeWeek(time?: number | string | Date | Chronos): number {
+		const relativeDays = this.getRelativeDay(time);
+		return Math.floor(relativeDays / 7);
+	}
+
+	/**
 	 * @public @instance Returns the number of full hours between the input date and now.
 	 * @param time Optional time to compare with the `Chronos` date/time.
 	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
@@ -949,6 +981,8 @@ export class Chronos {
 				return this.getRelativeMonth(time);
 			case 'day':
 				return this.getRelativeDay(time);
+			case 'week':
+				return this.getRelativeWeek(time);
 			case 'hour':
 				return this.getRelativeHour(time);
 			case 'minute':
@@ -966,7 +1000,7 @@ export class Chronos {
 	 * @public @instance Returns a new Chronos instance at the start of a given unit.
 	 * @param unit The unit to reset (e.g., year, month, day).
 	 */
-	startOf(unit: TimeUnit | 'week'): Chronos {
+	startOf(unit: TimeUnit): Chronos {
 		const d = new Date(this.#date);
 
 		switch (unit) {
@@ -1040,6 +1074,9 @@ export class Chronos {
 			case 'day':
 				d.setDate(d.getDate() + amount);
 				break;
+			case 'week':
+				d.setDate(d.getDate() + amount * 7);
+				break;
 			case 'month':
 				d.setMonth(d.getMonth() + amount);
 				break;
@@ -1072,6 +1109,8 @@ export class Chronos {
 				return this.#date.getMonth();
 			case 'day':
 				return this.#date.getDate();
+			case 'week':
+				return this.getWeek();
 			case 'hour':
 				return this.#date.getHours();
 			case 'minute':
@@ -1101,6 +1140,8 @@ export class Chronos {
 			case 'day':
 				d.setDate(value);
 				break;
+			case 'week':
+				return this.setWeek(value);
 			case 'hour':
 				d.setHours(value);
 				break;
@@ -1139,6 +1180,8 @@ export class Chronos {
 				return msDiff / 3.6e6;
 			case 'day':
 				return msDiff / 8.64e7;
+			case 'week':
+				return msDiff / 6.048e8;
 			case 'month':
 				return (
 					(this.get('year') - time.get('year')) * 12 +
@@ -1204,7 +1247,57 @@ export class Chronos {
 		}
 	}
 
-	/** @public @instance Returns ISO week number */
+	/**
+	 * @public @instance Sets the date to the Monday of the specified ISO week number within the current year.
+	 * This method assumes ISO week logic, where week 1 is the week containing January 4th.
+	 *
+	 * @param week The ISO week number (1–53) to set the date to.
+	 * @returns A new Chronos instance set to the start (Monday) of the specified week.
+	 */
+	setWeek(week: number): Chronos {
+		const d = new Date(this.#date);
+
+		const year = d.getFullYear();
+		const jan4 = new Date(year, 0, 4);
+		const dayOfWeek = jan4.getDay() || 7; // Make Sunday (0) into 7
+		const weekStart = new Date(jan4);
+		weekStart.setDate(jan4.getDate() - (dayOfWeek - 1)); // Move to Monday
+
+		weekStart.setDate(weekStart.getDate() + (week - 1) * 7); // Move to target week
+		d.setFullYear(weekStart.getFullYear());
+		d.setMonth(weekStart.getMonth());
+		d.setDate(weekStart.getDate());
+
+		return new Chronos(d).#withOrigin('setWeek');
+	}
+
+	// /**
+	//  * @public @instance Sets the date to the Monday of the specified ISO week number and year.
+	//  * @param week ISO week number (1–53)
+	//  * @param isoYear Optional ISO week year. Defaults to the current ISO week year.
+	//  * @returns New Chronos instance set to the start of the specified ISO week.
+	//  */
+	// setISOWeek(week: number, isoYear?: number): Chronos {
+	// 	// ❗ Use calendar year instead of ISO week year unless explicitly provided
+	// 	const targetISOYear = isoYear ?? this.#date.getFullYear();
+
+	// 	const jan4 = new Date(Date.UTC(targetISOYear, 0, 4));
+	// 	const dayOfWeek = jan4.getUTCDay();
+	// 	const offset = (dayOfWeek + 6) % 7;
+
+	// 	const firstISOWeekStart = new Date(jan4);
+	// 	firstISOWeekStart.setUTCDate(jan4.getUTCDate() - offset);
+	// 	firstISOWeekStart.setUTCDate(
+	// 		firstISOWeekStart.getUTCDate() + (week - 1) * 7,
+	// 	);
+
+	// 	return new Chronos(firstISOWeekStart).#withOrigin('setISOWeek');
+	// }
+
+	/**
+	 * @public @instance Calculates the ISO week number of the year.
+	 * @returns Week number (1-53).
+	 */
 	getWeek(): number {
 		// ISO week starts on Monday
 		const target = this.startOf('week').add(3, 'day');
@@ -1213,8 +1306,7 @@ export class Chronos {
 			.startOf('week')
 			.add(3, 'day');
 
-		const daysDiff = target.diff(firstThursday, 'day');
-		const week = Math.floor(daysDiff / 7) + 1;
+		const week = target.diff(firstThursday, 'week');
 
 		return week;
 	}
@@ -1224,6 +1316,16 @@ export class Chronos {
 		const d = this.startOf('week').add(3, 'day'); // Thursday of current ISO week
 		return d.year;
 	}
+
+	// /**
+	//  * @private @instance Gets the ISO week-numbering year.
+	//  * @returns The ISO year (can differ from calendar year).
+	//  */
+	// getISOWeekYear(): number {
+	// 	const date = new Date(this.#date);
+	// 	date.setDate(date.getDate() + 4 - (date.getDay() || 7)); // Thursday of the week
+	// 	return date.getFullYear();
+	// }
 
 	/** @public @instance Returns day of year (1 - 366) */
 	getDayOfYear(): number {
@@ -1427,7 +1529,7 @@ export class Chronos {
 			year = date instanceof Chronos ? date.year : new Chronos(date).year;
 		}
 
-		return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+		return isLeapYear(year);
 	}
 
 	/**

@@ -214,3 +214,22 @@ export function extractEmails(str: string): string[] {
 export function extractURLs(str: string): string[] {
 	return str.match(/https?:\/\/[^\s/$.?#].[^\s]*/g) || [];
 }
+
+/**
+ * * Returns a grammatically correct unit string, optionally prefixed with the number.
+ *
+ * @param count The numeric value to determine singular or plural.
+ * @param unit The unit name (e.g., "day", "hour").
+ * @param withNumber Whether to prefix the count before the unit. Defaults to `true`.
+ * @returns Formatted unit string like `"1 day"`, `"2 months"`, or `"hour"`.
+ */
+export function formatUnitWithPlural(
+	count: number,
+	unit: string,
+	withNumber = true,
+): string {
+	const abs = Math.abs(count);
+	const pluralized = abs === 1 ? unit : `${unit}s`;
+
+	return withNumber ? `${count} ${pluralized}` : pluralized;
+}
