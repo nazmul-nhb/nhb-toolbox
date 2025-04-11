@@ -524,3 +524,5 @@ export type DayPart =
 
 /** Object type for extracting day parts. */
 export type DayPartConfig = Record<DayPart, [Hours, Hours]>;
+
+export type Quarter = 1 | 2 | 3 | 4;

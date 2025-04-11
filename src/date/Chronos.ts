@@ -2,6 +2,7 @@ import { isString } from '../guards/primitives';
 import type { LocaleCode } from '../number/types';
 import { getOrdinal } from '../number/utilities';
 import { formatUnitWithPlural } from '../string/convert';
+import { isPalindrome } from '../string/guards';
 import {
 	DAYS,
 	DEFAULT_RANGES,
@@ -20,6 +21,7 @@ import type {
 	DayPart,
 	DayPartConfig,
 	FormatOptions,
+	Quarter,
 	StrictFormat,
 	TimeUnit,
 	TimeZone,
@@ -842,6 +844,38 @@ export class Chronos {
 		}
 	}
 
+	/**
+	 * @instance Checks if the current date is a palindrome in either padded or non-padded format.
+	 *
+	 * @remarks
+	 * A palindrome date reads the same forward and backward, excluding delimiters.
+	 * This method checks both zero-padded (`MM-DD`) and non-padded (`M-D`) formats for flexibility.
+	 *
+	 * Examples of palindromes:
+	 * - `'2020-02-02'` → `'20200202'` ✅
+	 * - `'2112-11-12'` → `'21121112'` ❌
+	 * - `'2011-01-11'` (from `'YY-M-D'`) → `'11111'` ✅
+	 * - `'2011-01-11'` (from `'YYYY-M-D'`) → `'11111'` ❌
+	 *
+	 * @param shortYear - If `true`, uses `'YY-MM-DD'` and `'YY-M-D'` formats.
+	 *                    If `false`, uses `'YYYY-MM-DD'` and `'YYYY-M-D'` formats.
+	 *                    Defaults to `false`.
+	 *
+	 * @returns `true` if either padded or non-padded formatted date is a palindrome, otherwise `false`.
+	 *
+	 * @example
+	 * new Chronos('2020-02-02').isPalindromeDate(); // true
+	 * new Chronos('2112-11-12').isPalindromeDate(); // false
+	 * new Chronos('2011-1-11').isPalindromeDate(); // false (from '2011111')
+	 * new Chronos('2011-1-11').isPalindromeDate(true); // true (from '11111')
+	 * new Chronos('2024-04-11').isPalindromeDate(); // false
+	 */
+	isPalindromeDate(shortYear = false): boolean {
+		const padded = this.formatStrict(shortYear ? 'YY-MM-DD' : 'YYYY-MM-DD');
+		const normal = this.formatStrict(shortYear ? 'YY-M-D' : 'YYYY-M-D');
+		return isPalindrome(padded) || isPalindrome(normal);
+	}
+
 	/** @instance Checks if currently in DST */
 	isDST(): boolean {
 		const jan = new Date(this.year, 0, 1);
@@ -1494,6 +1528,54 @@ export class Chronos {
 	/** @instance Converts to array with all date unit parts */
 	toArray() {
 		return Object.values(this.toObject());
+	}
+
+	/**
+	 * @instance Returns the academic year based on a typical start in July and end in June.
+	 * @returns The academic year in format `YYYY-YYYY`.
+	 */
+	toAcademicYear(): `${number}-${number}` {
+		const year = this.#date.getFullYear();
+		const month = this.#date.getMonth();
+		if (month >= 6) {
+			return `${year}-${year + 1}`;
+		}
+		return `${year - 1}-${year}`;
+	}
+
+	/**
+	 * @instance Returns the **calendar quarter** (1 to 4) of the current date.
+	 *
+	 * @remarks
+	 * A calendar year is divided into four quarters:
+	 *
+	 * - `Q1`: January to March
+	 * - `Q2`: April to June
+	 * - `Q3`: July to September
+	 * - `Q4`: October to December
+	 *
+	 * This method strictly uses the **calendar year**. For fiscal quarters, use `toFiscalQuarter()` instead.
+	 *
+	 * @example
+	 * new Chronos('2025-02-14').toQuarter(); // 1
+	 * new Chronos('2025-08-09').toQuarter(); // 3
+	 *
+	 * @returns The calendar quarter number (1–4).
+	 */
+	toQuarter(): Quarter {
+		const month = this.#date.getMonth();
+		return (Math.floor(month / 3) + 1) as Quarter;
+	}
+
+	/**
+	 * @instance Returns the fiscal quarter based on custom fiscal year start (defaults to July).
+	 * @param startMonth - The fiscal year start month (1-12), default is July (7).
+	 * @returns The fiscal quarter (1-4).
+	 */
+	toFiscalQuarter(startMonth: number = 7): Quarter {
+		const month = this.#date.getMonth() + 1;
+		const adjusted = (month - startMonth + 12) % 12;
+		return (Math.floor(adjusted / 3) + 1) as Quarter;
 	}
 
 	/** @instance Returns offset like +06:00 */
