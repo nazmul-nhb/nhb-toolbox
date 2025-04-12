@@ -14,7 +14,7 @@
 		"lint": "node scripts/lint.mjs",
 		"fix": "node scripts/fix.mjs",
 		"commit": "node scripts/commit.mjs",
-		"check": "node scripts/jsDoc.mjs",
+		"jsDoc": "node scripts/jsDoc.mjs",
 		"count": "node scripts/exports.mjs"
 	},
 	"publishConfig": {
@@ -27,6 +27,7 @@
 		"type": "git",
 		"url": "git+https://github.com/nazmul-nhb/nhb-toolbox.git"
 	},
+	"homepage": "https://nhb-toolbox.vercel.app",
 	"keywords": [
 		"toolbox",
 		"utility",

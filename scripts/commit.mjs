@@ -1,10 +1,8 @@
 import chalk from 'chalk';
 import { execa } from 'execa';
 import fs from 'fs/promises';
-import { dirname, join } from 'path';
-import progressEstimator from 'progress-estimator';
 import readline from 'readline/promises';
-import { fileURLToPath } from 'url';
+import { estimator } from './estimator.mjs';
 
 /**
  * @typedef {Object} PackageJson - Contents from `package.json`.
@@ -34,12 +32,6 @@ import { fileURLToPath } from 'url';
 const rl = readline.createInterface({
 	input: process.stdin,
 	output: process.stdout,
-});
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const estimator = progressEstimator({
-	storagePath: join(__dirname, '.estimator'),
 });
 
 /**

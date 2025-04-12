@@ -1,17 +1,9 @@
+// @ts-check
+
+import chalk from 'chalk';
 import { execa } from 'execa';
 import { globby } from 'globby';
-import chalk from 'chalk';
-import progressEstimator from 'progress-estimator';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Set up progress-estimator cache
-const estimator = progressEstimator({
-	storagePath: join(__dirname, '.estimator'),
-});
+import { estimator } from './estimator.mjs';
 
 // Function to visualize fixing process
 (async () => {

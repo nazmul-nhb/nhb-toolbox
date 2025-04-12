@@ -1,3 +1,5 @@
+// @ts-check
+
 import chalk from 'chalk';
 import fs from 'fs/promises';
 import { extname, resolve } from 'path';
@@ -28,13 +30,19 @@ async function getFilePath() {
 			'Enter the path to the JS/TS file (with or without extension): ',
 		),
 	);
+
 	rl.close();
 
-	const ext = extname(inputPath);
-	let fullPath = inputPath;
+	const filePath = inputPath.trim() || 'src/index';
+
+	const ext = extname(filePath);
+	let fullPath = filePath;
 
 	if (!ext) {
-		const tryPaths = [inputPath + '.ts', inputPath + '.js'];
+		const tryPaths = ['.ts', '.js', '.mjs', 'cjs'].map(
+			(ex) => filePath + ex,
+		);
+
 		for (const path of tryPaths) {
 			try {
 				await fs.access(path);
@@ -44,7 +52,7 @@ async function getFilePath() {
 				continue;
 			}
 		}
-		if (fullPath === inputPath) {
+		if (fullPath === filePath) {
 			throw new Error('File not found with either .ts or .js extension.');
 		}
 	}

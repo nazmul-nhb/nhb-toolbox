@@ -3,17 +3,8 @@
 import chalk from 'chalk';
 import { execa } from 'execa';
 import { globby } from 'globby';
-import { dirname, extname, join } from 'path';
-import progressEstimator from 'progress-estimator';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Set up progress-estimator cache
-const estimator = progressEstimator({
-	storagePath: join(__dirname, '.estimator'),
-});
+import { extname } from 'path';
+import { estimator } from './estimator.mjs';
 
 /**
  * * Get the icon for the file.

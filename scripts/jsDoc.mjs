@@ -1,12 +1,12 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import { readdirSync, readFileSync } from 'fs';
+import { join } from 'path';
 
 /**
  * * Analyze a TypeScript or JavaScript class file and report JSDoc coverage for methods and class properties.
  * @param {string} filePath
  */
 function analyzeFile(filePath) {
-	const content = fs.readFileSync(filePath, 'utf8');
+	const content = readFileSync(filePath, 'utf8');
 
 	const methodRegex =
 		/^\s*(?:public|private|protected)?\s*(?:static\s*)?(?:async\s*)?(get\s+|set\s+)?([a-zA-Z0-9_[\]$]+)\s*\(.*?\)\s*{/gm;
@@ -44,10 +44,10 @@ function analyzeFile(filePath) {
  * @param {string} dir
  */
 function analyzeAllFiles(dir) {
-	const entries = fs.readdirSync(dir, { withFileTypes: true });
+	const entries = readdirSync(dir, { withFileTypes: true });
 
 	for (const entry of entries) {
-		const fullPath = path.join(dir, entry.name);
+		const fullPath = join(dir, entry.name);
 		if (entry.isDirectory()) {
 			analyzeAllFiles(fullPath);
 		} else if (
