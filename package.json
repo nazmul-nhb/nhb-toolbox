@@ -1,6 +1,6 @@
 {
 	"name": "nhb-toolbox",
-	"version": "4.0.0",
+	"version": "4.0.01",
 	"description": "A versatile collection of smart, efficient, and reusable utility functions for everyday development needs.",
 	"main": "dist/cjs/index.js",
 	"module": "dist/esm/index.js",
@@ -40,11 +40,18 @@
 		"toolbox",
 		"utility",
 		"functions",
+		"class",
+		"form",
+		"form-data",
 		"development",
 		"tools",
 		"helpers",
 		"utils",
 		"nhb",
+		"color",
+		"chronos",
+		"time",
+		"moment",
 		"nhb-toolbox"
 	],
 	"author": {

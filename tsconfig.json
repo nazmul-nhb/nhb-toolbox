@@ -7,6 +7,7 @@
 		"declarationDir": "./dist/dts", // Separate directory for types
 		"declaration": true, // Generate .d.ts files
 		"declarationMap": true, // Map declarations to sources (useful for debugging in TS projects)
+		"emitDeclarationOnly": false, // Emit both JavaScript and declaration files
 		"esModuleInterop": true, // Compatibility with CommonJS
 		"allowSyntheticDefaultImports": true, // Allow `import default` from CJS modules
 		"moduleResolution": "Node", // Ensure Node.js-compatible module resolution
@@ -20,7 +21,6 @@
 		"forceConsistentCasingInFileNames": true, // Case sensitivity for imports
 		"allowJs": true, // Allow including JavaScript files
 		"checkJs": true, // Allow checks on JS files
-		"emitDeclarationOnly": false, // Emit both JavaScript and declaration files
 		"removeComments": false,
 		"preserveWatchOutput": true
 	},
