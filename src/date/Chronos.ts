@@ -774,27 +774,37 @@ export class Chronos {
 	 * @instance Checks if another date is the same as this one in a specific unit.
 	 * @param other The other date to compare.
 	 * @param unit The unit to compare.
+	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Default is `0`.
 	 */
-	isSame(other: ChronosInput, unit: TimeUnit): boolean {
+	isSame(
+		other: ChronosInput,
+		unit: TimeUnit,
+		weekStartsOn: number = 0,
+	): boolean {
 		const time = new Chronos(other);
 
 		return (
-			this.startOf(unit).toDate().getTime() ===
-			time.startOf(unit).toDate().getTime()
+			this.startOf(unit, weekStartsOn).toDate().getTime() ===
+			time.startOf(unit, weekStartsOn).toDate().getTime()
 		);
 	}
 
 	/**
 	 * @instance Checks if this date is before another date in a specific unit.
 	 * @param other The other date to compare.
+	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Default is `0`.
 	 * @param unit The unit to compare.
 	 */
-	isBefore(other: ChronosInput, unit: TimeUnit): boolean {
+	isBefore(
+		other: ChronosInput,
+		unit: TimeUnit,
+		weekStartsOn: number = 0,
+	): boolean {
 		const time = new Chronos(other);
 
 		return (
-			this.startOf(unit).toDate().getTime() <
-			time.startOf(unit).toDate().getTime()
+			this.startOf(unit, weekStartsOn).toDate().getTime() <
+			time.startOf(unit, weekStartsOn).toDate().getTime()
 		);
 	}
 
@@ -802,13 +812,18 @@ export class Chronos {
 	 * @instance Checks if this date is after another date in a specific unit.
 	 * @param other The other date to compare.
 	 * @param unit The unit to compare.
+	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Default is `0`.
 	 */
-	isAfter(other: ChronosInput, unit: TimeUnit): boolean {
+	isAfter(
+		other: ChronosInput,
+		unit: TimeUnit,
+		weekStartsOn: number = 0,
+	): boolean {
 		const time = new Chronos(other);
 
 		return (
-			this.startOf(unit).toDate().getTime() >
-			time.startOf(unit).toDate().getTime()
+			this.startOf(unit, weekStartsOn).toDate().getTime() >
+			time.startOf(unit, weekStartsOn).toDate().getTime()
 		);
 	}
 
@@ -1215,8 +1230,9 @@ export class Chronos {
 	/**
 	 * @instance Returns a new Chronos instance at the start of a given unit.
 	 * @param unit The unit to reset (e.g., year, month, day).
+	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Default is `0`.
 	 */
-	startOf(unit: TimeUnit): Chronos {
+	startOf(unit: TimeUnit, weekStartsOn: number = 0): Chronos {
 		const d = new Date(this.#date);
 
 		switch (unit) {
@@ -1229,9 +1245,8 @@ export class Chronos {
 				d.setHours(0, 0, 0, 0);
 				break;
 			case 'week': {
-				const day = d.getDay(); // 0 (Sun) - 6 (Sat)
-				const diff = (day + 6) % 7; // convert Sunday=0 to 6, Monday=1 to 0, etc.
-
+				const day = d.getDay();
+				const diff = (day - weekStartsOn + 7) % 7;
 				d.setDate(d.getDate() - diff);
 				d.setHours(0, 0, 0, 0);
 				break;
@@ -1258,9 +1273,10 @@ export class Chronos {
 	/**
 	 * @instance Returns a new Chronos instance at the end of a given unit.
 	 * @param unit The unit to adjust (e.g., year, month, day).
+	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Default is `0`.
 	 */
-	endOf(unit: TimeUnit): Chronos {
-		return this.startOf(unit)
+	endOf(unit: TimeUnit, weekStartsOn: number = 0): Chronos {
+		return this.startOf(unit, weekStartsOn)
 			.add(1, unit)
 			.add(-1, 'millisecond')
 			.#withOrigin('endOf');
@@ -1488,25 +1504,51 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Calculates the ISO week number of the year.
-	 * @returns Week number (1-53).
+	 * @instance Calculates the ISO 8601 week number of the year.
+	 *
+	 * ISO weeks start on Monday, and the first week of the year is the one containing January 4th.
+	 *
+	 * @returns Week number (1–53).
 	 */
 	getWeek(): number {
-		// ISO week starts on Monday
-		const target = this.startOf('week').add(3, 'day');
+		const target = this.startOf('week', 1).add(3, 'day'); // Thursday of current ISO week
 
-		const firstThursday = new Chronos(new Date(target.year, 0, 4))
-			.startOf('week')
-			.add(3, 'day');
+		const firstThursday = new Chronos(target.year, 1, 4) // January 4
+			.startOf('week', 1)
+			.add(3, 'day'); // Thursday of first ISO week
 
-		const week = target.diff(firstThursday, 'week');
-
-		return week;
+		return target.diff(firstThursday, 'week') + 1;
 	}
 
-	/** @instance Returns ISO week year */
-	getWeekYear(): number {
-		const d = this.startOf('week').add(3, 'day'); // Thursday of current ISO week
+	/**
+	 * @instance Calculates the week number of the year based on custom week start.
+	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Default is `0`.
+	 * @returns Week number (1-53).
+	 */
+	getWeekOfYear(weekStartsOn: number = 0): number {
+		const startOfYear = new Chronos(this.year, 1, 1);
+		const startOfFirstWeek = startOfYear.startOf('week', weekStartsOn);
+
+		const week = this.startOf('week', weekStartsOn).diff(
+			startOfFirstWeek,
+			'week',
+		);
+
+		return week + 1;
+	}
+
+	/**
+	 * @instance Returns the ISO week-numbering year for the current date.
+	 *
+	 * The ISO week-numbering year may differ from the calendar year.
+	 * For example, January 1st may fall in the last ISO week of the previous year.
+	 *
+	 * @param weekStartsOn Optional: Defines the start day of the week (0 = Sunday, 1 = Monday).
+	 *                     Defaults to 0 (Sunday). Use 1 for strict ISO 8601.
+	 * @returns The ISO week-numbering year.
+	 */
+	getWeekYear(weekStartsOn: number = 0): number {
+		const d = this.startOf('week', weekStartsOn).add(3, 'day'); // Thursday of current ISO week
 		return d.year;
 	}
 
