@@ -19,6 +19,7 @@ import { estimator } from './estimator.mjs';
  * @property {Object} repository - Information about the repository.
  * @property {string} repository.type - The type of the version control system (e.g., "git").
  * @property {string} repository.url - The URL of the repository.
+ * @property {string} homepage - The URL of the homepage for the package.
  * @property {string[]} keywords - Keywords related to the package.
  * @property {Object} author - Information about the package author.
  * @property {string} author.name - The name of the author.
