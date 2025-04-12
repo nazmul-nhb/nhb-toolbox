@@ -862,6 +862,50 @@ export class Chronos {
 	}
 
 	/**
+	 * @instance Checks if the current date falls on a weekend.
+	 *
+	 * @param weekStartsOn Optional day the week starts on (0–6). Default is `0` (Sunday).
+	 * @param weekendLength Optional length of the weekend (1 or 2). Default is `2`.
+	 * @returns Whether the date is a weekend.
+	 *
+	 * @description
+	 * Weekend is determined based on `weekStartsOn` and `weekendLength`.
+	 *
+	 * - `weekStartsOn` is a 0-based index (0 = Sunday, 1 = Monday, ..., 6 = Saturday).
+	 * - `weekendLength` defines how many days are considered weekend (1 or 2). Default is 2.
+	 *   If 1, only the last day of the week is treated as weekend.
+	 *   If 2, the last two days are treated as weekend.
+	 */
+	isWeekend(weekStartsOn: number = 0, weekendLength: 1 | 2 = 2): boolean {
+		const day = this.#date.getDay();
+		const lastDayOfWeek = (weekStartsOn + 6) % 7;
+		const secondLastDay = (weekStartsOn + 5) % 7;
+
+		if (weekendLength === 1) {
+			return day === lastDayOfWeek;
+		}
+
+		return day === lastDayOfWeek || day === secondLastDay;
+	}
+
+	/**
+	 * @instance Checks if the current date is a workday (non-weekend day).
+	 *
+	 * @param weekStartsOn Optional day the week starts on (0–6). Default is `0` (Sunday).
+	 * @param weekendLength Optional length of the weekend (1 or 2). Default is `2`.
+	 * @returns Whether the date is a workday.
+	 *
+	 * @description
+	 * Weekends are determined by `weekStartsOn` and `weekendLength`.
+	 *
+	 * - `weekStartsOn` is a 0-based index (0 = Sunday, 1 = Monday, ..., 6 = Saturday).
+	 * - `weekendLength` defines how many days are considered weekend (1 or 2). Default is 2.
+	 */
+	isWorkday(weekStartsOn: number = 0, weekendLength: 1 | 2 = 2): boolean {
+		return !this.isWeekend(weekStartsOn, weekendLength);
+	}
+
+	/**
 	 * @instance Checks if the current date is a palindrome in either padded or non-padded format.
 	 *
 	 * @remarks
@@ -893,15 +937,18 @@ export class Chronos {
 		return isPalindrome(padded) || isPalindrome(normal);
 	}
 
-	/** @instance Checks if currently in DST */
+	/**
+	 * @instance Checks if the date is within daylight saving time (DST).
+	 * @returns Whether the date is in DST.
+	 */
 	isDST(): boolean {
-		const jan = new Date(this.year, 0, 1);
-		const jul = new Date(this.year, 6, 1);
+		const year = this.#date.getFullYear();
 
-		return (
-			Math.min(jan.getTimezoneOffset(), jul.getTimezoneOffset()) !==
-			this.#date.getTimezoneOffset()
-		);
+		const jan = new Date(year, 0, 1).getTimezoneOffset();
+
+		const jul = new Date(year, 6, 1).getTimezoneOffset();
+
+		return this.#date.getTimezoneOffset() < Math.max(jan, jul);
 	}
 
 	/**
