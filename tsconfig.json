@@ -1,11 +1,10 @@
 {
 	"compilerOptions": {
 		"target": "ESNext", // Target the latest features
-		"module": "ESNext", // Output as commonJS modules
 		"lib": ["DOM", "ESNext"], // Include DOM and modern ES features
 		"rootDir": "./src", // Root directory for source files
 		"outDir": "./dist", // Output directory
-		"declarationDir": "./dist", // Separate directory for types
+		"declarationDir": "./dist/dts", // Separate directory for types
 		"declaration": true, // Generate .d.ts files
 		"declarationMap": true, // Map declarations to sources (useful for debugging in TS projects)
 		"esModuleInterop": true, // Compatibility with CommonJS
@@ -21,7 +20,9 @@
 		"forceConsistentCasingInFileNames": true, // Case sensitivity for imports
 		"allowJs": true, // Allow including JavaScript files
 		"checkJs": true, // Allow checks on JS files
-		"emitDeclarationOnly": false // Emit both JavaScript and declaration files
+		"emitDeclarationOnly": false, // Emit both JavaScript and declaration files
+		"removeComments": false,
+		"preserveWatchOutput": true
 	},
 	"include": ["src/**/*.ts", "src/**/*.d.ts"], // Include all TS files
 	"exclude": ["node_modules", "**/*.test.ts", "**/__tests__/**/*"] // Exclude test files

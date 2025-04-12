@@ -32,7 +32,11 @@ const getFileIcon = (filePath) => {
 		// Clean and Build
 		await estimator(
 			execa('rimraf', ['dist']).then(() =>
-				execa('tsc', [], { stdio: 'inherit' }),
+				execa('tsc', ['-p', 'tsconfig.cjs.json']).then(() =>
+					execa('tsc', ['-p', 'tsconfig.esm.json'], {
+						stdio: 'inherit',
+					}),
+				),
 			),
 			chalk.yellowBright('Building Your Package...'),
 		);

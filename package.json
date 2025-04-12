@@ -1,9 +1,17 @@
 {
 	"name": "nhb-toolbox",
-	"version": "3.9.73",
+	"version": "4.0.0",
 	"description": "A versatile collection of smart, efficient, and reusable utility functions for everyday development needs.",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
+	"main": "dist/cjs/index.js",
+	"module": "dist/esm/index.js",
+	"types": "dist/dts/index.d.ts",
+	"exports": {
+		".": {
+			"import": "./dist/esm/index.js",
+			"require": "./dist/cjs/index.js"
+		},
+		"./package.json": "./package.json"
+	},
 	"sideEffects": false,
 	"scripts": {
 		"clean": "rimraf dist",
