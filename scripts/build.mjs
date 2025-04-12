@@ -36,7 +36,7 @@ const getFileIcon = (filePath) => {
 					execa('tsc', ['-p', 'tsconfig.esm.json'], {
 						stdio: 'inherit',
 					}).then(() =>
-						execa('node', ['./scripts/post-build.mjs'], {
+						execa('node', ['./scripts/types.mjs'], {
 							stdio: 'inherit',
 						}),
 					),
