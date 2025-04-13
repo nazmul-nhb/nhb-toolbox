@@ -56,6 +56,10 @@ const createExports = (modulePaths) => {
 			require: './dist/cjs/index.js',
 			types: './dist/dts/index.d.ts',
 		},
+		'./types': {
+			types: './dist/dts/types/index.d.ts',
+			default: './dist/dts/types/index.d.ts',
+		},
 	};
 
 	/** @type {[string, string][]} */
@@ -88,7 +92,12 @@ const createTypesVersions = (validModules) => {
 		versions[`${module}/types`] = [resolved.replace('./', '')];
 	});
 
-	return { '*': versions };
+	return {
+		'*': {
+			types: ['dist/dts/types/index.d.ts'],
+			...versions,
+		},
+	};
 };
 
 /**
