@@ -76,6 +76,9 @@ export type NonNullishPrimitiveKey<T> = {
 /** Falsy primitive type  */
 export type FalsyPrimitive = false | 0 | '' | null | undefined;
 
+/** A generic class constructor */
+export type Constructor = new (...args: any[]) => unknown;
+
 /** Generic function type */
 export type GenericFn = (...args: unknown[]) => unknown;
 
@@ -120,3 +123,21 @@ export type AdvancedTypes =
 	| URIError
 	| bigint
 	| symbol;
+
+/** * Represents detailed information about a class's methods. */
+export interface ClassDetails {
+	/** * List of instance method names defined directly on the class prototype. */
+	instanceNames: string[];
+
+	/** * List of static method names defined directly on the class constructor. */
+	staticNames: string[];
+
+	/** * Number of instance methods. */
+	instances: number;
+
+	/** * Number of static methods. */
+	statics: number;
+
+	/** * Total number of instance and static methods combined. */
+	total: number;
+}

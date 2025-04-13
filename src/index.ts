@@ -21,14 +21,14 @@ export {
 	convertStringCase,
 	extractEmails,
 	extractURLs,
+	formatUnitWithPlural as formatNumberWithPluralUnit,
+	formatUnitWithPlural,
+	formatUnitWithPlural as formatWithPlural,
 	maskString,
 	normalizeString,
 	replaceAllInString,
 	reverseString,
 	slugifyString,
-	formatUnitWithPlural,
-	formatUnitWithPlural as formatWithPlural,
-	formatUnitWithPlural as formatNumberWithPluralUnit,
 } from './string/convert';
 
 export {
@@ -273,8 +273,14 @@ export {
 // ! Other Utilities
 export {
 	convertArrayToString,
-	countClassMethods,
+	countInstanceMethods,
+	countStaticMethods,
 	debounceAction,
+	getInstanceMethodNames,
+	countInstanceMethods as getInstanceMethodsCount,
+	getStaticMethodNames,
+	countStaticMethods as getStaticMethodsCount,
+	getClassDetails,
 	isDeepEqual,
 	throttleAction,
 } from './utils';
@@ -316,6 +322,8 @@ export {
 	isObjectWithKeys,
 	isPromise,
 	isRegExp,
+	isMethodDescriptor,
+	isMethodDescriptor as isMethod,
 	isRegExp as isRegularExpression,
 	isReturningPromise,
 	isSet,

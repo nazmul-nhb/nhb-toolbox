@@ -1,6 +1,6 @@
 {
 	"name": "nhb-toolbox",
-	"version": "4.0.12",
+	"version": "4.0.20",
 	"description": "A versatile collection of smart, efficient, and reusable utility functions for everyday development needs.",
 	"main": "dist/cjs/index.js",
 	"module": "dist/esm/index.js",
@@ -77,6 +77,7 @@
 		"typescript": "^5.7.3",
 		"typescript-eslint": "^8.21.0"
 	},
+	"packageManager": "pnpm@10.6.2+sha512.47870716bea1572b53df34ad8647b42962bc790ce2bf4562ba0f643237d7302a3d6a8ecef9e4bdfc01d23af1969aa90485d4cebb0b9638fa5ef1daef656f6c1b",
 	"exports": {
 		"./package.json": "./package.json",
 		".": {
@@ -144,6 +145,5 @@
 				"dist/dts/string/types.d.ts"
 			]
 		}
-	},
-	"packageManager": "pnpm@10.6.2+sha512.47870716bea1572b53df34ad8647b42962bc790ce2bf4562ba0f643237d7302a3d6a8ecef9e4bdfc01d23af1969aa90485d4cebb0b9638fa5ef1daef656f6c1b"
+	}
 }

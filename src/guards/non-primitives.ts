@@ -72,6 +72,18 @@ export function isFunction(value: unknown): value is GenericFn {
 }
 
 /**
+ * * Determines whether the provided property descriptor represents a method.
+ *
+ * @param descriptor - The property descriptor to check.
+ * @returns `true` if the descriptor is defined and its value is a function; otherwise, `false`.
+ */
+export const isMethodDescriptor = (
+	descriptor: PropertyDescriptor | undefined,
+): boolean => {
+	return !!descriptor && typeof descriptor.value === 'function';
+};
+
+/**
  * * Type guard to check if a value is a Date object.
  * @param value - The value to check.
  * @returns `true` if the value is a Date object, otherwise `false`.

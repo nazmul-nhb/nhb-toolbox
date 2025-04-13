@@ -1,6 +1,14 @@
 import { isInvalidOrEmptyArray } from '../array/basics';
+import { sortAnArray } from '../array/sort';
+import { isMethodDescriptor } from '../guards/non-primitives';
 import type { GenericObject } from '../object/types';
-import type { DelayedFn, ThrottledFn, VoidFunction } from '../types';
+import type {
+	ClassDetails,
+	Constructor,
+	DelayedFn,
+	ThrottledFn,
+	VoidFunction,
+} from '../types';
 
 /**
  * * Deeply compare two values (arrays, objects, or primitive values).
@@ -119,17 +127,78 @@ export const throttleAction = <T extends VoidFunction>(
 };
 
 /**
- * * Counts the number of instance methods defined on a class prototype.
+ * * Retrieves the names of all instance methods defined directly on a class prototype.
  *
- * @param cls The class constructor (not an instance).
- * @returns Number of methods directly defined on the class prototype.
+ * @param cls - The class constructor (not an instance).
+ * @returns A sorted array of instance method names.
  */
-export function countClassMethods(cls: Function): number {
+export function getInstanceMethodNames(cls: Constructor): string[] {
 	const prototype = cls.prototype;
 
-	return Object.getOwnPropertyNames(prototype).filter((name) => {
-		if (name === 'constructor') return false;
-		const descriptor = Object.getOwnPropertyDescriptor(prototype, name);
-		return !!descriptor && typeof descriptor.value === 'function';
-	}).length;
+	const methods = Object.getOwnPropertyNames(prototype).filter((method) => {
+		if (method === 'constructor') {
+			return false;
+		}
+
+		const descriptor = Object.getOwnPropertyDescriptor(prototype, method);
+
+		return isMethodDescriptor(descriptor);
+	});
+
+	return sortAnArray(methods);
+}
+
+/**
+ * * Retrieves the names of all static methods defined directly on a class constructor.
+ *
+ * @param cls - The class constructor (not an instance).
+ * @returns A sorted array of static method names.
+ */
+export function getStaticMethodNames(cls: Constructor): string[] {
+	const methods = Object.getOwnPropertyNames(cls).filter((method) => {
+		return (
+			method !== 'prototype' && method !== 'name' && method !== 'length'
+		);
+	});
+
+	return sortAnArray(methods);
+}
+
+/**
+ * * Counts the number of instance methods defined directly on a class prototype.
+ *
+ * @param cls - The class constructor (not an instance).
+ * @returns The number of instance methods defined on the class prototype.
+ */
+export function countInstanceMethods(cls: Constructor): number {
+	return getInstanceMethodNames(cls).length;
+}
+
+/**
+ * * Counts the number of static methods defined directly on a class constructor.
+ *
+ * @param cls - The class constructor (not an instance).
+ * @returns The number of static methods defined on the class constructor.
+ */
+export function countStaticMethods(cls: Constructor): number {
+	return getStaticMethodNames(cls).length;
+}
+
+/**
+ * * Gathers detailed information about the instance and static methods of a class.
+ *
+ * @param cls - The class constructor (not an instance).
+ * @returns An object containing names and counts of instance and static methods.
+ */
+export function getClassDetails(cls: Constructor): ClassDetails {
+	const instanceNames = getInstanceMethodNames(cls);
+	const staticNames = getStaticMethodNames(cls);
+
+	return {
+		instanceNames,
+		staticNames,
+		instances: instanceNames.length,
+		statics: staticNames.length,
+		total: instanceNames.length + staticNames.length,
+	};
 }
