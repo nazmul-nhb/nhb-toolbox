@@ -15,6 +15,7 @@ type CapitalizeWords<T extends string, LowerCaseRest extends boolean> =
 	:	Capitalize<T>;
 
 /** - Determines the correct return type based on the provided options. */
+// ! Unused
 export type CapitalizeResult<T extends string, O extends CapitalizeOptions> =
 	O['capitalizeAll'] extends true ? Uppercase<T>
 	: O['capitalizeEachFirst'] extends true ?

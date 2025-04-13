@@ -1,8 +1,4 @@
-import type {
-	CapitalizeOptions,
-	CapitalizeResult,
-	RandomIdOptions,
-} from './types';
+import type { CapitalizeOptions, RandomIdOptions } from './types';
 
 /**
  * * Utility to convert the first letter of any string to uppercase and the rest lowercase (unless specified).
@@ -12,15 +8,14 @@ import type {
  * @param options Options to customize the capitalization.
  * @returns Capitalized string or fully uppercased string depending on `capitalizeAll` option.
  */
-export function capitalizeString<T extends string, O extends CapitalizeOptions>(
-	string: T,
-	options?: O,
-): CapitalizeResult<T, O> {
-	if (typeof string !== 'string' || !string)
-		return '' as CapitalizeResult<T, O>;
+export function capitalizeString(
+	string: string,
+	options?: CapitalizeOptions,
+): string {
+	if (typeof string !== 'string' || !string) return '';
 
 	const trimmedString = string.trim();
-	if (!trimmedString) return '' as CapitalizeResult<T, O>;
+	if (!trimmedString) return '';
 
 	const {
 		capitalizeAll = false,
@@ -29,14 +24,14 @@ export function capitalizeString<T extends string, O extends CapitalizeOptions>(
 	} = options || {};
 
 	if (capitalizeAll) {
-		return trimmedString.toUpperCase() as CapitalizeResult<T, O>;
+		return trimmedString.toUpperCase();
 	}
 
 	if (capitalizeEachFirst) {
 		return trimmedString
 			.split(/\s+/)
 			.map((word) => capitalizeString(word, { lowerCaseRest }))
-			.join(' ') as CapitalizeResult<T, O>;
+			.join(' ');
 	}
 
 	const matchArray = trimmedString.match(/^(\W*)(\w)(.*)$/);
@@ -45,9 +40,7 @@ export function capitalizeString<T extends string, O extends CapitalizeOptions>(
 		const [_, leadingSymbols, firstLetter, rest] = matchArray;
 		return leadingSymbols
 			.concat(firstLetter.toUpperCase())
-			.concat(
-				lowerCaseRest ? rest.toLowerCase() : rest,
-			) as CapitalizeResult<T, O>;
+			.concat(lowerCaseRest ? rest.toLowerCase() : rest);
 	}
 
 	return trimmedString
@@ -57,7 +50,7 @@ export function capitalizeString<T extends string, O extends CapitalizeOptions>(
 			lowerCaseRest ?
 				trimmedString.slice(1).toLowerCase()
 			:	trimmedString.slice(1),
-		) as CapitalizeResult<T, O>;
+		);
 }
 
 /**

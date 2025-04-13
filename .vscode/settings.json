@@ -1,0 +1,89 @@
+{
+	// ! Exclude Folders from watching
+	"files.watcherExclude": {
+		"**/node_modules": true,
+		"**/coverage": true,
+		"**/.git": true,
+		"**/dist": true
+	},
+	"files.exclude": {
+		"**/.git": true
+	},
+	// ! Exclude Folders from global searching
+	"search.exclude": {
+		"**/node_modules": true,
+		"**/dist": true,
+		"**/coverage": true,
+		"**/.git": true
+	},
+	"prettier.useTabs": true,
+	"prettier.tabWidth": 4,
+	"prettier.printWidth": 92,
+	"prettier.semi": true,
+	"prettier.singleQuote": true,
+	"prettier.experimentalTernaries": true,
+	"prettier.vueIndentScriptAndStyle": true,
+	"files.autoSave": "onFocusChange",
+	"files.autoSaveWhenNoErrors": true,
+	"editor.inlineSuggest.enabled": true,
+	"editor.quickSuggestions": {
+		"strings": true,
+		"comments": "on"
+	},
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit",
+		"source.fixAll.tslint": "explicit",
+		"source.removeUnused.ts": "explicit",
+		"source.addMissingImports.ts": "explicit",
+		"source.removeUnusedImports": "explicit",
+		"source.fixAll.ts": "explicit",
+		"source.sortImports": "explicit",
+		"source.organizeImports": "explicit"
+	},
+	// ! File Nesting
+	"explorer.fileNesting.enabled": true,
+	"explorer.fileNesting.patterns": {
+		"tsconfig.json": "tsconfig.*.json, env.d.ts, next-env.d.ts",
+		"vite.config.*": "jsconfig*, vitest.config.*, cypress.config.*, playwright.config.*",
+		"package.json": "package-lock.json, pnpm*, bun.lockb, .npmrc, .nvmrc, .ncurc, .yarnrc*, yarn*, .eslint*, eslint*, .prettier*, prettier*, .editorconfig, nodemon.json",
+		"vercel.json": ".vercel*, vercel*",
+		"readme.md": "*.md, license, LICENSE",
+		"tailwind.config.*js": "tailwind.*",
+		"tailwind.config.ts": "tailwind.*",
+		"jest.config.*js": "jest.*",
+		"jest.config.ts": "jest.*",
+		"webpack.config.*js": "webpack.*",
+		"webpack.config.ts": "webpack.*",
+		"babel.config.*js": ".babelrc, .babelrc.js, babel.*",
+		"babel.config.ts": ".babelrc, .babelrc.js, babel.*",
+		"rollup.config.*js": "rollup.*",
+		"rollup.config.ts": "rollup.*",
+		".gitlab-ci.yml": ".gitlab-ci.*.yml",
+		".env": ".env.*, .envrc, .env.local",
+		"angular.json": "tslint.json, karma.conf.js",
+		"karma.conf.*js": "karma.*, karma.config.*",
+		"karma.conf.ts": "karma.*, karma.config.*",
+		"lerna.json": "lerna.*, .monorepo*",
+		"makefile": "makefile.*",
+		"gruntfile.*js": "gruntfile.*, grunt.*",
+		"gruntfile.ts": "gruntfile.*, grunt.*",
+		"gulpfile.*js": "gulpfile.*, gulp.*",
+		"gulpfile.ts": "gulpfile.*, gulp.*",
+		".travis.yml": ".travis, .travis.yml",
+		"azure-pipelines.yml": ".azure*, .azure-pipelines.yml",
+		".github": ".github/*",
+		"nuxt.config.*js": "nuxt.config.*, nuxt.*",
+		"nuxt.config.ts": "nuxt.config.*, nuxt.*",
+		"composer.json": "composer.lock, .php-version",
+		"bitbucket-pipelines.yml": "bitbucket-pipelines.*, .bitbucket*",
+		"procfile": "Procfile.*, procfile.*, .buildpacks, .slugignore",
+		"Procfile": "Procfile.*, procfile.*, .buildpacks, .slugignore",
+		"netlify.toml": "netlify.*",
+		"serverless.yml": "serverless.*.yml, serverless.*.json",
+		"dockerfile": "Dockerfile.*, dockerfile.*, docker-compose.yml, .dockerignore, docker-compose.*.yml",
+		"Dockerfile": "Dockerfile.*, dockerfile.*, docker-compose.yml, .dockerignore, docker-compose.*.yml",
+		"editor.wordWrap": "on",
+		"javascript.updateImportsOnFileMove.enabled": "always",
+		"editor.cursorSmoothCaretAnimation": "on"
+	}
+}
