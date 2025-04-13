@@ -1,6 +1,6 @@
 import { isString } from '../guards/primitives';
 import type { LocaleCode } from '../number/types';
-import { getOrdinal } from '../number/utilities';
+import { getOrdinal, roundToNearest } from '../number/utilities';
 import { formatUnitWithPlural } from '../string/convert';
 import { isPalindrome } from '../string/guards';
 import {
@@ -192,6 +192,8 @@ export class Chronos {
 		yield ['minute', this.minute];
 		yield ['second', this.second];
 		yield ['millisecond', this.millisecond];
+		yield ['timestamp', this.timestamp];
+		yield ['unix', this.unix];
 	}
 
 	/**
@@ -462,9 +464,9 @@ export class Chronos {
 		return this.month + 1;
 	}
 
-	/** Gets the time value in milliseconds since midnight, January 1, 1970 UTC. */
+	/** Gets the time value in seconds since midnight, January 1, 1970 UTC. */
 	get unix(): number {
-		return this.#date.getTime();
+		return this.#date.getTime() / 1000;
 	}
 
 	/** Gets the time value in milliseconds since midnight, January 1, 1970 UTC. */
@@ -903,6 +905,52 @@ export class Chronos {
 	 */
 	isWorkday(weekStartsOn: number = 0, weekendLength: 1 | 2 = 2): boolean {
 		return !this.isWeekend(weekStartsOn, weekendLength);
+	}
+
+	/**
+	 * @instance Checks if the current date and time fall within business hours.
+	 *
+	 * @param businessStartHour Optional starting hour of business time (0–23). Defaults to `9` (9 AM).
+	 * @param businessEndHour Optional ending hour of business time (0–23). Defaults to `17` (5 PM).
+	 * @param weekStartsOn Optional day the week starts on (0–6). Default is `0` (Sunday).
+	 * @param weekendLength Optional weekend length (1 or 2). Default is `2`.
+	 *
+	 * @returns Whether the current time is within business hours.
+	 *
+	 * @remarks
+	 * * Business hours are typically 9 AM to 5 PM on weekdays.
+	 * * Supports standard and overnight business hours. Overnight means `end < start`.
+	 * * Example: `businessStartHour = 22`, `businessEndHour = 6` will cover 10 PM to 6 AM next day.
+	 *
+	 * * *Weekends are determined by `weekStartsOn` and `weekendLength` using the `isWeekend()` method.*
+	 *
+	 * - Business hours are `[businessStartHour, businessEndHour)`.
+	 * - If `weekendLength` is `1`, only the last day of the week is treated as weekend.
+	 * - If `weekendLength` is `2`, the last two days are treated as weekend.
+	 */
+	isBusinessHour(
+		businessStartHour: number = 9,
+		businessEndHour: number = 17,
+		weekStartsOn: number = 0,
+		weekendLength: 1 | 2 = 2,
+	): boolean {
+		if (this.isWeekend(weekStartsOn, weekendLength)) {
+			return false;
+		}
+
+		const hour = this.#date.getHours();
+
+		if (businessStartHour === businessEndHour) {
+			return false;
+		}
+
+		if (businessStartHour < businessEndHour) {
+			// Normal range, e.g. 9 → 17
+			return hour >= businessStartHour && hour < businessEndHour;
+		} else {
+			// Overnight shift, e.g. 22 → 6
+			return hour >= businessStartHour || hour < businessEndHour;
+		}
 	}
 
 	/**
@@ -1784,6 +1832,75 @@ export class Chronos {
 				values.second ?? 0,
 			),
 		).#withOrigin('parse');
+	}
+
+	/**
+	 * * Rounds the current date-time to the nearest specified unit and interval.
+	 *
+	 * @param unit - The unit to round (`year`, `month`, `week`, `day`, `hour`, `minute`, `second`, `millisecond`).
+	 * 				 Month and Week are 0 based.
+	 * @param nearest - The interval to round to. Defaults to `1`.
+	 * @returns A new `Chronos` instance with the rounded value. For wrong unit returns current instance.
+	 */
+	round(unit: TimeUnit, nearest = 1): Chronos {
+		const date = new Date(this.#date);
+
+		switch (unit) {
+			case 'millisecond': {
+				const rounded = roundToNearest(date.getMilliseconds(), nearest);
+				date.setMilliseconds(rounded);
+				break;
+			}
+			case 'second': {
+				const rounded = roundToNearest(date.getSeconds(), nearest);
+				date.setSeconds(rounded, 0);
+				break;
+			}
+			case 'minute': {
+				const rounded = roundToNearest(date.getMinutes(), nearest);
+				date.setMinutes(rounded, 0, 0);
+				break;
+			}
+			case 'hour': {
+				const rounded = roundToNearest(date.getHours(), nearest);
+				date.setHours(rounded, 0, 0, 0);
+				break;
+			}
+			case 'day': {
+				const rounded = roundToNearest(date.getDate(), nearest);
+				date.setDate(rounded);
+				date.setHours(0, 0, 0, 0);
+				break;
+			}
+			case 'week': {
+				const currentWeek = this.getWeek();
+				const roundedWeek = roundToNearest(currentWeek, nearest);
+				const startOfYear = new Date(date.getFullYear(), 0, 1);
+				const daysOffset = (roundedWeek - 1) * 7;
+
+				startOfYear.setDate(startOfYear.getDate() + daysOffset);
+				startOfYear.setHours(0, 0, 0, 0);
+				return new Chronos(startOfYear);
+			}
+			case 'month': {
+				const currentMonth = date.getMonth();
+				const roundedMonth = roundToNearest(currentMonth, nearest);
+				date.setMonth(roundedMonth, 1);
+				date.setHours(0, 0, 0, 0);
+				break;
+			}
+			case 'year': {
+				const currentYear = date.getFullYear();
+				const roundedYear = roundToNearest(currentYear, nearest);
+				date.setFullYear(roundedYear, 0, 1);
+				date.setHours(0, 0, 0, 0);
+				break;
+			}
+			default:
+				return this;
+		}
+
+		return new Chronos(date).#withOrigin('round');
 	}
 
 	/**

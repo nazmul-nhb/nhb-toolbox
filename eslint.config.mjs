@@ -42,7 +42,7 @@ export default [
 			'prettier/prettier': 'off',
 			'no-unused-expressions': 'error',
 			'prefer-const': 'error',
-			'no-console': ['warn', { allow: ['info', 'warn', 'error'] }],
+			// 'no-console': ['warn', { allow: ['info', 'warn', 'error', 'table'] }],
 			'no-undef': 'error',
 			'@typescript-eslint/no-empty-object-type': 'off',
 			'@typescript-eslint/no-unused-expressions': 'error',
@@ -92,5 +92,20 @@ export default [
 	{
 		files: ['**/*.js', '**/*.cjs'],
 		rules: { '@typescript-eslint/no-require-imports': 'off' },
+	},
+	{
+		files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
+		rules: {
+			// Disallow ONLY `console.log`
+			'no-restricted-syntax': [
+				'warn',
+				{
+					selector:
+						"CallExpression[callee.object.name='console'][callee.property.name='log']",
+					message:
+						'Avoid using `console.log`; use `console.info/warn/error/table/dir` etc. instead.',
+				},
+			],
+		},
 	},
 ];

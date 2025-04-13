@@ -9,8 +9,9 @@ import type { CurrencyCode, LocaleCode } from './types';
  * @returns The number rounded to the nearest interval.
  * @example roundToNearest(27, 5) → 25
  */
-export const roundToNearest = (value: number, interval = 5): number =>
-	Math.round(value / interval) * interval;
+export const roundToNearest = (value: number, interval = 5): number => {
+	return Math.round(value / interval) * interval;
+};
 
 /**
  * * Formats a number as a currency string.
@@ -46,8 +47,13 @@ export const formatCurrency = (
  * @example clampNumber(5, 10, 20) → 10
  * @example clampNumber(25, 10, 20) → 20
  */
-export const clampNumber = (value: number, min: number, max: number): number =>
-	Math.max(min, Math.min(value, max));
+export const clampNumber = (
+	value: number,
+	min: number,
+	max: number,
+): number => {
+	return Math.max(min, Math.min(value, max));
+};
 
 /**
  * * Generates a random floating-point number within a range.

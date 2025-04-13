@@ -236,6 +236,8 @@ export interface ChronosObject {
 	minute: number;
 	second: number;
 	millisecond: number;
+	timestamp: number;
+	unix: number;
 }
 
 export type WithoutOrigin = Omit<Chronos, typeof ORIGIN>;
