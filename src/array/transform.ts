@@ -48,6 +48,58 @@ export function removeDuplicatesFromArray<T>(array: T[]): T[] {
 }
 
 /**
+ * * Finds duplicate values in an array, runs deep comparison for objects and arrays.
+ *
+ * @param array - The array in which to find duplicates.
+ * @returns An array containing all duplicate entries (each one only once).
+ */
+export function getDuplicates<T>(array: T[]): T[] {
+	const seen: T[] = [];
+	const duplicates: T[] = [];
+
+	for (const item of array) {
+		const hasSeen = seen.find((el) => isDeepEqual(el, item));
+		const hasDuplicate = duplicates.find((el) => isDeepEqual(el, item));
+
+		if (hasSeen && !hasDuplicate) {
+			duplicates.push(item);
+		} else if (!hasSeen) {
+			seen.push(item);
+		}
+	}
+
+	return duplicates;
+}
+
+/**
+ * * Finds elements missing from one array compared to another using deep comparison.
+ *
+ * @param options - Configuration to specify which array to compare and direction of check.
+ * @returns An array of missing elements based on the comparison direction.
+ */
+
+/**
+ * * Finds elements missing from one array compared to another using deep comparison.
+ *
+ * @param array1 The first array to compare.
+ * @param array2 The second array to compare.
+ * @param missingFrom Which direction to compare for missing values:.
+ *					  - `'from-first'` → values in `array1` missing in `array2`.
+ *					  - `'from-second'` → values in `array2` missing in `array1`.
+ * @returns An array of missing elements based on the comparison direction.
+ */
+export function findMissingElements<T, U>(
+	array1: T[],
+	array2: U[],
+	missingFrom: 'from-first' | 'from-second',
+): (T | U)[] {
+	const source = missingFrom === 'from-first' ? array1 : array2;
+	const target = missingFrom === 'from-first' ? array2 : array1;
+
+	return source.filter((item) => !target.some((t) => isDeepEqual(t, item)));
+}
+
+/**
  * * Splits an array into chunks of a given size.
  *
  * @param arr The array to split.

@@ -35,6 +35,9 @@ export {
 	extractNumbersFromString,
 	getLevenshteinDistance,
 	getLevenshteinDistance as levenshteinDistance,
+	countWords,
+	countWords as wordCount,
+	countWords as countWordsInString,
 } from './string/utilities';
 
 // ! Number Utilities
@@ -201,7 +204,15 @@ export { sortAnArray } from './array/sort';
 
 export {
 	createOptionsArray,
+	getDuplicates as extractDuplicates,
+	getDuplicates as extractDuplicatesFromArray,
+	findMissingElements as extractMissingElements,
+	findMissingElements,
+	getDuplicates,
+	getDuplicates as getDuplicatesFromArray,
+	findMissingElements as getMissingElements,
 	moveArrayElement,
+	removeDuplicatesFromArray as removeDuplicates,
 	removeDuplicatesFromArray,
 	rotateArray,
 	splitArray,
