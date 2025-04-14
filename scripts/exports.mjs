@@ -2,7 +2,7 @@
 
 import chalk from 'chalk';
 import fs from 'fs/promises';
-import { extname, resolve } from 'path';
+import { extname, join, resolve } from 'path';
 import { createInterface } from 'readline/promises';
 import tsModule from 'typescript';
 
@@ -16,8 +16,8 @@ import tsModule from 'typescript';
  */
 
 /**
- * Prompts the user to enter a JS/TS file path (with or without extension).
- * @returns {Promise<string>} The resolved file path with extension.
+ * Prompts the user to enter a JS/TS/MJS (with extension) file path.
+ * @returns {Promise<string>} The resolved file path with extension or directory path.
  */
 async function getFilePath() {
 	const rl = createInterface({
@@ -26,38 +26,21 @@ async function getFilePath() {
 	});
 
 	const inputPath = await rl.question(
-		chalk.cyan(
-			'Enter the path to the JS/TS file (with or without extension): ',
+		chalk.cyanBright(
+			`───────────────────────────────────────────────────────────────────────────────\n` +
+				`🎯	Please specify the path to a ${chalk.yellowBright.bold('"JavaScript/TypeScript/MJS"')} file or folder.\n` +
+				`   - Enter the full file path (with extension) to process a specific file.\n` +
+				`   - Enter a folder path to scan all ${chalk.bold.yellowBright('*.js')}, ${chalk.bold.yellowBright('*.ts')}, or ${chalk.bold.yellowBright('*.mjs')} files within.\n` +
+				`   - Leave it empty to scan the default file: ${chalk.bgYellowBright.bold.whiteBright(' src/index.ts ')}.\n` +
+				`───────────────────────────────────────────────────────────────────────────────\n`,
 		),
 	);
 
 	rl.close();
 
-	const filePath = inputPath.trim() || 'src/index';
+	const filePath = inputPath.trim() || 'src/index.ts';
 
-	const ext = extname(filePath);
-	let fullPath = filePath;
-
-	if (!ext) {
-		const tryPaths = ['.ts', '.js', '.mjs', 'cjs'].map(
-			(ex) => filePath + ex,
-		);
-
-		for (const path of tryPaths) {
-			try {
-				await fs.access(path);
-				fullPath = path;
-				break;
-			} catch {
-				continue;
-			}
-		}
-		if (fullPath === filePath) {
-			throw new Error('File not found with either .ts or .js extension.');
-		}
-	}
-
-	return resolve(fullPath);
+	return resolve(filePath);
 }
 
 /**
@@ -141,31 +124,74 @@ async function countExports(filePath) {
 	}
 }
 
+/**
+ * Scans a folder recursively and returns an array of all .js, .ts, and .mjs files.
+ * @param {string} folderPath - Folder to scan.
+ * @returns {Promise<string[]>} List of file paths.
+ */
+async function getFilesFromFolder(folderPath) {
+	const files = await fs.readdir(folderPath, { withFileTypes: true });
+
+	/** @type {string[]} */
+	let filePaths = [];
+
+	for (const file of files) {
+		const fullPath = join(folderPath, file.name);
+		if (file.isDirectory()) {
+			filePaths = filePaths.concat(await getFilesFromFolder(fullPath));
+		} else if (['.js', '.ts', '.mjs'].includes(extname(file.name))) {
+			filePaths.push(fullPath);
+		}
+	}
+
+	return filePaths;
+}
+
 /** * Main execution block. */
 (async () => {
 	try {
 		const filePath = await getFilePath();
-		const result = await countExports(filePath);
 
-		console.info(chalk.green(`\n📦 Export Summary for "${filePath}":`));
-		console.info(
-			chalk.yellow(`🔸 Default Exports        : ${result.default}`),
-		);
-		console.info(
-			chalk.yellow(
-				`🔹 Named Exports (Total)  : ${result.namedExportsTotal}`,
-			),
-		);
-		console.info(
-			chalk.yellow(
-				`   ┣ Direct               : ${result.namedExportsDirect}`,
-			),
-		);
-		console.info(
-			chalk.yellow(
-				`   ┗ Aliased              : ${result.namedExportsAliased}`,
-			),
-		);
+		let filesToProcess = [];
+		const stats = await fs.stat(filePath);
+
+		if (stats.isDirectory()) {
+			// If it's a directory, scan for .js/.ts/.mjs files inside
+			filesToProcess = await getFilesFromFolder(filePath);
+			if (filesToProcess.length === 0) {
+				throw new Error(
+					'No `.js`, `.mjs` or `.ts` files found in the folder.',
+				);
+			}
+		} else {
+			// If it's a file, just process that file
+			filesToProcess = [filePath];
+		}
+
+		// Process each file in the list
+		for (const file of filesToProcess) {
+			const result = await countExports(file);
+
+			console.info(chalk.green(`\n📦 Export Summary for "${file}":`));
+			console.info(
+				chalk.yellow(`🔸 Default Exports        : ${result.default}`),
+			);
+			console.info(
+				chalk.yellow(
+					`🔹 Named Exports (Total)  : ${result.namedExportsTotal}`,
+				),
+			);
+			console.info(
+				chalk.yellow(
+					`   ┣ Direct               : ${result.namedExportsDirect}`,
+				),
+			);
+			console.info(
+				chalk.yellow(
+					`   ┗ Aliased              : ${result.namedExportsAliased}`,
+				),
+			);
+		}
 	} catch (error) {
 		console.error(chalk.red('🛑 Unexpected Error:\n'), error);
 		process.exit(1);
