@@ -167,89 +167,19 @@ export function reverseNumber(num: Numeric): number {
  * * Calculates the average of a set of numbers.
  *
  * @param numbers - A list of numbers for which to calculate the average.
- * @returns The average of the provided numbers. Returns `NaN` if no numbers are provided or if any invalid values are encountered.
+ * @returns The average of the provided numbers. Returns `NaN` if no numbers are valid.
  */
 export function getAverage(...numbers: Numeric[]): number {
-	const cNumbers = numbers.map(Number);
-	// Edge case: check if the input is an empty array or contains invalid values
-	if (cNumbers.length === 0) {
-		return NaN; // Return NaN if no numbers are provided
+	let sum = 0;
+	let count = 0;
+
+	for (const n of numbers) {
+		const num = Number(n);
+		if (typeof num === 'number' && !isNaN(num)) {
+			sum += num;
+			count++;
+		}
 	}
 
-	// Validate each number in the array
-	const validNumbers = cNumbers.filter(
-		(num) => typeof num === 'number' && !isNaN(num),
-	);
-
-	// Edge case: check if the valid numbers array is empty after filtering
-	if (validNumbers.length === 0) {
-		return NaN; // Return NaN if no valid numbers are found
-	}
-
-	// Calculate the sum of the valid numbers
-	const sum = validNumbers.reduce((acc, curr) => acc + curr, 0);
-
-	// Return the average
-	return sum / validNumbers.length;
-}
-
-/**
- * * Calculates the percentage of a number based on a given part and total.
- *
- * @param part - The part of the total value.
- * @param total - The total value.
- * @returns The percentage of the part in relation to the total, rounded to two decimal places.
- *          Returns `NaN` if the total is zero or invalid.
- */
-export function getPercentage(part: number, total: number): number {
-	if (total === 0 || !Number.isFinite(total) || !Number.isFinite(part)) {
-		return NaN; // Prevent division by zero or invalid values
-	}
-	return (part / total) * 100;
-}
-
-/**
- * * Calculates the number that a given percentage corresponds to based on a total value.
- *
- * @param percentage - The percentage of the total value.
- * @param total - The total value.
- * @returns The number corresponding to the given percentage of the total, rounded to two decimal places.
- *          Returns `NaN` if the total is zero or invalid.
- */
-export function getValueFromPercentage(
-	percentage: number,
-	total: number,
-): number {
-	if (
-		total === 0 ||
-		!Number.isFinite(total) ||
-		!Number.isFinite(percentage)
-	) {
-		return NaN; // Prevent division by zero or invalid values
-	}
-	return (percentage / 100) * total;
-}
-
-/**
- * * Calculates the original number based on the given percentage and the corresponding value.
- *
- * @param percentage - The percentage value (e.g., 10 for 10%).
- * @param percentageValue - The value corresponding to the given percentage.
- * @returns The original number from which the percentage value is derived, or `NaN` if invalid inputs are provided.
- */
-export function getOriginalFromPercentage(
-	percentage: number,
-	percentageValue: number,
-): number {
-	if (
-		percentage === 0 ||
-		percentageValue === 0 ||
-		!Number.isFinite(percentage) ||
-		!Number.isFinite(percentageValue)
-	) {
-		return NaN; // Prevent division by zero or invalid values
-	}
-
-	const original = (percentageValue / percentage) * 100;
-	return Math.round(original * 100) / 100;
+	return count === 0 ? NaN : Math.round((sum / count) * 1000) / 1000;
 }

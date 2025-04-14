@@ -50,3 +50,13 @@ export function isFibonacci(num: number): boolean {
 		isPerfectSquare(5 * num * num + 4) || isPerfectSquare(5 * num * num - 4)
 	);
 }
+
+/**
+ * * Checks whether any input is not a finite number.
+ *
+ * @param numbers - The list of numbers to validate.
+ * @returns `true` if any input is not finite.
+ */
+export function areInvalidNumbers(...numbers: number[]): boolean {
+	return numbers.some((n) => !Number.isFinite(n));
+}

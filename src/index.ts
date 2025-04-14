@@ -44,24 +44,18 @@ export {
 	calculateHCF,
 	calculateLCM as calculateLCD,
 	calculateLCM,
-	getOriginalFromPercentage as calculateOriginalFromPercentage,
-	getPercentage as calculatePercentage,
 	convertToDecimal,
 	getAverage,
 	getAverage as getAverageOfNumbers,
-	getOriginalFromPercentage as getOriginalNumberFromPercentage,
-	getPercentage,
-	getOriginalFromPercentage as getPercentageOfWhat,
-	getValueFromPercentage as getPercentageResult,
 	getRandomNumber,
 	sumNumbers as getSumOfNumbers,
-	getValueFromPercentage,
-	getOriginalFromPercentage as percentageOfWhat,
 	reverseNumber,
 	sumDigits,
 	sumNumbers,
 	sumNumbers as sumOfNumbers,
 } from './number/basics';
+
+export { calculatePercentage } from './number/percent';
 
 export {
 	fibonacciGenerator,
@@ -76,9 +70,11 @@ export {
 } from './number/fibonacci';
 
 export {
+	areInvalidNumbers,
 	isEven,
 	isEven as isEvenNumber,
 	isFibonacci,
+	areInvalidNumbers as isInvalidNumbers,
 	isMultiple,
 	isOdd,
 	isOdd as isOddNumber,

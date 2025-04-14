@@ -62,3 +62,83 @@ export type CurrencyCode =
 export type LocaleCode =
 	| (typeof CURRENCY_LOCALES)[keyof typeof CURRENCY_LOCALES]
 	| (typeof LOCALE_CODES)[number];
+
+/** * Options to calculate what percentage a `part` is of a `total`. */
+export interface GetPercentOptions {
+	/** Mode to calculate percentage from `part` and `total` */
+	mode: 'get-percent';
+	/** The part value (e.g., 25 out of 100) */
+	part: number;
+	/** The total value representing 100% */
+	total: number;
+}
+
+/** * Options to calculate a value from a `percentage` of a `total`. */
+export interface GetValueOptions {
+	/** Mode to calculate value from `percentage` and `total` */
+	mode: 'get-value';
+	/** The percentage (e.g., 25%) */
+	percentage: number;
+	/** The total value representing 100% */
+	total: number;
+}
+
+/** * Options to calculate the original total from a known `value` and `percentage`. */
+export interface GetOriginalOptions {
+	/** Mode to calculate original total from `value` and `percentage` */
+	mode: 'get-original';
+	/** The percentage the `value` represents */
+	percentage: number;
+	/** The known value that is a percentage of the original total */
+	value: number;
+}
+
+/** * Calculates the percentage change from `oldValue` to `newValue`. */
+export interface GetChangeOptions {
+	/** Mode to calculate percentage change from `oldValue` to `newValue` */
+	mode: 'get-change-percent';
+	/** The original value before the change */
+	oldValue: number;
+	/** The new value after the change */
+	newValue: number;
+}
+
+/** * Applies a percentage increase or decrease to a `baseValue`. */
+export interface ApplyChangeOptions {
+	/** Mode to apply percentage change to `baseValue` */
+	mode: 'apply-percent-change';
+	/** The base value to apply the percentage change to */
+	baseValue: number;
+	/** The percentage change to apply (positive or negative) */
+	percentage: number;
+}
+
+/** * Calculates the absolute percentage difference between two values. */
+export interface GetDifferenceOptions {
+	/** Mode to calculate percentage difference between `value1` and `value2` */
+	mode: 'get-percent-difference';
+	/** The first value to compare */
+	value1: number;
+	/** The second value to compare */
+	value2: number;
+}
+
+/** * Calculates the inverse percentage: what percent `total` is of `part`. */
+export interface InversePercentageOptions {
+	/** Mode to calculate inverse percentage from `part` and `total` */
+	mode: 'inverse-percent';
+	/** The part value to calculate inverse percentage from */
+	part: number;
+	/** The total value to calculate inverse percentage of */
+	total: number;
+}
+
+/** * Options for calculating percentages and related values. */
+export type PercentageOptions =
+	| GetPercentOptions
+	| GetValueOptions
+	| GetOriginalOptions
+	| GetChangeOptions
+	| ApplyChangeOptions
+	| GetDifferenceOptions
+	| InversePercentageOptions;
