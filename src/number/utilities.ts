@@ -9,8 +9,8 @@ import type { CurrencyCode, LocaleCode } from './types';
  * @returns The number rounded to the nearest interval.
  * @example roundToNearest(27, 5) → 25
  */
-export const roundToNearest = (value: number, interval = 5): number => {
-	return Math.round(value / interval) * interval;
+export const roundToNearest = (value: Numeric, interval = 5): number => {
+	return Math.round(Number(value) / interval) * interval;
 };
 
 /**
@@ -24,7 +24,7 @@ export const roundToNearest = (value: number, interval = 5): number => {
  * @example formatCurrency(1234.56, "USD", "en-US") → "$1,234.56"
  */
 export const formatCurrency = (
-	value: number | `${number}`,
+	value: Numeric,
 	currency: CurrencyCode = 'USD',
 	locale?: LocaleCode,
 ): string => {
@@ -62,8 +62,8 @@ export const clampNumber = (
  * @returns A random floating-point number between min and max.
  * @example randomFloat(1.5, 3.5) → 2.84623
  */
-export const getRandomFloat = (min: number, max: number): number => {
-	return Math.random() * (max - min) + min;
+export const getRandomFloat = (min: Numeric, max: Numeric): number => {
+	return Math.random() * (Number(max) - Number(min)) + Number(min);
 };
 
 /**
@@ -72,13 +72,13 @@ export const getRandomFloat = (min: number, max: number): number => {
  * If the `withNumber` parameter is `true`, the function returns the number along with its ordinal suffix (e.g., "1st").
  * Otherwise, it returns only the ordinal suffix (e.g., "st").
  *
- * @param n - The number or number string to get the ordinal suffix for.
+ * @param num - The number or number string to get the ordinal suffix for.
  * @param withNumber - Whether to include the number along with its ordinal suffix (defaults to `true`).
  * @returns The appropriate ordinal suffix, optionally with the number (e.g., '1st' or 'st`, '2nd' or 'nd' and so on.).
  */
-export const getOrdinal = (n: Numeric, withNumber = true): string => {
-	const remainder10 = Number(n) % 10;
-	const remainder100 = Number(n) % 100;
+export const getOrdinal = (num: Numeric, withNumber = true): string => {
+	const remainder10 = Number(num) % 10;
+	const remainder100 = Number(num) % 100;
 
 	let suffix: string;
 
@@ -92,5 +92,5 @@ export const getOrdinal = (n: Numeric, withNumber = true): string => {
 		suffix = 'th';
 	}
 
-	return withNumber ? String(n).concat(suffix) : suffix;
+	return withNumber ? String(num).concat(suffix) : suffix;
 };

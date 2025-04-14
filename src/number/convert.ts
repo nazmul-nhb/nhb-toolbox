@@ -1,3 +1,4 @@
+import type { Numeric } from '../types';
 import { thousands } from './constants';
 import { _convertLessThanThousand } from './helpers';
 
@@ -6,7 +7,9 @@ import { _convertLessThanThousand } from './helpers';
  * @param number - The number to convert into words.
  * @returns The number converted in words.
  */
-export function numberToWords(number: number): string {
+export function numberToWords(num: Numeric): string {
+	let number = Number(num);
+
 	const isNegative = number < 0;
 
 	if (number === 0) return 'zero';
@@ -40,8 +43,10 @@ export function numberToWords(number: number): string {
  * @returns The Roman numeral representation.
  * @example convertToRomanNumerals(29) → "XXIX"
  */
-export const convertToRomanNumerals = (num: number): string => {
-	if (num <= 0 || num >= 4000)
+export const convertToRomanNumerals = (num: Numeric): string => {
+	let number = Number(num);
+
+	if (number <= 0 || number >= 4000)
 		throw new RangeError('Number must be between 1 and 3999');
 
 	const romanMap: [number, string][] = [
@@ -62,9 +67,9 @@ export const convertToRomanNumerals = (num: number): string => {
 
 	let result = '';
 	for (const [value, numeral] of romanMap) {
-		while (num >= value) {
+		while (number >= value) {
 			result += numeral;
-			num -= value;
+			number -= value;
 		}
 	}
 	return result;

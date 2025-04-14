@@ -160,10 +160,8 @@ export class Chronos {
 		seconds?: number,
 		ms?: number,
 	) {
-		let newDate: Date;
-
 		if (typeof valueOrYear === 'number' && typeof month === 'number') {
-			newDate = new Date(
+			this.#date = new Date(
 				valueOrYear,
 				month - 1,
 				date ?? 1,
@@ -173,10 +171,9 @@ export class Chronos {
 				ms ?? 0,
 			);
 		} else {
-			newDate = this.#toNewDate(valueOrYear);
+			this.#date = this.#toNewDate(valueOrYear);
 		}
 
-		this.#date = newDate;
 		this[ORIGIN] = 'root';
 		this.#offset = `UTC${this.getUTCOffset()}` as UTCOffSet;
 	}
@@ -1838,9 +1835,9 @@ export class Chronos {
 	 * * Rounds the current date-time to the nearest specified unit and interval.
 	 *
 	 * @param unit - The unit to round (`year`, `month`, `week`, `day`, `hour`, `minute`, `second`, `millisecond`).
-	 * 				 Month and Week are 0 based.
+	 *
 	 * @param nearest - The interval to round to. Defaults to `1`.
-	 * @returns A new `Chronos` instance with the rounded value. For wrong unit returns current instance.
+	 * @returns A new `Chronos` instance with the rounded value. For wrong unit returns current instance. Rounded *Month and Week are 0 based.*
 	 */
 	round(unit: TimeUnit, nearest = 1): Chronos {
 		const date = new Date(this.#date);
