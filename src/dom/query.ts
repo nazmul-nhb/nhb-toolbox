@@ -57,6 +57,9 @@ export const generateQueryParams = <T extends QueryObject>(
 
 /**
  * * Get query params as standard `JavaScript` Object `Record<string, string>`.
+ *
+ * - **Note:** *Extracts query parameters from the current URL (window.location.search).*
+ *
  * @returns Query string as key-value paired object. `Record<string, string>`.
  */
 export function getQueryParams(): Record<string, string> {
@@ -78,6 +81,8 @@ export function updateQueryParam(key: string, value: string) {
  * Parses a query string (with optional `?` prefix) into an object.
  * Supports multiple values for the same key by returning arrays.
  * Optionally parses primitive string values into actual types (e.g., "1" → 1, "true" → true).
+ *
+ * - **Note:** *This function does **not** access or depend on `current URL` a.k.a `window.location.search`.*
  *
  * @param query - The query string to parse.
  * @param parsePrimitives - Whether to convert stringified primitives into real values (default: true).
