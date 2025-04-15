@@ -3,16 +3,22 @@ import {
 	_convertOpacityToHex,
 	_extractAlphaColorValues,
 	_extractSolidColorValues,
+	_isHSL,
+	_isHSLA,
+	_isRGB,
+	_isRGBA,
 } from './helpers';
 import { generateRandomHSLColor } from './random';
 import type {
 	AlphaColors,
+	ColorNumbers,
+	Colors,
 	ColorType,
 	Hex6,
 	Hex8,
 	HSL,
 	HSLA,
-	OpacityValue,
+	Percent,
 	RGB,
 	RGBA,
 	SolidColors,
@@ -23,7 +29,7 @@ const { hex, rgb } = convertColorCode(hsl);
 
 /**
  * * Class representing a color and its conversions among `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` and `HSLA` formats.
- * * It has 1 instance method `applyOpacity()` to apply opacity to `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` or `HSLA` color.
+ * * It has 13 instance methods to manipulate and play with the color values.
  * * It has 6 static methods that can be used to check if a color is in `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` or `HSLA` format.
  *
  * @property hex - The color in `Hex` format.
@@ -54,7 +60,7 @@ export class Color {
 	 * - `HSLA` (e.g., `hsla(14, 100%, 60%, 1)`)
 	 *
 	 * Additionally:
-	 * - Use `.applyOpacity(opacity)` to modify or add opacity to the color.
+	 * - It has 13 instance methods to manipulate and play with the color values.
 	 * - Use static methods like `Color.isHex6(color)` to validate color strings.
 	 *
 	 * @example
@@ -81,7 +87,7 @@ export class Color {
 	 * You can create a color from any of these formats, and the class will populate the rest.
 	 *
 	 * Additionally:
-	 * - Use `.applyOpacity(opacity)` to modify or add opacity to the color.
+	 * - It has 13 instance methods to manipulate and play with the color values.
 	 * - Use available 6 static methods like `Color.isHex6(color)` to validate color strings.
 	 *
 	 * @param toConvert - A color string in any supported format (`Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, or `HSLA`) to convert in all other formats (includes the current format).
@@ -121,7 +127,7 @@ export class Color {
 	 * If no color is passed, a random color will be generated.
 	 *
 	 * Additionally:
-	 * - Use `.applyOpacity(opacity)` to modify or add opacity to the color.
+	 * - It has 13 instance methods to manipulate and play with the color values.
 	 * - Use static methods like `Color.isHex6(color)` to validate color strings.
 	 *
 	 * @param toConvert - An optional input color string in any supported format (`Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, or `HSLA`) to convert in all other (includes the current format) formats.
@@ -202,12 +208,12 @@ export class Color {
 	}
 
 	/**
-	 * * Applies or modifies the opacity of a color.
-	 * - For solid colors (Hex6/RGB/HSL): Adds an alpha channel with the specified opacity
-	 * - For alpha colors (Hex8/RGBA/HSLA): Updates the existing alpha channel
+	 * @instance Applies or modifies the opacity of a color. Mutate the original instance.
+	 * - For solid colors (Hex6/RGB/HSL): Adds an alpha channel with the specified opacity.
+	 * - For alpha colors (Hex8/RGBA/HSLA): Updates the existing alpha channel.
 	 *
-	 * @param opacity - A number between 0-100 representing the opacity percentage
-	 * @returns An object containing all color formats with the applied opacity
+	 * @param opacity - A number between 0-100 representing the opacity percentage.
+	 * @returns A new instance of `Color` containing all color formats with the applied opacity.
 	 *
 	 * @example
 	 * const color = new Color("#ff0000");
@@ -219,7 +225,7 @@ export class Color {
 	 * const alpha75 = alphaColor.applyOpacity(75); // Change to 75% opacity
 	 * console.log(alpha75.hex8); // #FF0000BF
 	 */
-	applyOpacity(opacity: OpacityValue): SolidColors & AlphaColors {
+	applyOpacity(opacity: Percent): Color {
 		const validOpacity = Math.min(100, Math.max(0, opacity));
 		const alphaHex = _convertOpacityToHex(opacity);
 		const alphaDecimal = validOpacity / 100;
@@ -227,14 +233,214 @@ export class Color {
 		const rgbValues = _extractSolidColorValues(this.rgb);
 		const hslValues = _extractSolidColorValues(this.hsl);
 
-		return {
+		return Color.#fromParts({
 			hex: this.hex.slice(0, 7).toUpperCase() as Hex6,
 			hex8: `${this.hex.slice(0, 7)}${alphaHex}`.toUpperCase() as Hex8,
-			rgb: `rgb(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]})` as RGB,
-			rgba: `rgba(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]}, ${alphaDecimal})` as RGBA,
-			hsl: `hsl(${hslValues[0]}, ${hslValues[1]}%, ${hslValues[2]}%)` as HSL,
-			hsla: `hsla(${hslValues[0]}, ${hslValues[1]}%, ${hslValues[2]}%, ${alphaDecimal})` as HSLA,
+			rgb: `rgb(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]})`,
+			rgba: `rgba(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]}, ${alphaDecimal})`,
+			hsl: `hsl(${hslValues[0]}, ${hslValues[1]}%, ${hslValues[2]}%)`,
+			hsla: `hsla(${hslValues[0]}, ${hslValues[1]}%, ${hslValues[2]}%, ${alphaDecimal})`,
+		});
+	}
+
+	/**
+	 * @instance Darkens the color by reducing the lightness by the given percentage.
+	 * @param percent - The percentage to darken (0–100).
+	 * @returns A new `Color` instance with the modified darkness.
+	 */
+	applyDarkness(percent: Percent): Color {
+		const [h, s, l] = _extractSolidColorValues(this.hsl);
+
+		const newL = Math.max(0, l - percent);
+
+		const newHSL = `hsl(${h}, ${s}%, ${newL}%)` as HSL;
+
+		return new Color(newHSL);
+	}
+
+	/**
+	 * @instance Lightens the color by increasing the lightness by the given percentage.
+	 * @param percent - The percentage to brighten (0–100).
+	 * @returns A new `Color` instance with the modified lightness.
+	 */
+	applyBrightness(percent: Percent): Color {
+		const [h, s, l] = _extractSolidColorValues(this.hsl);
+
+		const newL = Math.min(100, l + percent);
+
+		const newHSL = `hsl(${h}, ${s}%, ${newL}%)` as HSL;
+
+		return new Color(newHSL);
+	}
+
+	/**
+	 * @instance Reduces the saturation of the color to make it appear duller.
+	 * @param percent - The percentage to reduce saturation (0–100).
+	 * @returns A new `Color` instance with the modified saturation.
+	 */
+	applyDullness(percent: Percent): Color {
+		const [h, s, l] = _extractSolidColorValues(this.hsl);
+
+		const newS = Math.max(0, s - percent);
+
+		const newHSL = `hsl(${h}, ${newS}%, ${l}%)` as HSL;
+
+		return new Color(newHSL);
+	}
+
+	/**
+	 * @instance Softens the color toward white by reducing saturation and increasing lightness based on a percentage.
+	 * - *This creates a soft UI-like white shade effect (similar to some UI libraries' light color scale).*
+	 * @param percent - Value from 0 to 100 representing how far to push the color toward white.
+	 * @returns A new `Color` instance shifted toward white.
+	 */
+	applyWhiteShade(percent: Percent): Color {
+		const [h, s, l] = _extractSolidColorValues(this.hsl);
+
+		// Cap values to avoid overshooting
+		const newS = Math.max(0, s - (s * percent) / 100);
+		const newL = Math.min(100, l + ((100 - l) * percent) / 100);
+
+		const newHSL = `hsl(${h}, ${newS}%, ${newL}%)` as HSL;
+
+		return new Color(newHSL);
+	}
+
+	/**
+	 * @instance Blends the current color with another color based on the given weight.
+	 * @param other - The color in any 6 `(Hex, Hex8 RGB, RGBA, HSL or HSLA)` to blend with.
+	 * @param weight - A number from 0 to 1 indicating the weight of the other color. Defaults to `0.5`.
+	 * 				 - `weight = 0` → only the original color (this)
+	 *				 - `weight = 1` → only the other color
+	 *				 - `weight = 0.5` → equal blend between the two
+	 * @returns A new `Color` instance representing the blended result.
+	 */
+	blendWith(other: ColorType, weight = 0.5): Color {
+		const w = Math.max(0, Math.min(1, weight));
+
+		const converted = new Color(other);
+		const rgb1 = _extractSolidColorValues(this.rgb);
+		const rgb2 = _extractSolidColorValues(converted.rgb);
+
+		const blended = rgb1.map((c, i) =>
+			Math.round(c * (1 - w) + rgb2[i] * w),
+		) as ColorNumbers;
+
+		const blendedRGB = `rgb(${blended[0]}, ${blended[1]}, ${blended[2]})`;
+
+		return new Color(blendedRGB as RGB);
+	}
+
+	/**
+	 * @instance Calculates the contrast ratio between this color and another color (WCAG).
+	 * @param other - The other color to compare against.
+	 * @returns A number representing the contrast ratio (rounded to 2 decimal places).
+	 */
+	contrastRatio(other: ColorType): number {
+		const newColor = new Color(other);
+
+		const luminance = (rgb: RGB): number => {
+			const [r, g, b] = _extractSolidColorValues(rgb).map((v) => {
+				const c = v / 255;
+				return c <= 0.03928 ?
+						c / 12.92
+					:	Math.pow((c + 0.055) / 1.055, 2.4);
+			});
+
+			return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 		};
+
+		const lum1 = luminance(this.rgb);
+		const lum2 = luminance(newColor.rgb);
+
+		const brighter = Math.max(lum1, lum2);
+		const darker = Math.min(lum1, lum2);
+
+		const ratio = (brighter + 0.05) / (darker + 0.05);
+
+		return Math.round(ratio * 100) / 100;
+	}
+
+	/**
+	 * @instance Returns the complementary color by rotating the hue 180 degrees.
+	 * @returns A new Color that is the complement of the current color.
+	 */
+	getComplementaryColor(): Color {
+		const [h, s, l] = _extractSolidColorValues(this.hsl);
+
+		const newHue = (h + 180) % 360;
+
+		const newHSL = `hsl(${newHue}, ${s}%, ${l}%)` as HSL;
+
+		return new Color(newHSL);
+	}
+
+	/**
+	 * @instance Generates a color scheme of analogous colors, including the base color.
+	 * Analogous colors are next to each other on the color wheel (±30°).
+	 * @returns An array of three Color instances: [base, left, right].
+	 */
+	getAnalogousColors(): [Color, Color, Color] {
+		const [h, s, l] = _extractSolidColorValues(this.hsl);
+
+		const left = `hsl(${(h + 330) % 360}, ${s}%, ${l}%)` as HSL;
+		const right = `hsl(${(h + 30) % 360}, ${s}%, ${l}%)` as HSL;
+
+		return [this, new Color(left), new Color(right)];
+	}
+
+	/**
+	 * @instance Generates a color triad scheme including the base color.
+	 * Triadic colors are evenly spaced (120° apart) on the color wheel.
+	 * @returns An array of three Color instances: [base, triad1, triad2].
+	 */
+	getTriadColors(): [Color, Color, Color] {
+		const [h, s, l] = _extractSolidColorValues(this.hsl);
+
+		const c1 = `hsl(${(h + 120) % 360}, ${s}%, ${l}%)` as HSL;
+		const c2 = `hsl(${(h + 240) % 360}, ${s}%, ${l}%)` as HSL;
+
+		return [this, new Color(c1), new Color(c2)];
+	}
+
+	/**
+	 * @instance Generates a tetradic color scheme including the base color.
+	 * Tetradic colors form a rectangle on the color wheel (90° apart).
+	 * @returns An array of four Color instances: [base, tetrad1, tetrad2, tetrad3].
+	 */
+	getTetradColors(): [Color, Color, Color, Color] {
+		const [h, s, l] = _extractSolidColorValues(this.hsl);
+
+		const c1 = `hsl(${(h + 90) % 360}, ${s}%, ${l}%)` as HSL;
+		const c2 = `hsl(${(h + 180) % 360}, ${s}%, ${l}%)` as HSL;
+		const c3 = `hsl(${(h + 270) % 360}, ${s}%, ${l}%)` as HSL;
+
+		return [this, new Color(c1), new Color(c2), new Color(c3)];
+	}
+
+	/**
+	 * @instance Gets the `WCAG` accessibility rating between this and another color.
+	 * @param other - The other color to test contrast against.
+	 * @returns 'Fail', 'AA', or 'AAA' based on `WCAG 2.1` contrast standards.
+	 */
+	getWCAGRating(other: ColorType): 'Fail' | 'AA' | 'AAA' {
+		const ratio = this.contrastRatio(other);
+
+		if (ratio >= 7) return 'AAA';
+		if (ratio >= 4.5) return 'AA';
+		return 'Fail';
+	}
+
+	/**
+	 * @instance Determines if the color is light based on its perceived brightness.
+	 * @returns `true` if light, `false` if dark.
+	 */
+	isLightColor(): boolean {
+		const [r, g, b] = _extractSolidColorValues(this.rgb);
+
+		const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+		return brightness > 127.5;
 	}
 
 	/**
@@ -258,47 +464,43 @@ export class Color {
 	}
 
 	/**
-	 * @static Checks if a color is in `RGB` format.
+	 * @static Checks if a color is in `RGB` format and within valid ranges.
 	 *
 	 * @param color Color to check.
-	 * @returns Boolean: `true` if it's an `RGB` color, `false` if not.
+	 * @returns `true` if it's a `RGB` color, `false` if not.
 	 */
 	static isRGB(color: string): color is RGB {
-		return /^rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)$/.test(color);
+		return _isRGB(color);
 	}
 
 	/**
-	 * @static Checks if a color is in `RGBA` format.
+	 * @static Checks if a color is in `RGBA` format and within valid ranges.
 	 *
 	 * @param color Color to check.
-	 * @returns Boolean: `true` if it's an `RGBA` color, `false` if not.
+	 * @returns `true` if it's a `RGBA` color, `false` if not.
 	 */
 	static isRGBA(color: string): color is RGBA {
-		return /^rgba\(\d{1,3},\s*\d{1,3},\s*\d{1,3},\s*(0|1|0?\.\d+)\)$/.test(
-			color,
-		);
+		return _isRGBA(color);
 	}
 
 	/**
-	 * @static Checks if a color is in `HSL` format.
+	 * @static Checks if a color is in `HSL` format and within valid ranges.
 	 *
 	 * @param color Color to check.
-	 * @returns Boolean: `true` if it's an `HSL` color, `false` if not.
+	 * @returns `true` if it's a `HSL` color, `false` if not.
 	 */
 	static isHSL(color: string): color is HSL {
-		return /^hsl\(\d{1,3},\s*\d{1,3}%,\s*\d{1,3}%\)$/.test(color);
+		return _isHSL(color);
 	}
 
 	/**
-	 * @static Checks if a color is in `HSLA` format.
+	 * @static Checks if a color is in `HSLA` format and within valid ranges.
 	 *
 	 * @param color Color to check.
-	 * @returns Boolean: `true` if it's an `HSLA` color, `false` if not.
+	 * @returns `true` if it's a `HSLA` color, `false` if not.
 	 */
 	static isHSLA(color: string): color is HSLA {
-		return /^hsla\(\d{1,3},\s*\d{1,3}%,\s*\d{1,3}%,\s*(0|1|0?\.\d+)\)$/.test(
-			color,
-		);
+		return _isHSLA(color);
 	}
 
 	/**
@@ -329,5 +531,22 @@ export class Color {
 		}
 
 		throw new Error(`Unrecognized color format: ${color}`);
+	}
+
+	/**
+	 * @private @static Internal factory to create a Color instance from parsed parts.
+	 * @param parts All the color parts as object.
+	 * @returns An instance of `Color`.
+	 */
+	static #fromParts(parts: Colors): Color {
+		const color = Object.create(Color.prototype) as Color;
+		color.hex = parts.hex;
+		color.hex8 = parts.hex8;
+		color.rgb = parts.rgb;
+		color.rgba = parts.rgba;
+		color.hsl = parts.hsl;
+		color.hsla = parts.hsla;
+
+		return color;
 	}
 }

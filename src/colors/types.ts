@@ -6,8 +6,8 @@ export type ColorInput = string | number;
 /** - An array of strings/numbers or nested arrays of strings/numbers for generating colors. */
 export interface ColorInputArray extends Array<ColorInput | ColorInputArray> {}
 
-/** - Opacity value in percentage `(0% - 100%)` without `%` symbol. */
-export type OpacityValue =
+/** - Number value in percentage `(0% - 100%)` without `%` symbol. */
+export type Percent =
 	| 0
 	| 1
 	| 2
@@ -228,3 +228,19 @@ export interface ConvertedColors<T extends ColorType>
 
 /** Represents an alpha value between 0 and 1 */
 export type AlphaValue = Branded<number, 'AlphaValue'>;
+
+/** An Object representing all the colors from `Color` constructor. */
+export interface Colors {
+	/** - `Hex` color (e.g., `#ff5733`) */
+	hex: Hex6;
+	/** - `Hex8` color (Hex with opacity, e.g., `#ff573380`) */
+	hex8: Hex8;
+	/** - `RGB` color (e.g., `rgb(255, 87, 51)`) */
+	rgb: RGB;
+	/** - `RGBA` color (e.g., `rgba(255, 87, 51, 1)`) */
+	rgba: RGBA;
+	/** - `HSL` color (e.g., `hsl(14, 100%, 60%)`) */
+	hsl: HSL;
+	/** - `HSLA` color (e.g., `hsla(14, 100%, 60%, 1)`) */
+	hsla: HSLA;
+}

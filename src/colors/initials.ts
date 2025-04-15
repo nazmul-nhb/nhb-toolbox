@@ -1,6 +1,6 @@
 import { alphabetColorPalette, numberColorPalette } from './constants';
 import { _applyOpacity, _convertOpacityToHex } from './helpers';
-import type { ColorInput, ColorInputArray, OpacityValue } from './types';
+import type { ColorInput, ColorInputArray, Percent } from './types';
 
 /**
  *  * Generates a hex color based on the first character (initial) of a string or number.
@@ -14,7 +14,7 @@ import type { ColorInput, ColorInputArray, OpacityValue } from './types';
  */
 export function getColorForInitial(
 	input: string | number,
-	opacity?: OpacityValue,
+	opacity?: Percent,
 ): string;
 
 /**
@@ -30,7 +30,7 @@ export function getColorForInitial(
  */
 export function getColorForInitial(
 	input: ColorInputArray,
-	opacity?: OpacityValue,
+	opacity?: Percent,
 ): string[];
 
 /**
@@ -46,7 +46,7 @@ export function getColorForInitial(
  */
 export function getColorForInitial(
 	input: ColorInput | ColorInputArray = '',
-	opacity: OpacityValue = 100,
+	opacity: Percent = 100,
 ): string | string[] {
 	let initial: string;
 

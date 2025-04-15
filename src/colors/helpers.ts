@@ -6,7 +6,7 @@ import type {
 	Hex8,
 	HSL,
 	HSLA,
-	OpacityValue,
+	Percent,
 	RGB,
 	RGBA,
 } from './types';
@@ -17,7 +17,7 @@ import type {
  * @param opacity - The opacity value as a percentage (0-100).
  * @returns A 2-digit hex string representing the alpha value.
  */
-export const _convertOpacityToHex = (opacity: OpacityValue): string => {
+export const _convertOpacityToHex = (opacity: Percent): string => {
 	// Ensure opacity is between 0 and 100
 	const validOpacity = Math.min(100, Math.max(0, opacity));
 	// Convert to a value between 0 and 255, then to a hex string
@@ -119,7 +119,7 @@ export const _extractAlphaColorValues = (
 };
 
 /**
- * * Checks if a color is in `Hex` format.
+ * @private Checks if a color is in `Hex` format.
  *
  * @param color Color to check.
  * @returns Boolean: `true` if it's a `Hex` color, `false` if not.
@@ -129,28 +129,7 @@ export function _isHex6(color: string): color is Hex6 {
 }
 
 /**
- * * Checks if a color is in `RGB` format.
- *
- * @param color Color to check.
- * @returns Boolean: `true` if it's an `RGB` color, `false` if not.
- */
-export function _isRGB(color: string): color is RGB {
-	return /^rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)$/.test(color);
-}
-
-/**
- * * Checks if a color is in `HSL` format.
- *
- * @param color Color to check.
- * @returns Boolean: `true` if it's an `HSL` color, `false` if not.
- */
-export function _isHSL(color: string): color is HSL {
-	return /^hsl\(\d{1,3},\s*\d{1,3}%,\s*\d{1,3}%\)$/.test(color);
-}
-
-/**
- * @static
- * Checks if a color is in `Hex8` format.
+ * @private Checks if a color is in `Hex8` format.
  *
  * @param color Color to check.
  * @returns Boolean: `true` if it's a `Hex8` color, `false` if not.
@@ -160,36 +139,100 @@ export function _isHex8(color: string): color is Hex8 {
 }
 
 /**
- * @static
- * Checks if a color is in `RGBA` format.
+ * @private Checks if a color is in `RGB` format and within valid ranges.
  *
  * @param color Color to check.
- * @returns Boolean: `true` if it's an `RGBA` color, `false` if not.
+ * @returns `true` if it's a `RGB` color, `false` if not.
+ */
+export function _isRGB(color: string): color is RGB {
+	const match = color.match(
+		/^rgb\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?)\s*\)$/,
+	);
+	if (!match) return false;
+	const [r, g, b] = match.slice(1).map(Number);
+	return (
+		_isValidRGBComponent(r) &&
+		_isValidRGBComponent(g) &&
+		_isValidRGBComponent(b)
+	);
+}
+
+/**
+ * @private Checks if a color is in `RGBA` format and within valid ranges.
+ *
+ * @param color Color to check.
+ * @returns `true` if it's a `RGBA` color, `false` if not.
  */
 export function _isRGBA(color: string): color is RGBA {
-	return /^rgba\(\d{1,3},\s*\d{1,3},\s*\d{1,3},\s*(0|1|0?\.\d+)\)$/.test(
-		color,
+	const match = color.match(
+		/^rgba\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?),\s*(0|1|0?\.\d+)\s*\)$/,
+	);
+	if (!match) return false;
+	const [r, g, b, a] = match.slice(1).map(Number);
+	return (
+		_isValidRGBComponent(r) &&
+		_isValidRGBComponent(g) &&
+		_isValidRGBComponent(b) &&
+		_isValidAlpha(a)
 	);
 }
 
 /**
- * @static
- * Checks if a color is in `HSLA` format.
+ * @private Checks if a color is in `HSL` format and within valid ranges.
  *
  * @param color Color to check.
- * @returns Boolean: `true` if it's an `HSLA` color, `false` if not.
+ * @returns `true` if it's a `HSL` color, `false` if not.
+ */
+export function _isHSL(color: string): color is HSL {
+	const match = color.match(
+		/^hsl\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?)%,\s*(\d{1,3}(?:\.\d+)?)%\s*\)$/,
+	);
+	if (!match) return false;
+	const [h, s, l] = match.slice(1).map(Number);
+	return _isValidHue(h) && _isValidPercentage(s) && _isValidPercentage(l);
+}
+
+/**
+ * @private Checks if a color is in `HSLA` format and within valid ranges.
+ *
+ * @param color Color to check.
+ * @returns `true` if it's a `HSLA` color, `false` if not.
  */
 export function _isHSLA(color: string): color is HSLA {
-	return /^hsla\(\d{1,3},\s*\d{1,3}%,\s*\d{1,3}%,\s*(0|1|0?\.\d+)\)$/.test(
-		color,
+	const match = color.match(
+		/^hsla\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?)%,\s*(\d{1,3}(?:\.\d+)?)%,\s*(0|1|0?\.\d+)\s*\)$/,
+	);
+	if (!match) return false;
+	const [h, s, l, a] = match.slice(1).map(Number);
+	return (
+		_isValidHue(h) &&
+		_isValidPercentage(s) &&
+		_isValidPercentage(l) &&
+		_isValidAlpha(a)
 	);
 }
 
 /**
- * * Type guard to validate alpha value.
+ * @private Checks if a number is valid alpha value.
+ *
  * @param value Alpha value to check.
- * @returns Boolean: `true` if it's a valid alpha value, `false` if not.
+ * @returns `true` if it's a valid alpha value, `false` if not.
  */
 export function _isValidAlpha(value: number): value is AlphaValue {
 	return value >= 0 && value <= 1 && !isNaN(value);
+}
+
+/** * @private Validates RGB component (0–255). */
+export function _isValidRGBComponent(value: number): boolean {
+	return value >= 0 && value <= 255;
+}
+
+/** * @private Validates HSL hue (0–360). */
+export function _isValidHue(value: number): boolean {
+	return value >= 0 && value <= 360;
+}
+
+/** * @private Validates HSL percentage components (0–100). */
+export function _isValidPercentage(value: number): boolean {
+	return value >= 0 && value <= 100;
 }

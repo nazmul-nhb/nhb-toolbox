@@ -18,7 +18,7 @@ import type {
 	Hex8,
 	HSL,
 	HSLA,
-	OpacityValue,
+	Percent,
 	RGB,
 	RGBA,
 } from './types';
@@ -232,7 +232,7 @@ export const convertRgbaToHex8 = (
 	const hex = convertRgbToHex(r, g, b);
 
 	const alphaHex = _convertOpacityToHex(
-		Math.round(newAlpha * 100) as OpacityValue,
+		Math.round(newAlpha * 100) as Percent,
 	);
 
 	return `${hex}${alphaHex}` as Hex8;
@@ -345,7 +345,7 @@ export const convertHslaToHex8 = (
 	const hex = convertHslToHex(h, s, l);
 
 	const alphaHex = _convertOpacityToHex(
-		Math.round(newAlpha * 100) as OpacityValue,
+		Math.round(newAlpha * 100) as Percent,
 	);
 
 	return `${hex}${alphaHex}` as Hex8;
