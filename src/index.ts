@@ -32,12 +32,12 @@ export {
 } from './string/convert';
 
 export {
+	countWords,
+	countWords as countWordsInString,
 	extractNumbersFromString,
 	getLevenshteinDistance,
 	getLevenshteinDistance as levenshteinDistance,
-	countWords,
 	countWords as wordCount,
-	countWords as countWordsInString,
 } from './string/utilities';
 
 // ! Number Utilities
@@ -255,6 +255,7 @@ export {
 	flattenObjectKeyValue,
 	mergeAndFlattenObjects,
 	mergeObjects,
+	parseJsonToObject,
 } from './object/objectify';
 
 export {
@@ -283,6 +284,9 @@ export {
 	generateQueryParams as formatQueryParams,
 	generateQueryParams,
 	getQueryParams,
+	parseQueryString,
+	parseQueryString as queryStringToObject,
+	parseQueryString as getQueryStringAsObject,
 	updateQueryParam,
 } from './dom/query';
 
@@ -303,12 +307,16 @@ export {
 	countInstanceMethods,
 	countStaticMethods,
 	debounceAction,
+	deepParsePrimitives,
 	getClassDetails,
 	getInstanceMethodNames,
 	countInstanceMethods as getInstanceMethodsCount,
 	getStaticMethodNames,
 	countStaticMethods as getStaticMethodsCount,
 	isDeepEqual,
+	parseJSON,
+	parseJSON as parseJsonDeep,
+	deepParsePrimitives as parsePrimitivesDeep,
 	throttleAction,
 } from './utils';
 

@@ -1,6 +1,8 @@
 import { flattenObjectKeyValue } from '../object/objectify';
-import type { QueryObject } from '../object/types';
+import { parseObjectValues } from '../object/sanitize';
+import type { QueryObject, StrictObject } from '../object/types';
 import type { QueryString } from '../string/types';
+import { deepParsePrimitives } from '../utils';
 
 /**
  * * Utility to generate query parameters from an object.
@@ -71,3 +73,38 @@ export function updateQueryParam(key: string, value: string) {
 	url.searchParams.set(key, value);
 	window.history.replaceState({}, '', url.toString());
 }
+
+/**
+ * Parses a query string (with optional `?` prefix) into an object.
+ * Supports multiple values for the same key by returning arrays.
+ * Optionally parses primitive string values into actual types (e.g., "1" → 1, "true" → true).
+ *
+ * @param query - The query string to parse.
+ * @param parsePrimitives - Whether to convert stringified primitives into real values (default: true).
+ * @returns An object where keys are strings and values can be string, array, number, boolean, or null.
+ */
+export const parseQueryString = (
+	query: string,
+	parsePrimitives = true,
+): StrictObject => {
+	const params = new URLSearchParams(
+		query.startsWith('?') ? query.slice(1) : query,
+	);
+
+	const entries: StrictObject = {};
+
+	for (const [key, value] of params.entries()) {
+		if (key in entries) {
+			const current = entries[key];
+
+			const array =
+				Array.isArray(current) ? [...current, value] : [current, value];
+
+			entries[key] = parsePrimitives ? deepParsePrimitives(array) : array;
+		} else {
+			entries[key] = value;
+		}
+	}
+
+	return parsePrimitives ? parseObjectValues(entries) : entries;
+};

@@ -1,6 +1,8 @@
 import { isInvalidOrEmptyArray } from '../array/basics';
 import { sortAnArray } from '../array/sort';
-import { isMethodDescriptor } from '../guards/non-primitives';
+import { isMethodDescriptor, isObject } from '../guards/non-primitives';
+import { isString } from '../guards/primitives';
+import { isNumericString } from '../guards/specials';
 import type { GenericObject } from '../object/types';
 import type {
 	ClassDetails,
@@ -201,4 +203,63 @@ export function getClassDetails(cls: Constructor): ClassDetails {
 		statics: staticNames.length,
 		total: instanceNames.length + staticNames.length,
 	};
+}
+
+/**
+ * * Parses a JSON string and optionally converts stringified primitives inside objects or arrays.
+ *
+ * @param value - The JSON string to parse.
+ * @param parsePrimitives - Whether to convert stringified primitives (default: `true`).
+ * @returns The parsed JSON value with optional primitive parsing.
+ */
+export const parseJSON = (value: string, parsePrimitives = true): unknown => {
+	try {
+		const parsed = JSON.parse(value);
+
+		return parsePrimitives ? deepParsePrimitives(parsed) : parsed;
+	} catch {
+		return {};
+	}
+};
+
+/**
+ * Recursively parses primitive values inside objects and arrays.
+ *
+ * @param input - Any input value to parse recursively.
+ * @returns Input with primitives (strings like "true", "123") converted.
+ */
+export function deepParsePrimitives(input: unknown): unknown {
+	if (Array.isArray(input)) {
+		return input.map(deepParsePrimitives);
+	}
+
+	if (isObject(input)) {
+		const result: Record<string, unknown> = {};
+
+		for (const [key, value] of Object.entries(input)) {
+			result[key] = deepParsePrimitives(value);
+		}
+
+		return result;
+	}
+
+	if (isString(input)) {
+		if (/^(true|false)$/i.test(input)) {
+			return input.toLowerCase() === 'true';
+		}
+
+		if (isNumericString(input)) {
+			return Number(input);
+		}
+
+		if (input === 'null') {
+			return null;
+		}
+
+		if (input === 'undefined') {
+			return undefined;
+		}
+	}
+
+	return input;
 }

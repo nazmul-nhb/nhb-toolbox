@@ -169,6 +169,10 @@ export function parseObjectValues(object: GenericObject): StrictObject {
 					parsedBody[key] = false;
 				} else if (!isNaN(Number(value))) {
 					parsedBody[key] = Number(value);
+				} else if (value === 'undefined') {
+					parsedBody[key] = undefined;
+				} else if (value === 'null') {
+					parsedBody[key] = null;
 				} else {
 					parsedBody[key] = value;
 				}
