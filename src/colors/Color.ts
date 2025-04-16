@@ -311,13 +311,14 @@ export class Color {
 	/**
 	 * @instance Blends the current color with another color based on the given weight.
 	 *
-	 * - **NOTE:** *If any of the input colors has opacity (alpha channel), it might be lost from the generated alpha variants of the respective color formats.*
-	 * @param other - The color in any 6 `(Hex, Hex8 RGB, RGBA, HSL or HSLA)` to blend with.
+	 * - **NOTE:** *If any of the input colors has opacity (alpha channel), it might be lost or distorted from the generated alpha variants of the respective color formats.*
+	 *
+	 * @param other - The color in any 6 `(Hex, Hex8 RGB, RGBA, HSL or HSLA)` format to blend with.
 	 * @param weight - A number from 0 to 1 indicating the weight of the other color. Defaults to `0.5`.
-	 * 				 - `weight = 0` → only the original color (this)
-	 *				 - `weight = 1` → only the other color
-	 *				 - `weight = 0.5` → equal blend between the two
-	 * @returns A new `Color` instance representing the blended result.
+	 *                  - `weight = 0` → only the original color.
+	 *                  - `weight = 1` → only the other color.
+	 *                  - `weight = 0.5` → equal blend between the two.
+	 * @returns A new `Color` instance representing the blended result, with proper alpha blending.
 	 */
 	blendWith(other: ColorType, weight = 0.5): Color {
 		const w = Math.max(0, Math.min(1, weight));
@@ -326,23 +327,17 @@ export class Color {
 		const [r1, b1, g1, a1] = _extractAlphaColorValues(this.rgba);
 		const [r2, b2, g2, a2] = _extractAlphaColorValues(converted.rgba);
 
-		const alpha = a1 * (1 - w) + a2 * w;
+		const alpha = Math.round((a1 * (1 - w) + a2 * w) * 100) / 100;
 
-		// ! Original code for solid color
-		// const blended = rgb1.map((c, i) =>
-		// 	Math.round(c * (1 - w) + rgb2[i] * w),
-		// ) as ColorNumbers;
-
-		// const blendedRGB = `rgb(${blended[0]}, ${blended[1]}, ${blended[2]})`;
-
-		const blendChannel = (c1: number, c2: number) =>
-			Math.round((c1 * a1 * (1 - w) + c2 * a2 * w) / alpha);
+		const blendChannel = (c1: number, c2: number): number => {
+			return Math.round((c1 * a1 * (1 - w) + c2 * a2 * w) / alpha);
+		};
 
 		const r = blendChannel(r1, r2);
 		const g = blendChannel(g1, g2);
 		const b = blendChannel(b1, b2);
 
-		const blended = `rgba(${r}, ${g}, ${b}, ${+alpha.toFixed(2)})`;
+		const blended = `rgba(${r}, ${g}, ${b}, ${alpha})`;
 
 		return new Color(blended as RGBA);
 	}
