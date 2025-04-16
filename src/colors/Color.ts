@@ -11,7 +11,7 @@ import {
 import { generateRandomHSLColor } from './random';
 import type {
 	AlphaColors,
-	ColorNumbers,
+	Analogous,
 	Colors,
 	ColorType,
 	Hex6,
@@ -22,6 +22,8 @@ import type {
 	RGB,
 	RGBA,
 	SolidColors,
+	Tetrad,
+	Triad,
 } from './types';
 
 const hsl = generateRandomHSLColor();
@@ -249,13 +251,13 @@ export class Color {
 	 * @returns A new `Color` instance with the modified darkness.
 	 */
 	applyDarkness(percent: Percent): Color {
-		const [h, s, l] = _extractSolidColorValues(this.hsl);
+		const [h, s, l, a] = _extractAlphaColorValues(this.hsla);
 
 		const newL = Math.max(0, l - percent);
 
 		const newHSL = `hsl(${h}, ${s}%, ${newL}%)` as HSL;
 
-		return new Color(newHSL);
+		return new Color(newHSL).applyOpacity((a * 100) as Percent);
 	}
 
 	/**
@@ -264,13 +266,13 @@ export class Color {
 	 * @returns A new `Color` instance with the modified lightness.
 	 */
 	applyBrightness(percent: Percent): Color {
-		const [h, s, l] = _extractSolidColorValues(this.hsl);
+		const [h, s, l, a] = _extractAlphaColorValues(this.hsla);
 
 		const newL = Math.min(100, l + percent);
 
 		const newHSL = `hsl(${h}, ${s}%, ${newL}%)` as HSL;
 
-		return new Color(newHSL);
+		return new Color(newHSL).applyOpacity((a * 100) as Percent);
 	}
 
 	/**
@@ -279,13 +281,13 @@ export class Color {
 	 * @returns A new `Color` instance with the modified saturation.
 	 */
 	applyDullness(percent: Percent): Color {
-		const [h, s, l] = _extractSolidColorValues(this.hsl);
+		const [h, s, l, a] = _extractAlphaColorValues(this.hsla);
 
 		const newS = Math.max(0, s - percent);
 
 		const newHSL = `hsl(${h}, ${newS}%, ${l}%)` as HSL;
 
-		return new Color(newHSL);
+		return new Color(newHSL).applyOpacity((a * 100) as Percent);
 	}
 
 	/**
@@ -295,7 +297,7 @@ export class Color {
 	 * @returns A new `Color` instance shifted toward white.
 	 */
 	applyWhiteShade(percent: Percent): Color {
-		const [h, s, l] = _extractSolidColorValues(this.hsl);
+		const [h, s, l, a] = _extractAlphaColorValues(this.hsla);
 
 		// Cap values to avoid overshooting
 		const newS = Math.max(0, s - (s * percent) / 100);
@@ -303,11 +305,13 @@ export class Color {
 
 		const newHSL = `hsl(${h}, ${newS}%, ${newL}%)` as HSL;
 
-		return new Color(newHSL);
+		return new Color(newHSL).applyOpacity((a * 100) as Percent);
 	}
 
 	/**
 	 * @instance Blends the current color with another color based on the given weight.
+	 *
+	 * - **NOTE:** *If any of the input colors has opacity (alpha channel), it might be lost from the generated alpha variants of the respective color formats.*
 	 * @param other - The color in any 6 `(Hex, Hex8 RGB, RGBA, HSL or HSLA)` to blend with.
 	 * @param weight - A number from 0 to 1 indicating the weight of the other color. Defaults to `0.5`.
 	 * 				 - `weight = 0` → only the original color (this)
@@ -319,16 +323,28 @@ export class Color {
 		const w = Math.max(0, Math.min(1, weight));
 
 		const converted = new Color(other);
-		const rgb1 = _extractSolidColorValues(this.rgb);
-		const rgb2 = _extractSolidColorValues(converted.rgb);
+		const [r1, b1, g1, a1] = _extractAlphaColorValues(this.rgba);
+		const [r2, b2, g2, a2] = _extractAlphaColorValues(converted.rgba);
 
-		const blended = rgb1.map((c, i) =>
-			Math.round(c * (1 - w) + rgb2[i] * w),
-		) as ColorNumbers;
+		const alpha = a1 * (1 - w) + a2 * w;
 
-		const blendedRGB = `rgb(${blended[0]}, ${blended[1]}, ${blended[2]})`;
+		// ! Original code for solid color
+		// const blended = rgb1.map((c, i) =>
+		// 	Math.round(c * (1 - w) + rgb2[i] * w),
+		// ) as ColorNumbers;
 
-		return new Color(blendedRGB as RGB);
+		// const blendedRGB = `rgb(${blended[0]}, ${blended[1]}, ${blended[2]})`;
+
+		const blendChannel = (c1: number, c2: number) =>
+			Math.round((c1 * a1 * (1 - w) + c2 * a2 * w) / alpha);
+
+		const r = blendChannel(r1, r2);
+		const g = blendChannel(g1, g2);
+		const b = blendChannel(b1, b2);
+
+		const blended = `rgba(${r}, ${g}, ${b}, ${+alpha.toFixed(2)})`;
+
+		return new Color(blended as RGBA);
 	}
 
 	/**
@@ -366,13 +382,13 @@ export class Color {
 	 * @returns A new Color that is the complement of the current color.
 	 */
 	getComplementaryColor(): Color {
-		const [h, s, l] = _extractSolidColorValues(this.hsl);
+		const [h, s, l, a] = _extractAlphaColorValues(this.hsla);
 
 		const newHue = (h + 180) % 360;
 
 		const newHSL = `hsl(${newHue}, ${s}%, ${l}%)` as HSL;
 
-		return new Color(newHSL);
+		return new Color(newHSL).applyOpacity((a * 100) as Percent);
 	}
 
 	/**
@@ -380,13 +396,17 @@ export class Color {
 	 * Analogous colors are next to each other on the color wheel (±30°).
 	 * @returns An array of three Color instances: [base, left, right].
 	 */
-	getAnalogousColors(): [Color, Color, Color] {
-		const [h, s, l] = _extractSolidColorValues(this.hsl);
+	getAnalogousColors(): Analogous {
+		const [h, s, l, a] = _extractAlphaColorValues(this.hsla);
 
 		const left = `hsl(${(h + 330) % 360}, ${s}%, ${l}%)` as HSL;
 		const right = `hsl(${(h + 30) % 360}, ${s}%, ${l}%)` as HSL;
 
-		return [this, new Color(left), new Color(right)];
+		const analogous = [this, new Color(left), new Color(right)];
+
+		return analogous.map((c) =>
+			c.applyOpacity((a * 100) as Percent),
+		) as Analogous;
 	}
 
 	/**
@@ -394,13 +414,15 @@ export class Color {
 	 * Triadic colors are evenly spaced (120° apart) on the color wheel.
 	 * @returns An array of three Color instances: [base, triad1, triad2].
 	 */
-	getTriadColors(): [Color, Color, Color] {
-		const [h, s, l] = _extractSolidColorValues(this.hsl);
+	getTriadColors(): Triad {
+		const [h, s, l, a] = _extractAlphaColorValues(this.hsla);
 
 		const c1 = `hsl(${(h + 120) % 360}, ${s}%, ${l}%)` as HSL;
 		const c2 = `hsl(${(h + 240) % 360}, ${s}%, ${l}%)` as HSL;
 
-		return [this, new Color(c1), new Color(c2)];
+		const triad = [this, new Color(c1), new Color(c2)];
+
+		return triad.map((c) => c.applyOpacity((a * 100) as Percent)) as Triad;
 	}
 
 	/**
@@ -408,14 +430,18 @@ export class Color {
 	 * Tetradic colors form a rectangle on the color wheel (90° apart).
 	 * @returns An array of four Color instances: [base, tetrad1, tetrad2, tetrad3].
 	 */
-	getTetradColors(): [Color, Color, Color, Color] {
-		const [h, s, l] = _extractSolidColorValues(this.hsl);
+	getTetradColors(): Tetrad {
+		const [h, s, l, a] = _extractAlphaColorValues(this.hsla);
 
 		const c1 = `hsl(${(h + 90) % 360}, ${s}%, ${l}%)` as HSL;
 		const c2 = `hsl(${(h + 180) % 360}, ${s}%, ${l}%)` as HSL;
 		const c3 = `hsl(${(h + 270) % 360}, ${s}%, ${l}%)` as HSL;
 
-		return [this, new Color(c1), new Color(c2), new Color(c3)];
+		const tetrad = [this, new Color(c1), new Color(c2), new Color(c3)];
+
+		return tetrad.map((c) =>
+			c.applyOpacity((a * 100) as Percent),
+		) as Tetrad;
 	}
 
 	/**

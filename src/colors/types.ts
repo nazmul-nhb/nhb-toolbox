@@ -1,4 +1,5 @@
 import type { Branded } from '../types';
+import type { Color } from './Color';
 
 /** - A string, number for generating color. */
 export type ColorInput = string | number;
@@ -244,3 +245,9 @@ export interface Colors {
 	/** - `HSLA` color (e.g., `hsla(14, 100%, 60%, 1)`) */
 	hsla: HSLA;
 }
+
+export type Analogous = [Color, Color, Color];
+
+export type Triad = [Color, Color, Color];
+
+export type Tetrad = [Color, Color, Color, Color];
