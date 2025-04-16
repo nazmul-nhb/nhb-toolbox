@@ -90,14 +90,30 @@ export type NestedPrimitiveKey<T> =
 		}[keyof T & string]
 	:	never;
 
-/** - Options for `sanitizeData` */
-export interface SanitizeOptions<T extends GenericObject> {
-	/** Keys to ignore */
+/** - Options for `sanitizeData` utility. */
+export interface SanitizeOptions<T> {
+	/**
+	 * An array of dot-notation keys to exclude from the sanitized output.
+	 * This is only applicable when sanitizing plain objects or arrays of objects.
+	 * When applied to nested or irregular array structures, behavior may be inconsistent or partially ignored.
+	 */
 	keysToIgnore?: DotNotationKey<T>[];
-	/** Whether to trim string values. Defaults to `true` */
+
+	/** Whether to trim string values. Defaults to `true`. */
 	trimStrings?: boolean;
-	/** Whether to exclude nullish (null or undefined) values. Defaults to `false` */
+
+	/** Whether to exclude nullish (`null` or `undefined`) values. Defaults to `false`. */
 	ignoreNullish?: boolean;
+
+	/** Whether to exclude all falsy values (`false`, `0`, `empty string: ''`, `null`, `undefined` and `empty object and arrays` (`{}`, `[]`)). Defaults to `false`. */
+	ignoreFalsy?: boolean;
+
+	/**
+	 * An array of dot-notation key paths that must be preserved in the sanitized output.
+	 * Use `"*"` to retain all keys. This applies primarily to plain or nested objects and arrays of objects.
+	 * When applied to nested or irregular array structures, behavior may be inconsistent or partially ignored.
+	 */
+	requiredKeys?: '*' | DotNotationKey<T>[];
 }
 
 /** - Data after sanitization.

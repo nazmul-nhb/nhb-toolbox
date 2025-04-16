@@ -1,4 +1,10 @@
-import { isNotEmptyObject } from '../guards/non-primitives';
+import { isCustomFileArray, isFileArray } from '../form/guards';
+import {
+	isArrayOfType,
+	isNotEmptyObject,
+	isObject,
+} from '../guards/non-primitives';
+import { isString } from '../guards/primitives';
 import { trimString } from '../string/basics';
 import type { FlattenPartial } from '../types';
 import type {
@@ -22,14 +28,14 @@ export function sanitizeData<T extends GenericObject>(
 ): FlattenPartial<T>;
 
 /**
- * * Sanitizes an array of objects by ignoring specified keys and trimming string values based on options provided.
- * * Also excludes nullish values (null, undefined) if specified. Always ignores empty nested object(s).
+ * * Sanitizes a deeply nested array that may contain arrays, objects or other (mixed) data types.
+ * * Preserves structure while removing empty values and trimming strings and other operations.
  *
- * @param object - The object to sanitize.
- * @param options - Options that define which keys to ignore, whether to trim string values, and whether to exclude nullish values.
- * @returns A new array of objects with the specified modifications.
+ * @param array - A mixed array that may contain arrays, objects or other data types.
+ * @param options - Options to trim and filter values.
+ * @returns A new sanitized array with the specified modifications.
  */
-export function sanitizeData<T extends GenericObject>(
+export function sanitizeData<T>(
 	array: T[],
 	options?: SanitizeOptions<T>,
 ): FlattenPartial<T>[];
@@ -63,13 +69,58 @@ export function sanitizeData<T extends GenericObject>(
 	options?: SanitizeOptions<T>,
 ): string | string[] | FlattenPartial<T> | FlattenPartial<T>[] {
 	const {
-		keysToIgnore: ignoreKeys = [],
+		keysToIgnore = [],
+		requiredKeys = [],
 		trimStrings = true,
 		ignoreNullish = false,
+		ignoreFalsy = false,
 	} = options || {};
 
 	// Flatten the object keys and use the keys for comparison
-	const ignoreKeySet = new Set(ignoreKeys);
+	const ignoreKeySet = new Set(keysToIgnore);
+
+	const isRequiredKey = (key: string) => {
+		return Array.isArray(requiredKeys) ?
+				requiredKeys.some(
+					(path) => key === path || key.startsWith(`${path}.`),
+				)
+			:	requiredKeys === '*';
+	};
+
+	/**
+	 * * Recursively process an array and its nested content(s).
+	 * @param arr Array to process.
+	 * @param path Full path as dot notation if needed.
+	 * @returns Processed array.
+	 */
+	const _processArray = (arr: unknown[], path: string): unknown[] => {
+		return arr
+			.map((item) => {
+				if (isString(item) && trimStrings) {
+					return trimString(item);
+				}
+
+				if (Array.isArray(item)) {
+					// Recursive sanitize
+					return _processArray(item, path);
+				}
+
+				if (isObject(item)) {
+					return _processObject(item as T, path);
+				}
+
+				return item;
+			})
+			.filter((v) => {
+				if (ignoreNullish && v == null) return false;
+				if (ignoreFalsy && !v) return false;
+				if (ignoreFalsy && isObject(v) && !isNotEmptyObject(v)) {
+					return false;
+				}
+
+				return true;
+			});
+	};
 
 	/**
 	 * * Helper function to process a single object.
@@ -88,23 +139,39 @@ export function sanitizeData<T extends GenericObject>(
 			}
 
 			// Exclude nullish values if specified
-			if (ignoreNullish && (value === null || value === undefined)) {
+			if (ignoreNullish && !isRequiredKey(fullKeyPath) && value == null) {
 				return acc;
 			}
 
-			// Trim string values if enabled
-			if (typeof value === 'string' && trimStrings) {
+			// Exclude falsy values `0`, `false`, `null` and `undefined`
+			if (ignoreFalsy && !value && !isRequiredKey(fullKeyPath)) {
+				return acc;
+			}
+
+			if (isString(value) && trimStrings) {
+				// Trim string values if enabled
 				acc[key as keyof T] = trimString(value) as T[keyof T];
-			} else if (
-				value &&
-				typeof value === 'object' &&
-				!Array.isArray(value)
-			) {
+			} else if (value && isObject(value)) {
 				// Recursively process nested objects
 				const processedValue = _processObject(value as T, fullKeyPath);
-				// Only add the property if it's not an empty object
-				if (isNotEmptyObject(processedValue)) {
+				// Add the property conditionally if it's not an empty object
+				if (
+					!ignoreFalsy ||
+					isRequiredKey(fullKeyPath) ||
+					isNotEmptyObject(processedValue)
+				) {
 					acc[key as keyof T] = processedValue as T[keyof T];
+				}
+			} else if (value && Array.isArray(value)) {
+				// Keep file arrays untouched
+				if (isFileArray(value) || isCustomFileArray(value)) {
+					acc[key as keyof T] = value as T[keyof T];
+				}
+				// acc[key as keyof T] = value.map(sanitizeData) as T[keyof T];
+				const sanitizedArray = _processArray(value, fullKeyPath);
+
+				if (!ignoreFalsy || sanitizedArray.length > 0) {
+					acc[key as keyof T] = sanitizedArray as T[keyof T];
 				}
 			} else {
 				// Add other values as-is
@@ -115,25 +182,32 @@ export function sanitizeData<T extends GenericObject>(
 		}, {} as T);
 
 	// Process strings
-	if (typeof input === 'string') {
+	if (isString(input)) {
 		return trimString(input);
 	}
 
 	// Process array of strings and objects
 	if (Array.isArray(input)) {
 		// Process array of strings
-		if (typeof input[0] === 'string') {
-			return trimString(input as string[]);
+		if (isArrayOfType(input, isString)) {
+			return trimString(input);
 		}
 
-		// Process array of objects
+		// * Handle arrays with nested strings/arrays/objects
 		return input
-			.map((obj) => _processObject(obj as T))
-			.filter((obj) => isNotEmptyObject(obj));
+			.map((item) => sanitizeData(item, options))
+			.filter((val) => {
+				if (ignoreNullish && val == null) return false;
+				if (ignoreFalsy && !val) return false;
+				if (ignoreFalsy && isObject(val) && !isNotEmptyObject(val)) {
+					return false;
+				}
+				return true;
+			});
 	}
 
 	// Process object
-	if (typeof input === 'object' && input !== null) {
+	if (isObject(input)) {
 		return _processObject(input);
 	}
 
@@ -154,7 +228,7 @@ export function parseObjectValues(object: GenericObject): StrictObject {
 
 	if (isNotEmptyObject(object)) {
 		Object.entries(object).forEach(([key, value]) => {
-			if (typeof value !== 'string') {
+			if (!isString(value)) {
 				parsedBody[key] = value;
 				return;
 			}

@@ -261,20 +261,7 @@ export const createControlledFormData = <T extends GenericObject>(
 				if (isRequiredKey(fullKey)) {
 					_addToFormData(key, JSON.stringify(value));
 				}
-			}
-			// else if (Array.isArray(value) && value.every(isNotEmptyObject)) {
-			// 	if (shouldDotNotate(fullKey)) {
-			// 		value.forEach((item, index) =>
-			// 			_addToFormData(`${fullKey}[${index}]`, item),
-			// 		);
-			// 	} else if (shouldStringify(fullKey)) {
-			// 		_addToFormData(
-			// 			key,
-			// 			value.map((item) => _processObject(item, parentKey)),
-			// 		);
-			// 	}
-			// }
-			else {
+			} else {
 				// * For other cases, just append as key-value
 				_addToFormData(key, value);
 			}
