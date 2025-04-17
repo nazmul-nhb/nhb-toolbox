@@ -15,6 +15,22 @@ import type {
 } from './types';
 
 /**
+ * * Trims all the words in a string.
+ *
+ * @param input String to sanitize.
+ * @returns Sanitized string .
+ */
+export function sanitizeData(input: string): string;
+
+/**
+ * * Trims all the words in an array of strings.
+ *
+ * @param input Array of strings to sanitize.
+ * @returns Sanitized array of strings.
+ */
+export function sanitizeData(input: string[]): string[];
+
+/**
  * * Sanitizes an object by ignoring specified keys and trimming string values based on options provided.
  * * Also excludes nullish values (null, undefined) if specified. Always ignores empty nested object(s).
  *
@@ -39,22 +55,6 @@ export function sanitizeData<T>(
 	array: T[],
 	options?: SanitizeOptions<T>,
 ): FlattenPartial<T>[];
-
-/**
- * * Trims all the words in a string.
- *
- * @param input String to sanitize.
- * @returns Sanitized string .
- */
-export function sanitizeData(input: string): string;
-
-/**
- * * Trims all the words in an array of strings.
- *
- * @param input Array of strings to sanitize.
- * @returns Sanitized array of strings.
- */
-export function sanitizeData(input: string[]): string[];
 
 /**
  * * Sanitizes a string, array of strings, an object or array of objects by ignoring specified keys and trimming string values.
