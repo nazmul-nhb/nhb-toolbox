@@ -73,17 +73,32 @@ export function sanitizeData<T extends GenericObject>(
 		trimStrings = true,
 		ignoreNullish = false,
 		ignoreFalsy = false,
+		ignoreEmpty = false,
 	} = options || {};
 
 	// Flatten the object keys and use the keys for comparison
 	const ignoreKeySet = new Set(keysToIgnore);
 
+	/**
+	 * * Determines if a key is required
+	 * @param key The key to check.
+	 * @returns `true` if the key is required, otherwise `false`.
+	 */
 	const isRequiredKey = (key: string) => {
 		return Array.isArray(requiredKeys) ?
-				requiredKeys.some(
+				requiredKeys?.some(
 					(path) => key === path || key.startsWith(`${path}.`),
 				)
 			:	requiredKeys === '*';
+	};
+
+	/**
+	 * * Check if a value is an object and determines whether it should skip based on `ignoreEmpty` flag.
+	 * @param obj Object value to check.
+	 * @returns `true` if the object is skippable, otherwise `false`.
+	 */
+	const skipObject = (obj: unknown): boolean => {
+		return ignoreEmpty && isObject(obj) && !isNotEmptyObject(obj);
 	};
 
 	/**
@@ -113,10 +128,7 @@ export function sanitizeData<T extends GenericObject>(
 			.filter((v) => {
 				if (ignoreNullish && v == null) return false;
 				if (ignoreFalsy && !v) return false;
-				if (ignoreFalsy && isObject(v) && !isNotEmptyObject(v)) {
-					return false;
-				}
-
+				if (skipObject(v) && !isRequiredKey(path)) return false;
 				return true;
 			});
 	};
@@ -155,7 +167,7 @@ export function sanitizeData<T extends GenericObject>(
 				const processedValue = _processObject(value as T, fullKeyPath);
 				// Add the property conditionally if it's not an empty object
 				if (
-					!ignoreFalsy ||
+					!ignoreEmpty ||
 					isRequiredKey(fullKeyPath) ||
 					isNotEmptyObject(processedValue)
 				) {
@@ -166,14 +178,17 @@ export function sanitizeData<T extends GenericObject>(
 				// if (isFileArray(value) || isCustomFileArray(value)) {
 				// 	acc[key as keyof T] = value as T[keyof T];
 				// }
-				// acc[key as keyof T] = value.map(sanitizeData) as T[keyof T];
-				const sanitizedArray = _processArray(value, fullKeyPath);
+				const processedArray = _processArray(value, fullKeyPath);
 
-				if (!ignoreFalsy || sanitizedArray.length > 0) {
-					acc[key as keyof T] = sanitizedArray as T[keyof T];
+				if (
+					!ignoreEmpty ||
+					isRequiredKey(fullKeyPath) ||
+					processedArray.length > 0
+				) {
+					acc[key as keyof T] = processedArray as T[keyof T];
 				}
 			} else {
-				// Add other values as-is
+				// Add other values untouched
 				acc[key as keyof T] = value as T[keyof T];
 			}
 
@@ -198,9 +213,8 @@ export function sanitizeData<T extends GenericObject>(
 			.filter((val) => {
 				if (ignoreNullish && val == null) return false;
 				if (ignoreFalsy && !val) return false;
-				if (ignoreFalsy && isObject(val) && !isNotEmptyObject(val)) {
-					return false;
-				}
+				if (skipObject(val)) return false;
+
 				return true;
 			});
 	}

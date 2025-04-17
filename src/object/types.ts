@@ -35,6 +35,8 @@ export type DotNotationKeyStrict<T> =
 /** - Dot-notation keys for nested objects with `any` value (including optional properties) */
 export type DotNotationKey<T> =
 	T extends AdvancedTypes ? never
+	: T extends Array<infer U> ?
+		DotNotationKey<U> // drill into array item
 	: T extends GenericObject ?
 		{
 			[K in keyof T & string]: NonNullable<T[K]> extends GenericObject ?
@@ -105,8 +107,11 @@ export interface SanitizeOptions<T> {
 	/** Whether to exclude nullish (`null` or `undefined`) values. Defaults to `false`. */
 	ignoreNullish?: boolean;
 
-	/** Whether to exclude all falsy values (`false`, `0`, `empty string: ''`, `null`, `undefined` and `empty object and arrays` (`{}`, `[]`)). Defaults to `false`. */
+	/** Whether to exclude all falsy values (`false`, `0`, `empty string: ''`, `null`, `undefined`. Defaults to `false`. */
 	ignoreFalsy?: boolean;
+
+	/** Whether to exclude empty object(s) and array(s) (`{}`, `[]`). Defaults to `false`. */
+	ignoreEmpty?: boolean;
 
 	/**
 	 * An array of dot-notation key paths that must be preserved in the sanitized output.
