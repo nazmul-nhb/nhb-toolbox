@@ -1,4 +1,3 @@
-import { isCustomFileArray, isFileArray } from '../form/guards';
 import {
 	isArrayOfType,
 	isNotEmptyObject,
@@ -164,9 +163,9 @@ export function sanitizeData<T extends GenericObject>(
 				}
 			} else if (value && Array.isArray(value)) {
 				// Keep file arrays untouched
-				if (isFileArray(value) || isCustomFileArray(value)) {
-					acc[key as keyof T] = value as T[keyof T];
-				}
+				// if (isFileArray(value) || isCustomFileArray(value)) {
+				// 	acc[key as keyof T] = value as T[keyof T];
+				// }
 				// acc[key as keyof T] = value.map(sanitizeData) as T[keyof T];
 				const sanitizedArray = _processArray(value, fullKeyPath);
 
