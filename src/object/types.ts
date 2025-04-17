@@ -35,8 +35,6 @@ export type DotNotationKeyStrict<T> =
 /** - Dot-notation keys for nested objects with `any` value (including optional properties) */
 export type DotNotationKey<T> =
 	T extends AdvancedTypes ? never
-	: T extends Array<infer U> ?
-		DotNotationKey<U> // drill into array item
 	: T extends GenericObject ?
 		{
 			[K in keyof T & string]: NonNullable<T[K]> extends GenericObject ?
