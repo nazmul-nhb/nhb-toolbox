@@ -43,5 +43,5 @@ export const getLevenshteinDistance = (a: string, b: string): number => {
  * @returns Number of words (Unicode-aware).
  */
 export function countWords(text: string): number {
-	return (text.match(/\p{L}[\p{L}\p{M}\p{Pd}'’]*/gu) || []).length;
+	return (text.match(/\p{L}[\p{L}\p{M}\p{Pd}'’]*|\p{N}+/gu) || []).length;
 }
