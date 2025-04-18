@@ -85,5 +85,28 @@
 		"editor.wordWrap": "on",
 		"javascript.updateImportsOnFileMove.enabled": "always",
 		"editor.cursorSmoothCaretAnimation": "on"
-	}
+	},
+	"cSpell.words": [
+		"Ariary",
+		"Botswanan",
+		"Colón",
+		"Djiboutian",
+		"Fank",
+		"Faroese",
+		"Furter",
+		"Guyanaese",
+		"Kazakhstani",
+		"Kyrgyzstani",
+		"Leonean",
+		"Nuevo",
+		"Paʻanga",
+		"Príncipe",
+		"Rican",
+		"Seychellois",
+		"Somoni",
+		"Tajikistani",
+		"Tomé",
+		"Uzbekistani",
+		"Verdean"
+	]
 }

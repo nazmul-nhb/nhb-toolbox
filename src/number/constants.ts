@@ -508,3 +508,38 @@ export const CURRENCY_LOCALES = {
 	ZMW: 'en-ZM', // Zambian Kwacha
 	ZWL: 'en-ZW', // Zimbabwean Dollar
 } as const;
+
+/** * Fiat currencies supported by Frankfurter API */
+export const SUPPORTED_CURRENCIES = [
+	'AUD',
+	'BGN',
+	'BRL',
+	'CAD',
+	'CHF',
+	'CNY',
+	'CZK',
+	'DKK',
+	'EUR',
+	'GBP',
+	'HKD',
+	'HUF',
+	'IDR',
+	'ILS',
+	'INR',
+	'ISK',
+	'JPY',
+	'KRW',
+	'MXN',
+	'MYR',
+	'NOK',
+	'NZD',
+	'PHP',
+	'PLN',
+	'RON',
+	'SEK',
+	'SGD',
+	'THB',
+	'TRY',
+	'USD',
+	'ZAR',
+] as const;

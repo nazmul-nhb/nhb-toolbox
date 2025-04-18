@@ -2,6 +2,7 @@ import type {
 	CURRENCY_CODES,
 	CURRENCY_LOCALES,
 	LOCALE_CODES,
+	SUPPORTED_CURRENCIES,
 } from './constants';
 
 /** - Options for random number generator */
@@ -62,6 +63,24 @@ export type CurrencyCode =
 export type LocaleCode =
 	| (typeof CURRENCY_LOCALES)[keyof typeof CURRENCY_LOCALES]
 	| (typeof LOCALE_CODES)[number];
+
+/** * Fiat currencies supported by Frankfurter API */
+export type SupportedCurrency = (typeof SUPPORTED_CURRENCIES)[number];
+
+/** - Options for `convert` method in `Currency` class */
+export interface ConvertOptions {
+	/** A manual exchange rate to use if the API call fails. */
+	fallbackRate?: number;
+	/**  If true, bypasses the cache and fetches fresh rate. */
+	forceRefresh?: boolean;
+}
+
+export interface FrankFurter {
+	amount: number;
+	base: CurrencyCode;
+	date: string;
+	rates: Record<CurrencyCode, number>;
+}
 
 /** * Options to calculate what percentage a `part` is of a `total`. */
 export interface GetPercentOptions {

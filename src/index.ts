@@ -58,6 +58,8 @@ export {
 	sumNumbers as sumOfNumbers,
 } from './number/basics';
 
+export { Currency } from './number/Currency';
+
 export { calculatePercentage } from './number/percent';
 
 export {

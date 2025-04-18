@@ -1,6 +1,5 @@
 node_modules
-__*.ts
-__*.md
+__*.*
 coverage
 TODO.md
 dist
