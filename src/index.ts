@@ -60,6 +60,8 @@ export {
 
 export { Currency } from './number/Currency';
 
+export { Unit } from './number/Unit';
+
 export { calculatePercentage } from './number/percent';
 
 export {

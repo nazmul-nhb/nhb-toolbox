@@ -3,6 +3,7 @@ import type {
 	CURRENCY_LOCALES,
 	LOCALE_CODES,
 	SUPPORTED_CURRENCIES,
+	UNIT_LABELS,
 } from './constants';
 
 /** - Options for random number generator */
@@ -161,3 +162,9 @@ export type PercentageOptions =
 	| ApplyChangeOptions
 	| GetDifferenceOptions
 	| InversePercentageOptions;
+
+/** * Short forms of units */
+export type UnitKey = keyof typeof UNIT_LABELS;
+
+/** Labels for the units */
+export type UnitLabel = (typeof UNIT_LABELS)[UnitKey];

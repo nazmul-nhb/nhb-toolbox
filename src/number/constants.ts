@@ -543,3 +543,60 @@ export const SUPPORTED_CURRENCIES = [
 	'USD',
 	'ZAR',
 ] as const;
+
+/**
+ * @constant Unit names and their full readable labels.
+ */
+export const UNIT_LABELS = {
+	// Length
+	m: 'Meter',
+	km: 'Kilometer',
+	mi: 'Mile',
+	ft: 'Foot',
+
+	// Mass / Weight
+	kg: 'Kilogram',
+	lbs: 'Pound',
+	g: 'Gram',
+	oz: 'Ounce',
+
+	// Temperature
+	C: 'Celsius',
+	F: 'Fahrenheit',
+	K: 'Kelvin',
+
+	// Volume
+	l: 'Liter',
+	gal: 'Gallon',
+
+	// Area
+	sqm: 'Square Meter',
+	sqft: 'Square Foot',
+
+	// Speed
+	kmph: 'Kilometer per Hour',
+	mph: 'Miles per Hour',
+
+	// Time
+	h: 'Hour',
+	min: 'Minute',
+	sec: 'Second',
+	d: 'Day',
+
+	// Digital Storage
+	kb: 'Kilobyte',
+	mb: 'Megabyte',
+	gb: 'Gigabyte',
+
+	// Energy
+	j: 'Joule',
+	cal: 'Calorie',
+
+	// Pressure
+	atm: 'Atmosphere',
+	pa: 'Pascal',
+
+	// Frequency
+	hz: 'Hertz',
+	khz: 'Kilohertz',
+} as const;
