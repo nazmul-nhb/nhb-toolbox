@@ -544,10 +544,8 @@ export const SUPPORTED_CURRENCIES = [
 	'ZAR',
 ] as const;
 
-/**
- * @constant Unit names and their full readable labels.
- */
-export const UNIT_LABELS = {
+/** * @constant Unit names and their full readable labels. */
+export const UNITS = {
 	// Length
 	m: 'Meter',
 	km: 'Kilometer',
@@ -599,4 +597,30 @@ export const UNIT_LABELS = {
 	// Frequency
 	hz: 'Hertz',
 	khz: 'Kilohertz',
+} as const;
+
+/** * Scientific SI Unit prefix multipliers. */
+export const PREFIX_MULTIPLIERS = {
+	y: 1e-24,
+	z: 1e-21,
+	a: 1e-18,
+	f: 1e-15,
+	p: 1e-12,
+	n: 1e-9,
+	μ: 1e-6,
+	u: 1e-6,
+	m: 1e-3,
+	c: 1e-2,
+	d: 1e-1,
+	da: 1e1,
+	h: 1e2,
+	k: 1e3,
+	M: 1e6,
+	G: 1e9,
+	T: 1e12,
+	P: 1e15,
+	E: 1e18,
+	Z: 1e21,
+	Y: 1e24,
+	'': 1, // base unit, like meter, gram, byte etc.
 } as const;

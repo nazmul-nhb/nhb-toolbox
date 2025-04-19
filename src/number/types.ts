@@ -2,9 +2,11 @@ import type {
 	CURRENCY_CODES,
 	CURRENCY_LOCALES,
 	LOCALE_CODES,
+	PREFIX_MULTIPLIERS,
 	SUPPORTED_CURRENCIES,
-	UNIT_LABELS,
+	UNITS,
 } from './constants';
+import type { Unit } from './Unit';
 
 /** - Options for random number generator */
 export interface RandomNumberOptions {
@@ -163,8 +165,20 @@ export type PercentageOptions =
 	| GetDifferenceOptions
 	| InversePercentageOptions;
 
-/** * Short forms of units */
-export type UnitKey = keyof typeof UNIT_LABELS;
+/** * Static methods from `Unit` class that accept a single number argument and return a number. */
+export type UnitNumberMethods = {
+	[K in keyof typeof Unit]: (typeof Unit)[K] extends (
+		(value: number) => number
+	) ?
+		K
+	:	never;
+}[keyof typeof Unit];
 
-/** Labels for the units */
-export type UnitLabel = (typeof UNIT_LABELS)[UnitKey];
+/** - Short forms of units */
+export type UnitKey = keyof typeof UNITS;
+
+/** - Labels for the units */
+export type UnitLabel = (typeof UNITS)[UnitKey];
+
+/** - Prefixes for SI units */
+export type SIPrefix = keyof typeof PREFIX_MULTIPLIERS;
