@@ -544,7 +544,7 @@ export const SUPPORTED_CURRENCIES = [
 	'ZAR',
 ] as const;
 
-/** * @constant Unit names and their full readable labels. */
+/** * Unit names and their full readable labels. */
 export const UNITS = {
 	// Length
 	m: 'Meter',

@@ -60,7 +60,7 @@ export {
 
 export { Currency } from './number/Currency';
 
-export { Unit } from './number/Unit';
+export { Unit, Unit as UnitConverter } from './number/Unit';
 
 export { calculatePercentage } from './number/percent';
 
@@ -93,6 +93,7 @@ export {
 export {
 	numberToWords as convertNumberToWords,
 	convertToRomanNumerals,
+	convertToRomanNumerals as numericToRoman,
 	numberToWords,
 } from './number/convert';
 

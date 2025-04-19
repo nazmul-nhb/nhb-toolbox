@@ -8,7 +8,7 @@ import type {
 } from './types';
 import { formatCurrency } from './utilities';
 
-const rateCache: Map<string, number> = new Map();
+// const rateCache: Map<string, number> = new Map();
 
 /**
  * * A utility class for handling currency operations like formatting and conversion.
@@ -40,6 +40,13 @@ export class Currency {
 		this.#amount = Number(amount);
 		this.#code = code;
 		this.currency = this.format('en-US');
+	}
+
+	static readonly #rateCache: Map<string, number> = new Map();
+
+	/** * Clears cached rates that were fetched previously. */
+	static clearRateCache(): void {
+		Currency.#rateCache.clear();
 	}
 
 	/**
@@ -74,50 +81,62 @@ export class Currency {
 	): Promise<number> {
 		const key = `${this.#code}->${to}`;
 
-		if (!options?.forceRefresh && rateCache.has(key)) {
-			const cachedRate = rateCache.get(key)!;
+		if (!options?.forceRefresh && Currency.#rateCache.has(key)) {
+			const cachedRate = Currency.#rateCache.get(key)!;
 
 			return this.#amount * cachedRate;
 		}
 
 		try {
 			const rate = await this.#fetchFromFrankfurter(to);
-			rateCache.set(key, rate);
+			Currency.#rateCache.set(key, rate);
 
 			return this.#amount * rate;
 		} catch (error) {
 			if (options?.fallbackRate != null) {
 				console.warn(
-					`Currency conversion failed (${this.#code} → ${to}): ${JSON.stringify(error)}. Using fallback rate...`,
+					`Currency conversion failed (${this.#code} → ${to}): ${(error as Error).message}. Using fallback rate...`,
 				);
 
 				return this.#amount * options.fallbackRate;
 			}
 
 			throw new Error(
-				`Currency conversion failed (${this.#code} → ${to}): ${JSON.stringify(error)}`,
+				`Currency conversion failed (${this.#code} → ${to}): ${(error as Error).message}`,
 			);
 		}
 	}
 
 	/**
-	 * @private @instance Attempts to fetch rate from frankfurter.app
+	 * @private Attempts to fetch rate from frankfurter.app
 	 * @param to - Target currency code
 	 * @returns Exchange rate (multiplier)
 	 */
 	async #fetchFromFrankfurter(to: CurrencyCode): Promise<number> {
-		const url = `https://api.frankfurter.app/latest?amount=${this.#amount}&from=${this.#code}&to=${to}`;
+		const url = `https://api.frankfurter.app/latest?amount=${this.#amount}&from=${this.#code}`;
 
-		const res = await fetch(url, { redirect: 'error' });
+		try {
+			const res = await fetch(url, { redirect: 'error' });
 
-		if (!res.ok) throw new Error(`Frankfurter error: ${res.status}`);
+			if (!res.ok)
+				throw new Error(
+					`FrankFurter Error: ${res.status}. "${res.statusText}"`,
+				);
 
-		const data = (await res.json()) as FrankFurter;
+			const data: FrankFurter = await res.json();
 
-		if (!data.rates?.[to]) {
-			throw new Error(`Currency "${to}" not found in rates`);
+			if (!data.rates?.[to]) {
+				throw new Error(
+					`Currency "${to}" not found in FrankFurter Database!`,
+				);
+			}
+
+			return data.rates[to] / this.#amount;
+		} catch (error) {
+			throw new Error(
+				(error as Error).message ||
+					`Failed to fetch data from FrankFurter API`,
+			);
 		}
-
-		return data.rates[to] / this.#amount;
 	}
 }
