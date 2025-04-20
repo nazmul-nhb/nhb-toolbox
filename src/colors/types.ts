@@ -1,5 +1,6 @@
 import type { Branded } from '../types';
 import type { Color } from './Color';
+import type { CSS_COLORS } from './css-colors';
 
 /** - A string, number for generating color. */
 export type ColorInput = string | number;
@@ -246,8 +247,14 @@ export interface Colors {
 	hsla: HSLA;
 }
 
+/** Analogous colors  */
 export type Analogous = [Color, Color, Color];
 
+/** Triad color */
 export type Triad = [Color, Color, Color];
 
+/** Tetrad color */
 export type Tetrad = [Color, Color, Color, Color];
+
+/** CSS named color, also includes different response colors */
+export type CSSColor = keyof typeof CSS_COLORS;

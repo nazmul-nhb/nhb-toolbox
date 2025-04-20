@@ -1,4 +1,5 @@
 import { convertColorCode } from './convert';
+import { CSS_COLORS } from './css-colors';
 import {
 	_convertOpacityToHex,
 	_extractAlphaColorValues,
@@ -14,6 +15,7 @@ import type {
 	Analogous,
 	Colors,
 	ColorType,
+	CSSColor,
 	Hex6,
 	Hex8,
 	HSL,
@@ -32,7 +34,7 @@ const { hex, rgb } = convertColorCode(hsl);
 /**
  * * Class representing a color and its conversions among `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` and `HSLA` formats.
  * * It has 13 instance methods to manipulate and play with the color values.
- * * It has 6 static methods that can be used to check if a color is in `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` or `HSLA` format.
+ * * It has 7 static methods that can be used to check if a color is in `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` or `HSLA` format.
  *
  * @property hex - The color in `Hex` format.
  * @property hex8 - The color in `Hex8` format.
@@ -90,9 +92,9 @@ export class Color {
 	 *
 	 * Additionally:
 	 * - It has 13 instance methods to manipulate and play with the color values.
-	 * - Use available 6 static methods like `Color.isHex6(color)` to validate color strings.
+	 * - Use available 7 static methods like `Color.isHex6(color)` to validate color strings.
 	 *
-	 * @param toConvert - A color string in any supported format (`Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, or `HSLA`) to convert in all other formats (includes the current format).
+	 * @param color - A color string in any supported format (`Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, or `HSLA`) to convert in all other formats (includes the current format).
 	 *
 	 * @example
 	 * // Convert an existing Hex color to all other formats
@@ -111,7 +113,25 @@ export class Color {
 	 *
 	 * @returns Instance of `Color`.
 	 */
-	constructor(toConvert: ColorType);
+	constructor(color: ColorType);
+
+	/**
+	 * * Creates a new `Color` instance using a standard (CSS) named color and automatically converts it to all other supported formats: `Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, and `HSLA`.
+	 *
+	 * @description
+	 * This allows you to use any valid named color from standard `150+ `CSS color names (e.g., `"red"`, `"blue"`, `"rebeccapurple"`)
+	 *
+	 * @param color - A named color string from standard `150+ `CSS color names.
+	 *
+	 * @example
+	 * // Using a CSS named color
+	 * const sky = new Color("skyblue");
+	 * console.log(sky.hex); // '#87CEEB'
+	 * console.log(sky.rgba); // 'rgba(135, 206, 235, 1)'
+	 *
+	 * @returns Instance of `Color`.
+	 */
+	constructor(color: CSSColor);
 
 	/**
 	 * * Creates a new `Color` instance and automatically converts the input color to all other supported formats: `Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, and `HSLA`.
@@ -132,7 +152,7 @@ export class Color {
 	 * - It has 13 instance methods to manipulate and play with the color values.
 	 * - Use static methods like `Color.isHex6(color)` to validate color strings.
 	 *
-	 * @param toConvert - An optional input color string in any supported format (`Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, or `HSLA`) to convert in all other (includes the current format) formats.
+	 * @param color - An optional input color string in any supported format (`Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, or `HSLA`) to convert in all other (includes the current format) formats.
 	 *
 	 * @example
 	 * // Convert an existing Hex color to all other formats
@@ -156,33 +176,43 @@ export class Color {
 	 *
 	 * @returns Instance of `Color`.
 	 */
-	constructor(toConvert?: ColorType) {
-		if (toConvert) {
-			const colors = this.#convertColorToOthers(toConvert);
-
-			if ('hex8' in colors) {
-				// Extract alpha color values (Hex8, RGBA, HSLA)
-				const rgbaValues = _extractAlphaColorValues(colors.rgba);
-				const hslaValues = _extractAlphaColorValues(colors.hsla);
-
-				this.hex = colors.hex8.toUpperCase().slice(0, 7) as Hex6;
-				this.hex8 = colors.hex8.toUpperCase() as Hex8;
-				this.rgb = `rgb(${rgbaValues[0]}, ${rgbaValues[1]}, ${rgbaValues[2]})`;
-				this.rgba = colors.rgba;
-				this.hsl = `hsl(${hslaValues[0]}, ${hslaValues[1]}%, ${hslaValues[2]}%)`;
-				this.hsla = colors.hsla;
+	constructor(color?: ColorType | CSSColor) {
+		if (color) {
+			if (Color.isCSSColor(color)) {
+				const newColor = new Color(CSS_COLORS[color]);
+				this.hex = newColor.hex;
+				this.hex8 = newColor.hex8;
+				this.rgb = newColor.rgb;
+				this.rgba = newColor.rgba;
+				this.hsl = newColor.hsl;
+				this.hsla = newColor.hsla;
 			} else {
-				// Extract solid color values (Hex, RGB, HSL)
-				const rgbValues = _extractSolidColorValues(colors.rgb);
-				const hslValues = _extractSolidColorValues(colors.hsl);
+				const colors = this.#convertColorToOthers(color);
 
-				this.hex = colors.hex.toUpperCase() as Hex6;
-				this.hex8 =
-					`${colors.hex.toUpperCase()}${_convertOpacityToHex(100)}` as Hex8;
-				this.rgb = colors.rgb;
-				this.rgba = `rgba(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]}, 1)`;
-				this.hsl = colors.hsl;
-				this.hsla = `hsla(${hslValues[0]}, ${hslValues[1]}%, ${hslValues[2]}%, 1)`;
+				if ('hex8' in colors) {
+					// Extract alpha color values (Hex8, RGBA, HSLA)
+					const rgbaValues = _extractAlphaColorValues(colors.rgba);
+					const hslaValues = _extractAlphaColorValues(colors.hsla);
+
+					this.hex = colors.hex8.toUpperCase().slice(0, 7) as Hex6;
+					this.hex8 = colors.hex8.toUpperCase() as Hex8;
+					this.rgb = `rgb(${rgbaValues[0]}, ${rgbaValues[1]}, ${rgbaValues[2]})`;
+					this.rgba = colors.rgba;
+					this.hsl = `hsl(${hslaValues[0]}, ${hslaValues[1]}%, ${hslaValues[2]}%)`;
+					this.hsla = colors.hsla;
+				} else {
+					// Extract solid color values (Hex, RGB, HSL)
+					const rgbValues = _extractSolidColorValues(colors.rgb);
+					const hslValues = _extractSolidColorValues(colors.hsl);
+
+					this.hex = colors.hex.toUpperCase() as Hex6;
+					this.hex8 =
+						`${colors.hex.toUpperCase()}${_convertOpacityToHex(100)}` as Hex8;
+					this.rgb = colors.rgb;
+					this.rgba = `rgba(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]}, 1)`;
+					this.hsl = colors.hsl;
+					this.hsla = `hsla(${hslValues[0]}, ${hslValues[1]}%, ${hslValues[2]}%, 1)`;
+				}
 			}
 		} else {
 			const rgbValues = _extractSolidColorValues(rgb);
@@ -522,6 +552,26 @@ export class Color {
 	 */
 	static isHSLA(color: string): color is HSLA {
 		return _isHSLA(color);
+	}
+
+	/**
+	 * * Checks if a color is a valid CSS color name.
+	 * - This method checks against a predefined list of CSS color names.
+	 * - It does not validate format types like Hex, RGB, or HSL or their alpha channels.
+	 *
+	 * @param color - The color to check.
+	 * @returns `true` if the color is a valid CSS color name, `false` otherwise.
+	 */
+	static isCSSColor(color: string): color is CSSColor {
+		return (
+			!Color.isHex6(color) &&
+			!Color.isHex8(color) &&
+			!_isRGB(color) &&
+			!_isRGBA(color) &&
+			!_isHSL(color) &&
+			!_isHSLA(color) &&
+			color in CSS_COLORS
+		);
 	}
 
 	/**
