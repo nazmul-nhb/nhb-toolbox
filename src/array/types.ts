@@ -67,3 +67,18 @@ export interface SortNature {
 	/** If true, uses localeCompare for string chunk comparisons. Defaults to `false`. */
 	localeAware?: boolean;
 }
+/** * Options for customizing the search behavior. */
+export interface FindOptions<T = unknown> {
+	/** * Enables fuzzy matching when exact match fails. Defaults to `false`. */
+	fuzzy?: boolean;
+	/** * Optional key for caching the result. Defaults to `finder-cache` */
+	cacheKey?: string;
+	/** * Forces binary search even for small datasets. Defaults to `false`. */
+	forceBinary?: boolean;
+	/** * If true, matcher and keys will be normalized to lowercase. Defaults to `true`. */
+	caseInsensitive?: boolean;
+	/** * If true, uses built in `Array.sort()`. Defaults to `true`. Pass `false` if data is already sorted. */
+	needSorting?: boolean;
+	/** * Optional data source to use instead of constructor items. */
+	data?: T[] | (() => T[]);
+}

@@ -205,6 +205,8 @@ export {
 	shuffleArray,
 } from './array/basics';
 
+export { Finder } from './array/Finder';
+
 export { sortAnArray } from './array/sort';
 
 export {

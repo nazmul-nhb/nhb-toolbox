@@ -555,7 +555,7 @@ export class Color {
 	}
 
 	/**
-	 * * Checks if a color is a valid CSS color name.
+	 * @static Checks if a color is a valid CSS color name.
 	 * - This method checks against a predefined list of CSS color names.
 	 * - It does not validate format types like Hex, RGB, or HSL or their alpha channels.
 	 *
