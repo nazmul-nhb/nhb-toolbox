@@ -1,8 +1,5 @@
+import type { OwnKeys } from '../types';
 import type { FindOptions } from './types';
-
-type OwnKeys<T> = {
-	[K in keyof T]: {} extends Pick<T, K> ? never : K;
-}[keyof T];
 
 type KeySelector<T> =
 	| Extract<OwnKeys<T>, string | number>

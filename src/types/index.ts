@@ -68,6 +68,16 @@ export type PrimitiveKey<T> = {
 	[K in keyof T]: T[K] extends Primitive ? K : never;
 }[keyof T];
 
+/**
+ * * Keys of an object that are part of the object type itself.
+ * This excludes keys that are inherited from the prototype chain.
+ * This type is useful for extracting keys that are part of the object's own properties.
+ * It is used in the `OwnKeys` type to filter out keys that are not part of the object properties.
+ */
+export type OwnKeys<T> = {
+	[K in keyof T]: {} extends Pick<T, K> ? never : K;
+}[keyof T];
+
 /** Extract primitive (string, number or boolean) key(s) from an object */
 export type NonNullishPrimitiveKey<T> = {
 	[K in keyof T]: T[K] extends string | number | boolean ? K : never;
