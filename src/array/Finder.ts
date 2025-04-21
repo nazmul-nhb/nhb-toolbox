@@ -1,6 +1,13 @@
 import type { FindOptions } from './types';
 
-type KeySelector<T> = keyof T | ((item: T) => string | number);
+type OwnKeys<T> = {
+	[K in keyof T]: {} extends Pick<T, K> ? never : K;
+}[keyof T];
+
+type KeySelector<T> =
+	| Extract<OwnKeys<T>, string | number>
+	| ((item: T) => string | number);
+
 type CacheEntry<T> = { result: T[]; timestamp: number };
 
 /**
@@ -10,20 +17,36 @@ type CacheEntry<T> = { result: T[]; timestamp: number };
 export class Finder<T> {
 	static readonly DEFAULT_TTL = 1000 * 60 * 5;
 
-	#cache: Map<string, CacheEntry<T>> = new Map();
+	#cachedResult: Map<string, CacheEntry<T>> = new Map();
 	#sortedCache: Map<string, CacheEntry<T>> = new Map();
 	#ttl: number;
 	#items: T[];
 
 	/**
+	 * * Creates a new `Finder` instance with a static array of items.
+	 *
+	 * @param data An array of items to initialize the search dataset.
+	 * @param ttl Optional time-to-live (in milliseconds) for cached search results. Defaults to {@link Finder.DEFAULT_TTL 5 Minutes}.
+	 */
+	constructor(data: T[], ttl?: number);
+
+	/**
+	 * * Creates a new `Finder` instance with a lazy-evaluated item provider.
+	 *
+	 * @param cb A function returning an array of items to initialize the search dataset.
+	 * @param ttl Time-to-live (in milliseconds) for cached search results. Defaults to {@link Finder.DEFAULT_TTL 5 Minutes}.
+	 */
+	constructor(cb: () => T[], ttl?: number);
+
+	/**
 	 * * Creates a new `Finder` instance.
 	 *
+	 * @param data The initial array of items or a callback returning them.
 	 * @param ttl Time-to-live (in milliseconds) for cached search results. Defaults to {@link Finder.DEFAULT_TTL 5 Minutes}.
-	 * @param items The initial array of items to be used for searching.
 	 */
-	constructor(ttl: number = Finder.DEFAULT_TTL, items: T[]) {
+	constructor(data: T[] | (() => T[]), ttl: number = Finder.DEFAULT_TTL) {
 		this.#ttl = ttl;
-		this.#items = items;
+		this.#items = typeof data === 'function' ? data() : data;
 	}
 
 	/**
@@ -32,9 +55,9 @@ export class Finder<T> {
 	 */
 	clearCache(key?: string): void {
 		if (key) {
-			this.#cache.delete(key);
+			this.#cachedResult.delete(key);
 		} else {
-			this.#cache.clear();
+			this.#cachedResult.clear();
 		}
 	}
 
@@ -76,12 +99,12 @@ export class Finder<T> {
 			:	matcher;
 
 		if (cacheKey) {
-			const entry = this.#cache.get(cacheKey);
+			const entry = this.#cachedResult.get(cacheKey);
 
 			if (entry && Date.now() - entry.timestamp < this.#ttl) {
 				return entry.result;
 			} else {
-				this.#cache.delete(cacheKey);
+				this.#cachedResult.delete(cacheKey);
 			}
 		}
 
@@ -144,7 +167,7 @@ export class Finder<T> {
 		}
 
 		if (cacheKey) {
-			this.#cache.set(cacheKey, {
+			this.#cachedResult.set(cacheKey, {
 				result: results,
 				timestamp: Date.now(),
 			});
@@ -191,12 +214,12 @@ export class Finder<T> {
 			:	matcher;
 
 		if (cacheKey) {
-			const entry = this.#cache.get(cacheKey);
+			const entry = this.#cachedResult.get(cacheKey);
 
 			if (entry && Date.now() - entry.timestamp < this.#ttl) {
 				return entry.result[0];
 			} else {
-				this.#cache.delete(cacheKey);
+				this.#cachedResult.delete(cacheKey);
 			}
 		}
 
@@ -232,7 +255,7 @@ export class Finder<T> {
 		}
 
 		if (cacheKey && result) {
-			this.#cache.set(cacheKey, {
+			this.#cachedResult.set(cacheKey, {
 				result: [result],
 				timestamp: Date.now(),
 			});
