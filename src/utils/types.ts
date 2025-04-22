@@ -1,5 +1,6 @@
 import type { Numeric } from '../types';
 
+/** Options to initialize Paginator */
 export interface PaginatorOptions {
 	/** The total number of items. */
 	totalItems: Numeric;
@@ -9,15 +10,25 @@ export interface PaginatorOptions {
 	currentPage?: Numeric;
 }
 
+/** Paginator metadata */
 export interface PaginatorMeta {
+	/** Total number of items in the dataset. */
 	totalItems: number;
+	/** The current page number in the pagination. */
 	currentPage: number;
+	/** The number of items per page in the pagination. */
 	itemsPerPage: number;
+	/** The total number of pages based on the totalItems and itemsPerPage. */
 	totalPages: number;
+	/** Whether the current page has a previous page. */
 	hasPrev: boolean;
+	/** Whether the current page has a next page. */
 	hasNext: boolean;
+	/** Whether the current page is the first page. */
 	isFirst: boolean;
+	/** Whether the current page is the last page. */
 	isLast: boolean;
+	/** The number of items to skip (the offset) for the current page. */
 	offset: number;
 }
 
