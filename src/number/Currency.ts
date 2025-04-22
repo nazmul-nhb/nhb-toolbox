@@ -19,8 +19,8 @@ import { formatCurrency } from './utilities';
  * - Intended for use with numeric inputs (number or numeric string).
  */
 export class Currency {
-	#amount: number;
-	#code: CurrencyCode;
+	readonly #amount: number;
+	readonly #code: CurrencyCode;
 	/**
 	 * * The formatted currency string (e.g., `$1,000.00`).
 	 *

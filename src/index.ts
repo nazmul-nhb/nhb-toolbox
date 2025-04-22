@@ -327,6 +327,8 @@ export {
 	throttleAction,
 } from './utils';
 
+export { Paginator } from './utils/Paginator';
+
 // ! Primitive Type Guards
 export {
 	isBoolean,

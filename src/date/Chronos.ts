@@ -53,7 +53,7 @@ import { extractMinutesFromUTC, formatUTCOffset } from './utils';
  * @returns Instance of `Chronos` with all methods and properties.
  */
 export class Chronos {
-	#date: Date;
+	readonly #date: Date;
 	#offset: UTCOffSet;
 	[ORIGIN]?: ChronosMethods | 'root';
 

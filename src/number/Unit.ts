@@ -18,8 +18,8 @@ import type { SIPrefix, UnitKey, UnitNumberMethods } from './types';
  * - Frequency: Hz, kHz
  */
 export class Unit {
-	#value: number;
-	#unit?: UnitKey;
+	readonly #value: number;
+	readonly #unit?: UnitKey;
 
 	/**
 	 * * Creates an instance of the Unit class.

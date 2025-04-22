@@ -14,10 +14,10 @@ type CacheEntry<T> = { result: T[]; timestamp: number };
 export class Finder<T> {
 	static readonly DEFAULT_TTL = 1000 * 60 * 5;
 
-	#cachedResult: Map<string, CacheEntry<T>> = new Map();
-	#sortedCache: Map<string, CacheEntry<T>> = new Map();
-	#ttl: number;
-	#items: T[];
+	readonly #cachedResult: Map<string, CacheEntry<T>> = new Map();
+	readonly #sortedCache: Map<string, CacheEntry<T>> = new Map();
+	readonly #ttl: number;
+	readonly #items: T[];
 
 	/**
 	 * * Creates a new `Finder` instance with a static array of items.
