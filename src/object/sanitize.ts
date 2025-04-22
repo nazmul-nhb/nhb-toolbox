@@ -31,10 +31,10 @@ export function sanitizeData(input: string[]): string[];
 
 /**
  * * Sanitizes an object by ignoring specified keys and trimming string values based on options provided.
- * * Also excludes nullish values (null, undefined) if specified. Always ignores empty nested object(s).
+ * * Also excludes nullish values (`null`, `undefined`), falsy (`nullish` + `0` & `""`) or empty values (`object`, `array`) if specified.
  *
  * @param object - The object to sanitize.
- * @param options - Options that define which keys to ignore, whether to trim string values, and whether to exclude nullish values.
+ * @param options - Options that define which keys to ignore, whether to trim string values, and whether to exclude nullish, falsy or empty values.
  * @returns A new object with the specified modifications.
  */
 export function sanitizeData<T extends GenericObject>(
