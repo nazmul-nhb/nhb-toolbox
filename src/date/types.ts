@@ -162,16 +162,26 @@ export type TimeUnit =
 	| 'second'
 	| 'millisecond';
 
+/** Year in either 4 or 2 digits format */
 export type Year = (typeof YEAR_FORMATS)[number];
+/** Month in either 1 or 2 digits or 3 letters or full word format */
 export type Month = (typeof MONTH_FORMATS)[number];
+/** Day in either 2 letters or full word format */
 export type Day = (typeof DAY_FORMATS)[number];
+/** Date in either 1 or 2 digits format */
 export type MonthDate = (typeof DATE_FORMATS)[number];
+/** Second in either 1 or 2 digits format */
 export type Hour = (typeof HOUR_FORMATS)[number];
+/** Second in either 1 or 2 digits format */
 export type Minute = (typeof MINUTE_FORMATS)[number];
+/** Second in either 1 or 2 digits format */
 export type Second = (typeof SECOND_FORMATS)[number];
+/** Millisecond in either 1 or 2 digits format */
 export type Millisecond = (typeof MILLISECOND_FORMATS)[number];
+/** Time formats in either capital or lowercase `am/pm` format */
 export type TimeFormats = (typeof TIME_FORMATS)[number];
 
+/** Standard union formats for `Chronos`. */
 export type ChronosFormat =
 	| Year
 	| Month
@@ -225,6 +235,7 @@ export type StrictFormat =
 	| TimeParts
 	| `${DateParts}${DateTimeConnector}${TimeParts}`;
 
+/** Iterable `Chronos` object properties */
 export interface ChronosObject {
 	year: number;
 	month: number;
@@ -468,8 +479,10 @@ export interface ChronosStatics {
 	isValidChronos(value: unknown): value is Chronos;
 }
 
+/** Names of time-zones */
 export type TimeZone = keyof typeof TIME_ZONES;
 
+/** Positive UTC hours */
 export type PositiveUTCHour =
 	| '+00'
 	| '+01'
@@ -487,6 +500,7 @@ export type PositiveUTCHour =
 	| '+13'
 	| '+14';
 
+/** Negative UTC hours */
 export type NegativeUTCHour =
 	| '-00'
 	| '-01'
@@ -504,11 +518,13 @@ export type NegativeUTCHour =
 	| '-13'
 	| '-14';
 
+/** UTC Minutes as quarters */
 export type UTCMinute = '00' | '15' | '30' | '45';
 
+/** UTC offset as `UTC-HH:MM` format */
 export type UTCOffSet = `UTC${PositiveUTCHour | NegativeUTCHour}:${UTCMinute}`;
 
-/** * Format options */
+/** Chronos Date Format options */
 export interface FormatOptions {
 	/** - The desired format (Default format is dd, `MMM DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55). */
 	format?: string;
@@ -528,6 +544,8 @@ export type DayPart =
 /** Object type for extracting day parts. */
 export type DayPartConfig = Record<DayPart, [Hours, Hours]>;
 
+/** Quarters of the year */
 export type Quarter = 1 | 2 | 3 | 4;
 
+/** Names of Zodiac signs */
 export type ZodiacSign = (typeof ZODIAC_SIGNS)[number][0];
