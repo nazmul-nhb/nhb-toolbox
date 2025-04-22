@@ -67,6 +67,7 @@ export interface SortNature {
 	/** If true, uses localeCompare for string chunk comparisons. Defaults to `false`. */
 	localeAware?: boolean;
 }
+
 /** * Options for customizing the search behavior. */
 export interface FindOptions<T = unknown> {
 	/** * Enables fuzzy matching when exact match fails. Defaults to `false`. */

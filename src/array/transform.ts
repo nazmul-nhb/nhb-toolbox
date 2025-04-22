@@ -96,7 +96,7 @@ export function findMissingElements<T, U>(
 	const source = missingFrom === 'from-first' ? array1 : array2;
 	const target = missingFrom === 'from-first' ? array2 : array1;
 
-	return source.filter((item) => !target.some((t) => isDeepEqual(t, item)));
+	return source.filter((s) => !target.some((t) => isDeepEqual(t, s)));
 }
 
 /**
