@@ -3,10 +3,10 @@ import { LOWERCASE } from './constants';
 import type { CaseFormat, MaskOptions } from './types';
 
 /**
- * Converts a string to a specified case format such as `camelCase`, `snake_case`, `kebab-case`, `PascalCase`, `Title Case`, `lowercase`, or `UPPERCASE`.
+ * * Converts a string to a specified case format such as `camelCase`, `snake_case`, `kebab-case`, `PascalCase`, `Title Case`, `lowercase`, or `UPPERCASE`.
  *
- * This function handles non-alphanumeric characters (e.g., spaces, hyphens, underscores, dots, slashes) as word delimiters. For `Title Case`, prepositions, articles, conjunctions, and auxiliary verbs are not capitalized unless they appear at the start of the title.
- * You can also convert the string to `lowercase` or `UPPERCASE`, but it's recommended to use default string methods like `string.toLowerCase()` and `string.toUpperCase()` for these cases.
+ * - This function handles non-alphanumeric characters (e.g., spaces, hyphens, underscores, dots, slashes) as word delimiters. For `Title Case`, prepositions, articles, conjunctions, and auxiliary verbs are not capitalized unless they appear at the start of the title.
+ * - You can also convert the string to `lowercase` or `UPPERCASE`, but it's recommended to use default string methods like `string.toLowerCase()` and `string.toUpperCase()` for these cases.
  *
  * @param string The input string to be converted. The string should have words separated by non-alphanumeric characters (e.g., spaces, hyphens, underscores, etc.).
  * @param format The format to convert the string to. The available formats are:
@@ -114,7 +114,7 @@ export function convertStringCase(string: string, format: CaseFormat): string {
 }
 
 /**
- * Replaces all occurrences of a string or pattern in the given input string.
+ * * Replaces all occurrences of a string or pattern in the given input string.
  *
  * - If `find` is a string, it is converted into a global regular expression (`/find/g`).
  * - If `find` is a `RegExp`, the global (`g`) flag is ensured.

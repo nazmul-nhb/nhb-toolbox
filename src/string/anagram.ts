@@ -2,7 +2,7 @@
  * * Utility to generate unique anagrams of a word.
  * @param word The word for generating anagrams.
  * @param limit The maximum number of anagrams to return ('all' for unlimited). Default is `100`.
- * @returns An array of generated anagrams. The first element is always the given word. Generated angrams are always in lowercase.
+ * @returns An array of generated anagrams. The first element is always the given word. Generated anagrams are always in lowercase.
  */
 export function generateAnagrams(
 	word: string,
