@@ -206,31 +206,43 @@ export function getClassDetails(cls: Constructor): ClassDetails {
 }
 
 /**
- * * Parses a JSON string and optionally converts stringified primitives inside objects or arrays.
+ * * Parses any valid JSON string, optionally converting stringified primitives inside (nested) arrays or objects.
  *
+ * @template T - Expected return type (default is unknown).
  * @param value - The JSON string to parse.
  * @param parsePrimitives - Whether to convert stringified primitives (default: `true`).
- * @returns The parsed JSON value with optional primitive parsing.
+ * @returns The parsed JSON value typed as `T`, or the original parsed value with optional primitive conversion.
+ * - Returns `{}` if parsing fails, such as when the input is malformed or invalid JSON or passing single quoted string.
+ *
+ * - *Unlike `parseJsonToObject`, which ensures the root value is an object,
+ * this function returns any valid JSON structure such as arrays, strings, numbers, or objects.*
+ *
+ * This is useful when you're not sure of the root structure of the JSON, or when you expect something other than an object.
+ *
+ * @see `parseJsonToObject` for strict object-only parsing.
  */
-export const parseJSON = (value: string, parsePrimitives = true): unknown => {
+export const parseJSON = <T = unknown>(
+	value: string,
+	parsePrimitives = true,
+): T => {
 	try {
 		const parsed = JSON.parse(value);
-
-		return parsePrimitives ? deepParsePrimitives(parsed) : parsed;
+		return (parsePrimitives ? deepParsePrimitives(parsed) : parsed) as T;
 	} catch {
-		return {};
+		return {} as T;
 	}
 };
 
 /**
- * Recursively parses primitive values inside objects and arrays.
+ * * Recursively parses primitive values inside objects and arrays.
  *
+ * @template T - Expected return type after parsing (default is unknown).
  * @param input - Any input value to parse recursively.
- * @returns Input with primitives (strings like "true", "123") converted.
+ * @returns Input with primitives (strings like "true", "123") converted, typed as `T`.
  */
-export function deepParsePrimitives(input: unknown): unknown {
+export function deepParsePrimitives<T = unknown>(input: unknown): T {
 	if (Array.isArray(input)) {
-		return input.map(deepParsePrimitives);
+		return input.map(deepParsePrimitives) as T;
 	}
 
 	if (isObject(input)) {
@@ -240,26 +252,28 @@ export function deepParsePrimitives(input: unknown): unknown {
 			result[key] = deepParsePrimitives(value);
 		}
 
-		return result;
+		return result as T;
 	}
 
 	if (isString(input)) {
 		if (/^(true|false)$/i.test(input)) {
-			return input.toLowerCase() === 'true';
+			return (input.toLowerCase() === 'true') as T;
 		}
 
 		if (isNumericString(input)) {
-			return Number(input);
+			return Number(input) as T;
 		}
 
 		if (input === 'null') {
-			return null;
+			return null as T;
 		}
 
 		if (input === 'undefined') {
-			return undefined;
+			return undefined as T;
 		}
+
+		return input as T;
 	}
 
-	return input;
+	return input as T;
 }

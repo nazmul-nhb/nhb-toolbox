@@ -282,23 +282,34 @@ export const extractUpdatedAndNewFields = <
 
 /**
  * * Safely parses a JSON string into an object.
- *
- * *Optionally converts stringified primitive values inside the object (e.g., `"0"` → `0`, `"true"` → `true`, `"null"` → `null`).*
+ * * Optionally converts stringified primitive values inside the object (e.g., `"0"` → `0`, `"true"` → `true`, `"null"` → `null`).
  *
  * @param value - The JSON string to parse.
  * @param parsePrimitives - Whether to convert stringified primitives into real values (default: `true`).
  * @returns A parsed object with primitive conversions, or an empty object on failure or if the root is not a valid object.
+ * - Returns `{}` if parsing fails, such as when the input is malformed or invalid JSON or passing single quoted string.
+ *
+ * - **N.B.** This function will return an empty object if the JSON string is invalid or if the root element is not an object.
+ *
+ * - *Unlike `parseJSON`, which returns any valid JSON structure (including arrays, strings, numbers, etc.),
+ * this function strictly ensures that the result is an object and optionally transforms stringified primitives.*
+ *
+ * @see parseJSON - For parsing generic JSON values (arrays, numbers, etc.) with optional primitive transformation.
+ *
  */
-export const parseJsonToObject = (value: string, parsePrimitives = true) => {
+export const parseJsonToObject = <T = GenericObject>(
+	value: string,
+	parsePrimitives = true,
+): T => {
 	try {
-		const data = JSON.parse(value);
+		const data = JSON.parse(value) as T;
 
 		if (!isObject(data)) {
-			return {};
+			return {} as T;
 		}
 
 		return parsePrimitives ? parseObjectValues(data) : data;
 	} catch {
-		return {};
+		return {} as T;
 	}
 };
