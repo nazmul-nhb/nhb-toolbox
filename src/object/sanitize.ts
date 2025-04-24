@@ -6,7 +6,12 @@ import {
 import { isString } from '../guards/primitives';
 import { trimString } from '../string/basics';
 import type { FlattenPartial } from '../types';
-import type { DotNotationKey, GenericObject, SanitizeOptions } from './types';
+import type {
+	DotNotationKey,
+	GenericObject,
+	ParsedPrimitive,
+	SanitizeOptions,
+} from './types';
 
 /**
  * * Trims all the words in a string.
@@ -231,7 +236,11 @@ export function sanitizeData<T extends GenericObject>(
  * @param object - The object with potentially stringified primitive values.
  * @returns A new object with parsed values converted to their original types.
  */
-export function parseObjectValues<T = GenericObject>(object: GenericObject): T {
+export function parseObjectValues<T extends Record<string, string>>(
+	object: T,
+): {
+	[K in keyof T]: ParsedPrimitive<T[K]>;
+} {
 	const parsedBody: GenericObject = {};
 
 	if (isNotEmptyObject(object)) {
@@ -262,5 +271,7 @@ export function parseObjectValues<T = GenericObject>(object: GenericObject): T {
 		});
 	}
 
-	return parsedBody as T;
+	return parsedBody as {
+		[K in keyof T]: ParsedPrimitive<T[K]>;
+	};
 }

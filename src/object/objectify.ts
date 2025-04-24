@@ -297,7 +297,7 @@ export const extractUpdatedAndNewFields = <
  * @see parseJSON - For parsing generic JSON values (arrays, numbers, etc.) with optional primitive transformation.
  *
  */
-export const parseJsonToObject = <T = GenericObject>(
+export const parseJsonToObject = <T extends GenericObject = GenericObject>(
 	value: string,
 	parsePrimitives = true,
 ): T => {
@@ -308,7 +308,7 @@ export const parseJsonToObject = <T = GenericObject>(
 			return {} as T;
 		}
 
-		return parsePrimitives ? parseObjectValues(data) : data;
+		return parsePrimitives ? parseObjectValues<T>(data) : data;
 	} catch {
 		return {} as T;
 	}

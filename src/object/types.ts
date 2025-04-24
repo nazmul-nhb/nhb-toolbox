@@ -169,3 +169,13 @@ export type Numberified<T> = {
 export type FieldMap<Source, Target> = {
 	[K in keyof Partial<Target>]: keyof Partial<Source>;
 };
+
+/** * Infers the real primitive type from a stringified version. */
+export type ParsedPrimitive<T> =
+	T extends string ?
+		T extends `${number}` ? number
+		: T extends 'true' | 'false' ? boolean
+		: T extends 'null' ? null
+		: T extends 'undefined' ? undefined
+		: T
+	:	T;
