@@ -236,7 +236,7 @@ export function sanitizeData<T extends GenericObject>(
  * @param object - The object with potentially stringified primitive values.
  * @returns A new object with parsed values converted to their original types.
  */
-export function parseObjectValues<T extends Record<string, string>>(
+export function parseObjectValues<T extends GenericObject>(
 	object: T,
 ): {
 	[K in keyof T]: ParsedPrimitive<T[K]>;
