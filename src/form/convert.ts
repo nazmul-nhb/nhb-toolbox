@@ -20,6 +20,7 @@ import type { FormDataConfigs } from './types';
 
 /**
  * * Utility to convert object into FormData in a controlled way.
+ * - **N.B.** Be cautious when using this in SSR (Server-Side Rendering) environments (such as `Next.js` Server Components), as it may not work as expected.
  *
  * @param data - The source object to control and convert to FormData.
  * @param configs - Configuration options to control the formData.

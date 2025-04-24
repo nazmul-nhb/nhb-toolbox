@@ -2,6 +2,7 @@ import type { CustomFile, FileUpload, OriginFileObj } from './types';
 
 /**
  * * Checks if a given value is a valid `FormData` & it's not empty.
+ * - **N.B.** Be cautious when using this in SSR (Server-Side Rendering) environments (such as `Next.js` Server Components), as it may not work as expected.
  * @param value - The value to check.
  * @returns `true` if the value is a valid `FormData` and not empty, otherwise `false`.
  */
@@ -22,6 +23,7 @@ export function isValidFormData(value: unknown): value is FormData {
 
 /**
  * * Checks if a given value is an `OriginFileObj`.
+ * - **N.B.** Be cautious when using this in SSR (Server-Side Rendering) environments (such as `Next.js` Server Components), as it may not work as expected.
  * @param value - The value to check.
  * @returns `true` if the value is a valid `OriginFileObj`, otherwise `false`.
  */
@@ -37,6 +39,7 @@ export function isOriginFileObj(value: unknown): value is OriginFileObj {
 
 /**
  * * Checks if a given value is a `CustomFile`.
+ * - **N.B.** Be cautious when using this in SSR (Server-Side Rendering) environments (such as `Next.js` Server Components), as it may not work as expected.
  * @param value - The value to check.
  * @returns `true` if the value is a valid `CustomFile`, otherwise `false`.
  */
@@ -52,6 +55,7 @@ export function isCustomFile(value: unknown): value is CustomFile {
 
 /**
  * * Checks if a given value is an array of `CustomFile` objects.
+ * - **N.B.** Be cautious when using this in SSR (Server-Side Rendering) environments (such as `Next.js` Server Components), as it may not work as expected.
  * @param value - The value to check.
  * @returns `true` if the value is a valid `CustomFile[]`, otherwise `false`.
  */
@@ -63,6 +67,7 @@ export function isCustomFileArray(value: unknown): value is CustomFile[] {
 
 /**
  * * Checks if a given value is an array of `File` objects.
+ * - **N.B.** Be cautious when using this in SSR (Server-Side Rendering) environments (such as `Next.js` Server Components), as it may not work as expected.
  * @param value - The value to check.
  * @returns `true` if the value is a valid `File[]`, otherwise `false`.
  */

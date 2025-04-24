@@ -4,6 +4,7 @@ import type { ParsedFormData, SerializedForm } from './types';
 
 /**
  * * Serialize form data into an object or a query string.
+ * - **N.B.** Be cautious when using this in SSR (Server-Side Rendering) environments (such as `Next.js` Server Components), as it may not work as expected.
  *
  * @param form - The form element to serialize.
  * @param toQueryString - Whether to return the result as a query string. If false, returns an object.
