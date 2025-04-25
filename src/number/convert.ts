@@ -3,7 +3,8 @@ import { thousands } from './constants';
 import { _convertLessThanThousand } from './helpers';
 
 /**
- * * Converts a number to words
+ * * Converts a number to words.
+ * @Warning ***Supports numeric values up to `10e19` or `10^20` (one hundred quintillion).***
  * @param number - The number to convert into words.
  * @returns The number converted in words.
  */
@@ -20,6 +21,10 @@ export function numberToWords(num: Numeric): string {
 	let result = '';
 
 	while (number > 0) {
+		if (i >= thousands.length) {
+			return `Number exceeds supported range (max is 10e${thousands.length * 3 - 2})`;
+		}
+
 		if (number % 1000 !== 0) {
 			const isLastGroup = i === 0 && number % 100 < 100;
 			const prefix = _convertLessThanThousand(number % 1000, isLastGroup);

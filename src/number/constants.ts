@@ -12,7 +12,7 @@ export const ones = [
 ] as const;
 
 export const teens = [
-	'',
+	'ten',
 	'eleven',
 	'twelve',
 	'thirteen',
@@ -45,11 +45,8 @@ export const thousands = [
 	'trillion',
 	'quadrillion',
 	'quintillion',
-	'sextillion',
-	'septillion',
-	'octillion',
-	'nonillion',
-	'decillion',
+	// ! Needs to modify later, below supports up to 10 sextillion! It's a bug!
+	// 'sextillion',
 ] as const;
 
 /** List of ISO 4217 currency codes */

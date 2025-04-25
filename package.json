@@ -1,6 +1,6 @@
 {
 	"name": "nhb-toolbox",
-	"version": "4.2.0",
+	"version": "4.2.1",
 	"description": "A versatile collection of smart, efficient, and reusable utility functions and classes for everyday development needs.",
 	"main": "dist/cjs/index.js",
 	"module": "dist/esm/index.js",
@@ -65,7 +65,7 @@
 		"name": "Nazmul Hassan",
 		"email": "nazmulnhb@gmail.com"
 	},
-	"license": "ISC",
+	"license": "Apache-2.0",
 	"devDependencies": {
 		"@eslint/js": "^9.18.0",
 		"@types/jest": "^29.5.14",
