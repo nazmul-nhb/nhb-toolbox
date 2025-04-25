@@ -1757,16 +1757,21 @@ export class Chronos {
 	}
 
 	/**
-	 * @static Parses a date string with a given format (partial support)
+	 * @static Parses a date string with a given format (limited support only).
 	 *
 	 * * **Supported format tokens**:
 	 * - `YYYY`: Full year (e.g., 2023)
 	 * - `YY`: Two-digit year (e.g., 23 for 2023, 99 for 1999)
 	 * - `MM`: Month (01-12)
+	 * - `M`: Month (1-9)
 	 * - `DD`: Day of the month (01-31)
+	 * - `D`: Day of the month (1-9)
 	 * - `HH`: Hour (00-23)
+	 * - `H`: Hour (0-9)
 	 * - `mm`: Minute (00-59)
+	 * - `m`: Minute (0-9)
 	 * - `ss`: Second (00-59)
+	 * - `s`: Second (0-9)
 	 *
 	 * **Example**:
 	 * ```ts
@@ -1780,53 +1785,82 @@ export class Chronos {
 	 * @throws `Error` If the date string does not match the format.
 	 */
 	static parse(dateStr: string, format: string): Chronos {
-		const formatMap = {
+		const tokenPatterns: Record<string, string> = {
+			YYYY: '(?<YYYY>\\d{4})',
+			YY: '(?<YY>\\d{2})',
+			MM: '(?<MM>\\d{2})',
+			M: '(?<M>\\d{1,2})',
+			DD: '(?<DD>\\d{2})',
+			D: '(?<D>\\d{1,2})',
+			HH: '(?<HH>\\d{2})',
+			H: '(?<H>\\d{1,2})',
+			mm: '(?<mm>\\d{2})',
+			m: '(?<m>\\d{1,2})',
+			ss: '(?<ss>\\d{2})',
+			s: '(?<s>\\d{1,2})',
+		};
+
+		const tokenToComponent: Record<string, keyof ChronosDateParts> = {
 			YYYY: 'year',
 			YY: 'year',
 			MM: 'month',
+			M: 'month',
 			DD: 'date',
+			D: 'date',
 			HH: 'hour',
+			H: 'hour',
 			mm: 'minute',
+			m: 'minute',
 			ss: 'second',
-		} as const;
+			s: 'second',
+		};
 
-		const regex = format.replace(/YYYY|YY|MM|DD|HH|mm|ss/g, (match) => {
-			return `(?<${match}>\\d{${match.length}})`; // Adjust regex for each format token
-		});
+		type ChronosDateParts = {
+			year: number;
+			month: number;
+			date: number;
+			hour: number;
+			minute: number;
+			second: number;
+		};
 
-		const match = new RegExp(`^${regex}$`).exec(dateStr);
+		const tokenRegex = new RegExp(
+			Object.keys(tokenPatterns).join('|'),
+			'g',
+		);
+
+		const trimmedInput = dateStr.trim();
+
+		const regexStr = format
+			.trim()
+			.replace(tokenRegex, (token) => tokenPatterns[token] ?? token)
+			.replace(/\s+/g, '\\s*');
+
+		const match = new RegExp(`^${regexStr}\\s*$`).exec(trimmedInput);
 
 		if (!match?.groups) {
 			throw new Error('Invalid date format');
 		}
 
-		const values = Object.entries(match.groups).reduce(
-			(acc, [key, val]) => {
-				const map = formatMap[key as keyof typeof formatMap];
+		const parts: Partial<ChronosDateParts> = {};
 
-				if (map) {
-					acc[map] = Number(val);
-				}
-
-				return acc;
-			},
-			{} as Record<string, number>,
-		);
-
-		// Adjust for 2-digit year (YY) by assuming the year is in the 1900s or 2000s
-		if (values.year && values.year < 100) {
-			// Assuming 21st century for years < 100 (00-99 becomes 2000-2099)
-			values.year += 2000;
+		for (const [token, value] of Object.entries(match.groups)) {
+			const key = tokenToComponent[token];
+			if (key) {
+				let num = Number(value);
+				if (token === 'YY') num += num < 100 ? 2000 : 0;
+				parts[key] = num;
+			}
 		}
 
 		return new Chronos(
 			new Date(
-				values.year ?? 1970,
-				(values.month ?? 1) - 1,
-				values.date ?? 1,
-				values.hour ?? 0,
-				values.minute ?? 0,
-				values.second ?? 0,
+				parts.year ?? 1970,
+				(parts.month ?? 1) - 1,
+				parts.date ?? 1,
+				parts.hour ?? 0,
+				parts.minute ?? 0,
+				parts.second ?? 0,
 			),
 		).#withOrigin('parse');
 	}

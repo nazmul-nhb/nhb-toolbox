@@ -393,16 +393,21 @@ export interface ChronosStatics {
 	now(): number;
 
 	/**
-	 * @public @static Parses a date string with a given format (partial support)
+	 * * Parses a date string with a given format (limited support only).
 	 *
 	 * * **Supported format tokens**:
 	 * - `YYYY`: Full year (e.g., 2023)
 	 * - `YY`: Two-digit year (e.g., 23 for 2023, 99 for 1999)
 	 * - `MM`: Month (01-12)
+	 * - `M`: 1-Digit Month (1-9)
 	 * - `DD`: Day of the month (01-31)
+	 * - `D`: 1-Digit Day of the month (1-9)
 	 * - `HH`: Hour (00-23)
+	 * - `H`: 1-Digit Hour (0-9)
 	 * - `mm`: Minute (00-59)
+	 * - `m`: 1-Digit Minute (0-9)
 	 * - `ss`: Second (00-59)
+	 * - `s`: 1-Digit Second (0-9)
 	 *
 	 * **Example**:
 	 * ```ts
