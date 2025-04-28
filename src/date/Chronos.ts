@@ -471,6 +471,11 @@ export class Chronos {
 		return this.#date.getTime();
 	}
 
+	/** * Gets the last date (number) of the current month `(28, 29, 30 or 31)`. */
+	get lastDateOfMonth(): 28 | 29 | 30 | 31 {
+		return this.lastDayOfMonth().#date.getDate() as 28 | 29 | 30 | 31;
+	}
+
 	/** @instance Returns a debug-friendly string for `console.log` or `util.inspect`. */
 	inspect(): string {
 		return `[Chronos ${this.toLocalISOString()}]`;
@@ -996,6 +1001,16 @@ export class Chronos {
 		return this.#date.getTimezoneOffset() < Math.max(jan, jul);
 	}
 
+	/** @instance Checks if current day is the first day of the current month. */
+	isFirstDayOfMonth(): boolean {
+		return this.isSame(this.firstDayOfMonth(), 'day');
+	}
+
+	/** @instance Checks if current day is the last day of the current month. */
+	isLastDayOfMonth(): boolean {
+		return this.isSame(this.lastDayOfMonth(), 'day');
+	}
+
 	/**
 	 * @instance Returns full time difference from now (or a specified time) down to a given level.
 	 *
@@ -1287,6 +1302,22 @@ export class Chronos {
 	 */
 	getRelativeMilliSecond(time?: ChronosInput): number {
 		return this.#date.getTime() - this.#toNewDate(time).getTime();
+	}
+
+	/** @instance Returns a new Chronos instance set to the first day of the current month. */
+	firstDayOfMonth(): Chronos {
+		const year = this.#date.getFullYear();
+		const month = this.#date.getMonth();
+		const lastDate = new Date(year, month, 1);
+		return new Chronos(lastDate).#withOrigin('firstDayOfMonth');
+	}
+
+	/** @instance Returns a new Chronos instance set to the last day of the current month. */
+	lastDayOfMonth(): Chronos {
+		const year = this.#date.getFullYear();
+		const month = this.#date.getMonth() + 1;
+		const lastDate = new Date(year, month, 0);
+		return new Chronos(lastDate).#withOrigin('lastDayOfMonth');
 	}
 
 	/**
@@ -1911,7 +1942,7 @@ export class Chronos {
 
 				startOfYear.setDate(startOfYear.getDate() + daysOffset);
 				startOfYear.setHours(0, 0, 0, 0);
-				return new Chronos(startOfYear);
+				return new Chronos(startOfYear).#withOrigin('round');
 			}
 			case 'month': {
 				const currentMonth = date.getMonth();
