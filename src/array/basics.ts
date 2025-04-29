@@ -17,8 +17,9 @@ export const flattenArray = <T>(input: T | T[]): Flattened<T>[] => {
 };
 
 /**
- * * Filters an array of objects based on multiple conditions for specified keys.
+ * @deprecated _Please, use `findAll` instance method from `Finder` class for **more advanced filtering and searching.**_
  *
+ * * Filters an array of objects based on multiple conditions for specified keys.
  * @param array - The array of objects to filter.
  * @param conditions - An object where keys represent the property names and values represent filter conditions.
  *                     The conditions can be a function `(value: T[K]) => boolean`.

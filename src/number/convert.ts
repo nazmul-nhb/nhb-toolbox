@@ -3,13 +3,18 @@ import { thousands } from './constants';
 import { _convertLessThanThousand } from './helpers';
 
 /**
- * * Converts a number to words.
- * @Warning ***Supports numeric values up to `10e19` or `10^20` (one hundred quintillion).***
+ * * Converts a numeric value into its corresponding English word representation.
+ * @warning ***Supports numeric values up to `10e19` or `10^20` (one hundred quintillion).***
+ * @warning ***Decimal values are ignored; only the integer part is converted.***
  * @param number - The number to convert into words.
  * @returns The number converted in words.
  */
 export function numberToWords(num: Numeric): string {
-	let number = Number(num);
+	let number = Math.trunc(Number(num));
+
+	if (!Number.isFinite(number) || isNaN(number)) {
+		return 'Invalid Number!';
+	}
 
 	const isNegative = number < 0;
 
@@ -22,7 +27,7 @@ export function numberToWords(num: Numeric): string {
 
 	while (number > 0) {
 		if (i >= thousands.length) {
-			return `Number exceeds supported range (max is 10e${thousands.length * 3 - 2})`;
+			return `Number exceeds supported range (max is 10e19 aka 10^20)`;
 		}
 
 		if (number % 1000 !== 0) {
