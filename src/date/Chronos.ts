@@ -778,7 +778,7 @@ export class Chronos {
 	 * @instance Checks if another date is the same as this one in a specific unit.
 	 * @param other The other date to compare.
 	 * @param unit The unit to compare.
-	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Default is `0`.
+	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
 	isSame(
 		other: ChronosInput,
@@ -796,8 +796,8 @@ export class Chronos {
 	/**
 	 * @instance Checks if this date is before another date in a specific unit.
 	 * @param other The other date to compare.
-	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Default is `0`.
 	 * @param unit The unit to compare.
+	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
 	isBefore(
 		other: ChronosInput,
@@ -816,7 +816,7 @@ export class Chronos {
 	 * @instance Checks if this date is after another date in a specific unit.
 	 * @param other The other date to compare.
 	 * @param unit The unit to compare.
-	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Default is `0`.
+	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
 	isAfter(
 		other: ChronosInput,
@@ -828,6 +828,40 @@ export class Chronos {
 		return (
 			this.startOf(unit, weekStartsOn).toDate().getTime() >
 			time.startOf(unit, weekStartsOn).toDate().getTime()
+		);
+	}
+
+	/**
+	 * @instance Checks if this date is the same or before another date in a specific unit.
+	 * @param other The other date to compare.
+	 * @param unit The unit to compare.
+	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
+	 */
+	isSameOrBefore(
+		other: ChronosInput,
+		unit: TimeUnit,
+		weekStartsOn: number = 0,
+	): boolean {
+		return (
+			this.isSame(other, unit, weekStartsOn) ||
+			this.isBefore(other, unit, weekStartsOn)
+		);
+	}
+
+	/**
+	 * @instance Checks if this date is the same or after another date in a specific unit.
+	 * @param other The other date to compare.
+	 * @param unit The unit to compare.
+	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
+	 */
+	isSameOrAfter(
+		other: ChronosInput,
+		unit: TimeUnit,
+		weekStartsOn: number = 0,
+	): boolean {
+		return (
+			this.isSame(other, unit, weekStartsOn) ||
+			this.isAfter(other, unit, weekStartsOn)
 		);
 	}
 
@@ -1353,7 +1387,7 @@ export class Chronos {
 	/**
 	 * @instance Returns a new Chronos instance at the start of a given unit.
 	 * @param unit The unit to reset (e.g., year, month, day).
-	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Default is `0`.
+	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
 	startOf(unit: TimeUnit, weekStartsOn: number = 0): Chronos {
 		const d = new Date(this.#date);
@@ -1396,7 +1430,7 @@ export class Chronos {
 	/**
 	 * @instance Returns a new Chronos instance at the end of a given unit.
 	 * @param unit The unit to adjust (e.g., year, month, day).
-	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Default is `0`.
+	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
 	endOf(unit: TimeUnit, weekStartsOn: number = 0): Chronos {
 		return this.startOf(unit, weekStartsOn)
@@ -1645,7 +1679,7 @@ export class Chronos {
 
 	/**
 	 * @instance Calculates the week number of the year based on custom week start.
-	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Default is `0`.
+	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 * @returns Week number (1-53).
 	 */
 	getWeekOfYear(weekStartsOn: number = 0): number {
