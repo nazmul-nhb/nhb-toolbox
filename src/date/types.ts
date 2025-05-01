@@ -284,7 +284,13 @@ export type ChronosMethods =
 			:	never;
 	  }[keyof typeof Chronos];
 
-/** Accepted Input type for `Chronos` */
+/**
+ * * Accepted Input type for `Chronos`
+ *
+ * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
+ * and convert it to the **equivalent local time** using the current environment's UTC offset.*
+ *
+ */
 export type ChronosInput = number | string | Date | Chronos;
 
 /** All the statics methods in `Chronos` class */
@@ -316,6 +322,9 @@ export interface ChronosStatics {
 	/**
 	 * * Converts a date into a `Chronos` object and access to all `Chronos` methods and properties.
 	 *
+	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
+	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
+	 *
 	 * @description
 	 * This function serves as a wrapper around the `Chronos` class constructor and allows you to create a new `Chronos` instance from various types of date representations.
 	 *
@@ -328,6 +337,9 @@ export interface ChronosStatics {
 	/**
 	 * * Converts a date into a `Chronos` object and access to all `Chronos` methods and properties.
 	 *
+	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
+	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
+	 *
 	 * @description
 	 * This function serves as a wrapper around the `Chronos` class constructor and allows you to create a new `Chronos` instance from various types of date representations.
 	 *
@@ -339,6 +351,9 @@ export interface ChronosStatics {
 
 	/**
 	 * * Converts a date into a `Chronos` object and access to all `Chronos` methods and properties.
+	 *
+	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
+	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
 	 *
 	 * @description
 	 * This function serves as a wrapper around the `Chronos` class constructor and allows you to create a new `Chronos` instance from various types of date representations.

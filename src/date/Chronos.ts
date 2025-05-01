@@ -35,6 +35,9 @@ import { extractMinutesFromUTC, formatUTCOffset } from './utils';
 /**
  * * Creates a new immutable `Chronos` instance.
  *
+ * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
+ * and convert it to the **equivalent local time** using the current environment's UTC offset.*
+ *
  * @param value - A date value (`number`, `string`, `Date`, or `Chronos` object).
  * - If a string is provided, it should be in a format that can be parsed by the Date constructor.
  * - If a number is provided, it should be a timestamp (milliseconds since the Unix epoch).
@@ -79,6 +82,9 @@ export class Chronos {
 	/**
 	 * * Creates a new immutable `Chronos` instance.
 	 *
+	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
+	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
+	 *
 	 * @param value - A date value in `string`, it should be in a format that can be parsed by the `Date` constructor.
 	 *
 	 * @returns Instance of `Chronos` with all methods and properties.
@@ -87,6 +93,9 @@ export class Chronos {
 
 	/**
 	 * * Creates a new immutable `Chronos` instance.
+	 *
+	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
+	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
 	 *
 	 * @param value - A date value as `Date` object, it will be used as is.
 	 *
@@ -97,6 +106,9 @@ export class Chronos {
 	/**
 	 * * Creates a new immutable `Chronos` instance.
 	 *
+	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
+	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
+	 *
 	 * @param value - A date value as `Chronos` object.
 	 *
 	 * @returns Instance of `Chronos` with all methods and properties.
@@ -105,6 +117,9 @@ export class Chronos {
 
 	/**
 	 * * Creates a new immutable `Chronos` instance.
+	 *
+	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
+	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
 	 *
 	 * @param year The full year designation is required for cross-century date accuracy. If year is between 0 and 99 is used, then year is assumed to be 1900 + year.
 	 * @param month The month as a number between 1 and 12 (January to December).
@@ -129,6 +144,9 @@ export class Chronos {
 	/**
 	 * * Creates a new immutable `Chronos` instance.
 	 *
+	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
+	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
+	 *
 	 * @param value - A date value (`number`, `string`, `Date`, or `Chronos` object).
 	 * - If a string is provided, it should be in a format that can be parsed by the `Date` constructor.
 	 * - If a number is provided, it should be a timestamp (milliseconds since the Unix epoch).
@@ -141,6 +159,9 @@ export class Chronos {
 
 	/**
 	 * * Creates a new immutable `Chronos` instance.
+	 *
+	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
+	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
 	 *
 	 * @param valueOrYear The value in number, string, Date or Chronos format or the full year designation is required for cross-century date accuracy. If year is between 0 and 99 is used, then year is assumed to be 1900 + year.
 	 * @param month The month as a number between 1 and 12 (January to December).
@@ -285,7 +306,7 @@ export class Chronos {
 	}
 
 	/**
-	 * @private @instance Method to create native `Date` instance from date-like data types.
+	 * @private Method to create native `Date` instance from date-like data types.
 	 * @param value The value to convert into `Date`.
 	 * @returns Instance of native Date object.
 	 */
@@ -304,7 +325,7 @@ export class Chronos {
 	}
 
 	/**
-	 * @private @instance Method to tag origin of the `Chronos` instance.
+	 * @private Method to tag origin of the `Chronos` instance.
 	 *
 	 * @param origin Origin of the instance, the method name from where it was created.
 	 * @param offset Optional UTC offset in `UTC+12:00` format.
@@ -318,7 +339,7 @@ export class Chronos {
 	}
 
 	/**
-	 * @private @instance Formats the current `Chronos` date using the specified template.
+	 * @private Formats the current `Chronos` date using the specified template.
 	 *
 	 * @param format - The desired date format.
 	 * @param useUTC - Whether to use UTC or local time.
@@ -403,7 +424,7 @@ export class Chronos {
 		return result;
 	}
 
-	/** @private @instance Returns ISO string with local time zone offset */
+	/** @private Returns ISO string with local time zone offset */
 	#toLocalISOString(): string {
 		const pad = (n: number, p = 2) => String(n).padStart(p, '0');
 

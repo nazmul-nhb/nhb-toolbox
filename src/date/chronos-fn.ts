@@ -5,6 +5,9 @@ import type { ChronosInput, ChronosStatics } from './types';
 /**
  * * Converts a date into a Chronos object and access to all `Chronos` methods and properties.
  *
+ * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
+ * and convert it to the **equivalent local time** using the current environment's UTC offset.*
+ *
  * @description
  * This function serves as a wrapper around the `Chronos` class constructor and allows you to create a new `Chronos` instance from various types of date representations.
  * The following types of input are supported:
@@ -91,6 +94,9 @@ const chronos = ((
  * Static methods from the `Chronos` class are copied over to the `chronos` function.
  * Therefore, you can access static methods from `Chronos` both through the `Chronos` class and the `chronos` function.
  *
+ * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
+ * and convert it to the **equivalent local time** using the current environment's UTC offset.*
+ *
  * Example usage:
  * ```ts
  * chronos.parse("2023-12-31", "YYYY-MM-DD");
@@ -126,17 +132,5 @@ Object.getOwnPropertyNames(Chronos).forEach((method) => {
 		(chronos as Any)[method] = (Chronos as Any)[method];
 	}
 });
-
-// ? Add instance methods from Chronos prototype to chronos function
-// Object.getOwnPropertyNames(Chronos.prototype).forEach((method) => {
-// 	// Skip the constructor method
-// 	if (method !== 'constructor') {
-// 		(chronos as Any)[method] = function (this: Chronos, ...args: Any[]) {
-// 			return this instanceof Chronos ?
-// 					(this as Any)[method](...args)
-// 				:	(new Chronos() as Any)[method](...args); // Fallback to new Chronos instance
-// 		};
-// 	}
-// });
 
 export { typedChronos as chronos };
