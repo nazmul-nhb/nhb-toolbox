@@ -251,6 +251,18 @@ export interface ChronosObject {
 	unix: number;
 }
 
+/** Return object type of `duration` method of `Chronos`. */
+export interface TimeDuration {
+	years: number;
+	months: number;
+	days: number;
+	hours: number;
+	minutes: number;
+	seconds: number;
+	milliseconds: number;
+}
+
+/** @internal Helper type to assign instance origin when creating new Chronos instance. */
 export type WithoutOrigin = Omit<Chronos, typeof ORIGIN>;
 
 /** Methods (both instance and static) in `Chronos` class that return `Chronos` instance. */

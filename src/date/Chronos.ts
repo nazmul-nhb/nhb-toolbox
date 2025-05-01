@@ -24,6 +24,7 @@ import type {
 	FormatOptions,
 	Quarter,
 	StrictFormat,
+	TimeDuration,
 	TimeUnit,
 	TimeZone,
 	UTCOffSet,
@@ -407,6 +408,38 @@ export class Chronos {
 		const pad = (n: number, p = 2) => String(n).padStart(p, '0');
 
 		return `${this.year}-${pad(this.month + 1)}-${pad(this.date)}T${pad(this.hour)}:${pad(this.minute)}:${pad(this.second)}.${pad(this.millisecond, 3)}${this.getUTCOffset()}`;
+	}
+
+	/**
+	 * @private Normalizes duration values based on sign and `absolute` flag.
+	 * @param result The raw time breakdown to normalize.
+	 * @param absolute If true, ensures all values are positive.
+	 * @param isFuture Whether the duration was forward (true) or backward (false).
+	 * @returns The normalized duration object.
+	 */
+	#normalizeDuration(
+		result: TimeDuration,
+		absolute: boolean,
+		isFuture: boolean,
+	): TimeDuration {
+		const entries = Object.entries(result) as [
+			keyof TimeDuration,
+			number,
+		][];
+
+		if (!absolute && !isFuture) {
+			for (const [key, value] of entries) {
+				if (value !== 0) {
+					result[key] = value * -1;
+				}
+			}
+		} else if (absolute) {
+			for (const [key, value] of entries) {
+				result[key] = Math.abs(value);
+			}
+		}
+
+		return result;
 	}
 
 	/** Gets the full year of the date. */
@@ -1997,6 +2030,72 @@ export class Chronos {
 		}
 
 		return new Chronos(date).#withOrigin('round');
+	}
+
+	/**
+	 * @instance Returns the full time duration breakdown between current input (start) and another time (to).
+	 * @param toTime The time to compare with. Defaults to now.
+	 * @param absolute If true, returns all values as positive numbers. Defaults to `true`.
+	 * @returns An object of time units: years, months, days, hours, minutes, seconds, milliseconds.
+	 */
+	duration(toTime?: ChronosInput, absolute = true): TimeDuration {
+		const now = this.#date;
+		const target = this.#toNewDate(toTime);
+
+		const isFuture = target > now;
+		const from = isFuture ? now : target;
+		const to = isFuture ? target : now;
+
+		let years = to.getFullYear() - from.getFullYear();
+		let months = to.getMonth() - from.getMonth();
+		let days = to.getDate() - from.getDate();
+		let hours = to.getHours() - from.getHours();
+		let minutes = to.getMinutes() - from.getMinutes();
+		let seconds = to.getSeconds() - from.getSeconds();
+		let milliseconds = to.getMilliseconds() - from.getMilliseconds();
+
+		if (milliseconds < 0) {
+			milliseconds += 1000;
+			seconds--;
+		}
+
+		if (seconds < 0) {
+			seconds += 60;
+			minutes--;
+		}
+
+		if (minutes < 0) {
+			minutes += 60;
+			hours--;
+		}
+
+		if (hours < 0) {
+			hours += 24;
+			days--;
+		}
+
+		if (days < 0) {
+			const prevMonth = new Date(to.getFullYear(), to.getMonth(), 0);
+			days += prevMonth.getDate();
+			months--;
+		}
+
+		if (months < 0) {
+			months += 12;
+			years--;
+		}
+
+		const result: TimeDuration = {
+			years,
+			months,
+			days,
+			hours,
+			minutes,
+			seconds,
+			milliseconds,
+		};
+
+		return this.#normalizeDuration(result, absolute, isFuture);
 	}
 
 	/**
