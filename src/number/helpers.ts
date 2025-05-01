@@ -1,4 +1,4 @@
-import { ones, teens, tens } from './constants';
+import { ONES, TEENS, TENS } from './constants';
 
 /**
  * Apply multiples of a number if there is any.
@@ -21,18 +21,18 @@ export const _applyMultiples = (
  * @returns Numbers less than 1000 in words.
  */
 export function _convertLessThanThousand(num: number, isLast: boolean): string {
-	if (num < 10) return ones[num];
+	if (num < 10) return ONES[num];
 
-	if (num < 20) return teens[num - 10];
+	if (num < 20) return TEENS[num - 10];
 
-	let result = tens[Math.floor(num / 10)];
+	let result = TENS[Math.floor(num / 10)];
 
 	const remainder = num % 10;
 
-	if (remainder > 0) result += `-${ones[remainder]}`;
+	if (remainder > 0) result += `-${ONES[remainder]}`;
 
 	if (num >= 100) {
-		const hundredsPart = `${ones[Math.floor(num / 100)]} hundred`;
+		const hundredsPart = `${ONES[Math.floor(num / 100)]} hundred`;
 
 		return num % 100 === 0 ?
 				hundredsPart

@@ -1,4 +1,4 @@
-export const ones = [
+export const ONES = [
 	'',
 	'one',
 	'two',
@@ -11,7 +11,7 @@ export const ones = [
 	'nine',
 ] as const;
 
-export const teens = [
+export const TEENS = [
 	'ten',
 	'eleven',
 	'twelve',
@@ -24,7 +24,7 @@ export const teens = [
 	'nineteen',
 ] as const;
 
-export const tens = [
+export const TENS = [
 	'',
 	'ten',
 	'twenty',
@@ -37,7 +37,7 @@ export const tens = [
 	'ninety',
 ] as const;
 
-export const thousands = [
+export const THOUSANDS = [
 	'',
 	'thousand',
 	'million',

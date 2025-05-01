@@ -1,5 +1,5 @@
 import type { Numeric } from '../types';
-import { thousands } from './constants';
+import { THOUSANDS } from './constants';
 import { _convertLessThanThousand } from './helpers';
 
 /**
@@ -26,7 +26,7 @@ export function numberToWords(num: Numeric): string {
 	let result = '';
 
 	while (number > 0) {
-		if (i >= thousands.length) {
+		if (i >= THOUSANDS.length) {
 			return `Number exceeds supported range (max is 10e19 aka 10^20)`;
 		}
 
@@ -34,7 +34,7 @@ export function numberToWords(num: Numeric): string {
 			const isLastGroup = i === 0 && number % 100 < 100;
 			const prefix = _convertLessThanThousand(number % 1000, isLastGroup);
 
-			result = `${prefix} ${thousands[i]} ${result}`;
+			result = `${prefix} ${THOUSANDS[i]} ${result}`;
 		}
 
 		number = Math.floor(number / 1000);
@@ -49,8 +49,9 @@ export function numberToWords(num: Numeric): string {
 
 /**
  * * Converts a number to a Roman numeral.
- * @param num - The number to convert.
+ * @param num - The number to convert. Number must be `between 1 and 3999`.
  * @returns The Roman numeral representation.
+ *
  * @example convertToRomanNumerals(29) → "XXIX"
  */
 export const convertToRomanNumerals = (num: Numeric): string => {

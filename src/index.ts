@@ -50,9 +50,11 @@ export {
 export {
 	countWords,
 	countWords as countWordsInString,
+	extractNumbersFromString as extractNumbers,
 	extractNumbersFromString,
 	getLevenshteinDistance,
 	getLevenshteinDistance as levenshteinDistance,
+	extractNumbersFromString as parseNumbersFromText,
 	countWords as wordCount,
 } from './string/utilities';
 
@@ -64,8 +66,10 @@ export {
 	calculateLCM as calculateLCD,
 	calculateLCM,
 	convertToDecimal,
+	convertToDecimal as convertToFixed,
 	getAverage,
 	getAverage as getAverageOfNumbers,
+	getRandomNumber as getRandomInt,
 	getRandomNumber,
 	sumNumbers as getSumOfNumbers,
 	reverseNumber,
@@ -111,6 +115,10 @@ export {
 	convertToRomanNumerals,
 	numberToWords,
 	convertToRomanNumerals as numericToRoman,
+	convertToRomanNumerals as toRoman,
+	convertToRomanNumerals as numberToRoman,
+	convertToRomanNumerals as integerToRoman,
+	convertToRomanNumerals as toRomanNumeral,
 } from './number/convert';
 
 export {
