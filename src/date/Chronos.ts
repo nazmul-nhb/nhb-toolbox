@@ -807,6 +807,27 @@ export class Chronos {
 		return this.getRelativeDay() === -1;
 	}
 
+	/** @instance Checks if another date is exactly equal to this one */
+	isEqual(other: ChronosInput): boolean {
+		const time = other instanceof Chronos ? other : new Chronos(other);
+
+		return this.timestamp === time.timestamp;
+	}
+
+	/** @instance Checks if another date is exactly equal to or before this one */
+	isEqualOrBefore(other: ChronosInput): boolean {
+		const time = other instanceof Chronos ? other : new Chronos(other);
+
+		return this.timestamp <= time.timestamp;
+	}
+
+	/** @instance Checks if another date is exactly equal to or after this one */
+	isEqualOrAfter(other: ChronosInput): boolean {
+		const time = other instanceof Chronos ? other : new Chronos(other);
+
+		return this.timestamp >= time.timestamp;
+	}
+
 	/**
 	 * @instance Checks if another date is the same as this one in a specific unit.
 	 * @param other The other date to compare.
@@ -818,7 +839,7 @@ export class Chronos {
 		unit: TimeUnit,
 		weekStartsOn: number = 0,
 	): boolean {
-		const time = new Chronos(other);
+		const time = other instanceof Chronos ? other : new Chronos(other);
 
 		return (
 			this.startOf(unit, weekStartsOn).toDate().getTime() ===
@@ -837,7 +858,7 @@ export class Chronos {
 		unit: TimeUnit,
 		weekStartsOn: number = 0,
 	): boolean {
-		const time = new Chronos(other);
+		const time = other instanceof Chronos ? other : new Chronos(other);
 
 		return (
 			this.startOf(unit, weekStartsOn).toDate().getTime() <
@@ -856,7 +877,7 @@ export class Chronos {
 		unit: TimeUnit,
 		weekStartsOn: number = 0,
 	): boolean {
-		const time = new Chronos(other);
+		const time = other instanceof Chronos ? other : new Chronos(other);
 
 		return (
 			this.startOf(unit, weekStartsOn).toDate().getTime() >
@@ -1587,7 +1608,7 @@ export class Chronos {
 	 * @param unit The unit in which to return the difference.
 	 */
 	diff(other: ChronosInput, unit: TimeUnit): number {
-		const time = new Chronos(other);
+		const time = other instanceof Chronos ? other : new Chronos(other);
 
 		const msDiff = this.#date.getTime() - time.toDate().getTime();
 
