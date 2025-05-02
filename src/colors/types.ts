@@ -7,7 +7,7 @@ import type { CSS_COLORS } from './css-colors';
 export type ColorInput = string | number;
 
 /** - An array of strings/numbers or nested arrays of strings/numbers for generating colors. */
-export interface ColorInputArray extends Array<ColorInput | ColorInputArray> {}
+export type ColorInputArray = Array<ColorInput | ColorInputArray>;
 
 /** - Number value in percentage `(0% - 100%)` without `%` symbol. */
 export type Percent = (typeof PERCENT_VALUES)[number];
