@@ -1,3 +1,4 @@
+import type { Numeric } from '../types';
 import type { Time, UTCOffSet } from './types';
 
 /**
@@ -40,20 +41,6 @@ export function getCurrentDateTime(): Date {
 	return new Date();
 }
 
-// /**
-//  * * Converts a date into a Chronos object.
-//  *
-//  * @param date - A date value. It can be a `string`, `number`, `Date`, or `Chronos` object.
-//  * - If a string is provided, it should be in a format that can be parsed by the Date constructor.
-//  * - If a number is provided, it should be a timestamp (milliseconds since the Unix epoch).
-//  * - If a Date object is provided, it will be used as is.
-//  * - If a Chronos object is provided, it will be converted to a Date object.
-//  * @returns A new Chronos object representing the provided date.
-//  */
-// export function chronos(date?: ChronosInput) {
-// 	return new Chronos(date);
-// }
-
 /**
  * * Extract Time in `HH:MM` format from given UTC value.
  *
@@ -80,10 +67,13 @@ export function extractMinutesFromUTC(utc: UTCOffSet): number {
  * @param minutes - The offset in minutes (positive or negative).
  * @returns A formatted UTC offset string like `UTC+05:30` or `UTC-04:00`.
  */
-export function formatUTCOffset(minutes: number): UTCOffSet {
-	const sign = minutes < 0 ? '-' : '+';
-	const abs = Math.abs(minutes);
+export function formatUTCOffset(minutes: Numeric): UTCOffSet {
+	const numMIn = typeof minutes === 'number' ? minutes : Number(minutes);
+
+	const sign = numMIn < 0 ? '-' : '+';
+	const abs = Math.abs(numMIn);
 	const hours = String(Math.floor(abs / 60)).padStart(2, '0');
 	const mins = String(abs % 60).padStart(2, '0');
+
 	return `UTC${sign}${hours}:${mins}` as UTCOffSet;
 }
