@@ -1,7 +1,6 @@
 import type { Any } from '../types';
 import type {
 	DotNotationKey,
-	FieldMap,
 	GenericObject,
 	Numberified,
 	Stringified,
@@ -202,14 +201,21 @@ export function pickObjectFieldsByCondition<T extends GenericObject>(
  */
 export function remapFields<
 	Source extends GenericObject,
-	Target extends GenericObject,
->(source: Source, fieldMap: FieldMap<Source, Target>): Target {
-	const result = {} as GenericObject;
+	Target extends Record<string, keyof Source>,
+>(
+	source: Source,
+	fieldMap: Target,
+): {
+	[K in keyof Target]: Source[Target[K]];
+} {
+	const result = {} as {
+		[K in keyof Target]: Source[Target[K]];
+	};
 
 	for (const targetKey in fieldMap) {
 		const sourceKey = fieldMap[targetKey];
-		result[targetKey] = source[sourceKey as keyof Source];
+		result[targetKey] = source[sourceKey];
 	}
 
-	return result as Target;
+	return result;
 }

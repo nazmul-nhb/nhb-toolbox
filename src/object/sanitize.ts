@@ -5,7 +5,7 @@ import {
 } from '../guards/non-primitives';
 import { isString } from '../guards/primitives';
 import { trimString } from '../string/basics';
-import type { FlattenPartial } from '../types';
+import type { FlattenPartial, PartialOrRequired } from '../types';
 import type {
 	DotNotationKey,
 	GenericObject,
@@ -35,12 +35,17 @@ export function sanitizeData(input: string[]): string[];
  *
  * @param object - The object to sanitize.
  * @param options - Options that define which keys to ignore, whether to trim string values, and whether to exclude nullish, falsy or empty values.
+ * @param _return - By default return type is as it is, passing this parameter `true` makes the return type `Partial<T>`.
  * @returns A new object with the specified modifications.
  */
-export function sanitizeData<T extends GenericObject>(
+export function sanitizeData<
+	T extends GenericObject,
+	B extends PartialOrRequired = 'required',
+>(
 	object: T,
 	options?: SanitizeOptions<T>,
-): FlattenPartial<T>;
+	_return?: B,
+): B extends 'partial' ? FlattenPartial<T> : T;
 
 /**
  * * Sanitizes a deeply nested array that may contain arrays, objects or other (mixed) data types.
@@ -48,12 +53,14 @@ export function sanitizeData<T extends GenericObject>(
  *
  * @param array - A mixed array that may contain arrays, objects or other data types.
  * @param options - Options to trim and filter values.
+ * @param _return - By default return type is as it is, passing this parameter `partial` makes the return type `Partial<T>`.
  * @returns A new sanitized array with the specified modifications.
  */
-export function sanitizeData<T>(
+export function sanitizeData<T, B extends PartialOrRequired = 'required'>(
 	array: T[],
 	options?: SanitizeOptions<T>,
-): FlattenPartial<T>[];
+	_return?: B,
+): B extends 'partial' ? FlattenPartial<T>[] : T[];
 
 /**
  * * Sanitizes a string, array of strings, an object or array of objects by ignoring specified keys and trimming string values.
@@ -61,12 +68,21 @@ export function sanitizeData<T>(
  *
  * @param input - The string, object or array of strings or objects to sanitize.
  * @param options - Options for processing.
+ * @param _return - By default return type is as it is, passing this parameter `partial` makes the return type `Partial<T>`.
  * @returns A new string, object or array of strings or objects with the specified modifications.
  */
-export function sanitizeData<T extends GenericObject>(
+export function sanitizeData<
+	T extends GenericObject,
+	B extends PartialOrRequired = 'required',
+>(
 	input: string | string[] | T | T[],
 	options?: SanitizeOptions<T>,
-): string | string[] | FlattenPartial<T> | FlattenPartial<T>[] {
+	_return?: B,
+):
+	| string
+	| string[]
+	| (B extends 'partial' ? FlattenPartial<T> : T)
+	| (B extends 'partial' ? FlattenPartial<T>[] : T[]) {
 	const {
 		keysToIgnore = [],
 		requiredKeys = [],
@@ -97,7 +113,7 @@ export function sanitizeData<T extends GenericObject>(
 	 * @param obj Object value to check.
 	 * @returns `true` if the object is skippable, otherwise `false`.
 	 */
-	const skipObject = (obj: unknown): boolean => {
+	const _skipObject = (obj: unknown): boolean => {
 		return ignoreEmpty && isObject(obj) && !isNotEmptyObject(obj);
 	};
 
@@ -128,7 +144,7 @@ export function sanitizeData<T extends GenericObject>(
 			.filter((v) => {
 				if (ignoreNullish && v == null) return false;
 				if (ignoreFalsy && !v) return false;
-				if (skipObject(v) && !isRequiredKey(path)) return false;
+				if (_skipObject(v) && !isRequiredKey(path)) return false;
 				return true;
 			});
 	};
@@ -139,7 +155,7 @@ export function sanitizeData<T extends GenericObject>(
 	 * @param object The object to process.
 	 * @param parentPath The parent path of a key.
 	 *  */
-	const _processObject = (object: T, parentPath = ''): FlattenPartial<T> =>
+	const _processObject = (object: T, parentPath = '') =>
 		Object.entries(object).reduce((acc, [key, value]) => {
 			// Compute the full key path
 			const fullKeyPath = parentPath ? `${parentPath}.${key}` : key;
@@ -209,19 +225,20 @@ export function sanitizeData<T extends GenericObject>(
 
 		// * Handle arrays with nested strings/arrays/objects
 		return input
-			.map((item) => sanitizeData(item, options))
+			.map((item) => sanitizeData(item, options, _return))
 			.filter((val) => {
 				if (ignoreNullish && val == null) return false;
 				if (ignoreFalsy && !val) return false;
-				if (skipObject(val)) return false;
+				if (_skipObject(val)) return false;
 
 				return true;
-			});
+			}) as B extends 'partial' ? FlattenPartial<T>[] : T[];
 	}
 
 	// Process object
 	if (isObject(input)) {
-		return _processObject(input);
+		return _processObject(input) as B extends 'partial' ? FlattenPartial<T>
+		:	T;
 	}
 
 	return input;

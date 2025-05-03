@@ -119,35 +119,6 @@ export interface SanitizeOptions<T> {
 	requiredKeys?: '*' | DotNotationKey<T>[];
 }
 
-/** - Data after sanitization.
- * ! Unused
- */
-export type SanitizedData<T> = {
-	[P in keyof T]?: T[P] extends GenericObject ? SanitizedData<T[P]> : T[P];
-};
-
-/**
- * - Dot-notation keys for nested objects.
- * ! Unused
- */
-export type KeyConversion<T> =
-	T extends StrictObject ?
-		{
-			[K in keyof T & string]: K extends string ?
-				T[K] extends StrictObject ?
-					`${K}` | `${K}.${KeyConversion<T[K]>}`
-				:	`${K}`
-			:	never;
-		}[keyof T & string]
-	:	never;
-
-/**
- * ! Unused
- * * Determines the return type of `convertObjectValues` based on the `ConvertTo` type.
- */
-export type ConvertedData<T, C extends 'string' | 'number'> =
-	C extends 'string' ? Stringified<T> | Stringified<T>[] : T | T[];
-
 /** - Type of data value converted to `string` */
 export type Stringified<T> = {
 	[K in keyof T]: T[K] extends (infer U)[] ? Stringified<U>[]
@@ -167,7 +138,7 @@ export type Numberified<T> = {
 
 /** - Type for mapped object fields to be created from another object interface/type */
 export type FieldMap<Source, Target> = {
-	[K in keyof Partial<Target>]: keyof Partial<Source>;
+	[TargetKey in keyof Target]: keyof Source;
 };
 
 /** * Infers the real primitive type from a stringified version. */
