@@ -100,10 +100,10 @@ export interface AlphaColors {
 }
 
 /** * Represents a tuple of three numerical values corresponding to RGB or HSL color components. */
-export type ColorNumbers = [number, number, number];
+export type SolidValues = [number, number, number];
 
-/** * Represents a tuple of three numerical values corresponding to RGB or HSL color components. */
-export type ColorNumbersAlpha = [number, number, number, number];
+/** * Represents a tuple of four numerical values corresponding to RGBA or HSLA color components. */
+export type AlphaValues = [number, number, number, number];
 
 /**
  * * Represents the converted color formats for a given color type.

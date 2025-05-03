@@ -141,3 +141,11 @@
 
 /** Utility type to flatten Partial type */
 // export type FlattenPartial<T> = T extends Partial<infer U> ? Partial<U> : Partial<T> & {};
+
+/** - Type for mapped object fields to be created from another object interface/type */
+// export type MappedFields<
+// 	Source,
+// 	Target extends Record<string, keyof Source>,
+// > = {
+// 	[Key in keyof Target]: Source[Target[Key]];
+// };

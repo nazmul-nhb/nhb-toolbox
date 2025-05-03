@@ -1,7 +1,5 @@
 import type {
 	AlphaValue,
-	ColorNumbers,
-	ColorNumbersAlpha,
 	Hex6,
 	Hex8,
 	HSL,
@@ -86,36 +84,6 @@ export const _isSimilarToLast = (
 		saturationDifference < 24 &&
 		lightnessDifference < 16
 	);
-};
-
-/**
- * * Extracts numbers from a color string like `rgb(66, 103, 69)` or `hsl(120, 42.86%, 41.18%)`.
- * * Converts percentage values to decimal (e.g., `42.86%` → `42.86`).
- *
- * @param colorString The color string in RGB or HSL format.
- * @returns An array of extracted numbers.
- */
-export const _extractSolidColorValues = (
-	colorString: HSL | RGB,
-): ColorNumbers => {
-	return (colorString.match(/[\d.]+%?/g) || []).map((value) =>
-		parseFloat(value),
-	) as ColorNumbers;
-};
-
-/**
- * * Extracts numbers from a color string like `rgba(66, 103, 69, 0.6)` or `hsla(120, 42.86%, 41.18%, 0.9)`.
- * * Converts percentage values to decimal (e.g., `42.86%` → `42.86`).
- *
- * @param colorString The color string in RGB or HSL format.
- * @returns An array of extracted numbers.
- */
-export const _extractAlphaColorValues = (
-	colorString: HSLA | RGBA,
-): ColorNumbersAlpha => {
-	return (colorString.match(/[\d.]+%?/g) || []).map((value) =>
-		parseFloat(value),
-	) as ColorNumbersAlpha;
 };
 
 /**

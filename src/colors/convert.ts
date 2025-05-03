@@ -1,7 +1,5 @@
 import {
 	_convertOpacityToHex,
-	_extractAlphaColorValues,
-	_extractSolidColorValues,
 	_isHex6,
 	_isHex8,
 	_isHSL,
@@ -22,6 +20,7 @@ import type {
 	RGB,
 	RGBA,
 } from './types';
+import { extractAlphaColorValues, extractSolidColorValues } from './utils';
 
 /**
  * * Converts HSL to RGB color format.
@@ -262,7 +261,7 @@ export const convertHslaToRgba = (
 	}
 
 	const rgb = convertHslToRgb(h, s, l);
-	const rgbNumbers = _extractSolidColorValues(rgb);
+	const rgbNumbers = extractSolidColorValues(rgb);
 
 	return convertRgbToRgba(
 		rgbNumbers[0],
@@ -296,7 +295,7 @@ export const convertRgbaToHsla = (
 	}
 
 	const hsl = convertRgbToHsl(r, g, b);
-	const hslNumbers = _extractSolidColorValues(hsl);
+	const hslNumbers = extractSolidColorValues(hsl);
 
 	return `hsla(${hslNumbers[0]}, ${hslNumbers[1]}%, ${hslNumbers[2]}%, ${parseFloat(newAlpha.toFixed(1))})`;
 };
@@ -362,7 +361,7 @@ export const convertHslaToHex8 = (
 export const convertHex8ToHsla = (hex8: Hex8): HSLA => {
 	const rgba = convertHex8ToRgba(hex8);
 
-	return convertRgbaToHsla(..._extractAlphaColorValues(rgba as RGBA));
+	return convertRgbaToHsla(...extractAlphaColorValues(rgba as RGBA));
 };
 
 /**
@@ -451,7 +450,7 @@ export function convertColorCode(color: ColorType): ConvertedColors<ColorType> {
 	}
 
 	if (_isRGB(color)) {
-		const rgbValues = _extractSolidColorValues(color as RGB);
+		const rgbValues = extractSolidColorValues(color as RGB);
 
 		return {
 			hex: convertRgbToHex(...rgbValues),
@@ -460,7 +459,7 @@ export function convertColorCode(color: ColorType): ConvertedColors<ColorType> {
 	}
 
 	if (_isHSL(color)) {
-		const hslValues = _extractSolidColorValues(color as HSL);
+		const hslValues = extractSolidColorValues(color as HSL);
 
 		return {
 			hex: convertHslToHex(...hslValues),
@@ -476,7 +475,7 @@ export function convertColorCode(color: ColorType): ConvertedColors<ColorType> {
 	}
 
 	if (_isRGBA(color)) {
-		const rgbaValues = _extractAlphaColorValues(color as RGBA);
+		const rgbaValues = extractAlphaColorValues(color as RGBA);
 
 		return {
 			hex8: convertRgbaToHex8(...rgbaValues),
@@ -485,7 +484,7 @@ export function convertColorCode(color: ColorType): ConvertedColors<ColorType> {
 	}
 
 	if (_isHSLA(color)) {
-		const hslaValues = _extractAlphaColorValues(color as HSLA);
+		const hslaValues = extractAlphaColorValues(color as HSLA);
 
 		return {
 			hex8: convertHslaToHex8(...hslaValues),

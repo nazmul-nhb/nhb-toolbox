@@ -2,8 +2,6 @@ import { convertColorCode } from './convert';
 import { CSS_COLORS } from './css-colors';
 import {
 	_convertOpacityToHex,
-	_extractAlphaColorValues,
-	_extractSolidColorValues,
 	_isHSL,
 	_isHSLA,
 	_isRGB,
@@ -27,6 +25,7 @@ import type {
 	Tetrad,
 	Triad,
 } from './types';
+import { extractAlphaColorValues, extractSolidColorValues } from './utils';
 
 const hsl = generateRandomHSLColor();
 const { hex, rgb } = convertColorCode(hsl);
@@ -180,6 +179,7 @@ export class Color {
 		if (color) {
 			if (Color.isCSSColor(color)) {
 				const newColor = new Color(CSS_COLORS[color]);
+
 				this.hex = newColor.hex;
 				this.hex8 = newColor.hex8;
 				this.rgb = newColor.rgb;
@@ -191,8 +191,8 @@ export class Color {
 
 				if ('hex8' in colors) {
 					// Extract alpha color values (Hex8, RGBA, HSLA)
-					const rgbaValues = _extractAlphaColorValues(colors.rgba);
-					const hslaValues = _extractAlphaColorValues(colors.hsla);
+					const rgbaValues = extractAlphaColorValues(colors.rgba);
+					const hslaValues = extractAlphaColorValues(colors.hsla);
 
 					this.hex = colors.hex8.toUpperCase().slice(0, 7) as Hex6;
 					this.hex8 = colors.hex8.toUpperCase() as Hex8;
@@ -202,8 +202,8 @@ export class Color {
 					this.hsla = colors.hsla;
 				} else {
 					// Extract solid color values (Hex, RGB, HSL)
-					const rgbValues = _extractSolidColorValues(colors.rgb);
-					const hslValues = _extractSolidColorValues(colors.hsl);
+					const rgbValues = extractSolidColorValues(colors.rgb);
+					const hslValues = extractSolidColorValues(colors.hsl);
 
 					this.hex = colors.hex.toUpperCase() as Hex6;
 					this.hex8 =
@@ -215,8 +215,8 @@ export class Color {
 				}
 			}
 		} else {
-			const rgbValues = _extractSolidColorValues(rgb);
-			const hslValues = _extractSolidColorValues(hsl);
+			const rgbValues = extractSolidColorValues(rgb);
+			const hslValues = extractSolidColorValues(hsl);
 
 			// Generate random colors
 			this.hex = hex.toUpperCase() as Hex6;
@@ -262,8 +262,8 @@ export class Color {
 		const alphaHex = _convertOpacityToHex(opacity);
 		const alphaDecimal = validOpacity / 100;
 
-		const rgbValues = _extractSolidColorValues(this.rgb);
-		const hslValues = _extractSolidColorValues(this.hsl);
+		const rgbValues = extractSolidColorValues(this.rgb);
+		const hslValues = extractSolidColorValues(this.hsl);
 
 		return Color.#fromParts({
 			hex: this.hex.slice(0, 7).toUpperCase() as Hex6,
@@ -281,7 +281,7 @@ export class Color {
 	 * @returns A new `Color` instance with the modified darkness.
 	 */
 	applyDarkness(percent: Percent): Color {
-		const [h, s, l, a] = _extractAlphaColorValues(this.hsla);
+		const [h, s, l, a] = extractAlphaColorValues(this.hsla);
 
 		const newL = Math.max(0, l - percent);
 
@@ -296,7 +296,7 @@ export class Color {
 	 * @returns A new `Color` instance with the modified lightness.
 	 */
 	applyBrightness(percent: Percent): Color {
-		const [h, s, l, a] = _extractAlphaColorValues(this.hsla);
+		const [h, s, l, a] = extractAlphaColorValues(this.hsla);
 
 		const newL = Math.min(100, l + percent);
 
@@ -311,7 +311,7 @@ export class Color {
 	 * @returns A new `Color` instance with the modified saturation.
 	 */
 	applyDullness(percent: Percent): Color {
-		const [h, s, l, a] = _extractAlphaColorValues(this.hsla);
+		const [h, s, l, a] = extractAlphaColorValues(this.hsla);
 
 		const newS = Math.max(0, s - percent);
 
@@ -327,7 +327,7 @@ export class Color {
 	 * @returns A new `Color` instance shifted toward white.
 	 */
 	applyWhiteShade(percent: Percent): Color {
-		const [h, s, l, a] = _extractAlphaColorValues(this.hsla);
+		const [h, s, l, a] = extractAlphaColorValues(this.hsla);
 
 		// Cap values to avoid overshooting
 		const newS = Math.max(0, s - (s * percent) / 100);
@@ -350,12 +350,14 @@ export class Color {
 	 *                  - `weight = 0.5` → equal blend between the two.
 	 * @returns A new `Color` instance representing the blended result, with proper alpha blending.
 	 */
-	blendWith(other: ColorType, weight = 0.5): Color {
+	blendWith(other: ColorType | CSSColor, weight = 0.5): Color {
 		const w = Math.max(0, Math.min(1, weight));
 
-		const converted = new Color(other);
-		const [r1, b1, g1, a1] = _extractAlphaColorValues(this.rgba);
-		const [r2, b2, g2, a2] = _extractAlphaColorValues(converted.rgba);
+		const converted =
+			Color.isCSSColor(other) ? new Color(other) : new Color(other);
+
+		const [r1, b1, g1, a1] = extractAlphaColorValues(this.rgba);
+		const [r2, b2, g2, a2] = extractAlphaColorValues(converted.rgba);
 
 		const alpha = Math.round((a1 * (1 - w) + a2 * w) * 100) / 100;
 
@@ -377,11 +379,12 @@ export class Color {
 	 * @param other - The other color to compare against.
 	 * @returns A number representing the contrast ratio (rounded to 2 decimal places).
 	 */
-	contrastRatio(other: ColorType): number {
-		const newColor = new Color(other);
+	contrastRatio(other: ColorType | CSSColor): number {
+		const newColor =
+			Color.isCSSColor(other) ? new Color(other) : new Color(other);
 
 		const luminance = (rgb: RGB): number => {
-			const [r, g, b] = _extractSolidColorValues(rgb).map((v) => {
+			const [r, g, b] = extractSolidColorValues(rgb).map((v) => {
 				const c = v / 255;
 				return c <= 0.03928 ?
 						c / 12.92
@@ -407,7 +410,7 @@ export class Color {
 	 * @returns A new Color that is the complement of the current color.
 	 */
 	getComplementaryColor(): Color {
-		const [h, s, l, a] = _extractAlphaColorValues(this.hsla);
+		const [h, s, l, a] = extractAlphaColorValues(this.hsla);
 
 		const newHue = (h + 180) % 360;
 
@@ -422,7 +425,7 @@ export class Color {
 	 * @returns An array of three Color instances: [base, left, right].
 	 */
 	getAnalogousColors(): Analogous {
-		const [h, s, l, a] = _extractAlphaColorValues(this.hsla);
+		const [h, s, l, a] = extractAlphaColorValues(this.hsla);
 
 		const left = `hsl(${(h + 330) % 360}, ${s}%, ${l}%)` as HSL;
 		const right = `hsl(${(h + 30) % 360}, ${s}%, ${l}%)` as HSL;
@@ -440,7 +443,7 @@ export class Color {
 	 * @returns An array of three Color instances: [base, triad1, triad2].
 	 */
 	getTriadColors(): Triad {
-		const [h, s, l, a] = _extractAlphaColorValues(this.hsla);
+		const [h, s, l, a] = extractAlphaColorValues(this.hsla);
 
 		const c1 = `hsl(${(h + 120) % 360}, ${s}%, ${l}%)` as HSL;
 		const c2 = `hsl(${(h + 240) % 360}, ${s}%, ${l}%)` as HSL;
@@ -456,7 +459,7 @@ export class Color {
 	 * @returns An array of four Color instances: [base, tetrad1, tetrad2, tetrad3].
 	 */
 	getTetradColors(): Tetrad {
-		const [h, s, l, a] = _extractAlphaColorValues(this.hsla);
+		const [h, s, l, a] = extractAlphaColorValues(this.hsla);
 
 		const c1 = `hsl(${(h + 90) % 360}, ${s}%, ${l}%)` as HSL;
 		const c2 = `hsl(${(h + 180) % 360}, ${s}%, ${l}%)` as HSL;
@@ -474,7 +477,7 @@ export class Color {
 	 * @param other - The other color to test contrast against.
 	 * @returns 'Fail', 'AA', or 'AAA' based on `WCAG 2.1` contrast standards.
 	 */
-	getWCAGRating(other: ColorType): 'Fail' | 'AA' | 'AAA' {
+	getWCAGRating(other: ColorType | CSSColor): 'Fail' | 'AA' | 'AAA' {
 		const ratio = this.contrastRatio(other);
 
 		if (ratio >= 7) return 'AAA';
@@ -487,7 +490,7 @@ export class Color {
 	 * @returns `true` if light, `false` if dark.
 	 */
 	isLightColor(): boolean {
-		const [r, g, b] = _extractSolidColorValues(this.rgb);
+		const [r, g, b] = extractSolidColorValues(this.rgb);
 
 		const brightness = (r * 299 + g * 587 + b * 114) / 1000;
 

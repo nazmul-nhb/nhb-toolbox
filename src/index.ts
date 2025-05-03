@@ -98,13 +98,13 @@ export {
 
 export {
 	areInvalidNumbers,
+	areInvalidNumbers as areNumbersInvalid,
 	isEven,
 	isEven as isEvenNumber,
 	isFibonacci,
 	areInvalidNumbers as isInvalidNumber,
-	areInvalidNumbers as areNumbersInvalid,
-	areInvalidNumbers as isNumberInvalid,
 	isMultiple,
+	areInvalidNumbers as isNumberInvalid,
 	isOdd,
 	isOdd as isOddNumber,
 	isFibonacci as isParOfFibonacci,
@@ -115,11 +115,11 @@ export {
 export {
 	numberToWords as convertNumberToWords,
 	convertToRomanNumerals,
+	convertToRomanNumerals as integerToRoman,
+	convertToRomanNumerals as numberToRoman,
 	numberToWords,
 	convertToRomanNumerals as numericToRoman,
 	convertToRomanNumerals as toRoman,
-	convertToRomanNumerals as numberToRoman,
-	convertToRomanNumerals as integerToRoman,
 	convertToRomanNumerals as toRomanNumeral,
 } from './number/convert';
 
@@ -176,6 +176,11 @@ export {
 } from './colors/convert';
 
 export { Color, Color as Colour } from './colors/Color';
+
+export {
+	extractAlphaColorValues,
+	extractSolidColorValues,
+} from './colors/utils';
 
 // ! Date & Time Utilities
 export {

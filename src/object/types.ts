@@ -136,11 +136,6 @@ export type Numberified<T> = {
 	: number;
 };
 
-/** - Type for mapped object fields to be created from another object interface/type */
-export type FieldMap<Source, Target> = {
-	[TargetKey in keyof Target]: keyof Source;
-};
-
 /** * Infers the real primitive type from a stringified version. */
 export type ParsedPrimitive<T> =
 	T extends string ?
