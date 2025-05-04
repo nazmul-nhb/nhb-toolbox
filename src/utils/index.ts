@@ -81,10 +81,10 @@ export const convertArrayToString = <T>(
  *
  * debouncedSearch('laptop'); // Executes after 300ms of inactivity.
  */
-export const debounceAction = <T extends VoidFunction>(
+export function debounceAction<T extends VoidFunction>(
 	callback: T,
 	delay = 300,
-): DelayedFn<T> => {
+): DelayedFn<T> {
 	let timeoutId: ReturnType<typeof setTimeout> | undefined = undefined;
 
 	return (...args: Parameters<T>) => {
@@ -96,7 +96,7 @@ export const debounceAction = <T extends VoidFunction>(
 			callback(...args);
 		}, delay);
 	};
-};
+}
 
 /**
  * * A generic throttle function that ensures a callback is executed at most once per specified interval.
@@ -112,10 +112,10 @@ export const debounceAction = <T extends VoidFunction>(
  *
  * window.addEventListener('resize', throttledResize);
  */
-export const throttleAction = <T extends VoidFunction>(
+export function throttleAction<T extends VoidFunction>(
 	callback: T,
 	delay = 150,
-): ThrottledFn<T> => {
+): ThrottledFn<T> {
 	let lastCall = 0;
 
 	return (...args: Parameters<T>) => {
@@ -126,7 +126,7 @@ export const throttleAction = <T extends VoidFunction>(
 			callback(...args);
 		}
 	};
-};
+}
 
 /**
  * * Retrieves the names of all instance methods defined directly on a class prototype.

@@ -72,5 +72,12 @@ export async function copyToClipboard(text: string): Promise<void> {
 		}
 	} catch (error) {
 		console.error('Failed to copy text:', error);
+		throw error;
+	} finally {
+		const textArea = document.querySelector('textarea[style*="fixed"]');
+
+		if (textArea) {
+			document.body.removeChild(textArea);
+		}
 	}
 }
