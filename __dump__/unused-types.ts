@@ -149,3 +149,45 @@
 // > = {
 // 	[Key in keyof Target]: Source[Target[Key]];
 // };
+
+/** * Infers the real primitive type from a stringified version. */
+// export type ParsedPrimitive<T> =
+// 	T extends string ?
+// 		T extends `${number}` ? number
+// 		: T extends 'true' | 'false' ? boolean
+// 		: T extends 'null' ? null
+// 		: T extends 'undefined' ? undefined
+// 		: T
+// 	:	T;
+
+// type ParsePrimitive<T extends string> =
+// 	T extends 'true' ? true
+// 	: T extends 'false' ? false
+// 	: T extends 'null' ? null
+// 	: T extends 'undefined' ? undefined
+// 	: T extends `${number}` ? number
+// 	: T;
+
+// export type ParseJSON<T extends string> =
+// 	T extends `[${infer Items}]` ? ParseArray<Items>
+// 	: T extends `{${infer Props}}` ? ParseObject<Props>
+// 	: ParsePrimitive<T>;
+
+// type ParseArray<T extends string> =
+// 	T extends `${infer First},${infer Rest}` ?
+// 		[ParseJSON<First>, ...ParseArray<Rest>]
+// 	: T extends '' ? []
+// 	: [ParseJSON<T>];
+
+// type ParseObject<T extends string> =
+// 	T extends `${infer Key}":${infer Value},${infer Rest}` ?
+// 		ParseObjectProperty<Key, Value> & ParseObject<Rest>
+// 	: T extends `${infer Key}":${infer Value}}` ?
+// 		ParseObjectProperty<Key, Value>
+// 	:	{};
+
+// type ParseObjectProperty<K extends string, V extends string> = {
+// 	[P in K extends `"${infer Key}"` ? Key : never]: ParseJSON<V>;
+// };
+
+// export type ParsedObject<T extends GenericObject> = { [K in keyof T]: Any };

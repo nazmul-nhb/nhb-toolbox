@@ -5,7 +5,7 @@ import {
 } from '../guards/non-primitives';
 import { isString } from '../guards/primitives';
 import { trimString } from '../string/basics';
-import type { FlattenPartial, PartialOrRequired } from '../types';
+import type { Any, FlattenPartial, PartialOrRequired } from '../types';
 import type { DotNotationKey, GenericObject, SanitizeOptions } from './types';
 
 /**
@@ -253,7 +253,7 @@ export function sanitizeData<
 export function parseObjectValues<T extends GenericObject>(
 	object: T,
 	parseNested = true,
-): GenericObject {
+): { [K in keyof T]: Any } {
 	function _deepParseValues(data: unknown): unknown {
 		if (Array.isArray(data)) {
 			return data.map(_deepParseValues);
@@ -294,5 +294,5 @@ export function parseObjectValues<T extends GenericObject>(
 		});
 	}
 
-	return parsedBody;
+	return parsedBody as { [K in keyof T]: Any };
 }
