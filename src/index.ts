@@ -298,11 +298,7 @@ export {
 
 export {
 	parseObjectValues,
-	parseObjectValues as parsePrimitiveData,
-	parseObjectValues as parsePrimitives,
 	parseObjectValues as parseStringifiedObjectValues,
-	parseObjectValues as parseStringifiedPrimitives,
-	parseObjectValues as parseStringifiedValues,
 	sanitizeData,
 } from './object/sanitize';
 

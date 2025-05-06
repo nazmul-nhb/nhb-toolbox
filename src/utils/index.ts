@@ -227,6 +227,7 @@ export const parseJSON = <T = unknown>(
 ): T => {
 	try {
 		const parsed = JSON.parse(value);
+
 		return (parsePrimitives ? deepParsePrimitives(parsed) : parsed) as T;
 	} catch {
 		return {} as T;

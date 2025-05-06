@@ -6,12 +6,7 @@ import {
 import { isString } from '../guards/primitives';
 import { trimString } from '../string/basics';
 import type { FlattenPartial, PartialOrRequired } from '../types';
-import type {
-	DotNotationKey,
-	GenericObject,
-	ParsedPrimitive,
-	SanitizeOptions,
-} from './types';
+import type { DotNotationKey, GenericObject, SanitizeOptions } from './types';
 
 /**
  * * Trims all the words in a string.
@@ -247,48 +242,57 @@ export function sanitizeData<
 /**
  * * Parse an object of stringified values into their appropriate primitive types.
  *
- * Attempts to convert string values into `boolean`, `number`, or JSON-parsed objects/arrays.
- * Non-string values are left unchanged.
+ * @description
+ * - Attempts to convert string values into `boolean`, `number`, or JSON-parsed objects/arrays.
+ * - Non-string values except arrays/objects are left unchanged. Nested arrays/objects are parsed recursively.
  *
  * @param object - The object with potentially stringified primitive values.
+ * @param parseNested - Whether to convert stringified primitives in nested arrays/objects. (default: `true`).
  * @returns A new object with parsed values converted to their original types.
  */
 export function parseObjectValues<T extends GenericObject>(
 	object: T,
-): {
-	[K in keyof T]: ParsedPrimitive<T[K]>;
-} {
+	parseNested = true,
+): GenericObject {
+	function _deepParseValues(data: unknown): unknown {
+		if (Array.isArray(data)) {
+			return data.map(_deepParseValues);
+		} else if (isNotEmptyObject(data)) {
+			const result: Record<string, unknown> = {};
+
+			for (const [key, value] of Object.entries(data)) {
+				result[key] = parseNested ? _deepParseValues(value) : value;
+			}
+
+			return result;
+		} else if (isString(data)) {
+			try {
+				const parsed = JSON.parse(data);
+
+				return _deepParseValues(parsed);
+			} catch {
+				if (data === 'true') return true;
+				else if (data === 'false') {
+					return false;
+				} else if (data === 'null') {
+					return null;
+				} else if (data === 'undefined') {
+					return undefined;
+				} else if (!isNaN(Number(data))) {
+					return Number(data);
+				} else return data;
+			}
+		}
+		return data;
+	}
+
 	const parsedBody: GenericObject = {};
 
 	if (isNotEmptyObject(object)) {
 		Object.entries(object).forEach(([key, value]) => {
-			if (!isString(value)) {
-				parsedBody[key] = value;
-				return;
-			}
-
-			try {
-				const parsedValue = JSON.parse(value);
-				parsedBody[key] = parsedValue;
-			} catch {
-				if (value === 'true') {
-					parsedBody[key] = true;
-				} else if (value === 'false') {
-					parsedBody[key] = false;
-				} else if (!isNaN(Number(value))) {
-					parsedBody[key] = Number(value);
-				} else if (value === 'undefined') {
-					parsedBody[key] = undefined;
-				} else if (value === 'null') {
-					parsedBody[key] = null;
-				} else {
-					parsedBody[key] = value;
-				}
-			}
+			parsedBody[key] = _deepParseValues(value);
 		});
 	}
 
-	return parsedBody as {
-		[K in keyof T]: ParsedPrimitive<T[K]>;
-	};
+	return parsedBody;
 }
