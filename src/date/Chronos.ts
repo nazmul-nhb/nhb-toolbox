@@ -656,30 +656,27 @@ export class Chronos {
 	/**
 	 * @instance Formats the date into a custom string format (local time).
 	 *
-	 * @param format - The desired format (Default format is `dd, mmm DD, YYYY HH:mm:ss:mss` = `Sun, Apr 06, 2025 16:11:55:379`).
+	 * @param format - The desired format (Default format is `dd, mmm DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55`).
 	 * @param useUTC - Optional `useUTC` to get the formatted time using UTC Offset, defaults to `false`. Equivalent to `formatUTC()` method if set to `true`.
 	 * @returns Formatted date string in desired format (in local time unless `useUTC` passed as `true`).
 	 */
-	format(
-		format: string = 'dd, mmm DD, YYYY HH:mm:ss:mss',
-		useUTC = false,
-	): string {
-		return this.#format(format, useUTC);
+	format(format?: string, useUTC = false): string {
+		return this.#format(format ?? 'dd, mmm DD, YYYY HH:mm:ss', useUTC);
 	}
 
 	/**
-	 * @instance Formats the date into a strict custom string format (local time).
-	 * @description Select from `21,000+` pre-defined formats.
+	 * @instance Formats the date into a predefined strict string format using local time or UTC.
 	 *
-	 * @param format - The desired format (Default format is `dd, mmm DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55`).
-	 * @param useUTC - Optional `useUTC` to get the formatted time using UTC Offset, defaults to `false`. Equivalent to `formatUTC()` method if set to `true`.
-	 * @returns Formatted date string in desired strict format (in local time unless `useUTC` passed as `true`).
+	 * @remarks Offers over 21,000 predefined formats with full IntelliSense support.
+	 *
+	 * @param format - The desired format string. Defaults to `'dd, mmm DD, YYYY HH:mm:ss'`
+	 *                 (e.g., `'Sun, Apr 06, 2025 16:11:55'`).
+	 * @param useUTC - If `true`, formats the date in UTC (equivalent to `formatUTC()`);
+	 *                 defaults to `false` (local time).
+	 * @returns A formatted date string in the specified format
 	 */
-	formatStrict(
-		format: StrictFormat = 'dd, mmm DD, YYYY HH:mm:ss',
-		useUTC = false,
-	): string {
-		return this.#format(format, useUTC);
+	formatStrict(format?: StrictFormat, useUTC = false): string {
+		return this.#format(format ?? 'dd, mmm DD, YYYY HH:mm:ss', useUTC);
 	}
 
 	/**
