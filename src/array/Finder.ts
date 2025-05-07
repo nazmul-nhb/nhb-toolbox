@@ -12,7 +12,7 @@ type CacheEntry<T> = { result: T[]; timestamp: number };
  * It supports binary search, fuzzy search, and smart caching with TTL.
  */
 export class Finder<T> {
-	static readonly DEFAULT_TTL = 1000 * 60 * 5;
+	static readonly #DEFAULT_TTL = 1000 * 60 * 5;
 
 	readonly #cachedResult: Map<string, CacheEntry<T>> = new Map();
 	readonly #sortedCache: Map<string, CacheEntry<T>> = new Map();
@@ -23,7 +23,7 @@ export class Finder<T> {
 	 * * Creates a new `Finder` instance with a static array of items.
 	 *
 	 * @param data An array of items to initialize the search dataset.
-	 * @param ttl Optional time-to-live (in milliseconds) for cached search results. Defaults to {@link Finder.DEFAULT_TTL 5 Minutes}.
+	 * @param ttl Optional time-to-live (in milliseconds) for cached search results. Defaults to {@link Finder.#DEFAULT_TTL 5 Minutes}.
 	 */
 	constructor(data: T[], ttl?: number);
 
@@ -31,7 +31,7 @@ export class Finder<T> {
 	 * * Creates a new `Finder` instance with a lazy-evaluated item provider.
 	 *
 	 * @param cb A function returning an array of items to initialize the search dataset.
-	 * @param ttl Time-to-live (in milliseconds) for cached search results. Defaults to {@link Finder.DEFAULT_TTL 5 Minutes}.
+	 * @param ttl Time-to-live (in milliseconds) for cached search results. Defaults to {@link Finder.#DEFAULT_TTL 5 Minutes}.
 	 */
 	constructor(cb: () => T[], ttl?: number);
 
@@ -39,9 +39,9 @@ export class Finder<T> {
 	 * * Creates a new `Finder` instance.
 	 *
 	 * @param data The initial array of items or a callback returning them.
-	 * @param ttl Time-to-live (in milliseconds) for cached search results. Defaults to {@link Finder.DEFAULT_TTL 5 Minutes}.
+	 * @param ttl Time-to-live (in milliseconds) for cached search results. Defaults to {@link Finder.#DEFAULT_TTL 5 Minutes}.
 	 */
-	constructor(data: T[] | (() => T[]), ttl: number = Finder.DEFAULT_TTL) {
+	constructor(data: T[] | (() => T[]), ttl: number = Finder.#DEFAULT_TTL) {
 		this.#ttl = ttl;
 		this.#items = typeof data === 'function' ? data() : data;
 	}
