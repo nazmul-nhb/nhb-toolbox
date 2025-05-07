@@ -515,9 +515,9 @@ export class Chronos {
 		return this.month + 1;
 	}
 
-	/** Gets the time value in seconds since midnight, January 1, 1970 UTC. */
+	/** Returns the Unix timestamp (seconds since the Unix epoch: January 1, 1970, UTC). */
 	get unix(): number {
-		return this.#date.getTime() / 1000;
+		return Math.floor(this.#date.getTime() / 1000);
 	}
 
 	/** Gets the time value in milliseconds since midnight, January 1, 1970 UTC. */
@@ -535,14 +535,7 @@ export class Chronos {
 		return `[Chronos ${this.toLocalISOString()}]`;
 	}
 
-	/** @instance Clones and returns a new Chronos instance with the same date. */
-	clone(): Chronos {
-		return new Chronos(this.#date).#withOrigin(
-			this[ORIGIN] as ChronosMethods,
-		);
-	}
-
-	/** @instance Enables JSON.stringify and console logging to show readable output. */
+	/** @instance Enables JSON.stringify and logging in the console (in Browser environment) to show readable output. */
 	toJSON(): string {
 		return this.toLocalISOString();
 	}
@@ -550,6 +543,13 @@ export class Chronos {
 	/** @instance Enables arithmetic and comparison operations (e.g., +new Chronos()). */
 	valueOf(): number {
 		return this.getTimeStamp();
+	}
+
+	/** @instance Clones and returns a new Chronos instance with the same date. */
+	clone(): Chronos {
+		return new Chronos(this.#date).#withOrigin(
+			this[ORIGIN] as ChronosMethods,
+		);
 	}
 
 	/** @instance Gets the native `Date` instance (read-only). */
