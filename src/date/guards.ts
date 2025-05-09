@@ -65,16 +65,18 @@ export function isDateLike(value: unknown): boolean {
 			typeof v.format === 'function' &&
 			typeof v.toJSON === 'function' &&
 			typeof v.toISOString === 'function'
-		)
+		) {
 			return true;
+		}
 
 		// Luxon
 		if (
 			typeof v.toISO === 'function' &&
 			typeof v.toFormat === 'function' &&
 			typeof v.isValid === 'boolean'
-		)
+		) {
 			return true;
+		}
 
 		// JS-Joda
 		if (
@@ -82,8 +84,9 @@ export function isDateLike(value: unknown): boolean {
 			typeof v.minus === 'function' &&
 			typeof v.equals === 'function' &&
 			typeof v.getClass === 'function'
-		)
+		) {
 			return true;
+		}
 
 		// Temporal
 		if (
@@ -92,8 +95,9 @@ export function isDateLike(value: unknown): boolean {
 			['PlainDate', 'ZonedDateTime', 'Instant'].includes(
 				v.constructor?.name ?? '',
 			)
-		)
+		) {
 			return true;
+		}
 	}
 
 	return false;
