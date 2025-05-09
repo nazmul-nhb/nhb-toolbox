@@ -48,3 +48,53 @@ export function isLeapYear(year: Numeric): boolean {
 		Number(year) % 400 === 0
 	);
 }
+
+/**
+ * * Checks if a value is a date-like object from `Date`, `Chronos`, `Moment.js`, `Day.js`, `Luxon`, `JS-Joda`, or `Temporal`
+ * @param value Value to check if it is date-like object.
+ * @returns `true` if the value is date-like object, otherwise `false`.
+ */
+export function isDateLike(value: unknown): boolean {
+	if (value instanceof Date) return true;
+
+	if (value && typeof value === 'object') {
+		const v = value as Record<string, unknown>;
+
+		// Chronos, Moment or Day.js
+		if (
+			typeof v.format === 'function' &&
+			typeof v.toJSON === 'function' &&
+			typeof v.toISOString === 'function'
+		)
+			return true;
+
+		// Luxon
+		if (
+			typeof v.toISO === 'function' &&
+			typeof v.toFormat === 'function' &&
+			typeof v.isValid === 'boolean'
+		)
+			return true;
+
+		// JS-Joda
+		if (
+			typeof v.plus === 'function' &&
+			typeof v.minus === 'function' &&
+			typeof v.equals === 'function' &&
+			typeof v.getClass === 'function'
+		)
+			return true;
+
+		// Temporal
+		if (
+			typeof v.toJSON === 'function' &&
+			typeof v.toString === 'function' &&
+			['PlainDate', 'ZonedDateTime', 'Instant'].includes(
+				v.constructor?.name ?? '',
+			)
+		)
+			return true;
+	}
+
+	return false;
+}

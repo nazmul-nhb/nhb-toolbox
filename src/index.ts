@@ -192,6 +192,7 @@ export {
 export {
 	isLeapYear,
 	isValidTime,
+	isDateLike,
 	isValidTime as isValidTimeString,
 	isValidUTCOffSet as isValidUTC,
 	isValidUTCOffSet,

@@ -1,3 +1,4 @@
+import { isDateLike } from '../date/guards';
 import {
 	isEmptyObject,
 	isNotEmptyObject,
@@ -258,6 +259,8 @@ export const createControlledFormData = <T extends GenericObject>(
 			} else if (isNotEmptyObject(value) && !shouldStringify(fullKey)) {
 				// * Process nested objects
 				_processObject(value, key);
+			} else if (isDateLike(value)) {
+				_addToFormData(key, JSON.parse(JSON.stringify(value)));
 			} else if (isEmptyObject(value)) {
 				if (isRequiredKey(fullKey)) {
 					_addToFormData(key, JSON.stringify(value));
