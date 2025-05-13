@@ -10,7 +10,7 @@
     <img src="https://img.shields.io/npm/v/nhb-toolbox.svg?style=for-the-badge&color=teal" alt="Version" />
   </a>
   <a href="https://www.npmjs.com/package/nhb-toolbox" aria-label="License">
-    <img src="https://img.shields.io/npm/l/nhb-toolbox.svg?label=license&style=for-the-badge&color=gold" alt="License" />
+    <img src="https://img.shields.io/npm/l/nhb-toolbox.svg?label=license&style=for-the-badge&color=orange" alt="License" />
   </a>
 </p>
 
@@ -21,7 +21,7 @@
 - **Helper Functions & Classes**: Reusable solutions for everyday tasks
 - **Type Guards & Predicates**: Runtime safety with perfect type inference
 - **Validation Utilities**: Robust data validation patterns
-- **Zero Dependencies**: Lightweight and framework-agnostic
+- **Zero Dependencies**: Framework-agnostic implementation using only native TS/JS with 0 external package
 
 > [Explore Full Documentation →](https://nhb-toolbox.vercel.app/)
 
@@ -49,7 +49,7 @@ yarn add nhb-toolbox
 
 - **Type-Safe Utilities**:Fully typed for perfect TypeScript integration with strict type checking
 - **Modular Design**: Tree-shaking friendly – import only what you need with zero bloat
-- **Zero Dependencies**: Lightweight and framework-agnostic
+- **Zero Dependencies**: No external dependencies - works with any JS/TS framework
 - **IDE Support**: Full type hints with JSDoc-powered API references in your editor
 - **Comprehensive Documentation**: Learn with real-world use cases on [documentation site](https://nhb-toolbox.vercel.app/)
 - **Battle-Tested**: Reliable utilities refined through real-world production use
