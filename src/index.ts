@@ -190,9 +190,9 @@ export {
 } from './date/greet';
 
 export {
+	isDateLike,
 	isLeapYear,
 	isValidTime,
-	isDateLike,
 	isValidTime as isValidTimeString,
 	isValidUTCOffSet as isValidUTC,
 	isValidUTCOffSet,
@@ -278,6 +278,7 @@ export {
 	isCustomFileArray,
 	isFileArray,
 	isFileList,
+	isFileOrBlob,
 	isFileUpload,
 	isOriginFileObj,
 	isValidFormData,

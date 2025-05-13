@@ -875,3 +875,39 @@
 // const a = sanitizeData(user, { keysToIgnore: ['emailAddress'] });
 
 // console.info(a);
+
+// console.info(new Color('red').blendWith('green'));
+
+// Color {
+//   hex: '#FF0000',
+//   hex8: '#FF0000FF',
+//   rgb: 'rgb(255, 0, 0)',
+//   rgba: 'rgba(255, 0, 0, 1)',
+//   hsl: 'hsl(0, 100%, 50%)',
+//   hsla: 'hsla(0, 100%, 50%, 1)'
+// }
+// Color {
+//   hex: '#800040',
+//   hex8: '#800040FF',
+//   rgb: 'rgb(128, 0, 64)',
+//   rgba: 'rgba(128, 0, 64, 1)',
+//   hsl: 'hsl(330, 100%, 25.1%)',
+//   hsla: 'hsla(330, 100%, 25.1%, 1)'
+// }
+
+// interface User {
+// 	id?: number;
+// 	name: string;
+// }
+
+// const user: User = {
+// 	id: 25,
+// 	name: 'A',
+// };
+
+// console.info(
+// 	remapFields(user, {
+// 		mamun: 'id',
+// 		x: 'name',
+// 	}),
+// );

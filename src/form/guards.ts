@@ -71,11 +71,9 @@ export function isCustomFileArray(value: unknown): value is CustomFile[] {
  * @param value - The value to check.
  * @returns `true` if the value is a valid `File[]`, otherwise `false`.
  */
-export function isFileArray(value: unknown): value is File[] {
+export function isFileArray(value: unknown): value is File[] | Blob[] {
 	return (
-		Array.isArray(value) &&
-		value.length > 0 &&
-		value.every((v) => v instanceof File)
+		Array.isArray(value) && value.length > 0 && value.every(isFileOrBlob)
 	);
 }
 
@@ -86,6 +84,18 @@ export function isFileArray(value: unknown): value is File[] {
  */
 export function isFileList(value: unknown): value is FileList {
 	return typeof FileList !== 'undefined' && value instanceof FileList;
+}
+
+/**
+ * * Checks if a given value is an instance of `File` or `Blob`.
+ * @param value - The value to check.
+ * @returns `true` if the value is an instance of `File` or `Blob`, otherwise `false`.
+ */
+export function isFileOrBlob(value: unknown): value is File | Blob {
+	return (
+		(typeof File !== 'undefined' && value instanceof File) ||
+		(typeof Blob !== 'undefined' && value instanceof Blob)
+	);
 }
 
 /**

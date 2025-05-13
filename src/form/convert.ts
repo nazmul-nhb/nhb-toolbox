@@ -15,6 +15,7 @@ import {
 	isCustomFileArray,
 	isFileArray,
 	isFileList,
+	isFileOrBlob,
 	isFileUpload,
 } from './guards';
 import type { FormDataConfigs } from './types';
@@ -176,11 +177,11 @@ export const createControlledFormData = <T extends GenericObject>(
 					formData.append(transformedKey, value.file);
 				}
 			}
-		} else if (value instanceof Blob || value instanceof File) {
+		} else if (isFileOrBlob(value)) {
 			formData.append(transformedKey, value);
 		} else if (isFileList(value)) {
 			for (let i = 0; i < value.length; i++) {
-				formData.append(transformedKey, value.item(i) as File);
+				formData.append(transformedKey, value.item(i)!);
 			}
 		} else if (Array.isArray(value)) {
 			if (isFileArray(value)) {
@@ -204,6 +205,8 @@ export const createControlledFormData = <T extends GenericObject>(
 			} else if (isRequiredKey(key)) {
 				formData.append(transformedKey, JSON.stringify(value));
 			}
+		} else if (isDateLike(value)) {
+			formData.append(transformedKey, JSON.parse(JSON.stringify(value)));
 		} else if (isNotEmptyObject(value)) {
 			if (shouldStringify(key) && !shouldDotNotate(key)) {
 				// * Clean object before stringifying, preserving required keys
@@ -227,10 +230,8 @@ export const createControlledFormData = <T extends GenericObject>(
 				if (typeof value === 'string' && shouldLowercaseValue(key)) {
 					formData.append(transformedKey, value.toLowerCase());
 				} else {
-					formData.append(
-						transformedKey,
-						value as string | Blob | File,
-					);
+					// ! CONFUSED UNGA-BUNGA
+					formData.append(transformedKey, value as Blob);
 				}
 			}
 		}
@@ -245,8 +246,9 @@ export const createControlledFormData = <T extends GenericObject>(
 				parentKey ? `${parentKey}.${transformedKey}` : transformedKey;
 
 			// * Skip keys that are in ignoreKeys
-			if (configs?.ignoreKeys?.includes(fullKey as DotNotationKey<T>))
+			if (configs?.ignoreKeys?.includes(fullKey as DotNotationKey<T>)) {
 				return;
+			}
 
 			// * Trim string values if trimStrings is enabled
 			if (configs?.trimStrings && typeof value === 'string') {
@@ -259,6 +261,8 @@ export const createControlledFormData = <T extends GenericObject>(
 			} else if (isNotEmptyObject(value) && !shouldStringify(fullKey)) {
 				// * Process nested objects
 				_processObject(value, key);
+			} else if (isFileOrBlob(value)) {
+				_addToFormData(key, value);
 			} else if (isDateLike(value)) {
 				_addToFormData(key, JSON.parse(JSON.stringify(value)));
 			} else if (isEmptyObject(value)) {
