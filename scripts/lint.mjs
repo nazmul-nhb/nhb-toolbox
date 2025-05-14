@@ -15,7 +15,10 @@ import { estimator } from './estimator.mjs';
 
 		// Start linting...
 		await estimator(
-			execa('eslint', ['src'], { stdio: 'inherit', reject: false }),
+			execa('npx', ['eslint', 'src'], {
+				stdio: 'inherit',
+				reject: false,
+			}),
 			chalk.yellowBright('Linting Your Code...'),
 		);
 

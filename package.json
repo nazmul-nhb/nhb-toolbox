@@ -15,7 +15,7 @@
 		"lint": "node scripts/lint.mjs",
 		"fix": "node scripts/fix.mjs",
 		"commit": "node scripts/commit.mjs",
-		"count": "node scripts/exports.mjs",
+		"count": "node scripts/count.mjs",
 		"types": "node scripts/types.mjs"
 	},
 	"publishConfig": {

@@ -41,7 +41,7 @@ export default [
 			...prettierConfig.rules,
 			'prettier/prettier': 'off',
 			'no-unused-expressions': 'error',
-			'prefer-const': 'error',
+			'prefer-const': 'warn',
 			// 'no-console': ['warn', { allow: ['info', 'warn', 'error', 'table'] }],
 			'no-undef': 'error',
 			'@typescript-eslint/no-empty-object-type': 'off',

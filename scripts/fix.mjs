@@ -15,11 +15,11 @@ import { estimator } from './estimator.mjs';
 
 		// Start fixing linting issues...
 		await estimator(
-			execa('eslint', ['src', '--fix'], {
+			execa('npx', ['eslint', 'src', '--fix'], {
 				stdio: 'inherit',
 				reject: false,
 			}),
-			chalk.yellowBright('Fixing Linting Errors...'),
+			chalk.yellowBright('Fixing Fixable Linting Errors...'),
 		);
 
 		// Calculate total files and time

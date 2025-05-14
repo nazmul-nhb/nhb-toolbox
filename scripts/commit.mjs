@@ -145,6 +145,16 @@ function isValidVersion(newVersion, oldVersion) {
 				),
 			);
 
+			if (!newVersion?.trim()) {
+				newVersion = currentVersion;
+				console.info(
+					chalk.cyanBright(
+						`✅ Continuing with version ${chalk.yellow(newVersion)}`,
+					),
+				);
+				break;
+			}
+
 			if (!/^\d+\.\d+\.\d+$/.test(newVersion)) {
 				console.info(
 					chalk.yellow(
