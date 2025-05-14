@@ -1,3 +1,4 @@
+import { isNumber } from '../guards/primitives';
 import type { GenericObject } from '../object/types';
 import { isDeepEqual } from '../utils';
 import type { OptionsConfig } from './types';
@@ -13,24 +14,57 @@ export const createOptionsArray = <
 	T extends GenericObject,
 	K1 extends string = 'value',
 	K2 extends string = 'label',
+	V extends boolean = false,
 >(
 	data: T[],
-	config: OptionsConfig<T, K1, K2>,
-): { [P in K1 | K2]: string }[] => {
+	config: OptionsConfig<T, K1, K2, V>,
+): Array<{
+	[P in K1 | K2]: P extends K1 ?
+		V extends true ?
+			T[OptionsConfig<T, K1, K2, V>['firstFieldKey']] extends string ?
+				string
+			:	number
+		:	string
+	:	string;
+}> => {
 	const {
 		firstFieldKey,
 		secondFieldKey,
 		firstFieldName = 'value' as K1,
 		secondFieldName = 'label' as K2,
+		numberAsNumber = false,
 	} = config || {};
 
-	if (data && data.length) {
-		return data.map((datum) => ({
-			[firstFieldName]: String(datum[firstFieldKey] ?? ''),
+	if (data && data?.length) {
+		return data?.map((datum) => ({
+			[firstFieldName]:
+				numberAsNumber && isNumber(datum[firstFieldKey]) ?
+					datum[firstFieldKey]
+				:	String(datum[firstFieldKey] ?? ''),
 			[secondFieldName]: String(datum[secondFieldKey] ?? ''),
-		})) as { [P in K1 | K2]: string }[];
+		})) as Array<{
+			[P in K1 | K2]: P extends K1 ?
+				V extends true ?
+					T[OptionsConfig<T, K1, K2, V>['firstFieldKey']] extends (
+						string
+					) ?
+						string
+					:	number
+				:	string
+			:	string;
+		}>;
 	} else {
-		return [];
+		return [] as Array<{
+			[P in K1 | K2]: P extends K1 ?
+				V extends true ?
+					T[OptionsConfig<T, K1, K2, V>['firstFieldKey']] extends (
+						string
+					) ?
+						string
+					:	number
+				:	string
+			:	string;
+		}>;
 	}
 };
 

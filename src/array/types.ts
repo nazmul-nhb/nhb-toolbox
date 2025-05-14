@@ -11,33 +11,52 @@ export type Flattened<T> = T extends (infer U)[] ? Flattened<U> : T;
  * @typeParam T - The type of the objects in the input array.
  * @typeParam K1 - The name of the key for the first field in the output (default: `'value'`).
  * @typeParam K2 - The name of the key for the second field in the output (default: `'label'`).
+ * @typeParam V - Whether to keep the `value` field as number if it is a number. Defaults to `false`.
  */
-export interface OptionsConfig<T, K1, K2> {
+export interface OptionsConfig<T, K1, K2, V extends boolean = false> {
 	/**
 	 * - The key in the input objects to use for the first field of the option.
-	 * @example If the input objects have an `id` field and you want to use it as the `value` field in the output, set createOptionsArray(data, {firstFieldKey: 'id'}).
+	 * @example
+	 * // If the input objects have an `id` field and you want to use it as the `value` field in the output:
+	 * createOptionsArray(data, {firstFieldKey: 'id'}).
 	 */
 	firstFieldKey: PrimitiveKey<T>;
 
 	/**
 	 * - The key in the input objects to use for the second field of the option.
-	 * @example If the input objects have a `name` field and you want to use it as the `label` field in the output, set createOptionsArray(data, {firstFieldKey: 'id', secondFieldKey: 'name'}).
+	 * @example
+	 * // If the input objects have a `name` field and you want to use it as the `label` field in the output:
+	 * createOptionsArray(data, {firstFieldKey: 'id', secondFieldKey: 'name'}).
 	 */
 	secondFieldKey: PrimitiveKey<T>;
 
 	/**
 	 * - The name of the first field in the output object.
 	 * - Defaults to `'value'`.
-	 * @example If you want the output field to be named `'key'` instead of `'value'`, set createOptionsArray(data, {firstFieldKey: 'id', secondFieldKey: 'name', firstFieldName: 'key'}).
+	 * @example
+	 * // If you want the output field to be named `'key'` instead of `'value'`:
+	 * createOptionsArray(data, {firstFieldKey: 'id', secondFieldKey: 'name', firstFieldName: 'key'}).
 	 */
 	firstFieldName?: K1;
 
 	/**
 	 * - The name of the second field in the output object.
 	 * - Defaults to `'label'`.
-	 * @example If you want the output field to be named `'title'` instead of `'label'`, set createOptionsArray(data, {firstFieldKey: 'id', secondFieldKey: 'name', firstFieldName: 'key', secondFieldName: 'title'}).
+	 * @example
+	 * // If you want the output field to be named `'title'` instead of `'label'`:
+	 * createOptionsArray(data, {firstFieldKey: 'id', secondFieldKey: 'name', firstFieldName: 'key', secondFieldName: 'title'}).
 	 */
 	secondFieldName?: K2;
+
+	/**
+	 * - If `true`, and the value from `firstFieldKey` is a number if it is originally number, it will be retained as a number.
+	 * - Otherwise, all values are converted to strings.
+	 * Defaults to `false`.
+	 * @example
+	 * // Set `numberAsNumber: true` to keep numeric values (like `id`) as numbers instead of strings.
+	 * createOptionsArray(data, {firstFieldKey: 'id', secondFieldKey: 'name', numberAsNumber: true}).
+	 */
+	numberAsNumber?: V;
 }
 
 /** * Option for sorting order. */
