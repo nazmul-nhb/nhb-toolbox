@@ -17,7 +17,7 @@ export function serializeForm<T extends boolean = false>(
 	const formData = new FormData(form);
 	const data: Record<string, string | string[]> = {};
 
-	formData.forEach((value, key) => {
+	formData?.forEach((value, key) => {
 		// If the key already exists, we make it an array to handle multiple selections
 		if (data[key]) {
 			data[key] =
@@ -53,7 +53,7 @@ export function parseFormData<T extends FormData | string>(
 	if (typeof data === 'string') {
 		const params = new URLSearchParams(data);
 
-		params.forEach((value, key) => {
+		params?.forEach((value, key) => {
 			const existing = parsed[key];
 
 			if (typeof existing === 'string') {
@@ -65,7 +65,7 @@ export function parseFormData<T extends FormData | string>(
 			}
 		});
 	} else {
-		data.forEach((value, key) => {
+		data?.forEach((value, key) => {
 			const existing = parsed[key];
 
 			if (value instanceof File) {

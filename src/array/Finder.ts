@@ -222,8 +222,8 @@ export class Finder<T> {
 
 		let result: T | undefined;
 
-		if (source.length < 100 && !forceBinary) {
-			result = source.find((item) => {
+		if (source?.length < 100 && !forceBinary) {
+			result = source?.find((item) => {
 				const key = getKey(item);
 				const value =
 					caseInsensitive && typeof key === 'string' ?
@@ -313,7 +313,7 @@ export class Finder<T> {
 		caseInsensitive: boolean,
 	): T | undefined {
 		let min = 0,
-			max = sorted.length - 1;
+			max = sorted?.length - 1;
 
 		while (min <= max) {
 			const mid = Math.floor((min + max) / 2);
@@ -368,7 +368,7 @@ export class Finder<T> {
 		let i = 0;
 
 		for (const char of target) {
-			i = source.indexOf(char, i);
+			i = source?.indexOf(char, i);
 			if (i === -1) return false;
 			i++;
 		}

@@ -29,14 +29,14 @@ export function capitalizeString(
 
 	if (capitalizeEachFirst) {
 		return trimmedString
-			.split(/\s+/)
-			.map((word) => capitalizeString(word, { lowerCaseRest }))
-			.join(' ');
+			?.split(/\s+/)
+			?.map((word) => capitalizeString(word, { lowerCaseRest }))
+			?.join(' ');
 	}
 
 	const matchArray = trimmedString.match(/^(\W*)(\w)(.*)$/);
 
-	if (matchArray && matchArray.length === 4) {
+	if (matchArray && matchArray?.length === 4) {
 		const [_, leadingSymbols, firstLetter, rest] = matchArray;
 		return leadingSymbols
 			.concat(firstLetter.toUpperCase())
@@ -63,13 +63,13 @@ export function capitalizeString(
 export const truncateString = (string: string, maxLength: number): string => {
 	if (typeof string !== 'string' || !string) return '';
 
-	const trimmedString = string.trim();
+	const trimmedString = string?.trim();
 
 	if (!trimmedString) return '';
 
-	if (trimmedString.length <= maxLength) return trimmedString;
+	if (trimmedString?.length <= maxLength) return trimmedString;
 
-	return trimmedString.slice(0, maxLength).concat('...');
+	return trimmedString?.slice(0, maxLength)?.concat('...');
 };
 
 /**
@@ -102,8 +102,8 @@ export const generateRandomID = (options?: RandomIdOptions): string => {
 		randomString,
 		suffix && suffix.trim(),
 	]
-		.filter(Boolean)
-		.join(separator);
+		?.filter(Boolean)
+		?.join(separator);
 
 	switch (caseOption) {
 		case 'upper':
@@ -142,13 +142,13 @@ export function trimString(input: string | string[]): string | string[] {
 
 	// If the input is a string, trim each word
 	if (typeof input === 'string' && !Array.isArray(input)) {
-		return input.trim().replace(/\s+/g, ' ');
+		return input?.trim()?.replace(/\s+/g, ' ');
 	}
 
 	// If the input is an array of strings, trim each string in the array
 	if (Array.isArray(input)) {
-		return input.map((str) =>
-			typeof str === 'string' ? str.trim().replace(/\s+/g, ' ') : str,
+		return input?.map((str) =>
+			typeof str === 'string' ? str?.trim()?.replace(/\s+/g, ' ') : str,
 		);
 	}
 

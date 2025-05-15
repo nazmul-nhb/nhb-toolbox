@@ -73,7 +73,7 @@ export function getColorForInitial(
 		const index = upperInitial.charCodeAt(0) - 'A'.charCodeAt(0);
 
 		// Validate alphabet
-		if (index >= 0 && index < alphabetColorPalette.length) {
+		if (index >= 0 && index < alphabetColorPalette?.length) {
 			return _applyOpacity(alphabetColorPalette[index], hexOpacity);
 		}
 
@@ -92,7 +92,7 @@ export function getColorForInitial(
 		return _applyOpacity('#010514', hexOpacity);
 		// Handle array of strings/numbers
 	} else if (Array.isArray(input)) {
-		if (input.length < 1)
+		if (input?.length < 1)
 			return [...alphabetColorPalette, ...numberColorPalette].map(
 				(color) => _applyOpacity(color, hexOpacity),
 			);

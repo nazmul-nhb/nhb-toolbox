@@ -25,22 +25,22 @@ export const generateQueryParams = <T extends QueryObject>(
 
 	// Generate the query string
 	const queryParams = Object.entries(flattenedParams)
-		.filter(
+		?.filter(
 			([_, value]) =>
 				value !== undefined &&
 				value !== null &&
-				!(typeof value === 'string' && value.trim() === ''),
+				!(typeof value === 'string' && value?.trim() === ''),
 		)
-		.flatMap(([key, value]) =>
+		?.flatMap(([key, value]) =>
 			Array.isArray(value) ?
 				value
-					.filter(
+					?.filter(
 						(v) =>
 							v !== undefined &&
 							v !== null &&
 							!(typeof v === 'string' && v.trim() === ''),
 					)
-					.map(
+					?.map(
 						(v) =>
 							`${encodeURIComponent(key)}=${encodeURIComponent(
 								typeof v === 'boolean' ? String(v) : String(v),
@@ -63,7 +63,7 @@ export const generateQueryParams = <T extends QueryObject>(
  * @returns Query string as key-value paired object. `Record<string, string>`.
  */
 export function getQueryParams(): Record<string, string> {
-	return Object.fromEntries(new URLSearchParams(window.location.search));
+	return Object.fromEntries(new URLSearchParams(window?.location?.search));
 }
 
 /**
@@ -74,7 +74,7 @@ export function getQueryParams(): Record<string, string> {
 export function updateQueryParam(key: string, value: string) {
 	const url = new URL(window.location.href);
 	url.searchParams.set(key, value);
-	window.history.replaceState({}, '', url.toString());
+	window.history.replaceState({}, '', url?.toString());
 }
 
 /**

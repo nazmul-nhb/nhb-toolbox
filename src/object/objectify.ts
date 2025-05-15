@@ -17,7 +17,7 @@ import type { GenericObject } from './types';
 export const mergeObjects = <T extends GenericObject>(...objects: T[]): T => {
 	const map = new Map<string, Any>();
 
-	objects.forEach((obj) => {
+	objects?.forEach((obj) => {
 		for (const key in obj) {
 			const existingValue = map.get(key);
 
@@ -48,7 +48,7 @@ export const mergeObjects = <T extends GenericObject>(...objects: T[]): T => {
 
 	const result = {} as T;
 
-	map.forEach((value, key) => {
+	map?.forEach((value, key) => {
 		result[key as keyof T] = value as T[keyof T];
 	});
 
@@ -81,11 +81,11 @@ export const mergeAndFlattenObjects = <T extends GenericObject>(
 		}
 	};
 
-	objects.forEach((obj) => _flattenObject(obj));
+	objects?.forEach((obj) => _flattenObject(obj));
 
 	const result = {} as T;
 
-	map.forEach((value, key) => {
+	map?.forEach((value, key) => {
 		result[key as keyof T] = value as T[keyof T];
 	});
 

@@ -360,6 +360,7 @@ export { Paginator } from './utils/Paginator';
 
 // ! Primitive Type Guards
 export {
+	isBigInt,
 	isBoolean,
 	isFalsy,
 	isInteger,
@@ -381,7 +382,6 @@ export {
 	isArray,
 	isArrayOfType,
 	isValidArray as isArrayWithLength,
-	isBigInt,
 	isDate,
 	isEmptyObject,
 	isEmptyObject as isEmptyObjectGuard,

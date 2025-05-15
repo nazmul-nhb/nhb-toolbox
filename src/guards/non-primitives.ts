@@ -17,7 +17,7 @@ export function isArray<T>(value: unknown): value is Array<T> {
  * @returns `true` if the value is an array with length, otherwise `false`.
  */
 export function isValidArray<T>(value: unknown): value is Array<T> {
-	return Array.isArray(value) && value.length > 0;
+	return Array.isArray(value) && value?.length > 0;
 }
 
 /**
@@ -37,7 +37,7 @@ export function isObject(value: unknown): value is Record<string, unknown> {
 export function isNotEmptyObject(
 	value: unknown,
 ): value is Record<string, unknown> {
-	return isObject(value) && Object.keys(value).length > 0;
+	return isObject(value) && Object.keys(value)?.length > 0;
 }
 
 /**
@@ -50,7 +50,7 @@ export function isObjectWithKeys<T extends Record<string, unknown>>(
 	value: unknown,
 	keys: (keyof T)[],
 ): value is T {
-	return isObject(value) && keys.every((key) => key in value);
+	return isObject(value) && keys?.every((key) => key in value);
 }
 
 /**
@@ -59,7 +59,7 @@ export function isObjectWithKeys<T extends Record<string, unknown>>(
  * @returns `true` if the value is an empty object, otherwise `false`.
  */
 export function isEmptyObject<T extends GenericObject>(value: T): boolean {
-	return isObject(value) && Object.keys(value).length === 0;
+	return isObject(value) && Object.keys(value)?.length === 0;
 }
 
 /**
@@ -80,7 +80,7 @@ export function isFunction(value: unknown): value is GenericFn {
 export const isMethodDescriptor = (
 	descriptor: PropertyDescriptor | undefined,
 ): boolean => {
-	return !!descriptor && typeof descriptor.value === 'function';
+	return !!descriptor && typeof descriptor?.value === 'function';
 };
 
 /**
@@ -102,7 +102,7 @@ export function isArrayOfType<T>(
 	value: unknown,
 	typeCheck: (item: unknown) => item is T,
 ): value is T[] {
-	return isArray(value) && value.every(typeCheck);
+	return isArray(value) && value?.every(typeCheck);
 }
 
 /**
@@ -151,15 +151,6 @@ export function isError(value: unknown): value is Error {
 }
 
 /**
- * * Type guard to check if a value is a BigInt.
- * @param value - The value to check.
- * @returns `true` if the value is a BigInt, otherwise `false`.
- */
-export function isBigInt(value: unknown): value is bigint {
-	return typeof value === 'bigint';
-}
-
-/**
  * * Type guard to check if a string is valid JSON.
  * @param value - The value to check.
  * @returns `true` if the value is valid JSON, otherwise `false`.
@@ -181,5 +172,5 @@ export function isJSON(value: unknown): value is string {
  * @returns `true` if the function returns a Promise, otherwise `false`.
  */
 export function isReturningPromise<T>(fn: unknown): fn is AsyncFunction<T> {
-	return isFunction(fn) && fn.constructor.name === 'AsyncFunction';
+	return isFunction(fn) && fn.constructor?.name === 'AsyncFunction';
 }

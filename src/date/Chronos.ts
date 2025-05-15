@@ -393,23 +393,23 @@ export class Chronos {
 		let result = '';
 		let i = 0;
 
-		while (i < format.length) {
+		while (i < format?.length) {
 			let matched = false;
 
 			for (const token of sortedFormats) {
-				const ahead = format.slice(i, i + token.length);
+				const ahead = format?.slice(i, i + token?.length);
 				const prev = i === 0 ? '' : format[i - 1];
-				const next = format[i + token.length] ?? '';
+				const next = format[i + token?.length] ?? '';
 
 				// Check non-alphanumeric boundaries
 				const prevOk = i === 0 || /[^a-zA-Z0-9]/.test(prev);
 				const nextOk =
-					i + token.length >= format.length ||
+					i + token?.length >= format?.length ||
 					/[^a-zA-Z0-9]/.test(next);
 
 				if (ahead === token && prevOk && nextOk) {
 					result += dateComponents[token];
-					i += token.length;
+					i += token?.length;
 					matched = true;
 					break;
 				}
@@ -1195,28 +1195,28 @@ export class Chronos {
 		const parts: string[] = [];
 
 		if (lvlIdx >= 0 && years > 0 && lvlIdx >= unitOrder.indexOf('year')) {
-			parts.push(formatUnitWithPlural(years, 'year'));
+			parts?.push(formatUnitWithPlural(years, 'year'));
 		}
 		if (lvlIdx >= unitOrder.indexOf('month') && months > 0) {
-			parts.push(formatUnitWithPlural(months, 'month'));
+			parts?.push(formatUnitWithPlural(months, 'month'));
 		}
 		if (lvlIdx >= unitOrder.indexOf('week') && weeks > 0) {
-			parts.push(formatUnitWithPlural(weeks, 'week'));
+			parts?.push(formatUnitWithPlural(weeks, 'week'));
 		}
 		if (lvlIdx >= unitOrder.indexOf('day') && days > 0) {
-			parts.push(formatUnitWithPlural(days, 'day'));
+			parts?.push(formatUnitWithPlural(days, 'day'));
 		}
 		if (lvlIdx >= unitOrder.indexOf('hour') && hours > 0) {
-			parts.push(formatUnitWithPlural(hours, 'hour'));
+			parts?.push(formatUnitWithPlural(hours, 'hour'));
 		}
 		if (lvlIdx >= unitOrder.indexOf('minute') && minutes > 0) {
-			parts.push(formatUnitWithPlural(minutes, 'minute'));
+			parts?.push(formatUnitWithPlural(minutes, 'minute'));
 		}
 		if (
 			lvlIdx >= unitOrder.indexOf('second') &&
-			(seconds > 0 || parts.length === 0)
+			(seconds > 0 || parts?.length === 0)
 		) {
-			parts.push(formatUnitWithPlural(seconds, 'second'));
+			parts?.push(formatUnitWithPlural(seconds, 'second'));
 		}
 
 		let prefix = '';
@@ -1230,7 +1230,7 @@ export class Chronos {
 			}
 		}
 
-		return `${prefix}${parts.join(' ')}${suffix}`;
+		return `${prefix}${parts?.join(' ')}${suffix}`;
 	}
 
 	/**
@@ -1992,12 +1992,12 @@ export class Chronos {
 
 		return new Chronos(
 			new Date(
-				parts.year ?? 1970,
-				(parts.month ?? 1) - 1,
-				parts.date ?? 1,
-				parts.hour ?? 0,
-				parts.minute ?? 0,
-				parts.second ?? 0,
+				parts?.year ?? 1970,
+				(parts?.month ?? 1) - 1,
+				parts?.date ?? 1,
+				parts?.hour ?? 0,
+				parts?.minute ?? 0,
+				parts?.second ?? 0,
 			),
 		).#withOrigin('parse');
 	}

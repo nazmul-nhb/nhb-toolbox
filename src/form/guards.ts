@@ -15,7 +15,7 @@ export function isValidFormData(value: unknown): value is FormData {
 			return false;
 		}
 
-		return Array.from(value.entries()).length > 0;
+		return Array.from(value.entries())?.length > 0;
 	}
 
 	return false;
@@ -61,7 +61,7 @@ export function isCustomFile(value: unknown): value is CustomFile {
  */
 export function isCustomFileArray(value: unknown): value is CustomFile[] {
 	return (
-		Array.isArray(value) && value.length > 0 && value.every(isCustomFile)
+		Array.isArray(value) && value?.length > 0 && value?.every(isCustomFile)
 	);
 }
 
@@ -73,7 +73,7 @@ export function isCustomFileArray(value: unknown): value is CustomFile[] {
  */
 export function isFileArray(value: unknown): value is File[] | Blob[] {
 	return (
-		Array.isArray(value) && value.length > 0 && value.every(isFileOrBlob)
+		Array.isArray(value) && value?.length > 0 && value?.every(isFileOrBlob)
 	);
 }
 

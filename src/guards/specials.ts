@@ -19,7 +19,7 @@ export function isEmail(value: unknown): value is string {
  * @returns `true` if the value is an array of valid email strings, otherwise `false`.
  */
 export function isEmailArray(value: unknown): value is string[] {
-	return isArray(value) && value.every(isEmail);
+	return isArray(value) && value?.every(isEmail);
 }
 
 /**

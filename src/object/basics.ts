@@ -17,7 +17,7 @@ export const cloneObject = <T extends GenericObject>(obj: T): T => {
  * @returns Number of fields in the object.
  */
 export const countObjectFields = <T extends GenericObject>(obj: T): number => {
-	if (obj != null) return Object.keys(obj).length;
+	if (obj != null) return Object.keys(obj)?.length;
 
 	return 0;
 };

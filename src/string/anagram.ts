@@ -8,8 +8,8 @@ export function generateAnagrams(
 	word: string,
 	limit: number | 'all' = 100,
 ): Lowercase<string>[] {
-	if (word.length <= 1) {
-		return [word.toLowerCase() as Lowercase<string>];
+	if (word?.length <= 1) {
+		return [word?.toLowerCase() as Lowercase<string>];
 	}
 
 	const uniqueAnagrams = new Set<string>();
@@ -20,17 +20,17 @@ export function generateAnagrams(
 	 * @param remaining Remaining characters to process.
 	 */
 	const _permute = (str: string, remaining: string) => {
-		if (!remaining.length) {
+		if (!remaining?.length) {
 			uniqueAnagrams.add(str);
 			return;
 		}
 
-		for (let i = 0; i < remaining.length; i++) {
+		for (let i = 0; i < remaining?.length; i++) {
 			if (limit !== 'all' && uniqueAnagrams.size >= limit) return;
 
 			_permute(
 				str + remaining[i],
-				remaining.slice(0, i) + remaining.slice(i + 1),
+				remaining?.slice(0, i) + remaining?.slice(i + 1),
 			);
 		}
 	};

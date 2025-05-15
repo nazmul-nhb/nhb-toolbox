@@ -90,13 +90,13 @@ export const convertToDecimal = <T extends boolean | undefined = false>(
  * @returns The HCF/GCD of all the provided numbers.
  */
 export const calculateHCF = (...numbers: Numeric[]): number => {
-	const converted = numbers.map(Number);
+	const converted = numbers?.map(Number);
 
-	if (converted.length === 0) return 0;
+	if (converted?.length === 0) return 0;
 
 	let hcf = converted[0];
 
-	for (let i = 1; i < converted.length; i++) {
+	for (let i = 1; i < converted?.length; i++) {
 		hcf = _find2NumbersHCF(hcf, converted[i]);
 	}
 
@@ -110,13 +110,13 @@ export const calculateHCF = (...numbers: Numeric[]): number => {
  * @returns The LCM/LCD of all the provided numbers.
  */
 export const calculateLCM = (...numbers: Numeric[]): number => {
-	const converted = numbers.map(Number);
+	const converted = numbers?.map(Number);
 
-	if (converted.length === 0) return 0;
+	if (converted?.length === 0) return 0;
 
 	let lcm = converted[0];
 
-	for (let i = 1; i < converted.length; i++) {
+	for (let i = 1; i < converted?.length; i++) {
 		lcm = _find2NumbersLCM(lcm, converted[i]);
 	}
 
@@ -144,8 +144,8 @@ export function sumDigits(num: Numeric): number {
  */
 export function sumNumbers(...numbers: Numeric[]): number {
 	return numbers
-		.map((num) => Number(num))
-		.reduce((sum, number) => sum + number, 0);
+		?.map((num) => Number(num))
+		?.reduce((sum, number) => sum + number, 0);
 }
 
 /**

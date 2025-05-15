@@ -32,7 +32,7 @@ export function naturalSort(
 		for (const char of str) {
 			const charIsNum = !Number.isNaN(Number(char));
 
-			if (current.length === 0) {
+			if (current?.length === 0) {
 				current = char;
 				isNumeric = charIsNum;
 				continue;
@@ -41,14 +41,14 @@ export function naturalSort(
 			if (charIsNum === isNumeric) {
 				current += char;
 			} else {
-				chunks.push(isNumeric ? Number(current) : current);
+				chunks?.push(isNumeric ? Number(current) : current);
 				current = char;
 				isNumeric = charIsNum;
 			}
 		}
 
-		if (current.length > 0) {
-			chunks.push(isNumeric ? Number(current) : current);
+		if (current?.length > 0) {
+			chunks?.push(isNumeric ? Number(current) : current);
 		}
 
 		return chunks;
@@ -57,7 +57,7 @@ export function naturalSort(
 	const aChunks = _createChunks(a);
 	const bChunks = _createChunks(b);
 
-	for (let i = 0; i < Math.min(aChunks.length, bChunks.length); i++) {
+	for (let i = 0; i < Math.min(aChunks?.length, bChunks?.length); i++) {
 		let aChunk = aChunks[i];
 		let bChunk = bChunks[i];
 
@@ -67,8 +67,8 @@ export function naturalSort(
 			typeof aChunk === 'string' &&
 			typeof bChunk === 'string'
 		) {
-			aChunk = aChunk.toLowerCase();
-			bChunk = bChunk.toLowerCase();
+			aChunk = aChunk?.toLowerCase();
+			bChunk = bChunk?.toLowerCase();
 		}
 
 		// Compare types: number vs string
@@ -94,5 +94,5 @@ export function naturalSort(
 		}
 	}
 
-	return aChunks.length - bChunks.length;
+	return aChunks?.length - bChunks?.length;
 }

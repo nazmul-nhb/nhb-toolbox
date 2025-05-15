@@ -30,8 +30,8 @@ export const generateRandomHSLColor = (maxColors: number = 16): HSL => {
 	recentColors.push(color);
 
 	// Limit the recent colors to the last `maxColors` to avoid excessive memory usage
-	if (recentColors.length > maxColors) {
-		recentColors.shift();
+	if (recentColors?.length > maxColors) {
+		recentColors?.shift();
 	}
 
 	return color;

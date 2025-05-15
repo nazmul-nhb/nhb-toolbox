@@ -72,9 +72,9 @@ export function getDuplicates<T>(array: T[]): T[] {
 		const hasDuplicate = duplicates?.find((el) => isDeepEqual(el, item));
 
 		if (hasSeen && !hasDuplicate) {
-			duplicates.push(item);
+			duplicates?.push(item);
 		} else if (!hasSeen) {
-			seen.push(item);
+			seen?.push(item);
 		}
 	}
 

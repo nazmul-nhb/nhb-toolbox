@@ -73,6 +73,15 @@ export function isSymbol(value: unknown): value is symbol {
 }
 
 /**
+ * * Type guard to check if a value is a BigInt.
+ * @param value - The value to check.
+ * @returns `true` if the value is a BigInt, otherwise `false`.
+ */
+export function isBigInt(value: unknown): value is bigint {
+	return typeof value === 'bigint';
+}
+
+/**
  * * Type guard to check if a value is a primitive (i.e. `string | number | boolean | symbol | bigint | null | undefined`).
  * @param value - The value to check.
  * @returns `true` if the value is a primitive, otherwise `false`.

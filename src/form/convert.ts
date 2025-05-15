@@ -39,7 +39,7 @@ export const createControlledFormData = <T extends GenericObject>(
 	/** - Helper to check if a key should be lowercase */
 	const shouldLowercaseKeys = (key: string) => {
 		return Array.isArray(configs?.lowerCaseKeys) ?
-				configs.lowerCaseKeys.some(
+				configs?.lowerCaseKeys?.some(
 					(path) => key === path || key.startsWith(`${path}.`),
 				)
 			:	configs?.lowerCaseKeys === '*';
@@ -48,8 +48,8 @@ export const createControlledFormData = <T extends GenericObject>(
 	/** - Helper to check if a key should be lowercase */
 	const shouldLowercaseValue = (key: string) => {
 		return Array.isArray(configs?.lowerCaseValues) ?
-				configs.lowerCaseValues.some(
-					(path) => key === path || key.startsWith(`${path}.`),
+				configs.lowerCaseValues?.some(
+					(path) => key === path || key?.startsWith(`${path}.`),
 				)
 			:	configs?.lowerCaseValues === '*';
 	};
@@ -64,10 +64,10 @@ export const createControlledFormData = <T extends GenericObject>(
 		const transformedKey = _transformKey(key);
 
 		return Array.isArray(configs?.requiredKeys) ?
-				configs.requiredKeys.some(
+				configs?.requiredKeys?.some(
 					(path) =>
 						transformedKey === path ||
-						transformedKey.startsWith(`${path}.`),
+						transformedKey?.startsWith(`${path}.`),
 				)
 			:	configs?.requiredKeys === '*';
 	};
@@ -139,7 +139,7 @@ export const createControlledFormData = <T extends GenericObject>(
 					}
 				} else {
 					if (typeof value === 'string') {
-						acc[transformedKey] = value.toLowerCase();
+						acc[transformedKey] = value?.toLowerCase();
 					} else if (Array.isArray(value)) {
 						if (isRequiredKey(fullKey) || isValidArray(value)) {
 							acc[transformedKey] = value;
@@ -162,41 +162,41 @@ export const createControlledFormData = <T extends GenericObject>(
 		const transformedKey = _transformKey(key);
 
 		if (isCustomFileArray(value)) {
-			value.forEach((file) =>
-				formData.append(transformedKey, file.originFileObj),
+			value?.forEach((file) =>
+				formData.append(transformedKey, file?.originFileObj),
 			);
 		} else if (isFileUpload(value)) {
-			if (value.fileList) {
-				value.fileList.forEach((file) =>
-					formData.append(transformedKey, file.originFileObj),
+			if (value?.fileList) {
+				value?.fileList.forEach((file) =>
+					formData.append(transformedKey, file?.originFileObj),
 				);
-			} else if (value.file) {
-				if (isCustomFile(value.file)) {
-					formData.append(transformedKey, value.file.originFileObj);
+			} else if (value?.file) {
+				if (isCustomFile(value?.file)) {
+					formData.append(transformedKey, value?.file?.originFileObj);
 				} else {
-					formData.append(transformedKey, value.file);
+					formData.append(transformedKey, value?.file);
 				}
 			}
 		} else if (isFileOrBlob(value)) {
 			formData.append(transformedKey, value);
 		} else if (isFileList(value)) {
-			for (let i = 0; i < value.length; i++) {
+			for (let i = 0; i < value?.length; i++) {
 				formData.append(transformedKey, value.item(i)!);
 			}
 		} else if (Array.isArray(value)) {
 			if (isFileArray(value)) {
 				if (shouldBreakArray(key)) {
-					value.forEach((item, index) => {
+					value?.forEach((item, index) => {
 						_addToFormData(`${transformedKey}[${index}]`, item);
 					});
 				} else {
-					value.forEach((item) => {
+					value?.forEach((item) => {
 						formData.append(transformedKey, item);
 					});
 				}
 			} else if (isValidArray(value)) {
 				if (shouldBreakArray(key)) {
-					value.forEach((item, index) => {
+					value?.forEach((item, index) => {
 						_addToFormData(`${transformedKey}[${index}]`, item);
 					});
 				} else {
@@ -228,7 +228,7 @@ export const createControlledFormData = <T extends GenericObject>(
 
 			if (isNotNullish || isRequiredKey(key)) {
 				if (typeof value === 'string' && shouldLowercaseValue(key)) {
-					formData.append(transformedKey, value.toLowerCase());
+					formData.append(transformedKey, value?.toLowerCase());
 				} else {
 					// ! CONFUSED UNGA-BUNGA
 					formData.append(transformedKey, value as Blob);
@@ -252,7 +252,7 @@ export const createControlledFormData = <T extends GenericObject>(
 
 			// * Trim string values if trimStrings is enabled
 			if (configs?.trimStrings && typeof value === 'string') {
-				value = value.trim();
+				value = value?.trim();
 			}
 
 			// * Check if this key is preserved as dot-notation

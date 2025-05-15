@@ -4,7 +4,7 @@
  * @returns An array of numbers found in the string.
  */
 export const extractNumbersFromString = (input: string): number[] => {
-	return (input.match(/\d+/g) || []).map(Number);
+	return (input.match(/\d+/g) || [])?.map(Number);
 };
 
 /**
@@ -14,8 +14,8 @@ export const extractNumbersFromString = (input: string): number[] => {
  * @returns The Levenshtein distance between the two strings.
  */
 export const getLevenshteinDistance = (a: string, b: string): number => {
-	const lenA = a.length;
-	const lenB = b.length;
+	const lenA = a?.length;
+	const lenB = b?.length;
 	const dp: number[][] = Array.from({ length: lenA + 1 }, (_, i) =>
 		Array.from({ length: lenB + 1 }, (_, j) =>
 			i === 0 ? j
@@ -43,5 +43,5 @@ export const getLevenshteinDistance = (a: string, b: string): number => {
  * @returns Number of words (Unicode-aware).
  */
 export function countWords(text: string): number {
-	return (text.match(/\p{L}[\p{L}\p{M}\p{Pd}'’]*|\p{N}+/gu) || []).length;
+	return (text?.match(/\p{L}[\p{L}\p{M}\p{Pd}'’]*|\p{N}+/gu) || [])?.length;
 }

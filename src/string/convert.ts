@@ -29,33 +29,33 @@ import type { CaseFormat, MaskOptions } from './types';
 export function convertStringCase(string: string, format: CaseFormat): string {
 	if (!string || typeof string !== 'string') return '';
 
-	const start = string.match(/^[^\d\w\s]+/)?.[0] || '';
-	const end = string.match(/[^\d\w\s]+$/)?.[0] || '';
-	const core = string.replace(/^[^\d\w\s]+|[^\w\s]+$/g, '').trim();
+	const start = string?.match(/^[^\d\w\s]+/)?.[0] || '';
+	const end = string?.match(/[^\d\w\s]+$/)?.[0] || '';
+	const core = string?.replace(/^[^\d\w\s]+|[^\w\s]+$/g, '').trim();
 
 	const titleCase = core
-		.split(/\s+/g)
-		.map((part) => {
+		?.split(/\s+/g)
+		?.map((part) => {
 			const startSymbol = part.match(/^[^\d\w\s]+/)?.[0] || ''; // Capture leading symbols
 			const endSymbol = part.match(/[^\d\w\s]+$/)?.[0] || ''; // Capture trailing symbols
 			const coreWord = part.replace(/^[^\d\w\s]+|[^\d\w\s]+$/g, ''); // Remove them for processing
 
-			if (LOWERCASE.includes(coreWord.toLowerCase())) {
-				return startSymbol + coreWord.toLowerCase() + endSymbol;
+			if (LOWERCASE.includes(coreWord?.toLowerCase())) {
+				return startSymbol + coreWord?.toLowerCase() + endSymbol;
 			}
 
 			return (
 				startSymbol +
-				coreWord.charAt(0).toUpperCase() +
-				coreWord.slice(1).toLowerCase() +
+				coreWord?.charAt(0)?.toUpperCase() +
+				coreWord?.slice(1)?.toLowerCase() +
 				endSymbol
 			);
 		})
 		.join(' ');
 
-	const formattedString = string.replace(
+	const formattedString = string?.replace(
 		/[^a-zA-Z0-9]+(.)?/g,
-		(_, chr: string) => (chr ? chr.toUpperCase() : ''),
+		(_, chr: string) => (chr ? chr?.toUpperCase() : ''),
 	);
 
 	if (!formattedString) return '';
@@ -137,7 +137,7 @@ export const replaceAllInString = (
 			new RegExp(find, 'g')
 		:	new RegExp(
 				find,
-				find.flags.includes('g') ? find.flags : find.flags + 'g',
+				find?.flags.includes('g') ? find?.flags : find?.flags + 'g',
 			);
 
 	return trimmedString?.replace(regex, replace);
@@ -150,9 +150,9 @@ export const replaceAllInString = (
  */
 export const slugifyString = (input: string): Lowercase<string> => {
 	return trimString(input)
-		.toLowerCase()
-		.replace(/[^a-z0-9]+/g, '-')
-		.replace(/^-+|-+$/g, '') as Lowercase<string>;
+		?.toLowerCase()
+		?.replace(/[^a-z0-9]+/g, '-')
+		?.replace(/^-+|-+$/g, '') as Lowercase<string>;
 };
 
 /**
@@ -166,13 +166,13 @@ export const maskString = (input: string, options?: MaskOptions): string => {
 
 	const trimmedString = trimString(input);
 
-	if (trimmedString.length <= start + end) {
-		return maskChar.repeat(trimmedString.length);
+	if (trimmedString?.length <= start + end) {
+		return maskChar?.repeat(trimmedString?.length);
 	}
 
 	return (
 		trimmedString.slice(0, start) +
-		maskChar.repeat(trimmedString.length - start - end) +
+		maskChar?.repeat(trimmedString?.length - start - end) +
 		(end > 0 ? trimmedString.slice(-end) : '')
 	);
 };
@@ -185,7 +185,7 @@ export const maskString = (input: string, options?: MaskOptions): string => {
 export const reverseString = (input: string): string => {
 	const trimmedString = trimString(input);
 
-	return trimmedString.split('').reverse().join('');
+	return trimmedString?.split('')?.reverse()?.join('');
 };
 
 /**
@@ -212,7 +212,7 @@ export function extractEmails(str: string): string[] {
  * @returns An array of extracted URLs.
  */
 export function extractURLs(str: string): string[] {
-	return str.match(/https?:\/\/[^\s/$.?#].[^\s]*/g) || [];
+	return str?.match(/https?:\/\/[^\s/$.?#].[^\s]*/g) || [];
 }
 
 /**

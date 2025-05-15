@@ -120,7 +120,7 @@ export function sanitizeData<
 	 */
 	const _processArray = (arr: unknown[], path: string): unknown[] => {
 		return arr
-			.map((item) => {
+			?.map((item) => {
 				if (isString(item) && trimStrings) {
 					return trimString(item);
 				}
@@ -136,7 +136,7 @@ export function sanitizeData<
 
 				return item;
 			})
-			.filter((v) => {
+			?.filter((v) => {
 				if (ignoreNullish && v == null) return false;
 				if (ignoreFalsy && !v) return false;
 				if (_skipObject(v) && !isRequiredKey(path)) return false;
@@ -194,7 +194,7 @@ export function sanitizeData<
 				if (
 					!ignoreEmpty ||
 					isRequiredKey(fullKeyPath) ||
-					processedArray.length > 0
+					processedArray?.length > 0
 				) {
 					acc[key as keyof T] = processedArray as T[keyof T];
 				}
@@ -220,8 +220,8 @@ export function sanitizeData<
 
 		// * Handle arrays with nested strings/arrays/objects
 		return input
-			.map((item) => sanitizeData(item, options, _return))
-			.filter((val) => {
+			?.map((item) => sanitizeData(item, options, _return))
+			?.filter((val) => {
 				if (ignoreNullish && val == null) return false;
 				if (ignoreFalsy && !val) return false;
 				if (_skipObject(val)) return false;
@@ -256,7 +256,7 @@ export function parseObjectValues<T extends GenericObject>(
 ): { [K in keyof T]: Any } {
 	function _deepParseValues(data: unknown): unknown {
 		if (Array.isArray(data)) {
-			return data.map(_deepParseValues);
+			return data?.map(_deepParseValues);
 		} else if (isNotEmptyObject(data)) {
 			const result: Record<string, unknown> = {};
 
@@ -289,7 +289,7 @@ export function parseObjectValues<T extends GenericObject>(
 	const parsedBody: GenericObject = {};
 
 	if (isNotEmptyObject(object)) {
-		Object.entries(object).forEach(([key, value]) => {
+		Object.entries(object)?.forEach(([key, value]) => {
 			parsedBody[key] = _deepParseValues(value);
 		});
 	}

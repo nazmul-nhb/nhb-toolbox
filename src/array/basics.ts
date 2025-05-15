@@ -34,8 +34,8 @@ export const filterArrayOfObjects = <T extends GenericObject>(
 		throw new Error('The provided input is not a valid array!');
 	}
 
-	return array.filter((item) =>
-		Object.entries(conditions).every(([key, conditionFn]) => {
+	return array?.filter((item) =>
+		Object.entries(conditions)?.every(([key, conditionFn]) => {
 			if (typeof conditionFn === 'function') {
 				return conditionFn(
 					item[key as keyof T] as T[keyof T] | undefined,
@@ -55,13 +55,13 @@ export const filterArrayOfObjects = <T extends GenericObject>(
 export const isInvalidOrEmptyArray = <T>(value: T): boolean => {
 	if (!Array.isArray(value)) return true;
 
-	if (value.length === 0) return true;
+	if (value?.length === 0) return true;
 
-	return value.every(
+	return value?.every(
 		(item) =>
 			item == null ||
-			(Array.isArray(item) && item.length === 0) ||
-			(typeof item === 'object' && Object.keys(item || {}).length === 0),
+			(Array.isArray(item) && item?.length === 0) ||
+			(typeof item === 'object' && Object.keys(item || {})?.length === 0),
 	);
 };
 
@@ -76,7 +76,7 @@ export const shuffleArray = <T>(array: T[]): T[] => {
 
 	const shuffled = structuredClone(array);
 
-	for (let i = shuffled.length - 1; i > 0; i--) {
+	for (let i = shuffled?.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));
 		[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
 	}

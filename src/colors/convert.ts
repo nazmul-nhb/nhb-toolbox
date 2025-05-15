@@ -124,11 +124,11 @@ export const convertHslToHex = (h: number, s: number, l: number): Hex6 => {
 export const convertHexToHsl = (hex: Hex6 | Hex): HSL => {
 	let newHex = hex.replace('#', '');
 
-	if (newHex.length === 3) {
+	if (newHex?.length === 3) {
 		newHex = newHex
-			.split('')
-			.map((char) => char + char)
-			.join('');
+			?.split('')
+			?.map((char) => char + char)
+			?.join('');
 	}
 
 	const r = parseInt(newHex.slice(0, 2), 16);
@@ -148,9 +148,9 @@ export const convertHexToHsl = (hex: Hex6 | Hex): HSL => {
  */
 export const convertRgbToHex = (r: number, g: number, b: number): Hex6 => {
 	const hex = [r, g, b]
-		.map((v) => v.toString(16).padStart(2, '0'))
-		.join('')
-		.toUpperCase();
+		?.map((v) => v.toString(16).padStart(2, '0'))
+		?.join('')
+		?.toUpperCase();
 
 	return `#${hex}` as Hex6;
 };
@@ -165,11 +165,11 @@ export const convertHexToRgb = (hex: Hex6 | Hex | string): RGB => {
 	// Remove the # if present
 	let newHex = hex.replace('#', '');
 
-	if (newHex.length === 3) {
+	if (newHex?.length === 3) {
 		newHex = newHex
-			.split('')
-			.map((char) => char + char)
-			.join('');
+			?.split('')
+			?.map((char) => char + char)
+			?.join('');
 	}
 
 	const r = parseInt(newHex.slice(0, 2), 16);

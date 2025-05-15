@@ -31,8 +31,8 @@ export const isDeepEqual = <T>(a: T, b: T): boolean => {
 
 	// Check for array equality
 	if (Array.isArray(a) && Array.isArray(b)) {
-		if (a.length !== b.length) return false;
-		return a.every((element, index) => isDeepEqual(element, b[index]));
+		if (a?.length !== b?.length) return false;
+		return a?.every((element, index) => isDeepEqual(element, b[index]));
 	}
 
 	// Check for object equality
@@ -40,9 +40,9 @@ export const isDeepEqual = <T>(a: T, b: T): boolean => {
 		const aKeys = Object.keys(a);
 		const bKeys = Object.keys(b);
 
-		if (aKeys.length !== bKeys.length) return false;
+		if (aKeys?.length !== bKeys?.length) return false;
 
-		return aKeys.every((key) =>
+		return aKeys?.every((key) =>
 			isDeepEqual((a as GenericObject)[key], (b as GenericObject)[key]),
 		);
 	}
@@ -173,7 +173,7 @@ export function getStaticMethodNames(cls: Constructor): string[] {
  * @returns The number of instance methods defined on the class prototype.
  */
 export function countInstanceMethods(cls: Constructor): number {
-	return getInstanceMethodNames(cls).length;
+	return getInstanceMethodNames(cls)?.length;
 }
 
 /**
@@ -183,7 +183,7 @@ export function countInstanceMethods(cls: Constructor): number {
  * @returns The number of static methods defined on the class constructor.
  */
 export function countStaticMethods(cls: Constructor): number {
-	return getStaticMethodNames(cls).length;
+	return getStaticMethodNames(cls)?.length;
 }
 
 /**
@@ -199,9 +199,9 @@ export function getClassDetails(cls: Constructor): ClassDetails {
 	return {
 		instanceNames,
 		staticNames,
-		instances: instanceNames.length,
-		statics: staticNames.length,
-		total: instanceNames.length + staticNames.length,
+		instances: instanceNames?.length,
+		statics: staticNames?.length,
+		total: instanceNames?.length + staticNames?.length,
 	};
 }
 
@@ -243,7 +243,7 @@ export const parseJSON = <T = unknown>(
  */
 export function deepParsePrimitives<T = unknown>(input: unknown): T {
 	if (Array.isArray(input)) {
-		return input.map(deepParsePrimitives) as T;
+		return input?.map(deepParsePrimitives) as T;
 	}
 
 	if (isObject(input)) {
@@ -258,7 +258,7 @@ export function deepParsePrimitives<T = unknown>(input: unknown): T {
 
 	if (isString(input)) {
 		if (/^(true|false)$/i.test(input)) {
-			return (input.toLowerCase() === 'true') as T;
+			return (input?.toLowerCase() === 'true') as T;
 		}
 
 		if (isNumericString(input)) {

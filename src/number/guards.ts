@@ -58,5 +58,5 @@ export function isFibonacci(num: number): boolean {
  * @returns `true` if any input is not finite.
  */
 export function areInvalidNumbers(...numbers: number[]): boolean {
-	return numbers.some((n) => !Number.isFinite(n));
+	return numbers?.some((n) => !Number.isFinite(n));
 }

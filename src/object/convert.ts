@@ -82,8 +82,8 @@ export function convertObjectValues<
 
 		let current: Any = obj;
 
-		segments.forEach((key, index) => {
-			if (index === segments.length - 1) {
+		segments?.forEach((key, index) => {
+			if (index === segments?.length - 1) {
 				const value = current[key];
 
 				if (_shouldPreserveValue(value)) {
@@ -116,7 +116,7 @@ export function convertObjectValues<
 	const _convertValue = (obj: T): T => {
 		let newObj = structuredClone(obj);
 
-		keys.forEach((key) => {
+		keys?.forEach((key) => {
 			newObj = _setValueAtPath(newObj, key, convertTo);
 		});
 
@@ -124,7 +124,7 @@ export function convertObjectValues<
 	};
 
 	if (Array.isArray(data)) {
-		return data.map((d) => _convertValue(d)) as C extends 'string' ?
+		return data?.map((d) => _convertValue(d)) as C extends 'string' ?
 			Stringified<T>[]
 		: C extends 'number' ? Numberified<T>[]
 		: never;
@@ -156,7 +156,7 @@ export function pickFields<T extends GenericObject, U extends keyof T>(
 ): { [K in U]: T[K] } {
 	const result = {} as { [K in U]: T[K] };
 
-	keys.forEach((key) => {
+	keys?.forEach((key) => {
 		result[key] = source[key];
 	});
 
@@ -182,7 +182,7 @@ export function pickObjectFieldsByCondition<T extends GenericObject>(
 ): Partial<T> {
 	const result: Partial<T> = {};
 
-	Object.entries(source).forEach(([key, value]) => {
+	Object.entries(source)?.forEach(([key, value]) => {
 		if (condition(key as keyof T, value)) {
 			result[key as keyof T] = value;
 		}

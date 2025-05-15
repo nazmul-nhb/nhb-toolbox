@@ -11,7 +11,7 @@ export const _applyMultiples = (
 	multiples?: number,
 ): number[] => {
 	if (!multiples) return array;
-	return array.filter((n) => n % multiples === 0);
+	return array?.filter((n) => n % multiples === 0);
 };
 
 /**

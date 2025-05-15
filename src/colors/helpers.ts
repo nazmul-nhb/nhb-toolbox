@@ -58,10 +58,10 @@ export const _isSimilarToLast = (
 	recentColors: string[],
 	newColor: string,
 ): boolean => {
-	if (recentColors.length === 0) return false;
+	if (recentColors?.length === 0) return false;
 
 	const newHSL = newColor.match(/hsl\((\d+), (\d+)%, (\d+)%\)/);
-	const lastHSL = recentColors[recentColors.length - 1].match(
+	const lastHSL = recentColors[recentColors?.length - 1].match(
 		/hsl\((\d+), (\d+)%, (\d+)%\)/,
 	);
 

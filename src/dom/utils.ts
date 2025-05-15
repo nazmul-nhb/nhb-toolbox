@@ -60,7 +60,7 @@ export async function copyToClipboard(text: string): Promise<void> {
 			document.body.appendChild(textArea);
 
 			textArea.select();
-			textArea.setSelectionRange(0, textArea.value.length);
+			textArea.setSelectionRange(0, textArea.value?.length);
 
 			const success = document.execCommand('copy');
 
