@@ -1,4 +1,4 @@
-import type { FalsyPrimitive } from '../types';
+import type { FalsyPrimitive, NormalPrimitive, Primitive } from '../types';
 
 /**
  * * Type guard to check if a value is a number.
@@ -73,18 +73,33 @@ export function isSymbol(value: unknown): value is symbol {
 }
 
 /**
- * * Type guard to check if a value is a primitive.
+ * * Type guard to check if a value is a primitive (i.e. `string | number | boolean | symbol | bigint | null | undefined`).
  * @param value - The value to check.
  * @returns `true` if the value is a primitive, otherwise `false`.
  */
-export function isPrimitive(
-	value: unknown,
-): value is string | number | boolean | symbol | null | undefined {
+export function isPrimitive(value: unknown): value is Primitive {
 	return (
 		value === null ||
-		['string', 'number', 'boolean', 'symbol', 'undefined'].includes(
-			typeof value,
-		)
+		[
+			'string',
+			'number',
+			'boolean',
+			'symbol',
+			'bigint',
+			'undefined',
+		].includes(typeof value)
+	);
+}
+
+/**
+ * * Type guard to check if a value is a normal primitive (i.e. `string | number | boolean | null | undefined`).
+ * @param value - The value to check.
+ * @returns `true` if the value is a primitive, otherwise `false`.
+ */
+export function isNormalPrimitive(value: unknown): value is NormalPrimitive {
+	return (
+		value === null ||
+		['string', 'number', 'boolean', 'undefined'].includes(typeof value)
 	);
 }
 

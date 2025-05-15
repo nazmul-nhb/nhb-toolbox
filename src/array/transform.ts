@@ -1,7 +1,7 @@
 import { isNumber } from '../guards/primitives';
 import type { GenericObject } from '../object/types';
 import { isDeepEqual } from '../utils';
-import type { OptionsConfig } from './types';
+import type { FieldValue, Option, OptionsConfig } from './types';
 
 /**
  * * Converts an array of objects into a formatted array of options.
@@ -18,53 +18,29 @@ export const createOptionsArray = <
 >(
 	data: T[],
 	config: OptionsConfig<T, K1, K2, V>,
-): Array<{
-	[P in K1 | K2]: P extends K1 ?
-		V extends true ?
-			T[OptionsConfig<T, K1, K2, V>['firstFieldKey']] extends string ?
-				string
-			:	number
-		:	string
-	:	string;
-}> => {
+): Array<{ [P in K1 | K2]: FieldValue<P, T, K1, K2, V> }> => {
 	const {
 		firstFieldKey,
 		secondFieldKey,
 		firstFieldName = 'value' as K1,
 		secondFieldName = 'label' as K2,
-		numberAsNumber = false,
+		retainNumberValue = false,
 	} = config || {};
 
 	if (data && data?.length) {
-		return data?.map((datum) => ({
-			[firstFieldName]:
-				numberAsNumber && isNumber(datum[firstFieldKey]) ?
+		return data?.map((datum) => {
+			const firstValue =
+				retainNumberValue && isNumber(datum[firstFieldKey]) ?
 					datum[firstFieldKey]
-				:	String(datum[firstFieldKey] ?? ''),
-			[secondFieldName]: String(datum[secondFieldKey] ?? ''),
-		})) as Array<{
-			[P in K1 | K2]: P extends K1 ?
-				V extends true ?
-					T[OptionsConfig<T, K1, K2, V>['firstFieldKey']] extends (
-						string
-					) ?
-						string
-					:	number
-				:	string
-			:	string;
-		}>;
+				:	String(datum[firstFieldKey] ?? '');
+
+			return {
+				[firstFieldName]: firstValue,
+				[secondFieldName]: String(datum[secondFieldKey] ?? ''),
+			};
+		}) as Array<Option<T, K1, K2, V>>;
 	} else {
-		return [] as Array<{
-			[P in K1 | K2]: P extends K1 ?
-				V extends true ?
-					T[OptionsConfig<T, K1, K2, V>['firstFieldKey']] extends (
-						string
-					) ?
-						string
-					:	number
-				:	string
-			:	string;
-		}>;
+		return [] as Array<Option<T, K1, K2, V>>;
 	}
 };
 
@@ -75,9 +51,9 @@ export const createOptionsArray = <
  * @returns A new array with duplicates removed.
  */
 export function removeDuplicatesFromArray<T>(array: T[]): T[] {
-	return array.filter(
+	return array?.filter(
 		(item, index, self) =>
-			index === self.findIndex((el) => isDeepEqual(el, item)),
+			index === self?.findIndex((el) => isDeepEqual(el, item)),
 	);
 }
 
@@ -92,8 +68,8 @@ export function getDuplicates<T>(array: T[]): T[] {
 	const duplicates: T[] = [];
 
 	for (const item of array) {
-		const hasSeen = seen.find((el) => isDeepEqual(el, item));
-		const hasDuplicate = duplicates.find((el) => isDeepEqual(el, item));
+		const hasSeen = seen?.find((el) => isDeepEqual(el, item));
+		const hasDuplicate = duplicates?.find((el) => isDeepEqual(el, item));
 
 		if (hasSeen && !hasDuplicate) {
 			duplicates.push(item);
@@ -127,10 +103,10 @@ export function findMissingElements<T, U>(
 	array2: U[],
 	missingFrom: 'from-first' | 'from-second',
 ): (T | U)[] {
-	const source = missingFrom === 'from-first' ? array1 : array2;
-	const target = missingFrom === 'from-first' ? array2 : array1;
+	const source = (missingFrom === 'from-first' ? array1 : array2) ?? [];
+	const target = (missingFrom === 'from-first' ? array2 : array1) ?? [];
 
-	return source.filter((s) => !target.some((t) => isDeepEqual(t, s)));
+	return source.filter((s) => !target?.some((t) => isDeepEqual(t, s)));
 }
 
 /**
@@ -143,7 +119,7 @@ export function findMissingElements<T, U>(
 export function splitArray<T>(arr: T[], chunkSize: number): T[][] {
 	const result: T[][] = [];
 
-	for (let i = 0; i < arr.length; i += chunkSize) {
+	for (let i = 0; i < arr?.length; i += chunkSize) {
 		result.push(arr.slice(i, i + chunkSize));
 	}
 
@@ -158,7 +134,7 @@ export function splitArray<T>(arr: T[], chunkSize: number): T[][] {
  * @returns The rotated array.
  */
 export function rotateArray<T>(arr: T[], steps: number): T[] {
-	const length = arr.length;
+	const length = arr?.length;
 
 	if (length === 0) return arr;
 

@@ -191,3 +191,27 @@
 // };
 
 // export type ParsedObject<T extends GenericObject> = { [K in keyof T]: Any };
+
+// /** Type for first field key */
+// export type FirstFieldKey<
+//     T extends GenericObject,
+//     K1 extends string = 'value',
+//     K2 extends string = 'label',
+//     V extends boolean = false,
+// > = T[OptionsConfig<T, K1, K2, V>['firstFieldKey']];
+
+// /** TYpe for first field value */
+// export type FirstFieldValue<
+//     T extends GenericObject,
+//     K1 extends string = 'value',
+//     K2 extends string = 'label',
+//     V extends boolean = false,
+// > = V extends true ? FirstFieldKey<T, K1, K2, V> : string;
+
+// /** Type of an option in `OptionsArray` */
+// export type Option<
+//     T extends GenericObject,
+//     K1 extends string = 'value',
+//     K2 extends string = 'label',
+//     V extends boolean = false,
+// > = { [P in K1 | K2]: P extends K1 ? FirstFieldValue<T, K1, K2, V> : string };

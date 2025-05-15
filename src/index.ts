@@ -364,6 +364,7 @@ export {
 	isFalsy,
 	isInteger,
 	isNonEmptyString,
+	isNormalPrimitive,
 	isNull,
 	isNumber,
 	isPositiveInteger,

@@ -13,12 +13,22 @@ export type FlattenPartial<T> = Partial<{ [K in keyof T]: T[K] }>;
 /** Union of `number` and numeric string */
 export type Numeric = number | `${number}`;
 
-/** Union of Primitive Types */
-export type Primitive = string | number | boolean | null | undefined;
+/** Union of All Primitive Types (i.e. `string | number | boolean | symbol | bigint | null | undefined`) */
+export type Primitive =
+	| string
+	| number
+	| boolean
+	| symbol
+	| bigint
+	| null
+	| undefined;
 
-/** Extract primitive key(s) from an object */
-export type PrimitiveKey<T> = {
-	[K in keyof T]: T[K] extends Primitive ? K : never;
+/** Union of Normal Primitive Types (i.e. `string | number | boolean | null | undefined`) */
+export type NormalPrimitive = string | number | boolean | null | undefined;
+
+/** Extract normal primitive key(s) (i.e. `string | number | boolean | null | undefined`) from an object */
+export type NormalPrimitiveKey<T> = {
+	[K in keyof T]: T[K] extends NormalPrimitive ? K : never;
 }[keyof T];
 
 /**

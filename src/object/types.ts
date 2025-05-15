@@ -1,4 +1,4 @@
-import type { AdvancedTypes, HasMethods, Primitive } from '../types';
+import type { AdvancedTypes, HasMethods, NormalPrimitive } from '../types';
 
 /** - Generic object with `unknown` value */
 export type StrictObject = Record<string, unknown>;
@@ -10,7 +10,10 @@ export type GenericObject = Record<string, any>;
  * * Represents a value that can be used in a query object.
  * - Can be a primitive, an array of primitives, or a nested query object.
  */
-export type QueryObjectValue = Primitive | Primitive[] | QueryObject;
+export type QueryObjectValue =
+	| NormalPrimitive
+	| NormalPrimitive[]
+	| QueryObject;
 
 /**
  * * Represents a query object with string keys and `QueryObjectValue` values.
@@ -103,7 +106,10 @@ export type NestedPrimitiveKey<T> =
 		HasMethods<T> extends true ?
 			never
 		:	{
-				[K in keyof T & string]: NonNullable<T[K]> extends Primitive ? K
+				[K in keyof T & string]: NonNullable<T[K]> extends (
+					NormalPrimitive
+				) ?
+					K
 				: NonNullable<T[K]> extends GenericObject ?
 					`${K}.${NestedPrimitiveKey<NonNullable<T[K]>>}`
 				:	never;

@@ -1,9 +1,10 @@
 import type { GenericObject, NestedPrimitiveKey } from '../object/types';
-import type { PrimitiveKey } from '../types';
+import type { NormalPrimitiveKey } from '../types';
 
 /** * Flatten Array or Wrap in Array */
 export type Flattened<T> = T extends (infer U)[] ? Flattened<U> : T;
 
+// ! ======== TYPES FOR OPTIONS ARRAY START ======== //
 /**
  * * Configuration for `createOptionsArray`.
  * - Defines the mapping between keys in the input objects and the keys in the output options.
@@ -15,20 +16,20 @@ export type Flattened<T> = T extends (infer U)[] ? Flattened<U> : T;
  */
 export interface OptionsConfig<T, K1, K2, V extends boolean = false> {
 	/**
-	 * - The key in the input objects to use for the first field of the option.
+	 * - The key in the input objects to use for the first field of the option. Only primitive values (`string | number | boolean | null | undefined`) are accepted.
 	 * @example
 	 * // If the input objects have an `id` field and you want to use it as the `value` field in the output:
 	 * createOptionsArray(data, {firstFieldKey: 'id'}).
 	 */
-	firstFieldKey: PrimitiveKey<T>;
+	firstFieldKey: NormalPrimitiveKey<T>;
 
 	/**
-	 * - The key in the input objects to use for the second field of the option.
+	 * - The key in the input objects to use for the second field of the option. Only primitive values (`string | number | boolean | null | undefined`) are accepted.
 	 * @example
 	 * // If the input objects have a `name` field and you want to use it as the `label` field in the output:
 	 * createOptionsArray(data, {firstFieldKey: 'id', secondFieldKey: 'name'}).
 	 */
-	secondFieldKey: PrimitiveKey<T>;
+	secondFieldKey: NormalPrimitiveKey<T>;
 
 	/**
 	 * - The name of the first field in the output object.
@@ -49,15 +50,68 @@ export interface OptionsConfig<T, K1, K2, V extends boolean = false> {
 	secondFieldName?: K2;
 
 	/**
-	 * - If `true`, and the value from `firstFieldKey` is a number if it is originally number, it will be retained as a number.
-	 * - Otherwise, all values are converted to strings.
-	 * Defaults to `false`.
+	 * - If `true`, numeric values from `firstFieldKey` will remain as numbers.
+	 * - All other values (including booleans, null, undefined) will be converted to strings.
+	 * - When `false` (default), all values are converted to strings.
+	 * - Defaults to `false`.
 	 * @example
-	 * // Set `numberAsNumber: true` to keep numeric values (like `id`) as numbers instead of strings.
-	 * createOptionsArray(data, {firstFieldKey: 'id', secondFieldKey: 'name', numberAsNumber: true}).
+	 * // Numeric IDs remain as numbers
+	 * createOptionsArray(data, {
+	 *   firstFieldKey: 'id',
+	 *   secondFieldKey: 'name',
+	 *   retainNumberValue: true
+	 * });
+	 *
+	 * // All values become strings (default behavior)
+	 * createOptionsArray(data, {
+	 *   firstFieldKey: 'id',
+	 *   secondFieldKey: 'name'
+	 * });
 	 */
-	numberAsNumber?: V;
+	retainNumberValue?: V;
 }
+
+/** Type for first field key */
+export type FirstFieldKey<
+	T extends GenericObject,
+	K1 extends string = 'value',
+	K2 extends string = 'label',
+	V extends boolean = false,
+> = T[OptionsConfig<T, K1, K2, V>['firstFieldKey']];
+
+/** Type for firs field value */
+export type FirstFieldValue<
+	T extends GenericObject,
+	K1 extends string = 'value',
+	K2 extends string = 'label',
+	V extends boolean = false,
+> =
+	V extends true ?
+		FirstFieldKey<T, K1, K2, V> extends (
+			Exclude<FirstFieldKey<T, K1, K2, V>, number>
+		) ?
+			string
+		:	number
+	:	string;
+
+/** Type of values for the option fields */
+export type FieldValue<
+	P extends K1 | K2,
+	T extends GenericObject,
+	K1 extends string = 'value',
+	K2 extends string = 'label',
+	V extends boolean = false,
+> = P extends K1 ? FirstFieldValue<T, K1, K2, V> : string;
+
+/** Type of an option in `OptionsArray` */
+export type Option<
+	T extends GenericObject,
+	K1 extends string = 'value',
+	K2 extends string = 'label',
+	V extends boolean = false,
+> = { [P in K1 | K2]: FieldValue<P, T, K1, K2, V> };
+
+// ! ========= TYPES FOR OPTIONS ARRAY END ========= //
 
 /** * Option for sorting order. */
 export interface OrderOption {
