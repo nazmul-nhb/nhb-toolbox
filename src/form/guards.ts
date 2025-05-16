@@ -66,10 +66,10 @@ export function isCustomFileArray(value: unknown): value is CustomFile[] {
 }
 
 /**
- * * Checks if a given value is an array of `File` objects.
+ * * Checks if a given value is an array of `File/Blob` objects.
  * - **N.B.** Be cautious when using this in SSR (Server-Side Rendering) environments (such as `Next.js` Server Components), as it may not work as expected.
  * @param value - The value to check.
- * @returns `true` if the value is a valid `File[]`, otherwise `false`.
+ * @returns `true` if the value is a valid `File[]` or `Blob[]`, otherwise `false`.
  */
 export function isFileArray(value: unknown): value is File[] | Blob[] {
 	return (

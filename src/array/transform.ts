@@ -10,7 +10,7 @@ import type { FieldValue, Option, OptionsConfig } from './types';
  * @param config - The configuration object to specify the keys for the `value` (firstFieldName) and `label` (secondFieldName) fields and rename as needed.
  * @returns An array of options, where each option has `value` and `label` fields as default or as specified by user in the config options.
  */
-export const createOptionsArray = <
+export function createOptionsArray<
 	T extends GenericObject,
 	K1 extends string = 'value',
 	K2 extends string = 'label',
@@ -18,7 +18,7 @@ export const createOptionsArray = <
 >(
 	data: T[],
 	config: OptionsConfig<T, K1, K2, V>,
-): Array<{ [P in K1 | K2]: FieldValue<P, T, K1, K2, V> }> => {
+): Array<{ [P in K1 | K2]: FieldValue<P, T, K1, K2, V> }> {
 	const {
 		firstFieldKey,
 		secondFieldKey,
@@ -42,7 +42,7 @@ export const createOptionsArray = <
 	} else {
 		return [] as Array<Option<T, K1, K2, V>>;
 	}
-};
+}
 
 /**
  * * Removes duplicate values from an array, supporting deep comparison for objects and arrays.

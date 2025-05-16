@@ -51,7 +51,10 @@ export function sanitizeData<
  * @param _return - By default return type is as it is, passing this parameter `partial` makes the return type `Partial<T>`.
  * @returns A new sanitized array with the specified modifications.
  */
-export function sanitizeData<T, B extends PartialOrRequired = 'required'>(
+export function sanitizeData<
+	T extends GenericObject,
+	B extends PartialOrRequired = 'required',
+>(
 	array: T[],
 	options?: SanitizeOptions<T>,
 	_return?: B,
