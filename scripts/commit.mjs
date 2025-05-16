@@ -149,7 +149,7 @@ function isValidVersion(newVersion, oldVersion) {
 				newVersion = currentVersion;
 				console.info(
 					chalk.cyanBright(
-						`✅ Continuing with version ${chalk.yellow(newVersion)}`,
+						`❕Continuing with the previous version ${chalk.yellow(newVersion)}`,
 					),
 				);
 				break;
@@ -176,9 +176,19 @@ function isValidVersion(newVersion, oldVersion) {
 			break;
 		}
 
-		const commitMessage = await rl.question(
-			chalk.cyan('Enter commit message: '),
-		);
+		let commitMessage = '';
+
+		while (!commitMessage?.trim()) {
+			commitMessage = await rl.question(
+				chalk.cyan('Enter commit message (required): '),
+			);
+
+			if (!commitMessage?.trim()) {
+				console.info(
+					chalk.yellow('💀 Commit message cannot be empty!'),
+				);
+			}
+		}
 
 		rl.close();
 
