@@ -4,7 +4,7 @@ import { getRandomNumber } from './basics';
 import { isEven, isOdd } from './guards';
 import { _applyMultiples } from './helpers';
 import { isPrime } from './prime';
-import type { GetAs, NumberType, RangedNumbers, RangeOptions } from './types';
+import type { NumberType, RangedNumbers, RangeOptions } from './types';
 
 /**
  * * Function to get numbers within a range based on the provided `NumberType` and options.
@@ -14,18 +14,18 @@ import type { GetAs, NumberType, RangedNumbers, RangeOptions } from './types';
  * @param options - Options to configure number generation, including range and formatting.
  * @returns Either a string or an array of numbers.
  */
-export function getNumbersInRange<T extends GetAs>(
+export function getNumbersInRange<T extends boolean = false>(
 	type: NumberType = 'any',
 	options?: RangeOptions<T>,
 ): RangedNumbers<T> {
 	const {
-		getAs = 'array',
+		getAsString = false,
 		min = 0,
 		max = 100,
 		includeMin = true,
 		includeMax = true,
-		separator = ',',
-		multiplesOf: multiples,
+		separator = ', ',
+		multiplesOf,
 	} = options || {};
 
 	let output: number[] = [];
@@ -60,9 +60,9 @@ export function getNumbersInRange<T extends GetAs>(
 		return numbers;
 	};
 
-	if (type === 'prime' && multiples !== undefined) {
+	if (type === 'prime' && multiplesOf !== undefined) {
 		console.warn(
-			'Warning: The "multiples" option is ignored when the type is "prime"!',
+			'Warning: The "multiplesOf" option is ignored when the type is "prime"!',
 		);
 	}
 
@@ -102,10 +102,10 @@ export function getNumbersInRange<T extends GetAs>(
 	}
 
 	if (type !== 'prime') {
-		output = _applyMultiples(output, multiples);
+		output = _applyMultiples(output, multiplesOf);
 	}
 
-	return getAs === 'string' ?
+	return getAsString ?
 			(convertArrayToString(output, separator) as RangedNumbers<T>)
 		:	(output as RangedNumbers<T>);
 }

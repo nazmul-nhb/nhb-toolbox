@@ -190,6 +190,9 @@
 // 	[P in K extends `"${infer Key}"` ? Key : never]: ParseJSON<V>;
 // };
 
+/** - Output format for the generated numbers */
+// export type GetAs = 'array' | 'string';
+
 // export type ParsedObject<T extends GenericObject> = { [K in keyof T]: Any };
 
 // /** Type for first field key */

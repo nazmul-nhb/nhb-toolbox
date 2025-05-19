@@ -40,22 +40,20 @@ export type NumberType =
 	| 'prime'
 	| 'random';
 
-/** - Output format for the generated numbers */
-export type GetAs = 'array' | 'string';
-
 /** - Options for generating numbers in a range */
-export interface RangeOptions<T extends GetAs> extends RandomNumberOptions {
-	/** Separator for the string format if `getAs` is `'string'`. Defaults to `,`. */
-	separator?: string;
+export interface RangeOptions<T extends boolean = false>
+	extends RandomNumberOptions {
+	/** Separator for the string format if `getAsString` is `'true'`. Defaults to `, `. */
+	separator?: T extends true ? string : never;
 	/** The multiples of which number to consider in the result. */
 	multiplesOf?: number;
-	/** The format for the result - either `'array'` or `'string'`. Default is `array` */
-	getAs?: T;
+	/** The format for the result - `{ getAsString: true }` returns strings with custom separator and `false` returns array of numbers. Default is `false`. */
+	getAsString?: T;
 }
 
 /** - The return type of the `getNumbersInRange` function */
-export type RangedNumbers<T extends GetAs> =
-	T extends 'array' ? number[] : string;
+export type RangedNumbers<T extends boolean = false> =
+	T extends true ? string : number[];
 
 /** List of ISO 4217 currency codes. */
 export type CurrencyCode =
