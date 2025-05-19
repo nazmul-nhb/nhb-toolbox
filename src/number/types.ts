@@ -154,14 +154,18 @@ export interface InversePercentageOptions {
 }
 
 /** * Options for calculating percentages and related values. */
-export type PercentageOptions =
+export type PercentageOptions = (
 	| GetPercentOptions
 	| GetValueOptions
 	| GetOriginalOptions
 	| GetChangeOptions
 	| ApplyChangeOptions
 	| GetDifferenceOptions
-	| InversePercentageOptions;
+	| InversePercentageOptions
+) & {
+	/** The number of decimal places to round the result to. */
+	roundTo?: number;
+};
 
 /** * Static methods from `Unit` class that accept a single number argument and return a number. */
 export type UnitNumberMethods = {

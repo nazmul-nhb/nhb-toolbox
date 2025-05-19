@@ -17,6 +17,20 @@ import type { PercentageOptions } from './types';
  * @returns The calculated number rounded to three decimal places, or `NaN` if input is invalid.
  */
 export function calculatePercentage(options: PercentageOptions): number {
+	const { roundTo = 3 } = options;
+
+	/**
+	 * - Rounds a number to the specified number of decimal places.
+	 *
+	 * @param num - The number to round.
+	 * @returns The rounded number.
+	 */
+	const _roundNumber = (num: number) => {
+		const factor = Math.pow(10, roundTo);
+
+		return Math.round(num * factor) / factor;
+	};
+
 	switch (options?.mode) {
 		case 'get-percent': {
 			const { part, total } = options;
@@ -25,7 +39,7 @@ export function calculatePercentage(options: PercentageOptions): number {
 				return NaN;
 			}
 
-			return Math.round((part / total) * 100 * 1000) / 1000;
+			return _roundNumber((part / total) * 100);
 		}
 
 		case 'get-value': {
@@ -35,7 +49,7 @@ export function calculatePercentage(options: PercentageOptions): number {
 				return NaN;
 			}
 
-			return Math.round((percentage / 100) * total * 1000) / 1000;
+			return _roundNumber((percentage / 100) * total);
 		}
 
 		case 'get-original': {
@@ -45,7 +59,7 @@ export function calculatePercentage(options: PercentageOptions): number {
 				return NaN;
 			}
 
-			return Math.round((value / percentage) * 100 * 1000) / 1000;
+			return _roundNumber((value / percentage) * 100);
 		}
 
 		case 'get-change-percent': {
@@ -57,7 +71,7 @@ export function calculatePercentage(options: PercentageOptions): number {
 
 			const change = ((newValue - oldValue) / oldValue) * 100;
 
-			return Math.round(change * 1000) / 1000;
+			return _roundNumber(change);
 		}
 
 		case 'apply-percent-change': {
@@ -69,7 +83,7 @@ export function calculatePercentage(options: PercentageOptions): number {
 
 			const value = baseValue * (1 + percentage / 100);
 
-			return Math.round(value * 1000) / 1000;
+			return _roundNumber(value);
 		}
 
 		case 'get-percent-difference': {
@@ -87,7 +101,7 @@ export function calculatePercentage(options: PercentageOptions): number {
 
 			const diff = (Math.abs(value1 - value2) / avg) * 100;
 
-			return Math.round(diff * 1000) / 1000;
+			return _roundNumber(diff);
 		}
 
 		case 'inverse-percent': {
@@ -97,7 +111,7 @@ export function calculatePercentage(options: PercentageOptions): number {
 				return NaN;
 			}
 
-			return Math.round((total / part) * 100 * 1000) / 1000;
+			return _roundNumber((total / part) * 100);
 		}
 
 		default:
