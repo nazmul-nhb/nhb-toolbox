@@ -163,7 +163,7 @@ export type PercentageOptions = (
 	| GetDifferenceOptions
 	| InversePercentageOptions
 ) & {
-	/** The number of decimal places to round the result to. */
+	/** The number of decimal places to round the result to. Defaults to `3`. */
 	roundTo?: number;
 };
 
