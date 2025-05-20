@@ -1,3 +1,4 @@
+import { isNumber } from '../guards/primitives';
 import type { Numeric } from '../types';
 import { _find2NumbersHCF, _find2NumbersLCM } from './helpers';
 import type {
@@ -182,4 +183,24 @@ export function getAverage(...numbers: Numeric[]): number {
 	}
 
 	return count === 0 ? NaN : Math.round((sum / count) * 1000) / 1000;
+}
+
+/**
+ * * Rounds a number to a specified number of decimal places.
+ *
+ * @param number - The number to round.
+ * @param roundTo - The number of decimal places to round to (default is `2`).
+ * - If `roundTo` is negative, the number is rounded to the left of the decimal point (e.g., `-1` rounds to the nearest 10, `-2` to nearest 100 etc.).
+ * @returns The rounded number, either in float or integer (if a whole number).
+ *
+ * @example
+ * roundNumber(1234.56, -2); // 1200
+ * roundNumber(1234.56, 1);  // 1234.6
+ */
+export function roundNumber(number: Numeric, roundTo = 2): number {
+	const factor = Math.pow(10, roundTo);
+
+	const num = isNumber(number) ? number : Number(number);
+
+	return Math.round(num * factor) / factor;
 }
