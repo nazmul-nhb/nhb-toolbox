@@ -779,23 +779,25 @@ export class Chronos {
 	 * @returns A new instance of `Chronos` with time in the given timezone. Invalid input sets time-zone to `UTC`.
 	 */
 	timeZone(zone: TimeZone | UTCOffSet): Chronos {
-		let offset: number;
+		let targetOffset: number;
 		let stringOffset: UTCOffSet;
 
 		if (isValidUTCOffSet(zone)) {
-			offset = extractMinutesFromUTC(zone);
+			targetOffset = extractMinutesFromUTC(zone);
 			stringOffset = zone;
 		} else {
-			offset = TIME_ZONES[zone] ?? TIME_ZONES['UTC'];
-			stringOffset = formatUTCOffset(offset);
+			targetOffset = TIME_ZONES[zone] ?? TIME_ZONES['UTC'];
+			stringOffset = formatUTCOffset(targetOffset);
 		}
 
-		const utc =
-			this.#date.getTime() + this.#date.getTimezoneOffset() * 60 * 1000;
+		const previousOffset = extractMinutesFromUTC(this.#offset);
+		const relativeOffset = targetOffset - previousOffset;
 
-		const adjusted = new Date(utc + offset * 60 * 1000);
+		const adjustedTime = new Date(
+			this.#date.getTime() + relativeOffset * 60 * 1000,
+		);
 
-		return new Chronos(adjusted).#withOrigin('timeZone', stringOffset);
+		return new Chronos(adjustedTime).#withOrigin('timeZone', stringOffset);
 	}
 
 	/**
