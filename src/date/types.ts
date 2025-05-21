@@ -104,6 +104,9 @@ export type Minutes =
 	| '58'
 	| '59';
 
+/** - Second in numeric string from `00` to `59` */
+export type Seconds = Minutes;
+
 /** - Time in "HH:MM" format. */
 export type Time = `${Hours}:${Minutes}`;
 
@@ -454,6 +457,26 @@ export interface ChronosStatics {
 	 * @param dateLike Date input to create utc time.
 	 */
 	utc(dateLike: ChronosInput): Chronos;
+
+	/**
+	 * @static Formats a time-only string into a formatted time string.
+	 *
+	 * @param time - Time string to be formatted. Supported formats include:
+	 * - `HH:mm` → e.g., `'14:50'`
+	 * - `HH:mm:ss` → e.g., `'14:50:00'`
+	 * - `HH:mm:ss.SSS` → e.g., `'14:50:00.800'`
+	 * - `HH:mm+TimeZoneOffset(HH)` → e.g., `'14:50+06'`
+	 * - `HH:mm:ss+TimeZoneOffset(HH)` → e.g., `'14:50:00+06'`
+	 * - `HH:mm:ss+TimeZoneOffset(HH:mm)` → e.g., `'14:50:00+05:30'`
+	 * - `HH:mm:ss.SSS+TimeZoneOffset(HH)` → e.g., `'14:50:00.800+06'`
+	 * - `HH:mm:ss.SSS+TimeZoneOffset(HH:mm)` → e.g., `'14:50:00.800+06:30'`
+	 *
+	 * * *Input will default to today's date and assume local timezone if no offset is provided.*
+	 *
+	 * @param format - Format string accepted by `formatStrict()` method (`TimeParts`). Default: `hh:mm:ss a` → 02:33:36 pm.
+	 * @returns Formatted time string in local (System) time.
+	 */
+	formatTimePart(time: string, format?: TimeParts): string;
 
 	/**
 	 * * Returns earliest Chronos

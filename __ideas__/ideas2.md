@@ -7,12 +7,12 @@
 <!-- - **uuid** – Everyone needs IDs, everywhere -->
 
 - **sleep** – Super useful in async flows, tests, and mocks
-      <!-- - **clamp** – Very common in UI, animations, number ranges -->
-      <!-- - **groupBy** / **sortBy** – Core data manipulation, extremely handy -->
-      <!-- - **truncate** – Used all the time in displaying previews, titles, bios -->
-      <!-- - **pluralize** – Instantly useful in UI text: `1 item`, `2 items` -->
+  <!-- - **clamp** – Very common in UI, animations, number ranges -->
+  <!-- - **groupBy** / **sortBy** – Core data manipulation, extremely handy -->
+  <!-- - **truncate** – Used all the time in displaying previews, titles, bios -->
+  <!-- - **pluralize** – Instantly useful in UI text: `1 item`, `2 items` -->
 - **toTitleCase** / **toSentenceCase** – UI text formatting is huge
-    <!-- - **randomInt** / **randomFloat** – Testing, generative UI, fallback logic -->
+      <!-- - **randomInt** / **randomFloat** – Testing, generative UI, fallback logic -->
 - **padStart** / **padEnd** – Great for clocks, numbers, codes, formatting
 
 ---
@@ -43,10 +43,10 @@ These feel slightly more situational or advanced — still useful, but wouldn’
 <!-- - **toDurationString** – Specific to interval UX (timers, countdowns) -->
 
 - **convertTo24Hour** / **convertTo12Hour** – Useful, but narrow niche
-    <!-- - **getRelativeYear** / `Month`, `Day`, etc. – Advanced comparison, not common for everyone -->
+      <!-- - **getRelativeYear** / `Month`, `Day`, etc. – Advanced comparison, not common for everyone -->
 - **getWeekOfMonth** – Nice edge-case, not core
-      <!-- - **roundDecimal** – Useful, but easily done inline sometimes -->
-      <!-- - **numberToWords** / **spellNumber** – Rare unless building finance, forms, accessibility -->
+  <!-- - **roundDecimal** – Useful, but easily done inline sometimes -->
+  <!-- - **numberToWords** / **spellNumber** – Rare unless building finance, forms, accessibility -->
 - `difference`, `intersect`, `uniqueArray`, `mergeArrays`, `flatten` – Handy but feels like lodash territory
 
 ---
