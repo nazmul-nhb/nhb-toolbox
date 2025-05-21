@@ -2205,8 +2205,15 @@ export class Chronos {
 	 * @param dateLike Date input to create utc time.
 	 */
 	static utc(dateLike: ChronosInput): Chronos {
-		const date = new Chronos(dateLike).#date;
+		const chronos = new Chronos(dateLike);
+
+		if (chronos.#offset === 'UTC+00:00') {
+			return chronos.#withOrigin('utc');
+		}
+
+		const date = chronos.#date;
 		const utc = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+
 		return new Chronos(utc).#withOrigin('utc');
 	}
 
