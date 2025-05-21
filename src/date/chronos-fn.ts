@@ -89,7 +89,6 @@ const chronos = ((
 }) as ChronosStatics;
 
 /**
- * @static
  * @remarks
  * Static methods from the `Chronos` class are copied over to the `chronos` function.
  * Therefore, you can access static methods from `Chronos` both through the `Chronos` class and the `chronos` function.
@@ -104,7 +103,7 @@ const chronos = ((
  * Chronos.parse("2023-12-31", "YYYY-MM-DD");
  * ```
  *
- * *No need to call `chronos` for accessing the static methods. Simply call them.*
+ * *No need to call `chronos` for accessing the static methods. Simply call the static methods.*
  *
  * **Available Static Methods:**
  *

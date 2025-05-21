@@ -602,11 +602,12 @@ export class Chronos {
 			case 'timeZone':
 			case 'toUTC':
 			case 'utc': {
-				const mins = extractMinutesFromUTC(
+				const previousOffset = extractMinutesFromUTC(this.#offset);
+				const currentOffset = extractMinutesFromUTC(
 					`UTC${this.getUTCOffset()}` as UTCOffSet,
 				);
 
-				const date = this.addMinutes(mins);
+				const date = this.addMinutes(-previousOffset - currentOffset);
 
 				return date.#toLocalISOString();
 			}
@@ -686,9 +687,8 @@ export class Chronos {
 	 * @returns Formatted date string in desired format (UTC time).
 	 */
 	formatUTC(format: string = 'dd, mmm DD, YYYY HH:mm:ss:mss'): string {
-		switch (this[ORIGIN]) {
-			case 'toUTC':
-			case 'utc':
+		switch (this.#offset) {
+			case 'UTC+00:00':
 				return this.#format(format, false);
 			default:
 				return this.#format(format, true);
@@ -1883,16 +1883,29 @@ export class Chronos {
 
 	/** @instance Returns new Chronos instance in UTC */
 	toUTC(): Chronos {
+		if (this.#offset === 'UTC+00:00') {
+			return this.#withOrigin('toUTC');
+		}
+
 		const date = this.#date;
 		const utc = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+
 		return new Chronos(utc).#withOrigin('toUTC');
 	}
 
 	/** @instance Returns new Chronos instance in local time */
 	toLocal(): Chronos {
-		const date = this.#date;
-		const utc = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-		return new Chronos(utc).#withOrigin('toLocal');
+		const previousOffset = extractMinutesFromUTC(this.#offset);
+
+		const localOffset = -this.#date.getTimezoneOffset();
+
+		const relativeOffset = previousOffset - localOffset;
+
+		const localTime = new Date(
+			this.#date.getTime() - relativeOffset * 60 * 1000,
+		);
+
+		return new Chronos(localTime).#withOrigin('toLocal');
 	}
 
 	/**
