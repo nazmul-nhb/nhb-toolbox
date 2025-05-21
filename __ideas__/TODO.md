@@ -1,3 +1,4 @@
+<!-- markdownlint-disable-file MD024 -->
 # String Utilities
 
 <!-- - Convert a string to camelCase, snake_case, or kebab-case. -->
@@ -63,7 +64,7 @@
 - Generate UUIDs or GUIDs. --> Did `generateRandomID`
 - Check device type (mobile, tablet, desktop). --> Did in `nhb-hooks`
 - Convert a file to base64. --> Did few but not published
-  <!-- - Debounce and throttle functions -->
+      <!-- - Debounce and throttle functions -->
 - Convert units (e.g., bytes to KB, MB, GB) --> Did in `Unit` class
 
 # New Number Utilities
@@ -81,12 +82,12 @@
  * @returns A flattened array with all elements.
  */
 const flattenArray = <T>(arr: (T | T[])[]): T[] => {
-	return arr.reduce((acc, el) => {
-		if (Array.isArray(el)) {
-			return acc.concat(flattenArray(el));
-		}
-		acc.push(el);
-		return acc;
-	}, []);
+ return arr.reduce((acc, el) => {
+  if (Array.isArray(el)) {
+   return acc.concat(flattenArray(el));
+  }
+  acc.push(el);
+  return acc;
+ }, []);
 };
 ```

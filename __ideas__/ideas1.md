@@ -3,16 +3,16 @@
 ## 1. **String Utilities:**
 
 - `sanitizeHTML` – To sanitize HTML input to prevent XSS vulnerabilities.
-    <!-- - `wordCount` – To count words in a string. -->
-    <!-- - `truncateAtWord` – To truncate a string at the nearest word boundary instead of a character limit. -->
-    <!-- - `toTitleCase` – Converts a string to title case (useful for headings). -->
+  <!-- - `wordCount` – To count words in a string. -->
+  <!-- - `truncateAtWord` – To truncate a string at the nearest word boundary instead of a character limit. -->
+  <!-- - `toTitleCase` – Converts a string to title case (useful for headings). -->
 
 ## 2. **Number Utilities:**
 
 - `formatPhoneNumber` – Formats phone numbers based on the country code.
-  <!-- - `getAverage` – Calculates the average of a set of numbers. -->
+      <!-- - `getAverage` – Calculates the average of a set of numbers. -->
 - `convertToBase` – Convert numbers between various bases (binary, octal, hexadecimal, etc.).
-  <!-- - `generateRandomString` – Generate random strings of alphanumeric characters, useful for session IDs or tokens. -->
+      <!-- - `generateRandomString` – Generate random strings of alphanumeric characters, useful for session IDs or tokens. -->
 
 ## 3. **Color Utilities:**
 
@@ -56,8 +56,8 @@
 <!-- - `validateEmailFormat` – Validate if an email address matches a regex pattern. -->
 
 - `resetForm` – Reset a form’s fields to their initial values.
-    <!-- - `serializeForm` – Convert form data into an object or query string. -->
-    <!-- - `parseFormData` – Parse form data into a structured object format. -->
+  <!-- - `serializeForm` – Convert form data into an object or query string. -->
+  <!-- - `parseFormData` – Parse form data into a structured object format. -->
 
 ## 9. **Other Utilities:**
 
@@ -85,29 +85,29 @@
 ```ts
 type Primitive = string | number | boolean | bigint | symbol | null | undefined;
 type AdvancedTypes =
-	| Function
-	| Date
-	| RegExp
-	| Map<unknown, unknown>
-	| Set<unknown>;
+ | Function
+ | Date
+ | RegExp
+ | Map<unknown, unknown>
+ | Set<unknown>;
 
 /**
  * Extracts dot-notation keys from nested objects (recursively), including objects inside arrays.
  */
 export type DotNotationKey<T> =
-	T extends Primitive | AdvancedTypes ? never
-	: T extends Array<infer U> ?
-		DotNotationKey<U> // drill into array item
-	: T extends object ?
-		{
-			[K in keyof T & string]: T[K] extends Primitive | AdvancedTypes ?
-				`${K}`
-			: T[K] extends Array<infer U> ?
-				U extends object ?
-					`${K}` | `${K}.${DotNotationKey<U>}`
-				:	`${K}`
-			: T[K] extends object ? `${K}` | `${K}.${DotNotationKey<T[K]>}`
-			: never;
-		}[keyof T & string]
-	:	never;
+ T extends Primitive | AdvancedTypes ? never
+ : T extends Array<infer U> ?
+  DotNotationKey<U> // drill into array item
+ : T extends object ?
+  {
+   [K in keyof T & string]: T[K] extends Primitive | AdvancedTypes ?
+    `${K}`
+   : T[K] extends Array<infer U> ?
+    U extends object ?
+     `${K}` | `${K}.${DotNotationKey<U>}`
+    : `${K}`
+   : T[K] extends object ? `${K}` | `${K}.${DotNotationKey<T[K]>}`
+   : never;
+  }[keyof T & string]
+ : never;
 ```
