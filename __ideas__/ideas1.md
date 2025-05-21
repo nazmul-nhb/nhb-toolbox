@@ -3,16 +3,16 @@
 ## 1. **String Utilities:**
 
 - `sanitizeHTML` – To sanitize HTML input to prevent XSS vulnerabilities.
-  <!-- - `wordCount` – To count words in a string. -->
-  <!-- - `truncateAtWord` – To truncate a string at the nearest word boundary instead of a character limit. -->
-  <!-- - `toTitleCase` – Converts a string to title case (useful for headings). -->
+    <!-- - `wordCount` – To count words in a string. -->
+    <!-- - `truncateAtWord` – To truncate a string at the nearest word boundary instead of a character limit. -->
+    <!-- - `toTitleCase` – Converts a string to title case (useful for headings). -->
 
 ## 2. **Number Utilities:**
 
 - `formatPhoneNumber` – Formats phone numbers based on the country code.
-      <!-- - `getAverage` – Calculates the average of a set of numbers. -->
+  <!-- - `getAverage` – Calculates the average of a set of numbers. -->
 - `convertToBase` – Convert numbers between various bases (binary, octal, hexadecimal, etc.).
-      <!-- - `generateRandomString` – Generate random strings of alphanumeric characters, useful for session IDs or tokens. -->
+  <!-- - `generateRandomString` – Generate random strings of alphanumeric characters, useful for session IDs or tokens. -->
 
 ## 3. **Color Utilities:**
 
@@ -56,8 +56,8 @@
 <!-- - `validateEmailFormat` – Validate if an email address matches a regex pattern. -->
 
 - `resetForm` – Reset a form’s fields to their initial values.
-  <!-- - `serializeForm` – Convert form data into an object or query string. -->
-  <!-- - `parseFormData` – Parse form data into a structured object format. -->
+    <!-- - `serializeForm` – Convert form data into an object or query string. -->
+    <!-- - `parseFormData` – Parse form data into a structured object format. -->
 
 ## 9. **Other Utilities:**
 

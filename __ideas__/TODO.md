@@ -63,7 +63,7 @@
 - Generate UUIDs or GUIDs. --> Did `generateRandomID`
 - Check device type (mobile, tablet, desktop). --> Did in `nhb-hooks`
 - Convert a file to base64. --> Did few but not published
-      <!-- - Debounce and throttle functions -->
+  <!-- - Debounce and throttle functions -->
 - Convert units (e.g., bytes to KB, MB, GB) --> Did in `Unit` class
 
 # New Number Utilities

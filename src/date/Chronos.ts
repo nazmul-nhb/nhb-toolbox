@@ -2224,12 +2224,13 @@ export class Chronos {
 	 * @param time - Time string to be formatted. Supported formats include:
 	 * - `HH:mm` → e.g., `'14:50'`
 	 * - `HH:mm:ss` → e.g., `'14:50:00'`
-	 * - `HH:mm:ss.SSS` → e.g., `'14:50:00.800'`
+	 * - `HH:mm:ss.mss` → e.g., `'14:50:00.800'`
 	 * - `HH:mm+TimeZoneOffset(HH)` → e.g., `'14:50+06'`
+	 * - `HH:mm+TimeZoneOffset(HH:mm)` → e.g., `'14:50+06:00'`
 	 * - `HH:mm:ss+TimeZoneOffset(HH)` → e.g., `'14:50:00+06'`
 	 * - `HH:mm:ss+TimeZoneOffset(HH:mm)` → e.g., `'14:50:00+05:30'`
-	 * - `HH:mm:ss.SSS+TimeZoneOffset(HH)` → e.g., `'14:50:00.800+06'`
-	 * - `HH:mm:ss.SSS+TimeZoneOffset(HH:mm)` → e.g., `'14:50:00.800+06:30'`
+	 * - `HH:mm:ss.mss+TimeZoneOffset(HH)` → e.g., `'14:50:00.800+06'`
+	 * - `HH:mm:ss.mss+TimeZoneOffset(HH:mm)` → e.g., `'14:50:00.800+06:30'`
 	 *
 	 * * *Input will default to today's date and assume local timezone if no offset is provided.*
 	 *
