@@ -453,10 +453,16 @@ export interface ChronosStatics {
 	parse(dateStr: string, format: string): Chronos;
 
 	/**
-	 * * Creates UTC Chronos
-	 * @param dateLike Date input to create utc time.
+	 * * Creates a UTC-based Chronos instance.
+	 * If no date is provided, it uses the current date and time.
+	 *
+	 * **This is the base time, meaning conversion in other timezone will consider UTC time as the base time.**
+	 *
+	 * @param dateLike Optional input date to base the UTC time on.
+	 * If omitted, the current system date/time is used.
+	 * @returns A new Chronos instance representing the UTC equivalent of the input.
 	 */
-	utc(dateLike: ChronosInput): Chronos;
+	utc(dateLike?: ChronosInput): Chronos;
 
 	/**
 	 * @static Formats a time-only string into a formatted time string.

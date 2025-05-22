@@ -558,9 +558,7 @@ export class Chronos {
 		switch (this[ORIGIN]) {
 			case 'toUTC':
 			case 'utc': {
-				const mins = extractMinutesFromUTC(
-					`UTC${this.getUTCOffset()}` as UTCOffSet,
-				);
+				const mins = this.getUTCOffsetMinutes();
 
 				const date = this.addMinutes(mins);
 
@@ -584,9 +582,7 @@ export class Chronos {
 			}
 			case 'toUTC':
 			case 'utc': {
-				const mins = extractMinutesFromUTC(
-					`UTC${this.getUTCOffset()}` as UTCOffSet,
-				);
+				const mins = this.getUTCOffsetMinutes();
 
 				const date = this.addMinutes(mins);
 
@@ -603,10 +599,8 @@ export class Chronos {
 			case 'timeZone':
 			case 'toUTC':
 			case 'utc': {
-				const previousOffset = extractMinutesFromUTC(this.#offset);
-				const currentOffset = extractMinutesFromUTC(
-					`UTC${this.getUTCOffset()}` as UTCOffSet,
-				);
+				const previousOffset = this.getTimeZoneOffsetMinutes();
+				const currentOffset = this.getUTCOffsetMinutes();
 
 				const date = this.addMinutes(-previousOffset - currentOffset);
 
@@ -791,7 +785,7 @@ export class Chronos {
 			stringOffset = formatUTCOffset(targetOffset);
 		}
 
-		const previousOffset = extractMinutesFromUTC(this.#offset);
+		const previousOffset = this.getTimeZoneOffsetMinutes();
 		const relativeOffset = targetOffset - previousOffset;
 
 		const adjustedTime = new Date(
@@ -1871,7 +1865,13 @@ export class Chronos {
 		return (Math.floor(adjusted / 3) + 1) as Quarter;
 	}
 
-	/** @instance Returns offset like +06:00 */
+	/**
+	 * @instance Returns the system's current UTC offset formatted as `+06:00` or `-07:00`.
+	 *
+	 * - *Unlike `Date.prototype.getTimezoneOffset()`, which returns the offset in minutes **behind** UTC (positive for locations west of UTC and negative for east), this method returns the more intuitive sign format used in time zone representations (e.g., `UTC+06:00` means 6 hours **ahead** of UTC).*
+	 *
+	 * @returns The (local) system's UTC offset in `±HH:mm` format.
+	 */
 	getUTCOffset(): string {
 		const offset = -this.#date.getTimezoneOffset();
 		const sign = offset >= 0 ? '+' : '-';
@@ -1882,6 +1882,42 @@ export class Chronos {
 		return `${sign}${pad(offset / 60)}:${pad(offset % 60)}`;
 	}
 
+	/**
+	 * @instance Returns the timezone offset of this `Chronos` instance in `+06:00` or `-07:00` format maintaining current timezone.
+	 *
+	 * - *Unlike `Date.prototype.getTimezoneOffset()`, which returns the offset in minutes **behind** UTC (positive for locations west of UTC and negative for east), this method returns the more intuitive sign format used in time zone representations (e.g., `UTC+06:00` means 6 hours **ahead** of UTC).*
+	 *
+	 * @returns The timezone offset string in `±HH:mm` format maintaining the current timezone regardless of system having different one.
+	 */
+	getTimeZoneOffset(): string {
+		return this.#offset.replace('UTC', '');
+	}
+
+	/**
+	 * @instance Returns the system's UTC offset in minutes.
+	 *
+	 * - *Unlike JavaScript's `Date.prototype.getTimezoneOffset()`, this method returns a positive value if the local time is ahead of UTC, and negative if behind UTC.*
+	 *
+	 * For example, for `UTC+06:00`, this returns `360`; for `UTC-05:30`, this returns `-330`.
+	 *
+	 * @returns The system's UTC offset in minutes, matching the sign convention used in `±HH:mm`.
+	 */
+	getUTCOffsetMinutes(): number {
+		return -this.#date.getTimezoneOffset();
+	}
+
+	/**
+	 * @instance Returns the current `Chronos` instance's UTC offset in minutes.
+	 *
+	 * This reflects the parsed or stored offset used internally by Chronos and follows the same
+	 * sign convention: positive for timezones ahead of UTC, negative for behind.
+	 *
+	 * @returns The UTC offset in minutes maintaining the current timezone regardless of system having different one.
+	 */
+	getTimeZoneOffsetMinutes(): number {
+		return extractMinutesFromUTC(this.#offset);
+	}
+
 	/** @instance Returns new Chronos instance in UTC */
 	toUTC(): Chronos {
 		if (this.#offset === 'UTC+00:00') {
@@ -1889,14 +1925,17 @@ export class Chronos {
 		}
 
 		const date = this.#date;
-		const utc = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+
+		const previousOffset = this.getTimeZoneOffsetMinutes();
+
+		const utc = new Date(date.getTime() - previousOffset * 60 * 1000);
 
 		return new Chronos(utc).#withOrigin('toUTC');
 	}
 
 	/** @instance Returns new Chronos instance in local time */
 	toLocal(): Chronos {
-		const previousOffset = extractMinutesFromUTC(this.#offset);
+		const previousOffset = this.getTimeZoneOffsetMinutes();
 
 		const localOffset = -this.#date.getTimezoneOffset();
 
@@ -2202,18 +2241,27 @@ export class Chronos {
 	}
 
 	/**
-	 * @static Creates UTC Chronos
-	 * @param dateLike Date input to create utc time.
+	 * @static Creates a UTC-based Chronos instance.
+	 * If no date is provided, it uses the current date and time.
+	 *
+	 * **This is the base time, meaning conversion in other timezone will consider UTC time as the base time.**
+	 *
+	 * @param dateLike Optional input date to base the UTC time on.
+	 * If omitted, the current system date/time is used.
+	 * @returns A new Chronos instance representing the UTC equivalent of the input.
 	 */
-	static utc(dateLike: ChronosInput): Chronos {
+	static utc(dateLike?: ChronosInput): Chronos {
 		const chronos = new Chronos(dateLike);
 
 		if (chronos.#offset === 'UTC+00:00') {
 			return chronos.#withOrigin('utc');
 		}
 
+		const previousOffset = chronos.getTimeZoneOffsetMinutes();
+
 		const date = chronos.#date;
-		const utc = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+
+		const utc = new Date(date.getTime() - previousOffset * 60 * 1000);
 
 		return new Chronos(utc).#withOrigin('utc');
 	}
