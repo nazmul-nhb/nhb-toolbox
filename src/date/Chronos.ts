@@ -2069,7 +2069,8 @@ export class Chronos {
 	 * @returns A new `Chronos` instance at the nearest rounded point in time. For wrong unit returns current instance.
 	 *
 	 * @remarks
-	 * - Rounded *Month and Week are 0 (index) based.*
+	 * - Rounding for `'month'` is based on how far into the month the date is. If past the midpoint, it rounds to the next month.
+	 *   - Month indices are 0-based internally (January = 0), but the resulting date reflects the correct calendar month.
 	 * - For `'week'` unit, rounding is performed by comparing proximity to the start and end of the ISO week (Monday to Sunday).
 	 *   - If the date is closer to the next Monday, it rounds forward; otherwise, it rounds back to the previous Monday.
 	 */
