@@ -1,29 +1,29 @@
 {
 	"compilerOptions": {
-		"target": "ESNext", // Target the latest features
-		"lib": ["DOM", "ESNext"], // Include DOM and modern ES features
-		"rootDir": "./src", // Root directory for source files
-		"outDir": "./dist", // Output directory
-		"declarationDir": "./dist/dts", // Separate directory for types
-		"declaration": true, // Generate .d.ts files
-		"declarationMap": true, // Map declarations to sources (useful for debugging in TS projects)
-		"emitDeclarationOnly": false, // Emit both JavaScript and declaration files
-		"esModuleInterop": true, // Compatibility with CommonJS
-		"allowSyntheticDefaultImports": true, // Allow `import default` from CJS modules
-		"moduleResolution": "Node", // Ensure Node.js-compatible module resolution
-		"strict": true, // Enable all strict type-checking options
-		"noImplicitAny": true, // Disallow implicit `any` types
-		"useUnknownInCatchVariables": true, // Use `unknown` for `catch` variables
-		"noUnusedLocals": true, // Report unused local variables
-		"noUnusedParameters": true, // Report unused parameters
-		"skipLibCheck": true, // Skip type-checking of dependencies
-		"resolveJsonModule": true, // Allow importing JSON files
-		"forceConsistentCasingInFileNames": true, // Case sensitivity for imports
-		"allowJs": true, // Allow including JavaScript files
-		"checkJs": true, // Allow checks on JS files
+		"target": "ESNext",
+		"lib": ["DOM", "ESNext"],
+		"rootDir": "./src",
+		"outDir": "./dist",
+		"declarationDir": "./dist/dts",
+		"declaration": true,
+		"declarationMap": true,
+		"emitDeclarationOnly": false,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"moduleResolution": "node16",
+		"strict": true,
+		"noImplicitAny": true,
+		"useUnknownInCatchVariables": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"skipLibCheck": true,
+		"resolveJsonModule": true,
+		"forceConsistentCasingInFileNames": true,
+		"allowJs": true,
+		"checkJs": true,
 		"removeComments": false,
 		"preserveWatchOutput": true
 	},
-	"include": ["src/**/*.ts", "src/**/*.d.ts"], // Include all TS files
-	"exclude": ["node_modules", "**/*.test.ts", "**/__tests__/**/*"] // Exclude test files
+	"include": ["src/**/*.ts", "src/**/*.d.ts"],
+	"exclude": ["node_modules", "**/*.test.ts", "**/__tests__/**/*"]
 }
