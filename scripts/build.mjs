@@ -2,8 +2,9 @@
 
 import chalk from 'chalk';
 import { execa } from 'execa';
+import fs from 'fs/promises';
 import { globby } from 'globby';
-import { extname } from 'path';
+import { extname, join } from 'path';
 import { estimator } from './estimator.mjs';
 
 /**
@@ -25,6 +26,32 @@ const getFileIcon = (filePath) => {
 	}
 };
 
+/**
+ * * Fix .js extensions in ESM files.
+ * @param {string} dir - Directory to fix
+ */
+const fixJsExtensions = async (dir) => {
+	const entries = await fs.readdir(dir, { withFileTypes: true });
+
+	for (const entry of entries) {
+		const fullPath = join(dir, entry.name);
+
+		if (entry.isDirectory()) {
+			await fixJsExtensions(fullPath);
+		} else if (entry.isFile() && entry.name.endsWith('.js')) {
+			const code = await fs.readFile(fullPath, 'utf8');
+
+			// Replace relative imports/exports that don’t end with .js/.json/.mjs
+			const fixed = code.replace(
+				/(?<=\b(?:import|export)[^'"]*?from\s*['"])(\.{1,2}\/[^'"]+?)(?=(?<!\.m?js|\.json)['"])/g,
+				'$1.js',
+			);
+
+			await fs.writeFile(fullPath, fixed);
+		}
+	}
+};
+
 (async () => {
 	const startTime = performance.now();
 
@@ -35,11 +62,13 @@ const getFileIcon = (filePath) => {
 				execa('tsc', ['-p', 'tsconfig.cjs.json']).then(() =>
 					execa('tsc', ['-p', 'tsconfig.esm.json'], {
 						stdio: 'inherit',
-					}).then(() =>
+					}).then(async () => {
+						await fixJsExtensions('./dist/esm');
+
 						execa('node', ['./scripts/types.mjs'], {
 							stdio: 'inherit',
-						}),
-					),
+						});
+					}),
 				),
 			),
 
