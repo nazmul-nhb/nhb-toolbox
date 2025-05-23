@@ -30,7 +30,7 @@ const getFileIcon = (filePath) => {
  * * Fix .js extensions in ESM files.
  * @param {string} dir - Directory to fix
  */
-const fixJsExtensions = async (dir) => {
+export const fixJsExtensions = async (dir) => {
 	const entries = await fs.readdir(dir, { withFileTypes: true });
 
 	for (const entry of entries) {
@@ -63,7 +63,7 @@ const fixJsExtensions = async (dir) => {
 					execa('tsc', ['-p', 'tsconfig.esm.json'], {
 						stdio: 'inherit',
 					}).then(async () => {
-						await fixJsExtensions('./dist/esm');
+						// await fixJsExtensions('./dist/esm');
 
 						execa('node', ['./scripts/types.mjs'], {
 							stdio: 'inherit',
