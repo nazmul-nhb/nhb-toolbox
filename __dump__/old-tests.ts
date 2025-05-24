@@ -911,3 +911,7 @@
 // 		x: 'name',
 // 	}),
 // );
+
+
+// "build": "tsup --config tsup.config.ts && node scripts/extensions.mjs && node scripts/types.mjs && prettier --write .",
+// "prepublishOnly": "tsup --config tsup.config.ts && node scripts/extensions.mjs && node scripts/types.mjs",
