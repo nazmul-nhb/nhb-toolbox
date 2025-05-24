@@ -431,12 +431,12 @@ export {
 } from './guards/specials';
 
 // ! Export All types
-export * from './array/types';
-export * from './colors/types';
-export * from './date/types';
-export * from './form/types';
-export * from './number/types';
-export * from './object/types';
-export * from './string/types';
-export * from './types';
-export * from './utils/types';
+export type * from './array/types';
+export type * from './colors/types';
+export type * from './date/types';
+export type * from './form/types';
+export type * from './number/types';
+export type * from './object/types';
+export type * from './string/types';
+export type * from './types';
+export type * from './utils/types';
