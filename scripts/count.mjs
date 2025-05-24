@@ -13,6 +13,7 @@ import tsModule from 'typescript';
  * @property {number} namedExportsTotal Total named export count.
  * @property {number} namedExportsDirect Original named export count.
  * @property {number} namedExportsAliased Aliased named export count.
+ * @property {number} namedTypeExports Total named type export count.
  */
 
 /**
@@ -61,6 +62,7 @@ async function countExports(filePath) {
 		let namedExportsTotal = 0;
 		let defaultExports = 0;
 		let aliasedExports = 0;
+		let namedTypeExports = 0;
 
 		/** @param {tsModule.Node} node */
 		const checkNode = (node) => {
@@ -92,9 +94,14 @@ async function countExports(filePath) {
 				}
 			} else if (
 				tsModule.isExportDeclaration(node) &&
-				node.exportClause
+				node.exportClause &&
+				tsModule.isNamedExports(node.exportClause)
 			) {
-				if (tsModule.isNamedExports(node.exportClause)) {
+				if (node.isTypeOnly) {
+					// Count type exports separately
+					namedTypeExports += node.exportClause.elements.length;
+				} else {
+					// Normal named exports
 					namedExportsTotal += node.exportClause.elements.length;
 					for (const el of node.exportClause.elements) {
 						if (
@@ -117,6 +124,7 @@ async function countExports(filePath) {
 			namedExportsTotal,
 			namedExportsDirect: namedExportsTotal - aliasedExports,
 			namedExportsAliased: aliasedExports,
+			namedTypeExports,
 		};
 	} catch (err) {
 		console.error(chalk.red('🛑 Failed to parse or read file:\n'), err);
@@ -189,6 +197,11 @@ async function getFilesFromFolder(folderPath) {
 			console.info(
 				chalk.yellow(
 					`   ┗ Aliased              : ${result.namedExportsAliased}`,
+				),
+			);
+			console.info(
+				chalk.yellow(
+					`🔹 Total Type Exports     : ${result.namedTypeExports}`,
 				),
 			);
 		}
