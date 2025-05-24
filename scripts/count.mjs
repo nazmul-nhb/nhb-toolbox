@@ -29,11 +29,11 @@ async function getFilePath() {
 	const inputPath = await rl.question(
 		chalk.cyanBright(
 			`───────────────────────────────────────────────────────────────────────────────\n` +
-				`🎯 Please specify the path to a ${chalk.yellowBright.bold('"JavaScript/TypeScript/MJS"')} file or folder.\n` +
-				`   - Enter the full file path (with extension) to process a specific file.\n` +
-				`   - Enter a folder path to scan all ${chalk.bold.yellowBright('*.js')}, ${chalk.bold.yellowBright('*.ts')}, or ${chalk.bold.yellowBright('*.mjs')} files within.\n` +
-				`   - Leave it empty to scan the default file: ${chalk.bgYellowBright.bold.whiteBright(' src/index.ts ')}.\n` +
-				`───────────────────────────────────────────────────────────────────────────────\n`,
+			`🎯 Please specify the path to a ${chalk.yellowBright.bold('"JavaScript/TypeScript/MJS"')} file or folder.\n` +
+			`   - Enter the full file path (with extension) to process a specific file.\n` +
+			`   - Enter a folder path to scan all ${chalk.bold.yellowBright('*.js')}, ${chalk.bold.yellowBright('*.ts')}, or ${chalk.bold.yellowBright('*.mjs')} files within.\n` +
+			`   - Leave it empty to scan the default file: ${chalk.bgYellowBright.bold.whiteBright(' src/index.ts ')}.\n` +
+			`───────────────────────────────────────────────────────────────────────────────\n`,
 		),
 	);
 
@@ -201,7 +201,7 @@ async function getFilesFromFolder(folderPath) {
 			);
 			console.info(
 				chalk.yellow(
-					`🔹 Total Type Exports     : ${result.namedTypeExports}`,
+					`🔺 Total Type Exports	  : ${result.namedTypeExports}`,
 				),
 			);
 		}
