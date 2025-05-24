@@ -3,7 +3,7 @@ import { defineConfig } from 'tsup';
 export default defineConfig({
 	entry: ['src/**/*.ts'],
 	format: ['esm', 'cjs'],
-	dts: true,
+	dts: { resolve: true },
 	clean: true,
 	sourcemap: true,
 	target: ['esnext'],
@@ -12,4 +12,7 @@ export default defineConfig({
 	bundle: false,
 	shims: true,
 	outDir: 'dist',
+	esbuildOptions(options) {
+		options.resolveExtensions = ['.ts', '.js', '.mts', '.mjs'];
+	},
 });
