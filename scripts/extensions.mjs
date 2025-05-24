@@ -28,4 +28,4 @@ export const fixJsExtensions = async (dir) => {
 	}
 };
 
-await fixJsExtensions('./dist');
+(async () => await fixJsExtensions('./dist'))().catch(console.dir);
