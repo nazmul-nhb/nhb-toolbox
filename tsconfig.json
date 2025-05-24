@@ -10,7 +10,7 @@
 		"emitDeclarationOnly": false,
 		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
-		"moduleResolution": "bundler", // 👈 Required to avoid TS errors on .js extension
+		"moduleResolution": "node",
 		"strict": true,
 		"noImplicitAny": true,
 		"useUnknownInCatchVariables": true,
