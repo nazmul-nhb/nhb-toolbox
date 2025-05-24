@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-	entry: ['src/index.ts'],
+	entry: ['src/**/*.ts'],
 	format: ['esm', 'cjs'],
 	dts: true,
 	clean: true,
@@ -9,7 +9,7 @@ export default defineConfig({
 	target: ['esnext'],
 	// splitting: false,
 	skipNodeModulesBundle: true,
-	// bundle: false,
-	shims: false,
+	bundle: false,
+	shims: true,
 	outDir: 'dist',
 });

@@ -8,7 +8,7 @@
 	"sideEffects": false,
 	"scripts": {
 		"clean": "rimraf dist",
-		"build": "tsup --config tsup.config.ts",
+		"build": "tsup --config tsup.config.ts && node scripts/types.mjs",
 		"prepublishOnly": "node scripts/build.mjs",
 		"test": "jest --coverage --verbose",
 		"format": "prettier --write .",
@@ -87,5 +87,80 @@
 		"typescript": "^5.7.3",
 		"typescript-eslint": "^8.21.0"
 	},
-	"packageManager": "pnpm@10.6.2+sha512.47870716bea1572b53df34ad8647b42962bc790ce2bf4562ba0f643237d7302a3d6a8ecef9e4bdfc01d23af1969aa90485d4cebb0b9638fa5ef1daef656f6c1b"
+	"packageManager": "pnpm@10.6.2+sha512.47870716bea1572b53df34ad8647b42962bc790ce2bf4562ba0f643237d7302a3d6a8ecef9e4bdfc01d23af1969aa90485d4cebb0b9638fa5ef1daef656f6c1b",
+	"exports": {
+		"./package.json": "./package.json",
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js"
+		},
+		"./types": {
+			"types": "./dist/types/index.d.ts",
+			"default": "./dist/types/index.d.ts"
+		},
+		"./array/types": {
+			"types": "./dist/array/types.d.ts",
+			"default": "./dist/array/types.d.ts"
+		},
+		"./colors/types": {
+			"types": "./dist/colors/types.d.ts",
+			"default": "./dist/colors/types.d.ts"
+		},
+		"./date/types": {
+			"types": "./dist/date/types.d.ts",
+			"default": "./dist/date/types.d.ts"
+		},
+		"./form/types": {
+			"types": "./dist/form/types.d.ts",
+			"default": "./dist/form/types.d.ts"
+		},
+		"./number/types": {
+			"types": "./dist/number/types.d.ts",
+			"default": "./dist/number/types.d.ts"
+		},
+		"./object/types": {
+			"types": "./dist/object/types.d.ts",
+			"default": "./dist/object/types.d.ts"
+		},
+		"./string/types": {
+			"types": "./dist/string/types.d.ts",
+			"default": "./dist/string/types.d.ts"
+		},
+		"./utils/types": {
+			"types": "./dist/utils/types.d.ts",
+			"default": "./dist/utils/types.d.ts"
+		}
+	},
+	"typesVersions": {
+		"*": {
+			"types": [
+				"dist/types/index.d.ts"
+			],
+			"array/types": [
+				"dist/array/types.d.ts"
+			],
+			"colors/types": [
+				"dist/colors/types.d.ts"
+			],
+			"date/types": [
+				"dist/date/types.d.ts"
+			],
+			"form/types": [
+				"dist/form/types.d.ts"
+			],
+			"number/types": [
+				"dist/number/types.d.ts"
+			],
+			"object/types": [
+				"dist/object/types.d.ts"
+			],
+			"string/types": [
+				"dist/string/types.d.ts"
+			],
+			"utils/types": [
+				"dist/utils/types.d.ts"
+			]
+		}
+	}
 }
