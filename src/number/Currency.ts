@@ -8,8 +8,6 @@ import type {
 } from './types';
 import { formatCurrency } from './utilities';
 
-// const rateCache: Map<string, number> = new Map();
-
 /**
  * * A utility class for handling currency operations like formatting and conversion.
  *

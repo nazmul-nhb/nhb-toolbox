@@ -1,5 +1,4 @@
-import { Chronos } from '..';
-import type { Any } from '../types';
+import { Chronos } from './Chronos';
 import type { ChronosInput, ChronosStatics } from './types';
 
 /**
@@ -60,7 +59,7 @@ import type { ChronosInput, ChronosStatics } from './types';
  * Chronos.parse("2023-12-31", "YYYY-MM-DD");
  * ```
  */
-const chronos = ((
+const chronos = /*#__PURE__*/ (
 	valueOrYear?: ChronosInput,
 	month?: number,
 	date?: number,
@@ -86,7 +85,7 @@ const chronos = ((
 	}
 
 	return newChronos;
-}) as ChronosStatics;
+};
 
 /**
  * @remarks
@@ -122,14 +121,28 @@ const chronos = ((
  * isValidChronos(value: unknown): boolean
  * ```
  */
-const typedChronos = chronos as ChronosStatics;
+const typedChronos = /*#__PURE__*/ chronos as ChronosStatics;
 
 // ? Add static methods from Chronos class to the chronos function
-Object.getOwnPropertyNames(Chronos).forEach((method) => {
-	// Exclude non-method properties like `length`, `name`, `prototype`
-	if (method !== 'prototype' && method !== 'name' && method !== 'length') {
-		(chronos as Any)[method] = (Chronos as Any)[method];
-	}
-});
+// Object.getOwnPropertyNames(Chronos).forEach((method) => {
+// 	// Exclude non-method properties like `length`, `name`, `prototype`
+// 	if (method !== 'prototype' && method !== 'name' && method !== 'length') {
+// 		(chronos as Any)[method] = (Chronos as Any)[method];
+// 	}
+// });
+
+typedChronos.now = Chronos.now;
+typedChronos.min = Chronos.min;
+typedChronos.max = Chronos.max;
+typedChronos.utc = Chronos.utc;
+typedChronos.parse = Chronos.parse;
+typedChronos.today = Chronos.today;
+typedChronos.tomorrow = Chronos.tomorrow;
+typedChronos.yesterday = Chronos.yesterday;
+typedChronos.isLeapYear = Chronos.isLeapYear;
+typedChronos.isValidDate = Chronos.isValidDate;
+typedChronos.isDateString = Chronos.isDateString;
+typedChronos.isValidChronos = Chronos.isValidChronos;
+typedChronos.formatTimePart = Chronos.formatTimePart;
 
 export { typedChronos as chronos };

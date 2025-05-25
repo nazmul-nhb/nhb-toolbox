@@ -1,1 +1,1 @@
-export const ORIGIN = Symbol('origin');
+export const ORIGIN = /*#__PURE__*/ Symbol('origin');
