@@ -8,11 +8,12 @@ export default defineConfig({
 	dts: true,
 	clean: true,
 	sourcemap: true,
-	// splitting: false,
-	// bundle: false,
-	// shims: true,
+	splitting: true,
+	bundle: true,
+	shims: true,
+	treeshake: true,
 	skipNodeModulesBundle: true,
-	esbuildOptions(options) {
-		options.resolveExtensions = ['.ts', '.js', '.mts', '.mjs'];
-	},
+	// esbuildOptions(options) {
+	// 	options.resolveExtensions = ['.ts', '.js', '.mts', '.mjs'];
+	// },
 });

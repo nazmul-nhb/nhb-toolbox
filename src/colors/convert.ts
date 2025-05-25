@@ -122,7 +122,7 @@ export const convertHslToHex = (h: number, s: number, l: number): Hex6 => {
  * @returns A string representing the color in HSL format (e.g., `hsl(0, 100%, 50%)`).
  */
 export const convertHexToHsl = (hex: Hex6 | Hex): HSL => {
-	let newHex = hex.replace('#', '');
+	let newHex = hex?.trim()?.replace('#', '');
 
 	if (newHex?.length === 3) {
 		newHex = newHex
@@ -163,7 +163,7 @@ export const convertRgbToHex = (r: number, g: number, b: number): Hex6 => {
  */
 export const convertHexToRgb = (hex: Hex6 | Hex | string): RGB => {
 	// Remove the # if present
-	let newHex = hex.replace('#', '');
+	let newHex = hex?.trim()?.replace('#', '');
 
 	if (newHex?.length === 3) {
 		newHex = newHex
@@ -309,7 +309,8 @@ export const convertRgbaToHsla = (
  * @returns A string representing the color in RGBA format (e.g., `rgba(255, 0, 0, 0.5)`).
  */
 export const convertHex8ToRgba = (hex8: Hex8): RGBA => {
-	const hex = hex8.replace('#', '');
+	const hex = hex8?.trim()?.replace('#', '');
+
 	const r = parseInt(hex.slice(0, 2), 16);
 	const g = parseInt(hex.slice(2, 4), 16);
 	const b = parseInt(hex.slice(4, 6), 16);
@@ -442,15 +443,17 @@ export function convertColorCode(color: HSLA): {
  * @throws If the color format is unrecognized throws `Error`.
  */
 export function convertColorCode(color: ColorType): ConvertedColors<ColorType> {
-	if (_isHex6(color)) {
+	const trimmedColor = color?.trim();
+
+	if (_isHex6(trimmedColor)) {
 		return {
-			rgb: convertHexToRgb(color),
-			hsl: convertHexToHsl(color),
+			rgb: convertHexToRgb(trimmedColor),
+			hsl: convertHexToHsl(trimmedColor),
 		} as ConvertedColors<Hex6>;
 	}
 
-	if (_isRGB(color)) {
-		const rgbValues = extractSolidColorValues(color as RGB);
+	if (_isRGB(trimmedColor)) {
+		const rgbValues = extractSolidColorValues(trimmedColor);
 
 		return {
 			hex: convertRgbToHex(...rgbValues),
@@ -458,8 +461,8 @@ export function convertColorCode(color: ColorType): ConvertedColors<ColorType> {
 		} as ConvertedColors<RGB>;
 	}
 
-	if (_isHSL(color)) {
-		const hslValues = extractSolidColorValues(color as HSL);
+	if (_isHSL(trimmedColor)) {
+		const hslValues = extractSolidColorValues(trimmedColor);
 
 		return {
 			hex: convertHslToHex(...hslValues),
@@ -467,15 +470,15 @@ export function convertColorCode(color: ColorType): ConvertedColors<ColorType> {
 		} as ConvertedColors<HSL>;
 	}
 
-	if (_isHex8(color)) {
+	if (_isHex8(trimmedColor)) {
 		return {
-			rgba: convertHex8ToRgba(color),
-			hsla: convertHex8ToHsla(color),
+			rgba: convertHex8ToRgba(trimmedColor),
+			hsla: convertHex8ToHsla(trimmedColor),
 		} as ConvertedColors<Hex8>;
 	}
 
-	if (_isRGBA(color)) {
-		const rgbaValues = extractAlphaColorValues(color as RGBA);
+	if (_isRGBA(trimmedColor)) {
+		const rgbaValues = extractAlphaColorValues(trimmedColor);
 
 		return {
 			hex8: convertRgbaToHex8(...rgbaValues),
@@ -483,8 +486,8 @@ export function convertColorCode(color: ColorType): ConvertedColors<ColorType> {
 		} as ConvertedColors<RGBA>;
 	}
 
-	if (_isHSLA(color)) {
-		const hslaValues = extractAlphaColorValues(color as HSLA);
+	if (_isHSLA(trimmedColor)) {
+		const hslaValues = extractAlphaColorValues(trimmedColor);
 
 		return {
 			hex8: convertHslaToHex8(...hslaValues),

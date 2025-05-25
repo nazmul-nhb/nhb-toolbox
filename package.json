@@ -1,6 +1,6 @@
 {
 	"name": "nhb-toolbox",
-	"version": "4.10.86",
+	"version": "4.10.87",
 	"description": "A versatile collection of smart, efficient, and reusable utility functions and classes for everyday development needs.",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
@@ -8,7 +8,7 @@
 	"sideEffects": false,
 	"scripts": {
 		"clean": "rimraf dist",
-		"build": "tsup --config tsup.config.ts && prettier --write .",
+		"build": "tsup --config tsup.config.ts",
 		"prepublishOnly": "tsup --config tsup.config.ts",
 		"test": "jest --coverage --verbose",
 		"format": "prettier --write .",

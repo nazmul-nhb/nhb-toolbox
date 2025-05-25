@@ -178,7 +178,9 @@ export class Color {
 	constructor(color?: ColorType | CSSColor) {
 		if (color) {
 			if (Color.isCSSColor(color)) {
-				const newColor = new Color(CSS_COLORS[color]);
+				const newColor = new Color(
+					CSS_COLORS[color?.trim() as CSSColor],
+				);
 
 				this.hex = newColor.hex;
 				this.hex8 = newColor.hex8;
@@ -504,7 +506,7 @@ export class Color {
 	 * @returns Boolean: `true` if it's a `Hex6` color, `false` if not.
 	 */
 	static isHex6(color: string): color is Hex6 {
-		return /^#[0-9A-Fa-f]{6}$/.test(color);
+		return /^#[0-9A-Fa-f]{6}$/.test(color?.trim());
 	}
 
 	/**
@@ -514,7 +516,7 @@ export class Color {
 	 * @returns Boolean: `true` if it's a `Hex8` color, `false` if not.
 	 */
 	static isHex8(color: string): color is Hex8 {
-		return /^#[0-9A-Fa-f]{8}$/.test(color);
+		return /^#[0-9A-Fa-f]{8}$/.test(color?.trim());
 	}
 
 	/**
@@ -614,6 +616,7 @@ export class Color {
 	 */
 	static #fromParts(parts: Colors): Color {
 		const color = Object.create(Color.prototype) as Color;
+
 		color.hex = parts.hex;
 		color.hex8 = parts.hex8;
 		color.rgb = parts.rgb;

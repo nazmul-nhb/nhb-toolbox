@@ -93,7 +93,7 @@ export const _isSimilarToLast = (
  * @returns Boolean: `true` if it's a `Hex` color, `false` if not.
  */
 export function _isHex6(color: string): color is Hex6 {
-	return /^#[0-9A-Fa-f]{6}$/.test(color);
+	return /^#[0-9A-Fa-f]{6}$/.test(color?.trim());
 }
 
 /**
@@ -103,7 +103,7 @@ export function _isHex6(color: string): color is Hex6 {
  * @returns Boolean: `true` if it's a `Hex8` color, `false` if not.
  */
 export function _isHex8(color: string): color is Hex8 {
-	return /^#[0-9A-Fa-f]{8}$/.test(color);
+	return /^#[0-9A-Fa-f]{8}$/.test(color?.trim());
 }
 
 /**
@@ -113,9 +113,11 @@ export function _isHex8(color: string): color is Hex8 {
  * @returns `true` if it's a `RGB` color, `false` if not.
  */
 export function _isRGB(color: string): color is RGB {
-	const match = color.match(
-		/^rgb\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?)\s*\)$/,
-	);
+	const match = color
+		?.trim()
+		?.match(
+			/^rgb\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?)\s*\)$/,
+		);
 	if (!match) return false;
 	const [r, g, b] = match.slice(1).map(Number);
 	return (
@@ -132,9 +134,11 @@ export function _isRGB(color: string): color is RGB {
  * @returns `true` if it's a `RGBA` color, `false` if not.
  */
 export function _isRGBA(color: string): color is RGBA {
-	const match = color.match(
-		/^rgba\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?),\s*(0|1|0?\.\d+)\s*\)$/,
-	);
+	const match = color
+		?.trim()
+		?.match(
+			/^rgba\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?),\s*(0|1|0?\.\d+)\s*\)$/,
+		);
 	if (!match) return false;
 	const [r, g, b, a] = match.slice(1).map(Number);
 	return (
@@ -152,9 +156,11 @@ export function _isRGBA(color: string): color is RGBA {
  * @returns `true` if it's a `HSL` color, `false` if not.
  */
 export function _isHSL(color: string): color is HSL {
-	const match = color.match(
-		/^hsl\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?)%,\s*(\d{1,3}(?:\.\d+)?)%\s*\)$/,
-	);
+	const match = color
+		?.trim()
+		?.match(
+			/^hsl\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?)%,\s*(\d{1,3}(?:\.\d+)?)%\s*\)$/,
+		);
 	if (!match) return false;
 	const [h, s, l] = match.slice(1).map(Number);
 	return _isValidHue(h) && _isValidPercentage(s) && _isValidPercentage(l);
@@ -167,9 +173,11 @@ export function _isHSL(color: string): color is HSL {
  * @returns `true` if it's a `HSLA` color, `false` if not.
  */
 export function _isHSLA(color: string): color is HSLA {
-	const match = color.match(
-		/^hsla\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?)%,\s*(\d{1,3}(?:\.\d+)?)%,\s*(0|1|0?\.\d+)\s*\)$/,
-	);
+	const match = color
+		?.trim()
+		.match(
+			/^hsla\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?)%,\s*(\d{1,3}(?:\.\d+)?)%,\s*(0|1|0?\.\d+)\s*\)$/,
+		);
 	if (!match) return false;
 	const [h, s, l, a] = match.slice(1).map(Number);
 	return (
