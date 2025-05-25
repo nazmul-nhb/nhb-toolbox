@@ -10,12 +10,14 @@ export default defineConfig({
 	sourcemap: true,
 	splitting: true,
 	bundle: true,
+	name: 'NHB Toolbox',
 	shims: true,
 	treeshake: true,
 	skipNodeModulesBundle: true,
 	esbuildOptions(options) {
 		options.treeShaking = true;
 		options.entryNames = '[name]';
+		options.chunkNames = '[name]-1';
 		options.pure = [
 			'Object.freeze',
 			'console.warn',
