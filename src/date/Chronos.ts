@@ -13,7 +13,6 @@ import {
 	ZODIAC_SIGNS,
 } from './constants';
 import { isLeapYear, isValidUTCOffSet } from './guards';
-import { ORIGIN } from './symbols';
 import type {
 	ChronosFormat,
 	ChronosInput,
@@ -60,7 +59,11 @@ import { extractMinutesFromUTC, formatUTCOffset } from './utils';
 export class Chronos {
 	readonly #date: Date;
 	#offset: UTCOffSet;
-	[ORIGIN]?: ChronosMethods | 'root';
+	#ORIGIN: ChronosMethods | 'root';
+	/** Chronos date/time in Native JS `Date` format */
+	native: Date;
+	/** Origin of the `Chronos` instance (Method that created `new Chronos`), useful fo tracking instance. */
+	origin: ChronosMethods | 'root';
 
 	/**
 	 * * Creates a new immutable `Chronos` instance.
@@ -193,11 +196,14 @@ export class Chronos {
 				seconds ?? 0,
 				ms ?? 0,
 			);
+			this.native = this.#date;
 		} else {
 			this.#date = this.#toNewDate(valueOrYear);
+			this.native = this.#date;
 		}
 
-		this[ORIGIN] = 'root';
+		this.#ORIGIN = 'root';
+		this.origin = this.#ORIGIN;
 		this.#offset = `UTC${this.getUTCOffset()}` as UTCOffSet;
 	}
 
@@ -227,7 +233,7 @@ export class Chronos {
 	}
 
 	[Symbol.replace](string: string, replacement: string): string {
-		switch (this[ORIGIN]) {
+		switch (this.#ORIGIN) {
 			case 'timeZone':
 			case 'toUTC':
 			case 'utc':
@@ -250,7 +256,7 @@ export class Chronos {
 	}
 
 	[Symbol.search](string: string): number {
-		switch (this[ORIGIN]) {
+		switch (this.#ORIGIN) {
 			case 'timeZone':
 			case 'toUTC':
 			case 'utc':
@@ -271,7 +277,7 @@ export class Chronos {
 	}
 
 	[Symbol.split](string: string): string[] {
-		switch (this[ORIGIN]) {
+		switch (this.#ORIGIN) {
 			case 'timeZone':
 			case 'toUTC':
 			case 'utc':
@@ -292,7 +298,7 @@ export class Chronos {
 	}
 
 	get [Symbol.toStringTag](): string {
-		switch (this[ORIGIN]) {
+		switch (this.#ORIGIN) {
 			case 'timeZone':
 				return this.toISOString().replace('Z', this.#offset.slice(3));
 			case 'toUTC':
@@ -334,7 +340,8 @@ export class Chronos {
 	 */
 	#withOrigin(origin: ChronosMethods, offset?: UTCOffSet): Chronos {
 		const instance = new Chronos(this.#date);
-		instance[ORIGIN] = origin;
+		instance.#ORIGIN = origin;
+		instance.origin = origin;
 		if (offset) instance.#offset = offset;
 		return instance;
 	}
@@ -549,13 +556,13 @@ export class Chronos {
 	/** @instance Clones and returns a new Chronos instance with the same date. */
 	clone(): Chronos {
 		return new Chronos(this.#date).#withOrigin(
-			this[ORIGIN] as ChronosMethods,
+			this.#ORIGIN as ChronosMethods,
 		);
 	}
 
 	/** @instance Gets the native `Date` instance (read-only). */
 	toDate(): Date {
-		switch (this[ORIGIN]) {
+		switch (this.#ORIGIN) {
 			case 'toUTC':
 			case 'utc': {
 				const mins = this.getUTCOffsetMinutes();
@@ -571,7 +578,7 @@ export class Chronos {
 
 	/** @instance Returns a string representation of a date. The format of the string depends on the locale. */
 	toString(): string {
-		switch (this[ORIGIN]) {
+		switch (this.#ORIGIN) {
 			case 'timeZone': {
 				const gmt = this.#offset.replace('UTC', 'GMT').replace(':', '');
 				const label = TIME_ZONE_LABELS[this.#offset] ?? this.#offset;
@@ -595,7 +602,7 @@ export class Chronos {
 
 	/** @instance Returns ISO string with local time zone offset */
 	toLocalISOString(): string {
-		switch (this[ORIGIN]) {
+		switch (this.#ORIGIN) {
 			case 'timeZone':
 			case 'toUTC':
 			case 'utc': {
@@ -613,7 +620,7 @@ export class Chronos {
 
 	/** @instance Returns a date as a string value in ISO format. */
 	toISOString(): string {
-		switch (this[ORIGIN]) {
+		switch (this.#ORIGIN) {
 			case 'timeZone':
 				return this.#toLocalISOString().replace(
 					this.getUTCOffset(),

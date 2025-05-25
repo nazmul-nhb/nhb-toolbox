@@ -119,6 +119,7 @@ const chronos = /*#__PURE__*/ (
  * isValidDate(value: unknown): boolean
  * isDateString(value: unknown): boolean
  * isValidChronos(value: unknown): boolean
+ * formatTimePart(time: string, format?: TimeParts): string
  * ```
  */
 const typedChronos = /*#__PURE__*/ chronos as ChronosStatics;

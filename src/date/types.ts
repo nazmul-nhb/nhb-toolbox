@@ -12,7 +12,6 @@ import type {
 	YEAR_FORMATS,
 	ZODIAC_SIGNS,
 } from './constants';
-import type { ORIGIN } from './symbols';
 
 /** - Minute in numeric string from `00` to `23` */
 export type Hours =
@@ -266,7 +265,7 @@ export interface TimeDuration {
 }
 
 /** @internal Helper type to assign instance origin when creating new Chronos instance. */
-export type WithoutOrigin = Omit<Chronos, typeof ORIGIN>;
+export type WithoutOrigin = Omit<Chronos, '#ORIGIN' | 'origin'>;
 
 /** Methods (both instance and static) in `Chronos` class that return `Chronos` instance. */
 export type ChronosMethods =
