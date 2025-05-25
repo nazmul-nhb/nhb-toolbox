@@ -7,13 +7,13 @@ import {
 	DAYS,
 	DEFAULT_RANGES,
 	MONTHS,
-	ORIGIN,
 	sortedFormats,
 	TIME_ZONE_LABELS,
 	TIME_ZONES,
 	ZODIAC_SIGNS,
 } from './constants';
 import { isLeapYear, isValidUTCOffSet } from './guards';
+import { ORIGIN } from './symbols';
 import type {
 	ChronosFormat,
 	ChronosInput,

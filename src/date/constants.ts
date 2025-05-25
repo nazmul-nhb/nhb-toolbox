@@ -1,7 +1,5 @@
 import type { DayPart, Hours, UTCOffSet } from './types';
 
-export const ORIGIN = Symbol('origin');
-
 export const DAYS = [
 	'Sunday',
 	'Monday',

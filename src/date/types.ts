@@ -6,13 +6,13 @@ import type {
 	MILLISECOND_FORMATS,
 	MINUTE_FORMATS,
 	MONTH_FORMATS,
-	ORIGIN,
 	SECOND_FORMATS,
 	TIME_FORMATS,
 	TIME_ZONES,
 	YEAR_FORMATS,
 	ZODIAC_SIGNS,
 } from './constants';
+import type { ORIGIN } from './symbols';
 
 /** - Minute in numeric string from `00` to `23` */
 export type Hours =

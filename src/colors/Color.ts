@@ -27,9 +27,6 @@ import type {
 } from './types';
 import { extractAlphaColorValues, extractSolidColorValues } from './utils';
 
-const hsl = generateRandomHSLColor();
-const { hex, rgb } = convertColorCode(hsl);
-
 /**
  * * Class representing a color and its conversions among `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` and `HSLA` formats.
  * * It has 13 instance methods to manipulate and play with the color values.
@@ -217,6 +214,9 @@ export class Color {
 				}
 			}
 		} else {
+			const hsl = generateRandomHSLColor();
+			const { hex, rgb } = convertColorCode(hsl);
+
 			const rgbValues = extractSolidColorValues(rgb);
 			const hslValues = extractSolidColorValues(hsl);
 
