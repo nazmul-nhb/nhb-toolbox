@@ -56,7 +56,7 @@ import { extractMinutesFromUTC, formatUTCOffset } from './utils';
  *
  * @returns Instance of `Chronos` with all methods and properties.
  */
-export class Chronos {
+export /* @__PURE__ */ class Chronos {
 	readonly #date: Date;
 	#offset: UTCOffSet;
 	#ORIGIN: ChronosMethods | 'root';

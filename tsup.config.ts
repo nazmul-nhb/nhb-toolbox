@@ -14,7 +14,15 @@ export default defineConfig({
 	treeshake: true,
 	skipNodeModulesBundle: true,
 	esbuildOptions(options) {
-		options.pure = ['Object.freeze'];
+		options.treeShaking = true;
+		options.pure = [
+			'Object.freeze',
+			'console.warn',
+			'console.log',
+			'console.error',
+			'Chronos',
+			'_Chronos',
+		];
 		// options.resolveExtensions = ['.ts', '.js', '.mts', '.mjs'];
 	},
 });

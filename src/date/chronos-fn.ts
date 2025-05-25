@@ -81,7 +81,7 @@ const chronos = /* @__PURE__ */ (
 			ms ?? 0,
 		);
 	} else {
-		newChronos = new Chronos(valueOrYear);
+		newChronos = /* @__PURE__ */ new Chronos(valueOrYear);
 	}
 
 	return newChronos;
