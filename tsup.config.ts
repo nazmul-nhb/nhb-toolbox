@@ -13,7 +13,8 @@ export default defineConfig({
 	shims: true,
 	treeshake: true,
 	skipNodeModulesBundle: true,
-	// esbuildOptions(options) {
-	// 	options.resolveExtensions = ['.ts', '.js', '.mts', '.mjs'];
-	// },
+	esbuildOptions(options) {
+		options.pure = ['Object.freeze'];
+		// options.resolveExtensions = ['.ts', '.js', '.mts', '.mjs'];
+	},
 });

@@ -2,6 +2,9 @@ import { trimString } from './basics';
 import { LOWERCASE } from './constants';
 import type { CaseFormat, MaskOptions } from './types';
 
+/** Lowercase prepositions, articles, conjunctions, and auxiliary verbs */
+type Lower = (typeof LOWERCASE)[number];
+
 /**
  * * Converts a string to a specified case format such as `camelCase`, `snake_case`, `kebab-case`, `PascalCase`, `Title Case`, `lowercase`, or `UPPERCASE`.
  *
@@ -40,7 +43,7 @@ export function convertStringCase(string: string, format: CaseFormat): string {
 			const endSymbol = part.match(/[^\d\w\s]+$/)?.[0] || ''; // Capture trailing symbols
 			const coreWord = part.replace(/^[^\d\w\s]+|[^\d\w\s]+$/g, ''); // Remove them for processing
 
-			if (LOWERCASE.includes(coreWord?.toLowerCase())) {
+			if (LOWERCASE.includes(coreWord?.toLowerCase() as Lower)) {
 				return startSymbol + coreWord?.toLowerCase() + endSymbol;
 			}
 

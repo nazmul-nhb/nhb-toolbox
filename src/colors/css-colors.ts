@@ -1,4 +1,4 @@
-export const CSS_COLORS = {
+export const CSS_COLORS = /* @__PURE__ */ Object.freeze({
 	black: '#000000',
 	silver: '#C0C0C0',
 	gray: '#808080',
@@ -156,4 +156,4 @@ export const CSS_COLORS = {
 	info: '#2196F3',
 	warning: '#FF9800',
 	error: '#F44336',
-} as const;
+} as const);

@@ -1,6 +1,6 @@
 import type { DayPart, Hours, UTCOffSet } from './types';
 
-export const DAYS = [
+export const DAYS = /* @__PURE__ */ Object.freeze([
 	'Sunday',
 	'Monday',
 	'Tuesday',
@@ -8,9 +8,9 @@ export const DAYS = [
 	'Thursday',
 	'Friday',
 	'Saturday',
-] as const;
+] as const);
 
-export const MONTHS = [
+export const MONTHS = /* @__PURE__ */ Object.freeze([
 	'January',
 	'February',
 	'March',
@@ -23,31 +23,73 @@ export const MONTHS = [
 	'October',
 	'November',
 	'December',
-] as const;
+] as const);
 
-export const YEAR_FORMATS = ['YYYY', 'YY', 'yyyy', 'yy'] as const;
-export const MONTH_FORMATS = ['M', 'MM', 'mmm', 'mmmm'] as const;
-export const DATE_FORMATS = ['DD', 'D', 'Do'] as const;
-export const DAY_FORMATS = ['d', 'dd', 'ddd'] as const;
-export const HOUR_FORMATS = ['H', 'HH', 'hh', 'h'] as const;
-export const MINUTE_FORMATS = ['mm', 'm'] as const;
-export const SECOND_FORMATS = ['ss', 's'] as const;
-export const MILLISECOND_FORMATS = ['ms', 'mss'] as const;
-export const TIME_FORMATS = ['a', 'A'] as const;
+export const YEAR_FORMATS = /* @__PURE__ */ Object.freeze([
+	'YYYY',
+	'YY',
+	'yyyy',
+	'yy',
+] as const);
 
-export const sortedFormats = [
-	...YEAR_FORMATS,
-	...MONTH_FORMATS,
-	...DAY_FORMATS,
-	...DATE_FORMATS,
-	...HOUR_FORMATS,
-	...MINUTE_FORMATS,
-	...SECOND_FORMATS,
-	...MILLISECOND_FORMATS,
-	...TIME_FORMATS,
-].sort((a, b) => b.length - a.length);
+export const MONTH_FORMATS = /* @__PURE__ */ Object.freeze([
+	'M',
+	'MM',
+	'mmm',
+	'mmmm',
+] as const);
 
-export const TIME_ZONES = {
+export const DATE_FORMATS = /* @__PURE__ */ Object.freeze([
+	'DD',
+	'D',
+	'Do',
+] as const);
+
+export const DAY_FORMATS = /* @__PURE__ */ Object.freeze([
+	'd',
+	'dd',
+	'ddd',
+] as const);
+
+export const HOUR_FORMATS = /* @__PURE__ */ Object.freeze([
+	'H',
+	'HH',
+	'hh',
+	'h',
+] as const);
+
+export const MINUTE_FORMATS = /* @__PURE__ */ Object.freeze([
+	'mm',
+	'm',
+] as const);
+
+export const SECOND_FORMATS = /* @__PURE__ */ Object.freeze([
+	'ss',
+	's',
+] as const);
+
+export const MILLISECOND_FORMATS = /* @__PURE__ */ Object.freeze([
+	'ms',
+	'mss',
+] as const);
+
+export const TIME_FORMATS = /* @__PURE__ */ Object.freeze(['a', 'A'] as const);
+
+export const sortedFormats = /* @__PURE__ */ Object.freeze(
+	[
+		...YEAR_FORMATS,
+		...MONTH_FORMATS,
+		...DAY_FORMATS,
+		...DATE_FORMATS,
+		...HOUR_FORMATS,
+		...MINUTE_FORMATS,
+		...SECOND_FORMATS,
+		...MILLISECOND_FORMATS,
+		...TIME_FORMATS,
+	].sort((a, b) => b.length - a.length),
+);
+
+export const TIME_ZONES = /* @__PURE__ */ {
 	// UTC -12:00 to -01:00 (Mostly Pacific Islands, Americas)
 	/** International Date Line West (Baker Island, Howland Island) */
 	IDLW: -12 * 60,
@@ -337,75 +379,77 @@ export const TIME_ZONES = {
 	PETT: 12 * 60,
 } as const;
 
-export const TIME_ZONE_LABELS: Record<UTCOffSet, string> = {
-	'UTC-12:00': 'Baker Island Time', // and Howland Island
-	// 'UTC-11:30': 'Niue Time',
-	// 'UTC-11:00': 'Niue Time',
-	'UTC-11:00': 'Samoa Standard Time',
-	// 'UTC-10:30': 'Marquesas Time',
-	'UTC-10:00': 'Hawaii-Aleutian Standard Time',
-	'UTC-09:30': 'Marquesas Islands Time',
-	'UTC-09:00': 'Alaskan Standard Time',
-	// 'UTC-08:30': 'Pitcairn Standard Time',
-	'UTC-08:00': 'Pacific Standard Time',
-	'UTC-07:30': 'Mountain Standard Time (Unofficial)',
-	'UTC-07:00': 'Mountain Standard Time',
-	'UTC-06:30': 'Central America Time (Unofficial)',
-	'UTC-06:00': 'Central Standard Time',
-	// 'UTC-05:30': 'Venezuelan Standard Time (Historical)',
-	'UTC-05:00': 'Eastern Standard Time',
-	// 'UTC-04:30': 'Venezuelan Standard Time',
-	'UTC-04:00': 'Atlantic Standard Time',
-	'UTC-03:30': 'Newfoundland Standard Time',
-	'UTC-03:00': 'SA Eastern Standard Time',
-	'UTC-02:30': 'Mid-Atlantic Time (Unofficial)',
-	'UTC-02:00': 'Mid-Atlantic Standard Time',
-	'UTC-01:30': 'Azores Time (Unofficial)',
-	'UTC-01:00': 'Cape Verde Time',
-	'UTC+00:00': 'Greenwich Mean Time',
-	'UTC+00:30': 'British Summer Time (Historical)',
-	'UTC+01:00': 'Central European Standard Time',
-	'UTC+01:30': 'Central Africa Time (Unofficial)',
-	'UTC+02:00': 'Eastern European Standard Time',
-	'UTC+02:30': 'Israel Standard Time (Historical)',
-	'UTC+03:00': 'Arab Standard Time',
-	'UTC+03:30': 'Iran Standard Time',
-	'UTC+04:00': 'Gulf Standard Time',
-	'UTC+04:30': 'Afghanistan Time',
-	'UTC+05:00': 'Pakistan Standard Time',
-	'UTC+05:30': 'India Standard Time',
-	'UTC+05:45': 'Nepal Standard Time',
-	'UTC+06:00': 'Bangladesh Standard Time',
-	'UTC+06:30': 'Myanmar Standard Time',
-	'UTC+07:00': 'Indochina Standard Time',
-	'UTC+07:30': 'Western Indonesia Time (Unofficial)',
-	'UTC+08:00': 'China Standard Time',
-	'UTC+08:30': 'North Korea Standard Time',
-	'UTC+08:45': 'South-Western Australia Standard Time',
-	'UTC+09:00': 'Japan Standard Time',
-	'UTC+09:30': 'Central Australia Standard Time',
-	'UTC+10:00': 'Eastern Australia Standard Time',
-	'UTC+10:30': 'Lord Howe Standard Time',
-	'UTC+11:00': 'Central Pacific Standard Time',
-	// 'UTC+11:30': 'Norfolk Island Time',
-	'UTC+12:00': 'New Zealand Standard Time',
-	'UTC+12:45': 'Chatham Islands Time',
-	'UTC+13:00': 'Phoenix Island Time',
-	'UTC+13:45': 'Tokelau Time (Unofficial)',
-	'UTC+14:00': 'Line Islands Time',
-} as Record<UTCOffSet, string>;
+export const TIME_ZONE_LABELS: Record<UTCOffSet, string> =
+	/* @__PURE__ */ Object.freeze({
+		'UTC-12:00': 'Baker Island Time', // and Howland Island
+		// 'UTC-11:30': 'Niue Time',
+		// 'UTC-11:00': 'Niue Time',
+		'UTC-11:00': 'Samoa Standard Time',
+		// 'UTC-10:30': 'Marquesas Time',
+		'UTC-10:00': 'Hawaii-Aleutian Standard Time',
+		'UTC-09:30': 'Marquesas Islands Time',
+		'UTC-09:00': 'Alaskan Standard Time',
+		// 'UTC-08:30': 'Pitcairn Standard Time',
+		'UTC-08:00': 'Pacific Standard Time',
+		'UTC-07:30': 'Mountain Standard Time (Unofficial)',
+		'UTC-07:00': 'Mountain Standard Time',
+		'UTC-06:30': 'Central America Time (Unofficial)',
+		'UTC-06:00': 'Central Standard Time',
+		// 'UTC-05:30': 'Venezuelan Standard Time (Historical)',
+		'UTC-05:00': 'Eastern Standard Time',
+		// 'UTC-04:30': 'Venezuelan Standard Time',
+		'UTC-04:00': 'Atlantic Standard Time',
+		'UTC-03:30': 'Newfoundland Standard Time',
+		'UTC-03:00': 'SA Eastern Standard Time',
+		'UTC-02:30': 'Mid-Atlantic Time (Unofficial)',
+		'UTC-02:00': 'Mid-Atlantic Standard Time',
+		'UTC-01:30': 'Azores Time (Unofficial)',
+		'UTC-01:00': 'Cape Verde Time',
+		'UTC+00:00': 'Greenwich Mean Time',
+		'UTC+00:30': 'British Summer Time (Historical)',
+		'UTC+01:00': 'Central European Standard Time',
+		'UTC+01:30': 'Central Africa Time (Unofficial)',
+		'UTC+02:00': 'Eastern European Standard Time',
+		'UTC+02:30': 'Israel Standard Time (Historical)',
+		'UTC+03:00': 'Arab Standard Time',
+		'UTC+03:30': 'Iran Standard Time',
+		'UTC+04:00': 'Gulf Standard Time',
+		'UTC+04:30': 'Afghanistan Time',
+		'UTC+05:00': 'Pakistan Standard Time',
+		'UTC+05:30': 'India Standard Time',
+		'UTC+05:45': 'Nepal Standard Time',
+		'UTC+06:00': 'Bangladesh Standard Time',
+		'UTC+06:30': 'Myanmar Standard Time',
+		'UTC+07:00': 'Indochina Standard Time',
+		'UTC+07:30': 'Western Indonesia Time (Unofficial)',
+		'UTC+08:00': 'China Standard Time',
+		'UTC+08:30': 'North Korea Standard Time',
+		'UTC+08:45': 'South-Western Australia Standard Time',
+		'UTC+09:00': 'Japan Standard Time',
+		'UTC+09:30': 'Central Australia Standard Time',
+		'UTC+10:00': 'Eastern Australia Standard Time',
+		'UTC+10:30': 'Lord Howe Standard Time',
+		'UTC+11:00': 'Central Pacific Standard Time',
+		// 'UTC+11:30': 'Norfolk Island Time',
+		'UTC+12:00': 'New Zealand Standard Time',
+		'UTC+12:45': 'Chatham Islands Time',
+		'UTC+13:00': 'Phoenix Island Time',
+		'UTC+13:45': 'Tokelau Time (Unofficial)',
+		'UTC+14:00': 'Line Islands Time',
+	} as Record<UTCOffSet, string>);
 
 /** Ranges for day parts. */
-export const DEFAULT_RANGES: Record<DayPart, [Hours, Hours]> = {
-	night: ['21', '23'],
-	midnight: ['00', '01'],
-	lateNight: ['02', '04'],
-	morning: ['05', '11'],
-	afternoon: ['12', '16'],
-	evening: ['17', '20'],
-} as const;
+export const DEFAULT_RANGES: Record<DayPart, [Hours, Hours]> =
+	/* @__PURE__ */ Object.freeze({
+		night: ['21', '23'],
+		midnight: ['00', '01'],
+		lateNight: ['02', '04'],
+		morning: ['05', '11'],
+		afternoon: ['12', '16'],
+		evening: ['17', '20'],
+	} as const);
 
-export const ZODIAC_SIGNS = [
+export const ZODIAC_SIGNS = /* @__PURE__ */ Object.freeze([
 	['Capricorn', [1, 19]],
 	['Aquarius', [2, 18]],
 	['Pisces', [3, 20]],
@@ -419,4 +463,4 @@ export const ZODIAC_SIGNS = [
 	['Scorpio', [11, 21]],
 	['Sagittarius', [12, 21]],
 	['Capricorn', [12, 31]],
-] as const;
+] as const);

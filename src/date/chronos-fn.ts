@@ -59,7 +59,7 @@ import type { ChronosInput, ChronosStatics } from './types';
  * Chronos.parse("2023-12-31", "YYYY-MM-DD");
  * ```
  */
-const chronos = /*#__PURE__*/ (
+const chronos = /* @__PURE__ */ (
 	valueOrYear?: ChronosInput,
 	month?: number,
 	date?: number,
@@ -122,7 +122,7 @@ const chronos = /*#__PURE__*/ (
  * formatTimePart(time: string, format?: TimeParts): string
  * ```
  */
-const typedChronos = /*#__PURE__*/ chronos as ChronosStatics;
+const typedChronos = /* @__PURE__ */ chronos as ChronosStatics;
 
 // ? Add static methods from Chronos class to the chronos function
 // Object.getOwnPropertyNames(Chronos).forEach((method) => {

@@ -1,4 +1,4 @@
-export const LOWERCASE: string[] = [
+export const LOWERCASE = /* @__PURE__ */ Object.freeze([
 	// Conjunctions
 	'and',
 	'but',
@@ -127,4 +127,4 @@ export const LOWERCASE: string[] = [
 	'were',
 	'will',
 	'would',
-] as const;
+] as const);

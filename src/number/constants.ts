@@ -1,4 +1,4 @@
-export const ONES = [
+export const ONES = /* @__PURE__ */ Object.freeze([
 	'',
 	'one',
 	'two',
@@ -9,9 +9,9 @@ export const ONES = [
 	'seven',
 	'eight',
 	'nine',
-] as const;
+] as const);
 
-export const TEENS = [
+export const TEENS = /* @__PURE__ */ Object.freeze([
 	'ten',
 	'eleven',
 	'twelve',
@@ -22,9 +22,9 @@ export const TEENS = [
 	'seventeen',
 	'eighteen',
 	'nineteen',
-] as const;
+] as const);
 
-export const TENS = [
+export const TENS = /* @__PURE__ */ Object.freeze([
 	'',
 	'ten',
 	'twenty',
@@ -35,9 +35,9 @@ export const TENS = [
 	'seventy',
 	'eighty',
 	'ninety',
-] as const;
+] as const);
 
-export const THOUSANDS = [
+export const THOUSANDS = /* @__PURE__ */ Object.freeze([
 	'',
 	'thousand',
 	'million',
@@ -47,10 +47,10 @@ export const THOUSANDS = [
 	'quintillion',
 	// ! Needs to modify later, below supports up to 10 sextillion! It's a bug!
 	// 'sextillion',
-] as const;
+] as const);
 
 /** List of ISO 4217 currency codes */
-export const CURRENCY_CODES = [
+export const CURRENCY_CODES = /* @__PURE__ */ Object.freeze([
 	'AED',
 	'AFN',
 	'ALL',
@@ -211,10 +211,10 @@ export const CURRENCY_CODES = [
 	'ZAR',
 	'ZMW',
 	'ZWL',
-] as const;
+] as const);
 
 /** List of all supported BCP 47 locales */
-export const LOCALE_CODES = [
+export const LOCALE_CODES = /* @__PURE__ */ Object.freeze([
 	'af-ZA',
 	'am-ET',
 	'ar-AE',
@@ -340,10 +340,10 @@ export const LOCALE_CODES = [
 	'zh-CN',
 	'zh-HK',
 	'zh-TW',
-] as const;
+] as const);
 
 /** Mapping of CurrencyCodes to LocaleCodes */
-export const CURRENCY_LOCALES = {
+export const CURRENCY_LOCALES = /* @__PURE__ */ Object.freeze({
 	AED: 'ar-AE', // United Arab Emirates Dirham
 	AFN: 'fa-IR', // Afghan Afghani
 	ALL: 'sq-AL', // Albanian Lek
@@ -504,10 +504,10 @@ export const CURRENCY_LOCALES = {
 	ZAR: 'en-ZA', // South African Rand
 	ZMW: 'en-ZM', // Zambian Kwacha
 	ZWL: 'en-ZW', // Zimbabwean Dollar
-} as const;
+} as const);
 
 /** * Fiat currencies supported by Frankfurter API */
-export const SUPPORTED_CURRENCIES = [
+export const SUPPORTED_CURRENCIES = /* @__PURE__ */ Object.freeze([
 	'AUD',
 	'BGN',
 	'BRL',
@@ -539,10 +539,10 @@ export const SUPPORTED_CURRENCIES = [
 	'TRY',
 	'USD',
 	'ZAR',
-] as const;
+] as const);
 
 /** * Unit names and their full readable labels. */
-export const UNITS = {
+export const UNITS = /* @__PURE__ */ Object.freeze({
 	// Length
 	m: 'Meter',
 	km: 'Kilometer',
@@ -594,10 +594,10 @@ export const UNITS = {
 	// Frequency
 	hz: 'Hertz',
 	khz: 'Kilohertz',
-} as const;
+} as const);
 
 /** * Scientific SI Unit prefix multipliers. */
-export const PREFIX_MULTIPLIERS = {
+export const PREFIX_MULTIPLIERS = /* @__PURE__ */ Object.freeze({
 	y: 1e-24,
 	z: 1e-21,
 	a: 1e-18,
@@ -620,4 +620,4 @@ export const PREFIX_MULTIPLIERS = {
 	Z: 1e21,
 	Y: 1e24,
 	'': 1, // base unit, like meter, gram, byte etc.
-} as const;
+} as const);
