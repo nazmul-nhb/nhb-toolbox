@@ -199,16 +199,7 @@ export {
 	isValidUTCOffSet,
 } from './date/guards';
 
-export { Chronos, Chronos as Chronus } from './date/Chronos';
-
-export {
-	chronos,
-	chronos as chronosjs,
-	chronos as chronosts,
-	chronos as chronus,
-	chronos as chronusjs,
-	chronos as chronusts,
-} from './date/chronos-fn';
+// ! Removed Chronos
 
 export {
 	formatUTCOffset as convertMinutesToUTCOffset,
@@ -470,43 +461,7 @@ export type {
 	Tetrad,
 	Triad,
 } from './colors/types';
-export type {
-	ChronosFormat,
-	ChronosInput,
-	ChronosMethods,
-	ChronosObject,
-	ChronosStatics,
-	DateParts,
-	Day,
-	DayPart,
-	DayPartConfig,
-	FormatOptions,
-	GreetingConfigs,
-	Hour,
-	Hours,
-	Millisecond,
-	Minute,
-	Minutes,
-	Month,
-	MonthDate,
-	NegativeUTCHour,
-	PositiveUTCHour,
-	Quarter,
-	Second,
-	Seconds,
-	StrictFormat,
-	Time,
-	TimeDuration,
-	TimeFormats,
-	TimeParts,
-	TimeUnit,
-	TimeZone,
-	UTCMinute,
-	UTCOffSet,
-	WithoutOrigin,
-	Year,
-	ZodiacSign,
-} from './date/types';
+export type { GreetingConfigs } from './date/types';
 export type {
 	CustomFile,
 	FileError,
