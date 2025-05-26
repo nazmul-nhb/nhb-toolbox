@@ -154,7 +154,7 @@ export type {
 	Primitive,
 	ThrottledFn,
 	VoidFunction,
-} from './types/index';
+} from './types';
 export type {
 	FromMetaOptions,
 	PageListOptions,

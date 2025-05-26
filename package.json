@@ -1,6 +1,6 @@
 {
 	"name": "nhb-toolbox",
-	"version": "4.11.4",
+	"version": "4.11.5",
 	"description": "A versatile collection of smart, efficient, and reusable utility functions and classes for everyday development needs.",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
@@ -61,35 +61,19 @@
 	},
 	"exports": {
 		".": {
-			"import": {
-				"types": "./dist/index.d.mts",
-				"default": "./dist/index.mjs"
-			},
-			"require": {
-				"types": "./dist/index.d.ts",
-				"default": "./dist/index.js"
-			}
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js"
 		},
 		"./types": {
-			"import": {
-				"types": "./dist/dts/types/index.d.mts",
-				"default": "./dist/dts/types/index.d.mts"
-			},
-			"require": {
-				"types": "./dist/dts/types/index.d.ts",
-				"default": "./dist/dts/types/index.d.ts"
-			}
-		},
-		"./chronos": {
-			"import": {
-				"types": "./dist/chronos.d.mts",
-				"default": "./dist/chronos.mjs"
-			},
-			"require": {
-				"types": "./dist/chronos.d.ts",
-				"default": "./dist/chronos.js"
-			}
+			"types": "./dist/typedefs.d.ts",
+			"default": "./dist/typedefs.d.ts"
 		}
+	},
+	"./chronos": {
+		"types": "./dist/chronos.d.ts",
+		"import": "./dist/chronos.mjs",
+		"require": "./dist/chronos.js"
 	},
 	"typesVersions": {
 		"*": {

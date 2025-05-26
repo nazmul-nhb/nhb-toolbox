@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-	entry: ['src/index.ts', 'src/chronos.ts', 'src/types.ts'],
+	entry: ['src/index.ts', 'src/chronos.ts', 'src/typedefs.ts'],
 	format: ['esm', 'cjs'],
 	target: ['esnext'],
 	outDir: 'dist',
