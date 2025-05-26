@@ -25,6 +25,6 @@ export default defineConfig({
 			'console.log',
 			'console.error',
 		];
-		// options.resolveExtensions = ['.ts', '.js', '.mts', '.mjs'];
+		options.resolveExtensions = ['.ts', '.js', '.mts', '.mjs'];
 	},
 });
