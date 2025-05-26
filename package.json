@@ -1,6 +1,6 @@
 {
 	"name": "nhb-toolbox",
-	"version": "4.11.1",
+	"version": "4.11.2",
 	"description": "A versatile collection of smart, efficient, and reusable utility functions and classes for everyday development needs.",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
@@ -60,6 +60,7 @@
 		"typescript-eslint": "^8.21.0"
 	},
 	"exports": {
+		"./package.json": "./package.json",
 		".": {
 			"import": {
 				"types": "./dist/index.d.mts",
