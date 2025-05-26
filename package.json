@@ -1,6 +1,6 @@
 {
 	"name": "nhb-toolbox",
-	"version": "4.11.5",
+	"version": "4.11.6",
 	"description": "A versatile collection of smart, efficient, and reusable utility functions and classes for everyday development needs.",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
@@ -79,6 +79,9 @@
 		"*": {
 			"chronos": [
 				"dist/chronos.d.ts"
+			],
+			"types": [
+				"dist/typedefs.d.ts"
 			]
 		}
 	},
