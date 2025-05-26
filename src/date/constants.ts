@@ -89,7 +89,7 @@ export const sortedFormats = /* @__PURE__ */ Object.freeze(
 	].sort((a, b) => b.length - a.length),
 );
 
-export const TIME_ZONES = /* @__PURE__ */ {
+export const TIME_ZONES = /* @__PURE__ */ Object.freeze({
 	// UTC -12:00 to -01:00 (Mostly Pacific Islands, Americas)
 	/** International Date Line West (Baker Island, Howland Island) */
 	IDLW: -12 * 60,
@@ -377,7 +377,7 @@ export const TIME_ZONES = /* @__PURE__ */ {
 	MAWT: 5 * 60,
 	/** Petropavlovsk-Kamchatsky Time (Russia) */
 	PETT: 12 * 60,
-} as const;
+} as const);
 
 export const TIME_ZONE_LABELS: Record<UTCOffSet, string> =
 	/* @__PURE__ */ Object.freeze({

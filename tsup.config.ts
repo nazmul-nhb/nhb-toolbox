@@ -12,7 +12,16 @@ export default defineConfig({
 	bundle: true,
 	name: 'nhb-toolbox',
 	shims: true,
-	treeshake: true,
+	treeshake: {
+		annotations: true,
+		moduleSideEffects: false,
+		manualPureFunctions: [
+			'Object.freeze',
+			'console.warn',
+			'console.log',
+			'console.error',
+		],
+	},
 	skipNodeModulesBundle: true,
 	esbuildOptions(options) {
 		options.treeShaking = true;
@@ -25,6 +34,6 @@ export default defineConfig({
 			'console.log',
 			'console.error',
 		];
-		options.resolveExtensions = ['.ts', '.js', '.mts', '.mjs'];
+		// options.resolveExtensions = ['.ts', '.js', '.mts', '.mjs'];
 	},
 });
