@@ -8,8 +8,8 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// const distPath = path.join(__dirname, '../dist/dts');
-const distPath = path.join(__dirname, '../dist');
+const distPath = path.join(__dirname, '../dist/dts');
+// const distPath = path.join(__dirname, '../dist');
 
 /**
  * Get all subdirectory names under the dist/dts directory
@@ -36,8 +36,8 @@ const resolveTypeFile = (module) => {
 	for (const file of candidates) {
 		const fullPath = path.join(basePath, file);
 		if (fs.existsSync(fullPath)) {
-			// return `./dist/dts/${module}/${file}`;
-			return `./dist/${module}/${file}`;
+			return `./dist/dts/${module}/${file}`;
+			// return `./dist/${module}/${file}`;
 		}
 	}
 
@@ -54,18 +54,18 @@ const createExports = (modulePaths) => {
 	const exports = {
 		'./package.json': './package.json',
 		'.': {
-			// types: './dist/dts/index.d.ts',
-			// import: './dist/esm/index.js',
-			// require: './dist/cjs/index.js',
-			types: './dist/index.d.ts',
-			import: './dist/index.mjs',
-			require: './dist/index.js',
+			types: './dist/dts/index.d.ts',
+			import: './dist/esm/index.js',
+			require: './dist/cjs/index.js',
+			// types: './dist/index.d.ts',
+			// import: './dist/index.mjs',
+			// require: './dist/index.js',
 		},
 		'./types': {
-			// types: './dist/dts/types/index.d.ts',
-			// default: './dist/dts/types/index.d.ts',
-			types: './dist/types/index.d.ts',
-			default: './dist/types/index.d.ts',
+			types: './dist/dts/types/index.d.ts',
+			default: './dist/dts/types/index.d.ts',
+			// types: './dist/types/index.d.ts',
+			// default: './dist/types/index.d.ts',
 		},
 	};
 
@@ -101,8 +101,8 @@ const createTypesVersions = (validModules) => {
 
 	return {
 		'*': {
-			// types: ['dist/dts/types/index.d.ts'],
-			types: ['dist/types/index.d.ts'],
+			types: ['dist/dts/types/index.d.ts'],
+			// types: ['dist/types/index.d.ts'],
 			...versions,
 		},
 	};
@@ -124,12 +124,12 @@ const updatePackageJson = (exports, validModules) => {
 
 	console.info(
 		'✅ ' +
-			chalk.yellow.bold('package.json ') +
-			chalk.green.bold('has been updated with ') +
-			chalk.yellowBright.bold('exports') +
-			chalk.green(' and ') +
-			chalk.yellowBright.bold('typesVersions') +
-			chalk.green(' fields!'),
+		chalk.yellow.bold('package.json ') +
+		chalk.green.bold('has been updated with ') +
+		chalk.yellowBright.bold('exports') +
+		chalk.green(' and ') +
+		chalk.yellowBright.bold('typesVersions') +
+		chalk.green(' fields!'),
 	);
 };
 
