@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-	entry: ['src/index.ts', 'src/chronos.ts'],
+	entry: ['src/index.ts', 'src/chronos.ts', 'src/types.ts'],
 	format: ['esm', 'cjs'],
 	target: ['esnext'],
 	outDir: 'dist',
@@ -12,19 +12,21 @@ export default defineConfig({
 	bundle: true,
 	name: 'nhb-toolbox',
 	shims: true,
+	pure: ['Object.freeze', 'console.warn', 'console.log', 'console.error'],
+	keepNames: true,
 	treeshake: true,
 	skipNodeModulesBundle: true,
 	esbuildOptions(options) {
-		options.treeShaking = true;
 		options.entryNames = '[name]';
 		options.chunkNames = '[name]-nhb';
-		options.keepNames = true;
-		options.pure = [
-			'Object.freeze',
-			'console.warn',
-			'console.log',
-			'console.error',
-		];
+		// options.treeShaking = true;
+		// options.keepNames = true;
+		// options.pure = [
+		// 	'Object.freeze',
+		// 	'console.warn',
+		// 	'console.log',
+		// 	'console.error',
+		// ];
 		// options.resolveExtensions = ['.ts', '.js', '.mts', '.mjs'];
 	},
 });
