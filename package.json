@@ -1,6 +1,6 @@
 {
 	"name": "nhb-toolbox",
-	"version": "4.10.98",
+	"version": "4.10.99",
 	"description": "A versatile collection of smart, efficient, and reusable utility functions and classes for everyday development needs.",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
@@ -89,30 +89,19 @@
 	},
 	"exports": {
 		".": {
-			"import": {
-				"types": "./dist/index.d.mts",
-				"default": "./dist/index.mjs"
-			},
-			"require": {
-				"types": "./dist/index.d.ts",
-				"default": "./dist/index.js"
-			}
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js"
 		},
 		"./chronos": {
-			"import": {
-				"types": "./dist/chronos.d.mts",
-				"default": "./dist/chronos.mjs"
-			},
-			"require": {
-				"types": "./dist/chronos.d.ts",
-				"default": "./dist/chronos.js"
-			}
+			"types": "./dist/chronos.d.ts",
+			"import": "./dist/chronos.mjs",
+			"require": "./dist/chronos.js"
 		}
 	},
 	"typesVersions": {
 		"*": {
 			"chronos": [
-				"dist/chronos.d.mts",
 				"dist/chronos.d.ts"
 			]
 		}
