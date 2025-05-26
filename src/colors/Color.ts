@@ -186,7 +186,9 @@ export class Color {
 				this.hsl = newColor.hsl;
 				this.hsla = newColor.hsla;
 			} else {
-				const colors = this.#convertColorToOthers(color);
+				const colors = this.#convertColorToOthers(
+					color?.trim() as ColorType,
+				);
 
 				if ('hex8' in colors) {
 					// Extract alpha color values (Hex8, RGBA, HSLA)

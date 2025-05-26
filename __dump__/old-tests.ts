@@ -913,5 +913,114 @@
 // );
 
 
+// import { Temporal } from '@js-temporal/polyfill';
+
+// console.info(getClassDetails(Unit));
+
+// console.info(extractSolidColorValues('hsl(120, 42.86%, 41.18%)'));
+
+// const date = new Date();
+
+// const data = {
+// 	date: date,
+// 	// day: dayjs(),
+// 	// moment: moment(),
+// 	chronos: chronos(),
+// 	name: 'Man',
+// };
+
+// const formData = createFormData(data, {
+// 	// ignoreKeys: ['date'],
+// 	// stringifyNested: ['chronos'],
+// });
+
+// console.info(new Date('2025-05-09T13:50:26.990+06:00'));
+// console.info(formData);
+
+// console.info(isDateLike(Temporal.Now.instant()));
+
+// console.info(`${new Chronos()}`);
+// const yellow = new Color('#ffff00');
+// const complementary = yellow.getComplementaryColor();
+// console.info(complementary.hex); // "#0000FF" (blue)
+
+// console.info(new Unit(39).convert('celsiusToFahrenheit'));
+
+// const file = new File(['foo'], 'foo.txt', {
+// 	type: 'text/plain',
+// });
+
+// const obj = {
+// 	list: file,
+// 	name: 'Mamun',
+// 	address: { city: 'S', road: { no: 2, po: 6712, date: new Date() } },
+// };
+
+// console.info(createFormData(obj, { requiredKeys: ['address'] }));
+
+// interface D {
+// 	id?: number;
+// 	name?: string;
+// }
+
+// const data1 = [
+// 	{ id: 256, name: 'Apple' },
+// 	{ id: 256, name: 'Banana' },
+// ];
+
+// const data2 = [
+// 	{ id: 256, name: 'Apple' },
+// 	{ id: 256, name: 'Banana' },
+// 	{ id: 257, name: 'Banana' },
+// ];
+
+// const options = createOptionsArray(data1, {
+// 	firstFieldKey: 'id',
+// 	secondFieldKey: 'name',
+// 	retainNumberValue: true,
+// });
+
+// console.info(sanitizeData(data1, { keysToIgnore: ['id'] }));
+
+// console.info(options);
+
+// console.info(extractMissingElements(data1, data2, 'from-first'));
+
+// const rr = getNumbersInRange('any', { getAsString: false });
+
+// console.info(rr);
+
+// console.info(
+// 	calculatePercentage({
+// 		mode: 'get-percent',
+// 		part: 20,
+// 		total: 60,
+// 	}),
+// );
+// console.info(
+// 	calculatePercentage({
+// 		mode: 'get-original',
+// 		percentage: 90,
+// 		value: 200,
+// 		roundTo: 0,
+// 	}),
+// );
+// console.info(
+// 	calculatePercentage({
+// 		mode: 'get-value',
+// 		percentage: 20,
+// 		total: 156,
+// 	}),
+// );
+
+// console.info(
+// 	calculatePercentage({
+// 		mode: 'apply-percent-change',
+// 		baseValue: 20,
+// 		percentage: 33,
+// 	}),
+// );
+
+
 // "build": "tsup --config tsup.config.ts && node scripts/extensions.mjs && node scripts/types.mjs && prettier --write .",
 // "prepublishOnly": "tsup --config tsup.config.ts && node scripts/extensions.mjs && node scripts/types.mjs",

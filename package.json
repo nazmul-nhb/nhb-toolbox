@@ -1,6 +1,6 @@
 {
 	"name": "nhb-toolbox",
-	"version": "4.10.96",
+	"version": "4.11.0",
 	"description": "A versatile collection of smart, efficient, and reusable utility functions and classes for everyday development needs.",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
@@ -22,13 +22,72 @@
 		"access": "public"
 	},
 	"files": [
-		"dist"
+		"dist",
+		"LICENSE",
+		"README.md",
+		"package.json"
 	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/nazmul-nhb/nhb-toolbox.git"
 	},
 	"homepage": "https://nhb-toolbox.vercel.app",
+	"author": {
+		"name": "Nazmul Hassan",
+		"email": "nazmulnhb@gmail.com"
+	},
+	"license": "Apache-2.0",
+	"devDependencies": {
+		"@eslint/js": "^9.18.0",
+		"@types/jest": "^29.5.14",
+		"@types/node": "^22.10.7",
+		"@typescript-eslint/eslint-plugin": "^8.21.0",
+		"@typescript-eslint/parser": "^8.21.0",
+		"chalk": "4.1.2",
+		"eslint": "^9.18.0",
+		"eslint-config-prettier": "^10.0.1",
+		"eslint-plugin-prettier": "^5.2.3",
+		"execa": "^9.5.2",
+		"globals": "^15.14.0",
+		"globby": "^14.0.2",
+		"jest": "^29.7.0",
+		"prettier": "^3.4.2",
+		"progress-estimator": "^0.3.1",
+		"rimraf": "^6.0.1",
+		"ts-jest": "^29.2.5",
+		"tsup": "^8.5.0",
+		"typescript": "^5.7.3",
+		"typescript-eslint": "^8.21.0"
+	},
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/index.d.mts",
+				"default": "./dist/index.mjs"
+			},
+			"require": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			}
+		},
+		"./chronos": {
+			"import": {
+				"types": "./dist/chronos.d.mts",
+				"default": "./dist/chronos.mjs"
+			},
+			"require": {
+				"types": "./dist/chronos.d.ts",
+				"default": "./dist/chronos.js"
+			}
+		}
+	},
+	"typesVersions": {
+		"*": {
+			"chronos": [
+				"dist/chronos.d.ts"
+			]
+		}
+	},
 	"keywords": [
 		"toolbox",
 		"utility",
@@ -60,52 +119,5 @@
 		"day",
 		"nhb-toolbox"
 	],
-	"author": {
-		"name": "Nazmul Hassan",
-		"email": "nazmulnhb@gmail.com"
-	},
-	"license": "Apache-2.0",
-	"devDependencies": {
-		"@eslint/js": "^9.18.0",
-		"@types/jest": "^29.5.14",
-		"@types/node": "^22.10.7",
-		"@typescript-eslint/eslint-plugin": "^8.21.0",
-		"@typescript-eslint/parser": "^8.21.0",
-		"chalk": "4.1.2",
-		"eslint": "^9.18.0",
-		"eslint-config-prettier": "^10.0.1",
-		"eslint-plugin-prettier": "^5.2.3",
-		"execa": "^9.5.2",
-		"globals": "^15.14.0",
-		"globby": "^14.0.2",
-		"jest": "^29.7.0",
-		"prettier": "^3.4.2",
-		"progress-estimator": "^0.3.1",
-		"rimraf": "^6.0.1",
-		"ts-jest": "^29.2.5",
-		"tsup": "^8.5.0",
-		"typescript": "^5.7.3",
-		"typescript-eslint": "^8.21.0"
-	},
-	"exports": {
-		"./package.json": "./package.json",
-		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.mjs",
-			"require": "./dist/index.js"
-		},
-		"./chronos": {
-			"types": "./dist/chronos.d.ts",
-			"import": "./dist/chronos.mjs",
-			"require": "./dist/chronos.js"
-		}
-	},
-	"typesVersions": {
-		"*": {
-			"chronos": [
-				"dist/chronos.d.ts"
-			]
-		}
-	},
 	"packageManager": "pnpm@10.6.2+sha512.47870716bea1572b53df34ad8647b42962bc790ce2bf4562ba0f643237d7302a3d6a8ecef9e4bdfc01d23af1969aa90485d4cebb0b9638fa5ef1daef656f6c1b"
 }
