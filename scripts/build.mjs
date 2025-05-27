@@ -63,7 +63,7 @@ export const fixJsExtensions = async (dir) => {
 					execa('tsc', ['-p', 'tsconfig.esm.json'], {
 						stdio: 'inherit',
 					}).then(async () => {
-						// await fixJsExtensions('./dist/esm');
+						await fixJsExtensions('./dist/esm');
 						execa('node', ['./scripts/types.mjs'], {
 							stdio: 'inherit',
 						});
