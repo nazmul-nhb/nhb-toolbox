@@ -2,16 +2,19 @@
 	"compilerOptions": {
 		"target": "ESNext",
 		"lib": ["DOM", "ESNext"],
+		"paths": {
+			"*": ["./src/*"]
+		},
 		"rootDir": "./src",
 		"outDir": "./dist",
 		"declarationDir": "./dist/dts",
 		"declaration": true,
 		"declarationMap": true,
-		"emitDeclarationOnly": false,
 		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
+		"baseUrl": ".",
+		"preserveSymlinks": true,
 		"moduleResolution": "node",
-		// "module": "ESNext",
 		"strict": true,
 		"noImplicitAny": true,
 		"useUnknownInCatchVariables": true,

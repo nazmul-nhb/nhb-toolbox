@@ -1,4 +1,4 @@
-import type { Any } from '../types';
+import type { Any } from '../types/index';
 import type {
 	DotNotationKey,
 	GenericObject,

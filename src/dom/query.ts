@@ -2,7 +2,7 @@ import { flattenObjectKeyValue } from '../object/objectify';
 import { parseObjectValues } from '../object/sanitize';
 import type { QueryObject, StrictObject } from '../object/types';
 import type { QueryString } from '../string/types';
-import { deepParsePrimitives } from '../utils';
+import { deepParsePrimitives } from '../utils/index';
 
 /**
  * * Utility to generate query parameters from an object.

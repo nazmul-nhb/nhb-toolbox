@@ -1,5 +1,5 @@
 import type { GenericObject } from '../object/types';
-import type { AsyncFunction, GenericFn } from '../types';
+import type { AsyncFunction, GenericFn } from '../types/index';
 import { isString } from './primitives';
 
 /**

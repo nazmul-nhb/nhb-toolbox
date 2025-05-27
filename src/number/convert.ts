@@ -1,4 +1,4 @@
-import type { Numeric } from '../types';
+import type { Numeric } from '../types/index';
 import { THOUSANDS } from './constants';
 import { _convertLessThanThousand } from './helpers';
 

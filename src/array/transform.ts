@@ -1,6 +1,6 @@
 import { isNumber } from '../guards/primitives';
 import type { GenericObject } from '../object/types';
-import { isDeepEqual } from '../utils';
+import { isDeepEqual } from '../utils/index';
 import type { FieldValue, Option, OptionsConfig } from './types';
 
 /**

@@ -356,7 +356,7 @@ export {
 	parseJSON as parseJsonDeep,
 	deepParsePrimitives as parsePrimitivesDeep,
 	throttleAction,
-} from './utils';
+} from './utils/index';
 
 export { Paginator } from './utils/Paginator';
 

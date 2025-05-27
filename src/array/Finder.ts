@@ -1,4 +1,4 @@
-import type { OwnKeys } from '../types';
+import type { OwnKeys } from '../types/index';
 import type { FindOptions } from './types';
 
 type KeySelector<T> =

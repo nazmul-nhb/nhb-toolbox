@@ -1,4 +1,8 @@
-import type { FalsyPrimitive, NormalPrimitive, Primitive } from '../types';
+import type {
+	FalsyPrimitive,
+	NormalPrimitive,
+	Primitive,
+} from '../types/index';
 
 /**
  * * Type guard to check if a value is a number.

@@ -1,6 +1,6 @@
 import { isString } from '../guards/primitives';
 import { isNumericString } from '../guards/specials';
-import type { Numeric } from '../types';
+import type { Numeric } from '../types/index';
 import type { Time, UTCOffSet } from './types';
 
 /**

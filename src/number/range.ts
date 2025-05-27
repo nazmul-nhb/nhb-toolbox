@@ -1,5 +1,5 @@
 import { shuffleArray } from '../array/basics';
-import { convertArrayToString } from '../utils';
+import { convertArrayToString } from '../utils/index';
 import { getRandomNumber } from './basics';
 import { isEven, isOdd } from './guards';
 import { _applyMultiples } from './helpers';

@@ -1,5 +1,5 @@
 import { isNumber } from '../guards/primitives';
-import type { Numeric } from '../types';
+import type { Numeric } from '../types/index';
 import { _find2NumbersHCF, _find2NumbersLCM } from './helpers';
 import type {
 	ConvertedDecimal,

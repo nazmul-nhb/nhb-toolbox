@@ -10,7 +10,7 @@ import type {
 	DelayedFn,
 	ThrottledFn,
 	VoidFunction,
-} from '../types';
+} from '../types/index';
 
 /**
  * * Deeply compare two values (arrays, objects, or primitive values).

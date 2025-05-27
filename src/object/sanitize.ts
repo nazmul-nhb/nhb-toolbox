@@ -5,7 +5,7 @@ import {
 } from '../guards/non-primitives';
 import { isString } from '../guards/primitives';
 import { trimString } from '../string/basics';
-import type { Any, FlattenPartial, PartialOrRequired } from '../types';
+import type { Any, FlattenPartial, PartialOrRequired } from '../types/index';
 import type { DotNotationKey, GenericObject, SanitizeOptions } from './types';
 
 /**

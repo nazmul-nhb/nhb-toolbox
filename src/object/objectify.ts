@@ -3,8 +3,8 @@ import {
 	isNotEmptyObject,
 	isObject,
 } from '../guards/non-primitives';
-import type { Any, FlattenPartial } from '../types';
-import { isDeepEqual } from '../utils';
+import type { Any, FlattenPartial } from '../types/index';
+import { isDeepEqual } from '../utils/index';
 import { parseObjectValues } from './sanitize';
 import type { GenericObject } from './types';
 

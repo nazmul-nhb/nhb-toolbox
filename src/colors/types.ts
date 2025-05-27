@@ -1,4 +1,4 @@
-import type { Branded } from '../types';
+import type { Branded } from '../types/index';
 import type { Color } from './Color';
 import type { PERCENT_VALUES } from './constants';
 import type { CSS_COLORS } from './css-colors';

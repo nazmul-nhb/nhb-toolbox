@@ -1,4 +1,8 @@
-import type { AdvancedTypes, HasMethods, NormalPrimitive } from '../types';
+import type {
+	AdvancedTypes,
+	HasMethods,
+	NormalPrimitive,
+} from '../types/index';
 
 /** - Generic object with `unknown` value */
 export type StrictObject = Record<string, unknown>;

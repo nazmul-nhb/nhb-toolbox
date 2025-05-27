@@ -1,4 +1,4 @@
-import type { Numeric } from '../types';
+import type { Numeric } from '../types/index';
 import type {
 	ConvertOptions,
 	CurrencyCode,
