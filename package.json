@@ -1,6 +1,6 @@
 {
 	"name": "nhb-toolbox",
-	"version": "4.11.7-alpha.1",
+	"version": "4.11.7-alpha.2",
 	"description": "A versatile collection of smart, efficient, and reusable utility functions and classes for everyday development needs.",
 	"main": "dist/cjs/index.js",
 	"module": "dist/esm/index.js",
@@ -61,25 +61,6 @@
 		"typescript": "^5.7.3",
 		"typescript-eslint": "^8.21.0"
 	},
-	"exports": {
-		"./package.json": "./package.json",
-		".": {
-			"types": "./dist/dts/index.d.ts",
-			"import": "./dist/esm/index.js",
-			"require": "./dist/cjs/index.js"
-		},
-		"./types": {
-			"types": "./dist/dts/typedefs.d.ts",
-			"default": "./dist/dts/typedefs.d.ts"
-		}
-	},
-	"typesVersions": {
-		"*": {
-			"types": [
-				"dist/dts/typedefs.d.ts"
-			]
-		}
-	},
 	"keywords": [
 		"toolbox",
 		"utility",
@@ -111,5 +92,79 @@
 		"day",
 		"nhb-toolbox"
 	],
-	"packageManager": "pnpm@10.6.2+sha512.47870716bea1572b53df34ad8647b42962bc790ce2bf4562ba0f643237d7302a3d6a8ecef9e4bdfc01d23af1969aa90485d4cebb0b9638fa5ef1daef656f6c1b"
+	"packageManager": "pnpm@10.6.2+sha512.47870716bea1572b53df34ad8647b42962bc790ce2bf4562ba0f643237d7302a3d6a8ecef9e4bdfc01d23af1969aa90485d4cebb0b9638fa5ef1daef656f6c1b",
+	"exports": {
+		".": {
+			"types": "./dist/dts/index.d.ts",
+			"import": "./dist/esm/index.js",
+			"require": "./dist/cjs/index.js"
+		},
+		"./types": {
+			"types": "./dist/dts/types/index.d.ts",
+			"default": "./dist/dts/types/index.d.ts"
+		},
+		"./array/types": {
+			"types": "./dist/dts/array/types.d.ts",
+			"default": "./dist/dts/array/types.d.ts"
+		},
+		"./colors/types": {
+			"types": "./dist/dts/colors/types.d.ts",
+			"default": "./dist/dts/colors/types.d.ts"
+		},
+		"./date/types": {
+			"types": "./dist/dts/date/types.d.ts",
+			"default": "./dist/dts/date/types.d.ts"
+		},
+		"./form/types": {
+			"types": "./dist/dts/form/types.d.ts",
+			"default": "./dist/dts/form/types.d.ts"
+		},
+		"./number/types": {
+			"types": "./dist/dts/number/types.d.ts",
+			"default": "./dist/dts/number/types.d.ts"
+		},
+		"./object/types": {
+			"types": "./dist/dts/object/types.d.ts",
+			"default": "./dist/dts/object/types.d.ts"
+		},
+		"./string/types": {
+			"types": "./dist/dts/string/types.d.ts",
+			"default": "./dist/dts/string/types.d.ts"
+		},
+		"./utils/types": {
+			"types": "./dist/dts/utils/types.d.ts",
+			"default": "./dist/dts/utils/types.d.ts"
+		}
+	},
+	"typesVersions": {
+		"*": {
+			"types": [
+				"dist/dts/types/index.d.ts"
+			],
+			"array/types": [
+				"dist/dts/array/types.d.ts"
+			],
+			"colors/types": [
+				"dist/dts/colors/types.d.ts"
+			],
+			"date/types": [
+				"dist/dts/date/types.d.ts"
+			],
+			"form/types": [
+				"dist/dts/form/types.d.ts"
+			],
+			"number/types": [
+				"dist/dts/number/types.d.ts"
+			],
+			"object/types": [
+				"dist/dts/object/types.d.ts"
+			],
+			"string/types": [
+				"dist/dts/string/types.d.ts"
+			],
+			"utils/types": [
+				"dist/dts/utils/types.d.ts"
+			]
+		}
+	}
 }

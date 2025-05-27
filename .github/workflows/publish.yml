@@ -69,7 +69,15 @@ jobs:
             # Publish to NPM only if version is different
             - name: Publish to NPM
               if: env.VERSION_UNCHANGED == 'false'
-              run: pnpm publish --access public
+              # run: pnpm publish --access public
+              run: |
+                  if [[ "$VERSION" =~ -(alpha|beta|rc) ]]; then
+                    echo "Pre-release version detected, publishing with tag 'next'"
+                    pnpm publish --access public --tag next
+                  else
+                    echo "Stable version detected, publishing with default tag 'latest'"
+                    pnpm publish --access public
+                  fi
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

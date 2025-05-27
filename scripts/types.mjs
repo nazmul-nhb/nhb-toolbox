@@ -52,7 +52,7 @@ const resolveTypeFile = (module) => {
 const createExports = (modulePaths) => {
 	/** @type {Record<string, unknown>} */
 	const exports = {
-		'./package.json': './package.json',
+		// './package.json': './package.json',
 		'.': {
 			types: './dist/dts/index.d.ts',
 			import: './dist/esm/index.js',
@@ -93,22 +93,22 @@ const createExports = (modulePaths) => {
  */
 const createTypesVersions = (validModules) => {
 	/** @type {Record<string, string[]>} */
-	// const versions = {};
+	const versions = {};
 
-	/** @type {string[]} */
-	const types = ['dist/dts/types/index.d.ts'];
+	// /** @type {string[]} */
+	// const types = ['dist/dts/types/index.d.ts'];
 
-	validModules.forEach(([_module, resolved]) => {
-		// versions[`${module}/types`] = [resolved.replace('./', '')];
-		types.push(resolved.replace('./', ''));
+	validModules.forEach(([module, resolved]) => {
+		versions[`${module}/types`] = [resolved.replace('./', '')];
+		// types.push(resolved.replace('./', ''));
 	});
 
 	return {
 		'*': {
-			types,
-			// types: ['dist/dts/types/index.d.ts'],
+			// types,
+			types: ['dist/dts/types/index.d.ts'],
 			// types: ['dist/types/index.d.ts'],
-			// ...versions,
+			...versions,
 		},
 	};
 };
