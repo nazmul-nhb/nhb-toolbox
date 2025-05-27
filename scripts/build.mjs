@@ -64,10 +64,9 @@ export const fixJsExtensions = async (dir) => {
 						stdio: 'inherit',
 					}).then(async () => {
 						// await fixJsExtensions('./dist/esm');
-
-						execa('node', ['./scripts/types.mjs'], {
-							stdio: 'inherit',
-						});
+						// execa('node', ['./scripts/types.mjs'], {
+						// 	stdio: 'inherit',
+						// });
 					}),
 				),
 			),

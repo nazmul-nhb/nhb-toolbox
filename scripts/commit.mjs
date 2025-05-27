@@ -3,6 +3,7 @@ import { execa } from 'execa';
 import fs from 'fs/promises';
 import readline from 'readline/promises';
 import { estimator } from './estimator.mjs';
+import semver from 'semver';
 
 /**
  * @typedef {Object} PackageJson - Contents from `package.json`.
@@ -112,7 +113,7 @@ async function runFormatter() {
  * @param {string} oldVersion - The current version.
  * @returns {boolean} True if newVersion is equal or greater, otherwise false.
  */
-function isValidVersion(newVersion, oldVersion) {
+export function isValidVersion(newVersion, oldVersion) {
 	if (newVersion === oldVersion) return true;
 
 	const [major1, minor1, patch1] = newVersion.split('.').map(Number);
@@ -133,7 +134,7 @@ function isValidVersion(newVersion, oldVersion) {
 
 		/** @type {PackageJson} */
 		const packageJson = JSON.parse(packageData);
-		const currentVersion = packageJson.version;
+		const oldVersion = packageJson.version;
 
 		/** @type {string} - New Version */
 		let newVersion;
@@ -141,12 +142,12 @@ function isValidVersion(newVersion, oldVersion) {
 		while (true) {
 			newVersion = await rl.question(
 				chalk.cyan(
-					`Current version: ${chalk.yellow(currentVersion)}\nEnter new version: `,
+					`Current version: ${chalk.yellow(oldVersion)}\nEnter new version: `,
 				),
 			);
 
 			if (!newVersion?.trim()) {
-				newVersion = currentVersion;
+				newVersion = oldVersion;
 				console.info(
 					chalk.cyanBright(
 						`❕Continuing with the previous version ${chalk.yellow(newVersion)}`,
@@ -155,16 +156,25 @@ function isValidVersion(newVersion, oldVersion) {
 				break;
 			}
 
-			if (!/^\d+\.\d+\.\d+$/.test(newVersion)) {
+			if (!semver.valid(newVersion)) {
 				console.info(
 					chalk.yellow(
-						'⚠ Invalid version format! Use semver (e.g., 1.2.3).',
+						'⚠ Invalid semver format! Use formats like 1.2.3, 1.2.3-beta.1, etc.',
 					),
 				);
 				continue;
 			}
 
-			if (!isValidVersion(newVersion, currentVersion)) {
+			// if (!/^\d+\.\d+\.\d+$/.test(newVersion)) {
+			// 	console.info(
+			// 		chalk.yellow(
+			// 			'⚠ Invalid version format! Use semver (e.g., 1.2.3).',
+			// 		),
+			// 	);
+			// 	continue;
+			// }
+
+			if (!semver.gte(newVersion, oldVersion)) {
 				console.info(
 					chalk.yellow(
 						'⚠ New version must be equal or greater than the current version!',
@@ -192,7 +202,7 @@ function isValidVersion(newVersion, oldVersion) {
 
 		rl.close();
 
-		if (newVersion === currentVersion) {
+		if (newVersion === oldVersion) {
 			console.info(
 				chalk.yellowBright(
 					`✅ No version change detected. Current version: ${newVersion}`,

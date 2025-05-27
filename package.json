@@ -1,15 +1,15 @@
 {
 	"name": "nhb-toolbox",
-	"version": "4.11.6",
+	"version": "4.11.7-alpha.1",
 	"description": "A versatile collection of smart, efficient, and reusable utility functions and classes for everyday development needs.",
-	"main": "dist/index.js",
-	"module": "dist/index.mjs",
-	"types": "dist/index.d.ts",
+	"main": "dist/cjs/index.js",
+	"module": "dist/esm/index.js",
+	"types": "dist/dts/index.d.ts",
 	"sideEffects": false,
 	"scripts": {
 		"clean": "rimraf dist",
-		"build": "tsup --config tsup.config.ts",
-		"prepublishOnly": "tsup --config tsup.config.ts",
+		"build": "node scripts/build.mjs",
+		"prepublishOnly": "node scripts/build.mjs",
 		"test": "jest --coverage --verbose",
 		"format": "prettier --write .",
 		"lint": "node scripts/lint.mjs",
@@ -41,6 +41,7 @@
 		"@eslint/js": "^9.18.0",
 		"@types/jest": "^29.5.14",
 		"@types/node": "^22.10.7",
+		"@types/semver": "^7.7.0",
 		"@typescript-eslint/eslint-plugin": "^8.21.0",
 		"@typescript-eslint/parser": "^8.21.0",
 		"chalk": "4.1.2",
@@ -54,34 +55,28 @@
 		"prettier": "^3.4.2",
 		"progress-estimator": "^0.3.1",
 		"rimraf": "^6.0.1",
+		"semver": "^7.7.2",
 		"ts-jest": "^29.2.5",
 		"tsup": "^8.5.0",
 		"typescript": "^5.7.3",
 		"typescript-eslint": "^8.21.0"
 	},
 	"exports": {
+		"./package.json": "./package.json",
 		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.mjs",
-			"require": "./dist/index.js"
+			"types": "./dist/dts/index.d.ts",
+			"import": "./dist/esm/index.js",
+			"require": "./dist/cjs/index.js"
 		},
 		"./types": {
-			"types": "./dist/typedefs.d.ts",
-			"default": "./dist/typedefs.d.ts"
+			"types": "./dist/dts/typedefs.d.ts",
+			"default": "./dist/dts/typedefs.d.ts"
 		}
-	},
-	"./chronos": {
-		"types": "./dist/chronos.d.ts",
-		"import": "./dist/chronos.mjs",
-		"require": "./dist/chronos.js"
 	},
 	"typesVersions": {
 		"*": {
-			"chronos": [
-				"dist/chronos.d.ts"
-			],
 			"types": [
-				"dist/typedefs.d.ts"
+				"dist/dts/typedefs.d.ts"
 			]
 		}
 	},

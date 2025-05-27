@@ -93,17 +93,22 @@ const createExports = (modulePaths) => {
  */
 const createTypesVersions = (validModules) => {
 	/** @type {Record<string, string[]>} */
-	const versions = {};
+	// const versions = {};
 
-	validModules.forEach(([module, resolved]) => {
-		versions[`${module}/types`] = [resolved.replace('./', '')];
+	/** @type {string[]} */
+	const types = ['dist/dts/types/index.d.ts'];
+
+	validModules.forEach(([_module, resolved]) => {
+		// versions[`${module}/types`] = [resolved.replace('./', '')];
+		types.push(resolved.replace('./', ''));
 	});
 
 	return {
 		'*': {
-			types: ['dist/dts/types/index.d.ts'],
+			types,
+			// types: ['dist/dts/types/index.d.ts'],
 			// types: ['dist/types/index.d.ts'],
-			...versions,
+			// ...versions,
 		},
 	};
 };
@@ -124,12 +129,12 @@ const updatePackageJson = (exports, validModules) => {
 
 	console.info(
 		'✅ ' +
-		chalk.yellow.bold('package.json ') +
-		chalk.green.bold('has been updated with ') +
-		chalk.yellowBright.bold('exports') +
-		chalk.green(' and ') +
-		chalk.yellowBright.bold('typesVersions') +
-		chalk.green(' fields!'),
+			chalk.yellow.bold('package.json ') +
+			chalk.green.bold('has been updated with ') +
+			chalk.yellowBright.bold('exports') +
+			chalk.green(' and ') +
+			chalk.yellowBright.bold('typesVersions') +
+			chalk.green(' fields!'),
 	);
 };
 
