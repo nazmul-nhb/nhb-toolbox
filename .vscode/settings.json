@@ -23,6 +23,8 @@
 	"prettier.singleQuote": true,
 	"prettier.experimentalTernaries": true,
 	"prettier.vueIndentScriptAndStyle": true,
+	// "typescript.preferences.importModuleSpecifier": "non-relative",
+	"typescript.preferences.importModuleSpecifierEnding": "index",
 	"files.autoSave": "onFocusChange",
 	"files.autoSaveWhenNoErrors": true,
 	"editor.inlineSuggest.enabled": true,

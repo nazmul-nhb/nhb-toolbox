@@ -2,10 +2,10 @@
 
 import chalk from 'chalk';
 import { execa } from 'execa';
-import fs from 'fs/promises';
 import { globby } from 'globby';
-import { extname, join } from 'path';
+import { extname } from 'path';
 import { estimator } from './estimator.mjs';
+import { fixJsExtensions } from './fix-imports.mjs';
 
 /**
  * * Get the icon for the file.
@@ -23,32 +23,6 @@ const getFileIcon = (filePath) => {
 
 		default:
 			return '🗃️ ';
-	}
-};
-
-/**
- * * Fix .js extensions in ESM files.
- * @param {string} dir - Directory to fix
- */
-export const fixJsExtensions = async (dir) => {
-	const entries = await fs.readdir(dir, { withFileTypes: true });
-
-	for (const entry of entries) {
-		const fullPath = join(dir, entry.name);
-
-		if (entry.isDirectory()) {
-			await fixJsExtensions(fullPath);
-		} else if (entry.isFile() && entry.name.endsWith('.js')) {
-			const code = await fs.readFile(fullPath, 'utf8');
-
-			// Replace relative imports/exports that don’t end with .js/.json/.mjs
-			const fixed = code.replace(
-				/(?<=\b(?:import|export)[^'"]*?from\s*['"])(\.{1,2}\/[^'"]+?)(?=(?<!\.m?js|\.json)['"])/g,
-				'$1.js',
-			);
-
-			await fs.writeFile(fullPath, fixed);
-		}
 	}
 };
 

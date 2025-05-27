@@ -2,9 +2,8 @@
 	"compilerOptions": {
 		"target": "ESNext",
 		"lib": ["DOM", "ESNext"],
-		"paths": {
-			"*": ["./src/*"]
-		},
+		"paths": { "*": ["./src/*"] },
+		"baseUrl": ".",
 		"rootDir": "./src",
 		"outDir": "./dist",
 		"declarationDir": "./dist/dts",
@@ -12,7 +11,6 @@
 		"declarationMap": true,
 		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
-		"baseUrl": ".",
 		"preserveSymlinks": true,
 		"moduleResolution": "node",
 		"strict": true,
@@ -21,7 +19,7 @@
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"skipLibCheck": true,
-		// "resolveJsonModule": true,
+		"resolveJsonModule": true,
 		"forceConsistentCasingInFileNames": true,
 		"allowJs": true,
 		"checkJs": true,
