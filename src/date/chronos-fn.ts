@@ -59,7 +59,7 @@ import type { ChronosInput, ChronosStatics } from './types';
  * Chronos.parse("2023-12-31", "YYYY-MM-DD");
  * ```
  */
-const chronos = /* @__PURE__ */ (
+const chronos = (
 	valueOrYear?: ChronosInput,
 	month?: number,
 	date?: number,
