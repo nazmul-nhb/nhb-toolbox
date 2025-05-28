@@ -52,7 +52,7 @@ const resolveTypeFile = (module) => {
 const createExports = (modulePaths) => {
 	/** @type {Record<string, unknown>} */
 	const exports = {
-		// './package.json': './package.json',
+		'./package.json': './package.json',
 		'.': {
 			types: './dist/dts/index.d.ts',
 			import: './dist/esm/index.js',

@@ -4,16 +4,16 @@
 
 <p>
   <a href="https://www.npmjs.com/package/nhb-toolbox" aria-label="Downloads">
-    <img src="https://img.shields.io/npm/dm/nhb-toolbox.svg?label=downloads&style=for-the-badge&color=red&logo=npm" alt="Downloads" />
+    <img src="https://img.shields.io/npm/dm/nhb-toolbox.svg?label=DOWNLOADS&style=flat&color=red&logo=npm" alt="Downloads" />
   </a>
   <a href="https://www.npmjs.com/package/nhb-toolbox" aria-label="Version">
-    <img src="https://img.shields.io/npm/v/nhb-toolbox.svg?style=for-the-badge&color=teal&logo=npm" alt="Latest Version" />
+    <img src="https://img.shields.io/npm/v/nhb-toolbox.svg?label=NPM&style=flat&color=teal&logo=npm" alt="Latest Version" />
   </a>
   <a href="https://bundlephobia.com/result?p=nhb-toolbox" aria-label="Bundle size">
-    <img src="https://img.shields.io/bundlephobia/minzip/nhb-toolbox?style=for-the-badge&color=purple&label=size&logo=nodedotjs" alt="Bundle Size" />
+    <img src="https://img.shields.io/bundlephobia/minzip/nhb-toolbox?style=flat&color=purple&label=SIZE&logo=nodedotjs" alt="Bundle Size" />
   </a>
   <a href="https://www.npmjs.com/package/nhb-toolbox" aria-label="License">
-    <img src="https://img.shields.io/npm/l/nhb-toolbox.svg?label=license&style=for-the-badge&color=orange&logo=open-source-initiative" alt="License" />
+    <img src="https://img.shields.io/npm/l/nhb-toolbox.svg?label=LICENSE&style=flat&color=orange&logo=open-source-initiative" alt="License" />
   </a>
 </p>
 

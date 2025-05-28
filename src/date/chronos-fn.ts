@@ -71,7 +71,7 @@ const chronos = (
 	let newChronos: Chronos;
 
 	if (typeof valueOrYear === 'number' && typeof month === 'number') {
-		newChronos = new Chronos(
+		newChronos = /* @__PURE__ */ new Chronos(
 			valueOrYear,
 			month,
 			date ?? 1,
@@ -120,9 +120,10 @@ const chronos = (
  * isDateString(value: unknown): boolean
  * isValidChronos(value: unknown): boolean
  * formatTimePart(time: string, format?: TimeParts): string
+ * getDatesForDay(day: WeekDay, options?: WeekdayOptions): string[]
  * ```
  */
-const typedChronos = /* @__PURE__ */ chronos as ChronosStatics;
+const typedChronos = chronos as ChronosStatics;
 
 // ? Add static methods from Chronos class to the chronos function
 // Object.getOwnPropertyNames(Chronos).forEach((method) => {
@@ -145,5 +146,6 @@ typedChronos.isValidDate = Chronos.isValidDate;
 typedChronos.isDateString = Chronos.isDateString;
 typedChronos.isValidChronos = Chronos.isValidChronos;
 typedChronos.formatTimePart = Chronos.formatTimePart;
+typedChronos.getDatesForDay = Chronos.getDatesForDay;
 
 export { typedChronos as chronos };

@@ -1,6 +1,6 @@
 {
 	"name": "nhb-toolbox",
-	"version": "4.12.0",
+	"version": "4.12.6",
 	"description": "A versatile collection of smart, efficient, and reusable utility functions and classes for everyday development needs.",
 	"main": "dist/cjs/index.js",
 	"module": "dist/esm/index.js",
@@ -36,7 +36,19 @@
 		"name": "Nazmul Hassan",
 		"email": "nazmulnhb@gmail.com"
 	},
+	"contributors": [
+		{
+			"name": "Nazmul Hassan",
+			"email": "nazmulnhb@gmail.com",
+			"url": "https://github.com/nazmul-nhb"
+		}
+	],
+	"bugs": {
+		"url": "https://github.com/nazmul-nhb/nhb-toolbox/issues",
+		"email": "nazmulnhb@gmail.com"
+	},
 	"license": "Apache-2.0",
+	"packageManager": "pnpm@10.11.0",
 	"devDependencies": {
 		"@eslint/js": "^9.18.0",
 		"@types/jest": "^29.5.14",
@@ -91,8 +103,8 @@
 		"day",
 		"nhb-toolbox"
 	],
-	"packageManager": "pnpm@10.6.2+sha512.47870716bea1572b53df34ad8647b42962bc790ce2bf4562ba0f643237d7302a3d6a8ecef9e4bdfc01d23af1969aa90485d4cebb0b9638fa5ef1daef656f6c1b",
 	"exports": {
+		"./package.json": "./package.json",
 		".": {
 			"types": "./dist/dts/index.d.ts",
 			"import": "./dist/esm/index.js",

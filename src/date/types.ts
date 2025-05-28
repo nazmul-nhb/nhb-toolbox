@@ -2,6 +2,7 @@ import type { Chronos } from './Chronos';
 import type {
 	DATE_FORMATS,
 	DAY_FORMATS,
+	DAYS,
 	HOUR_FORMATS,
 	MILLISECOND_FORMATS,
 	MINUTE_FORMATS,
@@ -464,7 +465,7 @@ export interface ChronosStatics {
 	utc(dateLike?: ChronosInput): Chronos;
 
 	/**
-	 * @static Formats a time-only string into a formatted time string.
+	 * * Formats a time-only string into a formatted time string.
 	 *
 	 * @param time - Time string to be formatted. Supported formats include:
 	 * - `HH:mm` → e.g., `'14:50'`
@@ -482,6 +483,53 @@ export interface ChronosStatics {
 	 * @returns Formatted time string in local (System) time.
 	 */
 	formatTimePart(time: string, format?: TimeParts): string;
+
+	/**
+	 * * Returns ISO date strings for each occurrence of a weekday from today, spanning a relative time range.
+	 *
+	 * @param day - The weekday to match (e.g., `'Wednesday'`, `'Sunday'`).
+	 * @param options - Relative range (e.g., 7 days, 4 weeks) and output format (local with timezone or utc).
+	 * @returns Array of ISO date strings in the specified format. Returns empty array if no matches in the time span.
+	 *
+	 * @example
+	 * Chronos.getDatesForDay('Wednesday', { span: 7, unit: 'day' });
+	 * //=> [ '2025-05-28T21:16:06.198+06:00', '2025-06-04T21:16:06.198+06:00' ]
+	 *
+	 * @example
+	 * Chronos.getDatesForDay('Wednesday', {
+	 *   span: 7,
+	 *   unit: 'day',
+	 *   format: 'utc'
+	 * });
+	 * //=> [ '2025-05-28T15:17:10.812Z', '2025-06-04T15:17:10.812Z' ]
+	 */
+	getDatesForDay(day: WeekDay, options?: RelativeRangeOptions): string[];
+
+	/**
+	 * * Returns ISO date strings for each occurrence of a weekday between two fixed dates.
+	 *
+	 * @param day - The weekday to match (e.g., `'Monday'`, `'Friday'`).
+	 * @param options - Absolute date range (e.g. `'2025-06-30'`, ` new Date()`, `new Chronos()` etc.) and output format (local with timezone or utc).
+	 * @returns Array of ISO date strings in the specified format. Returns empty array if no matches in the range.
+	 *
+	 * @example
+	 * Chronos.getDatesForDay('Monday', {
+	 *   from: '2025-05-28',
+	 *   to: '2025-06-30',
+	 *   format: 'local'
+	 * });
+	 * //=> [ '2025-01-06T...', '2025-01-13T...', ... ]
+	 */
+	getDatesForDay(day: WeekDay, options?: DateRangeOptions): string[];
+
+	/**
+	 * * Returns ISO date strings for each occurrence of a weekday.
+	 *
+	 * @param day - The weekday to match (e.g., `'Wednesday'`, `'Sunday'`).
+	 * @param options - Relative range (e.g., 7 days, 4 weeks) or Absolute date range and output format.
+	 * @returns Array of ISO date strings in the specified format.
+	 */
+	getDatesForDay(day: WeekDay, options?: WeekdayOptions): string[];
 
 	/**
 	 * * Returns earliest Chronos
@@ -609,3 +657,33 @@ export type Quarter = 1 | 2 | 3 | 4;
 
 /** Names of Zodiac signs */
 export type ZodiacSign = (typeof ZODIAC_SIGNS)[number][0];
+
+/** - Represents the full name of a weekday, e.g., 'Monday', 'Tuesday' etc. */
+export type WeekDay = (typeof DAYS)[number];
+
+/** - Options to define a **fixed date range** using explicit `from` and `to` dates. */
+export interface DateRangeOptions {
+	/** - Start date of the range (inclusive). Defaults to **now** if not provided. */
+	from?: ChronosInput;
+
+	/** - End date of the range (inclusive). Defaults to **4 weeks from now** if not provided. */
+	to?: ChronosInput;
+
+	/** - Output format: return ISO strings in `'local'` or `'utc'` format. Defaults to `'local'`. */
+	format?: 'local' | 'utc';
+}
+
+/** - Options to define a **relative date range** starting from the current date. */
+export interface RelativeRangeOptions {
+	/** - Number of time units forward from now. Defaults to `4`.  Controlled by the `unit` option. */
+	span?: number;
+
+	/** - Unit of time to advance the date range. Defaults to `'week'`.  Controlled by the `span` option. */
+	unit?: 'year' | 'month' | 'week' | 'day';
+
+	/** - Output format — return as local ISO string or UTC ISO string. Defaults to `'local'`. */
+	format?: 'local' | 'utc';
+}
+
+/** - Unified type that supports either a fixed or relative date range configuration. */
+export type WeekdayOptions = RelativeRangeOptions | DateRangeOptions;

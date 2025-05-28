@@ -18,16 +18,20 @@ import type {
 	ChronosInput,
 	ChronosMethods,
 	ChronosObject,
+	DateRangeOptions,
 	DayPart,
 	DayPartConfig,
 	FormatOptions,
 	Quarter,
+	RelativeRangeOptions,
 	StrictFormat,
 	TimeDuration,
 	TimeParts,
 	TimeUnit,
 	TimeZone,
 	UTCOffSet,
+	WeekDay,
+	WeekdayOptions,
 	ZodiacSign,
 } from './types';
 import { extractMinutesFromUTC, formatUTCOffset } from './utils';
@@ -2360,6 +2364,93 @@ export class Chronos {
 		)}`;
 
 		return new Chronos(timeWithDate).formatStrict(format ?? 'hh:mm:ss a');
+	}
+
+	/**
+	 * @static Returns ISO date strings for each occurrence of a weekday from today, spanning a relative time range.
+	 *
+	 * @param day - The weekday to match (e.g., `'Wednesday'`, `'Sunday'`).
+	 * @param options - Relative range (e.g., 7 days, 4 weeks) and output format (local with timezone or utc).
+	 * @returns Array of ISO date strings in the specified format. Returns empty array if no matches in the time span.
+	 *
+	 * @example
+	 * Chronos.getDatesForDay('Wednesday', { span: 7, unit: 'day' });
+	 * //=> [ '2025-05-28T21:16:06.198+06:00', '2025-06-04T21:16:06.198+06:00' ]
+	 *
+	 * @example
+	 * Chronos.getDatesForDay('Wednesday', {
+	 *   span: 7,
+	 *   unit: 'day',
+	 *   format: 'utc'
+	 * });
+	 * //=> [ '2025-05-28T15:17:10.812Z', '2025-06-04T15:17:10.812Z' ]
+	 */
+	static getDatesForDay(
+		day: WeekDay,
+		options?: RelativeRangeOptions,
+	): string[];
+
+	/**
+	 * @static Returns ISO date strings for each occurrence of a weekday between two fixed dates.
+	 *
+	 * @param day - The weekday to match (e.g., `'Monday'`, `'Friday'`).
+	 * @param options - Absolute date range (e.g. `'2025-06-30'`, ` new Date()`, `new Chronos()` etc.) and output format (local with timezone or utc).
+	 * @returns Array of ISO date strings in the specified format. Returns empty array if no matches in the range.
+	 *
+	 * @example
+	 * Chronos.getDatesForDay('Monday', {
+	 *   from: '2025-05-28',
+	 *   to: '2025-06-30',
+	 *   format: 'local'
+	 * });
+	 * //=> [ '2025-01-06T...', '2025-01-13T...', ... ]
+	 */
+	static getDatesForDay(day: WeekDay, options?: DateRangeOptions): string[];
+
+	/**
+	 * @static Returns ISO date strings for each occurrence of a weekday.
+	 *
+	 * @param day - The weekday to match (e.g., `'Wednesday'`, `'Sunday'`).
+	 * @param options - Relative range (e.g., 7 days, 4 weeks) or Absolute date range and output format.
+	 * @returns Array of ISO date strings in the specified format.
+	 */
+	static getDatesForDay(day: WeekDay, options?: WeekdayOptions): string[] {
+		let startDate = new Chronos(),
+			endDate = new Chronos().addWeeks(4);
+
+		const { format = 'local' } = options ?? {};
+
+		if (options && ('from' in options || 'to' in options)) {
+			startDate = new Chronos(options?.from);
+			endDate = new Chronos(options?.to);
+		} else if (options && ('span' in options || 'unit' in options)) {
+			const { span = 4, unit = 'week' } = options ?? {};
+			startDate = new Chronos();
+			endDate = startDate.add(span, unit);
+		}
+
+		const start = new Chronos(startDate);
+
+		const end = new Chronos(endDate);
+
+		const dayIndex = DAYS.indexOf(day);
+
+		let current = start;
+		while (current.weekDay !== dayIndex) {
+			current = current.add(1, 'day');
+		}
+
+		const result: string[] = [];
+		while (current.isSameOrBefore(end, 'day')) {
+			result.push(
+				format === 'local' ?
+					current.toLocalISOString()
+				:	current.toISOString(),
+			);
+			current = current.add(1, 'week');
+		}
+
+		return result;
 	}
 
 	/**
