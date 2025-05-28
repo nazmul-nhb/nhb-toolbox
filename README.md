@@ -60,6 +60,12 @@ yarn add nhb-toolbox
 
 ---
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for recent updates.
+
+---
+
 ## License
 
 This project is licensed under the [Apache License 2.0](./LICENSE) with the following additional requirement:

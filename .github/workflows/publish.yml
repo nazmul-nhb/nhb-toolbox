@@ -96,7 +96,8 @@ jobs:
                   tag_name: 'v${{ env.VERSION }}'
                   name: 'Version ${{ env.VERSION }}'
                   body: |
-                      Find in [NPM Registry](https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }}).
-                      Full Docs at [Official Docs](https://nhb-toolbox.vercel.app)
+                      - 🔗 Find in [NPM Registry](https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }}).
+                      - 🌐 Full Docs at [Official Docs](https://nhb-toolbox.vercel.app)
+                      - 👉 [See what's new in the changelog](./CHANGELOG.md)
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
