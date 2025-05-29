@@ -23,6 +23,7 @@ import type {
 	DayPartConfig,
 	FormatOptions,
 	MilliSecond,
+	MonthName,
 	Quarter,
 	RelativeRangeOptions,
 	StrictFormat,
@@ -808,15 +809,14 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Checks if the year is a leap year.
+	 * @instance Checks if the current year is a leap year.
 	 * - A year is a leap year if it is divisible by 4, but not divisible by 100, unless it is also divisible by 400.
 	 * - For example, 2000 and 2400 are leap years, but 1900 and 2100 are not.
+	 * @param year - Optional year to check. Default is the year from current `Chronos` instance.
 	 * @returns `true` if the year is a leap year, `false` otherwise.
 	 */
-	isLeapYear(): boolean {
-		const year = this.#date.getFullYear();
-
-		return isLeapYear(year);
+	isLeapYear(year?: number): boolean {
+		return isLeapYear(year ?? this.year);
 	}
 
 	/** @instance Checks if the current date is today. */
@@ -2269,6 +2269,24 @@ export class Chronos {
 		};
 
 		return this.#normalizeDuration(result, absolute, isFuture);
+	}
+
+	/**
+	 * @instance Returns the name of the current day or optional day index.
+	 * @param index Optional day index (0–6, where 0 is Sunday) to override current day.
+	 * @returns Name of the weekday.
+	 */
+	day(index?: Enumerate<7>): WeekDay {
+		return DAYS[index ?? this.weekDay];
+	}
+
+	/**
+	 * @instance Returns the name of the current month or optional month index.
+	 * @param index Optional month index (0–11, where 0 is January) to override current month.
+	 * @returns Name of the month.
+	 */
+	monthName(index?: Enumerate<12>): MonthName {
+		return MONTHS[index ?? this.month];
 	}
 
 	/**

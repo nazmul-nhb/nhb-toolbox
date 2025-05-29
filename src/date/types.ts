@@ -8,6 +8,7 @@ import type {
 	MILLISECOND_FORMATS,
 	MINUTE_FORMATS,
 	MONTH_FORMATS,
+	MONTHS,
 	SECOND_FORMATS,
 	TIME_FORMATS,
 	TIME_ZONES,
@@ -661,6 +662,9 @@ export type ZodiacSign = (typeof ZODIAC_SIGNS)[number][0];
 
 /** - Represents the full name of a weekday, e.g., 'Monday', 'Tuesday' etc. */
 export type WeekDay = (typeof DAYS)[number];
+
+/** - Represents the full name of a month, e.g., 'January', 'February' etc. */
+export type MonthName = (typeof MONTHS)[number];
 
 /** - Options to define a **fixed date range** using explicit `from` and `to` dates. */
 export interface DateRangeOptions {

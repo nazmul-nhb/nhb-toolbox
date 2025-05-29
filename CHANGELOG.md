@@ -6,17 +6,29 @@ All notable changes to this package will be documented in this file.
 
 ---
 
+## [4.12.10] - 2025-05-30
+
+### 🕧 New Chronos Methods
+
+- Added 2 new instance methods in `Chronos`, `day` and `monthName` to get day and month names respectively.
+
+### ℹ️ [README](README.md)
+
+- Added `Signature Utilities` section in `README.md`
+
 ## [4.12.8] - 2025-05-29
 
 ### Types
 
 - Added new types `Enumerate` and `NumberRange` to generate number literals like `0 | 1 | 2 | ... | 998`.
-- Implemented both types in few cases where a return type is number and limited to a range. Especially in `Chronos` and color and number related functions and `Color` class.
+- Implemented both types in few cases where a return type is number and limited to a range, especially in color and number related functions and `Color` & `Chronos` classes.
 
 ### Method Changed in Chronos
 
 - `isoWeekday` is now `isoWeekDay`
 - Some method logic changed internally
+
+---
 
 ## [4.12.7] - 2025-05-28
 

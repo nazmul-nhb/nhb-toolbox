@@ -48,6 +48,12 @@ yarn add nhb-toolbox
 
 ---
 
+## Changelog
+
+See [Changelog](CHANGELOG.md) for recent updates.
+
+---
+
 ## Key Features
 
 - **Type-Safe Utilities**:Fully typed for perfect TypeScript integration with strict type checking
@@ -60,9 +66,186 @@ yarn add nhb-toolbox
 
 ---
 
-## Changelog
+## Signature Utilities
 
-See [Changelog](CHANGELOG.md) for recent updates.
+### 🕰️ **Chronos - Time Mastery**
+
+The ultimate date/time manipulation class with 100+ methods for parsing, formatting, calculating, and comparing dates. Handles all edge cases and timezones safely.
+
+```typescript
+new Chronos('2025-01-01').addDays(3).format('YYYY-MM-DD'); // "2025-01-04"
+```
+
+[Documentation →](https://nhb-toolbox.vercel.app/docs/classes/Chronos)
+
+### 🎨 **Color - Professional Color Manipulation**
+
+Convert between color formats, generate palettes, check accessibility contrast, and perform advanced color math with perfect type safety.
+
+```typescript
+const blue = new Color('#0000ff');
+const darkerBlue = blue.applyDarkness(20); // 20% darker
+console.log(darkerBlue.hsl); // "hsl(240, 100%, 40%)" (was 50%)
+```
+
+[Documentation →](https://nhb-toolbox.vercel.app/docs/classes/Color)
+
+### 🔍 **Finder - Optimized Array Search**
+
+Blazing-fast array searching with binary search, fuzzy matching, and smart caching. Perfect for large datasets.
+
+```typescript
+const productFinder = new Finder(products);
+
+const laptop = productFinder.findOne('laptop', 'category', {
+	fuzzy: true,
+	caseInsensitive: false,
+});
+```
+
+[Documentation →](https://nhb-toolbox.vercel.app/docs/classes/Finder)
+
+### 🆔 **Random ID Generation**
+
+**`generateRandomID`** - Enterprise-grade unique ID generation with prefixes, timestamps, and formatting
+
+```typescript
+generateRandomID({
+	prefix: 'user',
+	timeStamp: true,
+	length: 12,
+	caseOption: 'upper',
+}); // "USER-171234567890-AB3C4D5E6F7G"
+```
+
+[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/string/generateRandomID)
+
+### 🎨 **Color System Utilities**
+
+**`getColorForInitial`** - Deterministic color mapping system for consistent UI theming
+
+```typescript
+// Get color palette for user avatars
+getColorForInitial(['Alice', 'Bob', 'Charlie']);
+// ['#00094C', '#00376E', '#005600']
+
+getColorForInitial('Banana', 50); // '#00376E80' (50% opacity)
+```
+
+[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/color/getColorForInitial)
+
+### 🛡️ **Sanitize Data**
+
+Clean and normalize strings/objects by trimming whitespace, removing empty values, and applying customizable filters.
+
+```typescript
+const user = {
+	name: '  John Doe  ',
+	age: null,
+	address: { city: '  NYC  ', zip: '' },
+	tags: [],
+};
+
+sanitizeData(user, { ignoreNullish: true, ignoreEmpty: true });
+// Returns { name: "John Doe", address: { city: "NYC" } } with exact input type
+
+sanitizeData(user, { ignoreNullish: true }, 'partial');
+// Return type: FlattenPartial<typeof user> which is Partial<T>
+// Returns { name: "John Doe", address: { city: "NYC" } }
+// { name: 'John' }
+```
+
+[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/object/sanitizeData)
+
+### 🔄 **JSON Hydration**
+
+**`parseJSON`** - Bulletproof JSON parsing with primitive conversion
+
+```typescript
+parseJSON('{"value":"42"}'); // { value: 42 } (auto-converts numbers)
+```
+
+[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/misc/parseJSON)
+
+### 💰 **Format Currency**
+
+Intelligent currency formatting with automatic locale detection and 150+ supported currencies.
+
+```typescript
+console.log(formatCurrency(99.99, 'EUR')); // "99,99 €"
+console.log(formatCurrency('5000', 'JPY')); // "￥5,000" (ja-JP locale)
+console.log(formatCurrency('5000', 'BDT')); // "৫,০০০.০০৳" (bn-BD locale)
+```
+
+[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/number/formatCurrency)
+
+### 🔢 **Number to Words**
+
+Convert numbers to human-readable words (supports up to 100 quintillion).
+
+```typescript
+numberToWords(125); // "one hundred twenty-five"
+```
+
+[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/number/numberToWords)
+
+### 🔢 **Advanced Number Operations**
+
+**`getNumbersInRange`** - Generate intelligent number sequences with prime, even/odd, and custom filtering capabilities
+
+```typescript
+// Get primes between 10-30 as formatted string
+getNumbersInRange('prime', { min: 10, max: 30, getAsString: true });
+// "11, 13, 17, 19, 23, 29"
+```
+
+[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/number/getNumbersInRange)
+
+**`calculatePercentage`** - Swiss Army knife for percentage calculations with 7 specialized modes
+
+```typescript
+// Calculate percentage change
+calculatePercentage({
+	mode: 'get-change-percent',
+	oldValue: 100,
+	newValue: 150,
+}); // 50 (50% increase)
+```
+
+[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/number/calculatePercentage)
+
+### 🔄 **Extract Updated Fields**
+
+Detect exactly what changed between two objects (including deep nested changes).
+
+```typescript
+const dbRecord = { id: 1, content: 'Hello', meta: { views: 0 } };
+const update = { content: 'Hello', meta: { views: 1 } };
+extractUpdatedFields(dbRecord, update);
+// { meta: { views: 1 } }
+```
+
+[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/object/extractUpdatedFields)
+
+### ⚡ **Performance Optimizers**
+
+**`throttleAction`** - Precision control for high-frequency events
+
+```typescript
+// Smooth scroll handling
+throttleAction(updateScrollPosition, 100);
+```
+
+[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/misc/throttleAction)
+
+**`debounceAction`** - Intelligent delay for expensive operations
+
+```typescript
+// Search-as-you-type
+debounceAction(fetchResults, 300);
+```
+
+[Full Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/misc/debounceAction)
 
 ---
 
