@@ -62,7 +62,7 @@ yarn add nhb-toolbox
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for recent updates.
+See [Changelog](CHANGELOG.md) for recent updates.
 
 ---
 

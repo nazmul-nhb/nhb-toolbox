@@ -1,6 +1,7 @@
+import type { Percent } from '../number/types';
 import { alphabetColorPalette, numberColorPalette } from './constants';
 import { _applyOpacity, _convertOpacityToHex } from './helpers';
-import type { ColorInput, ColorInputArray, Percent } from './types';
+import type { ColorInput, ColorInputArray } from './types';
 
 /**
  *  * Generates a hex color based on the first character (initial) of a string or number.

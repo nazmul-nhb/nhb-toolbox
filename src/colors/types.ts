@@ -1,6 +1,5 @@
 import type { Branded } from '../types/index';
 import type { Color } from './Color';
-import type { PERCENT_VALUES } from './constants';
 import type { CSS_COLORS } from './css-colors';
 
 /** - A string, number for generating color. */
@@ -8,9 +7,6 @@ export type ColorInput = string | number;
 
 /** - An array of strings/numbers or nested arrays of strings/numbers for generating colors. */
 export type ColorInputArray = Array<ColorInput | ColorInputArray>;
-
-/** - Number value in percentage `(0% - 100%)` without `%` symbol. */
-export type Percent = (typeof PERCENT_VALUES)[number];
 
 /**
  * * Represents a hexadecimal color code.

@@ -1,3 +1,4 @@
+import type { Percent } from '../number/types';
 import {
 	_convertOpacityToHex,
 	_isHex6,
@@ -16,7 +17,6 @@ import type {
 	Hex8,
 	HSL,
 	HSLA,
-	Percent,
 	RGB,
 	RGBA,
 } from './types';

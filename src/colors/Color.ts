@@ -1,3 +1,4 @@
+import type { Percent } from '../number/types';
 import { convertColorCode } from './convert';
 import { CSS_COLORS } from './css-colors';
 import {
@@ -18,7 +19,6 @@ import type {
 	Hex8,
 	HSL,
 	HSLA,
-	Percent,
 	RGB,
 	RGBA,
 	SolidColors,

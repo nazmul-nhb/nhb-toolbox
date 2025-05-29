@@ -218,3 +218,22 @@
 //     K2 extends string = 'label',
 //     V extends boolean = false,
 // > = { [P in K1 | K2]: P extends K1 ? FirstFieldValue<T, K1, K2, V> : string };
+
+
+// // * Helper: Add 1 to a number
+// type AddOne<N extends number, Acc extends unknown[] = []> =
+//     Acc['length'] extends N ? [...Acc, unknown]['length']
+//     :	AddOne<N, [...Acc, unknown]>;
+
+// // * Enumerate & Enumerate Internal: builds a union of all numbers from 0 to N - 1
+// type EnumerateInternal<N extends number, Acc extends number[] = []> =
+//     Acc['length'] extends N ? Acc[number]
+//     :	EnumerateInternal<N, [...Acc, Acc['length']]>;
+
+// type Enumerate<N extends number> = EnumerateInternal<N>;
+
+// /** Utility type to create literal type with numbers (from `0-998` for TypeScript limitation) */
+// export type NumberRange<From extends number, To extends number> = Exclude<
+//     Enumerate<To>,
+//     Enumerate<From>
+// >;

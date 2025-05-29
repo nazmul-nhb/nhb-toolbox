@@ -1,13 +1,5 @@
-import type {
-	AlphaValue,
-	Hex6,
-	Hex8,
-	HSL,
-	HSLA,
-	Percent,
-	RGB,
-	RGBA,
-} from './types';
+import type { Percent } from '../number/types';
+import type { AlphaValue, Hex6, Hex8, HSL, HSLA, RGB, RGBA } from './types';
 
 /**
  * * Converts opacity percentage (0-100) to a 2-digit hex string.

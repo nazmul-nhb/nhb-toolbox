@@ -1,3 +1,4 @@
+import type { Enumerate } from '../number/types';
 import type { Chronos } from './Chronos';
 import type {
 	DATE_FORMATS,
@@ -687,3 +688,6 @@ export interface RelativeRangeOptions {
 
 /** - Unified type that supports either a fixed or relative date range configuration. */
 export type WeekdayOptions = RelativeRangeOptions | DateRangeOptions;
+
+/** Millisecond from `0-999` */
+export type MilliSecond = Enumerate<999> | 999;

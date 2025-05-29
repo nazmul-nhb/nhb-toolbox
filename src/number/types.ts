@@ -8,6 +8,52 @@ import type {
 } from './constants';
 import type { Unit } from './Unit';
 
+// * Enumerate & Enumerate Internal: builds a union of all numbers from 0 to N - 1
+type EnumerateInternal<N extends number, Acc extends number[] = []> =
+	Acc['length'] extends N ? Acc[number]
+	:	EnumerateInternal<N, [...Acc, Acc['length']]>;
+
+/**
+ * * Builds a union of numeric literals from `0` to `N - 1`.
+ *
+ * @remarks
+ * - This utility supports ranges up to 998 due to TypeScript recursion limits.
+ *
+ * @example
+ * type U = Enumerate<3>; // 0 | 1 | 2
+ */
+export type Enumerate<N extends number> = EnumerateInternal<N>;
+
+// * Helper: Add 1 to a number
+type AddOne<N extends number, Acc extends unknown[] = []> =
+	Acc['length'] extends N ? [...Acc, unknown]['length']
+	:	AddOne<N, [...Acc, unknown]>;
+
+/**
+ *
+ * * Creates a union type of all numeric literals starting from `From` up to `To`.
+ *
+ * @example
+ * type R = NumberRange<2, 5>; // 2 | 3 | 4  5
+ * type N = NumberRange<0, 998>; // 0 | 1 | 2 | ... | 998
+ *
+ * @remarks
+ * - This utility supports ranges up to 998 due to TypeScript recursion limits.
+ * - `From` and `To` both are inclusive, — so `NumberRange<0, 998>` generates `0` to `998`.
+ * - Result is a union type, not a tuple or array.
+ *
+ * @generic From - A number from 0-998, start of the range.
+ * @generic To - A number from 1-998, end of the range.
+ * @returns A union of numeric literal types from `From` to `To - 1`.
+ */
+export type NumberRange<From extends number, To extends number> = Exclude<
+	Enumerate<AddOne<To>>,
+	Enumerate<From>
+>;
+
+/** - Number value in percentage `(0% - 100%)` without `%` symbol. */
+export type Percent = Enumerate<101>;
+
 /** - Options for random number generator */
 export interface RandomNumberOptions {
 	/** Minimum number to start with. */

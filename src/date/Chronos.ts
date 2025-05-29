@@ -1,5 +1,5 @@
 import { isString } from '../guards/primitives';
-import type { LocaleCode } from '../number/types';
+import type { Enumerate, LocaleCode, NumberRange } from '../number/types';
 import { getOrdinal, roundToNearest } from '../number/utilities';
 import { formatUnitWithPlural } from '../string/convert';
 import { isPalindrome } from '../string/guards';
@@ -22,6 +22,7 @@ import type {
 	DayPart,
 	DayPartConfig,
 	FormatOptions,
+	MilliSecond,
 	Quarter,
 	RelativeRangeOptions,
 	StrictFormat,
@@ -214,10 +215,10 @@ export class Chronos {
 	*[Symbol.iterator](): IterableIterator<[string, number]> {
 		yield ['year', this.year];
 		yield ['month', this.month];
-		yield ['isoMonth', this.month + 1];
+		yield ['isoMonth', this.isoMonth];
 		yield ['date', this.date];
 		yield ['weekDay', this.weekDay];
-		yield ['isoWeekDay', this.weekDay + 1];
+		yield ['isoWeekDay', this.isoWeekDay];
 		yield ['hour', this.hour];
 		yield ['minute', this.minute];
 		yield ['second', this.second];
@@ -481,50 +482,50 @@ export class Chronos {
 	}
 
 	/** Gets the month (0-11) of the date. */
-	get month(): number {
-		return this.#date.getMonth();
+	get month(): Enumerate<12> {
+		return this.#date.getMonth() as Enumerate<12>;
 	}
 
 	/** Gets the day of the month (1-31). */
-	get date(): number {
-		return this.#date.getDate();
+	get date(): NumberRange<1, 31> {
+		return this.#date.getDate() as NumberRange<1, 31>;
 	}
 
 	/** Gets the day of the week (0-6, where 0 is Sunday). */
-	get weekDay(): number {
-		return this.#date.getDay();
+	get weekDay(): Enumerate<7> {
+		return this.#date.getDay() as Enumerate<7>;
 	}
 
 	/** Gets the hour (0-23) of the date. */
-	get hour(): number {
-		return this.#date.getHours();
+	get hour(): Enumerate<24> {
+		return this.#date.getHours() as Enumerate<24>;
 	}
 
 	/** Gets the minute (0-59) of the date. */
-	get minute(): number {
-		return this.#date.getMinutes();
+	get minute(): Enumerate<60> {
+		return this.#date.getMinutes() as Enumerate<60>;
 	}
 
 	/** Gets the second (0-59) of the date. */
-	get second(): number {
-		return this.#date.getSeconds();
+	get second(): Enumerate<60> {
+		return this.#date.getSeconds() as Enumerate<60>;
 	}
 
 	/** Gets the millisecond (0-999) of the date. */
-	get millisecond(): number {
-		return this.#date.getMilliseconds();
+	get millisecond(): MilliSecond {
+		return this.#date.getMilliseconds() as MilliSecond;
 	}
 
 	/** Gets ISO weekday: 1 = Monday, 7 = Sunday */
-	get isoWeekday(): number {
+	get isoWeekDay() {
 		const day = this.weekDay;
 
 		return day === 0 ? 7 : day;
 	}
 
 	/** Gets ISO month (1–12 instead of 0–11) */
-	get isoMonth(): number {
-		return this.month + 1;
+	get isoMonth(): NumberRange<1, 12> {
+		return (this.month + 1) as NumberRange<1, 12>;
 	}
 
 	/** Returns the Unix timestamp (seconds since the Unix epoch: January 1, 1970, UTC). */
@@ -538,8 +539,8 @@ export class Chronos {
 	}
 
 	/** * Gets the last date (number) of the current month `(28, 29, 30 or 31)`. */
-	get lastDateOfMonth(): 28 | 29 | 30 | 31 {
-		return this.lastDayOfMonth().#date.getDate() as 28 | 29 | 30 | 31;
+	get lastDateOfMonth(): NumberRange<28, 31> {
+		return this.lastDayOfMonth().#date.getDate() as NumberRange<28, 31>;
 	}
 
 	/** @instance Returns a debug-friendly string for `console.log` or `util.inspect`. */
@@ -863,7 +864,7 @@ export class Chronos {
 	isSame(
 		other: ChronosInput,
 		unit: TimeUnit,
-		weekStartsOn: number = 0,
+		weekStartsOn: Enumerate<7> = 0,
 	): boolean {
 		const time = other instanceof Chronos ? other : new Chronos(other);
 
@@ -882,7 +883,7 @@ export class Chronos {
 	isBefore(
 		other: ChronosInput,
 		unit: TimeUnit,
-		weekStartsOn: number = 0,
+		weekStartsOn: Enumerate<7> = 0,
 	): boolean {
 		const time = other instanceof Chronos ? other : new Chronos(other);
 
@@ -901,7 +902,7 @@ export class Chronos {
 	isAfter(
 		other: ChronosInput,
 		unit: TimeUnit,
-		weekStartsOn: number = 0,
+		weekStartsOn: Enumerate<7> = 0,
 	): boolean {
 		const time = other instanceof Chronos ? other : new Chronos(other);
 
@@ -920,7 +921,7 @@ export class Chronos {
 	isSameOrBefore(
 		other: ChronosInput,
 		unit: TimeUnit,
-		weekStartsOn: number = 0,
+		weekStartsOn: Enumerate<7> = 0,
 	): boolean {
 		return (
 			this.isSame(other, unit, weekStartsOn) ||
@@ -937,7 +938,7 @@ export class Chronos {
 	isSameOrAfter(
 		other: ChronosInput,
 		unit: TimeUnit,
-		weekStartsOn: number = 0,
+		weekStartsOn: Enumerate<7> = 0,
 	): boolean {
 		return (
 			this.isSame(other, unit, weekStartsOn) ||
@@ -994,7 +995,10 @@ export class Chronos {
 	 *   If 1, only the last day of the week is treated as weekend.
 	 *   If 2, the last two days are treated as weekend.
 	 */
-	isWeekend(weekStartsOn: number = 0, weekendLength: 1 | 2 = 2): boolean {
+	isWeekend(
+		weekStartsOn: Enumerate<7> = 0,
+		weekendLength: 1 | 2 = 2,
+	): boolean {
 		const day = this.#date.getDay();
 		const lastDayOfWeek = (weekStartsOn + 6) % 7;
 		const secondLastDay = (weekStartsOn + 5) % 7;
@@ -1019,7 +1023,10 @@ export class Chronos {
 	 * - `weekStartsOn` is a 0-based index (0 = Sunday, 1 = Monday, ..., 6 = Saturday).
 	 * - `weekendLength` defines how many days are considered weekend (1 or 2). Default is 2.
 	 */
-	isWorkday(weekStartsOn: number = 0, weekendLength: 1 | 2 = 2): boolean {
+	isWorkday(
+		weekStartsOn: Enumerate<7> = 0,
+		weekendLength: 1 | 2 = 2,
+	): boolean {
 		return !this.isWeekend(weekStartsOn, weekendLength);
 	}
 
@@ -1045,9 +1052,9 @@ export class Chronos {
 	 * - If `weekendLength` is `2`, the last two days are treated as weekend.
 	 */
 	isBusinessHour(
-		businessStartHour: number = 9,
-		businessEndHour: number = 17,
-		weekStartsOn: number = 0,
+		businessStartHour: Enumerate<24> = 9,
+		businessEndHour: Enumerate<24> = 17,
+		weekStartsOn: Enumerate<7> = 0,
 		weekendLength: 1 | 2 = 2,
 	): boolean {
 		if (this.isWeekend(weekStartsOn, weekendLength)) {
@@ -1304,7 +1311,7 @@ export class Chronos {
 	/**
 	 * @instance Returns the number of full years between the input date and now.
 	 * @param time Optional time to compare with the `Chronos` date/time.
-	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
+	 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
 	 */
 	getRelativeYear(time?: ChronosInput): number {
 		const now = this.#toNewDate(time);
@@ -1326,7 +1333,7 @@ export class Chronos {
 	/**
 	 * @instance Returns the number of full months between the input date and now.
 	 * @param time Optional time to compare with the `Chronos` date/time.
-	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
+	 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
 	 */
 	getRelativeMonth(time?: ChronosInput): number {
 		const now = this.#toNewDate(time);
@@ -1382,7 +1389,7 @@ export class Chronos {
 	/**
 	 * @instance Returns the number of full hours between the input date and now.
 	 * @param time Optional time to compare with the `Chronos` date/time.
-	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
+	 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
 	 */
 	getRelativeHour(time?: ChronosInput): number {
 		const diff = this.#date.getTime() - this.#toNewDate(time).getTime();
@@ -1392,7 +1399,7 @@ export class Chronos {
 	/**
 	 * @instance Returns the number of full minutes between the input date and now.
 	 * @param time Optional time to compare with the `Chronos` date/time.
-	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
+	 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
 	 */
 	getRelativeMinute(time?: ChronosInput): number {
 		const diff = this.#date.getTime() - this.#toNewDate(time).getTime();
@@ -1402,7 +1409,7 @@ export class Chronos {
 	/**
 	 * @instance Returns the number of full seconds between the input date and now.
 	 * @param time Optional time to compare with the `Chronos` date/time.
-	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
+	 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
 	 */
 	getRelativeSecond(time?: ChronosInput): number {
 		const diff = this.#date.getTime() - this.#toNewDate(time).getTime();
@@ -1412,7 +1419,7 @@ export class Chronos {
 	/**
 	 * @instance Returns the number of milliseconds between the input date and now.
 	 * @param time Optional time to compare with the `Chronos` date/time.
-	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
+	 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
 	 */
 	getRelativeMilliSecond(time?: ChronosInput): number {
 		return this.#date.getTime() - this.#toNewDate(time).getTime();
@@ -1439,7 +1446,7 @@ export class Chronos {
 	 *
 	 * @param unit The time unit to compare by. Defaults to 'minute'.
 	 * @param time Optional time to compare with the `Chronos` date/time.
-	 * @returns The difference in number, negative is `Chronos` time is a past time else positive.
+	 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
 	 */
 	compare(unit: TimeUnit = 'minute', time?: ChronosInput): number {
 		switch (unit) {
@@ -1469,7 +1476,7 @@ export class Chronos {
 	 * @param unit The unit to reset (e.g., year, month, day).
 	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
-	startOf(unit: TimeUnit, weekStartsOn: number = 0): Chronos {
+	startOf(unit: TimeUnit, weekStartsOn: Enumerate<7> = 0): Chronos {
 		const d = new Date(this.#date);
 
 		switch (unit) {
@@ -1512,7 +1519,7 @@ export class Chronos {
 	 * @param unit The unit to adjust (e.g., year, month, day).
 	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
-	endOf(unit: TimeUnit, weekStartsOn: number = 0): Chronos {
+	endOf(unit: TimeUnit, weekStartsOn: Enumerate<7> = 0): Chronos {
 		return this.startOf(unit, weekStartsOn)
 			.add(1, unit)
 			.add(-1, 'millisecond')
@@ -1521,36 +1528,36 @@ export class Chronos {
 
 	/**
 	 * @instance Returns a new Chronos instance with the specified unit added.
-	 * @param amount The amount to add (can be negative).
+	 * @param number The number of time unit to add (can be negative).
 	 * @param unit The time unit to add.
 	 */
-	add(amount: number, unit: TimeUnit): Chronos {
+	add(number: number, unit: TimeUnit): Chronos {
 		const d = new Date(this.#date);
 
 		switch (unit) {
 			case 'millisecond':
-				d.setMilliseconds(d.getMilliseconds() + amount);
+				d.setMilliseconds(d.getMilliseconds() + number);
 				break;
 			case 'second':
-				d.setSeconds(d.getSeconds() + amount);
+				d.setSeconds(d.getSeconds() + number);
 				break;
 			case 'minute':
-				d.setMinutes(d.getMinutes() + amount);
+				d.setMinutes(d.getMinutes() + number);
 				break;
 			case 'hour':
-				d.setHours(d.getHours() + amount);
+				d.setHours(d.getHours() + number);
 				break;
 			case 'day':
-				d.setDate(d.getDate() + amount);
+				d.setDate(d.getDate() + number);
 				break;
 			case 'week':
-				d.setDate(d.getDate() + amount * 7);
+				d.setDate(d.getDate() + number * 7);
 				break;
 			case 'month':
-				d.setMonth(d.getMonth() + amount);
+				d.setMonth(d.getMonth() + number);
 				break;
 			case 'year':
-				d.setFullYear(d.getFullYear() + amount);
+				d.setFullYear(d.getFullYear() + number);
 				break;
 		}
 
@@ -1559,11 +1566,11 @@ export class Chronos {
 
 	/**
 	 * @instance Returns a new Chronos instance with the specified unit subtracted.
-	 * @param amount The amount to subtract (can be negative).
+	 * @param number The number of time unit to subtract (can be negative).
 	 * @param unit The time unit to add.
 	 */
-	subtract(amount: number, unit: TimeUnit): Chronos {
-		return this.add(-amount, unit).#withOrigin('subtract');
+	subtract(number: number, unit: TimeUnit): Chronos {
+		return this.add(-number, unit).#withOrigin('subtract');
 	}
 
 	/**
@@ -1610,7 +1617,7 @@ export class Chronos {
 				d.setDate(value);
 				break;
 			case 'week':
-				return this.setWeek(value);
+				return this.setWeek(value as NumberRange<1, 53>);
 			case 'hour':
 				d.setHours(value);
 				break;
@@ -1723,7 +1730,7 @@ export class Chronos {
 	 * @param week The ISO week number (1–53) to set the date to.
 	 * @returns A new Chronos instance set to the start (Monday) of the specified week.
 	 */
-	setWeek(week: number): Chronos {
+	setWeek(week: NumberRange<1, 53>): Chronos {
 		const d = new Date(this.#date);
 
 		const year = d.getFullYear();
@@ -1747,14 +1754,14 @@ export class Chronos {
 	 *
 	 * @returns Week number (1–53).
 	 */
-	getWeek(): number {
+	getWeek(): NumberRange<1, 53> {
 		const target = this.startOf('week', 1).add(3, 'day'); // Thursday of current ISO week
 
 		const firstThursday = new Chronos(target.year, 1, 4) // January 4
 			.startOf('week', 1)
 			.add(3, 'day'); // Thursday of first ISO week
 
-		return target.diff(firstThursday, 'week') + 1;
+		return (target.diff(firstThursday, 'week') + 1) as NumberRange<1, 53>;
 	}
 
 	/**
@@ -1762,7 +1769,7 @@ export class Chronos {
 	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 * @returns Week number (1-53).
 	 */
-	getWeekOfYear(weekStartsOn: number = 0): number {
+	getWeekOfYear(weekStartsOn: Enumerate<7> = 0): NumberRange<1, 53> {
 		const startOfYear = new Chronos(this.year, 1, 1);
 		const startOfFirstWeek = startOfYear.startOf('week', weekStartsOn);
 
@@ -1771,7 +1778,7 @@ export class Chronos {
 			'week',
 		);
 
-		return week + 1;
+		return (week + 1) as NumberRange<1, 53>;
 	}
 
 	/**
@@ -1784,16 +1791,16 @@ export class Chronos {
 	 *                     Defaults to 0 (Sunday). Use 1 for strict ISO 8601.
 	 * @returns The ISO week-numbering year.
 	 */
-	getWeekYear(weekStartsOn: number = 0): number {
+	getWeekYear(weekStartsOn: Enumerate<7> = 0): number {
 		const d = this.startOf('week', weekStartsOn).add(3, 'day'); // Thursday of current ISO week
 		return d.year;
 	}
 
 	/** @instance Returns day of year (1 - 366) */
-	getDayOfYear(): number {
+	getDayOfYear(): NumberRange<1, 366> {
 		const start = new Date(this.year, 0, 1);
 		const diff = this.#date.getTime() - start.getTime();
-		return Math.floor(diff / 86400000) + 1;
+		return (Math.floor(diff / 86400000) + 1) as NumberRange<1, 366>;
 	}
 
 	/**
@@ -1814,8 +1821,11 @@ export class Chronos {
 	}
 
 	/** @instance Returns number of days in current month */
-	daysInMonth(): number {
-		return new Date(this.year, this.month + 1, 0).getDate();
+	daysInMonth(): NumberRange<28, 31> {
+		return new Date(this.year, this.month + 1, 0).getDate() as NumberRange<
+			28,
+			31
+		>;
 	}
 
 	/** @instance Converts to object with all date unit parts */

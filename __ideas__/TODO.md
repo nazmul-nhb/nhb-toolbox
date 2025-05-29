@@ -1,6 +1,9 @@
 <!-- markdownlint-disable-file MD024 -->
+<!-- markdownlint-disable-file MD025 -->
 
 # Number to words (ordinal) ==> HIGH PRIORITY Plain words already exists
+
+# Make Chronos format like this : new Chronos.format('YYYY-MM-DDTHH:mm:ss.mss.Z')
 
 # String Utilities
 

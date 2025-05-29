@@ -1,10 +1,22 @@
 # Changelog
 
+<!-- markdownlint-disable-file MD024 -->
+
 All notable changes to this package will be documented in this file.
 
 ---
 
-<!-- markdownlint-disable-file MD024 -->
+## [4.12.8] - 2025-05-29
+
+### Types
+
+- Added new types `Enumerate` and `NumberRange` to generate number literals like `0 | 1 | 2 | ... | 998`.
+- Implemented both types in few cases where a return type is number and limited to a range. Especially in `Chronos` and color and number related functions and `Color` class.
+
+### Method Changed in Chronos
+
+- `isoWeekday` is now `isoWeekDay`
+- Some method logic changed internally
 
 ## [4.12.7] - 2025-05-28
 
