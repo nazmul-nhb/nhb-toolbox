@@ -94,6 +94,10 @@ export default [
 		rules: { '@typescript-eslint/no-require-imports': 'off' },
 	},
 	{
+		files: ['**/*plugins.ts'],
+		rules: { '@typescript-eslint/consistent-type-imports': 'off' },
+	},
+	{
 		files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
 		rules: {
 			// Disallow ONLY `console.log`

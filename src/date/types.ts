@@ -627,3 +627,8 @@ export interface SeasonOptions {
 	/** Predefined preset to use for season calculation */
 	preset?: SeasonPreset;
 }
+
+/**
+ * A plugin that augments the Chronos class with methods or properties.
+ */
+export type ChronosPlugin = (ChronosClass: typeof Chronos) => void;

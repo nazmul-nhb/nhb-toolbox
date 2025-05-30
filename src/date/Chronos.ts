@@ -13,12 +13,12 @@ import {
 	ZODIAC_SIGNS,
 } from './constants';
 import { isLeapYear, isValidUTCOffSet } from './guards';
-import { SEASON_PRESETS } from './seasons';
 import type {
 	ChronosFormat,
 	ChronosInput,
 	ChronosMethods,
 	ChronosObject,
+	ChronosPlugin,
 	DateRangeOptions,
 	DayPart,
 	DayPartConfig,
@@ -27,7 +27,6 @@ import type {
 	MonthName,
 	Quarter,
 	RelativeRangeOptions,
-	SeasonOptions,
 	StrictFormat,
 	TimeDuration,
 	TimeParts,
@@ -68,8 +67,16 @@ export class Chronos {
 	readonly #date: Date;
 	#offset: UTCOffSet;
 	#ORIGIN: ChronosMethods | 'root';
-	/** Chronos date/time in Native JS `Date` format */
+
+	static #plugins = new Set<ChronosPlugin>();
+
+	/**
+	 * * Chronos date/time in Native JS `Date` format.
+	 *
+	 * - **NOTE**: It is **HIGHLY** advised *not to rely* on this public property to access native JS `Date`. It's not reliable when timezone and/or UTC related operations are performed. If you really need to use native `Date`, use `toDate` method.  THis property is purely for developer convenience and sugar.
+	 */
 	native: Date;
+
 	/** Origin of the `Chronos` instance (Method that created `new Chronos`), useful fo tracking instance. */
 	origin: ChronosMethods | 'root';
 
@@ -1840,45 +1847,45 @@ export class Chronos {
 		return 'Capricorn';
 	}
 
-	/**
-	 * @instance Returns the current season name based on optional season rules or presets.
-	 * @param options Configuration with optional custom seasons or preset name.
-	 * @returns The name of the season the current date falls under.
-	 */
-	season(options?: SeasonOptions): string {
-		const { preset = 'default' } = options ?? {};
+	// /**
+	//  * @instance Returns the current season name based on optional season rules or presets.
+	//  * @param options Configuration with optional custom seasons or preset name.
+	//  * @returns The name of the season the current date falls under.
+	//  */
+	// season(options?: SeasonOptions): string {
+	// 	const { preset = 'default' } = options ?? {};
 
-		const seasonSet = options?.seasons ?? SEASON_PRESETS[preset];
+	// 	const seasonSet = options?.seasons ?? SEASON_PRESETS[preset];
 
-		const dateStr = this.#format('MM-DD');
+	// 	const dateStr = this.#format('MM-DD');
 
-		for (const { name, boundary } of seasonSet) {
-			if ('startDate' in boundary && 'endDate' in boundary) {
-				const start = boundary.startDate;
-				const end = boundary.endDate;
+	// 	for (const { name, boundary } of seasonSet) {
+	// 		if ('startDate' in boundary && 'endDate' in boundary) {
+	// 			const start = boundary.startDate;
+	// 			const end = boundary.endDate;
 
-				if (start <= end) {
-					if (dateStr >= start && dateStr <= end) return name;
-				} else {
-					// Handles wrap-around seasons like Dec–Feb
-					if (dateStr >= start || dateStr <= end) return name;
-				}
-			} else if ('startMonth' in boundary && 'endMonth' in boundary) {
-				const { startMonth, endMonth } = boundary;
-				if (startMonth <= endMonth) {
-					if (this.month >= startMonth && this.month <= endMonth) {
-						return name;
-					}
-				} else {
-					if (this.month >= startMonth || this.month <= endMonth) {
-						return name;
-					}
-				}
-			}
-		}
+	// 			if (start <= end) {
+	// 				if (dateStr >= start && dateStr <= end) return name;
+	// 			} else {
+	// 				// Handles wrap-around seasons like Dec–Feb
+	// 				if (dateStr >= start || dateStr <= end) return name;
+	// 			}
+	// 		} else if ('startMonth' in boundary && 'endMonth' in boundary) {
+	// 			const { startMonth, endMonth } = boundary;
+	// 			if (startMonth <= endMonth) {
+	// 				if (this.month >= startMonth && this.month <= endMonth) {
+	// 					return name;
+	// 				}
+	// 			} else {
+	// 				if (this.month >= startMonth || this.month <= endMonth) {
+	// 					return name;
+	// 				}
+	// 			}
+	// 		}
+	// 	}
 
-		return 'Unknown';
-	}
+	// 	return 'Unknown';
+	// }
 
 	/** @instance Returns number of days in current month */
 	daysInMonth(): NumberRange<28, 31> {
@@ -2622,5 +2629,16 @@ export class Chronos {
 	 */
 	static isValidChronos(value: unknown): value is Chronos {
 		return value instanceof Chronos;
+	}
+
+	/**
+	 * @static Injects a plugin into the Chronos system (once).
+	 * @param plugin The plugin to install.
+	 */
+	static use(plugin: ChronosPlugin): void {
+		if (!Chronos.#plugins.has(plugin)) {
+			Chronos.#plugins.add(plugin);
+			plugin(Chronos);
+		}
 	}
 }
