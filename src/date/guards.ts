@@ -1,7 +1,7 @@
 import { isString } from '../guards/primitives';
 import { isNumericString } from '../guards/specials';
 import type { Numeric } from '../types/index';
-import type { Time, UTCOffSet } from './types';
+import type { ClockTime, UTCOffSet } from './types';
 
 /**
  * * Checks if the provided value is a valid time string in "HH:MM" format.
@@ -9,7 +9,7 @@ import type { Time, UTCOffSet } from './types';
  * @param value - The value to check.
  * @returns `true` if the value is a valid time string, `false` otherwise.
  */
-export function isValidTime(value: unknown): value is Time {
+export function isValidTime(value: unknown): value is ClockTime {
 	if (!isString(value)) return false;
 
 	const [hourStr, minuteStr] = value.split(':');

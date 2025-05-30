@@ -1,4 +1,4 @@
-import type { DayPart, Hours, UTCOffSet } from './types';
+import type { ClockHour, DayPart, UTCOffSet } from './types';
 
 export const DAYS = /* @__PURE__ */ Object.freeze([
 	'Sunday',
@@ -68,6 +68,8 @@ export const SECOND_FORMATS = /* @__PURE__ */ Object.freeze([
 	's',
 ] as const);
 
+export const ZONE_FORMATS = /* @__PURE__ */ Object.freeze(['ZZ'] as const);
+
 export const MILLISECOND_FORMATS = /* @__PURE__ */ Object.freeze([
 	'ms',
 	'mss',
@@ -86,6 +88,7 @@ export const sortedFormats = /* @__PURE__ */ Object.freeze(
 		...SECOND_FORMATS,
 		...MILLISECOND_FORMATS,
 		...TIME_FORMATS,
+		...ZONE_FORMATS,
 	].sort((a, b) => b.length - a.length),
 );
 
@@ -439,7 +442,7 @@ export const TIME_ZONE_LABELS: Record<UTCOffSet, string> =
 	} as Record<UTCOffSet, string>);
 
 /** Ranges for day parts. */
-export const DEFAULT_RANGES: Record<DayPart, [Hours, Hours]> =
+export const DEFAULT_RANGES: Record<DayPart, [ClockHour, ClockHour]> =
 	/* @__PURE__ */ Object.freeze({
 		night: ['21', '23'],
 		midnight: ['00', '01'],
@@ -449,6 +452,7 @@ export const DEFAULT_RANGES: Record<DayPart, [Hours, Hours]> =
 		evening: ['17', '20'],
 	} as const);
 
+/** Western Zodiac Signs */
 export const ZODIAC_SIGNS = /* @__PURE__ */ Object.freeze([
 	['Capricorn', [1, 19]],
 	['Aquarius', [2, 18]],

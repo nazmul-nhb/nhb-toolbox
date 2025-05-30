@@ -1,4 +1,4 @@
-import type { Enumerate } from '../number/types';
+import type { Enumerate, NumberRange } from '../number/types';
 import type { Chronos } from './Chronos';
 import type {
 	DATE_FORMATS,
@@ -15,122 +15,39 @@ import type {
 	YEAR_FORMATS,
 	ZODIAC_SIGNS,
 } from './constants';
+import type { SEASON_PRESETS } from './seasons';
 
 /** - Minute in numeric string from `00` to `23` */
-export type Hours =
-	| '00'
-	| '01'
-	| '02'
-	| '03'
-	| '04'
-	| '05'
-	| '06'
-	| '07'
-	| '08'
-	| '09'
-	| '10'
-	| '11'
-	| '12'
-	| '13'
-	| '14'
-	| '15'
-	| '16'
-	| '17'
-	| '18'
-	| '19'
-	| '20'
-	| '21'
-	| '22'
-	| '23';
+export type ClockHour = `0${Enumerate<10>}` | `${NumberRange<10, 23>}`;
 
 /** - Minute in numeric string from `00` to `59` */
-export type Minutes =
-	| '00'
-	| '01'
-	| '02'
-	| '03'
-	| '04'
-	| '05'
-	| '06'
-	| '07'
-	| '08'
-	| '09'
-	| '10'
-	| '11'
-	| '12'
-	| '13'
-	| '14'
-	| '15'
-	| '16'
-	| '17'
-	| '18'
-	| '19'
-	| '20'
-	| '21'
-	| '22'
-	| '23'
-	| '24'
-	| '25'
-	| '26'
-	| '27'
-	| '28'
-	| '29'
-	| '30'
-	| '31'
-	| '32'
-	| '33'
-	| '34'
-	| '35'
-	| '36'
-	| '37'
-	| '38'
-	| '39'
-	| '40'
-	| '41'
-	| '42'
-	| '43'
-	| '44'
-	| '45'
-	| '46'
-	| '47'
-	| '48'
-	| '49'
-	| '50'
-	| '51'
-	| '52'
-	| '53'
-	| '54'
-	| '55'
-	| '56'
-	| '57'
-	| '58'
-	| '59';
+export type ClockMinute = `0${Enumerate<10>}` | `${NumberRange<10, 59>}`;
 
 /** - Second in numeric string from `00` to `59` */
-export type Seconds = Minutes;
+export type ClockSecond = `0${Enumerate<10>}` | `${NumberRange<10, 59>}`;
 
 /** - Time in "HH:MM" format. */
-export type Time = `${Hours}:${Minutes}`;
+export type ClockTime = `${ClockHour}:${ClockMinute}`;
 
 /** - Configuration options for greeting. */
 export interface GreetingConfigs {
 	/** Time when the morning period ends (HH:MM format). Defaults to `11:59` */
-	morningEnds?: Time;
+	morningEnds?: ClockTime;
 
 	/** Time when the noon period ends (HH:MM format). Defaults to `12:59` */
-	noonEnds?: Time;
+	noonEnds?: ClockTime;
 
 	/** Time when the afternoon period ends (HH:MM format). Defaults to `17:59` */
-	afternoonEnds?: Time;
+	afternoonEnds?: ClockTime;
 
 	/** Time when the evening period ends (HH:MM format). Defaults to `23:59` */
-	eveningEnds?: Time;
+	eveningEnds?: ClockTime;
 
 	/** Time when the midnight period ends (HH:MM format). Defaults to `02:59` */
-	midnightEnds?: Time;
+	midnightEnds?: ClockTime;
 
 	/** Current time in "HH:MM" format for some weird reason. Defaults to current time `new Date()` */
-	currentTime?: Time;
+	currentTime?: ClockTime;
 
 	/** Optional string to append after each message */
 	appendToMsg?: string;
@@ -196,7 +113,8 @@ export type ChronosFormat =
 	| Minute
 	| Second
 	| Millisecond
-	| TimeFormats;
+	| TimeFormats
+	| 'ZZ';
 
 /** Standard date formats. */
 export type DateParts =
@@ -593,40 +511,10 @@ export interface ChronosStatics {
 export type TimeZone = keyof typeof TIME_ZONES;
 
 /** Positive UTC hours */
-export type PositiveUTCHour =
-	| '+00'
-	| '+01'
-	| '+02'
-	| '+03'
-	| '+04'
-	| '+05'
-	| '+06'
-	| '+07'
-	| '+08'
-	| '+09'
-	| '+10'
-	| '+11'
-	| '+12'
-	| '+13'
-	| '+14';
+export type PositiveUTCHour = `+0${Enumerate<10>}` | `+${NumberRange<10, 14>}`;
 
 /** Negative UTC hours */
-export type NegativeUTCHour =
-	| '-00'
-	| '-01'
-	| '-02'
-	| '-03'
-	| '-04'
-	| '-05'
-	| '-06'
-	| '-07'
-	| '-08'
-	| '-09'
-	| '-10'
-	| '-11'
-	| '-12'
-	| '-13'
-	| '-14';
+export type NegativeUTCHour = `-0${Enumerate<10>}` | `-${NumberRange<10, 14>}`;
 
 /** UTC Minutes as quarters */
 export type UTCMinute = '00' | '15' | '30' | '45';
@@ -652,7 +540,7 @@ export type DayPart =
 	| 'evening';
 
 /** Object type for extracting day parts. */
-export type DayPartConfig = Record<DayPart, [Hours, Hours]>;
+export type DayPartConfig = Record<DayPart, [ClockHour, ClockHour]>;
 
 /** Quarters of the year */
 export type Quarter = 1 | 2 | 3 | 4;
@@ -695,3 +583,47 @@ export type WeekdayOptions = RelativeRangeOptions | DateRangeOptions;
 
 /** Millisecond from `0-999` */
 export type MilliSecond = Enumerate<999> | 999;
+
+/** Date of the month as `0` padded numeric string e.g. `01`, `18` */
+export type DateString = `0${NumberRange<1, 9>}` | `${NumberRange<10, 31>}`;
+
+/** Month as `0` padded numeric string, e.g. `02`, `01` etc. */
+export type MonthString = `0${NumberRange<1, 9>}` | `${NumberRange<10, 12>}`;
+
+/** Date and month in `MM-DD` format, e.g. `01-12` means 'January 18' */
+export type MonthDateString = `${MonthString}-${DateString}`;
+
+// ! ======== SEASON CONFIG TYPES ======== //
+
+/** ISO date-based range (format: `MM-DD`) e.g. `01-14` for 'January 14' */
+export type DateBoundary = {
+	/** Start date in `MM-DD` format, e.g. `01-18` means 'January 18' */
+	startDate: MonthDateString;
+	/** End date in `MM-DD` format, e.g. `03-17` means 'March 17' */
+	endDate: MonthDateString;
+};
+
+/** Inclusive month index-based range `0-11` (0 = January) */
+export type MonthBoundary = {
+	startMonth: Enumerate<12>;
+	endMonth: Enumerate<12>;
+};
+
+/** Season definition for season configuration */
+export interface SeasonDefinition {
+	/** Name of the season */
+	name: string;
+	/** Inclusive date/month boundary of the season */
+	boundary: MonthBoundary | DateBoundary;
+}
+
+/** Name of a predefined season preset */
+export type SeasonPreset = keyof typeof SEASON_PRESETS;
+
+/** Options for configuring seasons */
+export interface SeasonOptions {
+	/** Custom season list to override or define seasons manually */
+	seasons?: SeasonDefinition[];
+	/** Predefined preset to use for season calculation */
+	preset?: SeasonPreset;
+}

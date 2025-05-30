@@ -6,6 +6,14 @@ All notable changes to this package will be documented in this file.
 
 ---
 
+## [4.12.12] - 2025-05-30
+
+### 🕧 Updates in Chronos
+
+- Added new method `season` to get the name of the season for current Chronos instance. It has configurable options.
+- All `Chronos` methods that use `#format` method internally now accepts escape tokens and new token `ZZ` is introduced to include timezone offset (or Z for UTC time) in the formatted date string.
+- Updated some type names such as `Hours` ➡️ `ClockHour`, `Minutes` ➡️ `ClockMinute`, `Time` ➡️ `ClockTIme` etc. But the core definitions remain the same.
+
 ## [4.12.10] - 2025-05-30
 
 ### 🕧 New Chronos Methods

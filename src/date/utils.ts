@@ -1,5 +1,5 @@
 import type { Numeric } from '../types/index';
-import type { Time, UTCOffSet } from './types';
+import type { ClockTime, UTCOffSet } from './types';
 
 /**
  * * Extracts the hour and minute from a time string in `HH:MM` or `-HH:MM` format.
@@ -7,7 +7,9 @@ import type { Time, UTCOffSet } from './types';
  * @param time - The time string to extract from.
  * @return The extracted hour and minute as number tuple.
  */
-export function extractHourMinute(time: `-${Time}` | Time): [number, number] {
+export function extractHourMinute(
+	time: `-${ClockTime}` | ClockTime,
+): [number, number] {
 	const [hour, minute] = time.split(':').map(Number);
 
 	return [hour, minute];
@@ -19,11 +21,11 @@ export function extractHourMinute(time: `-${Time}` | Time): [number, number] {
  * @param time - The time in `HH:MM` or `-HH:MM` format.
  * @returns The total minutes elapsed since `00:00`.
  */
-export function getTotalMinutes(time: `-${Time}` | Time): number {
+export function getTotalMinutes(time: `-${ClockTime}` | ClockTime): number {
 	const isNegative = time.startsWith('-');
 
 	const [h, m] = extractHourMinute(
-		isNegative ? (time.slice(1) as Time) : time,
+		isNegative ? (time.slice(1) as ClockTime) : time,
 	);
 
 	const total = h * 60 + m;
@@ -47,8 +49,10 @@ export function getCurrentDateTime(): Date {
  * @param utc UTC value in `UTC-01:30` or `UTC+01:30` format.
  * @returns The UTC value in `HH:MM` format.
  */
-export function extractTimeFromUTC(utc: UTCOffSet): `-${Time}` | Time {
-	return utc.replace(/^UTC[+]?/g, '') as `-${Time}` | Time;
+export function extractTimeFromUTC(
+	utc: UTCOffSet,
+): `-${ClockTime}` | ClockTime {
+	return utc.replace(/^UTC[+]?/g, '') as `-${ClockTime}` | ClockTime;
 }
 
 /**

@@ -98,8 +98,8 @@ Blazing-fast array searching with binary search, fuzzy matching, and smart cachi
 const productFinder = new Finder(products);
 
 const laptop = productFinder.findOne('laptop', 'category', {
-	fuzzy: true,
-	caseInsensitive: false,
+ fuzzy: true,
+ caseInsensitive: false,
 });
 ```
 
@@ -111,10 +111,10 @@ const laptop = productFinder.findOne('laptop', 'category', {
 
 ```typescript
 generateRandomID({
-	prefix: 'user',
-	timeStamp: true,
-	length: 12,
-	caseOption: 'upper',
+ prefix: 'user',
+ timeStamp: true,
+ length: 12,
+ caseOption: 'upper',
 }); // "USER-171234567890-AB3C4D5E6F7G"
 ```
 
@@ -140,10 +140,10 @@ Clean and normalize strings/objects by trimming whitespace, removing empty value
 
 ```typescript
 const user = {
-	name: '  John Doe  ',
-	age: null,
-	address: { city: '  NYC  ', zip: '' },
-	tags: [],
+ name: '  John Doe  ',
+ age: null,
+ address: { city: '  NYC  ', zip: '' },
+ tags: [],
 };
 
 sanitizeData(user, { ignoreNullish: true, ignoreEmpty: true });
@@ -206,9 +206,9 @@ getNumbersInRange('prime', { min: 10, max: 30, getAsString: true });
 ```typescript
 // Calculate percentage change
 calculatePercentage({
-	mode: 'get-change-percent',
-	oldValue: 100,
-	newValue: 150,
+ mode: 'get-change-percent',
+ oldValue: 100,
+ newValue: 150,
 }); // 50 (50% increase)
 ```
 
@@ -247,11 +247,13 @@ debounceAction(fetchResults, 300);
 
 [Full Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/misc/debounceAction)
 
+> These utilities represent just a portion of the comprehensive `toolbox`. Each is designed with production-grade reliability and developer experience in mind. Explore more in the [full documentation](https://nhb-toolbox.vercel.app). All the utilities and classes are categorized.
+
 ---
 
 ## License
 
-This project is licensed under the [Apache License 2.0](./LICENSE) with the following additional requirement:
+This project is licensed under the [Apache License 2.0](LICENSE) with the following additional requirement:
 
 **Additional Requirement:**
 

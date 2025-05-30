@@ -13,6 +13,7 @@ import {
 	ZODIAC_SIGNS,
 } from './constants';
 import { isLeapYear, isValidUTCOffSet } from './guards';
+import { SEASON_PRESETS } from './seasons';
 import type {
 	ChronosFormat,
 	ChronosInput,
@@ -26,6 +27,7 @@ import type {
 	MonthName,
 	Quarter,
 	RelativeRangeOptions,
+	SeasonOptions,
 	StrictFormat,
 	TimeDuration,
 	TimeParts,
@@ -374,6 +376,7 @@ export class Chronos {
 			useUTC ?
 				this.#date.getUTCMilliseconds()
 			:	this.#date.getMilliseconds();
+		const timeZone = useUTC ? 'Z' : this.getTimeZoneOffset();
 
 		const dateComponents: Record<ChronosFormat, string> = {
 			YYYY: String(year),
@@ -402,34 +405,32 @@ export class Chronos {
 			mss: String(milliseconds).padStart(3, '0'),
 			a: hours < 12 ? 'am' : 'pm',
 			A: hours < 12 ? 'AM' : 'PM',
+			ZZ: timeZone,
 		};
+
+		const tokenRegex = new RegExp(`^(${sortedFormats.join('|')})`);
 
 		let result = '';
 		let i = 0;
 
-		while (i < format?.length) {
-			let matched = false;
-
-			for (const token of sortedFormats) {
-				const ahead = format?.slice(i, i + token?.length);
-				const prev = i === 0 ? '' : format[i - 1];
-				const next = format[i + token?.length] ?? '';
-
-				// Check non-alphanumeric boundaries
-				const prevOk = i === 0 || /[^a-zA-Z0-9]/.test(prev);
-				const nextOk =
-					i + token?.length >= format?.length ||
-					/[^a-zA-Z0-9]/.test(next);
-
-				if (ahead === token && prevOk && nextOk) {
-					result += dateComponents[token];
-					i += token?.length;
-					matched = true;
-					break;
+		while (i < format.length) {
+			// Handle [escaped literal]
+			if (format[i] === '[') {
+				const end = format.indexOf(']', i);
+				if (end !== -1) {
+					result += format.slice(i + 1, end);
+					i = end + 1;
+					continue;
 				}
 			}
 
-			if (!matched) {
+			// Try to match a format token
+			const match = tokenRegex.exec(format.slice(i));
+
+			if (match) {
+				result += dateComponents[match[0] as ChronosFormat];
+				i += match[0].length;
+			} else {
 				result += format[i];
 				i++;
 			}
@@ -663,12 +664,23 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Formats the date into a custom string format (local time).
+	 * @instance Formats the current date into a custom string format (local time by default).
 	 *
-	 * @param format - The desired format (Default format is `dd, mmm DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55`).
-	 * @param useUTC - Optional `useUTC` to get the formatted time using UTC Offset, defaults to `false`. Equivalent to `formatUTC()` method if set to `true`.
-	 * @returns Formatted date string in desired format (in local time unless `useUTC` passed as `true`).
+	 * @param format - The desired format string (Default: `dd, mmm DD, YYYY HH:mm:ss` → e.g., `Sun, Apr 06, 2025 16:11:55`).
+	 *
+	 * - To output raw text (i.e., not interpreted as a date token), wrap it in square brackets.
+	 * - For example, `[Today is] ddd` results in `Today is Sunday`, and `YYYY[ year]` results in `2025 year`.
+	 *
+	 * - Supported format tokens include: `YYYY`, `YY`, `MMMM`, `MMM`, `MM`, `M`, `DD`, `D`, `dd`, `ddd`, `Do`, `HH`, `H`, `hh`, `h`, `mm`, `m`, `ss`, `s`, `mss`, `a`, `A`, and `ZZ`.
+	 * - *Any token not wrapped in brackets will be parsed and replaced with its corresponding date component.*
+	 *
+	 * @param useUTC - Optional boolean to format the date using UTC time.
+	 * When `true`, it behaves like `formatUTC()` and outputs time based on UTC offset. Defaults to `false`.
+	 *
+	 * @returns Formatted date string using the specified format.
+	 * Uses local time by default unless `useUTC` is set to `true`.
 	 */
+
 	format(format?: string, useUTC = false): string {
 		return this.#format(format ?? 'dd, mmm DD, YYYY HH:mm:ss', useUTC);
 	}
@@ -680,6 +692,7 @@ export class Chronos {
 	 *
 	 * @param format - The desired format string. Defaults to `'dd, mmm DD, YYYY HH:mm:ss'`
 	 *                 (e.g., `'Sun, Apr 06, 2025 16:11:55'`).
+	 *
 	 * @param useUTC - If `true`, formats the date in UTC (equivalent to `formatUTC()`);
 	 *                 defaults to `false` (local time).
 	 * @returns A formatted date string in the specified format
@@ -692,6 +705,13 @@ export class Chronos {
 	 * @instance Formats the date into a custom string format (UTC time).
 	 *
 	 * @param format - The desired format (Default format is `dd, mmm DD, YYYY HH:mm:ss:mss` = `Sun, Apr 06, 2025 16:11:55:379`).
+	 *
+	 * - To output raw text (i.e., not interpreted as a date token), wrap it in square brackets.
+	 * - For example, `[Today is] ddd` results in `Today is Sunday`, and `YYYY[ year]` results in `2025 year`.
+	 *
+	 * - Supported format tokens include: `YYYY`, `YY`, `MMMM`, `MMM`, `MM`, `M`, `DD`, `D`, `dd`, `ddd`, `Do`, `HH`, `H`, `hh`, `h`, `mm`, `m`, `ss`, `s`, `mss`, `a`, `A`, and `ZZ`.
+	 * - *Any token not wrapped in brackets will be parsed and replaced with its corresponding date component.*
+	 *
 	 * @returns Formatted date string in desired format (UTC time).
 	 */
 	formatUTC(format: string = 'dd, mmm DD, YYYY HH:mm:ss:mss'): string {
@@ -1820,6 +1840,46 @@ export class Chronos {
 		return 'Capricorn';
 	}
 
+	/**
+	 * @instance Returns the current season name based on optional season rules or presets.
+	 * @param options Configuration with optional custom seasons or preset name.
+	 * @returns The name of the season the current date falls under.
+	 */
+	season(options?: SeasonOptions): string {
+		const { preset = 'default' } = options ?? {};
+
+		const seasonSet = options?.seasons ?? SEASON_PRESETS[preset];
+
+		const dateStr = this.#format('MM-DD');
+
+		for (const { name, boundary } of seasonSet) {
+			if ('startDate' in boundary && 'endDate' in boundary) {
+				const start = boundary.startDate;
+				const end = boundary.endDate;
+
+				if (start <= end) {
+					if (dateStr >= start && dateStr <= end) return name;
+				} else {
+					// Handles wrap-around seasons like Dec–Feb
+					if (dateStr >= start || dateStr <= end) return name;
+				}
+			} else if ('startMonth' in boundary && 'endMonth' in boundary) {
+				const { startMonth, endMonth } = boundary;
+				if (startMonth <= endMonth) {
+					if (this.month >= startMonth && this.month <= endMonth) {
+						return name;
+					}
+				} else {
+					if (this.month >= startMonth || this.month <= endMonth) {
+						return name;
+					}
+				}
+			}
+		}
+
+		return 'Unknown';
+	}
+
 	/** @instance Returns number of days in current month */
 	daysInMonth(): NumberRange<28, 31> {
 		return new Date(this.year, this.month + 1, 0).getDate() as NumberRange<
@@ -1880,7 +1940,7 @@ export class Chronos {
 	 * @param startMonth - The fiscal year start month (1-12), default is July (7).
 	 * @returns The fiscal quarter (1-4).
 	 */
-	toFiscalQuarter(startMonth: number = 7): Quarter {
+	toFiscalQuarter(startMonth: NumberRange<1, 12> = 7): Quarter {
 		const month = this.#date.getMonth() + 1;
 		const adjusted = (month - startMonth + 12) % 12;
 		return (Math.floor(adjusted / 3) + 1) as Quarter;
