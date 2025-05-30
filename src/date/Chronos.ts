@@ -1890,115 +1890,6 @@ export class Chronos {
 	}
 
 	/**
-	 * @static Parses a date string with a given format (limited support only).
-	 *
-	 * * **Supported format tokens**:
-	 * - `YYYY`: Full year (e.g., 2023)
-	 * - `YY`: Two-digit year (e.g., 23 for 2023, 99 for 1999)
-	 * - `MM`: Month (01-12)
-	 * - `M`: Month (1-9)
-	 * - `DD`: Day of the month (01-31)
-	 * - `D`: Day of the month (1-9)
-	 * - `HH`: Hour (00-23)
-	 * - `H`: Hour (0-9)
-	 * - `mm`: Minute (00-59)
-	 * - `m`: Minute (0-9)
-	 * - `ss`: Second (00-59)
-	 * - `s`: Second (0-9)
-	 *
-	 * **Example**:
-	 * ```ts
-	 * Chronos.parse('23-12-31 15:30:45', 'YY-MM-DD HH:mm:ss');
-	 * // returns Chronos instance with the parsed date 2023-12-31T15:30:45
-	 * ```
-	 *
-	 * @param dateStr - The date string to be parsed
-	 * @param format - The format of the date string. Tokens like `YYYY`, `MM`, `DD`, `HH`, `mm`, `ss` are used to specify the structure.
-	 * @returns A new `Chronos` instance representing the parsed date.
-	 * @throws `Error` If the date string does not match the format.
-	 */
-	static parse(dateStr: string, format: string): Chronos {
-		const tokenPatterns: Record<string, string> = {
-			YYYY: '(?<YYYY>\\d{4})',
-			YY: '(?<YY>\\d{2})',
-			MM: '(?<MM>\\d{2})',
-			M: '(?<M>\\d{1,2})',
-			DD: '(?<DD>\\d{2})',
-			D: '(?<D>\\d{1,2})',
-			HH: '(?<HH>\\d{2})',
-			H: '(?<H>\\d{1,2})',
-			mm: '(?<mm>\\d{2})',
-			m: '(?<m>\\d{1,2})',
-			ss: '(?<ss>\\d{2})',
-			s: '(?<s>\\d{1,2})',
-		};
-
-		const tokenToComponent: Record<string, keyof ChronosDateParts> = {
-			YYYY: 'year',
-			YY: 'year',
-			MM: 'month',
-			M: 'month',
-			DD: 'date',
-			D: 'date',
-			HH: 'hour',
-			H: 'hour',
-			mm: 'minute',
-			m: 'minute',
-			ss: 'second',
-			s: 'second',
-		};
-
-		type ChronosDateParts = {
-			year: number;
-			month: number;
-			date: number;
-			hour: number;
-			minute: number;
-			second: number;
-		};
-
-		const tokenRegex = new RegExp(
-			Object.keys(tokenPatterns).join('|'),
-			'g',
-		);
-
-		const trimmedInput = dateStr.trim();
-
-		const regexStr = format
-			.trim()
-			.replace(tokenRegex, (token) => tokenPatterns[token] ?? token)
-			.replace(/\s+/g, '\\s*');
-
-		const match = new RegExp(`^${regexStr}\\s*$`).exec(trimmedInput);
-
-		if (!match?.groups) {
-			throw new Error('Invalid date format');
-		}
-
-		const parts: Partial<ChronosDateParts> = {};
-
-		for (const [token, value] of Object.entries(match.groups)) {
-			const key = tokenToComponent[token];
-			if (key) {
-				let num = Number(value);
-				if (token === 'YY') num += num < 100 ? 2000 : 0;
-				parts[key] = num;
-			}
-		}
-
-		return new Chronos(
-			new Date(
-				parts?.year ?? 1970,
-				(parts?.month ?? 1) - 1,
-				parts?.date ?? 1,
-				parts?.hour ?? 0,
-				parts?.minute ?? 0,
-				parts?.second ?? 0,
-			),
-		).#withOrigin('parse');
-	}
-
-	/**
 	 * @instance Rounds the current date-time to the nearest specified unit and interval.
 	 *
 	 * - *Rounding is based on proximity to the start or end of the specified unit.*
@@ -2207,6 +2098,115 @@ export class Chronos {
 	 */
 	monthName(index?: Enumerate<12>): MonthName {
 		return MONTHS[index ?? this.month];
+	}
+
+	/**
+	 * @static Parses a date string with a given format (limited support only).
+	 *
+	 * * **Supported format tokens**:
+	 * - `YYYY`: Full year (e.g., 2023)
+	 * - `YY`: Two-digit year (e.g., 23 for 2023, 99 for 1999)
+	 * - `MM`: Month (01-12)
+	 * - `M`: Month (1-9)
+	 * - `DD`: Day of the month (01-31)
+	 * - `D`: Day of the month (1-9)
+	 * - `HH`: Hour (00-23)
+	 * - `H`: Hour (0-9)
+	 * - `mm`: Minute (00-59)
+	 * - `m`: Minute (0-9)
+	 * - `ss`: Second (00-59)
+	 * - `s`: Second (0-9)
+	 *
+	 * **Example**:
+	 * ```ts
+	 * Chronos.parse('23-12-31 15:30:45', 'YY-MM-DD HH:mm:ss');
+	 * // returns Chronos instance with the parsed date 2023-12-31T15:30:45
+	 * ```
+	 *
+	 * @param dateStr - The date string to be parsed
+	 * @param format - The format of the date string. Tokens like `YYYY`, `MM`, `DD`, `HH`, `mm`, `ss` are used to specify the structure.
+	 * @returns A new `Chronos` instance representing the parsed date.
+	 * @throws `Error` If the date string does not match the format.
+	 */
+	static parse(dateStr: string, format: string): Chronos {
+		const tokenPatterns: Record<string, string> = {
+			YYYY: '(?<YYYY>\\d{4})',
+			YY: '(?<YY>\\d{2})',
+			MM: '(?<MM>\\d{2})',
+			M: '(?<M>\\d{1,2})',
+			DD: '(?<DD>\\d{2})',
+			D: '(?<D>\\d{1,2})',
+			HH: '(?<HH>\\d{2})',
+			H: '(?<H>\\d{1,2})',
+			mm: '(?<mm>\\d{2})',
+			m: '(?<m>\\d{1,2})',
+			ss: '(?<ss>\\d{2})',
+			s: '(?<s>\\d{1,2})',
+		};
+
+		const tokenToComponent: Record<string, keyof ChronosDateParts> = {
+			YYYY: 'year',
+			YY: 'year',
+			MM: 'month',
+			M: 'month',
+			DD: 'date',
+			D: 'date',
+			HH: 'hour',
+			H: 'hour',
+			mm: 'minute',
+			m: 'minute',
+			ss: 'second',
+			s: 'second',
+		};
+
+		type ChronosDateParts = {
+			year: number;
+			month: number;
+			date: number;
+			hour: number;
+			minute: number;
+			second: number;
+		};
+
+		const tokenRegex = new RegExp(
+			Object.keys(tokenPatterns).join('|'),
+			'g',
+		);
+
+		const trimmedInput = dateStr.trim();
+
+		const regexStr = format
+			.trim()
+			.replace(tokenRegex, (token) => tokenPatterns[token] ?? token)
+			.replace(/\s+/g, '\\s*');
+
+		const match = new RegExp(`^${regexStr}\\s*$`).exec(trimmedInput);
+
+		if (!match?.groups) {
+			throw new Error('Invalid date format');
+		}
+
+		const parts: Partial<ChronosDateParts> = {};
+
+		for (const [token, value] of Object.entries(match.groups)) {
+			const key = tokenToComponent[token];
+			if (key) {
+				let num = Number(value);
+				if (token === 'YY') num += num < 100 ? 2000 : 0;
+				parts[key] = num;
+			}
+		}
+
+		return new Chronos(
+			new Date(
+				parts?.year ?? 1970,
+				(parts?.month ?? 1) - 1,
+				parts?.date ?? 1,
+				parts?.hour ?? 0,
+				parts?.minute ?? 0,
+				parts?.second ?? 0,
+			),
+		).#withOrigin('parse');
 	}
 
 	/**
