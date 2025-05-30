@@ -6,13 +6,19 @@ All notable changes to this package will be documented in this file.
 
 ---
 
-## [4.12.13-beta.1] - 2025-05-30
+## [4.12.20] - 2025-05-31
 
-- Solved experimental plugin export/import issues
+### 🕧 Released Plugin System for Chronos
+
+- Plugin injection system for Chronos is now fully functional.
+
+## [4.12.13-beta.1] - 2025-05-31
+
+- Created more plugins for resource heavy methods of `Chronos`.
 
 ## [4.12.13-alpha.2] - 2025-05-30
 
-- Solved experimental plugin export/import issues
+- Solved experimental plugin export/import issues.
 
 ## [4.12.13-alpha.1] - 2025-05-30
 
