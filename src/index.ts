@@ -202,6 +202,9 @@ export {
 // ! Chronos
 export { Chronos, Chronos as Chronus } from './date/Chronos';
 
+// ! Chronos Plugins
+export { seasonPlugin } from './date/chronos-plugins';
+
 export {
 	chronos,
 	chronos as chronosjs,

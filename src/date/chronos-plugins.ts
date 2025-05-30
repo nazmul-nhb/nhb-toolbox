@@ -13,7 +13,7 @@ declare module './Chronos' {
 }
 
 /** * Plugin to inject `season` method */
-const seasonPlugin = (
+export const seasonPlugin = (
 	ChronosClass: typeof import('./Chronos').Chronos,
 ): void => {
 	ChronosClass.prototype.season = function (
@@ -54,5 +54,3 @@ const seasonPlugin = (
 		return 'Unknown';
 	};
 };
-
-export { seasonPlugin };
