@@ -22,7 +22,7 @@ All notable changes to this package will be documented in this file.
 
 ## [4.12.13-alpha.1] - 2025-05-30
 
-### 🕧 Experimenting Plugin System for Chronos
+### 🕧 Experimenting with Plugin System for Chronos
 
 - Introduced plugin injection in `Chronos` class. Started with `season` method. Will make convert more methods if this is successful after publishing.
 
