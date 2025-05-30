@@ -3,41 +3,31 @@ import type { Enumerate, LocaleCode, NumberRange } from '../number/types';
 import { getOrdinal, roundToNearest } from '../number/utilities';
 import { formatUnitWithPlural } from '../string/convert';
 import { isPalindrome } from '../string/guards';
+import { DAYS, MONTHS, sortedFormats, TIME_ZONE_LABELS } from './constants';
+import { isLeapYear } from './guards';
 import {
-	DAYS,
-	DEFAULT_RANGES,
-	MONTHS,
-	sortedFormats,
-	TIME_ZONE_LABELS,
-	TIME_ZONES,
-	ZODIAC_SIGNS,
-} from './constants';
-import { isLeapYear, isValidUTCOffSet } from './guards';
-import type {
-	ChronosFormat,
-	ChronosInput,
-	ChronosMethods,
-	ChronosObject,
-	ChronosPlugin,
-	DateRangeOptions,
-	DayPart,
-	DayPartConfig,
-	FormatOptions,
-	MilliSecond,
-	MonthName,
-	Quarter,
-	RelativeRangeOptions,
-	StrictFormat,
-	TimeDuration,
-	TimeParts,
-	TimeUnit,
-	TimeZone,
-	UTCOffSet,
-	WeekDay,
-	WeekdayOptions,
-	ZodiacSign,
+	INTERNALS,
+	type ChronosFormat,
+	type ChronosInput,
+	type ChronosInternals,
+	type ChronosMethods,
+	type ChronosObject,
+	type ChronosPlugin,
+	type DateRangeOptions,
+	type FormatOptions,
+	type MilliSecond,
+	type MonthName,
+	type Quarter,
+	type RelativeRangeOptions,
+	type StrictFormat,
+	type TimeDuration,
+	type TimeParts,
+	type TimeUnit,
+	type UTCOffSet,
+	type WeekDay,
+	type WeekdayOptions,
 } from './types';
-import { extractMinutesFromUTC, formatUTCOffset } from './utils';
+import { extractMinutesFromUTC } from './utils';
 
 /**
  * * Creates a new immutable `Chronos` instance.
@@ -69,6 +59,13 @@ export class Chronos {
 	#ORIGIN: ChronosMethods | 'root';
 
 	static #plugins = new Set<ChronosPlugin>();
+
+	/** Use `#withOrigin` method outside `Chronos`. Purpose: Plugin creation. */
+	protected static [INTERNALS]: ChronosInternals = {
+		withOrigin(instance, method, label) {
+			return instance.#withOrigin(method, label);
+		},
+	};
 
 	/**
 	 * * Chronos date/time in Native JS `Date` format.
@@ -357,6 +354,7 @@ export class Chronos {
 		const instance = new Chronos(this.#date);
 		instance.#ORIGIN = origin;
 		instance.origin = origin;
+		instance.native = instance.#date;
 		if (offset) instance.#offset = offset;
 		return instance;
 	}
@@ -808,34 +806,6 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Create a new instance of `Chronos` in the specified timezone.
-	 *
-	 * @param zone - Standard timezone abbreviation (e.g., 'IST', 'UTC', 'EST') or UTC Offset in `UTC-01:30` format.
-	 * @returns A new instance of `Chronos` with time in the given timezone. Invalid input sets time-zone to `UTC`.
-	 */
-	timeZone(zone: TimeZone | UTCOffSet): Chronos {
-		let targetOffset: number;
-		let stringOffset: UTCOffSet;
-
-		if (isValidUTCOffSet(zone)) {
-			targetOffset = extractMinutesFromUTC(zone);
-			stringOffset = zone;
-		} else {
-			targetOffset = TIME_ZONES[zone] ?? TIME_ZONES['UTC'];
-			stringOffset = formatUTCOffset(targetOffset);
-		}
-
-		const previousOffset = this.getTimeZoneOffsetMinutes();
-		const relativeOffset = targetOffset - previousOffset;
-
-		const adjustedTime = new Date(
-			this.#date.getTime() + relativeOffset * 60 * 1000,
-		);
-
-		return new Chronos(adjustedTime).#withOrigin('timeZone', stringOffset);
-	}
-
-	/**
 	 * @instance Checks if the current year is a leap year.
 	 * - A year is a leap year if it is divisible by 4, but not divisible by 100, unless it is also divisible by 400.
 	 * - For example, 2000 and 2400 are leap years, but 1900 and 2100 are not.
@@ -1273,66 +1243,6 @@ export class Chronos {
 		}
 
 		return `${prefix}${parts?.join(' ')}${suffix}`;
-	}
-
-	/**
-	 * * Returns the part of day (`'midnight', 'lateNight', 'night', 'morning', 'afternoon', 'evening'`) based on the current hour.
-	 *
-	 * *Supports both normal and wraparound (overnight) ranges.*
-	 *
-	 * @param config - Optional custom hour ranges for each part of day.
-	 *                 Each range must be a tuple of strings as `[startHour, endHour]` in 24-hour format (e.g., `['06', '11']`).
-	 *                 Supports wraparound ranges like `['22', '04']` that cross midnight.
-	 *
-	 *                 **Default Ranges:**
-	 *                 - night: ['21', '23']
-	 *                 - midnight: ['00', '01']
-	 *                 - lateNight: ['02', '04']
-	 *                 - morning: ['05', '11']
-	 *                 - afternoon: ['12', '16']
-	 *                 - evening: ['17', '20']
-	 *
-	 * @returns The current part of the day as a string.
-	 *
-	 * @example
-	 * chronosInstance.getPartOfDay(); // e.g., 'morning'
-	 *
-	 * @example
-	 * // Example with custom ranges
-	 * chronosInstance.getPartOfDay({
-	 *   night: ['22', '04'],
-	 *   morning: ['05', '11'],
-	 *   afternoon: ['12', '16'],
-	 *   evening: ['17', '21'],
-	 *   lateNight: ['01', '03'],
-	 *   midnight: ['00', '00'],
-	 * });
-	 */
-	getPartOfDay(config?: Partial<DayPartConfig>): DayPart {
-		const hour = this.#date.getHours();
-
-		const ranges: DayPartConfig = {
-			...DEFAULT_RANGES,
-			...config,
-		};
-
-		for (const [part, [start, end]] of Object.entries(ranges)) {
-			const from = Number(start);
-			const to = Number(end);
-
-			if (from <= to) {
-				if (hour >= from && hour <= to) {
-					return part as DayPart;
-				}
-			} else {
-				// Wraparound logic (e.g., 20 to 04 means 20–23 OR 00–04)
-				if (hour >= from || hour <= to) {
-					return part as DayPart;
-				}
-			}
-		}
-
-		return 'night';
 	}
 
 	/**
@@ -1829,63 +1739,6 @@ export class Chronos {
 		const diff = this.#date.getTime() - start.getTime();
 		return (Math.floor(diff / 86400000) + 1) as NumberRange<1, 366>;
 	}
-
-	/**
-	 * @instance Returns the zodiac sign for the current date.
-	 * @returns The Western zodiac sign.
-	 */
-	getZodiacSign(): ZodiacSign {
-		const day = this.#date.getDate();
-		const month = this.#date.getMonth() + 1;
-
-		for (const [sign, [m, d]] of ZODIAC_SIGNS) {
-			if (month === m && day <= d) {
-				return sign;
-			}
-		}
-
-		return 'Capricorn';
-	}
-
-	// /**
-	//  * @instance Returns the current season name based on optional season rules or presets.
-	//  * @param options Configuration with optional custom seasons or preset name.
-	//  * @returns The name of the season the current date falls under.
-	//  */
-	// season(options?: SeasonOptions): string {
-	// 	const { preset = 'default' } = options ?? {};
-
-	// 	const seasonSet = options?.seasons ?? SEASON_PRESETS[preset];
-
-	// 	const dateStr = this.#format('MM-DD');
-
-	// 	for (const { name, boundary } of seasonSet) {
-	// 		if ('startDate' in boundary && 'endDate' in boundary) {
-	// 			const start = boundary.startDate;
-	// 			const end = boundary.endDate;
-
-	// 			if (start <= end) {
-	// 				if (dateStr >= start && dateStr <= end) return name;
-	// 			} else {
-	// 				// Handles wrap-around seasons like Dec–Feb
-	// 				if (dateStr >= start || dateStr <= end) return name;
-	// 			}
-	// 		} else if ('startMonth' in boundary && 'endMonth' in boundary) {
-	// 			const { startMonth, endMonth } = boundary;
-	// 			if (startMonth <= endMonth) {
-	// 				if (this.month >= startMonth && this.month <= endMonth) {
-	// 					return name;
-	// 				}
-	// 			} else {
-	// 				if (this.month >= startMonth || this.month <= endMonth) {
-	// 					return name;
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-
-	// 	return 'Unknown';
-	// }
 
 	/** @instance Returns number of days in current month */
 	daysInMonth(): NumberRange<28, 31> {

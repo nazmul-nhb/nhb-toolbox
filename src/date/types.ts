@@ -185,6 +185,16 @@ export interface TimeDuration {
 	milliseconds: number;
 }
 
+export const INTERNALS = Symbol('Internals');
+
+export interface ChronosInternals {
+	withOrigin(
+		instance: Chronos,
+		method: ChronosMethods,
+		label?: UTCOffSet,
+	): Chronos;
+}
+
 /** @internal Helper type to assign instance origin when creating new Chronos instance. */
 export type WithoutOrigin = Omit<Chronos, '#ORIGIN' | 'origin'>;
 
@@ -205,7 +215,8 @@ export type ChronosMethods =
 			} ?
 				K
 			:	never;
-	  }[keyof typeof Chronos];
+	  }[keyof typeof Chronos]
+	| 'timeZone';
 
 /**
  * * Accepted Input type for `Chronos`
@@ -312,6 +323,12 @@ export interface ChronosStatics {
 		seconds?: number,
 		ms?: number,
 	): Chronos;
+
+	/**
+	 * @static Injects a plugin into the Chronos system (once).
+	 * @param plugin The plugin to install.
+	 */
+	use(plugin: ChronosPlugin): void;
 
 	/**
 	 * * Returns the current date and time in a specified format in local time.
@@ -628,7 +645,5 @@ export interface SeasonOptions {
 	preset?: SeasonPreset;
 }
 
-/**
- * A plugin that augments the Chronos class with methods or properties.
- */
+/** * A plugin that augments the Chronos class with methods or properties. */
 export type ChronosPlugin = (ChronosClass: typeof Chronos) => void;

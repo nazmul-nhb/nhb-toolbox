@@ -111,6 +111,7 @@ const chronos = (
  * yesterday(): Chronos;
  * tomorrow(): Chronos
  * now(): number
+ * use(plugin: ChronosPlugin): void
  * parse(dateStr: string, format: string): Chronos
  * utc(dateLike: ChronosInput): Chronos
  * min(...dates: ChronosInput[]): Chronos
@@ -133,6 +134,7 @@ const typedChronos = chronos as ChronosStatics;
 // 	}
 // });
 
+typedChronos.use = Chronos.use;
 typedChronos.now = Chronos.now;
 typedChronos.min = Chronos.min;
 typedChronos.max = Chronos.max;

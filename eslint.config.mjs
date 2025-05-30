@@ -94,7 +94,7 @@ export default [
 		rules: { '@typescript-eslint/no-require-imports': 'off' },
 	},
 	{
-		files: ['**/*plugins.ts'],
+		files: ['**/*plugins.ts', '**/plugins/*.ts'],
 		rules: { '@typescript-eslint/consistent-type-imports': 'off' },
 	},
 	{

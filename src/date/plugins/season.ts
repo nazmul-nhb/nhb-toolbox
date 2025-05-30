@@ -1,7 +1,10 @@
-import { SEASON_PRESETS } from './seasons';
-import type { SeasonOptions } from './types';
+import { SEASON_PRESETS } from '../seasons';
+import type { SeasonOptions } from '../types';
 
-declare module './Chronos' {
+type ChronosConstructor = import('../Chronos').Chronos;
+type MainChronos = typeof import('../Chronos').Chronos;
+
+declare module '../Chronos' {
 	interface Chronos {
 		/**
 		 * @instance Returns the current season name based on optional season rules or presets.
@@ -13,11 +16,9 @@ declare module './Chronos' {
 }
 
 /** * Plugin to inject `season` method */
-export const seasonPlugin = (
-	ChronosClass: typeof import('./Chronos').Chronos,
-): void => {
+export const seasonPlugin = (ChronosClass: MainChronos): void => {
 	ChronosClass.prototype.season = function (
-		this: import('./Chronos').Chronos,
+		this: ChronosConstructor,
 		options?: SeasonOptions,
 	): string {
 		const { preset = 'default' } = options ?? {};

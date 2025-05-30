@@ -203,7 +203,10 @@ export {
 export { Chronos, Chronos as Chronus } from './date/Chronos';
 
 // ! Chronos Plugins
-export { seasonPlugin } from './date/chronos-plugins';
+export { dayPartPlugin } from './date/plugins/day-part';
+export { seasonPlugin } from './date/plugins/season';
+export { timeZonePlugin } from './date/plugins/time-zone';
+export { zodiacPlugin } from './date/plugins/zodiac';
 
 export {
 	chronos,

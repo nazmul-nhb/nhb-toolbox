@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ---
 
+## [4.12.13-beta.1] - 2025-05-30
+
+- Solved experimental plugin export/import issues
+
 ## [4.12.13-alpha.2] - 2025-05-30
 
 - Solved experimental plugin export/import issues
