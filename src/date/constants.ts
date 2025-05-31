@@ -488,8 +488,8 @@ export const VEDIC_ZODIAC_SIGNS = /* @__PURE__ */ Object.freeze([
 
 /** Zodiac Signs Presets */
 export const ZODIAC_PRESETS = /* @__PURE__ */ Object.freeze({
-	vedic: VEDIC_ZODIAC_SIGNS,
 	western: WESTERN_ZODIAC_SIGNS,
-	tropical: VEDIC_ZODIAC_SIGNS,
-	sidereal: WESTERN_ZODIAC_SIGNS,
+	vedic: VEDIC_ZODIAC_SIGNS,
+	tropical: WESTERN_ZODIAC_SIGNS,
+	sidereal: VEDIC_ZODIAC_SIGNS,
 } as const);

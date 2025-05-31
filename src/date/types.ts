@@ -580,7 +580,7 @@ export type ZodiacArray = Array<
 export interface ZodiacOptions {
 	/** - Optional birthdate in `MM-DD` format (1-based month). */
 	birthDate?: MonthDateString;
-	/** Optional Zodiac preset to use. Default is `western`.  */
+	/** Optional Zodiac preset to use. Default is `western`. `western` and `tropical`, `vedic` and `sedereal` are same. */
 	preset?: ZodiacPreset;
 	/** Custom Zodiac date ranges. */
 	custom?: ZodiacArray;

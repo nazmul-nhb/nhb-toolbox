@@ -6,9 +6,17 @@ All notable changes to this package will be documented in this file.
 
 ---
 
+## [4.12.23] - 2025-06-01
+
+### 🕧 Updates for Chronos
+
+- All plugin imports now use statement like `import { somePlugin } from 'nhb-toolbox/plugins/plugin-path';`
+- Updated `getZodiacSign` method: includes 2 presets `western` and `vedic` with aliases `tropical` and `sidereal`.
+- Fixed issues in `getZodiacSign` method which previously could not parse some date/month range.
+
 ## [4.12.21-beta.2] - 2025-05-31
 
-- Updated `types.mjs` script for updating the exports fields for plugins in `package,json`.
+- Updated `types.mjs` script for updating the exports fields for plugins in `package.json`.
 
 ## [4.12.21-beta.1] - 2025-05-31
 
