@@ -9,27 +9,27 @@ const DEFAULT_SEASONS = /* @__PURE__ */ Object.freeze([
 /**Default Bangladeshi Seasons */
 const BANGLADESH_SEASONS = /* @__PURE__ */ Object.freeze([
 	{
-		name: 'Grishsho (Summer)',
+		name: 'Grisma (Summer)',
 		boundary: { startDate: '04-15', endDate: '06-14' },
 	},
 	{
-		name: 'Bôrsha (Monsoon)',
+		name: 'Barsa (Monsoon)',
 		boundary: { startDate: '06-15', endDate: '08-14' },
 	},
 	{
-		name: 'Shôrot (Autumn)',
+		name: 'Sarat (Autumn)',
 		boundary: { startDate: '08-15', endDate: '10-14' },
 	},
 	{
-		name: 'Hemonto (Late Autumn)',
+		name: 'Hemanta (Late-Autumn)',
 		boundary: { startDate: '10-15', endDate: '12-14' },
 	},
 	{
-		name: 'Sheet (Winter)',
+		name: 'Shhit (Winter)',
 		boundary: { startDate: '12-15', endDate: '02-14' },
 	},
 	{
-		name: 'Bôshonto (Spring)',
+		name: 'Basanta (Spring)',
 		boundary: { startDate: '02-15', endDate: '04-14' },
 	},
 ]);
@@ -66,7 +66,7 @@ const INDIA_VEDIC_SEASONS = /* @__PURE__ */ Object.freeze([
 		boundary: { startDate: '08-15', endDate: '10-14' },
 	}, // Mid-Aug to Mid-Oct
 	{
-		name: 'Hemant (Late Autumn',
+		name: 'Hemant (Late-Autumn',
 		boundary: { startDate: '10-15', endDate: '12-14' },
 	}, // Mid-Oct to Mid-Dec
 ]);
@@ -108,7 +108,7 @@ const US_ACADEMIC_SEASONS = /* @__PURE__ */ Object.freeze([
 		boundary: { startDate: '08-16', endDate: '12-20' },
 	},
 	{
-		name: 'Winter',
+		name: 'Winter Break',
 		boundary: { startDate: '12-21', endDate: '01-09' },
 	},
 ]);

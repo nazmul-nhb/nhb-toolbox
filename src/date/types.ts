@@ -12,8 +12,9 @@ import type {
 	SECOND_FORMATS,
 	TIME_FORMATS,
 	TIME_ZONES,
+	WESTERN_ZODIAC_SIGNS,
 	YEAR_FORMATS,
-	ZODIAC_SIGNS,
+	ZODIAC_PRESETS,
 } from './constants';
 import type { SEASON_PRESETS } from './seasons';
 
@@ -565,7 +566,25 @@ export type DayPartConfig = Record<DayPart, [ClockHour, ClockHour]>;
 export type Quarter = 1 | 2 | 3 | 4;
 
 /** Names of Zodiac signs */
-export type ZodiacSign = (typeof ZODIAC_SIGNS)[number][0];
+export type ZodiacSign = (typeof WESTERN_ZODIAC_SIGNS)[number][0];
+
+/** Presets for Zodiac Sign Configuration */
+export type ZodiacPreset = keyof typeof ZODIAC_PRESETS;
+
+/** Shape of Zodiac signs array */
+export type ZodiacArray = Array<
+	[ZodiacSign, [NumberRange<1, 12>, NumberRange<1, 31>]]
+>;
+
+/** Options for configuring Zodiac sign getter */
+export interface ZodiacOptions {
+	/** - Optional birthdate in `MM-DD` format (1-based month). */
+	birthDate?: MonthDateString;
+	/** Optional Zodiac preset to use. Default is `western`.  */
+	preset?: ZodiacPreset;
+	/** Custom Zodiac date ranges. */
+	custom?: ZodiacArray;
+}
 
 /** - Represents the full name of a weekday, e.g., 'Monday', 'Tuesday' etc. */
 export type WeekDay = (typeof DAYS)[number];

@@ -6,6 +6,12 @@ All notable changes to this package will be documented in this file.
 
 ---
 
+## [4.12.21-beta.1] - 2025-05-31
+
+- Updated `getZodiacSign` method: includes 2 presets `western` and `vedic`.
+- Fixed issues in `getZodiacSign` method.
+- Experimenting with exporting each Chronos plugin as separate module from the respective locations.
+
 ## [4.12.20] - 2025-05-31
 
 ### 🕧 Released Plugin System for Chronos

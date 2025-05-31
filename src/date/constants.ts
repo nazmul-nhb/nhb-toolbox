@@ -453,18 +453,43 @@ export const DEFAULT_RANGES: Record<DayPart, [ClockHour, ClockHour]> =
 	} as const);
 
 /** Western Zodiac Signs */
-export const ZODIAC_SIGNS = /* @__PURE__ */ Object.freeze([
-	['Capricorn', [1, 19]],
-	['Aquarius', [2, 18]],
-	['Pisces', [3, 20]],
-	['Aries', [4, 19]],
-	['Taurus', [5, 20]],
-	['Gemini', [6, 20]],
-	['Cancer', [7, 22]],
-	['Leo', [8, 22]],
-	['Virgo', [9, 22]],
-	['Libra', [10, 22]],
-	['Scorpio', [11, 21]],
-	['Sagittarius', [12, 21]],
-	['Capricorn', [12, 31]],
+export const WESTERN_ZODIAC_SIGNS = /* @__PURE__ */ Object.freeze([
+	['Capricorn', [12, 22]],
+	['Aquarius', [1, 20]],
+	['Pisces', [2, 19]],
+	['Aries', [3, 21]],
+	['Taurus', [4, 20]],
+	['Gemini', [5, 21]],
+	['Cancer', [6, 21]],
+	['Leo', [7, 23]],
+	['Virgo', [8, 23]],
+	['Libra', [9, 23]],
+	['Scorpio', [10, 23]],
+	['Sagittarius', [11, 22]],
+	['Capricorn', [12, 22]],
 ] as const);
+
+/** Vedic Zodiac Sign */
+export const VEDIC_ZODIAC_SIGNS = /* @__PURE__ */ Object.freeze([
+	['Capricorn', [1, 14]],
+	['Aquarius', [2, 13]],
+	['Pisces', [3, 14]],
+	['Aries', [4, 13]],
+	['Taurus', [5, 14]],
+	['Gemini', [6, 14]],
+	['Cancer', [7, 16]],
+	['Leo', [8, 16]],
+	['Virgo', [9, 16]],
+	['Libra', [10, 16]],
+	['Scorpio', [11, 15]],
+	['Sagittarius', [12, 15]],
+	['Capricorn', [1, 14]],
+] as const);
+
+/** Zodiac Signs Presets */
+export const ZODIAC_PRESETS = /* @__PURE__ */ Object.freeze({
+	vedic: VEDIC_ZODIAC_SIGNS,
+	western: WESTERN_ZODIAC_SIGNS,
+	tropical: VEDIC_ZODIAC_SIGNS,
+	sidereal: WESTERN_ZODIAC_SIGNS,
+} as const);

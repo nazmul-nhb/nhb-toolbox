@@ -36,7 +36,7 @@ const resolveTypeFile = (module) => {
 	for (const file of candidates) {
 		const fullPath = path.join(basePath, file);
 		if (fs.existsSync(fullPath)) {
-			return `./dist/dts/${module}/${file}`;
+			return normalizePath(`./dist/dts/${module}/${file}`);
 			// return `./dist/${module}/${file}`;
 		}
 	}
@@ -45,9 +45,26 @@ const resolveTypeFile = (module) => {
 };
 
 /**
+ * Normalize a file path to use forward slashes.
+ * @param {string} filePath - The file path to normalize.
+ * @returns {string} - The normalized file path.
+ */
+const normalizePath = (filePath) => filePath.replace(/\\/g, '/');
+
+/**
+ * @typedef {Object} Exports
+ * @property {Record<string, unknown>} exports - The exports object
+ * @property {Array<[string, string]>} validModules - Array of valid modules
+ * @property {Object} pluginModules - Plugin modules configuration
+ * @property {string[]} pluginModules.types - Type definitions
+ * @property {string[]} pluginModules.import - Import paths
+ * @property {string[]} pluginModules.require - Require paths
+ */
+
+/**
  * Generate the exports field for package.json
  * @param {string[]} modulePaths - Array of module folder names
- * @returns {{ exports: Record<string, unknown>, validModules: [string, string][] }} Export object and valid modules with resolved file paths
+ * @returns {Exports} Export object and valid modules with resolved file paths
  */
 const createExports = (modulePaths) => {
 	/** @type {Record<string, unknown>} */
@@ -83,7 +100,62 @@ const createExports = (modulePaths) => {
 		}
 	});
 
-	return { exports, validModules };
+	/**
+	 * * Collect all plugin type files under any `dist\/dts\/**\/plugins/*.d.ts`.
+	 * @param {string} base Base path to look up.
+	 * @returns {string[]} matching path as array of strings.
+	 */
+	const walkForPlugins = (base) => {
+		/** @type {string[]} */
+		const pluginTypePaths = [];
+		const dirs = fs.readdirSync(base, { withFileTypes: true });
+
+		for (const dirent of dirs) {
+			const fullPath = path.join(base, dirent.name);
+			if (dirent.isDirectory()) {
+				if (dirent.name === 'plugins') {
+					const pluginFiles = fs
+						.readdirSync(fullPath)
+						.filter((f) => f.endsWith('.d.ts'))
+						.map((file) =>
+							path.relative(distPath, path.join(fullPath, file)),
+						);
+					pluginTypePaths.push(...pluginFiles);
+				} else {
+					pluginTypePaths.push(...walkForPlugins(fullPath));
+				}
+			}
+		}
+		return pluginTypePaths.map(normalizePath);
+	};
+
+	// Plugins across all formats
+	const pluginTypes = walkForPlugins(distPath);
+	const pluginImports = pluginTypes.map((p) =>
+		p.replace(/^/, 'dist/esm/').replace(/\.d\.ts$/, '.js'),
+	);
+	const pluginRequires = pluginTypes.map((p) =>
+		p.replace(/^/, 'dist/cjs/').replace(/\.d\.ts$/, '.js'),
+	);
+	const pluginTypesFull = pluginTypes.map((p) => `./dist/dts/${p}`);
+
+	if (pluginTypes.length > 0) {
+		exports['./plugins'] = {
+			types: pluginTypesFull,
+			import: pluginImports.map((p) => `./${p}`),
+			require: pluginRequires.map((p) => `./${p}`),
+		};
+	}
+
+	return {
+		exports,
+		validModules,
+		pluginModules: {
+			types: pluginTypes.map((p) => `dist/dts/${p}`),
+			import: pluginImports,
+			require: pluginRequires,
+		},
+	};
 };
 
 /**
@@ -117,13 +189,18 @@ const createTypesVersions = (validModules) => {
  * Read, update, and write package.json with updated exports and typesVersions
  * @param {Record<string, unknown>} exports - The exports map
  * @param {[string, string][]} validModules - Valid modules and their resolved type files
+ * @param {Exports['pluginModules'] } pluginModules
  */
-const updatePackageJson = (exports, validModules) => {
+const updatePackageJson = (exports, validModules, pluginModules) => {
 	const packageJsonPath = path.join(__dirname, '../package.json');
 	const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
 
 	packageJson.exports = exports;
 	packageJson.typesVersions = createTypesVersions(validModules);
+
+	if (pluginModules.types.length > 0) {
+		packageJson.typesVersions['*']['plugins'] = pluginModules.types;
+	}
 
 	fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
@@ -140,6 +217,6 @@ const updatePackageJson = (exports, validModules) => {
 
 const modulePaths = getModulePaths();
 
-const { exports, validModules } = createExports(modulePaths);
+const { exports, validModules, pluginModules } = createExports(modulePaths);
 
-updatePackageJson(exports, validModules);
+updatePackageJson(exports, validModules, pluginModules);
