@@ -1,6 +1,6 @@
 {
 	"name": "nhb-toolbox",
-	"version": "4.12.21-beta.1",
+	"version": "4.12.21-beta.2",
 	"description": "A versatile collection of smart, efficient, and reusable utility functions and classes for everyday development needs.",
 	"main": "dist/cjs/index.js",
 	"module": "dist/esm/index.js",
@@ -147,25 +147,25 @@
 			"types": "./dist/dts/utils/types.d.ts",
 			"default": "./dist/dts/utils/types.d.ts"
 		},
-		"./plugins": {
-			"types": [
-				"./dist/dts/date/plugins/day-part.d.ts",
-				"./dist/dts/date/plugins/season.d.ts",
-				"./dist/dts/date/plugins/time-zone.d.ts",
-				"./dist/dts/date/plugins/zodiac.d.ts"
-			],
-			"import": [
-				"./dist/esm/date/plugins/day-part.js",
-				"./dist/esm/date/plugins/season.js",
-				"./dist/esm/date/plugins/time-zone.js",
-				"./dist/esm/date/plugins/zodiac.js"
-			],
-			"require": [
-				"./dist/cjs/date/plugins/day-part.js",
-				"./dist/cjs/date/plugins/season.js",
-				"./dist/cjs/date/plugins/time-zone.js",
-				"./dist/cjs/date/plugins/zodiac.js"
-			]
+		"./plugins/day-part": {
+			"types": "./dist/dts/date/plugins/day-part.d.ts",
+			"import": "./dist/esm/date/plugins/day-part.js",
+			"require": "./dist/cjs/date/plugins/day-part.js"
+		},
+		"./plugins/season": {
+			"types": "./dist/dts/date/plugins/season.d.ts",
+			"import": "./dist/esm/date/plugins/season.js",
+			"require": "./dist/cjs/date/plugins/season.js"
+		},
+		"./plugins/time-zone": {
+			"types": "./dist/dts/date/plugins/time-zone.d.ts",
+			"import": "./dist/esm/date/plugins/time-zone.js",
+			"require": "./dist/cjs/date/plugins/time-zone.js"
+		},
+		"./plugins/zodiac": {
+			"types": "./dist/dts/date/plugins/zodiac.d.ts",
+			"import": "./dist/esm/date/plugins/zodiac.js",
+			"require": "./dist/cjs/date/plugins/zodiac.js"
 		}
 	},
 	"typesVersions": {
@@ -197,10 +197,16 @@
 			"utils/types": [
 				"dist/dts/utils/types.d.ts"
 			],
-			"plugins": [
-				"dist/dts/date/plugins/day-part.d.ts",
-				"dist/dts/date/plugins/season.d.ts",
-				"dist/dts/date/plugins/time-zone.d.ts",
+			"plugins/day-part": [
+				"dist/dts/date/plugins/day-part.d.ts"
+			],
+			"plugins/season": [
+				"dist/dts/date/plugins/season.d.ts"
+			],
+			"plugins/time-zone": [
+				"dist/dts/date/plugins/time-zone.d.ts"
+			],
+			"plugins/zodiac": [
 				"dist/dts/date/plugins/zodiac.d.ts"
 			]
 		}
