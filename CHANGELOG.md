@@ -14,7 +14,7 @@ All notable changes to this package will be documented in this file.
 
 ### 🕧 Updates for Chronos
 
-- Moved more Chronos methods to plugin system to avoid
+- Reduced bloat by moving additional `Chronos` methods to plugin system.
 - Changed plugin import paths as `import { somePlugin } from nhb-toolbox/plugins/somePlugin` format so the users can assume the path easily.
 - Updated parameter type for `isBusinessHour` method: instead of multiple parameters can accept one options object now.
 
