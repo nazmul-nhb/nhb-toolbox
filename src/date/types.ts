@@ -361,7 +361,7 @@ export interface ChronosStatics {
 	 * @static Injects a plugin into the `Chronos` system.
 	 * @param plugin The plugin to inject.
 	 *
-	 * - **NOTE:** *Once a plugin is injected, all the registered methods for that plugin will be available for the whole project.**
+	 * - **NOTE:** *Once a plugin is injected, all the registered methods for that plugin will be available for the whole project.*
 	 * - See full list of plugins and the methods they register {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/plugins#-official-plugins}
 	 */
 	use(plugin: ChronosPlugin): void;
