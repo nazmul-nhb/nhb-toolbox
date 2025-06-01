@@ -1,6 +1,6 @@
-import { TIME_ZONES } from '../constants';
+import { INTERNALS, TIME_ZONES } from '../constants';
 import { isValidUTCOffSet } from '../guards';
-import { INTERNALS, type TimeZone, type UTCOffSet } from '../types';
+import type { TimeZone, UTCOffSet } from '../types';
 import { extractMinutesFromUTC, formatUTCOffset } from '../utils';
 
 type ChronosConstructor = import('../Chronos').Chronos;
@@ -39,7 +39,8 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		const relativeOffset = targetOffset - previousOffset;
 
 		const adjustedTime = new Date(
-			this.toDate().getTime() + relativeOffset * 60 * 1000,
+			ChronosClass[INTERNALS].internalDate(this).getTime() +
+				relativeOffset * 60 * 1000,
 		);
 
 		const instance = new ChronosClass(adjustedTime);

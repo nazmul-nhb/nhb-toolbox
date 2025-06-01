@@ -77,7 +77,7 @@ export const MILLISECOND_FORMATS = /* @__PURE__ */ Object.freeze([
 
 export const TIME_FORMATS = /* @__PURE__ */ Object.freeze(['a', 'A'] as const);
 
-export const sortedFormats = /* @__PURE__ */ Object.freeze(
+export const SORTED_TIME_FORMATS = /* @__PURE__ */ Object.freeze(
 	[
 		...YEAR_FORMATS,
 		...MONTH_FORMATS,
@@ -493,3 +493,5 @@ export const ZODIAC_PRESETS = /* @__PURE__ */ Object.freeze({
 	tropical: WESTERN_ZODIAC_SIGNS,
 	sidereal: VEDIC_ZODIAC_SIGNS,
 } as const);
+
+export const INTERNALS = Symbol('Internals');

@@ -1,12 +1,15 @@
 import { isString } from '../guards/primitives';
 import type { Enumerate, LocaleCode, NumberRange } from '../number/types';
 import { getOrdinal, roundToNearest } from '../number/utilities';
-import { formatUnitWithPlural } from '../string/convert';
-import { isPalindrome } from '../string/guards';
-import { DAYS, MONTHS, sortedFormats, TIME_ZONE_LABELS } from './constants';
+import {
+	DAYS,
+	INTERNALS,
+	MONTHS,
+	SORTED_TIME_FORMATS,
+	TIME_ZONE_LABELS,
+} from './constants';
 import { isLeapYear } from './guards';
 import {
-	INTERNALS,
 	type ChronosFormat,
 	type ChronosInput,
 	type ChronosInternals,
@@ -60,10 +63,22 @@ export class Chronos {
 
 	static #plugins = new Set<ChronosPlugin>();
 
-	/** Use `#withOrigin` method outside `Chronos`. Purpose: Plugin creation. */
+	/** Use `readonly private` methods outside `Chronos`. Purpose: Plugin creation. */
 	protected static [INTERNALS]: ChronosInternals = {
+		internalDate(instance) {
+			return instance.#date;
+		},
+
+		offset(instance) {
+			return instance.#offset;
+		},
+
 		withOrigin(instance, method, label) {
 			return instance.#withOrigin(method, label);
+		},
+
+		toNewDate(instance, value) {
+			return instance.#toNewDate(value);
 		},
 	};
 
@@ -413,7 +428,7 @@ export class Chronos {
 			ZZ: timeZone,
 		};
 
-		const tokenRegex = new RegExp(`^(${sortedFormats.join('|')})`);
+		const tokenRegex = new RegExp(`^(${SORTED_TIME_FORMATS.join('|')})`);
 
 		let result = '';
 		let i = 0;
@@ -816,21 +831,6 @@ export class Chronos {
 		return isLeapYear(year ?? this.year);
 	}
 
-	/** @instance Checks if the current date is today. */
-	isToday(): boolean {
-		return this.getRelativeDay() === 0;
-	}
-
-	/** @instance Checks if the current date is tomorrow. */
-	isTomorrow(): boolean {
-		return this.getRelativeDay() === 1;
-	}
-
-	/** @instance Checks if the current date is yesterday. */
-	isYesterday(): boolean {
-		return this.getRelativeDay() === -1;
-	}
-
 	/** @instance Checks if another date is exactly equal to this one */
 	isEqual(other: ChronosInput): boolean {
 		const time = other instanceof Chronos ? other : new Chronos(other);
@@ -978,134 +978,6 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Checks if the current date falls on a weekend.
-	 *
-	 * @param weekStartsOn Optional day the week starts on (0–6). Default is `0` (Sunday).
-	 * @param weekendLength Optional length of the weekend (1 or 2). Default is `2`.
-	 * @returns Whether the date is a weekend.
-	 *
-	 * @description
-	 * Weekend is determined based on `weekStartsOn` and `weekendLength`.
-	 *
-	 * - `weekStartsOn` is a 0-based index (0 = Sunday, 1 = Monday, ..., 6 = Saturday).
-	 * - `weekendLength` defines how many days are considered weekend (1 or 2). Default is 2.
-	 *   If 1, only the last day of the week is treated as weekend.
-	 *   If 2, the last two days are treated as weekend.
-	 */
-	isWeekend(
-		weekStartsOn: Enumerate<7> = 0,
-		weekendLength: 1 | 2 = 2,
-	): boolean {
-		const day = this.#date.getDay();
-		const lastDayOfWeek = (weekStartsOn + 6) % 7;
-		const secondLastDay = (weekStartsOn + 5) % 7;
-
-		if (weekendLength === 1) {
-			return day === lastDayOfWeek;
-		}
-
-		return day === lastDayOfWeek || day === secondLastDay;
-	}
-
-	/**
-	 * @instance Checks if the current date is a workday (non-weekend day).
-	 *
-	 * @param weekStartsOn Optional day the week starts on (0–6). Default is `0` (Sunday).
-	 * @param weekendLength Optional length of the weekend (1 or 2). Default is `2`.
-	 * @returns Whether the date is a workday.
-	 *
-	 * @description
-	 * Weekends are determined by `weekStartsOn` and `weekendLength`.
-	 *
-	 * - `weekStartsOn` is a 0-based index (0 = Sunday, 1 = Monday, ..., 6 = Saturday).
-	 * - `weekendLength` defines how many days are considered weekend (1 or 2). Default is 2.
-	 */
-	isWorkday(
-		weekStartsOn: Enumerate<7> = 0,
-		weekendLength: 1 | 2 = 2,
-	): boolean {
-		return !this.isWeekend(weekStartsOn, weekendLength);
-	}
-
-	/**
-	 * @instance Checks if the current date and time fall within business hours.
-	 *
-	 * @param businessStartHour Optional starting hour of business time (0–23). Defaults to `9` (9 AM).
-	 * @param businessEndHour Optional ending hour of business time (0–23). Defaults to `17` (5 PM).
-	 * @param weekStartsOn Optional day the week starts on (0–6). Default is `0` (Sunday).
-	 * @param weekendLength Optional weekend length (1 or 2). Default is `2`.
-	 *
-	 * @returns Whether the current time is within business hours.
-	 *
-	 * @remarks
-	 * * Business hours are typically 9 AM to 5 PM on weekdays.
-	 * * Supports standard and overnight business hours. Overnight means `end < start`.
-	 * * Example: `businessStartHour = 22`, `businessEndHour = 6` will cover 10 PM to 6 AM next day.
-	 *
-	 * * *Weekends are determined by `weekStartsOn` and `weekendLength` using the `isWeekend()` method.*
-	 *
-	 * - Business hours are `[businessStartHour, businessEndHour)`.
-	 * - If `weekendLength` is `1`, only the last day of the week is treated as weekend.
-	 * - If `weekendLength` is `2`, the last two days are treated as weekend.
-	 */
-	isBusinessHour(
-		businessStartHour: Enumerate<24> = 9,
-		businessEndHour: Enumerate<24> = 17,
-		weekStartsOn: Enumerate<7> = 0,
-		weekendLength: 1 | 2 = 2,
-	): boolean {
-		if (this.isWeekend(weekStartsOn, weekendLength)) {
-			return false;
-		}
-
-		const hour = this.#date.getHours();
-
-		if (businessStartHour === businessEndHour) {
-			return false;
-		}
-
-		if (businessStartHour < businessEndHour) {
-			// Normal range, e.g. 9 → 17
-			return hour >= businessStartHour && hour < businessEndHour;
-		} else {
-			// Overnight shift, e.g. 22 → 6
-			return hour >= businessStartHour || hour < businessEndHour;
-		}
-	}
-
-	/**
-	 * @instance Checks if the current date is a palindrome in either padded or non-padded format.
-	 *
-	 * @remarks
-	 * A palindrome date reads the same forward and backward, excluding delimiters.
-	 * This method checks both zero-padded (`MM-DD`) and non-padded (`M-D`) formats for flexibility.
-	 *
-	 * Examples of palindromes:
-	 * - `'2020-02-02'` → `'20200202'` ✅
-	 * - `'2112-11-12'` → `'21121112'` ❌
-	 * - `'2011-01-11'` (from `'YY-M-D'`) → `'11111'` ✅
-	 * - `'2011-01-11'` (from `'YYYY-M-D'`) → `'11111'` ❌
-	 *
-	 * @param shortYear - If `true`, uses `'YY-MM-DD'` and `'YY-M-D'` formats.
-	 *                    If `false`, uses `'YYYY-MM-DD'` and `'YYYY-M-D'` formats.
-	 *                    Defaults to `false`.
-	 *
-	 * @returns `true` if either padded or non-padded formatted date is a palindrome, otherwise `false`.
-	 *
-	 * @example
-	 * new Chronos('2020-02-02').isPalindromeDate(); // true
-	 * new Chronos('2112-11-12').isPalindromeDate(); // false
-	 * new Chronos('2011-1-11').isPalindromeDate(); // false (from '2011111')
-	 * new Chronos('2011-1-11').isPalindromeDate(true); // true (from '11111')
-	 * new Chronos('2024-04-11').isPalindromeDate(); // false
-	 */
-	isPalindromeDate(shortYear = false): boolean {
-		const padded = this.formatStrict(shortYear ? 'YY-MM-DD' : 'YYYY-MM-DD');
-		const normal = this.formatStrict(shortYear ? 'YY-M-D' : 'YYYY-M-D');
-		return isPalindrome(padded) || isPalindrome(normal);
-	}
-
-	/**
 	 * @instance Checks if the date is within daylight saving time (DST).
 	 * @returns Whether the date is in DST.
 	 */
@@ -1129,239 +1001,6 @@ export class Chronos {
 		return this.isSame(this.lastDayOfMonth(), 'day');
 	}
 
-	/**
-	 * @instance Returns full time difference from now (or a specified time) down to a given level.
-	 *
-	 * @param level Determines the smallest unit to include in the output (e.g., 'minute' will show up to minutes, ignoring seconds). Defaults to `minute`.
-	 * @param withSuffixPrefix If `true`, adds `"in"` or `"ago"` depending on whether the time is in the future or past. Defaults to `true`.
-	 * @param time An optional time value to compare with (`string`, `number`, `Date`, or `Chronos` instance). Defaults to `now`.
-	 * @returns The difference as a human-readable string, e.g., `2 years 1 month 9 days 18 hours 56 minutes ago`.
-	 */
-	fromNow(
-		level: Exclude<TimeUnit, 'millisecond'> = 'minute',
-		withSuffixPrefix: boolean = true,
-		time?: ChronosInput,
-	): string {
-		const now = this.#toNewDate(time);
-
-		const target = this.#date;
-
-		const isFuture = target > now;
-
-		const from = isFuture ? now : target;
-		const to = isFuture ? target : now;
-
-		let years = to.getFullYear() - from.getFullYear();
-		let months = to.getMonth() - from.getMonth();
-		let days = to.getDate() - from.getDate();
-		let weeks = 0;
-		let hours = to.getHours() - from.getHours();
-		let minutes = to.getMinutes() - from.getMinutes();
-		let seconds = to.getSeconds() - from.getSeconds();
-
-		// Adjust negative values
-		if (seconds < 0) {
-			seconds += 60;
-			minutes--;
-		}
-
-		if (minutes < 0) {
-			minutes += 60;
-			hours--;
-		}
-
-		if (hours < 0) {
-			hours += 24;
-			days--;
-		}
-
-		if (level === 'week' || level === 'day') {
-			weeks = Math.floor(days / 7);
-			days = days % 7;
-		}
-
-		if (days < 0) {
-			const prevMonth = new Date(to.getFullYear(), to.getMonth(), 0);
-
-			days += prevMonth.getDate();
-			months--;
-		}
-
-		if (months < 0) {
-			months += 12;
-			years--;
-		}
-
-		const unitOrder = [
-			'year',
-			'month',
-			'week',
-			'day',
-			'hour',
-			'minute',
-			'second',
-		] as const;
-
-		const lvlIdx = unitOrder.indexOf(level);
-
-		const parts: string[] = [];
-
-		if (lvlIdx >= 0 && years > 0 && lvlIdx >= unitOrder.indexOf('year')) {
-			parts?.push(formatUnitWithPlural(years, 'year'));
-		}
-		if (lvlIdx >= unitOrder.indexOf('month') && months > 0) {
-			parts?.push(formatUnitWithPlural(months, 'month'));
-		}
-		if (lvlIdx >= unitOrder.indexOf('week') && weeks > 0) {
-			parts?.push(formatUnitWithPlural(weeks, 'week'));
-		}
-		if (lvlIdx >= unitOrder.indexOf('day') && days > 0) {
-			parts?.push(formatUnitWithPlural(days, 'day'));
-		}
-		if (lvlIdx >= unitOrder.indexOf('hour') && hours > 0) {
-			parts?.push(formatUnitWithPlural(hours, 'hour'));
-		}
-		if (lvlIdx >= unitOrder.indexOf('minute') && minutes > 0) {
-			parts?.push(formatUnitWithPlural(minutes, 'minute'));
-		}
-		if (
-			lvlIdx >= unitOrder.indexOf('second') &&
-			(seconds > 0 || parts?.length === 0)
-		) {
-			parts?.push(formatUnitWithPlural(seconds, 'second'));
-		}
-
-		let prefix = '';
-		let suffix = '';
-
-		if (withSuffixPrefix) {
-			if (isFuture) {
-				prefix = 'in ';
-			} else {
-				suffix = ' ago';
-			}
-		}
-
-		return `${prefix}${parts?.join(' ')}${suffix}`;
-	}
-
-	/**
-	 * @instance Returns the number of full years between the input date and now.
-	 * @param time Optional time to compare with the `Chronos` date/time.
-	 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
-	 */
-	getRelativeYear(time?: ChronosInput): number {
-		const now = this.#toNewDate(time);
-
-		let years = this.#date.getFullYear() - now.getFullYear();
-
-		const noYearMonthDay =
-			now.getMonth() < this.#date.getMonth() ||
-			(now.getMonth() === this.#date.getMonth() &&
-				now.getDate() < this.#date.getDate());
-
-		if (noYearMonthDay) {
-			years--;
-		}
-
-		return years;
-	}
-
-	/**
-	 * @instance Returns the number of full months between the input date and now.
-	 * @param time Optional time to compare with the `Chronos` date/time.
-	 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
-	 */
-	getRelativeMonth(time?: ChronosInput): number {
-		const now = this.#toNewDate(time);
-
-		let months =
-			(this.#date.getFullYear() - now.getFullYear()) * 12 +
-			(this.#date.getMonth() - now.getMonth());
-
-		const hasNotHadMonthDay = now.getDate() < this.#date.getDate();
-
-		if (hasNotHadMonthDay) {
-			months--;
-		}
-
-		return months;
-	}
-
-	/**
-	 * @instance Determines if the given date is today, tomorrow, yesterday or any relative day.
-	 * @param date - The date to compare (Date object).
-	 * @param time Optional time to compare with the `Chronos` date/time.
-	 * @returns
-	 *  - `-1` if the date is yesterday.
-	 *  - `0` if the date is today.
-	 *  - `1` if the date is tomorrow.
-	 *  - Other positive or negative numbers for other relative days (e.g., `-2` for two days ago, `2` for two days ahead).
-	 */
-	getRelativeDay(time?: ChronosInput): number {
-		const today = this.#toNewDate(time);
-		// Set the time of today to 00:00:00 for comparison purposes
-		today.setHours(0, 0, 0, 0);
-
-		// Normalize the input date to 00:00:00
-		const inputDate = this.#date;
-		inputDate.setHours(0, 0, 0, 0);
-
-		const diffTime = inputDate.getTime() - today.getTime();
-		const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-		return diffDays;
-	}
-
-	/**
-	 * @instance Determines how many full weeks apart the input date is from the `Chronos` instance.
-	 * @param time Optional time to compare with the `Chronos` date/time.
-	 * @returns Difference in weeks; negative if past, positive if future.
-	 */
-	getRelativeWeek(time?: ChronosInput): number {
-		const relativeDays = this.getRelativeDay(time);
-		return Math.floor(relativeDays / 7);
-	}
-
-	/**
-	 * @instance Returns the number of full hours between the input date and now.
-	 * @param time Optional time to compare with the `Chronos` date/time.
-	 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
-	 */
-	getRelativeHour(time?: ChronosInput): number {
-		const diff = this.#date.getTime() - this.#toNewDate(time).getTime();
-		return Math.floor(diff / (1000 * 60 * 60));
-	}
-
-	/**
-	 * @instance Returns the number of full minutes between the input date and now.
-	 * @param time Optional time to compare with the `Chronos` date/time.
-	 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
-	 */
-	getRelativeMinute(time?: ChronosInput): number {
-		const diff = this.#date.getTime() - this.#toNewDate(time).getTime();
-		return Math.floor(diff / (1000 * 60));
-	}
-
-	/**
-	 * @instance Returns the number of full seconds between the input date and now.
-	 * @param time Optional time to compare with the `Chronos` date/time.
-	 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
-	 */
-	getRelativeSecond(time?: ChronosInput): number {
-		const diff = this.#date.getTime() - this.#toNewDate(time).getTime();
-		return Math.floor(diff / 1000);
-	}
-
-	/**
-	 * @instance Returns the number of milliseconds between the input date and now.
-	 * @param time Optional time to compare with the `Chronos` date/time.
-	 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
-	 */
-	getRelativeMilliSecond(time?: ChronosInput): number {
-		return this.#date.getTime() - this.#toNewDate(time).getTime();
-	}
-
 	/** @instance Returns a new Chronos instance set to the first day of the current month. */
 	firstDayOfMonth(): Chronos {
 		const year = this.#date.getFullYear();
@@ -1376,36 +1015,6 @@ export class Chronos {
 		const month = this.#date.getMonth() + 1;
 		const lastDate = new Date(year, month, 0);
 		return new Chronos(lastDate).#withOrigin('lastDayOfMonth');
-	}
-
-	/**
-	 * @instance Compares the stored date with now, returning the difference in the specified unit.
-	 *
-	 * @param unit The time unit to compare by. Defaults to 'minute'.
-	 * @param time Optional time to compare with the `Chronos` date/time.
-	 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
-	 */
-	compare(unit: TimeUnit = 'minute', time?: ChronosInput): number {
-		switch (unit) {
-			case 'year':
-				return this.getRelativeYear(time);
-			case 'month':
-				return this.getRelativeMonth(time);
-			case 'day':
-				return this.getRelativeDay(time);
-			case 'week':
-				return this.getRelativeWeek(time);
-			case 'hour':
-				return this.getRelativeHour(time);
-			case 'minute':
-				return this.getRelativeMinute(time);
-			case 'second':
-				return this.getRelativeSecond(time);
-			case 'millisecond':
-				return this.getRelativeMilliSecond(time);
-			default:
-				throw new Error(`Unsupported time unit: ${unit}`);
-		}
 	}
 
 	/**
@@ -1754,21 +1363,8 @@ export class Chronos {
 	}
 
 	/** @instance Converts to array with all date unit parts */
-	toArray() {
+	toArray(): number[] {
 		return Object.values(this.toObject());
-	}
-
-	/**
-	 * @instance Returns the academic year based on a typical start in July and end in June.
-	 * @returns The academic year in format `YYYY-YYYY`.
-	 */
-	toAcademicYear(): `${number}-${number}` {
-		const year = this.#date.getFullYear();
-		const month = this.#date.getMonth();
-		if (month >= 6) {
-			return `${year}-${year + 1}`;
-		}
-		return `${year - 1}-${year}`;
 	}
 
 	/**
@@ -1793,17 +1389,6 @@ export class Chronos {
 	toQuarter(): Quarter {
 		const month = this.#date.getMonth();
 		return (Math.floor(month / 3) + 1) as Quarter;
-	}
-
-	/**
-	 * @instance Returns the fiscal quarter based on custom fiscal year start (defaults to July).
-	 * @param startMonth - The fiscal year start month (1-12), default is July (7).
-	 * @returns The fiscal quarter (1-4).
-	 */
-	toFiscalQuarter(startMonth: NumberRange<1, 12> = 7): Quarter {
-		const month = this.#date.getMonth() + 1;
-		const adjusted = (month - startMonth + 12) % 12;
-		return (Math.floor(adjusted / 3) + 1) as Quarter;
 	}
 
 	/**

@@ -186,14 +186,18 @@ export interface TimeDuration {
 	milliseconds: number;
 }
 
-export const INTERNALS = Symbol('Internals');
-
 export interface ChronosInternals {
 	withOrigin(
 		instance: Chronos,
 		method: ChronosMethods,
 		label?: UTCOffSet,
 	): Chronos;
+
+	toNewDate(instance: Chronos, value?: ChronosInput): Date;
+
+	internalDate(instance: Chronos): Date;
+
+	offset(instance: Chronos): UTCOffSet;
 }
 
 /** @internal Helper type to assign instance origin when creating new Chronos instance. */
@@ -580,7 +584,7 @@ export type ZodiacArray = Array<
 export interface ZodiacOptions {
 	/** - Optional birthdate in `MM-DD` format (1-based month). */
 	birthDate?: MonthDateString;
-	/** Optional Zodiac preset to use. Default is `western`. `western` and `tropical`, `vedic` and `sedereal` are same. */
+	/** Optional Zodiac preset to use. Default is `western`. `western` and `tropical`, `vedic` and `sidereal` are same. */
 	preset?: ZodiacPreset;
 	/** Custom Zodiac date ranges. */
 	custom?: ZodiacArray;
@@ -666,5 +670,19 @@ export interface SeasonOptions {
 	preset?: SeasonPreset;
 }
 
+// ! ======= SEASON CONFIG TYPES END ======== //
+
 /** * A plugin that augments the Chronos class with methods or properties. */
 export type ChronosPlugin = (ChronosClass: typeof Chronos) => void;
+
+/** Options for configuring business hour */
+export interface BusinessHourOptions {
+	/** - Optional starting hour of business time (0–23). Defaults to `9` (9 AM). */
+	businessStartHour?: Enumerate<24>;
+	/** - Optional ending hour of business time (0–23). Defaults to `17` (5 PM). */
+	businessEndHour?: Enumerate<24>;
+	/** - Optional day the week starts on (0–6). Default is `0` (Sunday). */
+	weekStartsOn?: Enumerate<7>;
+	/** - Optional weekend length (1 or 2). Default is `2`.*/
+	weekendLength?: 1 | 2;
+}
