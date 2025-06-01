@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ---
 
+## [4.12.25] - 2025-06-02
+
+- Updated JSDoc for some `Chronos` methods and exposed `INTERNALS` Symbol
+
 ## [4.12.24] - 2025-06-01
 
 ### 🕧 Updates for Chronos

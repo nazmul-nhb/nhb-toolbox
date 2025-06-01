@@ -202,12 +202,10 @@ export {
 // ! Chronos
 export { Chronos, Chronos as Chronus } from './date/Chronos';
 
-// ! Chronos Plugins
-// export { dayPartPlugin } from './date/plugins/day-part';
-// export { seasonPlugin } from './date/plugins/season';
-// export { timeZonePlugin } from './date/plugins/time-zone';
-// export { zodiacPlugin } from './date/plugins/zodiac';
+// ! Chronos `INTERNALS` Symbol for plugin authors
+export { INTERNALS } from './date/constants';
 
+// ! Chronos wrapper function
 export {
 	chronos,
 	chronos as chronosjs,
@@ -217,6 +215,7 @@ export {
 	chronos as chronusts,
 } from './date/chronos-fn';
 
+// ! Other date/time utils
 export {
 	formatUTCOffset as convertMinutesToUTCOffset,
 	extractHourMinute,

@@ -494,4 +494,5 @@ export const ZODIAC_PRESETS = /* @__PURE__ */ Object.freeze({
 	sidereal: VEDIC_ZODIAC_SIGNS,
 } as const);
 
+/** * @internal Symbol for accessing Chronos internals (plugin author use only) */
 export const INTERNALS = Symbol('Internals');

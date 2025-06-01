@@ -9,26 +9,26 @@ import {
 	TIME_ZONE_LABELS,
 } from './constants';
 import { isLeapYear } from './guards';
-import {
-	type ChronosFormat,
-	type ChronosInput,
-	type ChronosInternals,
-	type ChronosMethods,
-	type ChronosObject,
-	type ChronosPlugin,
-	type DateRangeOptions,
-	type FormatOptions,
-	type MilliSecond,
-	type MonthName,
-	type Quarter,
-	type RelativeRangeOptions,
-	type StrictFormat,
-	type TimeDuration,
-	type TimeParts,
-	type TimeUnit,
-	type UTCOffSet,
-	type WeekDay,
-	type WeekdayOptions,
+import type {
+	ChronosFormat,
+	ChronosInput,
+	ChronosInternals,
+	ChronosMethods,
+	ChronosObject,
+	ChronosPlugin,
+	DateRangeOptions,
+	FormatOptions,
+	MilliSecond,
+	MonthName,
+	Quarter,
+	RelativeRangeOptions,
+	StrictFormat,
+	TimeDuration,
+	TimeParts,
+	TimeUnit,
+	UTCOffSet,
+	WeekDay,
+	WeekdayOptions,
 } from './types';
 import { extractMinutesFromUTC } from './utils';
 
@@ -63,7 +63,7 @@ export class Chronos {
 
 	static #plugins = new Set<ChronosPlugin>();
 
-	/** Use `readonly private` methods outside `Chronos`. Purpose: Plugin creation. */
+	/** Use `readonly and/or private` methods outside `Chronos`. Purpose: Plugin creation. */
 	protected static [INTERNALS]: ChronosInternals = {
 		internalDate(instance) {
 			return instance.#date;
@@ -2070,8 +2070,11 @@ export class Chronos {
 	}
 
 	/**
-	 * @static Injects a plugin into the Chronos system (once).
-	 * @param plugin The plugin to install.
+	 * @static Injects a plugin into the `Chronos` system.
+	 * @param plugin The plugin to inject.
+	 *
+	 * - **NOTE:** *Once a plugin is injected, all the registered methods for that plugin will be available for the whole project.**
+	 * - See full list of plugins and the methods they register {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/plugins#-official-plugins}
 	 */
 	static use(plugin: ChronosPlugin): void {
 		if (!Chronos.#plugins.has(plugin)) {

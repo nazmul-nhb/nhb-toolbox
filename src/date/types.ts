@@ -186,17 +186,43 @@ export interface TimeDuration {
 	milliseconds: number;
 }
 
+/** Interface for accessing internal private properties in extended `Chronos` class */
 export interface ChronosInternals {
+	/**
+	 * * Access to `#withOrigin` private method
+	 * * Creates a new Chronos instance with origin tracking
+	 * @param instance - Chronos instance to operate on
+	 * @param method - Name of the method creating this instance
+	 * @param label - Optional UTC offset label
+	 * @returns A new Chronos instance
+	 */
 	withOrigin(
 		instance: Chronos,
 		method: ChronosMethods,
 		label?: UTCOffSet,
 	): Chronos;
 
+	/**
+	 * * Access to `#toNewDate` private method
+	 * * Creates a new `Date` object from a Chronos input
+	 * @param instance - Chronos instance to operate on
+	 * @param value - Input value to convert (optional, uses current date if omitted)
+	 * @returns A new JavaScript `Date` object
+	 */
 	toNewDate(instance: Chronos, value?: ChronosInput): Date;
 
+	/**
+	 * * Gets the internal `#date`, a readonly private property (core `Date` object)
+	 * @param instance - Chronos instance to access
+	 * @returns The core internal `Date` object
+	 */
 	internalDate(instance: Chronos): Date;
 
+	/**
+	 * * Gets current UTC Offset internally stored as `#offset` private property
+	 * @param instance - Chronos instance to access
+	 * @returns The stored formatted UTC offset
+	 */
 	offset(instance: Chronos): UTCOffSet;
 }
 
@@ -332,8 +358,11 @@ export interface ChronosStatics {
 	): Chronos;
 
 	/**
-	 * @static Injects a plugin into the Chronos system (once).
-	 * @param plugin The plugin to install.
+	 * @static Injects a plugin into the `Chronos` system.
+	 * @param plugin The plugin to inject.
+	 *
+	 * - **NOTE:** *Once a plugin is injected, all the registered methods for that plugin will be available for the whole project.**
+	 * - See full list of plugins and the methods they register {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/plugins#-official-plugins}
 	 */
 	use(plugin: ChronosPlugin): void;
 
