@@ -2,8 +2,8 @@ import chalk from 'chalk';
 import { execa } from 'execa';
 import fs from 'fs/promises';
 import readline from 'readline/promises';
-import { estimator } from './estimator.mjs';
 import semver from 'semver';
+import { estimator } from './estimator.mjs';
 
 /**
  * @typedef {Object} PackageJson - Contents from `package.json`.
@@ -66,7 +66,7 @@ async function updateVersion(newVersion) {
  * @param {string} commitMessage - The commit message for version update.
  * @param {string} version - The updated version number.
  */
-async function commitAndPush(commitMessage, version) {
+export async function commitAndPush(commitMessage, version) {
 	try {
 		console.info(chalk.blue('📤 Committing and pushing changes...'));
 
@@ -90,8 +90,38 @@ async function commitAndPush(commitMessage, version) {
 	}
 }
 
+async function formatUntrackedFiles() {
+	try {
+		// Get list of untracked files (not ignored, not committed)
+		const { stdout: filesRaw } = await execa('git', [
+			'ls-files',
+			'--others',
+			'--exclude-standard',
+		]);
+
+		const files = filesRaw.trim().split('\n').filter(Boolean);
+		console.log(files);
+		if (files.length === 0) {
+			console.info(chalk.yellow('No untracked files to format!'));
+			return;
+		}
+
+		console.info(
+			chalk.magenta(`Formatting ${files.length} untracked file(s) with Prettier...`),
+		);
+
+		// Run prettier --write on untracked files only
+		await execa('prettier', ['--write', ...files], { stdio: 'inherit' });
+
+		console.info(chalk.green('✅ Formatting of untracked files complete!'));
+	} catch (error) {
+		console.error(chalk.red('🛑 Error formatting untracked files:', error));
+		throw error;
+	}
+}
+
 /** * Runs prettier to format the codebase. */
-async function runFormatter() {
+export async function runFormatter() {
 	try {
 		console.info(chalk.magenta('🎨 Running Prettier to format code...'));
 
@@ -212,7 +242,8 @@ export function isValidVersion(newVersion, oldVersion) {
 			await updateVersion(newVersion);
 		}
 
-		await runFormatter();
+		// await runFormatter();
+		await formatUntrackedFiles();
 		await commitAndPush(commitMessage, newVersion);
 	} catch (error) {
 		console.error(chalk.red('🛑 Unexpected Error:', error));

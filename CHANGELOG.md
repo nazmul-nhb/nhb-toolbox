@@ -6,6 +6,11 @@ All notable changes to this package will be documented in this file.
 
 ---
 
+## [4.12.27] - 2025-06-02
+
+- Updated [README](README.md).
+- Added new utility types, can be imported from `'nhb-toolbox/utils/types'`.
+
 ## [4.12.25-26] - 2025-06-02
 
 - Updated JSDoc for some `Chronos` methods and exposed `INTERNALS` Symbol

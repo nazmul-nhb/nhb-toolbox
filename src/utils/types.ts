@@ -45,3 +45,180 @@ export interface PageListOptions {
 	/** Number of siblings pages to show around the current page (default 1). */
 	siblingCount?: number;
 }
+
+// ! UTILITY TYPES FOR GENERAL PURPOSE
+
+/**
+ * * Extracts the union of all property value types from a given object type.
+ *
+ * @example
+ * type Colors = { primary: string; secondary: string; id: number; };
+ * type ColorValues = ValueOf<Colors>; // string | number
+ */
+export type ValueOf<T> = T[keyof T];
+
+/**
+ * * Gets all keys from a union of object types.
+ *
+ * @example
+ * type A = { a: string };
+ * type B = { b: number };
+ * type Union = A | B;
+ * type Keys = KeysOfUnion<Union>; // "a" | "b"
+ */
+export type KeysOfUnion<T> = T extends T ? keyof T : never;
+
+/**
+ * * Recursively makes all properties in an object type optional.
+ *
+ * @example
+ * type Config = { a: string; nested: { b: number } };
+ * type PartialConfig = DeepPartial<Config>;
+ * // { a?: string; nested?: { b?: number } }
+ */
+export type DeepPartial<T> = {
+	[K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
+};
+
+/**
+ * * Removes `readonly` modifiers from all properties of an object type.
+ *
+ * @example
+ * type ReadonlyObj = { readonly id: number };
+ * type WritableObj = Mutable<ReadonlyObj>;
+ * // { id: number }
+ */
+export type Mutable<T> = {
+	-readonly [K in keyof T]: T[K];
+};
+
+/**
+ * * Recursively adds `readonly` to all properties of an object type.
+ *
+ * @example
+ * type State = { user: { id: number } };
+ * type ReadonlyState = Immutable<State>;
+ * // { readonly user: { readonly id: number } }
+ */
+export type Immutable<T> = {
+	readonly [K in keyof T]: Immutable<T[K]>;
+};
+
+/**
+ * * Combines two object types. In case of conflicts, keys from `U` override `T`.
+ *
+ * @example
+ * type A = { id: number; name: string };
+ * type B = { name: boolean; active: boolean };
+ * type Merged = Merge<A, B>;
+ * // { id: number; name: boolean; active: boolean }
+ */
+export type Merge<T, U> = {
+	[K in keyof T | keyof U]: K extends keyof U ? U[K]
+	: K extends keyof T ? T[K]
+	: never;
+};
+
+/**
+ * * Omits properties from an object type whose value types match `ValueType`.
+ *
+ * @example
+ * type Model = { id: number; name: string; hidden: boolean };
+ * type VisibleModel = OmitByValue<Model, boolean>;
+ * // { id: number; name: string }
+ */
+export type OmitByValue<T, ValueType> = {
+	[K in keyof T as T[K] extends ValueType ? never : K]: T[K];
+};
+
+/**
+ * * Makes only the specified keys in a type required; others remain optional.
+ *
+ * @example
+ * type User = { id?: number; name?: string };
+ * type UserWithId = RequireOnly<User, 'id'>;
+ * // { id: number; name?: string }
+ */
+export type RequireOnly<T, K extends keyof T> = Partial<T> &
+	Required<Pick<T, K>>;
+
+/**
+ * * Forces TypeScript to simplify a complex or inferred type into a more readable flat object.
+ *
+ * *Useful when working with utility types like `Merge`, `Omit`, etc., that produce deeply nested or unresolved intersections.*
+ *
+ * @example
+ * type A = { a: number };
+ * type B = { b: string };
+ * type Merged = A & B;
+ * type Pretty = Prettify<Merged>;
+ * // Type will now display as: { a: number; b: string }
+ */
+export type Prettify<T> = { [K in keyof T]: T[K] } & {};
+
+/**
+ * * Broadens a literal union (typically `string` or `number`) to also accept any other value of the base type, without losing IntelliSense autocomplete for the provided literals.
+ *
+ * *This is especially useful in API design where you want to provide suggestions for common options but still allow flexibility for custom user-defined values.*
+ *
+ * @example
+ * // ✅ String literal usage
+ * type Variant = LooseLiteral<'primary' | 'secondary'>;
+ * const v1: Variant = 'primary';  // suggested
+ * const v2: Variant = 'custom';   // also valid
+ *
+ * // ✅ Number literal usage
+ * type StatusCode = LooseLiteral<200 | 404 | 500>;
+ * const s1: StatusCode = 200;     // suggested
+ * const s2: StatusCode = 999;     // also valid
+ *
+ * // ✅ Mixed literal
+ * type Mixed = LooseLiteral<'one' | 2>;
+ * const m1: Mixed = 'one';        // ✅
+ * const m2: Mixed = 2;            // ✅
+ * const m3: Mixed = 'anything';   // ✅
+ * const m4: Mixed = 123;          // ✅
+ *
+ * @note Technically, this uses intersection with primitive base types (`string & {}` or `number & {}`) to retain IntelliSense while avoiding type narrowing.
+ */
+export type LooseLiteral<T extends string | number> =
+	| T
+	| (T extends string ? string & {} : number & {});
+
+/**
+ * * Extracts an object type containing only the optional keys from `T`.
+ *
+ * @template T - The original object type
+ * @returns A new object type with only optional keys from `T`
+ * @example
+ * type Example = { a: string; b?: number; c?: boolean };
+ * type OptionalPart = OptionalShape<Example>;
+ * // { b?: number; c?: boolean }
+ */
+export type OptionalShape<T> = {
+	[K in keyof T as {} extends Pick<T, K> ? K : never]?: T[K];
+};
+
+/**
+ * * Extracts an object type containing only the required keys from `T`.
+ *
+ * @template T - The original object type
+ * @returns A new object type with only required keys from `T`
+ * @example
+ * type Example = { a: string; b?: number; c: boolean };
+ * type RequiredPart = RequiredShape<Example>;
+ * // { a: string; c: boolean }
+ */
+export type RequiredShape<T> = {
+	[K in keyof T as {} extends Pick<T, K> ? never : K]: T[K];
+};
+
+/**
+ * * Converts a readonly tuple to a union of its element types.
+ *
+ * @template T - A tuple type (must be readonly if using `as const`)
+ * @example
+ * const roles = ['admin', 'user', 'guest'] as const;
+ * type Role = TupleToUnion<typeof roles>; // "admin" | "user" | "guest"
+ */
+export type TupleToUnion<T extends readonly unknown[]> = T[number];

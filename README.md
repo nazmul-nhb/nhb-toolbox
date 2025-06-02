@@ -72,6 +72,8 @@ See [Changelog](CHANGELOG.md) for recent updates.
 
 The ultimate date/time manipulation class with 100+ methods for parsing, formatting, calculating, and comparing dates. Handles all edge cases and timezones safely.
 
+> 🧩 **Note**: Some methods in `Chronos` are available only through the [plugin system](https://nhb-toolbox.vercel.app/docs/classes/Chronos/plugins#-official-plugins). This modular design ensures the core bundle stays lightweight — plugins are loaded only when needed, reducing unnecessary code in your final build.
+
 ```typescript
 new Chronos('2025-01-01').addDays(3).format('YYYY-MM-DD'); // "2025-01-04"
 ```
@@ -133,6 +135,37 @@ getColorForInitial('Banana', 50); // '#00376E80' (50% opacity)
 ```
 
 [Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/color/getColorForInitial)
+
+### FormData Preparation
+
+Convert JavaScript objects into `FormData` with extensive configuration options for handling nested structures, files, and data transformations.
+
+```typescript
+import { createFormData } from 'nhb-toolbox';
+
+const formData = createFormData({
+  user: {
+    name: ' John Doe ',
+    age: 30,
+    preferences: { theme: 'dark' }
+  },
+  files: [file1, file2]
+}, {
+  trimStrings: true,
+  lowerCaseValues: ['user.name'],
+  dotNotateNested: ['user.preferences'],
+  breakArray: ['files']
+});
+
+// Resulting FormData:
+// user.name=john doe
+// user.age=30
+// user.preferences.theme=dark
+// files[0]=[File1]
+// files[1]=[File2]
+```
+
+[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/form/createFormData)
 
 ### 🛡️ **Sanitize Data**
 

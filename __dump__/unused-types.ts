@@ -237,3 +237,8 @@
 //     Enumerate<To>,
 //     Enumerate<From>
 // >;
+
+
+type B = "a" | "b" | "c" | ( string & {})
+
+const b: B = ""
