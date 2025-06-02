@@ -1,246 +1,246 @@
 {
-  "name": "nhb-toolbox",
-  "version": "4.12.26",
-  "description": "A versatile collection of smart, efficient, and reusable utility functions and classes for everyday development needs.",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/dts/index.d.ts",
-  "sideEffects": false,
-  "scripts": {
-    "clean": "rimraf dist",
-    "build": "node scripts/build.mjs",
-    "prepublishOnly": "node scripts/build.mjs",
-    "test": "jest --coverage --verbose",
-    "format": "prettier --write .",
-    "lint": "node scripts/lint.mjs",
-    "fix": "node scripts/fix.mjs",
-    "commit": "node scripts/commit.mjs",
-    "count": "node scripts/count.mjs",
-    "types": "node scripts/types.mjs"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "files": [
-    "dist",
-    "LICENSE",
-    "README.md",
-    "CHANGELOG.md",
-    "package.json"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nazmul-nhb/nhb-toolbox.git"
-  },
-  "homepage": "https://nhb-toolbox.vercel.app",
-  "author": {
-    "name": "Nazmul Hassan",
-    "email": "nazmulnhb@gmail.com"
-  },
-  "contributors": [
-    {
-      "name": "Nazmul Hassan",
-      "email": "nazmulnhb@gmail.com",
-      "url": "https://github.com/nazmul-nhb"
-    }
-  ],
-  "bugs": {
-    "url": "https://github.com/nazmul-nhb/nhb-toolbox/issues",
-    "email": "nazmulnhb@gmail.com"
-  },
-  "license": "Apache-2.0",
-  "packageManager": "pnpm@10.11.0",
-  "devDependencies": {
-    "@eslint/js": "^9.18.0",
-    "@types/jest": "^29.5.14",
-    "@types/node": "^22.10.7",
-    "@types/semver": "^7.7.0",
-    "@typescript-eslint/eslint-plugin": "^8.21.0",
-    "@typescript-eslint/parser": "^8.21.0",
-    "chalk": "4.1.2",
-    "eslint": "^9.18.0",
-    "eslint-config-prettier": "^10.0.1",
-    "eslint-plugin-prettier": "^5.2.3",
-    "execa": "^9.5.2",
-    "globals": "^15.14.0",
-    "globby": "^14.0.2",
-    "jest": "^29.7.0",
-    "prettier": "^3.4.2",
-    "progress-estimator": "^0.3.1",
-    "rimraf": "^6.0.1",
-    "semver": "^7.7.2",
-    "ts-jest": "^29.2.5",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.21.0"
-  },
-  "keywords": [
-    "toolbox",
-    "utility",
-    "functions",
-    "class",
-    "form",
-    "random-id",
-    "id",
-    "parse",
-    "format",
-    "generate",
-    "generator",
-    "data",
-    "form-data",
-    "development",
-    "tools",
-    "helpers",
-    "utils",
-    "nhb",
-    "color",
-    "chronos",
-    "time",
-    "date-fns",
-    "javascript",
-    "typescript",
-    "moment",
-    "dayjs",
-    "date",
-    "day",
-    "nhb-toolbox"
-  ],
-  "exports": {
-    "./package.json": "./package.json",
-    ".": {
-      "types": "./dist/dts/index.d.ts",
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
-    },
-    "./types": {
-      "types": "./dist/dts/types/index.d.ts",
-      "default": "./dist/dts/types/index.d.ts"
-    },
-    "./array/types": {
-      "types": "./dist/dts/array/types.d.ts",
-      "default": "./dist/dts/array/types.d.ts"
-    },
-    "./colors/types": {
-      "types": "./dist/dts/colors/types.d.ts",
-      "default": "./dist/dts/colors/types.d.ts"
-    },
-    "./date/types": {
-      "types": "./dist/dts/date/types.d.ts",
-      "default": "./dist/dts/date/types.d.ts"
-    },
-    "./form/types": {
-      "types": "./dist/dts/form/types.d.ts",
-      "default": "./dist/dts/form/types.d.ts"
-    },
-    "./number/types": {
-      "types": "./dist/dts/number/types.d.ts",
-      "default": "./dist/dts/number/types.d.ts"
-    },
-    "./object/types": {
-      "types": "./dist/dts/object/types.d.ts",
-      "default": "./dist/dts/object/types.d.ts"
-    },
-    "./string/types": {
-      "types": "./dist/dts/string/types.d.ts",
-      "default": "./dist/dts/string/types.d.ts"
-    },
-    "./utils/types": {
-      "types": "./dist/dts/utils/types.d.ts",
-      "default": "./dist/dts/utils/types.d.ts"
-    },
-    "./plugins/businessPlugin": {
-      "types": "./dist/dts/date/plugins/businessPlugin.d.ts",
-      "import": "./dist/esm/date/plugins/businessPlugin.js",
-      "require": "./dist/cjs/date/plugins/businessPlugin.js"
-    },
-    "./plugins/dayPartPlugin": {
-      "types": "./dist/dts/date/plugins/dayPartPlugin.d.ts",
-      "import": "./dist/esm/date/plugins/dayPartPlugin.js",
-      "require": "./dist/cjs/date/plugins/dayPartPlugin.js"
-    },
-    "./plugins/fromNowPlugin": {
-      "types": "./dist/dts/date/plugins/fromNowPlugin.d.ts",
-      "import": "./dist/esm/date/plugins/fromNowPlugin.js",
-      "require": "./dist/cjs/date/plugins/fromNowPlugin.js"
-    },
-    "./plugins/palindromePlugin": {
-      "types": "./dist/dts/date/plugins/palindromePlugin.d.ts",
-      "import": "./dist/esm/date/plugins/palindromePlugin.js",
-      "require": "./dist/cjs/date/plugins/palindromePlugin.js"
-    },
-    "./plugins/relativeTimePlugin": {
-      "types": "./dist/dts/date/plugins/relativeTimePlugin.d.ts",
-      "import": "./dist/esm/date/plugins/relativeTimePlugin.js",
-      "require": "./dist/cjs/date/plugins/relativeTimePlugin.js"
-    },
-    "./plugins/seasonPlugin": {
-      "types": "./dist/dts/date/plugins/seasonPlugin.d.ts",
-      "import": "./dist/esm/date/plugins/seasonPlugin.js",
-      "require": "./dist/cjs/date/plugins/seasonPlugin.js"
-    },
-    "./plugins/timeZonePlugin": {
-      "types": "./dist/dts/date/plugins/timeZonePlugin.d.ts",
-      "import": "./dist/esm/date/plugins/timeZonePlugin.js",
-      "require": "./dist/cjs/date/plugins/timeZonePlugin.js"
-    },
-    "./plugins/zodiacPlugin": {
-      "types": "./dist/dts/date/plugins/zodiacPlugin.d.ts",
-      "import": "./dist/esm/date/plugins/zodiacPlugin.js",
-      "require": "./dist/cjs/date/plugins/zodiacPlugin.js"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      "types": [
-        "dist/dts/types/index.d.ts"
-      ],
-      "array/types": [
-        "dist/dts/array/types.d.ts"
-      ],
-      "colors/types": [
-        "dist/dts/colors/types.d.ts"
-      ],
-      "date/types": [
-        "dist/dts/date/types.d.ts"
-      ],
-      "form/types": [
-        "dist/dts/form/types.d.ts"
-      ],
-      "number/types": [
-        "dist/dts/number/types.d.ts"
-      ],
-      "object/types": [
-        "dist/dts/object/types.d.ts"
-      ],
-      "string/types": [
-        "dist/dts/string/types.d.ts"
-      ],
-      "utils/types": [
-        "dist/dts/utils/types.d.ts"
-      ],
-      "plugins/businessPlugin": [
-        "dist/dts/date/plugins/businessPlugin.d.ts"
-      ],
-      "plugins/dayPartPlugin": [
-        "dist/dts/date/plugins/dayPartPlugin.d.ts"
-      ],
-      "plugins/fromNowPlugin": [
-        "dist/dts/date/plugins/fromNowPlugin.d.ts"
-      ],
-      "plugins/palindromePlugin": [
-        "dist/dts/date/plugins/palindromePlugin.d.ts"
-      ],
-      "plugins/relativeTimePlugin": [
-        "dist/dts/date/plugins/relativeTimePlugin.d.ts"
-      ],
-      "plugins/seasonPlugin": [
-        "dist/dts/date/plugins/seasonPlugin.d.ts"
-      ],
-      "plugins/timeZonePlugin": [
-        "dist/dts/date/plugins/timeZonePlugin.d.ts"
-      ],
-      "plugins/zodiacPlugin": [
-        "dist/dts/date/plugins/zodiacPlugin.d.ts"
-      ]
-    }
-  }
+	"name": "nhb-toolbox",
+	"version": "4.12.27",
+	"description": "A versatile collection of smart, efficient, and reusable utility functions and classes for everyday development needs.",
+	"main": "dist/cjs/index.js",
+	"module": "dist/esm/index.js",
+	"types": "dist/dts/index.d.ts",
+	"sideEffects": false,
+	"scripts": {
+		"clean": "rimraf dist",
+		"build": "node scripts/build.mjs",
+		"prepublishOnly": "node scripts/build.mjs",
+		"test": "jest --coverage --verbose",
+		"format": "prettier --write .",
+		"lint": "node scripts/lint.mjs",
+		"fix": "node scripts/fix.mjs",
+		"commit": "node scripts/commit.mjs",
+		"count": "node scripts/count.mjs",
+		"types": "node scripts/types.mjs"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"files": [
+		"dist",
+		"LICENSE",
+		"README.md",
+		"CHANGELOG.md",
+		"package.json"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/nazmul-nhb/nhb-toolbox.git"
+	},
+	"homepage": "https://nhb-toolbox.vercel.app",
+	"author": {
+		"name": "Nazmul Hassan",
+		"email": "nazmulnhb@gmail.com"
+	},
+	"contributors": [
+		{
+			"name": "Nazmul Hassan",
+			"email": "nazmulnhb@gmail.com",
+			"url": "https://github.com/nazmul-nhb"
+		}
+	],
+	"bugs": {
+		"url": "https://github.com/nazmul-nhb/nhb-toolbox/issues",
+		"email": "nazmulnhb@gmail.com"
+	},
+	"license": "Apache-2.0",
+	"packageManager": "pnpm@10.11.0",
+	"devDependencies": {
+		"@eslint/js": "^9.18.0",
+		"@types/jest": "^29.5.14",
+		"@types/node": "^22.10.7",
+		"@types/semver": "^7.7.0",
+		"@typescript-eslint/eslint-plugin": "^8.21.0",
+		"@typescript-eslint/parser": "^8.21.0",
+		"chalk": "4.1.2",
+		"eslint": "^9.18.0",
+		"eslint-config-prettier": "^10.0.1",
+		"eslint-plugin-prettier": "^5.2.3",
+		"execa": "^9.5.2",
+		"globals": "^15.14.0",
+		"globby": "^14.0.2",
+		"jest": "^29.7.0",
+		"prettier": "^3.4.2",
+		"progress-estimator": "^0.3.1",
+		"rimraf": "^6.0.1",
+		"semver": "^7.7.2",
+		"ts-jest": "^29.2.5",
+		"typescript": "^5.7.3",
+		"typescript-eslint": "^8.21.0"
+	},
+	"keywords": [
+		"toolbox",
+		"utility",
+		"functions",
+		"class",
+		"form",
+		"random-id",
+		"id",
+		"parse",
+		"format",
+		"generate",
+		"generator",
+		"data",
+		"form-data",
+		"development",
+		"tools",
+		"helpers",
+		"utils",
+		"nhb",
+		"color",
+		"chronos",
+		"time",
+		"date-fns",
+		"javascript",
+		"typescript",
+		"moment",
+		"dayjs",
+		"date",
+		"day",
+		"nhb-toolbox"
+	],
+	"exports": {
+		"./package.json": "./package.json",
+		".": {
+			"types": "./dist/dts/index.d.ts",
+			"import": "./dist/esm/index.js",
+			"require": "./dist/cjs/index.js"
+		},
+		"./types": {
+			"types": "./dist/dts/types/index.d.ts",
+			"default": "./dist/dts/types/index.d.ts"
+		},
+		"./array/types": {
+			"types": "./dist/dts/array/types.d.ts",
+			"default": "./dist/dts/array/types.d.ts"
+		},
+		"./colors/types": {
+			"types": "./dist/dts/colors/types.d.ts",
+			"default": "./dist/dts/colors/types.d.ts"
+		},
+		"./date/types": {
+			"types": "./dist/dts/date/types.d.ts",
+			"default": "./dist/dts/date/types.d.ts"
+		},
+		"./form/types": {
+			"types": "./dist/dts/form/types.d.ts",
+			"default": "./dist/dts/form/types.d.ts"
+		},
+		"./number/types": {
+			"types": "./dist/dts/number/types.d.ts",
+			"default": "./dist/dts/number/types.d.ts"
+		},
+		"./object/types": {
+			"types": "./dist/dts/object/types.d.ts",
+			"default": "./dist/dts/object/types.d.ts"
+		},
+		"./string/types": {
+			"types": "./dist/dts/string/types.d.ts",
+			"default": "./dist/dts/string/types.d.ts"
+		},
+		"./utils/types": {
+			"types": "./dist/dts/utils/types.d.ts",
+			"default": "./dist/dts/utils/types.d.ts"
+		},
+		"./plugins/businessPlugin": {
+			"types": "./dist/dts/date/plugins/businessPlugin.d.ts",
+			"import": "./dist/esm/date/plugins/businessPlugin.js",
+			"require": "./dist/cjs/date/plugins/businessPlugin.js"
+		},
+		"./plugins/dayPartPlugin": {
+			"types": "./dist/dts/date/plugins/dayPartPlugin.d.ts",
+			"import": "./dist/esm/date/plugins/dayPartPlugin.js",
+			"require": "./dist/cjs/date/plugins/dayPartPlugin.js"
+		},
+		"./plugins/fromNowPlugin": {
+			"types": "./dist/dts/date/plugins/fromNowPlugin.d.ts",
+			"import": "./dist/esm/date/plugins/fromNowPlugin.js",
+			"require": "./dist/cjs/date/plugins/fromNowPlugin.js"
+		},
+		"./plugins/palindromePlugin": {
+			"types": "./dist/dts/date/plugins/palindromePlugin.d.ts",
+			"import": "./dist/esm/date/plugins/palindromePlugin.js",
+			"require": "./dist/cjs/date/plugins/palindromePlugin.js"
+		},
+		"./plugins/relativeTimePlugin": {
+			"types": "./dist/dts/date/plugins/relativeTimePlugin.d.ts",
+			"import": "./dist/esm/date/plugins/relativeTimePlugin.js",
+			"require": "./dist/cjs/date/plugins/relativeTimePlugin.js"
+		},
+		"./plugins/seasonPlugin": {
+			"types": "./dist/dts/date/plugins/seasonPlugin.d.ts",
+			"import": "./dist/esm/date/plugins/seasonPlugin.js",
+			"require": "./dist/cjs/date/plugins/seasonPlugin.js"
+		},
+		"./plugins/timeZonePlugin": {
+			"types": "./dist/dts/date/plugins/timeZonePlugin.d.ts",
+			"import": "./dist/esm/date/plugins/timeZonePlugin.js",
+			"require": "./dist/cjs/date/plugins/timeZonePlugin.js"
+		},
+		"./plugins/zodiacPlugin": {
+			"types": "./dist/dts/date/plugins/zodiacPlugin.d.ts",
+			"import": "./dist/esm/date/plugins/zodiacPlugin.js",
+			"require": "./dist/cjs/date/plugins/zodiacPlugin.js"
+		}
+	},
+	"typesVersions": {
+		"*": {
+			"types": [
+				"dist/dts/types/index.d.ts"
+			],
+			"array/types": [
+				"dist/dts/array/types.d.ts"
+			],
+			"colors/types": [
+				"dist/dts/colors/types.d.ts"
+			],
+			"date/types": [
+				"dist/dts/date/types.d.ts"
+			],
+			"form/types": [
+				"dist/dts/form/types.d.ts"
+			],
+			"number/types": [
+				"dist/dts/number/types.d.ts"
+			],
+			"object/types": [
+				"dist/dts/object/types.d.ts"
+			],
+			"string/types": [
+				"dist/dts/string/types.d.ts"
+			],
+			"utils/types": [
+				"dist/dts/utils/types.d.ts"
+			],
+			"plugins/businessPlugin": [
+				"dist/dts/date/plugins/businessPlugin.d.ts"
+			],
+			"plugins/dayPartPlugin": [
+				"dist/dts/date/plugins/dayPartPlugin.d.ts"
+			],
+			"plugins/fromNowPlugin": [
+				"dist/dts/date/plugins/fromNowPlugin.d.ts"
+			],
+			"plugins/palindromePlugin": [
+				"dist/dts/date/plugins/palindromePlugin.d.ts"
+			],
+			"plugins/relativeTimePlugin": [
+				"dist/dts/date/plugins/relativeTimePlugin.d.ts"
+			],
+			"plugins/seasonPlugin": [
+				"dist/dts/date/plugins/seasonPlugin.d.ts"
+			],
+			"plugins/timeZonePlugin": [
+				"dist/dts/date/plugins/timeZonePlugin.d.ts"
+			],
+			"plugins/zodiacPlugin": [
+				"dist/dts/date/plugins/zodiacPlugin.d.ts"
+			]
+		}
+	}
 }

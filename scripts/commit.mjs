@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { execa } from 'execa';
 import fs from 'fs/promises';
+import path from 'path';
 import readline from 'readline/promises';
 import semver from 'semver';
 import { estimator } from './estimator.mjs';
@@ -90,32 +91,50 @@ export async function commitAndPush(commitMessage, version) {
 	}
 }
 
-async function formatUntrackedFiles() {
-	try {
-		// Get list of untracked files (not ignored, not committed)
-		const { stdout: filesRaw } = await execa('git', [
-			'ls-files',
-			'--others',
-			'--exclude-standard',
-		]);
+export async function getChangedFiles() {
+	const { stdout } = await execa('git', [
+		'status',
+		'--porcelain',
+		'--untracked-files=normal',
+	]);
 
-		const files = filesRaw.trim().split('\n').filter(Boolean);
-		console.log(files);
-		if (files.length === 0) {
-			console.info(chalk.yellow('No untracked files to format!'));
+	return stdout
+		.split('\n')
+		.map((line) => line.trim())
+		.filter(Boolean)
+		.filter((line) => {
+			const status = line.slice(0, 2);
+			return ['M ', 'A ', '??'].some((prefix) =>
+				status.startsWith(prefix),
+			);
+		})
+		.map((line) => line.slice(2).trim()) // get file path
+		.map((filePath) => path.resolve(process.cwd(), filePath));
+}
+
+/** * Runs Prettier only on untracked files. */
+export async function formatUntrackedFiles() {
+	try {
+		console.info(chalk.magenta('🔍 Checking untracked files...'));
+
+		const files = await getChangedFiles();
+
+		if (!files.length) {
+			console.info(chalk.greenBright('✅ No untracked files to format.'));
 			return;
 		}
 
 		console.info(
-			chalk.magenta(`Formatting ${files.length} untracked file(s) with Prettier...`),
+			chalk.cyan(`📝 Formatting ${files.length} untracked files...`),
+		);
+		await estimator(
+			execa('prettier', ['--write', ...files], { stdio: 'inherit' }),
+			chalk.magenta('Formatting untracked files...'),
 		);
 
-		// Run prettier --write on untracked files only
-		await execa('prettier', ['--write', ...files], { stdio: 'inherit' });
-
-		console.info(chalk.green('✅ Formatting of untracked files complete!'));
+		console.info(chalk.green('✅ Untracked files formatted!'));
 	} catch (error) {
-		console.error(chalk.red('🛑 Error formatting untracked files:', error));
+		console.error(chalk.red('🛑 Failed to format untracked files:'), error);
 		throw error;
 	}
 }
@@ -242,8 +261,8 @@ export function isValidVersion(newVersion, oldVersion) {
 			await updateVersion(newVersion);
 		}
 
-		// await runFormatter();
-		await formatUntrackedFiles();
+		await runFormatter();
+		// await formatUntrackedFiles();
 		await commitAndPush(commitMessage, newVersion);
 	} catch (error) {
 		console.error(chalk.red('🛑 Unexpected Error:', error));
