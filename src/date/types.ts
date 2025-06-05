@@ -662,7 +662,10 @@ export type DateString = `0${NumberRange<1, 9>}` | `${NumberRange<10, 31>}`;
 export type MonthString = `0${NumberRange<1, 9>}` | `${NumberRange<10, 12>}`;
 
 /** Date and month in `MM-DD` format, e.g. `01-12` means 'January 18' */
-export type MonthDateString = `${MonthString}-${DateString}`;
+export type MonthDateString = Exclude<
+	`${MonthString}-${DateString}`,
+	'02-30' | '02-31' | '04-31' | '06-31' | '09-31' | '11-31'
+>;
 
 // ! ======== SEASON CONFIG TYPES ======== //
 

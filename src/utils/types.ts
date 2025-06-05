@@ -222,3 +222,19 @@ export type RequiredShape<T> = {
  * type Role = TupleToUnion<typeof roles>; // "admin" | "user" | "guest"
  */
 export type TupleToUnion<T extends readonly unknown[]> = T[number];
+
+/**
+ * * Creates a tuple type of a given length with elements of type T
+ *
+ * 📝 **Notes**:
+ * - This works recursively to build a tuple of exact length N.
+ *
+ * - N must be a literal number, not just number. You can’t pass a general number type because recursion can't compute unbounded lengths
+ * - You can use as const or mapped types when initializing values with this shape
+ *
+ * @example
+ * type FiveStrings = TupleOf<string, 5>; // [string, string, string, string, string]
+ * type EmptyTuple = TupleOf<boolean, 0>; // []
+ */
+export type TupleOf<T, N extends number, R extends unknown[] = []> =
+	R['length'] extends N ? R : TupleOf<T, N, [...R, T]>;
