@@ -29,7 +29,8 @@ export type DotNotationKeyStrict<T> =
 	T extends AdvancedTypes ? never
 	: T extends StrictObject ?
 		{
-			[K in keyof T & string]: NonNullable<T[K]> extends StrictObject ?
+			[K in keyof T & string]: NonNullable<T[K]> extends Function ? never
+			: NonNullable<T[K]> extends StrictObject ?
 				`${K}` | `${K}.${DotNotationKey<NonNullable<T[K]>>}`
 			:	`${K}`;
 		}[keyof T & string]
@@ -40,7 +41,8 @@ export type DotNotationKey<T> =
 	T extends AdvancedTypes ? never
 	: T extends GenericObject ?
 		{
-			[K in keyof T & string]: NonNullable<T[K]> extends GenericObject ?
+			[K in keyof T & string]: NonNullable<T[K]> extends Function ? never
+			: NonNullable<T[K]> extends GenericObject ?
 				`${K}` | `${K}.${DotNotationKey<NonNullable<T[K]>>}`
 			:	`${K}`;
 		}[keyof T & string]
@@ -50,9 +52,9 @@ export type DotNotationKey<T> =
 export type KeyForArray<T> =
 	T extends GenericObject ?
 		{
-			[K in keyof T & string]: NonNullable<T[K]> extends Array<unknown> ?
-				K
-			:	never;
+			[K in keyof T & string]: NonNullable<T[K]> extends Function ? never
+			: NonNullable<T[K]> extends Array<unknown> ? K
+			: never;
 		}[keyof T & string]
 	:	never;
 
@@ -61,7 +63,8 @@ export type KeyForObject<T> =
 	T extends AdvancedTypes ? never
 	: T extends GenericObject ?
 		{
-			[K in keyof T & string]: NonNullable<T[K]> extends GenericObject ?
+			[K in keyof T & string]: NonNullable<T[K]> extends Function ? never
+			: NonNullable<T[K]> extends GenericObject ?
 				NonNullable<T[K]> extends AdvancedTypes ?
 					never
 				:	K
@@ -74,7 +77,8 @@ export type NestedKeyString<T> =
 	T extends AdvancedTypes ? never
 	: T extends GenericObject ?
 		{
-			[K in keyof T & string]: NonNullable<T[K]> extends string ? K
+			[K in keyof T & string]: NonNullable<T[K]> extends Function ? never
+			: NonNullable<T[K]> extends string ? K
 			: NonNullable<T[K]> extends GenericObject ?
 				`${K}.${NestedKeyString<NonNullable<T[K]>>}`
 			:	never;
@@ -86,8 +90,8 @@ export type NestedPrimitiveKey<T> =
 	T extends AdvancedTypes ? never
 	: T extends GenericObject ?
 		{
-			[K in keyof T & string]: NonNullable<T[K]> extends NormalPrimitive ?
-				K
+			[K in keyof T & string]: NonNullable<T[K]> extends Function ? never
+			: NonNullable<T[K]> extends NormalPrimitive ? K
 			: NonNullable<T[K]> extends GenericObject ?
 				`${K}.${NestedPrimitiveKey<NonNullable<T[K]>>}`
 			:	never;
