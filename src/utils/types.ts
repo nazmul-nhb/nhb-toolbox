@@ -192,10 +192,10 @@ export type LooseLiteral<T extends string | number> =
  * @returns A new object type with only optional keys from `T`
  * @example
  * type Example = { a: string; b?: number; c?: boolean };
- * type OptionalPart = OptionalShape<Example>;
+ * type OptionalPart = ExtractOptional<Example>;
  * // { b?: number; c?: boolean }
  */
-export type OptionalShape<T> = {
+export type ExtractOptional<T> = {
 	[K in keyof T as {} extends Pick<T, K> ? K : never]?: T[K];
 };
 
@@ -206,10 +206,10 @@ export type OptionalShape<T> = {
  * @returns A new object type with only required keys from `T`
  * @example
  * type Example = { a: string; b?: number; c: boolean };
- * type RequiredPart = RequiredShape<Example>;
+ * type RequiredPart = ExtractRequired<Example>;
  * // { a: string; c: boolean }
  */
-export type RequiredShape<T> = {
+export type ExtractRequired<T> = {
 	[K in keyof T as {} extends Pick<T, K> ? never : K]: T[K];
 };
 
@@ -238,3 +238,25 @@ export type TupleToUnion<T extends readonly unknown[]> = T[number];
  */
 export type TupleOf<T, N extends number, R extends unknown[] = []> =
 	R['length'] extends N ? R : TupleOf<T, N, [...R, T]>;
+
+/**
+ * * Makes selected or all properties of an object type optional (only the values, not the keys).
+ *
+ * If `K` is provided, only those properties' values become optional (keys remain required).
+ * If `K` is omitted, all property values become optional.
+ *
+ * @template O - The original object type.
+ * @template K - Optional union of keys in `O` whose values should become optional.
+ *
+ * @example
+ * type A = { name: string; age: number };
+ * type B = ValueOptional<A, 'name'>;
+ * // Equivalent to: { name: string | undefined; age: number }
+ *
+ * @example
+ * type C = ValueOptional<A>;
+ * // Equivalent to: { name: string | undefined; age: number | undefined }
+ */
+export type ValueOptional<O, K extends keyof O = keyof O> = {
+	[P in keyof O]: P extends K ? O[P] | undefined : O[P];
+};

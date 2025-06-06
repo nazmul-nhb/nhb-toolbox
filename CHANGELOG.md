@@ -6,6 +6,11 @@ All notable changes to this package will be documented in this file.
 
 ---
 
+## [4.12.28] - 2025-06-06
+
+- **Resolved** a compile-time `not-assignable` error that occurred when optional properties were present in parameters of `sanitizeData`, `createFormData`, and other utility functions.
+- **Added** additional utility types and integrated them into various parts of the package to improve type safety and maintainability.
+
 ## [4.12.27] - 2025-06-02
 
 - Updated [README](README.md).

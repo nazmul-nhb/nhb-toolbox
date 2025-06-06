@@ -1,6 +1,7 @@
 import { isString } from '../guards/primitives';
 import type { Enumerate, LocaleCode, NumberRange } from '../number/types';
 import { getOrdinal, roundToNearest } from '../number/utilities';
+import type { TupleOf } from '../utils/types';
 import {
 	DAYS,
 	INTERNALS,
@@ -1363,8 +1364,8 @@ export class Chronos {
 	}
 
 	/** @instance Converts to array with all date unit parts */
-	toArray(): number[] {
-		return Object.values(this.toObject());
+	toArray(): TupleOf<number, 12> {
+		return Object.values(this.toObject()) as TupleOf<number, 12>;
 	}
 
 	/**

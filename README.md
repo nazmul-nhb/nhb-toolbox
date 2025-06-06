@@ -76,6 +76,8 @@ The ultimate date/time manipulation class with 100+ methods for parsing, formatt
 
 ```typescript
 new Chronos('2025-01-01').addDays(3).format('YYYY-MM-DD'); // "2025-01-04"
+// or with `Chronos` wrapper
+chronos('2025-01-01').addDays(3).format('YYYY-MM-DD'); // "2025-01-04"
 ```
 
 [Documentation →](https://nhb-toolbox.vercel.app/docs/classes/Chronos)

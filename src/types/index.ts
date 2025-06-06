@@ -1,3 +1,5 @@
+import type { Chronos } from '../date/Chronos';
+
 /** Uncontrolled any to use for edge cases */
 export type Any = any;
 
@@ -71,11 +73,23 @@ export type ThrottledFn<T extends VoidFunction> = (
 /** Asynchronous function type */
 export type AsyncFunction<T> = (...args: unknown[]) => Promise<T>;
 
+/**
+ * Represents an object that has at least one method property,
+ * but other keys can be anything.
+ */
+export type ObjectWithMethods =
+	{
+		[key: string]: unknown;
+	} & { [key: string]: (...args: any[]) => unknown } extends infer O ?
+		{ [K in keyof O]: O[K] }
+	:	never;
+
 /** Advanced non-primitive types */
 export type AdvancedTypes =
 	| Array<unknown>
 	| File
 	| FileList
+	| Chronos
 	| Blob
 	| Date
 	| RegExp
