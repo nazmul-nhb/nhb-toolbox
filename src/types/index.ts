@@ -85,7 +85,7 @@ export type ObjectWithMethods =
 		{ [K in keyof O]: O[K] }
 	:	never;
 
-/** Advanced non-primitive types */
+/** Advanced types to exclude from counting as object key */
 export type AdvancedTypes =
 	| Array<unknown>
 	| File
