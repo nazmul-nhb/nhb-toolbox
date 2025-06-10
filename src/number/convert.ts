@@ -1,5 +1,7 @@
+import { isNumber } from '../guards/primitives';
+import { isNumericString } from '../guards/specials';
 import type { Numeric } from '../types/index';
-import { THOUSANDS } from './constants';
+import { ORDINAL_UNDER_TEEN, THOUSANDS } from './constants';
 import { _convertLessThanThousand } from './helpers';
 
 /**
@@ -85,3 +87,39 @@ export const convertToRomanNumerals = (num: Numeric): string => {
 	}
 	return result;
 };
+
+/**
+ * * Converts a number, numeric string, or cardinal word string into its ordinal word representation.
+ *
+ * @param number - A number (e.g. `42`), numeric string (e.g. `"42"`), or cardinal word (e.g. `"forty-two"`).
+ * @returns The ordinal word form (always in lowercase) of the input.
+ *
+ * @example
+ * numberToWordsOrdinal(1); // "first"
+ * numberToWordsOrdinal("23"); // "twenty-third"
+ * numberToWordsOrdinal("twenty-three"); // "twenty-third"
+ */
+export function numberToWordsOrdinal(number: Numeric | string) {
+	const TEEN_OR_HUNDRED = /(teen|hundred|thousand|(m|b|tr|quadr)illion)$/;
+	const UNDER_TEEN =
+		/(zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)$/;
+
+	const _fixUnderTeen = (cardinal: string): string => {
+		return ORDINAL_UNDER_TEEN[cardinal];
+	};
+
+	const wordNumber =
+		isNumericString(number) || isNumber(number) ?
+			numberToWords(number)
+		:	number?.toLowerCase();
+
+	if (TEEN_OR_HUNDRED.test(wordNumber)) {
+		return wordNumber + 'th';
+	} else if (/y$/.test(wordNumber)) {
+		return wordNumber.replace(/y$/, 'ieth');
+	} else if (UNDER_TEEN.test(wordNumber)) {
+		return wordNumber.replace(UNDER_TEEN, _fixUnderTeen);
+	} else {
+		return wordNumber;
+	}
+}

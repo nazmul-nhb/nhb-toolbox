@@ -49,6 +49,23 @@ export const THOUSANDS = /* @__PURE__ */ Object.freeze([
 	// 'sextillion',
 ] as const);
 
+/** Ordinal number in words against the corresponding cardinal variant */
+export const ORDINAL_UNDER_TEEN = /* @__PURE__ */ Object.freeze({
+	zero: 'zeroth',
+	one: 'first',
+	two: 'second',
+	three: 'third',
+	four: 'fourth',
+	five: 'fifth',
+	six: 'sixth',
+	seven: 'seventh',
+	eight: 'eighth',
+	nine: 'ninth',
+	ten: 'tenth',
+	eleven: 'eleventh',
+	twelve: 'twelfth',
+} as Record<string, string>);
+
 /** List of ISO 4217 currency codes */
 export const CURRENCY_CODES = /* @__PURE__ */ Object.freeze([
 	'AED',

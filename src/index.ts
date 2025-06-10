@@ -115,11 +115,14 @@ export {
 } from './number/guards';
 
 export {
+	numberToWordsOrdinal as cardinalWordsToOrdinal,
 	numberToWords as convertNumberToWords,
+	numberToWordsOrdinal as convertNumberToWordsOrdinal,
 	convertToRomanNumerals,
 	convertToRomanNumerals as integerToRoman,
 	convertToRomanNumerals as numberToRoman,
 	numberToWords,
+	numberToWordsOrdinal,
 	convertToRomanNumerals as numericToRoman,
 	convertToRomanNumerals as toRoman,
 	convertToRomanNumerals as toRomanNumeral,

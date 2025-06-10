@@ -2,9 +2,15 @@
 
 <!-- markdownlint-disable-file MD024 -->
 
-All notable changes to this package will be documented in this file.
+All notable changes to the package will be documented here.
 
 ---
+
+## [4.12.31] - 2025-06-10
+
+- **Added** new utility to convert number or numeric string to ordinal word.
+- **Updated** JSDoc for some types.
+- **Upgraded** TypeScript version to `5.8.3` and other dev-dependencies.
 
 ## [4.12.28-30] - 2025-06-06
 
@@ -13,37 +19,37 @@ All notable changes to this package will be documented in this file.
 
 ## [4.12.27] - 2025-06-02
 
-- Updated [README](README.md).
-- Added new utility types, can be imported from `'nhb-toolbox/utils/types'`.
+- **Updated** [README](README.md).
+- **Added** new utility types, can be imported from `'nhb-toolbox/utils/types'`.
 
 ## [4.12.25-26] - 2025-06-02
 
-- Updated JSDoc for some `Chronos` methods and exposed `INTERNALS` Symbol
+- **Updated** JSDoc for some `Chronos` methods and exposed `INTERNALS` Symbol
 
 ## [4.12.24] - 2025-06-01
 
 ### 🕧 Updates for Chronos
 
-- Reduced bloat by moving additional `Chronos` methods to plugin system.
-- Changed plugin import paths as `import { somePlugin } from nhb-toolbox/plugins/somePlugin` format so the users can assume the path easily.
-- Updated parameter type for `isBusinessHour` method: instead of multiple parameters can accept one options object now.
+- **Reduced** bloat by moving _rarely used_ `Chronos` methods to plugin system.
+- **Changed** plugin import paths as `import { somePlugin } from nhb-toolbox/plugins/somePlugin` format so the users can assume the path easily.
+- **Updated** parameter type for `isBusinessHour` method: instead of multiple parameters can accept one options object now.
 
 ## [4.12.23] - 2025-06-01
 
 ### 🕧 Updates for Chronos
 
 - All plugin imports now use statement like `import { somePlugin } from 'nhb-toolbox/plugins/plugin-path';`
-- Updated `getZodiacSign` method: includes 2 presets `western` and `vedic` with aliases `tropical` and `sidereal`.
-- Fixed issues in `getZodiacSign` method which previously could not parse some date/month range.
+- **Updated** `getZodiacSign` method: includes 2 presets `western` and `vedic` with aliases `tropical` and `sidereal`.
+- **Fixed** issues in `getZodiacSign` method which previously could not parse some date/month range.
 
 ## [4.12.21-beta.2] - 2025-05-31
 
-- Updated `types.mjs` script for updating the exports fields for plugins in `package.json`.
+- **Updated** `types.mjs` script for updating the exports fields for plugins in `package.json`.
 
 ## [4.12.21-beta.1] - 2025-05-31
 
-- Updated `getZodiacSign` method: includes 2 presets `western` and `vedic`.
-- Fixed issues in `getZodiacSign` method.
+- **Updated** `getZodiacSign` method: includes 2 presets `western` and `vedic`.
+- **Fixed** issues in `getZodiacSign` method.
 - Experimenting with exporting each Chronos plugin as separate module from the respective locations.
 
 ## [4.12.20] - 2025-05-31
@@ -54,42 +60,42 @@ All notable changes to this package will be documented in this file.
 
 ## [4.12.13-beta.1] - 2025-05-31
 
-- Created more plugins for resource heavy methods of `Chronos`.
+- **Created** more plugins for resource heavy methods of `Chronos`.
 
 ## [4.12.13-alpha.2] - 2025-05-30
 
-- Solved experimental plugin export/import issues.
+- **Solved** experimental plugin export/import issues.
 
 ## [4.12.13-alpha.1] - 2025-05-30
 
 ### 🕧 Experimenting with Plugin System for Chronos
 
-- Introduced plugin injection in `Chronos` class. Started with `season` method. Will make convert more methods if this is successful after publishing.
+- **Introduced** plugin injection in `Chronos` class. Started with `season` method. Will make convert more methods if this is successful after publishing.
 
 ## [4.12.12] - 2025-05-30
 
 ### 🕧 Updates in Chronos
 
-- Added new method `season` to get the name of the season for current Chronos instance. It has configurable options.
+- **Added** new method `season` to get the name of the season for current Chronos instance. It has configurable options.
 - All `Chronos` methods that use `#format` method internally now accepts escape tokens and new token `ZZ` is introduced to include timezone offset (or Z for UTC time) in the formatted date string.
-- Updated some type names such as `Hours` ➡️ `ClockHour`, `Minutes` ➡️ `ClockMinute`, `Time` ➡️ `ClockTIme` etc. But the core definitions remain the same.
+- **Updated** some type names such as `Hours` ➡️ `ClockHour`, `Minutes` ➡️ `ClockMinute`, `Time` ➡️ `ClockTIme` etc. But the core definitions remain the same.
 
 ## [4.12.10] - 2025-05-30
 
 ### 🕧 New Chronos Methods
 
-- Added 2 new instance methods in `Chronos`, `day` and `monthName` to get day and month names respectively.
+- **Added** 2 new instance methods in `Chronos`, `day` and `monthName` to get day and month names respectively.
 
 ### ℹ️ [README](README.md)
 
-- Added `Signature Utilities` section in `README.md`
+- **Added** `Signature Utilities` section in `README.md`
 
 ## [4.12.8] - 2025-05-29
 
 ### Types
 
-- Added new types `Enumerate` and `NumberRange` to generate number literals like `0 | 1 | 2 | ... | 998`.
-- Implemented both types in few cases where a return type is number and limited to a range, especially in color and number related functions and `Color` & `Chronos` classes.
+- **Added** new types `Enumerate` and `NumberRange` to generate number literals like `0 | 1 | 2 | ... | 998`.
+- **Implemented** both types in few cases where a return type is number and limited to a range, especially in color and number related functions and `Color` & `Chronos` classes.
 
 ### Method Changed in Chronos
 
