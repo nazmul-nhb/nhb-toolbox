@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+<!-- ## [4.12.33] - 2025-06-__
+
+- Trim input string for `numberToWordsOrdinal` utility. -->
+
 ## [4.12.32] - 2025-06-11
 
 - **Fixed** a bug in `sanitizeData` and `createFormData` where key selections did not allow to choose keys with null/undefined value(s).
