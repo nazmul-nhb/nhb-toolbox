@@ -6,9 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
-<!-- ## [4.12.33] - 2025-06-__
+## [4.12.33] - 2025-06-11
 
-- Trim input string for `numberToWordsOrdinal` utility. -->
+- **Trim** input string for `numberToWordsOrdinal` utility.
+- **Preserve** `File`, `FileList` and other file related object(s) when processing nested object(s) using `sanitizeData`.
 
 ## [4.12.32] - 2025-06-11
 

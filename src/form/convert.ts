@@ -37,7 +37,7 @@ export const createControlledFormData = <T extends GenericObject>(
 	const { stringifyNested = '*' } = configs || {};
 
 	/** - Helper to check if a key should be lowercase */
-	const shouldLowercaseKeys = (key: string) => {
+	const _shouldLowercaseKeys = (key: string) => {
 		return Array.isArray(configs?.lowerCaseKeys) ?
 				configs?.lowerCaseKeys?.some(
 					(path) => key === path || key.startsWith(`${path}.`),
@@ -46,7 +46,7 @@ export const createControlledFormData = <T extends GenericObject>(
 	};
 
 	/** - Helper to check if a key should be lowercase */
-	const shouldLowercaseValue = (key: string) => {
+	const _shouldLowercaseValue = (key: string) => {
 		return Array.isArray(configs?.lowerCaseValues) ?
 				configs.lowerCaseValues?.some(
 					(path) => key === path || key?.startsWith(`${path}.`),
@@ -56,11 +56,11 @@ export const createControlledFormData = <T extends GenericObject>(
 
 	/** - Transforms key to lowercase if needed */
 	const _transformKey = (key: string) => {
-		return shouldLowercaseKeys(key) ? key.toLowerCase() : key;
+		return _shouldLowercaseKeys(key) ? key.toLowerCase() : key;
 	};
 
 	/** - Helper function to check if a key matches a breakArray key. */
-	const isRequiredKey = (key: string) => {
+	const _isRequiredKey = (key: string) => {
 		const transformedKey = _transformKey(key);
 
 		return Array.isArray(configs?.requiredKeys) ?
@@ -73,7 +73,7 @@ export const createControlledFormData = <T extends GenericObject>(
 	};
 
 	/** - Helper function to check if a key matches a dotNotation path to preserve. */
-	const shouldDotNotate = (key: string) => {
+	const _shouldDotNotate = (key: string) => {
 		const transformedKey = _transformKey(key);
 
 		return Array.isArray(configs?.dotNotateNested) ?
@@ -84,7 +84,7 @@ export const createControlledFormData = <T extends GenericObject>(
 	};
 
 	/** - Helper function to check if a key matches a stringifyNested key. */
-	const shouldStringify = (key: string) => {
+	const _shouldStringify = (key: string) => {
 		const transformedKey = _transformKey(key);
 
 		return Array.isArray(stringifyNested) ?
@@ -93,7 +93,7 @@ export const createControlledFormData = <T extends GenericObject>(
 	};
 
 	/** - Helper function to check if a key matches a breakArray key. */
-	const shouldBreakArray = (key: string) => {
+	const _shouldBreakArray = (key: string) => {
 		const transformedKey = _transformKey(key);
 
 		return Array.isArray(configs?.breakArray) ?
@@ -119,7 +119,7 @@ export const createControlledFormData = <T extends GenericObject>(
 
 			const shouldKeep =
 				(value != null && value !== '') ||
-				isRequiredKey(fullKey) ||
+				_isRequiredKey(fullKey) ||
 				isNonEmptyString(value) ||
 				isValidArray(value) ||
 				isNotEmptyObject(value);
@@ -133,7 +133,7 @@ export const createControlledFormData = <T extends GenericObject>(
 						const cleaned = _cleanObject(value, fullKey);
 
 						if (
-							isRequiredKey(fullKey) ||
+							_isRequiredKey(fullKey) ||
 							isNotEmptyObject(cleaned)
 						) {
 							acc[transformedKey] = cleaned;
@@ -147,7 +147,7 @@ export const createControlledFormData = <T extends GenericObject>(
 							if (configs?.trimStrings) {
 								cleanString = cleanString?.trim();
 							}
-							if (shouldLowercaseValue(fullKey)) {
+							if (_shouldLowercaseValue(fullKey)) {
 								cleanString = cleanString?.toLowerCase();
 							}
 							acc[transformedKey] = cleanString;
@@ -155,11 +155,11 @@ export const createControlledFormData = <T extends GenericObject>(
 							acc[transformedKey] = value;
 						}
 					} else if (Array.isArray(value)) {
-						if (isRequiredKey(fullKey) || isValidArray(value)) {
+						if (_isRequiredKey(fullKey) || isValidArray(value)) {
 							acc[transformedKey] = value;
 						}
 					} else if (isEmptyObject(value)) {
-						if (isRequiredKey(fullKey)) {
+						if (_isRequiredKey(fullKey)) {
 							acc[transformedKey] = value;
 						}
 					} else {
@@ -199,7 +199,7 @@ export const createControlledFormData = <T extends GenericObject>(
 			}
 		} else if (Array.isArray(value)) {
 			if (isFileArray(value)) {
-				if (shouldBreakArray(key)) {
+				if (_shouldBreakArray(key)) {
 					value?.forEach((item, index) => {
 						_addToFormData(`${transformedKey}[${index}]`, item);
 					});
@@ -209,24 +209,24 @@ export const createControlledFormData = <T extends GenericObject>(
 					});
 				}
 			} else if (isValidArray(value)) {
-				if (shouldBreakArray(key)) {
+				if (_shouldBreakArray(key)) {
 					value?.forEach((item, index) => {
 						_addToFormData(`${transformedKey}[${index}]`, item);
 					});
 				} else {
 					formData.append(transformedKey, JSON.stringify(value));
 				}
-			} else if (isRequiredKey(key)) {
+			} else if (_isRequiredKey(key)) {
 				formData.append(transformedKey, JSON.stringify(value));
 			}
 		} else if (isDateLike(value)) {
 			formData.append(transformedKey, JSON.parse(JSON.stringify(value)));
 		} else if (isNotEmptyObject(value)) {
-			if (shouldStringify(key) && !shouldDotNotate(key)) {
+			if (_shouldStringify(key) && !_shouldDotNotate(key)) {
 				// * Clean object before stringifying, preserving required keys
 				const cleanedValue = _cleanObject(value, key);
 
-				if (isNotEmptyObject(cleanedValue) || isRequiredKey(key)) {
+				if (isNotEmptyObject(cleanedValue) || _isRequiredKey(key)) {
 					formData.append(
 						transformedKey,
 						JSON.stringify(cleanedValue),
@@ -240,8 +240,8 @@ export const createControlledFormData = <T extends GenericObject>(
 		} else {
 			const isNotNullish = value != null && value !== '';
 
-			if (isNotNullish || isRequiredKey(key)) {
-				if (typeof value === 'string' && shouldLowercaseValue(key)) {
+			if (isNotNullish || _isRequiredKey(key)) {
+				if (typeof value === 'string' && _shouldLowercaseValue(key)) {
 					formData.append(transformedKey, value?.toLowerCase());
 				} else {
 					formData.append(transformedKey, value as Blob);
@@ -269,9 +269,9 @@ export const createControlledFormData = <T extends GenericObject>(
 			}
 
 			// * Check if this key is preserved as dot-notation
-			if (shouldDotNotate(fullKey)) {
+			if (_shouldDotNotate(fullKey)) {
 				_addToFormData(fullKey, value);
-			} else if (isNotEmptyObject(value) && !shouldStringify(fullKey)) {
+			} else if (isNotEmptyObject(value) && !_shouldStringify(fullKey)) {
 				if (isDateLike(value)) {
 					_addToFormData(key, JSON.parse(JSON.stringify(value)));
 				} else {
@@ -283,7 +283,7 @@ export const createControlledFormData = <T extends GenericObject>(
 			} else if (isDateLike(value)) {
 				_addToFormData(key, JSON.parse(JSON.stringify(value)));
 			} else if (isEmptyObject(value)) {
-				if (isRequiredKey(fullKey)) {
+				if (_isRequiredKey(fullKey)) {
 					_addToFormData(key, JSON.stringify(value));
 				}
 			} else {

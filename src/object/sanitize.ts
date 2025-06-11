@@ -1,5 +1,11 @@
 import { isDateLike } from '../date/guards';
 import {
+	isCustomFile,
+	isFileList,
+	isFileOrBlob,
+	isFileUpload,
+} from '../form/guards';
+import {
 	isArrayOfType,
 	isNotEmptyObject,
 	isObject,
@@ -99,7 +105,7 @@ export function sanitizeData<
 	 * @param key The key to check.
 	 * @returns `true` if the key is required, otherwise `false`.
 	 */
-	const isRequiredKey = (key: string) => {
+	const _isRequiredKey = (key: string) => {
 		return Array.isArray(requiredKeys) ?
 				requiredKeys?.some(
 					(path) => key === path || key.startsWith(`${path}.`),
@@ -114,6 +120,17 @@ export function sanitizeData<
 	 */
 	const _skipObject = (obj: unknown): boolean => {
 		return ignoreEmpty && isObject(obj) && !isNotEmptyObject(obj);
+	};
+
+	/** Determines if a value is file-like or date-like object */
+	const _shouldNotProcess = (value: unknown): boolean => {
+		return (
+			isCustomFile(value) ||
+			isFileList(value) ||
+			isFileOrBlob(value) ||
+			isFileUpload(value) ||
+			isDateLike(value)
+		);
 	};
 
 	/**
@@ -143,7 +160,7 @@ export function sanitizeData<
 			?.filter((v) => {
 				if (ignoreNullish && v == null) return false;
 				if (ignoreFalsy && !v) return false;
-				if (_skipObject(v) && !isRequiredKey(path)) return false;
+				if (_skipObject(v) && !_isRequiredKey(path)) return false;
 				return true;
 			});
 	};
@@ -165,22 +182,26 @@ export function sanitizeData<
 			}
 
 			// Exclude nullish values if specified
-			if (ignoreNullish && !isRequiredKey(fullKeyPath) && value == null) {
+			if (
+				ignoreNullish &&
+				!_isRequiredKey(fullKeyPath) &&
+				value == null
+			) {
 				return acc;
 			}
 
 			// Exclude falsy values `0`, `false`, `null` and `undefined`
-			if (ignoreFalsy && !value && !isRequiredKey(fullKeyPath)) {
+			if (ignoreFalsy && !value && !_isRequiredKey(fullKeyPath)) {
 				return acc;
 			}
 
 			if (isString(value) && trimStrings) {
 				// Trim string values if enabled
 				acc[key as keyof T] = trimString(value) as T[keyof T];
-			} else if (isDateLike(value)) {
+			} else if (_shouldNotProcess(value)) {
 				acc[key as keyof T] = value as T[keyof T];
 			} else if (value && isObject(value)) {
-				if (isDateLike(value)) {
+				if (_shouldNotProcess(value)) {
 					acc[key as keyof T] = value as T[keyof T];
 				} else {
 					// Recursively process nested objects
@@ -191,22 +212,18 @@ export function sanitizeData<
 					// Add the property conditionally if it's not an empty object
 					if (
 						!ignoreEmpty ||
-						isRequiredKey(fullKeyPath) ||
+						_isRequiredKey(fullKeyPath) ||
 						isNotEmptyObject(processedValue)
 					) {
 						acc[key as keyof T] = processedValue as T[keyof T];
 					}
 				}
 			} else if (value && Array.isArray(value)) {
-				// Keep file arrays untouched
-				// if (isFileArray(value) || isCustomFileArray(value)) {
-				// 	acc[key as keyof T] = value as T[keyof T];
-				// }
 				const processedArray = _processArray(value, fullKeyPath);
 
 				if (
 					!ignoreEmpty ||
-					isRequiredKey(fullKeyPath) ||
+					_isRequiredKey(fullKeyPath) ||
 					processedArray?.length > 0
 				) {
 					acc[key as keyof T] = processedArray as T[keyof T];
