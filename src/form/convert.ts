@@ -117,29 +117,43 @@ export const createControlledFormData = <T extends GenericObject>(
 				return acc;
 			}
 
-			const isNotNullish = value != null && value !== '';
-
-			// * Keep value if:
-			// * 1. It's required OR
-			// * 2. It's not null/undefined AND not empty string/object/array
 			const shouldKeep =
+				(value != null && value !== '') ||
 				isRequiredKey(fullKey) ||
-				isNotNullish ||
 				isNonEmptyString(value) ||
 				isValidArray(value) ||
 				isNotEmptyObject(value);
 
 			if (shouldKeep) {
 				if (isNotEmptyObject(value)) {
-					// * Recursively clean nested objects
-					const cleaned = _cleanObject(value, fullKey);
+					if (isDateLike(value)) {
+						acc[transformedKey] = value;
+					} else {
+						// * Recursively clean nested objects
+						const cleaned = _cleanObject(value, fullKey);
 
-					if (isRequiredKey(fullKey) || isNotEmptyObject(cleaned)) {
-						acc[transformedKey] = cleaned;
+						if (
+							isRequiredKey(fullKey) ||
+							isNotEmptyObject(cleaned)
+						) {
+							acc[transformedKey] = cleaned;
+						}
 					}
 				} else {
 					if (typeof value === 'string') {
-						acc[transformedKey] = value?.toLowerCase();
+						if (isNonEmptyString(value)) {
+							let cleanString = value;
+
+							if (configs?.trimStrings) {
+								cleanString = cleanString?.trim();
+							}
+							if (shouldLowercaseValue(fullKey)) {
+								cleanString = cleanString?.toLowerCase();
+							}
+							acc[transformedKey] = cleanString;
+						} else {
+							acc[transformedKey] = value;
+						}
 					} else if (Array.isArray(value)) {
 						if (isRequiredKey(fullKey) || isValidArray(value)) {
 							acc[transformedKey] = value;
@@ -230,7 +244,6 @@ export const createControlledFormData = <T extends GenericObject>(
 				if (typeof value === 'string' && shouldLowercaseValue(key)) {
 					formData.append(transformedKey, value?.toLowerCase());
 				} else {
-					// ! CONFUSED UNGA-BUNGA
 					formData.append(transformedKey, value as Blob);
 				}
 			}
@@ -251,7 +264,7 @@ export const createControlledFormData = <T extends GenericObject>(
 			}
 
 			// * Trim string values if trimStrings is enabled
-			if (configs?.trimStrings && typeof value === 'string') {
+			if (configs?.trimStrings && isNonEmptyString(value)) {
 				value = value?.trim();
 			}
 
@@ -259,8 +272,12 @@ export const createControlledFormData = <T extends GenericObject>(
 			if (shouldDotNotate(fullKey)) {
 				_addToFormData(fullKey, value);
 			} else if (isNotEmptyObject(value) && !shouldStringify(fullKey)) {
-				// * Process nested objects
-				_processObject(value, key);
+				if (isDateLike(value)) {
+					_addToFormData(key, JSON.parse(JSON.stringify(value)));
+				} else {
+					// * Process nested objects
+					_processObject(value, key);
+				}
 			} else if (isFileOrBlob(value)) {
 				_addToFormData(key, value);
 			} else if (isDateLike(value)) {

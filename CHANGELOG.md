@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.12.32] - 2025-06-11
+
+- **Fixed** a bug in `sanitizeData` and `createFormData` where key selections did not allow to choose keys with null/undefined value(s).
+- **Fixed** a bug in `createFormData` where values of nested object(s) incorrectly converted to lowercase. Process `date-like object(s)` more efficiently in both utilities.
+
 ## [4.12.31] - 2025-06-10
 
 - **Added** new utility to convert number or numeric string to ordinal word.

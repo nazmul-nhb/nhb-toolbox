@@ -1,3 +1,4 @@
+import { isDateLike } from '../date/guards';
 import {
 	isArrayOfType,
 	isNotEmptyObject,
@@ -176,16 +177,25 @@ export function sanitizeData<
 			if (isString(value) && trimStrings) {
 				// Trim string values if enabled
 				acc[key as keyof T] = trimString(value) as T[keyof T];
+			} else if (isDateLike(value)) {
+				acc[key as keyof T] = value as T[keyof T];
 			} else if (value && isObject(value)) {
-				// Recursively process nested objects
-				const processedValue = _processObject(value as T, fullKeyPath);
-				// Add the property conditionally if it's not an empty object
-				if (
-					!ignoreEmpty ||
-					isRequiredKey(fullKeyPath) ||
-					isNotEmptyObject(processedValue)
-				) {
-					acc[key as keyof T] = processedValue as T[keyof T];
+				if (isDateLike(value)) {
+					acc[key as keyof T] = value as T[keyof T];
+				} else {
+					// Recursively process nested objects
+					const processedValue = _processObject(
+						value as T,
+						fullKeyPath,
+					);
+					// Add the property conditionally if it's not an empty object
+					if (
+						!ignoreEmpty ||
+						isRequiredKey(fullKeyPath) ||
+						isNotEmptyObject(processedValue)
+					) {
+						acc[key as keyof T] = processedValue as T[keyof T];
+					}
 				}
 			} else if (value && Array.isArray(value)) {
 				// Keep file arrays untouched
