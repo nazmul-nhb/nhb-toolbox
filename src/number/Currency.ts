@@ -73,8 +73,11 @@ export class Currency {
 	 * @param options - Optional settings:
 	 *   - `fallbackRate`: A manual exchange rate to use if the API call fails or currency is not supported.
 	 *   - `forceRefresh`: If true, ignores cached rates and fetches fresh data.
-	 * @returns The converted amount as a number.
+	 * @returns A new `Currency` instance with the converted amount in the target currency.
 	 * @throws Will throw error if the API call fails and no `fallbackRate` is provided.
+	 *
+	 * @example
+	 * await new Currency(100, 'USD').convert('EUR');
 	 */
 	async convert(
 		to: SupportedCurrency | CurrencyCode,
