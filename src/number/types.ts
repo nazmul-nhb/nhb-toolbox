@@ -122,6 +122,7 @@ export interface ConvertOptions {
 	forceRefresh?: boolean;
 }
 
+/** Type Interface for API Response from `api.frankfurter.app` */
 export interface FrankFurter {
 	amount: number;
 	base: CurrencyCode;

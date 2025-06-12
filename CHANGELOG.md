@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.12.34] - 2025-06-12
+
+- **Updated** `format()` and `convert()` methods in `Currency` class. `format()` now accepts `CurrencyCode` as optional second parameter and `convert()` method now returns a new `Currency` instance.
+
 ## [4.12.33] - 2025-06-11
 
 - **Trim** input string for `numberToWordsOrdinal` utility.

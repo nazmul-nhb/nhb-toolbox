@@ -11,7 +11,7 @@ import { formatCurrency } from './utilities';
 /**
  * * A utility class for handling currency operations like formatting and conversion.
  *
- * - Supports formatting based on locale.
+ * - Supports formatting based on locale and currency code.
  * - Converts between **fiat currencies supported by `api.frankfurter.app`**.
  * - Automatically caches conversion rates to reduce redundant API calls.
  * - Intended for use with numeric inputs (number or numeric string).
@@ -24,7 +24,7 @@ export class Currency {
 	 *
 	 * - Generated using the `en-US` locale during construction.
 	 * - This is a display-friendly version of the currency value.
-	 * - For formatting with other locales, use the `format(locale)` method.
+	 * - For formatting with other locales, use the `format()` method.
 	 */
 	readonly currency: string;
 
@@ -48,12 +48,15 @@ export class Currency {
 	}
 
 	/**
-	 * @instance Formats the currency for a given locale.
-	 * @param locale - The target locale (e.g., 'de-DE')
-	 * @returns The formatted currency string
+	 * @instance Formats the stored amount as a localized currency string.
+	 *
+	 * @param locale - Optional. A BCP 47 locale string (e.g., `'de-DE'`, `'en-US'`). Defaults to `'en-US'` if not provided.
+	 * @param code - Optional. An ISO 4217 currency code (e.g., `'USD'`, `'EUR'`) used solely for formatting purposes.
+	 *            _This does not alter the internal currency code set during instantiation._
+	 * @returns A string representing the formatted currency value according to the specified locale and currency code.
 	 */
-	format(locale?: LocaleCode): string {
-		return formatCurrency(this.#amount, this.#code, locale);
+	format(locale?: LocaleCode, code?: CurrencyCode): string {
+		return formatCurrency(this.#amount, code ?? this.#code, locale);
 	}
 
 	/**
@@ -71,37 +74,37 @@ export class Currency {
 	 *   - `fallbackRate`: A manual exchange rate to use if the API call fails or currency is not supported.
 	 *   - `forceRefresh`: If true, ignores cached rates and fetches fresh data.
 	 * @returns The converted amount as a number.
-	 * @throws Will throw if the API call fails and no `fallbackRate` is provided.
+	 * @throws Will throw error if the API call fails and no `fallbackRate` is provided.
 	 */
 	async convert(
 		to: SupportedCurrency | CurrencyCode,
 		options?: ConvertOptions,
-	): Promise<number> {
+	): Promise<Currency> {
 		const key = `${this.#code}->${to}`;
 
 		if (!options?.forceRefresh && Currency.#rateCache.has(key)) {
 			const cachedRate = Currency.#rateCache.get(key)!;
 
-			return this.#amount * cachedRate;
+			return new Currency(this.#amount * cachedRate, to);
 		}
 
 		try {
 			const rate = await this.#fetchFromFrankfurter(to);
 			Currency.#rateCache.set(key, rate);
 
-			return this.#amount * rate;
+			return new Currency(this.#amount * rate, to);
 		} catch (error) {
 			if (options?.fallbackRate != null) {
 				console.warn(
 					`Currency conversion failed (${this.#code} → ${to}): ${(error as Error).message}. Using fallback rate...`,
 				);
 
-				return this.#amount * options.fallbackRate;
+				return new Currency(this.#amount * options.fallbackRate, to);
+			} else {
+				throw new Error(
+					`Currency conversion failed (${this.#code} → ${to}): ${(error as Error).message}`,
+				);
 			}
-
-			throw new Error(
-				`Currency conversion failed (${this.#code} → ${to}): ${(error as Error).message}`,
-			);
 		}
 	}
 
