@@ -112,6 +112,37 @@ export class Currency {
 	}
 
 	/**
+	 * @instance Converts the current currency amount to a target currency using either a cached rate or a manual exchange rate.
+	 *
+	 * - This method is **synchronous** and does **not perform any network requests**.
+	 * - If a cached rate exists for the currency pair, it is used.
+	 * - If no cached rate is found, `rate` is used as a manual exchange rate.
+	 * - If neither are available, the original instance is returned unchanged.
+	 *
+	 * @param to - The target currency code to convert to.
+	 * @param rate - A manual exchange rate to use if no cached rate is available.
+	 * @returns A new `Currency` instance with the converted amount, or the original instance if no rate is available.
+	 *
+	 * @example
+	 * const usd = new Currency(100, 'USD');
+	 * const eur = usd.convertSync('EUR', 0.92);
+	 *
+	 * console.log(eur.currency); // €92.00
+	 */
+	convertSync(to: CurrencyCode, rate: number): Currency {
+		const key = `${this.#code}->${to}`;
+		const cachedRate = Currency.#rateCache.get(key);
+
+		if (cachedRate) {
+			return new Currency(this.#amount * cachedRate, to);
+		} else if (rate) {
+			return new Currency(this.#amount * rate, to);
+		} else {
+			return this;
+		}
+	}
+
+	/**
 	 * @private Attempts to fetch rate from frankfurter.app
 	 * @param to - Target currency code
 	 * @returns Exchange rate (multiplier)

@@ -48,7 +48,7 @@ jobs:
                       echo "New version detected: v${{ env.VERSION }}"
                   fi
 
-              # Install PNPM, Setup Node.js, and Install Dependencies only if version changed
+            # Install PNPM, Setup Node.js, and Install Dependencies only if version changed
             - name: Install PNPM
               if: env.VERSION_UNCHANGED == 'false'
               run: npm install -g pnpm
@@ -96,8 +96,8 @@ jobs:
                   tag_name: 'v${{ env.VERSION }}'
                   name: 'Version ${{ env.VERSION }}'
                   body: |
-                      - 🔗 Find in [NPM Registry](https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }}).
-                      - 🌐 Full Docs at [Official Docs](https://nhb-toolbox.vercel.app)
-                      - 👉 [See what's new in the changelog](./CHANGELOG.md)
+                      - 📦 Find in [NPM Registry](https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }}).
+                      - 📄 Full Docs at [Official Docs](https://nhb-toolbox.vercel.app)
+                      - 🆕 [See what's new in the changelog](./CHANGELOG.md)
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

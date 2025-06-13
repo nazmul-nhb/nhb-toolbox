@@ -6,9 +6,15 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.12.36] - 2025-06-13
+
+- **Added** new `convertSync()` method in `Currency` class to convert currency without network request.
+
 ## [4.12.34-35] - 2025-06-12
 
-- **Updated** `format()` and `convert()` methods in `Currency` class. `format()` now accepts `CurrencyCode` as optional second parameter and `convert()` method now returns a new `Currency` instance.
+- **Updated** `format()` and `convert()` methods in `Currency` class:
+  - `format()` method now accepts `CurrencyCode` as optional second parameter
+  - `convert()` method now returns a new `Currency` instance.
 
 ## [4.12.33] - 2025-06-11
 
