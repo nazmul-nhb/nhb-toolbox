@@ -220,6 +220,8 @@ export {
 
 // ! Other date/time utils
 export {
+	convertMinutesToTime as convertMinutesToHourMinutes,
+	convertMinutesToTime,
 	formatUTCOffset as convertMinutesToUTCOffset,
 	extractHourMinute,
 	extractMinutesFromUTC,
@@ -229,7 +231,9 @@ export {
 	formatUTCOffset,
 	getCurrentDateTime,
 	getCurrentDateTime as getCurrentTime,
+	convertMinutesToTime as getHourMinutesFromMinutes,
 	extractMinutesFromUTC as getMinutesFromUTC,
+	convertMinutesToTime as getTimeFromMinutes,
 	extractTimeFromUTC as getTimeStringFromUTC,
 	getTotalMinutes,
 	getTotalMinutes as getTotalMinutesFromTime,

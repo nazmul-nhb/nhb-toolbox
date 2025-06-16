@@ -30,6 +30,9 @@ export type ClockSecond = `0${Enumerate<10>}` | `${NumberRange<10, 59>}`;
 /** - Time in "HH:MM" format. */
 export type ClockTime = `${ClockHour}:${ClockMinute}`;
 
+/** Normal time in `H:m`m format which does not follow the strict limit up to 23 hours, hour can be any number and minute can be numeric string from `00` to `59` */
+export type HourMinutes = `${number}:${ClockMinute}`;
+
 /** - Configuration options for greeting. */
 export interface GreetingConfigs {
 	/** Time when the morning period ends (HH:MM format). Defaults to `11:59` */

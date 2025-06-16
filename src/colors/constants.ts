@@ -1,5 +1,5 @@
-/** Colors based on the ASCII value of the letter. */
-export const alphabetColorPalette = /* @__PURE__ */ Object.freeze([
+/** Colors based on the ASCII value (index) of the letter. */
+export const ALPHABET_COLOR_PALETTE = /* @__PURE__ */ Object.freeze([
 	'#00094C',
 	'#00376E',
 	'#005600',
@@ -29,7 +29,7 @@ export const alphabetColorPalette = /* @__PURE__ */ Object.freeze([
 ]);
 
 /** Colors based on the index of numbers. */
-export const numberColorPalette = /* @__PURE__ */ Object.freeze([
+export const NUMBER_COLOR_PALETTE = /* @__PURE__ */ Object.freeze([
 	'#893213',
 	'#A44C15',
 	'#8B4513',

@@ -1,5 +1,5 @@
 import type { Percent } from '../number/types';
-import { alphabetColorPalette, numberColorPalette } from './constants';
+import { ALPHABET_COLOR_PALETTE, NUMBER_COLOR_PALETTE } from './constants';
 import { _applyOpacity, _convertOpacityToHex } from './helpers';
 import type { ColorInput, ColorInputArray } from './types';
 
@@ -65,7 +65,7 @@ export function getColorForInitial(
 		// Handle number as string
 		if (numbers.includes(initial)) {
 			return _applyOpacity(
-				numberColorPalette[parseInt(initial, 10)],
+				NUMBER_COLOR_PALETTE[parseInt(initial, 10)],
 				hexOpacity,
 			);
 		}
@@ -74,8 +74,8 @@ export function getColorForInitial(
 		const index = upperInitial.charCodeAt(0) - 'A'.charCodeAt(0);
 
 		// Validate alphabet
-		if (index >= 0 && index < alphabetColorPalette?.length) {
-			return _applyOpacity(alphabetColorPalette[index], hexOpacity);
+		if (index >= 0 && index < ALPHABET_COLOR_PALETTE?.length) {
+			return _applyOpacity(ALPHABET_COLOR_PALETTE[index], hexOpacity);
 		}
 
 		return _applyOpacity('#010514', hexOpacity);
@@ -85,7 +85,7 @@ export function getColorForInitial(
 
 		if (numbers.includes(initial)) {
 			return _applyOpacity(
-				numberColorPalette[parseInt(initial, 10)],
+				NUMBER_COLOR_PALETTE[parseInt(initial, 10)],
 				hexOpacity,
 			);
 		}
@@ -94,7 +94,7 @@ export function getColorForInitial(
 		// Handle array of strings/numbers
 	} else if (Array.isArray(input)) {
 		if (input?.length < 1)
-			return [...alphabetColorPalette, ...numberColorPalette].map(
+			return [...ALPHABET_COLOR_PALETTE, ...NUMBER_COLOR_PALETTE].map(
 				(color) => _applyOpacity(color, hexOpacity),
 			);
 

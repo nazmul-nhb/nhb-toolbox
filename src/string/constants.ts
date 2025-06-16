@@ -1,3 +1,4 @@
+/** List of conjunctions, prepositions, auxiliary verbs and articles in lowercase as array of strings */
 export const LOWERCASE = /* @__PURE__ */ Object.freeze([
 	// Conjunctions
 	'and',

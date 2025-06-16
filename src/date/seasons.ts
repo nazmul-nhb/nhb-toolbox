@@ -1,5 +1,5 @@
-/** Default Western Seasons */
-const DEFAULT_SEASONS = /* @__PURE__ */ Object.freeze([
+/** Western Seasons */
+export const DEFAULT_SEASONS = /* @__PURE__ */ Object.freeze([
 	{ name: 'Spring', boundary: { startMonth: 2, endMonth: 4 } },
 	{ name: 'Summer', boundary: { startMonth: 5, endMonth: 7 } },
 	{ name: 'Autumn', boundary: { startMonth: 8, endMonth: 10 } },
@@ -7,7 +7,7 @@ const DEFAULT_SEASONS = /* @__PURE__ */ Object.freeze([
 ]);
 
 /**Default Bangladeshi Seasons */
-const BANGLADESH_SEASONS = /* @__PURE__ */ Object.freeze([
+export const BANGLADESH_SEASONS = /* @__PURE__ */ Object.freeze([
 	{
 		name: 'Grisma (Summer)',
 		boundary: { startDate: '04-15', endDate: '06-14' },
@@ -35,7 +35,7 @@ const BANGLADESH_SEASONS = /* @__PURE__ */ Object.freeze([
 ]);
 
 /** Indian Seasons */
-const INDIA_IMD_SEASONS = /* @__PURE__ */ Object.freeze([
+export const INDIA_IMD_SEASONS = /* @__PURE__ */ Object.freeze([
 	{ name: 'Winter', boundary: { startMonth: 0, endMonth: 1 } },
 	{ name: 'Pre-Monsoon', boundary: { startMonth: 2, endMonth: 4 } },
 	{ name: 'Monsoon', boundary: { startMonth: 5, endMonth: 8 } },
@@ -44,7 +44,7 @@ const INDIA_IMD_SEASONS = /* @__PURE__ */ Object.freeze([
 ]);
 
 /** Indian Vedic Seasons */
-const INDIA_VEDIC_SEASONS = /* @__PURE__ */ Object.freeze([
+export const INDIA_VEDIC_SEASONS = /* @__PURE__ */ Object.freeze([
 	{
 		name: 'Shishir (Winter)',
 		boundary: { startDate: '12-15', endDate: '02-14' },
@@ -72,7 +72,7 @@ const INDIA_VEDIC_SEASONS = /* @__PURE__ */ Object.freeze([
 ]);
 
 /** Indian Tamil Seasons */
-const INDIA_TAMIL_SEASONS = /* @__PURE__ */ Object.freeze([
+export const INDIA_TAMIL_SEASONS = /* @__PURE__ */ Object.freeze([
 	{ name: 'Ilavenil (Mid-Summer)', boundary: { startMonth: 4, endMonth: 5 } }, // May – June
 	{
 		name: 'Mutuvenil (Peak-Summer)',
@@ -88,13 +88,13 @@ const INDIA_TAMIL_SEASONS = /* @__PURE__ */ Object.freeze([
 ]);
 
 /** Philippines Seasons */
-const PHILIPPINES_SEASONS = /* @__PURE__ */ Object.freeze([
+export const PHILIPPINES_SEASONS = /* @__PURE__ */ Object.freeze([
 	{ name: 'Dry Season', boundary: { startMonth: 11, endMonth: 4 } }, // Dec–May
 	{ name: 'Wet Season', boundary: { startMonth: 5, endMonth: 10 } }, // Jun–Nov
 ]);
 
 /** US Academic Seasons */
-const US_ACADEMIC_SEASONS = /* @__PURE__ */ Object.freeze([
+export const US_ACADEMIC_SEASONS = /* @__PURE__ */ Object.freeze([
 	{
 		name: 'Spring',
 		boundary: { startDate: '01-10', endDate: '05-15' },
@@ -114,7 +114,7 @@ const US_ACADEMIC_SEASONS = /* @__PURE__ */ Object.freeze([
 ]);
 
 /** Japanese Seasons */
-const JAPAN_SEASONS = /* @__PURE__ */ Object.freeze([
+export const JAPAN_SEASONS = /* @__PURE__ */ Object.freeze([
 	{
 		name: 'Haru (Spring)',
 		boundary: { startDate: '03-01', endDate: '05-31' },
@@ -134,7 +134,7 @@ const JAPAN_SEASONS = /* @__PURE__ */ Object.freeze([
 ]);
 
 /** Australian Seasons */
-const AUSTRALIA_SEASONS = /* @__PURE__ */ Object.freeze([
+export const AUSTRALIA_SEASONS = /* @__PURE__ */ Object.freeze([
 	{ name: 'Summer', boundary: { startMonth: 11, endMonth: 1 } },
 	{ name: 'Autumn', boundary: { startMonth: 2, endMonth: 4 } },
 	{ name: 'Winter', boundary: { startMonth: 5, endMonth: 7 } },
@@ -142,7 +142,7 @@ const AUSTRALIA_SEASONS = /* @__PURE__ */ Object.freeze([
 ]);
 
 /** Ethiopian Seasons */
-const ETHIOPIA_SEASONS = /* @__PURE__ */ Object.freeze([
+export const ETHIOPIA_SEASONS = /* @__PURE__ */ Object.freeze([
 	{ name: 'Bega (Dry)', boundary: { startMonth: 10, endMonth: 1 } },
 	{ name: 'Belg (Short Rain)', boundary: { startMonth: 2, endMonth: 4 } },
 	{ name: 'Kiremt (Main Rain)', boundary: { startMonth: 5, endMonth: 9 } },

@@ -1,5 +1,5 @@
 import type { Numeric } from '../types/index';
-import type { ClockTime, UTCOffSet } from './types';
+import type { ClockTime, HourMinutes, UTCOffSet } from './types';
 
 /**
  * * Extracts the hour and minute from a time string in `HH:MM` or `-HH:MM` format.
@@ -63,6 +63,14 @@ export function extractTimeFromUTC(
  */
 export function extractMinutesFromUTC(utc: UTCOffSet): number {
 	return getTotalMinutes(extractTimeFromUTC(utc));
+}
+
+export function convertMinutesToTime(minutes: Numeric): HourMinutes {
+	const numMIn = Math.abs(
+		typeof minutes === 'number' ? minutes : Number(minutes),
+	);
+
+	return `${String(Math.floor(numMIn / 60))}:${String(numMIn % 60).padStart(2, '0')}` as HourMinutes;
 }
 
 /**

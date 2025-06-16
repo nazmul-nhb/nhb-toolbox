@@ -1,3 +1,4 @@
+/** List of CSS Colors as array of objects */
 export const CSS_COLORS = /* @__PURE__ */ Object.freeze({
 	black: '#000000',
 	silver: '#C0C0C0',

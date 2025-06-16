@@ -6,6 +6,15 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.12.40] - 2025-06-16
+
+- **Added** new utility: `convertMinutesToTime` to convert minutes into clock-time (`HH:mm`) format.
+- **Exposed** important `constants` to consumers via `'nhb-toolbox/constants'` import path.
+
+### 🕧 Updates for Chronos
+
+- Added new instance method `getDatesInRange()` to get dates in the range as ISO date string.
+
 ## [4.12.36] - 2025-06-13
 
 - **Added** new `convertSync()` method in `Currency` class to convert currency without network request.

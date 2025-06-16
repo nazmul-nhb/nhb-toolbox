@@ -1,5 +1,6 @@
 import type { ClockHour, DayPart, UTCOffSet } from './types';
 
+/** Array of strings containing all the seven week-day names, starting with `Sunday` */
 export const DAYS = /* @__PURE__ */ Object.freeze([
 	'Sunday',
 	'Monday',
@@ -10,6 +11,7 @@ export const DAYS = /* @__PURE__ */ Object.freeze([
 	'Saturday',
 ] as const);
 
+/** Array of strings containing all the 12 month names, starting with `January`  */
 export const MONTHS = /* @__PURE__ */ Object.freeze([
 	'January',
 	'February',
@@ -92,6 +94,7 @@ export const SORTED_TIME_FORMATS = /* @__PURE__ */ Object.freeze(
 	].sort((a, b) => b.length - a.length),
 );
 
+/** List of time-zones with respective time-zone offsets (in number) as array of objects (`{timeZone: offset}`) */
 export const TIME_ZONES = /* @__PURE__ */ Object.freeze({
 	// UTC -12:00 to -01:00 (Mostly Pacific Islands, Americas)
 	/** International Date Line West (Baker Island, Howland Island) */
@@ -382,75 +385,74 @@ export const TIME_ZONES = /* @__PURE__ */ Object.freeze({
 	PETT: 12 * 60,
 } as const);
 
-export const TIME_ZONE_LABELS: Record<UTCOffSet, string> =
-	/* @__PURE__ */ Object.freeze({
-		'UTC-12:00': 'Baker Island Time', // and Howland Island
-		// 'UTC-11:30': 'Niue Time',
-		// 'UTC-11:00': 'Niue Time',
-		'UTC-11:00': 'Samoa Standard Time',
-		// 'UTC-10:30': 'Marquesas Time',
-		'UTC-10:00': 'Hawaii-Aleutian Standard Time',
-		'UTC-09:30': 'Marquesas Islands Time',
-		'UTC-09:00': 'Alaskan Standard Time',
-		// 'UTC-08:30': 'Pitcairn Standard Time',
-		'UTC-08:00': 'Pacific Standard Time',
-		'UTC-07:30': 'Mountain Standard Time (Unofficial)',
-		'UTC-07:00': 'Mountain Standard Time',
-		'UTC-06:30': 'Central America Time (Unofficial)',
-		'UTC-06:00': 'Central Standard Time',
-		// 'UTC-05:30': 'Venezuelan Standard Time (Historical)',
-		'UTC-05:00': 'Eastern Standard Time',
-		// 'UTC-04:30': 'Venezuelan Standard Time',
-		'UTC-04:00': 'Atlantic Standard Time',
-		'UTC-03:30': 'Newfoundland Standard Time',
-		'UTC-03:00': 'SA Eastern Standard Time',
-		'UTC-02:30': 'Mid-Atlantic Time (Unofficial)',
-		'UTC-02:00': 'Mid-Atlantic Standard Time',
-		'UTC-01:30': 'Azores Time (Unofficial)',
-		'UTC-01:00': 'Cape Verde Time',
-		'UTC+00:00': 'Greenwich Mean Time',
-		'UTC+00:30': 'British Summer Time (Historical)',
-		'UTC+01:00': 'Central European Standard Time',
-		'UTC+01:30': 'Central Africa Time (Unofficial)',
-		'UTC+02:00': 'Eastern European Standard Time',
-		'UTC+02:30': 'Israel Standard Time (Historical)',
-		'UTC+03:00': 'Arab Standard Time',
-		'UTC+03:30': 'Iran Standard Time',
-		'UTC+04:00': 'Gulf Standard Time',
-		'UTC+04:30': 'Afghanistan Time',
-		'UTC+05:00': 'Pakistan Standard Time',
-		'UTC+05:30': 'India Standard Time',
-		'UTC+05:45': 'Nepal Standard Time',
-		'UTC+06:00': 'Bangladesh Standard Time',
-		'UTC+06:30': 'Myanmar Standard Time',
-		'UTC+07:00': 'Indochina Standard Time',
-		'UTC+07:30': 'Western Indonesia Time (Unofficial)',
-		'UTC+08:00': 'China Standard Time',
-		'UTC+08:30': 'North Korea Standard Time',
-		'UTC+08:45': 'South-Western Australia Standard Time',
-		'UTC+09:00': 'Japan Standard Time',
-		'UTC+09:30': 'Central Australia Standard Time',
-		'UTC+10:00': 'Eastern Australia Standard Time',
-		'UTC+10:30': 'Lord Howe Standard Time',
-		'UTC+11:00': 'Central Pacific Standard Time',
-		// 'UTC+11:30': 'Norfolk Island Time',
-		'UTC+12:00': 'New Zealand Standard Time',
-		'UTC+12:45': 'Chatham Islands Time',
-		'UTC+13:00': 'Phoenix Island Time',
-		'UTC+13:45': 'Tokelau Time (Unofficial)',
-		'UTC+14:00': 'Line Islands Time',
-	} as Record<UTCOffSet, string>);
+/** List of time-zone labels against their corresponding utc values as array of objects */
+export const TIME_ZONE_LABELS = /* @__PURE__ */ Object.freeze({
+	'UTC-12:00': 'Baker Island Time', // and Howland Island
+	// 'UTC-11:30': 'Niue Time',
+	// 'UTC-11:00': 'Niue Time',
+	'UTC-11:00': 'Samoa Standard Time',
+	// 'UTC-10:30': 'Marquesas Time',
+	'UTC-10:00': 'Hawaii-Aleutian Standard Time',
+	'UTC-09:30': 'Marquesas Islands Time',
+	'UTC-09:00': 'Alaskan Standard Time',
+	// 'UTC-08:30': 'Pitcairn Standard Time',
+	'UTC-08:00': 'Pacific Standard Time',
+	'UTC-07:30': 'Mountain Standard Time (Unofficial)',
+	'UTC-07:00': 'Mountain Standard Time',
+	'UTC-06:30': 'Central America Time (Unofficial)',
+	'UTC-06:00': 'Central Standard Time',
+	// 'UTC-05:30': 'Venezuelan Standard Time (Historical)',
+	'UTC-05:00': 'Eastern Standard Time',
+	// 'UTC-04:30': 'Venezuelan Standard Time',
+	'UTC-04:00': 'Atlantic Standard Time',
+	'UTC-03:30': 'Newfoundland Standard Time',
+	'UTC-03:00': 'SA Eastern Standard Time',
+	'UTC-02:30': 'Mid-Atlantic Time (Unofficial)',
+	'UTC-02:00': 'Mid-Atlantic Standard Time',
+	'UTC-01:30': 'Azores Time (Unofficial)',
+	'UTC-01:00': 'Cape Verde Time',
+	'UTC+00:00': 'Greenwich Mean Time',
+	'UTC+00:30': 'British Summer Time (Historical)',
+	'UTC+01:00': 'Central European Standard Time',
+	'UTC+01:30': 'Central Africa Time (Unofficial)',
+	'UTC+02:00': 'Eastern European Standard Time',
+	'UTC+02:30': 'Israel Standard Time (Historical)',
+	'UTC+03:00': 'Arab Standard Time',
+	'UTC+03:30': 'Iran Standard Time',
+	'UTC+04:00': 'Gulf Standard Time',
+	'UTC+04:30': 'Afghanistan Time',
+	'UTC+05:00': 'Pakistan Standard Time',
+	'UTC+05:30': 'India Standard Time',
+	'UTC+05:45': 'Nepal Standard Time',
+	'UTC+06:00': 'Bangladesh Standard Time',
+	'UTC+06:30': 'Myanmar Standard Time',
+	'UTC+07:00': 'Indochina Standard Time',
+	'UTC+07:30': 'Western Indonesia Time (Unofficial)',
+	'UTC+08:00': 'China Standard Time',
+	'UTC+08:30': 'North Korea Standard Time',
+	'UTC+08:45': 'South-Western Australia Standard Time',
+	'UTC+09:00': 'Japan Standard Time',
+	'UTC+09:30': 'Central Australia Standard Time',
+	'UTC+10:00': 'Eastern Australia Standard Time',
+	'UTC+10:30': 'Lord Howe Standard Time',
+	'UTC+11:00': 'Central Pacific Standard Time',
+	// 'UTC+11:30': 'Norfolk Island Time',
+	'UTC+12:00': 'New Zealand Standard Time',
+	'UTC+12:45': 'Chatham Islands Time',
+	'UTC+13:00': 'Phoenix Island Time',
+	'UTC+13:45': 'Tokelau Time (Unofficial)',
+	'UTC+14:00': 'Line Islands Time',
+} as Record<UTCOffSet, string>);
 
 /** Ranges for day parts. */
-export const DEFAULT_RANGES: Record<DayPart, [ClockHour, ClockHour]> =
-	/* @__PURE__ */ Object.freeze({
-		night: ['21', '23'],
-		midnight: ['00', '01'],
-		lateNight: ['02', '04'],
-		morning: ['05', '11'],
-		afternoon: ['12', '16'],
-		evening: ['17', '20'],
-	} as const);
+export const DEFAULT_RANGES = /* @__PURE__ */ Object.freeze({
+	night: ['21', '23'],
+	midnight: ['00', '01'],
+	lateNight: ['02', '04'],
+	morning: ['05', '11'],
+	afternoon: ['12', '16'],
+	evening: ['17', '20'],
+} as Record<DayPart, [ClockHour, ClockHour]>);
 
 /** Western Zodiac Signs */
 export const WESTERN_ZODIAC_SIGNS = /* @__PURE__ */ Object.freeze([
