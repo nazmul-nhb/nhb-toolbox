@@ -638,6 +638,9 @@ export interface DateRangeOptions {
 
 	/** - Output format: return ISO strings in `'local'` or `'utc'` format. Defaults to `'local'`. */
 	format?: 'local' | 'utc';
+
+	/** Whether to round the dates in the range to the start of the day. Default is `false`. */
+	roundDate?: boolean;
 }
 
 /** - Options to define a **relative date range** starting from the current date. */
@@ -650,6 +653,9 @@ export interface RelativeRangeOptions {
 
 	/** - Output format — return as local ISO string or UTC ISO string. Defaults to `'local'`. */
 	format?: 'local' | 'utc';
+
+	/** Whether to round the dates in the range to the start of the day. Default is `false`. */
+	roundDate?: boolean;
 }
 
 /** - Unified type that supports either a fixed or relative date range configuration. */
@@ -668,6 +674,9 @@ export interface RangeWithDates {
 
 	/** Day(s) to skip from the range, e.g. ['Saturday', 'Sunday'] */
 	skipDays?: Array<WeekDay>;
+
+	/** Whether to round the dates in the range to the start of the day. Default is `false`. */
+	roundDate?: boolean;
 }
 
 /** - Options to define a **relative date range** starting from the current date. */
@@ -683,6 +692,9 @@ export interface RelativeDateRange {
 
 	/** Day(s) to skip from the range, e.g. ['Saturday', 'Sunday'] */
 	skipDays?: Array<WeekDay>;
+
+	/** Whether to round the dates in the range to the start of the day. Default is `false`. */
+	roundDate?: boolean;
 }
 
 /** - Unified type that supports either a fixed or relative date range configuration. */

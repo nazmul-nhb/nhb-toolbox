@@ -1756,7 +1756,11 @@ export class Chronos {
 		let startDate = this.clone(),
 			endDate = startDate.addWeeks(4);
 
-		const { format = 'local', skipDays = [] } = options ?? {};
+		const {
+			format = 'local',
+			skipDays = [],
+			roundDate = false,
+		} = options ?? {};
 
 		if (options) {
 			if ('from' in options || 'to' in options) {
@@ -1774,8 +1778,9 @@ export class Chronos {
 
 		const datesInRange: string[] = [];
 
-		let current = startDate.startOf('day');
-		while (current.isSameOrBefore(endDate.startOf('day'), 'day')) {
+		const end = roundDate ? endDate.startOf('day') : endDate;
+		let current = roundDate ? startDate.startOf('day') : startDate;
+		while (current.isSameOrBefore(end, 'day')) {
 			datesInRange.push(
 				format === 'local' ?
 					current.toLocalISOString()
@@ -1788,6 +1793,7 @@ export class Chronos {
 			const daysToSkip = [...new Set(skipDays)]?.flatMap((day) =>
 				Chronos.getDatesForDay(day, {
 					format,
+					roundDate,
 					from: startDate,
 					to: endDate,
 				}),
@@ -2071,7 +2077,7 @@ export class Chronos {
 		let startDate = new Chronos(),
 			endDate = startDate.addWeeks(4);
 
-		const { format = 'local' } = options ?? {};
+		const { format = 'local', roundDate = false } = options ?? {};
 
 		if (options) {
 			if ('from' in options || 'to' in options) {
@@ -2089,14 +2095,15 @@ export class Chronos {
 
 		const dayIndex = DAYS.indexOf(day);
 
-		let current = startDate.startOf('day');
+		const end = roundDate ? endDate.startOf('day') : endDate;
+		let current = roundDate ? startDate.startOf('day') : startDate;
 		while (current.weekDay !== dayIndex) {
 			current = current.add(1, 'day');
 		}
 
 		const result: string[] = [];
 
-		while (current.isSameOrBefore(endDate.startOf('day'), 'day')) {
+		while (current.isSameOrBefore(end, 'day')) {
 			result.push(
 				format === 'local' ?
 					current.toLocalISOString()

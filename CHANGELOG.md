@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.12.41] - 2025-06-17
+
+- **Updated** `getDatesInRange()` and `getDatesForDay()` `Chronos` methods' options to change the date rounding behaviour.
+
 ## [4.12.40] - 2025-06-17
 
 - **Added** new utility: `convertMinutesToTime` to convert minutes into clock-time (`H:mm`) format.
