@@ -18,10 +18,13 @@ import type {
 	ChronosObject,
 	ChronosPlugin,
 	DateRangeOptions,
+	DatesInRangeOptions,
 	FormatOptions,
 	MilliSecond,
 	MonthName,
 	Quarter,
+	RangeWithDates,
+	RelativeDateRange,
 	RelativeRangeOptions,
 	StrictFormat,
 	TimeDuration,
@@ -1687,6 +1690,122 @@ export class Chronos {
 	}
 
 	/**
+	 * @instance Returns an array of ISO date strings within a specific date range.
+	 *
+	 * - If the input is a fixed range (`from` and `to`), it includes all dates between them.
+	 * - If the input is a relative range (`span` and `unit`), it starts from current date and goes forward.
+	 * - If `skipDays` are provided, matching weekdays are excluded from the result.
+	 *
+	 * @param options - Configuration for the date range. Accepts either a fixed (`RangeWithDates`) format.
+	 * @returns Array of ISO date strings in either local or UTC format, excluding any skipped weekdays if specified.
+	 *
+	 * @example
+	 * // Using a fixed date range:
+	 * new Chronos().getDatesInRange({ from: '2025-01-01', to: '2025-01-03' });
+	 * // → ['2025-01-01T00:00:00+06:00', '2025-01-02T00:00:00+06:00', '2025-01-03T00:00:00+06:00']
+	 *
+	 * @example
+	 * // Using a relative date range with skipDays:
+	 * new Chronos().getDatesInRange({ span: 7, unit: 'day', skipDays: ['Saturday', 'Sunday'] });
+	 * // → Array of 7 dates excluding weekends
+	 *
+	 * @example
+	 * // UTC format:
+	 * new Chronos().getDatesInRange({ span: 2, unit: 'day', format: 'utc' });
+	 * // → ['2025-06-16T00:00:00.000Z', '2025-06-17T00:00:00.000Z']
+	 */
+	getDatesInRange(options?: RangeWithDates): string[];
+
+	/**
+	 * @instance Returns an array of ISO date strings within a specific date range.
+	 *
+	 * - If the input is a fixed range (`from` and `to`), it includes all dates between them.
+	 * - If the input is a relative range (`span` and `unit`), it starts from current date and goes forward.
+	 * - If `skipDays` are provided, matching weekdays are excluded from the result.
+	 *
+	 * @param options - Configuration for the date range. Accepts either a relative (`RelativeDateRange`) format.
+	 * @returns Array of ISO date strings in either local or UTC format, excluding any skipped weekdays if specified.
+	 *
+	 * @example
+	 * // Using a relative date range with skipDays:
+	 * new Chronos().getDatesInRange({ span: 7, unit: 'day', skipDays: ['Saturday', 'Sunday'] });
+	 * // → Array of 7 dates excluding weekends
+	 *
+	 * @example
+	 * // UTC format:
+	 * new Chronos().getDatesInRange({ span: 2, unit: 'day', format: 'utc' });
+	 * // → ['2025-06-16T00:00:00.000Z', '2025-06-17T00:00:00.000Z']
+	 *
+	 * @example
+	 * // Using a fixed date range:
+	 * new Chronos().getDatesInRange({ from: '2025-01-01', to: '2025-01-03' });
+	 * // → ['2025-01-01T00:00:00+06:00', '2025-01-02T00:00:00+06:00', '2025-01-03T00:00:00+06:00']
+	 */
+	getDatesInRange(options?: RelativeDateRange): string[];
+
+	/**
+	 * @instance Generates a list of ISO date strings within a specified range.
+	 *
+	 * - Accepts either an explicit date range (`from` and `to`) or a relative range (`span` and `unit`).
+	 * - If `skipDays` are provided, matching weekdays are excluded from the result.
+	 *
+	 * @param options - Optional configuration object defining either a fixed or relative date range.
+	 * @returns An array of ISO date strings in local or UTC format, depending on the `format` option.
+	 */
+	getDatesInRange(options?: DatesInRangeOptions): string[] {
+		let startDate = this.clone(),
+			endDate = startDate.addWeeks(4);
+
+		const { format = 'local', skipDays = [] } = options ?? {};
+
+		if (options) {
+			if ('from' in options || 'to' in options) {
+				if (options?.from) {
+					startDate = new Chronos(options?.from);
+				}
+				if (options?.to) {
+					endDate = new Chronos(options?.to);
+				}
+			} else if ('span' in options || 'unit' in options) {
+				const { span = 4, unit = 'week' } = options ?? {};
+				endDate = startDate.add(span, unit);
+			}
+		}
+
+		const datesInRange: string[] = [];
+
+		let current = startDate.startOf('day');
+		while (current.isSameOrBefore(endDate.startOf('day'), 'day')) {
+			datesInRange.push(
+				format === 'local' ?
+					current.toLocalISOString()
+				:	current.toISOString(),
+			);
+			current = current.add(1, 'day');
+		}
+
+		if (skipDays?.length > 0) {
+			const daysToSkip = [...new Set(skipDays)]?.flatMap((day) =>
+				Chronos.getDatesForDay(day, {
+					format,
+					from: startDate,
+					to: endDate,
+				}),
+			);
+
+			const filteredRange = datesInRange?.filter(
+				(date) =>
+					!daysToSkip?.some((day) =>
+						new Chronos(date).isSame(day, 'day'),
+					),
+			);
+
+			return filteredRange;
+		}
+		return datesInRange;
+	}
+
+	/**
 	 * @static Parses a date string with a given format (limited support only).
 	 *
 	 * * **Supported format tokens**:
@@ -1950,32 +2069,34 @@ export class Chronos {
 	 */
 	static getDatesForDay(day: WeekDay, options?: WeekdayOptions): string[] {
 		let startDate = new Chronos(),
-			endDate = new Chronos().addWeeks(4);
+			endDate = startDate.addWeeks(4);
 
 		const { format = 'local' } = options ?? {};
 
-		if (options && ('from' in options || 'to' in options)) {
-			startDate = new Chronos(options?.from);
-			endDate = new Chronos(options?.to);
-		} else if (options && ('span' in options || 'unit' in options)) {
-			const { span = 4, unit = 'week' } = options ?? {};
-			startDate = new Chronos();
-			endDate = startDate.add(span, unit);
+		if (options) {
+			if ('from' in options || 'to' in options) {
+				if (options?.from) {
+					startDate = new Chronos(options?.from);
+				}
+				if (options?.to) {
+					endDate = new Chronos(options?.to);
+				}
+			} else if ('span' in options || 'unit' in options) {
+				const { span = 4, unit = 'week' } = options ?? {};
+				endDate = startDate.add(span, unit);
+			}
 		}
-
-		const start = new Chronos(startDate);
-
-		const end = new Chronos(endDate);
 
 		const dayIndex = DAYS.indexOf(day);
 
-		let current = start;
+		let current = startDate.startOf('day');
 		while (current.weekDay !== dayIndex) {
 			current = current.add(1, 'day');
 		}
 
 		const result: string[] = [];
-		while (current.isSameOrBefore(end, 'day')) {
+
+		while (current.isSameOrBefore(endDate.startOf('day'), 'day')) {
 			result.push(
 				format === 'local' ?
 					current.toLocalISOString()

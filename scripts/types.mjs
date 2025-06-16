@@ -96,6 +96,11 @@ const createExports = (modulePaths) => {
 			import: './dist/esm/index.js',
 			require: './dist/cjs/index.js',
 		},
+		'./constants': {
+			types: './dist/dts/constants.d.ts',
+			import: './dist/esm/constants.js',
+			require: './dist/cjs/constants.js',
+		},
 		'./types': {
 			types: './dist/dts/types/index.d.ts',
 			default: './dist/dts/types/index.d.ts',
@@ -150,6 +155,7 @@ const createTypesVersions = (validModules) => {
 	return {
 		'*': {
 			types: ['dist/dts/types/index.d.ts'],
+			constants: ['dist/dts/constants.d.ts'],
 			...versions,
 		},
 	};

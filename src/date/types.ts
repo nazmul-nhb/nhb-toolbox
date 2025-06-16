@@ -655,6 +655,39 @@ export interface RelativeRangeOptions {
 /** - Unified type that supports either a fixed or relative date range configuration. */
 export type WeekdayOptions = RelativeRangeOptions | DateRangeOptions;
 
+/** - Options to define a **fixed date range** using explicit `from` and `to` dates. */
+export interface RangeWithDates {
+	/** - Start date of the range (inclusive). Defaults to **now** if not provided. */
+	from?: ChronosInput;
+
+	/** - End date of the range (inclusive). Defaults to **4 weeks from now** if not provided. */
+	to?: ChronosInput;
+
+	/** - Output format: return ISO strings in `'local'` or `'utc'` format. Defaults to `'local'`. */
+	format?: 'local' | 'utc';
+
+	/** Day(s) to skip from the range, e.g. ['Saturday', 'Sunday'] */
+	skipDays?: Array<WeekDay>;
+}
+
+/** - Options to define a **relative date range** starting from the current date. */
+export interface RelativeDateRange {
+	/** - Number of time units forward from now. Defaults to `4`.  Controlled by the `unit` option. */
+	span?: number;
+
+	/** - Unit of time to advance the date range. Defaults to `'week'`.  Controlled by the `span` option. */
+	unit?: 'year' | 'month' | 'week' | 'day';
+
+	/** - Output format — return as local ISO string or UTC ISO string. Defaults to `'local'`. */
+	format?: 'local' | 'utc';
+
+	/** Day(s) to skip from the range, e.g. ['Saturday', 'Sunday'] */
+	skipDays?: Array<WeekDay>;
+}
+
+/** - Unified type that supports either a fixed or relative date range configuration. */
+export type DatesInRangeOptions = RangeWithDates | RelativeDateRange;
+
 /** Millisecond from `0-999` */
 export type MilliSecond = Enumerate<999> | 999;
 

@@ -6,14 +6,15 @@ All notable changes to the package will be documented here.
 
 ---
 
-## [4.12.40] - 2025-06-16
+## [4.12.40] - 2025-06-17
 
-- **Added** new utility: `convertMinutesToTime` to convert minutes into clock-time (`HH:mm`) format.
+- **Added** new utility: `convertMinutesToTime` to convert minutes into clock-time (`H:mm`) format.
 - **Exposed** important `constants` to consumers via `'nhb-toolbox/constants'` import path.
 
 ### 🕧 Updates for Chronos
 
-- Added new instance method `getDatesInRange()` to get dates in the range as ISO date string.
+- **Added** new instance method `getDatesInRange()` to get dates in the range as ISO date string.
+- **Fixed** a bug by rounding the date to the start hour of the day and **updated** internal logic in static `getDatesForDay()` method.
 
 ## [4.12.36] - 2025-06-13
 
