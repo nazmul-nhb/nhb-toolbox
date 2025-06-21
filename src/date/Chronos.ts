@@ -718,7 +718,7 @@ export class Chronos {
 	 *                 (e.g., `'Sun, Apr 06, 2025 16:11:55'`).
 	 *
 	 * @param useUTC - If `true`, formats the date in UTC (equivalent to `formatUTC()`);
-	 *                 defaults to `false` (local time).
+	 *                 Defaults to `false` (local time).
 	 * @returns A formatted date string in the specified format
 	 */
 	formatStrict(format?: StrictFormat, useUTC = false): string {
@@ -1758,6 +1758,7 @@ export class Chronos {
 
 		const {
 			format = 'local',
+			onlyDays = [],
 			skipDays = [],
 			roundDate = false,
 		} = options ?? {};
@@ -1778,36 +1779,31 @@ export class Chronos {
 
 		const datesInRange: string[] = [];
 
+		const filterSet =
+			onlyDays?.length > 0 ?
+				new Set(onlyDays.map((d) => DAYS.indexOf(d)))
+			:	new Set(skipDays.map((d) => DAYS.indexOf(d)));
+
 		const end = roundDate ? endDate.startOf('day') : endDate;
 		let current = roundDate ? startDate.startOf('day') : startDate;
+
 		while (current.isSameOrBefore(end, 'day')) {
-			datesInRange.push(
-				format === 'local' ?
-					current.toLocalISOString()
-				:	current.toISOString(),
-			);
+			const shouldFilter =
+				onlyDays?.length > 0 ?
+					filterSet.has(current.weekDay)
+				:	!filterSet.has(current.weekDay);
+
+			if (shouldFilter) {
+				datesInRange.push(
+					format === 'local' ?
+						current.toLocalISOString()
+					:	current.toISOString(),
+				);
+			}
+
 			current = current.add(1, 'day');
 		}
 
-		if (skipDays?.length > 0) {
-			const daysToSkip = [...new Set(skipDays)]?.flatMap((day) =>
-				Chronos.getDatesForDay(day, {
-					format,
-					roundDate,
-					from: startDate,
-					to: endDate,
-				}),
-			);
-
-			const filteredRange = datesInRange?.filter(
-				(date) =>
-					!daysToSkip?.some((day) =>
-						new Chronos(date).isSame(day, 'day'),
-					),
-			);
-
-			return filteredRange;
-		}
 		return datesInRange;
 	}
 

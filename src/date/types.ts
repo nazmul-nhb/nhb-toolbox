@@ -1,4 +1,5 @@
 import type { Enumerate, NumberRange } from '../number/types';
+import type { LooseLiteral } from '../utils/types';
 import type { Chronos } from './Chronos';
 import type {
 	DATE_FORMATS,
@@ -157,10 +158,9 @@ export type TimeParts =
 type DateTimeConnector = ' ' | ', ' | '; ' | ' - ';
 
 /** Strict pre-defined types for formatting date and time. */
-export type StrictFormat =
-	| DateParts
-	| TimeParts
-	| `${DateParts}${DateTimeConnector}${TimeParts}`;
+export type StrictFormat = LooseLiteral<
+	DateParts | TimeParts | `${DateParts}${DateTimeConnector}${TimeParts}`
+>;
 
 /** Iterable `Chronos` object properties */
 export interface ChronosObject {
@@ -675,6 +675,9 @@ export interface RangeWithDates {
 	/** Day(s) to skip from the range, e.g. ['Saturday', 'Sunday'] */
 	skipDays?: Array<WeekDay>;
 
+	/** - Whether to include only specific days in the range. If provided, `skipDays` will be ignored. */
+	onlyDays?: Array<WeekDay>;
+
 	/** Whether to round the dates in the range to the start of the day. Default is `false`. */
 	roundDate?: boolean;
 }
@@ -692,6 +695,9 @@ export interface RelativeDateRange {
 
 	/** Day(s) to skip from the range, e.g. ['Saturday', 'Sunday'] */
 	skipDays?: Array<WeekDay>;
+
+	/** - Whether to include only specific days in the range. If provided, `skipDays` will be ignored. */
+	onlyDays?: Array<WeekDay>;
 
 	/** Whether to round the dates in the range to the start of the day. Default is `false`. */
 	roundDate?: boolean;

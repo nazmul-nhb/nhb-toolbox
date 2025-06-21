@@ -260,3 +260,18 @@ export type TupleOf<T, N extends number, R extends unknown[] = []> =
 export type ValueOptional<O, K extends keyof O = keyof O> = {
 	[P in keyof O]: P extends K ? O[P] | undefined : O[P];
 };
+
+type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
+
+/**
+ * * Creates a type that is either `T` or `U`, but not both at the same time.
+ * * This is useful for defining types that can be one of two options, but not both.
+ * * @template T - First type option.
+ * @template U - Second type option.
+ * @example
+ * type A = { a: string };
+ * type B = { b: number };
+ * type Exclusive = OneOf<A, B>;
+ * // Equivalent to: { a: string } | { b: number }
+ */
+export type OneOf<T, U> = (T & Without<U, T>) | (U & Without<T, U>);

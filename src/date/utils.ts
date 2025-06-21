@@ -65,6 +65,18 @@ export function extractMinutesFromUTC(utc: UTCOffSet): number {
 	return getTotalMinutes(extractTimeFromUTC(utc));
 }
 
+/**
+ * * Converts a number of minutes into a time string in "HH:MM" format.
+ *
+ * @param minutes - The number of minutes to convert. Can be a number or a numeric string.
+ * @returns A string representing the time in "HH:MM" format.
+ *
+ * @remarks Always returns the absolute value of the minutes, ignoring the sign if they are negative.
+ *
+ * @example
+ * convertMinutesToTime(75); // "1:15"
+ * convertMinutesToTime(-45); // "0:45"
+ */
 export function convertMinutesToTime(minutes: Numeric): HourMinutes {
 	const numMIn = Math.abs(
 		typeof minutes === 'number' ? minutes : Number(minutes),
