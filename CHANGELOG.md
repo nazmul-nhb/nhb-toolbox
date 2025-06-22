@@ -6,9 +6,14 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.12.43] - 2025-06-22
+
+- **Updated** `getDatesInRange()` method in `Chronos`, now accepts both `day-names` and `day-index` array for `skipDays` and `onlyDays`.
+- **Updated** JSDoc for some functions and methods.
+
 ## [4.12.42] - 2025-06-21
 
-- **Updated** JSDoc some functions and methods.
+- **Updated** JSDoc for some functions and methods.
 - **Updated and Optimized** `getDatesInRange()` method in `Chronos`. Added new option `onlyDays` to get dates for only the provided days.
 - **Allowed** `formatStrict()` method in `Chronos` to accept other string values [made less strict].
 

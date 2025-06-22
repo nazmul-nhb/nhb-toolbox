@@ -365,7 +365,7 @@ export interface ChronosStatics {
 	 * @param plugin The plugin to inject.
 	 *
 	 * - **NOTE:** *Once a plugin is injected, all the registered methods for that plugin will be available for the whole project.*
-	 * - See full list of plugins and the methods they register {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/plugins#-official-plugins}
+	 * - See full list of plugins and the methods they register {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/plugins#-official-plugins here}.
 	 */
 	use(plugin: ChronosPlugin): void;
 
@@ -672,11 +672,27 @@ export interface RangeWithDates {
 	/** - Output format: return ISO strings in `'local'` or `'utc'` format. Defaults to `'local'`. */
 	format?: 'local' | 'utc';
 
-	/** Day(s) to skip from the range, e.g. ['Saturday', 'Sunday'] */
-	skipDays?: Array<WeekDay>;
+	/**
+	 * An array of weekdays to exclude from the date range.
+	 * - Accepts either weekday names (e.g., `'Saturday'`, `'Sunday'`) or numeric indices (0 for Sunday to 6 for Saturday).
+	 * - Ignored if `onlyDays` is provided.
+	 *
+	 * @example
+	 * skipDays: ['Saturday', 'Sunday']
+	 * skipDays: [0, 6] // Sunday and Saturday
+	 */
+	skipDays?: Array<WeekDay> | Array<Enumerate<7>>;
 
-	/** - Whether to include only specific days in the range. If provided, `skipDays` will be ignored. */
-	onlyDays?: Array<WeekDay>;
+	/**
+	 * An array of weekdays to explicitly include in the date range.
+	 * - Accepts either weekday names (e.g., `'Monday'`, `'Wednesday'`) or numeric indices (0 for Sunday to 6 for Saturday).
+	 * - When provided, this overrides `skipDays` and includes only the specified days.
+	 *
+	 * @example
+	 * onlyDays: ['Monday', 'Wednesday']
+	 * onlyDays: [1, 3] // Monday and Wednesday
+	 */
+	onlyDays?: Array<WeekDay> | Array<Enumerate<7>>;
 
 	/** Whether to round the dates in the range to the start of the day. Default is `false`. */
 	roundDate?: boolean;
@@ -693,11 +709,27 @@ export interface RelativeDateRange {
 	/** - Output format — return as local ISO string or UTC ISO string. Defaults to `'local'`. */
 	format?: 'local' | 'utc';
 
-	/** Day(s) to skip from the range, e.g. ['Saturday', 'Sunday'] */
-	skipDays?: Array<WeekDay>;
+	/**
+	 * An array of weekdays to exclude from the date range.
+	 * - Accepts either weekday names (e.g., `'Saturday'`, `'Sunday'`) or numeric indices (0 for Sunday to 6 for Saturday).
+	 * - Ignored if `onlyDays` is provided.
+	 *
+	 * @example
+	 * skipDays: ['Saturday', 'Sunday']
+	 * skipDays: [0, 6] // Sunday and Saturday
+	 */
+	skipDays?: Array<WeekDay> | Array<Enumerate<7>>;
 
-	/** - Whether to include only specific days in the range. If provided, `skipDays` will be ignored. */
-	onlyDays?: Array<WeekDay>;
+	/**
+	 * An array of weekdays to explicitly include in the date range.
+	 * - Accepts either weekday names (e.g., `'Monday'`, `'Wednesday'`) or numeric indices (0 for Sunday to 6 for Saturday).
+	 * - When provided, this overrides `skipDays` and includes only the specified days.
+	 *
+	 * @example
+	 * onlyDays: ['Monday', 'Wednesday']
+	 * onlyDays: [1, 3] // Monday and Wednesday
+	 */
+	onlyDays?: Array<WeekDay> | Array<Enumerate<7>>;
 
 	/** Whether to round the dates in the range to the start of the day. Default is `false`. */
 	roundDate?: boolean;
