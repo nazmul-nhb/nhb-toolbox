@@ -269,6 +269,7 @@ export {
 	removeDuplicatesFromArray,
 	rotateArray,
 	splitArray,
+	spitArrayByProperty,
 } from './array/transform';
 
 export {
@@ -326,6 +327,12 @@ export {
 	pickObjectFieldsByCondition,
 	remapFields,
 	remapFields as remapObjectFields,
+	deleteFields,
+	deleteFields as omitFields,
+	deleteFields as omitObjectFields,
+	deleteFields as deleteObjectFields,
+	deleteFields as removeFields,
+	deleteFields as removeObjectFields,
 } from './object/convert';
 
 // ! DOM Utilities

@@ -146,7 +146,7 @@ export function convertObjectValues<
  * @param U The type of the keys to pick from the source object.
  *
  * @param source The source object from which to pick fields.
- * @param keys	The keys of the fields to pick from the source object.
+ * @param keys The keys of the fields to pick from the source object.
  *
  * @returns An object containing only the picked fields.
  */
@@ -159,6 +159,41 @@ export function pickFields<T extends GenericObject, U extends keyof T>(
 	keys?.forEach((key) => {
 		result[key] = source[key];
 	});
+
+	return result;
+}
+
+/**
+ * * Create a new object by removing specific keys from the source object.
+ *
+ * @param source - The original (source) object from which to delete fields.
+ * @param keys - An array of keys (fields) to remove from the object.
+ *
+ * @returns A new object without the specified keys.
+ *
+ * @example
+ * deleteFields({ a: 1, b: 2, c: 3 }, ['b'])
+ * // => { a: 1, c: 3 }
+ *
+ * @notes
+ * - Does not mutate the original object.
+ * - Useful for excluding sensitive or unwanted fields.
+ */
+export function deleteFields<T extends GenericObject, U extends keyof T>(
+	source: T,
+	keys: readonly U[],
+): {
+	[K in Exclude<keyof T, U>]: T[K];
+} {
+	const result = {} as {
+		[K in Exclude<keyof T, U>]: T[K];
+	};
+
+	for (const key in source) {
+		if (!keys.includes(key as string as U)) {
+			(result as T)[key] = source?.[key];
+		}
+	}
 
 	return result;
 }

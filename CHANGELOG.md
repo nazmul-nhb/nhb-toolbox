@@ -6,9 +6,9 @@ All notable changes to the package will be documented here.
 
 ---
 
-<!-- ## [4.12.48] - 2025-06-24
+## [4.12.46] - 2025-06-24
 
-- Added new utility `spitArrayByProperty` -->
+- **Added** new utilities `spitArrayByProperty` and `deleteFields`.
 
 ## [4.12.44] - 2025-06-23
 
