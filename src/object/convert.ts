@@ -1,4 +1,3 @@
-import type { Any } from '../types/index';
 import type {
 	DotNotationKey,
 	GenericObject,
@@ -80,11 +79,11 @@ export function convertObjectValues<
 	): T => {
 		const segments = path.split('.');
 
-		let current: Any = obj;
+		let current: GenericObject = obj;
 
 		segments?.forEach((key, index) => {
 			if (index === segments?.length - 1) {
-				const value = current[key];
+				const value = current?.[key];
 
 				if (_shouldPreserveValue(value)) {
 					return;
@@ -100,11 +99,14 @@ export function convertObjectValues<
 					current[key] = Number(value);
 				}
 			} else {
-				if (typeof current[key] === 'object' && current[key] !== null) {
-					current = current[key];
+				if (
+					typeof current?.[key] === 'object' &&
+					current?.[key] !== null
+				) {
+					current = current?.[key];
 				} else {
 					current[key] = {};
-					current = current[key];
+					current = current?.[key];
 				}
 			}
 		});
@@ -157,7 +159,7 @@ export function pickFields<T extends GenericObject, U extends keyof T>(
 	const result = {} as { [K in U]: T[K] };
 
 	keys?.forEach((key) => {
-		result[key] = source[key];
+		result[key] = source?.[key];
 	});
 
 	return result;
@@ -248,8 +250,8 @@ export function remapFields<
 	};
 
 	for (const targetKey in fieldMap) {
-		const sourceKey = fieldMap[targetKey];
-		result[targetKey] = source[sourceKey];
+		const sourceKey = fieldMap?.[targetKey];
+		result[targetKey] = source?.[sourceKey];
 	}
 
 	return result;
