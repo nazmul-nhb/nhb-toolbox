@@ -1,3 +1,4 @@
+import { isValidArray } from '../guards/non-primitives';
 import { isString } from '../guards/primitives';
 import type { Enumerate, LocaleCode, NumberRange } from '../number/types';
 import { getOrdinal, roundToNearest } from '../number/utilities';
@@ -1767,8 +1768,8 @@ export class Chronos {
 
 		const {
 			format = 'local',
-			onlyDays = [],
-			skipDays = [],
+			onlyDays,
+			skipDays,
 			roundDate = false,
 		} = options ?? {};
 
@@ -1789,9 +1790,10 @@ export class Chronos {
 		const datesInRange: string[] = [];
 
 		const filterSet = new Set<number>(
-			(onlyDays ?? skipDays ?? []).map((day) => {
-				return typeof day === 'number' ? day : DAYS.indexOf(day);
-			}),
+			(isValidArray(onlyDays) ? onlyDays
+			: isValidArray(skipDays) ? skipDays
+			: []
+			).map((day) => (typeof day === 'number' ? day : DAYS.indexOf(day))),
 		);
 
 		const end = roundDate ? endDate.startOf('day') : endDate;
@@ -1799,7 +1801,7 @@ export class Chronos {
 
 		while (current.isSameOrBefore(end, 'day')) {
 			const shouldFilter =
-				onlyDays?.length > 0 ?
+				onlyDays?.length ?
 					filterSet.has(current.weekDay)
 				:	!filterSet.has(current.weekDay);
 

@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.12.44] - 2025-06-23
+
+- **Updated** `getDatesInRange()` method in `Chronos`: fixed an option conflict.
+
 ## [4.12.43] - 2025-06-22
 
 - **Updated** `getDatesInRange()` method in `Chronos`, now accepts both `day-names` and `day-index` array for `skipDays` and `onlyDays`.
