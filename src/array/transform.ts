@@ -1,5 +1,7 @@
+import { isValidArray } from '../guards/non-primitives';
 import { isNumber } from '../guards/primitives';
 import type { GenericObject } from '../object/types';
+import type { NormalPrimitiveKey } from '../types/index';
 import { isDeepEqual } from '../utils/index';
 import type { FieldValue, Option, OptionsConfig } from './types';
 
@@ -116,14 +118,49 @@ export function findMissingElements<T, U>(
  * @param chunkSize The size of each chunk.
  * @returns An array of chunked arrays.
  */
-export function splitArray<T>(arr: T[], chunkSize: number): T[][] {
-	const result: T[][] = [];
+export function splitArray<T>(arr: T[], chunkSize: number): Array<T[]> {
+	const result: Array<T[]> = [];
 
 	for (let i = 0; i < arr?.length; i += chunkSize) {
 		result.push(arr.slice(i, i + chunkSize));
 	}
 
 	return result;
+}
+
+/**
+ * * Group an array of objects by a specified key, returning only arrays of grouped objects.
+ *
+ * @param source - The source array of objects to group.
+ * @param property - The property to group the array by. Property can be a string, number, boolean, undefined or null.
+ *
+ * @returns An array of grouped arrays. Each sub-array contains objects that share the same value for the specified property.
+ *
+ * @example
+ * spitArrayByProperty([{ type: 'a' }, { type: 'b' }, { type: 'a' }, { type: undefined }], 'type')
+ * // => [ [{ type: 'a' }, { type: 'a' }], [{ type: 'b' }], [{ type: undefined }] ]
+ *
+ * @notes
+ * - Returns an empty array if the input is invalid or empty.
+ * - Groups objects even when the group key is `undefined` or `null` (object with `null` & `undefined` property-values are grouped together).
+ */
+export function spitArrayByProperty<
+	T extends GenericObject,
+	P extends NormalPrimitiveKey<T>,
+>(source: T[] | undefined, property: P): Array<T[]> {
+	if (!isValidArray(source)) return [];
+
+	const grouped = {} as Record<string, T[]>;
+
+	source.forEach((item) => {
+		const rawKey = item?.[property];
+		const key = rawKey != null ? String(rawKey) : '__undefined__';
+
+		if (!grouped[key]) grouped[key] = [];
+		grouped[key].push(item);
+	});
+
+	return Object.values(grouped);
 }
 
 /**

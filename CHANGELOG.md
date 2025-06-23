@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+<!-- ## [4.12.48] - 2025-06-24
+
+- Added new utility `spitArrayByProperty` -->
+
 ## [4.12.44] - 2025-06-23
 
 - **Updated** `getDatesInRange()` method in `Chronos`: fixed an option conflict.
