@@ -125,19 +125,28 @@ export type HasMethods<T> =
 /** * Represents detailed information about a class's methods. */
 export interface ClassDetails {
 	/** * List of instance method names defined directly on the class prototype. */
-	instanceNames: string[];
+	instanceMethods: string[];
 
 	/** * List of static method names defined directly on the class constructor. */
-	staticNames: string[];
+	staticMethods: string[];
+
+	/** * List of instance getter names defined directly on the class prototype. */
+	instanceGetters: string[];
+
+	/** * List of static getter names defined directly on the class constructor. */
+	staticGetters: string[];
 
 	/** * Number of instance methods. */
-	instances: number;
+	instanceCount: number;
 
 	/** * Number of static methods. */
-	statics: number;
+	staticCount: number;
+
+	/** * Total number of instance and static getters combined. */
+	totalGetters: number;
 
 	/** * Total number of instance and static methods combined. */
-	total: number;
+	totalMethods: number;
 }
 
 /** Literal type for `partial` and `required` */

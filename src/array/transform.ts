@@ -137,14 +137,14 @@ export function splitArray<T>(arr: T[], chunkSize: number): Array<T[]> {
  * @returns An array of grouped arrays. Each sub-array contains objects that share the same value for the specified property.
  *
  * @example
- * spitArrayByProperty([{ type: 'a' }, { type: 'b' }, { type: 'a' }, { type: undefined }], 'type')
+ * splitArrayByProperty([{ type: 'a' }, { type: 'b' }, { type: 'a' }, { type: undefined }], 'type')
  * // => [ [{ type: 'a' }, { type: 'a' }], [{ type: 'b' }], [{ type: undefined }] ]
  *
  * @notes
  * - Returns an empty array if the input is invalid or empty.
  * - Groups objects even when the group key is `undefined` or `null` (object with `null` & `undefined` property-values are grouped together).
  */
-export function spitArrayByProperty<
+export function splitArrayByProperty<
 	T extends GenericObject,
 	P extends NormalPrimitiveKey<T>,
 >(source: T[] | undefined, property: P): Array<T[]> {

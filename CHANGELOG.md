@@ -6,9 +6,15 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.12.48] - 2025-06-24
+
+- **Fixed** typo for utility name `splitArrayByProperty`.
+- **Added** new utilities `getInstanceGetterNames` and `getStaticGetterNames`;
+- **Updated** `getClassDetails` and its return type.
+
 ## [4.12.46] - 2025-06-24
 
-- **Added** new utilities `spitArrayByProperty` and `deleteFields`.
+- **Added** new utilities ~~spitArrayByProperty~~ `splitArrayByProperty` and `deleteFields`.
 
 ## [4.12.44] - 2025-06-23
 

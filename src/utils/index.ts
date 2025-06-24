@@ -187,6 +187,44 @@ export function countStaticMethods(cls: Constructor): number {
 }
 
 /**
+ * * Retrieves the names of all instance getters defined directly on a class prototype.
+ *
+ * @param cls - The class constructor (not an instance).
+ * @returns A sorted array of instance getter names.
+ */
+export function getInstanceGetterNames(cls: Constructor): string[] {
+	const descriptors = Object.getOwnPropertyDescriptors(cls.prototype);
+
+	const result = Object.entries(descriptors)
+		.filter(
+			([key, desc]) =>
+				typeof desc.get === 'function' && key !== 'constructor',
+		)
+		.map(([key]) => key);
+
+	return sortAnArray(result);
+}
+
+/**
+ * * Retrieves the names of all static getters defined directly on a class constructor.
+ *
+ * @param cls - The class constructor (not an instance).
+ * @returns A sorted array of static getter names.
+ */
+export function getStaticGetterNames(cls: Constructor): string[] {
+	const descriptors = Object.getOwnPropertyDescriptors(cls);
+
+	const result = Object.entries(descriptors)
+		.filter(
+			([key, desc]) =>
+				typeof desc.get === 'function' && key !== 'prototype',
+		)
+		.map(([key]) => key);
+
+	return sortAnArray(result);
+}
+
+/**
  * * Gathers detailed information about the instance and static methods of a class.
  *
  * @param cls - The class constructor (not an instance).
@@ -195,13 +233,18 @@ export function countStaticMethods(cls: Constructor): number {
 export function getClassDetails(cls: Constructor): ClassDetails {
 	const instanceNames = getInstanceMethodNames(cls);
 	const staticNames = getStaticMethodNames(cls);
+	const instanceGetters = getInstanceGetterNames(cls);
+	const staticGetters = getStaticGetterNames(cls);
 
 	return {
-		instanceNames,
-		staticNames,
-		instances: instanceNames?.length,
-		statics: staticNames?.length,
-		total: instanceNames?.length + staticNames?.length,
+		instanceMethods: instanceNames,
+		staticMethods: staticNames,
+		instanceGetters,
+		staticGetters,
+		instanceCount: instanceNames?.length,
+		staticCount: staticNames?.length,
+		totalGetters: instanceGetters?.length + staticGetters?.length,
+		totalMethods: instanceNames?.length + staticNames?.length,
 	};
 }
 

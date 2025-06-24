@@ -269,7 +269,7 @@ export {
 	removeDuplicatesFromArray,
 	rotateArray,
 	splitArray,
-	spitArrayByProperty,
+	splitArrayByProperty,
 } from './array/transform';
 
 export {
