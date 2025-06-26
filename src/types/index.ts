@@ -74,24 +74,12 @@ export type ThrottledFn<T extends VoidFunction> = (
 /** Asynchronous function type */
 export type AsyncFunction<T> = (...args: unknown[]) => Promise<T>;
 
-/**
- * Represents an object that has at least one method property,
- * but other keys can be anything.
- */
-export type ObjectWithMethods =
-	{
-		[key: string]: unknown;
-	} & { [key: string]: (...args: any[]) => unknown } extends infer O ?
-		{ [K in keyof O]: O[K] }
-	:	never;
-
 /** Advanced types to exclude from counting as object key */
 export type AdvancedTypes =
 	| Array<unknown>
 	| File
 	| FileList
 	| Chronos
-	| Constructor
 	| DateLike
 	| Blob
 	| Date

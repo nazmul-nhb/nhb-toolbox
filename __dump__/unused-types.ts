@@ -239,6 +239,23 @@
 // >;
 
 
-type B = "a" | "b" | "c" | ( string & {})
+// type B = "a" | "b" | "c" | ( string & {})
 
-const b: B = ""
+// const b: B = ""
+
+
+/**
+ * Represents an object that has at least one method property,
+ * but other keys can be anything.
+ */
+// export type ObjectWithMethods =
+//     {
+//         [key: string]: unknown;
+//     } & { [key: string]: (...args: any[]) => unknown } extends infer O ?
+//         { [K in keyof O]: O[K] }
+//     :	never;
+
+/** * Represents any class instance (constructed via `new`) and excludes plain objects. */
+// export type ClassInstance = {
+//     constructor: Constructor;
+// } & object;
