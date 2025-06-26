@@ -2,6 +2,8 @@
 
 ## Extend class details util(s)
 
+~~done~~
+
 ```ts
 function getInstanceGetterNames(cls: Constructor): string[] {
  const prototype = cls.prototype;
@@ -37,6 +39,7 @@ console.info(getInstanceGetterNames(Chronos));
 - Split by property-name
 
 like this:
+~~done~~
 
 ```ts
 const spitArrayByProperty = (arrays: GenericObject[] | undefined) => {
@@ -58,5 +61,5 @@ const spitArrayByProperty = (arrays: GenericObject[] | undefined) => {
 
 ## Create new like previous ones
 
-- `deleteFields` like `pickFields`
+<!-- - `deleteFields` like `pickFields` -->
 - `useClock()` hook for `nhb-hooks`
