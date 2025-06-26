@@ -6,6 +6,78 @@ export type StrictObject = Record<string, unknown>;
 /** - Generic object but with `any` value */
 export type GenericObject = Record<string, any>;
 
+/** - A tuple of generic objects */
+export type Objects = readonly [GenericObject, ...GenericObject[]];
+
+/** - Converts a union type to an intersection type. */
+type UnionToIntersection<U> =
+	(U extends unknown ? (arg: U) => void : never) extends (
+		(arg: infer I) => void
+	) ?
+		I
+	:	never;
+
+/** - Merges all properties of the input objects into a single object type. */
+export type MergeAll<T extends readonly GenericObject[]> = {
+	[K in keyof UnionToIntersection<T[number]>]: UnionToIntersection<
+		T[number]
+	>[K];
+};
+
+/** - Dot-notation keys for flattened nested objects with `any` value (including optional properties) */
+export type FlattenKey<T> =
+	T extends AdvancedTypes ? never
+	: T extends GenericObject ?
+		{
+			[K in keyof T & string]: T[K] extends Function ? never
+			: T[K] extends AdvancedTypes ? K
+			: T[K] extends GenericObject ? `${K}.${FlattenKey<T[K]>}`
+			: `${K}`;
+		}[keyof T & string]
+	:	never;
+
+/** - Gets the value at a dot-notation key path */
+export type DotValue<T, K extends string> =
+	K extends `${infer P}.${infer Rest}` ?
+		P extends keyof T ?
+			DotValue<T[P], Rest>
+		:	never
+	: K extends keyof T ? T[K]
+	: never;
+
+/** - Flattens the values of a nested object into a single level against the dot-notation key */
+export type FlattenValue<T> = {
+	[K in FlattenKey<T>]: DotValue<T, K>;
+};
+
+/** - Extracts only leaf-level key names (excluding objects/functions) */
+export type FlattenLeafKey<T> =
+	T extends AdvancedTypes ? never
+	: T extends GenericObject ?
+		{
+			[K in keyof T & string]: T[K] extends Function ? never
+			: T[K] extends AdvancedTypes ? K
+			: T[K] extends GenericObject ? FlattenLeafKey<T[K]>
+			: K;
+		}[keyof T & string]
+	:	never;
+
+/** - Gets value for a flat leaf key (assumes no there are duplicates! Duplicates are merged into one), */
+export type LeafValue<T, K extends string> =
+	K extends keyof T ? T[K]
+	: T extends GenericObject ?
+		{
+			[P in keyof T & string]: T[P] extends GenericObject ?
+				LeafValue<T[P], K>
+			:	never;
+		}[keyof T & string]
+	:	never;
+
+/** - Final flattened object with only leaf keys */
+export type FlattenLeafValue<T> = {
+	[K in FlattenLeafKey<T>]: LeafValue<T, K>;
+};
+
 /**
  * * Represents a value that can be used in a query object.
  * - Can be a primitive, an array of primitives, or a nested query object.

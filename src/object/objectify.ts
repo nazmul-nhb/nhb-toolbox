@@ -1,58 +1,72 @@
+import { isDateLike } from '../date/guards';
+import { isFileOrBlob } from '../form/guards';
 import {
 	isEmptyObject,
 	isNotEmptyObject,
 	isObject,
 } from '../guards/non-primitives';
-import type { Any, FlattenPartial } from '../types/index';
+import type { FlattenPartial } from '../types/index';
 import { isDeepEqual } from '../utils/index';
 import { parseObjectValues } from './sanitize';
-import type { GenericObject } from './types';
+import type {
+	FlattenLeafValue,
+	FlattenValue,
+	GenericObject,
+	MergeAll,
+	Objects,
+} from './types';
 
 /**
- * * Deeply merge two or more objects using `Map`.
+ * Deeply merges two or more objects.
+ * Objects are merged recursively. Later values override earlier ones unless both are plain objects.
  *
- * @param objects Objects to merge.
- * @returns Merged object.
+ * @param objects - List of objects to be merged.
+ * @returns A new object with deeply merged properties from all input objects.
+ *
+ * @example
+ * const obj1 = { a: 1, b: { x: 10 } };
+ * const obj2 = { b: { y: 20 }, c: 3 };
+ * const merged = mergeObjects(obj1, obj2);
+ * // merged = { a: 1, b: { x: 10, y: 20 }, c: 3 }
+ *
+ * @example
+ * mergeObjects(
+ *   { a: 1, b: 2 },
+ *   { p: { c: 3 }, d: 4 },
+ *   { p: { e: 5 }, f: 6 }
+ * );
+ * // => { a: 1, b: 2, p: { c: 3, e: 5 }, d: 4, f: 6 }
  */
-export const mergeObjects = <T extends GenericObject>(...objects: T[]): T => {
-	const map = new Map<string, Any>();
+export const mergeObjects = <T extends Objects>(...objects: T): MergeAll<T> => {
+	const map = new Map<string, GenericObject>();
 
-	objects?.forEach((obj) => {
+	for (const obj of objects) {
 		for (const key in obj) {
 			const existingValue = map.get(key);
 
-			if ((obj[key] as T) instanceof Object && !Array.isArray(obj[key])) {
-				// If the key already exists in the map and both are objects, merge them
-				if (
-					existingValue &&
-					existingValue instanceof Object &&
-					!Array.isArray(existingValue)
-				) {
-					map.set(
-						key,
-						mergeObjects(
-							existingValue as GenericObject,
-							obj[key] as GenericObject,
-						),
-					);
+			if (isNotEmptyObject(obj[key])) {
+				if (isNotEmptyObject(existingValue)) {
+					if (isDateLike(obj[key]) || isFileOrBlob(obj[key])) {
+						map.set(key, obj[key]);
+					} else {
+						map.set(key, mergeObjects(existingValue, obj[key]));
+					}
 				} else {
-					// Otherwise, just set the value
 					map.set(key, obj[key]);
 				}
 			} else {
-				// If it's not an object, just set the value
 				map.set(key, obj[key]);
 			}
 		}
-	});
+	}
 
-	const result = {} as T;
+	const result: GenericObject = {};
 
 	map?.forEach((value, key) => {
-		result[key as keyof T] = value as T[keyof T];
+		result[key] = value;
 	});
 
-	return result;
+	return result as MergeAll<T>;
 };
 
 /**
@@ -63,33 +77,38 @@ export const mergeObjects = <T extends GenericObject>(...objects: T[]): T => {
  * @param objects Objects to merge.
  * @returns Merged object with flattened structure.
  */
-export const mergeAndFlattenObjects = <T extends GenericObject>(
-	...objects: T[]
-): GenericObject => {
-	const map = new Map<string, unknown>();
+export const mergeAndFlattenObjects = <T extends Objects>(
+	...objects: T
+): FlattenValue<MergeAll<T>> => {
+	const map = new Map<string, GenericObject>();
 
-	const _flattenObject = (obj: GenericObject, parentKey: keyof T = '') => {
+	const _flattenObject = (obj: GenericObject, parentKey = '') => {
 		for (const key in obj) {
 			const newKey = parentKey ? `${String(parentKey)}.${key}` : key;
-			if (obj[key] instanceof Object && !Array.isArray(obj[key])) {
-				// Recursively flatten nested objects
-				_flattenObject(obj[key] as GenericObject, newKey);
+
+			if (isNotEmptyObject(obj[key])) {
+				if (isDateLike(obj[key]) || isFileOrBlob(obj[key])) {
+					map.set(newKey, obj[key]);
+				} else {
+					_flattenObject(obj[key], newKey);
+				}
 			} else {
-				// Set the flattened key
 				map.set(newKey, obj[key]);
 			}
 		}
 	};
 
-	objects?.forEach((obj) => _flattenObject(obj));
+	for (const obj of objects) {
+		_flattenObject(obj);
+	}
 
-	const result = {} as T;
+	const result = {} as GenericObject;
 
 	map?.forEach((value, key) => {
-		result[key as keyof T] = value as T[keyof T];
+		result[key] = value;
 	});
 
-	return result;
+	return result as FlattenValue<MergeAll<T>>;
 };
 
 /**
@@ -100,25 +119,24 @@ export const mergeAndFlattenObjects = <T extends GenericObject>(
  */
 export const flattenObjectKeyValue = <T extends GenericObject>(
 	object: T,
-): T => {
+): FlattenLeafValue<MergeAll<[T]>> => {
 	const flattened: GenericObject = {};
 
 	for (const [key, value] of Object.entries(object)) {
-		if (
-			typeof value === 'object' &&
-			value !== null &&
-			!Array.isArray(value)
-		) {
-			// Recursively flatten nested objects
+		if (isNotEmptyObject(value)) {
 			const nestedFlattened = flattenObjectKeyValue(value);
-			Object.assign(flattened, nestedFlattened);
+
+			if (isDateLike(value) || isFileOrBlob(value)) {
+				flattened[key] = value;
+			} else {
+				Object.assign(flattened, nestedFlattened);
+			}
 		} else {
-			// Directly assign non-object values
 			flattened[key] = value;
 		}
 	}
 
-	return flattened as T;
+	return flattened as FlattenLeafValue<MergeAll<[T]>>;
 };
 
 /**
@@ -129,7 +147,7 @@ export const flattenObjectKeyValue = <T extends GenericObject>(
  */
 export const flattenObjectDotNotation = <T extends GenericObject>(
 	object: T,
-): GenericObject => {
+): FlattenValue<MergeAll<[T]>> => {
 	/**
 	 * * Recursively flattens an object, transforming nested structures into dot-notation keys.
 	 *
@@ -137,23 +155,22 @@ export const flattenObjectDotNotation = <T extends GenericObject>(
 	 * @param prefix - The prefix to prepend to each key. Used for nested objects.
 	 * @returns A flattened version of the input object.
 	 */
-	const _flattenObject = (source: T, prefix: keyof T = ''): GenericObject => {
+	const _flattenObject = (
+		source: GenericObject,
+		prefix: keyof T = '',
+	): GenericObject => {
 		const flattened: GenericObject = {};
 
 		for (const [key, value] of Object.entries(source)) {
-			// Construct the dot-notation key
 			const newKey = prefix ? `${String(prefix)}.${key}` : key;
 
-			if (
-				value &&
-				typeof value === 'object' &&
-				!Array.isArray(value) &&
-				value !== null
-			) {
-				// Recursively process nested objects
-				Object.assign(flattened, _flattenObject(value as T, newKey));
+			if (isNotEmptyObject(value) || isFileOrBlob(value)) {
+				if (isDateLike(value)) {
+					flattened[newKey] = value;
+				} else {
+					Object.assign(flattened, _flattenObject(value, newKey));
+				}
 			} else {
-				// Directly assign non-object values
 				flattened[newKey] = value;
 			}
 		}
@@ -161,8 +178,7 @@ export const flattenObjectDotNotation = <T extends GenericObject>(
 		return flattened;
 	};
 
-	// Call the recursive function with an empty prefix initially
-	return _flattenObject(object);
+	return _flattenObject(object) as FlattenValue<MergeAll<[T]>>;
 };
 
 /**

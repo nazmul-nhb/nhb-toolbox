@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.12.49] - 2025-06-26
+
+- **Updated** return type definition and **enhanced** internal logic for `mergeObjects`, `mergeAndFlattenObjects`, `flattenObjectKeyValue`, `flattenObjectDotNotation`.
+- **Created** new utility types for the mentioned utilities.
+
 ## [4.12.48] - 2025-06-24
 
 - **Fixed** typo for utility name `splitArrayByProperty`.

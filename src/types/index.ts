@@ -1,5 +1,5 @@
-import type { Color } from '../colors/Color';
 import type { Chronos } from '../date/Chronos';
+import type { DateLike } from '../date/types';
 
 /** Uncontrolled any to use for edge cases */
 export type Any = any;
@@ -91,7 +91,8 @@ export type AdvancedTypes =
 	| File
 	| FileList
 	| Chronos
-	| Color
+	| Constructor
+	| DateLike
 	| Blob
 	| Date
 	| RegExp

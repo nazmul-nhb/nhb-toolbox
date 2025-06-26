@@ -804,3 +804,28 @@ export interface BusinessHourOptions {
 	/** - Optional weekend length (1 or 2). Default is `2`.*/
 	weekendLength?: 1 | 2;
 }
+
+/** Interface representing a date-like object. */
+export interface DateLike {
+	toJSON?(): string;
+	toISOString?(): string;
+	toString?(): string;
+
+	// Moment/Dayjs/Chronos
+	format?(): string;
+
+	// Luxon
+	toISO?(): string;
+	toFormat?(format: string): string;
+
+	// JS-Joda
+	plus?(...args: unknown[]): unknown;
+	minus?(...args: unknown[]): unknown;
+	equals?(...args: unknown[]): boolean;
+	getClass?(): unknown;
+
+	// For Temporal or unknown types
+	constructor?: {
+		name: string;
+	};
+}
