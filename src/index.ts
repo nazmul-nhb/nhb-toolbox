@@ -251,6 +251,17 @@ export {
 	shuffleArray,
 } from './array/basics';
 
+export {
+	averageByField,
+	averageByField as avgByField,
+	groupAndAverageByField,
+	groupAndAverageByField as groupAndAvgByField,
+	groupAndSumByField,
+	sumByField,
+	sumFieldDifference,
+	sumFieldDifference as totalDeltaByField,
+} from './array/calc';
+
 export { Finder } from './array/Finder';
 
 export { sortAnArray } from './array/sort';
@@ -264,6 +275,7 @@ export {
 	getDuplicates,
 	getDuplicates as getDuplicatesFromArray,
 	findMissingElements as getMissingElements,
+	splitArrayByProperty as groupArrayByProperty,
 	moveArrayElement,
 	removeDuplicatesFromArray as removeDuplicates,
 	removeDuplicatesFromArray,
@@ -321,16 +333,16 @@ export {
 
 export {
 	convertObjectValues,
+	deleteFields,
+	deleteFields as deleteObjectFields,
+	deleteFields as omitFields,
+	deleteFields as omitObjectFields,
 	pickFields,
 	pickObjectFieldsByCondition as pickFieldsByCondition,
 	pickFields as pickObjectFields,
 	pickObjectFieldsByCondition,
 	remapFields,
 	remapFields as remapObjectFields,
-	deleteFields,
-	deleteFields as omitFields,
-	deleteFields as omitObjectFields,
-	deleteFields as deleteObjectFields,
 	deleteFields as removeFields,
 	deleteFields as removeObjectFields,
 } from './object/convert';

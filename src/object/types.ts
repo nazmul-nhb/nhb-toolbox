@@ -168,6 +168,18 @@ export type NestedPrimitiveKey<T> =
 		}[keyof T & string]
 	:	never;
 
+/** Extract only number, string, undefined and null keys from an object, including nested dot-notation keys.  */
+export type NumericDotKey<T> =
+	T extends AdvancedTypes ? never
+	: T extends GenericObject ?
+		{
+			[K in keyof T & string]: T[K] extends Function ? never
+			: T[K] extends Exclude<NormalPrimitive, boolean> ? K
+			: T[K] extends GenericObject ? `${K}.${NumericDotKey<T[K]>}`
+			: never;
+		}[keyof T & string]
+	:	never;
+
 /** - Options for `sanitizeData` utility. */
 export interface SanitizeOptions<T> {
 	/**

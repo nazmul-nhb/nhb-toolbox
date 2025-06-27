@@ -6,6 +6,17 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.12.60] - 2025-06-27
+
+- **Added** new array utilities:
+  - `sumByField`
+  - `averageByField`
+  - `sumFieldDifference`
+  - `groupAndSumByField`
+  - `groupAndAverageByField`
+
+- **Updated** `splitArrayByProperty` utility to allow nested field as dot-notation.
+
 ## [4.12.50] - 2025-06-27
 
 - **Updated** return type definition and **enhanced** internal logic for `mergeObjects`, `mergeAndFlattenObjects`, `flattenObjectKeyValue`, `flattenObjectDotNotation`.

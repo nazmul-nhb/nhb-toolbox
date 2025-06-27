@@ -1,8 +1,8 @@
 import { isValidArray } from '../guards/non-primitives';
 import { isNumber } from '../guards/primitives';
-import type { GenericObject } from '../object/types';
-import type { NormalPrimitiveKey } from '../types/index';
+import type { GenericObject, NestedPrimitiveKey } from '../object/types';
 import { isDeepEqual } from '../utils/index';
+import { _resolveNestedKey } from './helpers';
 import type { FieldValue, Option, OptionsConfig } from './types';
 
 /**
@@ -132,7 +132,7 @@ export function splitArray<T>(arr: T[], chunkSize: number): Array<T[]> {
  * * Group an array of objects by a specified key, returning only arrays of grouped objects.
  *
  * @param source - The source array of objects to group.
- * @param property - The property to group the array by. Property can be a string, number, boolean, undefined or null.
+ * @param property - The property to group the array by. Property can be a string, number, boolean, undefined or null. Supports nested dot notation.
  *
  * @returns An array of grouped arrays. Each sub-array contains objects that share the same value for the specified property.
  *
@@ -146,17 +146,20 @@ export function splitArray<T>(arr: T[], chunkSize: number): Array<T[]> {
  */
 export function splitArrayByProperty<
 	T extends GenericObject,
-	P extends NormalPrimitiveKey<T>,
+	P extends NestedPrimitiveKey<T>,
 >(source: T[] | undefined, property: P): Array<T[]> {
 	if (!isValidArray(source)) return [];
 
 	const grouped = {} as Record<string, T[]>;
 
 	source.forEach((item) => {
-		const rawKey = item?.[property];
+		const rawKey = _resolveNestedKey(item, property);
 		const key = rawKey != null ? String(rawKey) : '__undefined__';
 
-		if (!grouped[key]) grouped[key] = [];
+		if (!grouped[key]) {
+			grouped[key] = [];
+		}
+
 		grouped[key].push(item);
 	});
 
