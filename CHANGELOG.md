@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.12.61] - 2025-06-28
+
+- **Added** new utility type `Expand<T>` to resolve complex helper-wrapped types into readable structures, similar to `Prettify<T>` but only for special types to use with.
+- **Improved** type display for special cases where types were previously wrapped in multiple utility layers (e.g., `MergeAll`, `FlattenValue` etc.).
+
 ## [4.12.60] - 2025-06-27
 
 - **Added** new array utilities:

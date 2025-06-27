@@ -9,6 +9,16 @@ export type GenericObject = Record<string, any>;
 /** - A tuple of generic objects */
 export type Objects = readonly [GenericObject, ...GenericObject[]];
 
+/**
+ * - Prettify all object properties into a readable form.
+ *
+ * @note It is recommended to use it only with `MergeAll<T>`, `FlattenValue<T>` and/or `FlattenLeafValue<T>`. For other other cases use {@link https://nhb-toolbox.vercel.app/docs/types/utility-types#prettifyt Prettify<T>}
+ */
+export type Expand<T> =
+	T extends AdvancedTypes ? T
+	: T extends GenericObject ? { [K in keyof T]: Expand<T[K]> }
+	: T;
+
 /** - Converts a union type to an intersection type. */
 type UnionToIntersection<U> =
 	(U extends unknown ? (arg: U) => void : never) extends (
