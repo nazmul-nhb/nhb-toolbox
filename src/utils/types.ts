@@ -1,4 +1,4 @@
-import type { Numeric } from '../types/index';
+import type { AdvancedTypes, Numeric } from '../types/index';
 
 /** Options to initialize Paginator */
 export interface PaginatorOptions {
@@ -275,3 +275,110 @@ type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
  * // Equivalent to: { a: string } | { b: number }
  */
 export type OneOf<T, U> = (T & Without<U, T>) | (U & Without<T, U>);
+
+/**
+ * * Checks whether a type is a strict object (excluding functions).
+ *
+ * @template T - The type to test.
+ *
+ * @example
+ * type A = IsStrictObject<{}>;          // true
+ * type B = IsStrictObject<() => void>;  // false
+ * type C = IsStrictObject<string>;      // false
+ */
+export type IsStrictObject<T> =
+	T extends object ?
+		T extends AdvancedTypes ? false
+		: T extends Array<unknown> ? false
+		: true
+	:	false;
+
+/**
+ * * Returns the keyof `T` only if `T` is a non-function object, otherwise `null`.
+ * * Prevents extracting keys from primitives or functions.
+ *
+ * @template T - The input type.
+ *
+ * @example
+ * type A = Keyof<{ x: number }>; // "x"
+ * type B = Keyof<number>;        // null
+ */
+export type Keyof<T> = IsStrictObject<T> extends true ? keyof T : null;
+
+/**
+ * * Recursively generates dot-separated keys from a nested object.
+ *
+ * @template T - The input nested object type.
+ *
+ * @example
+ * type Obj = { user: { name: string; meta: { id: number } } };
+ * type Keys = DeepKeyof<Obj>;
+ * // "user" | "user.name" | "user.meta" | "user.meta.id"
+ */
+export type DeepKeyof<T> =
+	IsStrictObject<T> extends true ?
+		{
+			[K in keyof T]: K extends string ?
+				IsStrictObject<T[K]> extends true ?
+					K | `${K}.${DeepKeyof<T[K]>}`
+				:	K
+			:	never;
+		}[keyof T]
+	:	never;
+
+/**
+ * * Creates a new type by picking properties from `T` whose values extend type `V`.
+ *
+ * @template T - The object type.
+ * @template V - The value type to filter by.
+ *
+ * @example
+ * type T = { name: string; age: number; active: boolean };
+ * type StringsOnly = PickByValue<T, string>; // { name: string }
+ */
+export type PickByValue<T, V> = {
+	[K in keyof T as T[K] extends V ? K : never]: T[K];
+};
+
+/**
+ * * Maps all values of object `T` to a fixed type `R`, keeping original keys.
+ *
+ * @template T - The source object type.
+ * @template R - The replacement value type.
+ *
+ * @example
+ * type T = { name: string; age: number };
+ * type BooleanMapped = MapObjectValues<T, boolean>; // { name: boolean; age: boolean }
+ */
+export type MapObjectValues<T, R> = {
+	[K in keyof T]: R;
+};
+
+/**
+ * * Removes properties from object `T` whose type is `never`.
+ * * Typically useful after conditional filtering.
+ *
+ * @template T - The input object type.
+ *
+ * @example
+ * type T = { a: string; b: never; c: number };
+ * type Cleaned = RemoveNever<T>; // { a: string; c: number }
+ */
+export type RemoveNever<T> = {
+	[K in keyof T as T[K] extends never ? never : K]: T[K];
+};
+
+/**
+ * * Renames the keys of `T` using the mapping `R`.
+ *
+ * @template T - Original object type.
+ * @template R - Mapping from original keys to new key names.
+ *
+ * @example
+ * type Original = { first: string; last: string };
+ * type Mapped = RenameKeys<Original, { first: "firstName"; last: "lastName" }>;
+ * // Result: { firstName: string; lastName: string }
+ */
+export type RenameKeys<T, R extends Record<keyof T, string>> = {
+	[K in keyof T as R[K]]: T[K];
+};

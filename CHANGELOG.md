@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.12.64] - 2025-07-02
+
+- `Added` more utility types
+- `Updated` JSDoc for some `Chronos` methods
+
 ## [4.12.61] - 2025-06-28
 
 - **Added** new utility type `Expand<T>` to resolve complex helper-wrapped types into readable structures, similar to `Prettify<T>` but only for special types to use with.
