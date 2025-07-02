@@ -111,7 +111,7 @@ export function isPrimitive(value: unknown): value is Primitive {
  */
 export function isNormalPrimitive(value: unknown): value is NormalPrimitive {
 	return (
-		value === null ||
+		value == null ||
 		['string', 'number', 'boolean', 'undefined'].includes(typeof value)
 	);
 }

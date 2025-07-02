@@ -106,6 +106,6 @@ export function getNumbersInRange<T extends boolean = false>(
 	}
 
 	return getAsString ?
-			(convertArrayToString(output, separator) as RangedNumbers<T>)
+			(convertArrayToString(output, { separator }) as RangedNumbers<T>)
 		:	(output as RangedNumbers<T>);
 }

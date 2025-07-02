@@ -1,16 +1,28 @@
-import { isInvalidOrEmptyArray } from '../array/basics';
+import { _resolveNestedKey } from '../array/helpers';
 import { sortAnArray } from '../array/sort';
-import { isMethodDescriptor, isObject } from '../guards/non-primitives';
-import { isString } from '../guards/primitives';
+import {
+	isArrayOfType,
+	isMethodDescriptor,
+	isNotEmptyObject,
+	isObject,
+	isValidArray,
+} from '../guards/non-primitives';
+import { isNormalPrimitive, isString } from '../guards/primitives';
 import { isNumericString } from '../guards/specials';
 import type { GenericObject } from '../object/types';
 import type {
 	ClassDetails,
 	Constructor,
 	DelayedFn,
+	NormalPrimitive,
 	ThrottledFn,
 	VoidFunction,
 } from '../types/index';
+import type {
+	ArrayOfObjectsToStringOptions,
+	ArrayOfPrimitivesToStringOptions,
+	ArrayToStringOptions,
+} from './types';
 
 /**
  * * Deeply compare two values (arrays, objects, or primitive values).
@@ -51,21 +63,74 @@ export const isDeepEqual = <T>(a: T, b: T): boolean => {
 };
 
 /**
- * * Utility to convert an array to string with custom separator.
+ * * Converts an array of objects to a string using a specific property (supports nested path to primitive values) and separator.
+ *
+ * @example
+ * const users = [
+ * 	{ id: 1, name: { first: 'Alice' }, city: 'Bangu', },
+ * 	{ id: 4, name: { first: 'Bob' }, city: 'Banguland', },
+ * ];
+ * convertArrayToString(users, { target: 'name.first', separator: ' | ' });
+ * // "Alice | Bob"
+ *
+ * @param array Array of objects to convert.
+ * @param options Options including the target property and separator.
+ * @returns String formed by joining the property values with the given separator.
+ */
+export function convertArrayToString<T extends GenericObject>(
+	array: T[] | undefined,
+	options: ArrayOfObjectsToStringOptions<T>,
+): string;
+
+/**
+ * * Converts an array of primitive values to a string using a custom separator.
+ *
+ * @example
+ * convertArrayToString(['red', 'green', 'blue'], { separator: ' - ' });
+ * // "red - green - blue"
+ *
+ * @example
+ * convertArrayToString([1, 2, 3]);
+ * // "1, 2, 3"
+ *
+ * @param array Array of primitive values to convert.
+ * @param options Optional separator configuration.
+ * @returns String formed by joining array elements with the given separator.
+ */
+export function convertArrayToString<T extends NormalPrimitive>(
+	array: T[] | undefined,
+	options?: ArrayOfPrimitivesToStringOptions,
+): string;
+
+/**
+ * * Converts an array of primitive values or objects to a string using a separator or target key.
  *
  * @param array Array to convert.
- * @param separator Separate each element of the array. Can be `,`, `-`, `|` etc. Default is `,`.
- * @returns Converted array in string format with the separator.
+ * @param options Options for separator or key extraction from objects.
+ * @returns String representation of array values.
  */
-export const convertArrayToString = <T>(
-	array: T[],
-	separator: string = ',',
-): string => {
-	if (!isInvalidOrEmptyArray) {
-		throw new Error('Please, provide a valid array!');
+export function convertArrayToString<T extends NormalPrimitive | GenericObject>(
+	array: T[] | undefined,
+	options?: ArrayToStringOptions<T>,
+): string {
+	if (!isValidArray(array)) return '';
+
+	const { separator = ', ' } = options ?? {};
+
+	if (isArrayOfType(array, isNormalPrimitive)) {
+		return array?.join(separator);
+	} else if (isArrayOfType(array, isNotEmptyObject)) {
+		if (options && 'target' in options) {
+			return array
+				?.map((el) => _resolveNestedKey(el, options?.target))
+				?.join(separator);
+		} else {
+			return '';
+		}
 	}
-	return array.join(separator);
-};
+
+	return '';
+}
 
 /**
  * * A generic debounce function that delays the execution of a callback.

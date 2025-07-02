@@ -89,7 +89,7 @@ export type NumberType =
 /** - Options for generating numbers in a range */
 export interface RangeOptions<T extends boolean = false>
 	extends RandomNumberOptions {
-	/** Separator for the string format if `getAsString` is `'true'`. Defaults to `, `. */
+	/** Separator for the string format if `getAsString` is `true`. Defaults to `", "`. */
 	separator?: T extends true ? string : never;
 	/** The multiples of which number to consider in the result. */
 	multiplesOf?: number;

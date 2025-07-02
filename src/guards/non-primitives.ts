@@ -34,9 +34,7 @@ export function isObject(value: unknown): value is Record<string, unknown> {
  * @param value - The value to check.
  * @returns `true` if the value is an object with valid keys, otherwise `false`.
  */
-export function isNotEmptyObject(
-	value: unknown,
-): value is Record<string, unknown> {
+export function isNotEmptyObject(value: unknown): value is GenericObject {
 	return isObject(value) && Object.keys(value)?.length > 0;
 }
 

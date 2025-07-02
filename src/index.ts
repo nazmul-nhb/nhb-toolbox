@@ -373,6 +373,7 @@ export {
 // ! Other Utilities
 export {
 	convertArrayToString,
+	convertArrayToString as joinArrayElements,
 	countInstanceMethods,
 	countStaticMethods,
 	debounceAction,

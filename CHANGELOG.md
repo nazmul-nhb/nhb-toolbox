@@ -6,10 +6,15 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.12.66] - 2025-07-02
+
+- **Updated** `convertArrayToString` function, now accepts array of objects and have 2 overload signatures with options.
+- **Updated** `RenameKeys` utility type by fixing some minor issues.
+
 ## [4.12.64] - 2025-07-02
 
-- `Added` more utility types
-- `Updated` JSDoc for some `Chronos` methods
+- **Added** more utility types.
+- **Updated** JSDoc for some `Chronos` methods.
 
 ## [4.12.61] - 2025-06-28
 

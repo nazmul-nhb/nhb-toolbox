@@ -11,7 +11,7 @@ import { isNumericString } from '../guards/specials';
  */
 export function _resolveNestedKey(obj: unknown, path: string): unknown {
 	if (isNotEmptyObject(obj)) {
-		return path.split('.').reduce<unknown>((acc, key) => {
+		return path?.split('.').reduce<unknown>((acc, key) => {
 			if (isNotEmptyObject(acc)) {
 				return acc[key];
 			}
@@ -29,7 +29,7 @@ export function _resolveNestedKey(obj: unknown, path: string): unknown {
  */
 export function _getNumericProp(obj: unknown, path: string): number {
 	if (isNotEmptyObject(obj)) {
-		const value = path.split('.').reduce<unknown>((acc, key) => {
+		const value = path?.split('.').reduce<unknown>((acc, key) => {
 			if (isNotEmptyObject(acc)) {
 				return acc[key];
 			}

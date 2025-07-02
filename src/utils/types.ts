@@ -1,3 +1,4 @@
+import type { GenericObject, NestedPrimitiveKey } from '../object/types';
 import type { AdvancedTypes, Numeric } from '../types/index';
 
 /** Options to initialize Paginator */
@@ -45,6 +46,25 @@ export interface PageListOptions {
 	/** Number of siblings pages to show around the current page (default 1). */
 	siblingCount?: number;
 }
+
+/** * Options for converting a primitive array to string. */
+export interface ArrayOfPrimitivesToStringOptions {
+	/** Separator to join primitive values (default: `", "`). */
+	separator?: string;
+}
+
+/** * Options for converting an object array to string using a nested key. */
+export interface ArrayOfObjectsToStringOptions<T> {
+	/** Dot-accessible key path to extract value from each object. */
+	target: T extends GenericObject ? NestedPrimitiveKey<T> : never;
+	/** Separator to join extracted values (default: `", "`). */
+	separator?: string;
+}
+
+/** * Combined options for array-to-string conversion. */
+export type ArrayToStringOptions<T> =
+	| ArrayOfPrimitivesToStringOptions
+	| ArrayOfObjectsToStringOptions<T>;
 
 // ! UTILITY TYPES FOR GENERAL PURPOSE
 
@@ -379,6 +399,7 @@ export type RemoveNever<T> = {
  * type Mapped = RenameKeys<Original, { first: "firstName"; last: "lastName" }>;
  * // Result: { firstName: string; lastName: string }
  */
-export type RenameKeys<T, R extends Record<keyof T, string>> = {
-	[K in keyof T as R[K]]: T[K];
+export type RenameKeys<T, R extends Partial<Record<keyof T, string>>> = {
+	[K in keyof T as K extends keyof R ? Extract<R[K], string | number | symbol>
+	:	K]: T[K];
 };
