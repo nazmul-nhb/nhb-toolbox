@@ -78,10 +78,10 @@ export function* fibonacciGenerator(
 }
 
 /**
- * * Calculates the `n`-th Fibonacci number using optimized space.
+ * * Calculates the `n`th Fibonacci number using optimized space.
  *
  * @param index - The index (0-based) of the Fibonacci number.
- * @returns The index=`n`-th Fibonacci number.
+ * @returns The index=`n`th Fibonacci number.
  */
 export function getNthFibonacci(index: Numeric): number {
 	const n = Number(index);

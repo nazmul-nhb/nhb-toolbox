@@ -109,8 +109,8 @@ export {
 	areInvalidNumbers as isNumberInvalid,
 	isOdd,
 	isOdd as isOddNumber,
-	isFibonacci as isParOfFibonacci,
-	isFibonacci as isParOfFibonacciSeries,
+	isFibonacci as isPartOfFibonacci,
+	isFibonacci as isPartOfFibonacciSeries,
 	isPerfectSquare,
 } from './number/guards';
 

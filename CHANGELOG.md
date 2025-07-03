@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.12.67] - 2025-07-03
+
+- **Fixed** some import alias typo.
+
 ## [4.12.66] - 2025-07-02
 
 - **Updated** `convertArrayToString` function, now accepts array of objects and have 2 overload signatures with options.
