@@ -11,7 +11,7 @@
 		"build": "node scripts/build.mjs",
 		"prepublishOnly": "node scripts/build.mjs",
 		"test": "jest --coverage --verbose",
-		"format": "prettier --write .",
+		"format": "nhb-format",
 		"lint": "node scripts/lint.mjs",
 		"fix": "node scripts/fix.mjs",
 		"commit": "nhb-commit",
