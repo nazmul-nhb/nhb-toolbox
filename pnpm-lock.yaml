@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       nhb-scripts:
-        specifier: ^1.2.4
-        version: 1.2.4
+        specifier: ^1.2.5
+        version: 1.2.5
     devDependencies:
       '@eslint/js':
         specifier: ^9.28.0
@@ -1420,8 +1420,8 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  nhb-scripts@1.2.4:
-    resolution: {integrity: sha512-R+YMPx6ZfCLoO8YqSAdgVLX3qjf8VpUvunETKpNDB0xFQLcjBHyC3XUg9DmXAks0B/GbtMnSPKj98oCE3crZYQ==}
+  nhb-scripts@1.2.5:
+    resolution: {integrity: sha512-th04uem/rig7zvbNHdTS+k2FYsivMdb71KuIJ5oxie1zwjPjjenypKbWC46s4rsvybONeItZAcOYR9jQX4I+ZQ==}
     hasBin: true
 
   nhb-toolbox@4.12.67:
@@ -3545,7 +3545,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  nhb-scripts@1.2.4:
+  nhb-scripts@1.2.5:
     dependencies:
       chalk: 5.4.1
       execa: 9.6.0
