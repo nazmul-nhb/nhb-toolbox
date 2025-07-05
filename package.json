@@ -252,6 +252,6 @@
 		}
 	},
 	"dependencies": {
-		"nhb-scripts": "^1.2.1"
+		"nhb-scripts": "^1.2.4"
 	}
 }
