@@ -14,8 +14,8 @@
 		"format": "prettier --write .",
 		"lint": "node scripts/lint.mjs",
 		"fix": "node scripts/fix.mjs",
-		"commit": "node scripts/commit.mjs",
-		"count": "node scripts/count.mjs",
+		"commit": "nhb-commit",
+		"count": "nhb-count",
 		"types": "node scripts/types.mjs"
 	},
 	"publishConfig": {
@@ -250,5 +250,8 @@
 				"dist/dts/date/plugins/zodiacPlugin.d.ts"
 			]
 		}
+	},
+	"dependencies": {
+		"nhb-scripts": "^1.2.1"
 	}
 }
