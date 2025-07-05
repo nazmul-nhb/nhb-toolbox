@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      nhb-scripts:
-        specifier: ^1.2.5
-        version: 1.2.5
     devDependencies:
       '@eslint/js':
         specifier: ^9.28.0
@@ -54,6 +50,9 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@22.15.30)
+      nhb-scripts:
+        specifier: ^1.2.6
+        version: 1.2.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1420,12 +1419,12 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  nhb-scripts@1.2.5:
-    resolution: {integrity: sha512-th04uem/rig7zvbNHdTS+k2FYsivMdb71KuIJ5oxie1zwjPjjenypKbWC46s4rsvybONeItZAcOYR9jQX4I+ZQ==}
+  nhb-scripts@1.2.6:
+    resolution: {integrity: sha512-VU1FVs0A40bbSAp/suuv/0g27RQLMmC3pGN3hgO2l0FQqI1hmh6n1TXQsliD9xB0BlyImbbrYS09Mo9wDLZxZQ==}
     hasBin: true
 
-  nhb-toolbox@4.12.67:
-    resolution: {integrity: sha512-KZw+fphmxulntl/VQBgLTEct+KUIDTP6KcRBbghSx1130Ny86v7sd+E6zvYqX13xPeyNeUHWTgrSwVkrOa9lpw==}
+  nhb-toolbox@4.12.68:
+    resolution: {integrity: sha512-9YO6r7ijNux0CCroCDFkLg2iE/NrXVOi/vI+/Z1JFq6Qa4hoKCeA91DF5cirE0xI3a0ny3Dfo8YGFCvlyu3CVA==}
 
   node-int64@0.4.0:
     resolution: {integrity: sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==}
@@ -3545,13 +3544,13 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  nhb-scripts@1.2.5:
+  nhb-scripts@1.2.6:
     dependencies:
       chalk: 5.4.1
       execa: 9.6.0
       globby: 14.1.0
       minimist: 1.2.8
-      nhb-toolbox: 4.12.67
+      nhb-toolbox: 4.12.68
       progress-estimator: 0.3.1
       prompts: 2.4.2
       rimraf: 6.0.1
@@ -3559,7 +3558,9 @@ snapshots:
       type-fest: 4.41.0
       typescript: 5.8.3
 
-  nhb-toolbox@4.12.67: {}
+  nhb-toolbox@4.12.68:
+    dependencies:
+      nhb-scripts: 1.2.6
 
   node-int64@0.4.0: {}
 
