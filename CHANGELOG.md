@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.12.68-69] - 2025-07-05
+
+- **Updated Docs:** Added links to other projects
+
 ## [4.12.67] - 2025-07-03
 
 - **Fixed** some import alias typo.
