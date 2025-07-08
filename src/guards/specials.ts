@@ -117,17 +117,25 @@ export function isIPAddress(value: unknown): value is string {
 /**
  * * Type guard to check if the current environment matches a given string.
  * @param env - The expected environment (e.g., "production", "development").
- * @returns `true` if the current environment matches, otherwise `false`.
+ * @returns `true` if the value is a numeric string parsable by `Number()`, otherwise `false`.
  */
 export function isEnvironment(env: string): boolean {
 	return process.env.NODE_ENV === env;
 }
 
 /**
- * * Type guard to check if a value is a numeric string.
- * @param value - The value to check.
- * @returns `true` if the value is a numeric string, otherwise `false`.
+ * * Type guard to check if a value is a string representing a finite number.
+ *
+ * Accepts strings like: `"42"`, `"  -5.5 "`, `"0.123"`, `"-0"`, `"1e5"`.
+ * Rejects strings like: `"NaN"`, `"Infinity"`, `"-Infinity"`, `"abc"`, `""`, `"42abc"`.
+ *
+ * @param value - The value to test.
+ * @returns `true` if the value is a string that fully represents a finite number.
  */
 export function isNumericString(value: unknown): value is `${number}` {
-	return isString(value) && /^\d+(\.\d+)?$/.test(value);
+	return (
+		isString(value) &&
+		value?.trim() !== '' &&
+		Number.isFinite(Number(value))
+	);
 }

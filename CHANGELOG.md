@@ -6,9 +6,13 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.12.70] - 2025-07-08
+
+- **Updated** numeric string related issues, specifically in `isNumber` & `isNumericString` and other helper functions.
+
 ## [4.12.68-69] - 2025-07-05
 
-- **Updated Docs:** Added links to other projects
+- **Updated Docs:** Added links to other npm packages.
 
 ## [4.12.67] - 2025-07-03
 

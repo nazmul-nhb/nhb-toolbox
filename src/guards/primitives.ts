@@ -5,12 +5,12 @@ import type {
 } from '../types/index';
 
 /**
- * * Type guard to check if a value is a number.
- * @param value - The value to check.
- * @returns `true` if the value is a number, otherwise `false`.
+ * * Type guard to check whether a value is a finite number (excluding `NaN` and `Infinity`).
+ * @param value - The value to test.
+ * @returns `true` if the value is a finite number; otherwise `false`.
  */
 export function isNumber(value: unknown): value is number {
-	return typeof value === 'number' && !isNaN(value);
+	return typeof value === 'number' && Number.isFinite(value);
 }
 
 /**
