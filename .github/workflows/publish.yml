@@ -1,103 +1,101 @@
 name: Publish to NPM and Release with Tag
 
 on:
-    push:
-        branches:
-            - main
-    workflow_dispatch:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 permissions:
-    contents: write
-    id-token: write
+  contents: write
+  id-token: write
 
 jobs:
-    publish:
-        runs-on: ubuntu-latest
+  publish:
+    runs-on: ubuntu-latest
 
-        steps:
-            # Checkout Repository
-            - name: Checkout Repository
-              uses: actions/checkout@v4
+    steps:
+      # Checkout Repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-            # Get the current version from package.json
-            - name: Get version from package.json
-              id: get_version
-              run: |
-                  VERSION=$(jq -r .version package.json)
-                  echo "VERSION=${VERSION}" >> $GITHUB_ENV
+      # Get the current version from package.json
+      - name: Get version from package.json
+        id: get_version
+        run: |
+          VERSION=$(jq -r .version package.json)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
-            # Get the latest Git tag (fetch first to ensure remote tags are available)
-            - name: Get latest Git tag
-              id: get_latest_tag
-              run: |
-                  git fetch --tags
-                  LATEST_TAG=$(git tag -l 'v*' --sort=-v:refname | head -n 1)
-                  echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
-                  echo "Latest tag found: $LATEST_TAG"
+      # Get the latest Git tag (fetch first to ensure remote tags are available)
+      - name: Get latest Git tag
+        id: get_latest_tag
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git tag -l 'v*' --sort=-v:refname | head -n 1)
+          echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
+          echo "Latest tag found: $LATEST_TAG"
 
-            # Compare versions and skip if same
-            - name: Check if version changed
-              id: check_version
-              run: |
-                  if [ "v${{ env.VERSION }}" = "${{ env.LATEST_TAG }}" ]; then
-                      echo "VERSION_UNCHANGED=true" >> $GITHUB_ENV
-                      echo "No new version to publish"
-                      exit 0  # Exit early if version is unchanged
-                  else
-                      echo "VERSION_UNCHANGED=false" >> $GITHUB_ENV
-                      echo "New version detected: v${{ env.VERSION }}"
-                  fi
+      # Compare versions and skip if same
+      - name: Check if version changed
+        id: check_version
+        run: |
+          if [ "v${{ env.VERSION }}" = "${{ env.LATEST_TAG }}" ]; then
+              echo "VERSION_UNCHANGED=true" >> $GITHUB_ENV
+              echo "No new version to publish"
+              exit 0  # Exit early if version is unchanged
+          else
+              echo "VERSION_UNCHANGED=false" >> $GITHUB_ENV
+              echo "New version detected: v${{ env.VERSION }}"
+          fi
 
-            # Install PNPM, Setup Node.js, and Install Dependencies only if version changed
-            - name: Install PNPM
-              if: env.VERSION_UNCHANGED == 'false'
-              run: npm install -g pnpm
+      # Install PNPM, Setup Node.js, and Install Dependencies only if version changed
+      - name: Install PNPM
+        if: env.VERSION_UNCHANGED == 'false'
+        run: npm install -g pnpm
 
-            - name: Setup Node.js
-              if: env.VERSION_UNCHANGED == 'false'
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 22
-                  registry-url: 'https://registry.npmjs.org/'
-                  cache: 'pnpm'
+      - name: Setup Node.js
+        if: env.VERSION_UNCHANGED == 'false'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: "https://registry.npmjs.org/"
 
-            # Install Dependencies
-            - name: Install Dependencies
-              if: env.VERSION_UNCHANGED == 'false'
-              run: pnpm install --frozen-lockfile --store-dir ~/.pnpm-store
+      # Install Dependencies
+      - name: Install Dependencies
+        if: env.VERSION_UNCHANGED == 'false'
+        run: pnpm install --frozen-lockfile --store-dir ~/.pnpm-store
 
-            # Publish to NPM only if version is different
-            - name: Publish to NPM
-              if: env.VERSION_UNCHANGED == 'false'
-              # run: pnpm publish --access public
-              run: |
-                  if [[ "$VERSION" =~ -(alpha|beta|rc) ]]; then
-                    echo "Pre-release version detected, publishing with tag 'next'"
-                    pnpm publish --access public --tag next
-                  else
-                    echo "Stable version detected, publishing with default tag 'latest'"
-                    pnpm publish --access public
-                  fi
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Publish to NPM only if version is different
+      - name: Publish to NPM
+        if: env.VERSION_UNCHANGED == 'false'
+        run: |
+          if [[ "$VERSION" =~ -(alpha|beta|rc) ]]; then
+            echo "Pre-release version detected, publishing with tag 'next'"
+            pnpm publish --access public --tag next
+          else
+            echo "Stable version detected, publishing with default tag 'latest'"
+            pnpm publish --access public
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-            # Create a Git tag if version is different
-            - name: Create Git Tag
-              if: env.VERSION_UNCHANGED == 'false'
-              run: |
-                  git tag v${{ env.VERSION }}
-                  git push origin v${{ env.VERSION }}
+      # Create a Git tag if version is different
+      - name: Create Git Tag
+        if: env.VERSION_UNCHANGED == 'false'
+        run: |
+          git tag v${{ env.VERSION }}
+          git push origin v${{ env.VERSION }}
 
-            # Create GitHub Release if version is different
-            - name: Create Release
-              if: env.VERSION_UNCHANGED == 'false'
-              uses: softprops/action-gh-release@v1
-              with:
-                  tag_name: 'v${{ env.VERSION }}'
-                  name: 'Version ${{ env.VERSION }}'
-                  body: |
-                      - 📦 Find in [NPM Registry](https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }}).
-                      - 📄 Full Docs at [Official Docs](https://nhb-toolbox.vercel.app)
-                      - 🆕 [See what's new in the changelog](./CHANGELOG.md)
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Create GitHub Release if version is different
+      - name: Create Release
+        if: env.VERSION_UNCHANGED == 'false'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "v${{ env.VERSION }}"
+          name: "Version ${{ env.VERSION }}"
+          body: |
+            - 📦 Find in [NPM Registry](https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }}).
+            - 📄 Full Docs at [Official Docs](https://nhb-toolbox.vercel.app)
+            - 🆕 [See what's new in the changelog](./CHANGELOG.md)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
