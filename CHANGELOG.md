@@ -6,7 +6,7 @@ All notable changes to the package will be documented here.
 
 ---
 
-## [4.12.80] - 2025-07-19
+## [4.12.80-81] - 2025-07-19
 
 - **Updated** `convertArrayToString` to accept array of any primitive values.
 - **Fully integrated** with [nhb-scripts](https://www.npmjs.com/package/nhb-scripts/).
