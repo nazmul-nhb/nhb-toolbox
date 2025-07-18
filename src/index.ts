@@ -373,7 +373,6 @@ export {
 // ! Other Utilities
 export {
 	convertArrayToString,
-	convertArrayToString as joinArrayElements,
 	countInstanceMethods,
 	countStaticMethods,
 	debounceAction,
@@ -384,6 +383,7 @@ export {
 	getStaticMethodNames,
 	countStaticMethods as getStaticMethodsCount,
 	isDeepEqual,
+	convertArrayToString as joinArrayElements,
 	parseJSON,
 	parseJSON as parseJsonDeep,
 	deepParsePrimitives as parsePrimitivesDeep,

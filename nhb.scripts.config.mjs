@@ -8,6 +8,8 @@ export default defineScriptConfig({
         files: ['src'],
         ignorePath: '.prettierignore',
     },
+    lint: { folders: ['src'], patterns: ['**/*.ts'] },
+    fix: { folders: ['src'], patterns: ['**/*.ts'] },
     build: {
         distFolder: 'dist',
         commands: [
@@ -23,7 +25,7 @@ export default defineScriptConfig({
         ],
         after: [
             async () => await fixJsExtensions('dist/esm'),
-            () => fixTypeExports({
+            async () => await fixTypeExports({
                 distPath: 'dist/dts',
                 packageJsonPath: 'package.json',
                 typeFileCandidates: ['types.d.ts', 'interfaces.d.ts'],

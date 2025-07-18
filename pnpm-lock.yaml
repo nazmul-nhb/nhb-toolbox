@@ -39,8 +39,8 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@22.15.30)
       nhb-scripts:
-        specifier: ^1.6.3
-        version: 1.6.3
+        specifier: ^1.7.5
+        version: 1.7.5
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1409,8 +1409,9 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  nhb-scripts@1.6.3:
-    resolution: {integrity: sha512-oM0nPsZSdkq3AvZgd00irtXSrGlFRGQhAzIsvale+vGxN9S6IiXuO7wVH4fb2xBa4OX1geK6y9eKAj7J5ynDZw==}
+  nhb-scripts@1.7.5:
+    resolution: {integrity: sha512-NLNusoDePKeMzKMyDl74J8RYZqzjPSqTlogoPcextZ/oLP5YxidPfx95e6d4eJuhL06GPnG3feEgB68MGm9xKQ==}
+    engines: {node: '>=18'}
     hasBin: true
 
   nhb-toolbox@4.12.70:
@@ -3549,7 +3550,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  nhb-scripts@1.6.3:
+  nhb-scripts@1.7.5:
     dependencies:
       '@clack/prompts': 0.11.0
       chalk: 5.4.1
