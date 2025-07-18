@@ -7,14 +7,14 @@ import {
 	isObject,
 	isValidArray,
 } from '../guards/non-primitives';
-import { isNormalPrimitive, isString } from '../guards/primitives';
+import { isPrimitive, isString } from '../guards/primitives';
 import { isNumericString } from '../guards/specials';
 import type { GenericObject } from '../object/types';
 import type {
 	ClassDetails,
 	Constructor,
 	DelayedFn,
-	NormalPrimitive,
+	Primitive,
 	ThrottledFn,
 	VoidFunction,
 } from '../types/index';
@@ -97,7 +97,7 @@ export function convertArrayToString<T extends GenericObject>(
  * @param options Optional separator configuration.
  * @returns String formed by joining array elements with the given separator.
  */
-export function convertArrayToString<T extends NormalPrimitive>(
+export function convertArrayToString<T extends Primitive>(
 	array: T[] | undefined,
 	options?: ArrayOfPrimitivesToStringOptions,
 ): string;
@@ -109,7 +109,7 @@ export function convertArrayToString<T extends NormalPrimitive>(
  * @param options Options for separator or key extraction from objects.
  * @returns String representation of array values.
  */
-export function convertArrayToString<T extends NormalPrimitive | GenericObject>(
+export function convertArrayToString<T extends Primitive | GenericObject>(
 	array: T[] | undefined,
 	options?: ArrayToStringOptions<T>,
 ): string {
@@ -117,7 +117,7 @@ export function convertArrayToString<T extends NormalPrimitive | GenericObject>(
 
 	const { separator = ', ' } = options ?? {};
 
-	if (isArrayOfType(array, isNormalPrimitive)) {
+	if (isArrayOfType(array, isPrimitive)) {
 		return array?.join(separator);
 	} else if (isArrayOfType(array, isNotEmptyObject)) {
 		if (options && 'target' in options) {

@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.12.80] - 2025-07-19
+
+- **Updated** `convertArrayToString` to accept array of any primitive values.
+- **Fully integrated** with [nhb-scripts](https://www.npmjs.com/package/nhb-scripts/).
+
 ## [4.12.70] - 2025-07-08
 
 - **Updated** numeric string related issues, specifically in `isNumber` & `isNumericString` and other helper functions.
