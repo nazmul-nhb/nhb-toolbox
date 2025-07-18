@@ -22,7 +22,7 @@ export default defineScriptConfig({
             }
         ],
         after: [
-            () => fixJsExtensions('dist/esm'),
+            async () => await fixJsExtensions('dist/esm'),
             () => fixTypeExports({
                 distPath: 'dist/dts',
                 packageJsonPath: 'package.json',
