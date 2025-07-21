@@ -58,6 +58,7 @@ export {
 	countWords as wordCount,
 } from './string/utilities';
 
+// ! Pluralizer Class and Its Default Instance
 export { Pluralizer, pluralizer } from './pluralize/Pluralizer';
 
 // ! Number Utilities
@@ -148,11 +149,11 @@ export {
 	getOrdinal as getOrdinalNumber,
 	getRandomFloat as getRandomDecimal,
 	getRandomFloat,
+	normalizeNumber,
 	getOrdinal as numberToOrdinal,
 	roundToNearest as roundNumberToNearestInterval,
 	roundToNearest,
 	roundToNearest as roundToNearestInterval,
-	normalizeNumber,
 } from './number/utilities';
 
 export { getNumbersInRange } from './number/range';

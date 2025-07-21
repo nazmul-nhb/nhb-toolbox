@@ -5,12 +5,11 @@
 All notable changes to the package will be documented here.
 
 ---
-<!-- 
+
 ## [4.13.0] - 2025-07-21
 
-- **Added** new utility `pluralizer` with multiple methods.
+- **Added** new `Pluralizer` class and utility `pluralizer` (shared instance of `Pluralizer` class) with multiple methods.
 - **Refactored** codes in number utilities, introduced new `normalizeNumber` utility.
- -->
 
 ## [4.12.80-81] - 2025-07-19
 
