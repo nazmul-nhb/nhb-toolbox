@@ -15,7 +15,7 @@ import type { ColorInput, ColorInputArray } from './types';
  */
 export function getColorForInitial(
 	input: string | number,
-	opacity?: Percent,
+	opacity?: Percent
 ): string;
 
 /**
@@ -31,7 +31,7 @@ export function getColorForInitial(
  */
 export function getColorForInitial(
 	input: ColorInputArray,
-	opacity?: Percent,
+	opacity?: Percent
 ): string[];
 
 /**
@@ -47,7 +47,7 @@ export function getColorForInitial(
  */
 export function getColorForInitial(
 	input: ColorInput | ColorInputArray = '',
-	opacity: Percent = 100,
+	opacity: Percent = 100
 ): string | string[] {
 	let initial: string;
 
@@ -66,7 +66,7 @@ export function getColorForInitial(
 		if (numbers.includes(initial)) {
 			return _applyOpacity(
 				NUMBER_COLOR_PALETTE[parseInt(initial, 10)],
-				hexOpacity,
+				hexOpacity
 			);
 		}
 
@@ -86,7 +86,7 @@ export function getColorForInitial(
 		if (numbers.includes(initial)) {
 			return _applyOpacity(
 				NUMBER_COLOR_PALETTE[parseInt(initial, 10)],
-				hexOpacity,
+				hexOpacity
 			);
 		}
 
@@ -95,7 +95,7 @@ export function getColorForInitial(
 	} else if (Array.isArray(input)) {
 		if (input?.length < 1)
 			return [...ALPHABET_COLOR_PALETTE, ...NUMBER_COLOR_PALETTE].map(
-				(color) => _applyOpacity(color, hexOpacity),
+				(color) => _applyOpacity(color, hexOpacity)
 			);
 
 		return input

@@ -20,7 +20,7 @@ export function convertObjectValues<
 	C extends 'string' | 'number',
 >(
 	data: T,
-	options: { keys: DotNotationKey<T>[]; convertTo: C },
+	options: { keys: DotNotationKey<T>[]; convertTo: C }
 ): C extends 'string' ? Stringified<T>
 : C extends 'number' ? Numberified<T>
 : never;
@@ -40,7 +40,7 @@ export function convertObjectValues<
 	C extends 'string' | 'number',
 >(
 	data: T[],
-	options: { keys: DotNotationKey<T>[]; convertTo: C },
+	options: { keys: DotNotationKey<T>[]; convertTo: C }
 ): C extends 'string' ? Stringified<T>[]
 : C extends 'number' ? Numberified<T>[]
 : never;
@@ -60,7 +60,7 @@ export function convertObjectValues<
 	C extends 'string' | 'number',
 >(
 	data: T | T[],
-	options: { keys: DotNotationKey<T>[]; convertTo: C },
+	options: { keys: DotNotationKey<T>[]; convertTo: C }
 ): C extends 'string' ? Stringified<T> | Stringified<T>[]
 : C extends 'number' ? Numberified<T> | Numberified<T>[]
 : never {
@@ -75,7 +75,7 @@ export function convertObjectValues<
 	const _setValueAtPath = (
 		obj: T,
 		path: string,
-		convertTo: 'string' | 'number',
+		convertTo: 'string' | 'number'
 	): T => {
 		const segments = path.split('.');
 
@@ -154,7 +154,7 @@ export function convertObjectValues<
  */
 export function pickFields<T extends GenericObject, U extends keyof T>(
 	source: T,
-	keys: U[],
+	keys: U[]
 ): { [K in U]: T[K] } {
 	const result = {} as { [K in U]: T[K] };
 
@@ -183,7 +183,7 @@ export function pickFields<T extends GenericObject, U extends keyof T>(
  */
 export function deleteFields<T extends GenericObject, U extends keyof T>(
 	source: T,
-	keys: readonly U[],
+	keys: readonly U[]
 ): {
 	[K in Exclude<keyof T, U>]: T[K];
 } {
@@ -215,7 +215,7 @@ export function deleteFields<T extends GenericObject, U extends keyof T>(
  */
 export function pickObjectFieldsByCondition<T extends GenericObject>(
 	source: T,
-	condition: (key: keyof T, value: T[keyof T]) => boolean,
+	condition: (key: keyof T, value: T[keyof T]) => boolean
 ): Partial<T> {
 	const result: Partial<T> = {};
 
@@ -241,7 +241,7 @@ export function remapFields<
 	Target extends Record<string, keyof Source>,
 >(
 	source: Source,
-	fieldMap: Target,
+	fieldMap: Target
 ): {
 	[K in keyof Target]: Source[Target[K]];
 } {

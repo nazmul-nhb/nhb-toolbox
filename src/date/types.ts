@@ -202,7 +202,7 @@ export interface ChronosInternals {
 	withOrigin(
 		instance: Chronos,
 		method: ChronosMethods,
-		label?: UTCOffSet,
+		label?: UTCOffSet
 	): Chronos;
 
 	/**
@@ -357,7 +357,7 @@ export interface ChronosStatics {
 		hours?: number,
 		minutes?: number,
 		seconds?: number,
-		ms?: number,
+		ms?: number
 	): Chronos;
 
 	/**

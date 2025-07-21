@@ -18,7 +18,7 @@ declare module '../Chronos' {
 		fromNow(
 			level: Exclude<TimeUnit, 'millisecond'>,
 			withSuffixPrefix: boolean,
-			time?: ChronosInput,
+			time?: ChronosInput
 		): string;
 	}
 }
@@ -29,7 +29,7 @@ export const fromNowPlugin = (ChronosClass: MainChronos): void => {
 		this: ChronosConstructor,
 		level: Exclude<TimeUnit, 'millisecond'> = 'minute',
 		withSuffixPrefix: boolean = true,
-		time?: ChronosInput,
+		time?: ChronosInput
 	): string {
 		const now = ChronosClass[INTERNALS].toNewDate(this, time);
 

@@ -22,7 +22,7 @@ declare module '../Chronos' {
 export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	ChronosClass.prototype.timeZone = function (
 		this: ChronosConstructor,
-		zone: TimeZone | UTCOffSet,
+		zone: TimeZone | UTCOffSet
 	): ChronosConstructor {
 		let targetOffset: number;
 		let stringOffset: UTCOffSet;
@@ -40,7 +40,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 
 		const adjustedTime = new Date(
 			ChronosClass[INTERNALS].internalDate(this).getTime() +
-				relativeOffset * 60 * 1000,
+				relativeOffset * 60 * 1000
 		);
 
 		const instance = new ChronosClass(adjustedTime);
@@ -48,7 +48,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		return ChronosClass[INTERNALS].withOrigin(
 			instance,
 			'timeZone',
-			stringOffset,
+			stringOffset
 		);
 	};
 };

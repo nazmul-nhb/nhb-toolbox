@@ -16,7 +16,7 @@ import type { NumberType, RangedNumbers, RangeOptions } from './types';
  */
 export function getNumbersInRange<T extends boolean = false>(
 	type: NumberType = 'any',
-	options?: RangeOptions<T>,
+	options?: RangeOptions<T>
 ): RangedNumbers<T> {
 	const {
 		getAsString = false,
@@ -62,7 +62,7 @@ export function getNumbersInRange<T extends boolean = false>(
 
 	if (type === 'prime' && multiplesOf !== undefined) {
 		console.warn(
-			'Warning: The "multiplesOf" option is ignored when the type is "prime"!',
+			'Warning: The "multiplesOf" option is ignored when the type is "prime"!'
 		);
 	}
 
@@ -75,8 +75,8 @@ export function getNumbersInRange<T extends boolean = false>(
 						max: n,
 						includeMin,
 						includeMax,
-					}),
-				),
+					})
+				)
 			);
 			break;
 

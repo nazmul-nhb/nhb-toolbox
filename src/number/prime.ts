@@ -33,6 +33,6 @@ export const findPrimeNumbers = (start = 1, end = 1000): number[] => {
 
 	return Array.from(
 		{ length: endNumber - startNumber + 1 },
-		(_, i) => startNumber + i,
+		(_, i) => startNumber + i
 	).filter(isPrime);
 };

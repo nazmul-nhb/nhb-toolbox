@@ -66,7 +66,7 @@ const chronos = (
 	hours?: number,
 	minutes?: number,
 	seconds?: number,
-	ms?: number,
+	ms?: number
 ) => {
 	let newChronos: Chronos;
 
@@ -78,7 +78,7 @@ const chronos = (
 			hours ?? 0,
 			minutes ?? 0,
 			seconds ?? 0,
-			ms ?? 0,
+			ms ?? 0
 		);
 	} else {
 		newChronos = /* @__PURE__ */ new Chronos(valueOrYear);

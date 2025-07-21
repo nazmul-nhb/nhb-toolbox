@@ -121,7 +121,7 @@ export const mergeAndFlattenObjects = <T extends Objects>(
  * @returns A `flattened object` in key-value format.
  */
 export const flattenObjectKeyValue = <T extends GenericObject>(
-	object: T,
+	object: T
 ): Expand<FlattenLeafValue<MergeAll<[T]>>> => {
 	const flattened: GenericObject = {};
 
@@ -149,7 +149,7 @@ export const flattenObjectKeyValue = <T extends GenericObject>(
  * @returns A `flattened object` with dot notation keys.
  */
 export const flattenObjectDotNotation = <T extends GenericObject>(
-	object: T,
+	object: T
 ): Expand<FlattenValue<MergeAll<[T]>>> => {
 	/**
 	 * * Recursively flattens an object, transforming nested structures into dot-notation keys.
@@ -160,7 +160,7 @@ export const flattenObjectDotNotation = <T extends GenericObject>(
 	 */
 	const _flattenObject = (
 		source: GenericObject,
-		prefix: keyof T = '',
+		prefix: keyof T = ''
 	): GenericObject => {
 		const flattened: GenericObject = {};
 
@@ -193,7 +193,7 @@ export const flattenObjectDotNotation = <T extends GenericObject>(
  */
 export const extractUpdatedFields = <T extends GenericObject>(
 	baseObject: T,
-	updatedObject: FlattenPartial<T>,
+	updatedObject: FlattenPartial<T>
 ): FlattenPartial<T> => {
 	const updatedFields: FlattenPartial<T> = {};
 
@@ -205,7 +205,7 @@ export const extractUpdatedFields = <T extends GenericObject>(
 			if (updatedObject[key] && isNotEmptyObject(updatedObject[key])) {
 				updatedFields[key] = extractUpdatedFields(
 					baseObject[key],
-					updatedObject[key] as FlattenPartial<T>,
+					updatedObject[key] as FlattenPartial<T>
 				) as T[keyof T];
 
 				if (updatedFields[key] && isEmptyObject(updatedFields[key])) {
@@ -232,7 +232,7 @@ export const extractNewFields = <
 	U extends GenericObject,
 >(
 	baseObject: T,
-	updatedObject: FlattenPartial<T> & FlattenPartial<U>,
+	updatedObject: FlattenPartial<T> & FlattenPartial<U>
 ): FlattenPartial<U> => {
 	const newFields: FlattenPartial<U> = {};
 
@@ -247,7 +247,7 @@ export const extractNewFields = <
 			// Recursively extract new fields inside nested objects
 			const nestedNewFields = extractNewFields(
 				baseObject[key] as T,
-				updatedObject[key] as FlattenPartial<T> & FlattenPartial<U>,
+				updatedObject[key] as FlattenPartial<T> & FlattenPartial<U>
 			);
 
 			if (isNotEmptyObject(nestedNewFields)) {
@@ -272,7 +272,7 @@ export const extractUpdatedAndNewFields = <
 	U extends GenericObject,
 >(
 	baseObject: T,
-	updatedObject: FlattenPartial<T> & FlattenPartial<U>,
+	updatedObject: FlattenPartial<T> & FlattenPartial<U>
 ): FlattenPartial<T> & FlattenPartial<U> => {
 	const updatedFields: FlattenPartial<T> = {};
 	const newFields: FlattenPartial<U> = {};
@@ -284,7 +284,7 @@ export const extractUpdatedAndNewFields = <
 			if (updatedObject[key] && isNotEmptyObject(updatedObject[key])) {
 				updatedFields[key as keyof T] = extractUpdatedAndNewFields(
 					baseObject[key] as T,
-					updatedObject[key],
+					updatedObject[key]
 				) as T[keyof T];
 
 				if (updatedFields[key] && isEmptyObject(updatedFields[key])) {
@@ -318,7 +318,7 @@ export const extractUpdatedAndNewFields = <
  */
 export const parseJsonToObject = <T extends GenericObject = GenericObject>(
 	value: string,
-	parsePrimitives = true,
+	parsePrimitives = true
 ): T => {
 	try {
 		const data = JSON.parse(value) as T;

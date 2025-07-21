@@ -58,7 +58,7 @@ export function convertStringCase(string: string, format: CaseFormat): string {
 
 	const formattedString = string?.replace(
 		/[^a-zA-Z0-9]+(.)?/g,
-		(_, chr: string) => (chr ? chr?.toUpperCase() : ''),
+		(_, chr: string) => (chr ? chr?.toUpperCase() : '')
 	);
 
 	if (!formattedString) return '';
@@ -79,7 +79,7 @@ export function convertStringCase(string: string, format: CaseFormat): string {
 				:	formattedString.replace(/[A-Z]/g, (letter, index) =>
 						index === 0 ?
 							letter.toLowerCase()
-						:	`_${letter.toLowerCase()}`,
+						:	`_${letter.toLowerCase()}`
 					);
 
 		case 'kebab-case':
@@ -88,7 +88,7 @@ export function convertStringCase(string: string, format: CaseFormat): string {
 				:	formattedString.replace(/[A-Z]/g, (letter, index) =>
 						index === 0 ?
 							letter.toLowerCase()
-						:	`-${letter.toLowerCase()}`,
+						:	`-${letter.toLowerCase()}`
 					);
 
 		case 'PascalCase':
@@ -131,7 +131,7 @@ export function convertStringCase(string: string, format: CaseFormat): string {
 export const replaceAllInString = (
 	input: string,
 	find: string | RegExp,
-	replace: string,
+	replace: string
 ): string => {
 	const trimmedString = trimString(input);
 
@@ -140,7 +140,7 @@ export const replaceAllInString = (
 			new RegExp(find, 'g')
 		:	new RegExp(
 				find,
-				find?.flags.includes('g') ? find?.flags : find?.flags + 'g',
+				find?.flags.includes('g') ? find?.flags : find?.flags + 'g'
 			);
 
 	return trimmedString?.replace(regex, replace);
@@ -229,7 +229,7 @@ export function extractURLs(str: string): string[] {
 export function formatUnitWithPlural(
 	count: number,
 	unit: string,
-	withNumber = true,
+	withNumber = true
 ): string {
 	const abs = Math.abs(count);
 	const pluralized = abs === 1 ? unit : `${unit}s`;

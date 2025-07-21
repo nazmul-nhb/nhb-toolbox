@@ -14,7 +14,7 @@ import type { SortNature } from './types';
 export function naturalSort(
 	a: string,
 	b: string,
-	options?: SortNature,
+	options?: SortNature
 ): number {
 	const { caseInsensitive = true, localeAware = false } = options || {};
 

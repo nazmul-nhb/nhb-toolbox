@@ -19,7 +19,7 @@ declare module '../Chronos' {
 export const zodiacPlugin = (ChronosClass: MainChronos): void => {
 	ChronosClass.prototype.getZodiacSign = function (
 		this: ChronosConstructor,
-		options?: ZodiacOptions,
+		options?: ZodiacOptions
 	): ZodiacSign {
 		const { birthDate, preset = 'western', custom } = options ?? {};
 

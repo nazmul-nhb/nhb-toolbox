@@ -47,7 +47,7 @@ declare module '../Chronos' {
 export const dayPartPlugin = (ChronosClass: MainChronos): void => {
 	ChronosClass.prototype.getPartOfDay = function (
 		this: ChronosConstructor,
-		config?: Partial<DayPartConfig>,
+		config?: Partial<DayPartConfig>
 	): DayPart {
 		const hour = this.hour;
 

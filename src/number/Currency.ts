@@ -81,7 +81,7 @@ export class Currency {
 	 */
 	async convert(
 		to: SupportedCurrency | CurrencyCode,
-		options?: ConvertOptions,
+		options?: ConvertOptions
 	): Promise<Currency> {
 		const key = `${this.#code}->${to}`;
 
@@ -99,13 +99,13 @@ export class Currency {
 		} catch (error) {
 			if (options?.fallbackRate != null) {
 				console.warn(
-					`Currency conversion failed (${this.#code} → ${to}): ${(error as Error).message}. Using fallback rate...`,
+					`Currency conversion failed (${this.#code} → ${to}): ${(error as Error).message}. Using fallback rate...`
 				);
 
 				return new Currency(this.#amount * options.fallbackRate, to);
 			} else {
 				throw new Error(
-					`Currency conversion failed (${this.#code} → ${to}): ${(error as Error).message}`,
+					`Currency conversion failed (${this.#code} → ${to}): ${(error as Error).message}`
 				);
 			}
 		}
@@ -155,14 +155,14 @@ export class Currency {
 
 			if (!res.ok)
 				throw new Error(
-					`FrankFurter Error: ${res.status}. "${res.statusText}"`,
+					`FrankFurter Error: ${res.status}. "${res.statusText}"`
 				);
 
 			const data: FrankFurter = await res.json();
 
 			if (!data.rates?.[to]) {
 				throw new Error(
-					`Currency "${to}" not found in FrankFurter Database!`,
+					`Currency "${to}" not found in FrankFurter Database!`
 				);
 			}
 
@@ -170,7 +170,7 @@ export class Currency {
 		} catch (error) {
 			throw new Error(
 				(error as Error).message ||
-					`Failed to fetch data from FrankFurter API`,
+					`Failed to fetch data from FrankFurter API`
 			);
 		}
 	}

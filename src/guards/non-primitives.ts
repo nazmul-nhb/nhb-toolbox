@@ -46,7 +46,7 @@ export function isNotEmptyObject(value: unknown): value is GenericObject {
  */
 export function isObjectWithKeys<T extends Record<string, unknown>>(
 	value: unknown,
-	keys: (keyof T)[],
+	keys: (keyof T)[]
 ): value is T {
 	return isObject(value) && keys?.every((key) => key in value);
 }
@@ -76,7 +76,7 @@ export function isFunction(value: unknown): value is GenericFn {
  * @returns `true` if the descriptor is defined and its value is a function; otherwise, `false`.
  */
 export const isMethodDescriptor = (
-	descriptor: PropertyDescriptor | undefined,
+	descriptor: PropertyDescriptor | undefined
 ): boolean => {
 	return !!descriptor && typeof descriptor?.value === 'function';
 };
@@ -98,7 +98,7 @@ export function isDate(value: unknown): value is Date {
  */
 export function isArrayOfType<T>(
 	value: unknown,
-	typeCheck: (item: unknown) => item is T,
+	typeCheck: (item: unknown) => item is T
 ): value is T[] {
 	return isArray(value) && value?.every(typeCheck);
 }

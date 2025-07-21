@@ -8,7 +8,7 @@ import { ONES, TEENS, TENS } from './constants';
  */
 export const _applyMultiples = (
 	array: number[],
-	multiples?: number,
+	multiples?: number
 ): number[] => {
 	if (!multiples) return array;
 	return array?.filter((n) => n % multiples === 0);

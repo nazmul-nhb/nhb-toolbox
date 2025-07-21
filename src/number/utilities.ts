@@ -26,7 +26,7 @@ export const roundToNearest = (value: Numeric, interval = 5): number => {
 export const formatCurrency = (
 	value: Numeric,
 	currency: CurrencyCode = 'USD',
-	locale?: LocaleCode,
+	locale?: LocaleCode
 ): string => {
 	const selectedLocale: LocaleCode =
 		locale ? locale : CURRENCY_LOCALES[currency];
@@ -50,7 +50,7 @@ export const formatCurrency = (
 export const clampNumber = (
 	value: number,
 	min: number,
-	max: number,
+	max: number
 ): number => {
 	return Math.max(min, Math.min(value, max));
 };

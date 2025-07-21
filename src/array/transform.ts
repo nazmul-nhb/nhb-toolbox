@@ -19,7 +19,7 @@ export function createOptionsArray<
 	V extends boolean = false,
 >(
 	data: T[],
-	config: OptionsConfig<T, K1, K2, V>,
+	config: OptionsConfig<T, K1, K2, V>
 ): Array<{ [P in K1 | K2]: FieldValue<P, T, K1, K2, V> }> {
 	const {
 		firstFieldKey,
@@ -55,7 +55,7 @@ export function createOptionsArray<
 export function removeDuplicatesFromArray<T>(array: T[]): T[] {
 	return array?.filter(
 		(item, index, self) =>
-			index === self?.findIndex((el) => isDeepEqual(el, item)),
+			index === self?.findIndex((el) => isDeepEqual(el, item))
 	);
 }
 
@@ -103,7 +103,7 @@ export function getDuplicates<T>(array: T[]): T[] {
 export function findMissingElements<T, U>(
 	array1: T[],
 	array2: U[],
-	missingFrom: 'from-first' | 'from-second',
+	missingFrom: 'from-first' | 'from-second'
 ): (T | U)[] {
 	const source = (missingFrom === 'from-first' ? array1 : array2) ?? [];
 	const target = (missingFrom === 'from-first' ? array2 : array1) ?? [];
@@ -194,7 +194,7 @@ export function rotateArray<T>(arr: T[], steps: number): T[] {
 export function moveArrayElement<T>(
 	arr: T[],
 	fromIndex: number,
-	toIndex: number,
+	toIndex: number
 ): T[] {
 	const newArr = [...arr];
 

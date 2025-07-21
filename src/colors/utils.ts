@@ -13,7 +13,7 @@ import type { AlphaValues, HSL, HSLA, RGB, RGBA, SolidValues } from './types';
 export const extractSolidColorValues = (color: HSL | RGB): SolidValues => {
 	if (_isHSL(color) || _isRGB(color)) {
 		return (color?.trim()?.match(/[\d.]+%?/g) || [])?.map((value) =>
-			parseFloat(value),
+			parseFloat(value)
 		) as SolidValues;
 	}
 
@@ -32,7 +32,7 @@ export const extractSolidColorValues = (color: HSL | RGB): SolidValues => {
 export const extractAlphaColorValues = (color: HSLA | RGBA): AlphaValues => {
 	if (_isHSLA(color) || _isRGBA(color)) {
 		return (color?.trim()?.match(/[\d.]+%?/g) || [])?.map((value) =>
-			parseFloat(value),
+			parseFloat(value)
 		) as AlphaValues;
 	}
 

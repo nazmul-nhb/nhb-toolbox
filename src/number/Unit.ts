@@ -92,7 +92,7 @@ export class Unit {
 	static convertByPrefix(
 		value: number,
 		fromPrefix: SIPrefix,
-		toPrefix: SIPrefix,
+		toPrefix: SIPrefix
 	): number {
 		const fromMultiplier = PREFIX_MULTIPLIERS[fromPrefix];
 		const toMultiplier = PREFIX_MULTIPLIERS[toPrefix];

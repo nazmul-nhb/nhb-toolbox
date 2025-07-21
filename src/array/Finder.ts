@@ -67,7 +67,7 @@ export class Finder<T> {
 	findAll(
 		matcher: string | number,
 		keySelector: KeySelector<T>,
-		options?: FindOptions<T>,
+		options?: FindOptions<T>
 	): T[] {
 		const {
 			fuzzy = false,
@@ -126,7 +126,7 @@ export class Finder<T> {
 				sorted,
 				normalizedMatcher,
 				getKey,
-				caseInsensitive,
+				caseInsensitive
 			);
 
 			if (firstMatch) {
@@ -182,7 +182,7 @@ export class Finder<T> {
 	findOne(
 		matcher: string | number,
 		keySelector: KeySelector<T>,
-		options?: FindOptions<T>,
+		options?: FindOptions<T>
 	): T | undefined {
 		const {
 			fuzzy = false,
@@ -238,7 +238,7 @@ export class Finder<T> {
 				:	source,
 				normalizedMatcher,
 				getKey,
-				caseInsensitive,
+				caseInsensitive
 			);
 		}
 
@@ -247,7 +247,7 @@ export class Finder<T> {
 				source,
 				normalizedMatcher,
 				getKey,
-				caseInsensitive,
+				caseInsensitive
 			);
 		}
 
@@ -272,7 +272,7 @@ export class Finder<T> {
 		supplier: () => Promise<T[]>,
 		matcher: string | number,
 		keySelector: KeySelector<T>,
-		options?: Omit<FindOptions<T>, 'items'>,
+		options?: Omit<FindOptions<T>, 'items'>
 	): Promise<T[]> {
 		const items = await supplier();
 
@@ -290,7 +290,7 @@ export class Finder<T> {
 		supplier: () => Promise<T[]>,
 		matcher: string | number,
 		keySelector: KeySelector<T>,
-		options?: Omit<FindOptions<T>, 'items'>,
+		options?: Omit<FindOptions<T>, 'items'>
 	): Promise<T | undefined> {
 		const items = await supplier();
 
@@ -310,7 +310,7 @@ export class Finder<T> {
 		sorted: T[],
 		matcher: string | number,
 		keySelector: (item: T) => string | number,
-		caseInsensitive: boolean,
+		caseInsensitive: boolean
 	): T | undefined {
 		let min = 0,
 			max = sorted?.length - 1;
@@ -344,7 +344,7 @@ export class Finder<T> {
 		array: T[],
 		matcher: string,
 		keySelector: (item: T) => string | number,
-		caseInsensitive: boolean,
+		caseInsensitive: boolean
 	): T | undefined {
 		for (const item of array) {
 			const rawKey = keySelector(item);
@@ -386,7 +386,7 @@ export class Finder<T> {
 	#sortAndCache(
 		data: T[],
 		getKey: (item: T) => string | number,
-		cacheKey?: string,
+		cacheKey?: string
 	) {
 		if (cacheKey) {
 			const entry = this.#sortedCache.get(cacheKey);
@@ -423,7 +423,7 @@ export class Finder<T> {
 	 * @param getKey Original key extraction function
 	 */
 	static #createMemoizedKeyGetter<T>(
-		getKey: (item: T) => string | number,
+		getKey: (item: T) => string | number
 	): (item: T) => string | number {
 		const cache = new Map<T, string | number>();
 

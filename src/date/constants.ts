@@ -91,7 +91,7 @@ export const SORTED_TIME_FORMATS = /* @__PURE__ */ Object.freeze(
 		...MILLISECOND_FORMATS,
 		...TIME_FORMATS,
 		...ZONE_FORMATS,
-	].sort((a, b) => b.length - a.length),
+	].sort((a, b) => b.length - a.length)
 );
 
 /** List of time-zones with respective time-zone offsets (in number) as array of objects (`{timeZone: offset}`) */

@@ -51,13 +51,13 @@ export function sumFieldDifference<
 export function sumByField<T extends GenericObject>(
 	data: T[] | undefined,
 	field: NumericDotKey<T>,
-	roundTo = 2,
+	roundTo = 2
 ): number {
 	if (!isValidArray(data)) return 0;
 
 	const total = data?.reduce(
 		(acc, item) => acc + _getNumericProp(item, field),
-		0,
+		0
 	);
 
 	return roundNumber(total, roundTo);
@@ -78,13 +78,13 @@ export function sumByField<T extends GenericObject>(
 export function averageByField<T extends GenericObject>(
 	data: T[] | undefined,
 	field: NumericDotKey<T>,
-	roundTo = 2,
+	roundTo = 2
 ): number {
 	if (!isValidArray(data)) return 0;
 
 	const total = data?.reduce(
 		(acc, item) => acc + _getNumericProp(item, field),
-		0,
+		0
 	);
 
 	return roundNumber(total / data.length, roundTo);
@@ -107,7 +107,7 @@ export function groupAndSumByField<T extends GenericObject>(
 	data: T[] | undefined,
 	groupBy: NestedPrimitiveKey<T>,
 	sumBy: NumericDotKey<T>,
-	roundTo = 2,
+	roundTo = 2
 ): Array<Record<string, number>> {
 	if (!isValidArray(data)) return [];
 
@@ -117,7 +117,7 @@ export function groupAndSumByField<T extends GenericObject>(
 		[`${_resolveNestedKey(group[0], groupBy)}`]: sumByField(
 			group,
 			sumBy,
-			roundTo,
+			roundTo
 		),
 	}));
 
@@ -141,7 +141,7 @@ export function groupAndAverageByField<T extends GenericObject>(
 	data: T[] | undefined,
 	groupBy: NestedPrimitiveKey<T>,
 	averageBy: NumericDotKey<T>,
-	roundTo = 2,
+	roundTo = 2
 ): Array<Record<string, number>> {
 	if (!isValidArray(data)) return [];
 
@@ -151,7 +151,7 @@ export function groupAndAverageByField<T extends GenericObject>(
 		[`${_resolveNestedKey(group[0], groupBy)}`]: averageByField(
 			group,
 			averageBy,
-			roundTo,
+			roundTo
 		),
 	}));
 

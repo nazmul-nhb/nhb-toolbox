@@ -93,7 +93,7 @@ export function isDateLike(value: unknown): boolean {
 			typeof v.toJSON === 'function' &&
 			typeof v.toString === 'function' &&
 			['PlainDate', 'ZonedDateTime', 'Instant'].includes(
-				v.constructor?.name ?? '',
+				v.constructor?.name ?? ''
 			)
 		) {
 			return true;

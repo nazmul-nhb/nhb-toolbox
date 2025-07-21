@@ -44,7 +44,7 @@ export const generateRandomHSLColor = (maxColors: number = 16): HSL => {
  * @returns An object of generated unique random color in both `Hex` and `RGB` formats.
  */
 export const generateRandomColorInHexRGB = (
-	maxColors: number = 16,
+	maxColors: number = 16
 ): {
 	hex: Hex6;
 	rgb: RGB;

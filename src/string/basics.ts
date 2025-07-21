@@ -10,7 +10,7 @@ import type { CapitalizeOptions, RandomIdOptions } from './types';
  */
 export function capitalizeString(
 	string: string,
-	options?: CapitalizeOptions,
+	options?: CapitalizeOptions
 ): string {
 	if (typeof string !== 'string' || !string) return '';
 
@@ -49,7 +49,7 @@ export function capitalizeString(
 		.concat(
 			lowerCaseRest ?
 				trimmedString.slice(1).toLowerCase()
-			:	trimmedString.slice(1),
+			:	trimmedString.slice(1)
 		);
 }
 
@@ -93,7 +93,7 @@ export const generateRandomID = (options?: RandomIdOptions): string => {
 
 	// Generate a random string of alphanumeric characters
 	const randomString: string = Array.from({ length }, () =>
-		Math.random().toString(36).slice(2, 3),
+		Math.random().toString(36).slice(2, 3)
 	).join('');
 
 	const ID: string = [
@@ -148,7 +148,7 @@ export function trimString(input: string | string[]): string | string[] {
 	// If the input is an array of strings, trim each string in the array
 	if (Array.isArray(input)) {
 		return input?.map((str) =>
-			typeof str === 'string' ? str?.trim()?.replace(/\s+/g, ' ') : str,
+			typeof str === 'string' ? str?.trim()?.replace(/\s+/g, ' ') : str
 		);
 	}
 

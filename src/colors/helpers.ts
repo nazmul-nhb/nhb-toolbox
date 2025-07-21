@@ -48,13 +48,13 @@ export const _generateRandomHSL = (): HSL => {
  */
 export const _isSimilarToLast = (
 	recentColors: string[],
-	newColor: string,
+	newColor: string
 ): boolean => {
 	if (recentColors?.length === 0) return false;
 
 	const newHSL = newColor.match(/hsl\((\d+), (\d+)%, (\d+)%\)/);
 	const lastHSL = recentColors[recentColors?.length - 1].match(
-		/hsl\((\d+), (\d+)%, (\d+)%\)/,
+		/hsl\((\d+), (\d+)%, (\d+)%\)/
 	);
 
 	if (!newHSL || !lastHSL) return false;
@@ -108,7 +108,7 @@ export function _isRGB(color: string): color is RGB {
 	const match = color
 		?.trim()
 		?.match(
-			/^rgb\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?)\s*\)$/,
+			/^rgb\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?)\s*\)$/
 		);
 	if (!match) return false;
 	const [r, g, b] = match.slice(1).map(Number);
@@ -129,7 +129,7 @@ export function _isRGBA(color: string): color is RGBA {
 	const match = color
 		?.trim()
 		?.match(
-			/^rgba\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?),\s*(0|1|0?\.\d+)\s*\)$/,
+			/^rgba\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?),\s*(0|1|0?\.\d+)\s*\)$/
 		);
 	if (!match) return false;
 	const [r, g, b, a] = match.slice(1).map(Number);
@@ -151,7 +151,7 @@ export function _isHSL(color: string): color is HSL {
 	const match = color
 		?.trim()
 		?.match(
-			/^hsl\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?)%,\s*(\d{1,3}(?:\.\d+)?)%\s*\)$/,
+			/^hsl\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?)%,\s*(\d{1,3}(?:\.\d+)?)%\s*\)$/
 		);
 	if (!match) return false;
 	const [h, s, l] = match.slice(1).map(Number);
@@ -168,7 +168,7 @@ export function _isHSLA(color: string): color is HSLA {
 	const match = color
 		?.trim()
 		.match(
-			/^hsla\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?)%,\s*(\d{1,3}(?:\.\d+)?)%,\s*(0|1|0?\.\d+)\s*\)$/,
+			/^hsla\(\s*(\d{1,3}(?:\.\d+)?),\s*(\d{1,3}(?:\.\d+)?)%,\s*(\d{1,3}(?:\.\d+)?)%,\s*(0|1|0?\.\d+)\s*\)$/
 		);
 	if (!match) return false;
 	const [h, s, l, a] = match.slice(1).map(Number);

@@ -19,7 +19,7 @@ declare module '../Chronos' {
 export const seasonPlugin = (ChronosClass: MainChronos): void => {
 	ChronosClass.prototype.season = function (
 		this: ChronosConstructor,
-		options?: SeasonOptions,
+		options?: SeasonOptions
 	): string {
 		const { preset = 'default' } = options ?? {};
 

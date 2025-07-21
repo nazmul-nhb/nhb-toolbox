@@ -39,8 +39,8 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@22.15.30)
       nhb-scripts:
-        specifier: ^1.8.1
-        version: 1.8.1
+        specifier: ^1.8.6
+        version: 1.8.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1409,13 +1409,13 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  nhb-scripts@1.8.1:
-    resolution: {integrity: sha512-Su5zAo/HxJkp4dr5CudeKBcO+TnmcgFWW+kSkmKoi85RFAz0gTkD+gKJlezOVhOjSG00IGvcd3a4/6hreY2n+g==}
+  nhb-scripts@1.8.6:
+    resolution: {integrity: sha512-g7BMlFvLwSyWI9xkHkFBmF0/dD+dOv8z545by9+R0yvCMMV+8nfyxRSWEeW8K9xEYYpBOhJKo4zvZxTJcpdHaw==}
     engines: {node: '>=18'}
     hasBin: true
 
-  nhb-toolbox@4.12.70:
-    resolution: {integrity: sha512-l+/+RP0uR/fU3D2NHMdIBIR18kJrQmjHbRRZGSnsFikXmU6HqEyarWklHaC2zIGAIfqeQpTCf3p3XN9DavuIEQ==}
+  nhb-toolbox@4.12.81:
+    resolution: {integrity: sha512-uqUjNQAk6jCmOIEACos0RVcIZqB0aPV2zrhs5X2V1qKc4cxf8bTlyddDXc3Bk24z9gu6EIBqNrFFrdz5dAlr4g==}
 
   node-int64@0.4.0:
     resolution: {integrity: sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==}
@@ -3550,21 +3550,21 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  nhb-scripts@1.8.1:
+  nhb-scripts@1.8.6:
     dependencies:
       '@clack/prompts': 0.11.0
       chalk: 5.4.1
       execa: 9.6.0
       globby: 14.1.0
       minimist: 1.2.8
-      nhb-toolbox: 4.12.70
+      nhb-toolbox: 4.12.81
       progress-estimator: 0.3.1
       rimraf: 6.0.1
       semver: 7.7.2
       type-fest: 4.41.0
       typescript: 5.8.3
 
-  nhb-toolbox@4.12.70: {}
+  nhb-toolbox@4.12.81: {}
 
   node-int64@0.4.0: {}
 

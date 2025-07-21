@@ -39,7 +39,7 @@ declare module '../Chronos' {
 export const palindromePlugin = (ChronosClass: MainChronos): void => {
 	ChronosClass.prototype.isPalindromeDate = function (
 		this: ChronosConstructor,
-		shortYear = false,
+		shortYear = false
 	): boolean {
 		const padded = this.formatStrict(shortYear ? 'YY-MM-DD' : 'YYYY-MM-DD');
 		const normal = this.formatStrict(shortYear ? 'YY-M-D' : 'YYYY-M-D');

@@ -58,6 +58,8 @@ export {
 	countWords as wordCount,
 } from './string/utilities';
 
+export { Pluralizer, pluralizer } from './pluralize/Pluralizer';
+
 // ! Number Utilities
 export {
 	getAverage as calculateAverage,

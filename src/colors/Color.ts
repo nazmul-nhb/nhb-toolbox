@@ -176,7 +176,7 @@ export class Color {
 		if (color) {
 			if (Color.isCSSColor(color)) {
 				const newColor = new Color(
-					CSS_COLORS[color?.trim() as CSSColor],
+					CSS_COLORS[color?.trim() as CSSColor]
 				);
 
 				this.hex = newColor.hex;
@@ -187,7 +187,7 @@ export class Color {
 				this.hsla = newColor.hsla;
 			} else {
 				const colors = this.#convertColorToOthers(
-					color?.trim() as ColorType,
+					color?.trim() as ColorType
 				);
 
 				if ('hex8' in colors) {
@@ -437,7 +437,7 @@ export class Color {
 		const analogous = [this, new Color(left), new Color(right)];
 
 		return analogous.map((c) =>
-			c.applyOpacity((a * 100) as Percent),
+			c.applyOpacity((a * 100) as Percent)
 		) as Analogous;
 	}
 
@@ -472,7 +472,7 @@ export class Color {
 		const tetrad = [this, new Color(c1), new Color(c2), new Color(c3)];
 
 		return tetrad.map((c) =>
-			c.applyOpacity((a * 100) as Percent),
+			c.applyOpacity((a * 100) as Percent)
 		) as Tetrad;
 	}
 

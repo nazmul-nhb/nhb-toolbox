@@ -20,8 +20,8 @@ export const getLevenshteinDistance = (a: string, b: string): number => {
 		Array.from({ length: lenB + 1 }, (_, j) =>
 			i === 0 ? j
 			: j === 0 ? i
-			: 0,
-		),
+			: 0
+		)
 	);
 
 	for (let i = 1; i <= lenA; i++) {

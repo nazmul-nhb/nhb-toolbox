@@ -6,7 +6,7 @@
  */
 export function generateAnagrams(
 	word: string,
-	limit: number | 'all' = 100,
+	limit: number | 'all' = 100
 ): Lowercase<string>[] {
 	if (word?.length <= 1) {
 		return [word?.toLowerCase() as Lowercase<string>];
@@ -30,7 +30,7 @@ export function generateAnagrams(
 
 			_permute(
 				str + remaining[i],
-				remaining?.slice(0, i) + remaining?.slice(i + 1),
+				remaining?.slice(0, i) + remaining?.slice(i + 1)
 			);
 		}
 	};

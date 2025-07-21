@@ -19,7 +19,7 @@ import { naturalSort } from './utils';
  */
 export function sortAnArray<T extends GenericObject>(
 	array: T[],
-	options: SortByOption<T>,
+	options: SortByOption<T>
 ): T[];
 
 /**
@@ -31,7 +31,7 @@ export function sortAnArray<T extends GenericObject>(
  */
 export function sortAnArray<T extends string | number | boolean>(
 	array: T[],
-	options?: OrderOption,
+	options?: OrderOption
 ): T[];
 
 /**
@@ -56,14 +56,14 @@ export function sortAnArray<
 		return [...array].sort((a, b) =>
 			options?.sortOrder === 'desc' ?
 				naturalSort(b, a)
-			:	naturalSort(a, b),
+			:	naturalSort(a, b)
 		);
 	}
 
 	// Check if the array contains numbers
 	if (isArrayOfType(array, isNumber)) {
 		return [...array].sort((a, b) =>
-			options?.sortOrder === 'desc' ? b - a : a - b,
+			options?.sortOrder === 'desc' ? b - a : a - b
 		);
 	}
 
@@ -72,7 +72,7 @@ export function sortAnArray<
 		return [...array].sort((a, b) =>
 			options?.sortOrder === 'desc' ?
 				Number(b) - Number(a)
-			:	Number(a) - Number(b),
+			:	Number(a) - Number(b)
 		);
 	}
 
@@ -84,7 +84,7 @@ export function sortAnArray<
 					.split('.')
 					.reduce<unknown>(
 						(acc, key) => (acc as T)?.[key as keyof T],
-						obj,
+						obj
 					);
 			};
 

@@ -12,7 +12,7 @@ import type { ParsedFormData, SerializedForm } from './types';
  */
 export function serializeForm<T extends boolean = false>(
 	form: HTMLFormElement,
-	toQueryString: T = false as T,
+	toQueryString: T = false as T
 ): SerializedForm<T> {
 	const formData = new FormData(form);
 	const data: Record<string, string | string[]> = {};
@@ -46,7 +46,7 @@ export function serializeForm<T extends boolean = false>(
  */
 export function parseFormData<T extends FormData | string>(
 	data: T,
-	parsePrimitives = true,
+	parsePrimitives = true
 ): ParsedFormData<T> {
 	const parsed: Record<string, unknown> = {};
 

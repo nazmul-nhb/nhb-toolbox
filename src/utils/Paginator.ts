@@ -83,11 +83,11 @@ export class Paginator {
 	withOptions(options: Partial<PaginatorOptions>): Paginator {
 		const newTotalItems = Math.max(
 			0,
-			options.totalItems ? Number(options.totalItems) : this.#totalItems,
+			options.totalItems ? Number(options.totalItems) : this.#totalItems
 		);
 		const newItemsPerPage = Math.max(
 			1,
-			options.itemsPerPage ? Number(options.itemsPerPage) : this.#perPage,
+			options.itemsPerPage ? Number(options.itemsPerPage) : this.#perPage
 		);
 		const totalPages = Math.ceil(newTotalItems / newItemsPerPage);
 		const newCurrentPage = Math.min(
@@ -95,9 +95,9 @@ export class Paginator {
 				1,
 				options.currentPage ?
 					Number(options.currentPage)
-				:	this.#currentPage,
+				:	this.#currentPage
 			),
-			totalPages,
+			totalPages
 		);
 
 		return new Paginator({
@@ -222,7 +222,7 @@ export class Paginator {
 		const start = Math.max(this.#currentPage - siblingCount, edgeCount + 1);
 		const end = Math.min(
 			this.#currentPage + siblingCount,
-			total - edgeCount,
+			total - edgeCount
 		);
 
 		const _getRange = (from: number, to: number): number[] => {

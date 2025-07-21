@@ -73,7 +73,7 @@ export const getRandomNumber = (options?: RandomNumberOptions): number => {
  */
 export const convertToDecimal = <T extends boolean | undefined = false>(
 	input: Numeric,
-	options?: DecimalOptions<T>,
+	options?: DecimalOptions<T>
 ): ConvertedDecimal<T> => {
 	const { decimalPlaces = 2, isString = false } = options || {};
 
@@ -158,7 +158,7 @@ export function sumNumbers(...numbers: Numeric[]): number {
 export function reverseNumber(num: Numeric): number {
 	const reversed = parseInt(
 		Math.abs(Number(num)).toString().split('').reverse().join(''),
-		10,
+		10
 	);
 
 	return Number(num) < 0 ? -reversed : reversed;

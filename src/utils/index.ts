@@ -55,7 +55,7 @@ export const isDeepEqual = <T>(a: T, b: T): boolean => {
 		if (aKeys?.length !== bKeys?.length) return false;
 
 		return aKeys?.every((key) =>
-			isDeepEqual((a as GenericObject)[key], (b as GenericObject)[key]),
+			isDeepEqual((a as GenericObject)[key], (b as GenericObject)[key])
 		);
 	}
 
@@ -79,7 +79,7 @@ export const isDeepEqual = <T>(a: T, b: T): boolean => {
  */
 export function convertArrayToString<T extends GenericObject>(
 	array: T[] | undefined,
-	options: ArrayOfObjectsToStringOptions<T>,
+	options: ArrayOfObjectsToStringOptions<T>
 ): string;
 
 /**
@@ -99,7 +99,7 @@ export function convertArrayToString<T extends GenericObject>(
  */
 export function convertArrayToString<T extends Primitive>(
 	array: T[] | undefined,
-	options?: ArrayOfPrimitivesToStringOptions,
+	options?: ArrayOfPrimitivesToStringOptions
 ): string;
 
 /**
@@ -111,7 +111,7 @@ export function convertArrayToString<T extends Primitive>(
  */
 export function convertArrayToString<T extends Primitive | GenericObject>(
 	array: T[] | undefined,
-	options?: ArrayToStringOptions<T>,
+	options?: ArrayToStringOptions<T>
 ): string {
 	if (!isValidArray(array)) return '';
 
@@ -148,7 +148,7 @@ export function convertArrayToString<T extends Primitive | GenericObject>(
  */
 export function debounceAction<T extends VoidFunction>(
 	callback: T,
-	delay = 300,
+	delay = 300
 ): DelayedFn<T> {
 	let timeoutId: ReturnType<typeof setTimeout> | undefined = undefined;
 
@@ -179,7 +179,7 @@ export function debounceAction<T extends VoidFunction>(
  */
 export function throttleAction<T extends VoidFunction>(
 	callback: T,
-	delay = 150,
+	delay = 150
 ): ThrottledFn<T> {
 	let lastCall = 0;
 
@@ -263,7 +263,7 @@ export function getInstanceGetterNames(cls: Constructor): string[] {
 	const result = Object.entries(descriptors)
 		.filter(
 			([key, desc]) =>
-				typeof desc.get === 'function' && key !== 'constructor',
+				typeof desc.get === 'function' && key !== 'constructor'
 		)
 		.map(([key]) => key);
 
@@ -282,7 +282,7 @@ export function getStaticGetterNames(cls: Constructor): string[] {
 	const result = Object.entries(descriptors)
 		.filter(
 			([key, desc]) =>
-				typeof desc.get === 'function' && key !== 'prototype',
+				typeof desc.get === 'function' && key !== 'prototype'
 		)
 		.map(([key]) => key);
 
@@ -331,7 +331,7 @@ export function getClassDetails(cls: Constructor): ClassDetails {
  */
 export const parseJSON = <T = unknown>(
 	value: string,
-	parsePrimitives = true,
+	parsePrimitives = true
 ): T => {
 	try {
 		const parsed = JSON.parse(value);

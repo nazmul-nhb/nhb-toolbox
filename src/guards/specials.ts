@@ -40,7 +40,7 @@ export function isUUID(value: unknown): value is string {
 	return (
 		isString(value) &&
 		/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-			value,
+			value
 		)
 	);
 }
@@ -88,7 +88,7 @@ export function isBase64(value: unknown): value is string {
 	return (
 		isString(value) &&
 		/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(
-			value,
+			value
 		)
 	);
 }

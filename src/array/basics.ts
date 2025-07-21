@@ -28,7 +28,7 @@ export const flattenArray = <T>(input: T | T[]): Flattened<T>[] => {
  */
 export const filterArrayOfObjects = <T extends GenericObject>(
 	array: T[],
-	conditions: { [K in keyof T]?: (value: T[K] | undefined) => boolean },
+	conditions: { [K in keyof T]?: (value: T[K] | undefined) => boolean }
 ): T[] => {
 	if (!Array.isArray(array)) {
 		throw new Error('The provided input is not a valid array!');
@@ -38,11 +38,11 @@ export const filterArrayOfObjects = <T extends GenericObject>(
 		Object.entries(conditions)?.every(([key, conditionFn]) => {
 			if (typeof conditionFn === 'function') {
 				return conditionFn(
-					item[key as keyof T] as T[keyof T] | undefined,
+					item[key as keyof T] as T[keyof T] | undefined
 				);
 			}
 			return true;
-		}),
+		})
 	);
 };
 
@@ -61,7 +61,7 @@ export const isInvalidOrEmptyArray = <T>(value: T): boolean => {
 		(item) =>
 			item == null ||
 			(Array.isArray(item) && item?.length === 0) ||
-			(typeof item === 'object' && Object.keys(item || {})?.length === 0),
+			(typeof item === 'object' && Object.keys(item || {})?.length === 0)
 	);
 };
 

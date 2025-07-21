@@ -77,7 +77,7 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 	ChronosClass.prototype.isWeekend = function (
 		this: ChronosConstructor,
 		weekStartsOn: Enumerate<7> = 0,
-		weekendLength: 1 | 2 = 2,
+		weekendLength: 1 | 2 = 2
 	): boolean {
 		const day = ChronosClass[INTERNALS].internalDate(this).getDay();
 		const lastDayOfWeek = (weekStartsOn + 6) % 7;
@@ -93,14 +93,14 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 	ChronosClass.prototype.isWorkday = function (
 		this: ChronosConstructor,
 		weekStartsOn: Enumerate<7> = 0,
-		weekendLength: 1 | 2 = 2,
+		weekendLength: 1 | 2 = 2
 	): boolean {
 		return !this.isWeekend(weekStartsOn, weekendLength);
 	};
 
 	ChronosClass.prototype.isBusinessHour = function (
 		this: ChronosConstructor,
-		options?: BusinessHourOptions,
+		options?: BusinessHourOptions
 	): boolean {
 		const {
 			businessStartHour = 9,
@@ -130,7 +130,7 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 
 	ChronosClass.prototype.toFiscalQuarter = function (
 		this: ChronosConstructor,
-		startMonth: NumberRange<1, 12> = 7,
+		startMonth: NumberRange<1, 12> = 7
 	): Quarter {
 		const month = ChronosClass[INTERNALS].internalDate(this).getMonth() + 1;
 		const adjusted = (month - startMonth + 12) % 12;
@@ -138,7 +138,7 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 	};
 
 	ChronosClass.prototype.toAcademicYear = function (
-		this: ChronosConstructor,
+		this: ChronosConstructor
 	): `${number}-${number}` {
 		const year = ChronosClass[INTERNALS].internalDate(this).getFullYear();
 		const month = ChronosClass[INTERNALS].internalDate(this).getMonth();

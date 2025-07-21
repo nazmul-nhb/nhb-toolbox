@@ -30,7 +30,7 @@ import type { FormDataConfigs } from './types';
  */
 export const createControlledFormData = <T extends GenericObject>(
 	data: T,
-	configs?: FormDataConfigs<T>,
+	configs?: FormDataConfigs<T>
 ): FormData => {
 	const formData = new FormData();
 
@@ -40,7 +40,7 @@ export const createControlledFormData = <T extends GenericObject>(
 	const _shouldLowercaseKeys = (key: string) => {
 		return Array.isArray(configs?.lowerCaseKeys) ?
 				configs?.lowerCaseKeys?.some(
-					(path) => key === path || key.startsWith(`${path}.`),
+					(path) => key === path || key.startsWith(`${path}.`)
 				)
 			:	configs?.lowerCaseKeys === '*';
 	};
@@ -49,7 +49,7 @@ export const createControlledFormData = <T extends GenericObject>(
 	const _shouldLowercaseValue = (key: string) => {
 		return Array.isArray(configs?.lowerCaseValues) ?
 				configs.lowerCaseValues?.some(
-					(path) => key === path || key?.startsWith(`${path}.`),
+					(path) => key === path || key?.startsWith(`${path}.`)
 				)
 			:	configs?.lowerCaseValues === '*';
 	};
@@ -67,7 +67,7 @@ export const createControlledFormData = <T extends GenericObject>(
 				configs?.requiredKeys?.some(
 					(path) =>
 						transformedKey === path ||
-						transformedKey?.startsWith(`${path}.`),
+						transformedKey?.startsWith(`${path}.`)
 				)
 			:	configs?.requiredKeys === '*';
 	};
@@ -78,7 +78,7 @@ export const createControlledFormData = <T extends GenericObject>(
 
 		return Array.isArray(configs?.dotNotateNested) ?
 				configs.dotNotateNested.includes(
-					transformedKey as KeyForObject<T>,
+					transformedKey as KeyForObject<T>
 				)
 			:	configs?.dotNotateNested === '*';
 	};
@@ -104,7 +104,7 @@ export const createControlledFormData = <T extends GenericObject>(
 	/** - Helper to clean object by removing null/undefined/empty values while respecting required keys */
 	const _cleanObject = (
 		obj: GenericObject,
-		parentKey = '',
+		parentKey = ''
 	): GenericObject => {
 		return Object.entries(obj).reduce((acc, [key, value]) => {
 			const transformedKey = _transformKey(key);
@@ -177,12 +177,12 @@ export const createControlledFormData = <T extends GenericObject>(
 
 		if (isCustomFileArray(value)) {
 			value?.forEach((file) =>
-				formData.append(transformedKey, file?.originFileObj),
+				formData.append(transformedKey, file?.originFileObj)
 			);
 		} else if (isFileUpload(value)) {
 			if (value?.fileList) {
 				value?.fileList.forEach((file) =>
-					formData.append(transformedKey, file?.originFileObj),
+					formData.append(transformedKey, file?.originFileObj)
 				);
 			} else if (value?.file) {
 				if (isCustomFile(value?.file)) {
@@ -229,7 +229,7 @@ export const createControlledFormData = <T extends GenericObject>(
 				if (isNotEmptyObject(cleanedValue) || _isRequiredKey(key)) {
 					formData.append(
 						transformedKey,
-						JSON.stringify(cleanedValue),
+						JSON.stringify(cleanedValue)
 					);
 				}
 			} else {

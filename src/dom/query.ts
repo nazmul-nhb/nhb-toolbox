@@ -18,7 +18,7 @@ import { deepParsePrimitives } from '../utils/index';
  * generateQueryParams({ filters: { category: 'laptop', price: 1000 } }); // "?category=laptop&price=1000"
  */
 export const generateQueryParams = <T extends QueryObject>(
-	params: T = {} as T,
+	params: T = {} as T
 ): QueryString => {
 	// Flatten the nested object into key-value pairs
 	const flattenedParams = flattenObjectKeyValue(params);
@@ -29,7 +29,7 @@ export const generateQueryParams = <T extends QueryObject>(
 			([_, value]) =>
 				value !== undefined &&
 				value !== null &&
-				!(typeof value === 'string' && value?.trim() === ''),
+				!(typeof value === 'string' && value?.trim() === '')
 		)
 		?.flatMap(([key, value]) =>
 			Array.isArray(value) ?
@@ -38,17 +38,17 @@ export const generateQueryParams = <T extends QueryObject>(
 						(v) =>
 							v !== undefined &&
 							v !== null &&
-							!(typeof v === 'string' && v.trim() === ''),
+							!(typeof v === 'string' && v.trim() === '')
 					)
 					?.map(
 						(v) =>
 							`${encodeURIComponent(key)}=${encodeURIComponent(
-								typeof v === 'boolean' ? String(v) : String(v),
-							)}`,
+								typeof v === 'boolean' ? String(v) : String(v)
+							)}`
 					)
 			:	`${encodeURIComponent(key)}=${encodeURIComponent(
-					typeof value === 'boolean' ? String(value) : String(value),
-				)}`,
+					typeof value === 'boolean' ? String(value) : String(value)
+				)}`
 		)
 		.join('&');
 
@@ -90,10 +90,10 @@ export function updateQueryParam(key: string, value: string) {
  */
 export const parseQueryString = (
 	query: string,
-	parsePrimitives = true,
+	parsePrimitives = true
 ): StrictObject => {
 	const params = new URLSearchParams(
-		query.startsWith('?') ? query.slice(1) : query,
+		query.startsWith('?') ? query.slice(1) : query
 	);
 
 	const entries: StrictObject = {};

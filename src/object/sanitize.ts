@@ -46,7 +46,7 @@ export function sanitizeData<
 >(
 	object: T,
 	options?: SanitizeOptions<T>,
-	_return?: B,
+	_return?: B
 ): B extends 'partial' ? FlattenPartial<T> : T;
 
 /**
@@ -64,7 +64,7 @@ export function sanitizeData<
 >(
 	array: T[],
 	options?: SanitizeOptions<T>,
-	_return?: B,
+	_return?: B
 ): B extends 'partial' ? FlattenPartial<T>[] : T[];
 
 /**
@@ -82,7 +82,7 @@ export function sanitizeData<
 >(
 	input: string | string[] | T | T[],
 	options?: SanitizeOptions<T>,
-	_return?: B,
+	_return?: B
 ):
 	| string
 	| string[]
@@ -108,7 +108,7 @@ export function sanitizeData<
 	const _isRequiredKey = (key: string) => {
 		return Array.isArray(requiredKeys) ?
 				requiredKeys?.some(
-					(path) => key === path || key.startsWith(`${path}.`),
+					(path) => key === path || key.startsWith(`${path}.`)
 				)
 			:	requiredKeys === '*';
 	};
@@ -207,7 +207,7 @@ export function sanitizeData<
 					// Recursively process nested objects
 					const processedValue = _processObject(
 						value as T,
-						fullKeyPath,
+						fullKeyPath
 					);
 					// Add the property conditionally if it's not an empty object
 					if (
@@ -282,7 +282,7 @@ export function sanitizeData<
  */
 export function parseObjectValues<T extends GenericObject>(
 	object: T,
-	parseNested = true,
+	parseNested = true
 ): { [K in keyof T]: Any } {
 	function _deepParseValues(data: unknown): unknown {
 		if (Array.isArray(data)) {

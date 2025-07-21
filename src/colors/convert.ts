@@ -192,7 +192,7 @@ export const convertRgbToRgba = (
 	r: number,
 	g: number,
 	b: number,
-	a: number = 1,
+	a: number = 1
 ): RGBA => {
 	let newAlpha = a;
 
@@ -218,7 +218,7 @@ export const convertRgbaToHex8 = (
 	r: number,
 	g: number,
 	b: number,
-	a: number = 1,
+	a: number = 1
 ): Hex8 => {
 	let newAlpha = a;
 
@@ -231,7 +231,7 @@ export const convertRgbaToHex8 = (
 	const hex = convertRgbToHex(r, g, b);
 
 	const alphaHex = _convertOpacityToHex(
-		Math.round(newAlpha * 100) as Percent,
+		Math.round(newAlpha * 100) as Percent
 	);
 
 	return `${hex}${alphaHex}` as Hex8;
@@ -250,7 +250,7 @@ export const convertHslaToRgba = (
 	h: number,
 	s: number,
 	l: number,
-	a: number = 1,
+	a: number = 1
 ): RGBA => {
 	let newAlpha = a;
 
@@ -267,7 +267,7 @@ export const convertHslaToRgba = (
 		rgbNumbers[0],
 		rgbNumbers[1],
 		rgbNumbers[2],
-		parseFloat(newAlpha.toFixed(1)),
+		parseFloat(newAlpha.toFixed(1))
 	);
 };
 
@@ -284,7 +284,7 @@ export const convertRgbaToHsla = (
 	r: number,
 	g: number,
 	b: number,
-	a: number = 1,
+	a: number = 1
 ): HSLA => {
 	let newAlpha = a;
 
@@ -332,7 +332,7 @@ export const convertHslaToHex8 = (
 	h: number,
 	s: number,
 	l: number,
-	a: number = 1,
+	a: number = 1
 ): Hex8 => {
 	let newAlpha = a;
 
@@ -345,7 +345,7 @@ export const convertHslaToHex8 = (
 	const hex = convertHslToHex(h, s, l);
 
 	const alphaHex = _convertOpacityToHex(
-		Math.round(newAlpha * 100) as Percent,
+		Math.round(newAlpha * 100) as Percent
 	);
 
 	return `${hex}${alphaHex}` as Hex8;

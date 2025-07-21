@@ -61,7 +61,7 @@ export function getFibonacciSeriesMemo(limit: Numeric): number[] {
  */
 export function* fibonacciGenerator(
 	limit: Numeric,
-	onYield?: (value: number, index: number) => void,
+	onYield?: (value: number, index: number) => void
 ): Generator<number, void, void> {
 	const cLimit = Number(limit);
 
