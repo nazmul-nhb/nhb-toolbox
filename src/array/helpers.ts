@@ -1,6 +1,5 @@
 import { isNotEmptyObject } from '../guards/non-primitives';
-import { isNumber } from '../guards/primitives';
-import { isNumericString } from '../guards/specials';
+import { normalizeNumber } from '../number/utilities';
 
 /**
  * Safely resolves nested keys from a dot-separated string like "user.city".
@@ -35,11 +34,7 @@ export function _getNumericProp(obj: unknown, path: string): number {
 			}
 		}, obj);
 
-		return (
-			isNumber(value) ? value
-			: isNumericString(value) ? Number(value)
-			: 0
-		);
+		return normalizeNumber(value) ?? 0;
 	} else {
 		return 0;
 	}

@@ -1,4 +1,5 @@
-import { irregularRules, pluralRules, uncountableWords } from './rules';
+import { normalizeNumber } from '../number/utilities';
+import { irregularRules, pluralRules, uncountables } from './rules';
 import type { IrregularMap, PluralizeOptions, PluralizeRule } from './types';
 
 export class Pluralizer {
@@ -13,23 +14,23 @@ export class Pluralizer {
 	}
 
 	#loadRules(): void {
-		// Load irregular rules
+		// ! Load irregular rules
 		irregularRules.forEach(([single, plural]) => {
 			this.addIrregular(single, plural);
 		});
 
-		// Load plural rules
+		// ! Load plural rules
 		pluralRules.forEach(([rule, replacement]) => {
 			this.addPluralRule(rule, replacement);
 		});
 
-		// Load uncountables
-		uncountableWords.forEach((word) => {
+		// ! Load uncountables
+		uncountables.forEach((word) => {
 			this.addUncountable(word);
 		});
 	}
 
-	private restoreCase(word: string, token: string): string {
+	#restoreCase(word: string, token: string): string {
 		if (word === word.toUpperCase()) return token.toUpperCase();
 		if (word[0] === word[0].toUpperCase()) {
 			return token.charAt(0).toUpperCase() + token.slice(1).toLowerCase();
@@ -37,7 +38,7 @@ export class Pluralizer {
 		return token.toLowerCase();
 	}
 
-	private sanitizeWord(word: string, rules: PluralizeRule[]): string {
+	#sanitizeWord(word: string, rules: PluralizeRule[]): string {
 		if (!word.length || this.#uncountables.has(word.toLowerCase())) {
 			return word;
 		}
@@ -52,85 +53,81 @@ export class Pluralizer {
 		return word;
 	}
 
-	public addPluralRule(rule: RegExp, replacement: string): void {
+	addPluralRule(rule: RegExp, replacement: string): void {
 		this.#pluralRules.push([rule, replacement]);
 	}
 
-	public addSingularRule(rule: RegExp, replacement: string): void {
+	addSingularRule(rule: RegExp, replacement: string): void {
 		this.#singularRules.push([rule, replacement]);
 	}
 
-	public addUncountable(word: string): void {
+	addUncountable(word: string): void {
 		this.#uncountables.add(word.toLowerCase());
 	}
 
-	public addIrregular(single: string, plural: string): void {
+	addIrregular(single: string, plural: string): void {
 		const singleLower = single.toLowerCase();
 		const pluralLower = plural.toLowerCase();
 		this.#irregularSingles[singleLower] = pluralLower;
 		this.#irregularPlurals[pluralLower] = singleLower;
 	}
 
-	public pluralize(word: string, options: PluralizeOptions = {}): string {
-		const { count, inclusive } = options;
+	pluralize(word: string, options: PluralizeOptions = {}): string {
+		const count = normalizeNumber(options?.count);
+
+		const inclusive = options.inclusive ?? false;
 
 		if (typeof count === 'number') {
 			const pluralized =
-				count === 1 ? this.singular(word) : this.plural(word);
+				count > 1 ? this.toPlural(word) : this.toSingular(word);
 			return inclusive ? `${count} ${pluralized}` : pluralized;
 		}
 
-		return this.plural(word);
+		return this.toPlural(word);
 	}
 
-	public plural(word: string): string {
+	toPlural(word: string): string {
 		const lower = word.toLowerCase();
 
-		// Check uncountables
 		if (this.#uncountables.has(lower)) return word;
 
-		// Check irregulars
 		if (this.#irregularSingles[lower]) {
-			return this.restoreCase(word, this.#irregularSingles[lower]);
+			return this.#restoreCase(word, this.#irregularSingles[lower]);
 		}
 
-		// Apply rules
-		return this.restoreCase(
+		return this.#restoreCase(
 			word,
-			this.sanitizeWord(lower, this.#pluralRules)
+			this.#sanitizeWord(lower, this.#pluralRules)
 		);
 	}
 
-	public singular(word: string): string {
+	toSingular(word: string): string {
 		const lower = word.toLowerCase();
 
-		// Check uncountables
 		if (this.#uncountables.has(lower)) return word;
 
-		// Check irregulars
 		if (this.#irregularPlurals[lower]) {
-			return this.restoreCase(word, this.#irregularPlurals[lower]);
+			return this.#restoreCase(word, this.#irregularPlurals[lower]);
 		}
 
-		// Apply rules
-		return this.restoreCase(
+		return this.#restoreCase(
 			word,
-			this.sanitizeWord(lower, this.#singularRules)
+			this.#sanitizeWord(lower, this.#singularRules)
 		);
 	}
 
-	public isPlural(word: string): boolean {
+	isPlural(word: string): boolean {
 		const lower = word.toLowerCase();
 		if (this.#uncountables.has(lower)) return false;
 		if (this.#irregularPlurals[lower]) return true;
-		return this.singular(lower) !== lower;
+		return this.toSingular(lower) !== lower;
 	}
 
-	public isSingular(word: string): boolean {
+	isSingular(word: string): boolean {
 		const lower = word.toLowerCase();
 		if (this.#uncountables.has(lower)) return false;
 		if (this.#irregularSingles[lower]) return true;
-		return this.plural(lower) !== lower;
+		return this.toPlural(lower) !== lower;
 	}
 }
 

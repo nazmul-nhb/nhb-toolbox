@@ -152,6 +152,7 @@ export {
 	roundToNearest as roundNumberToNearestInterval,
 	roundToNearest,
 	roundToNearest as roundToNearestInterval,
+	normalizeNumber,
 } from './number/utilities';
 
 export { getNumbersInRange } from './number/range';
