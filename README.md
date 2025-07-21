@@ -68,7 +68,7 @@ See [Changelog](CHANGELOG.md) for recent updates.
 
 ## Signature Utilities
 
-### 🕰️ **Chronos - Time Mastery**
+### 🕰️ Chronos - Time Mastery
 
 The ultimate date/time manipulation class with 100+ methods for parsing, formatting, calculating, and comparing dates. Handles all edge cases and timezones safely.
 
@@ -82,7 +82,9 @@ chronos('2025-01-01').addDays(3).format('YYYY-MM-DD'); // "2025-01-04"
 
 [Documentation →](https://nhb-toolbox.vercel.app/docs/classes/Chronos)
 
-### 🎨 **Color - Professional Color Manipulation**
+---
+
+### 🎨 Color - Professional Color Manipulation
 
 Convert between color formats, generate palettes, check accessibility contrast, and perform advanced color math with perfect type safety.
 
@@ -94,7 +96,9 @@ console.log(darkerBlue.hsl); // "hsl(240, 100%, 40%)" (was 50%)
 
 [Documentation →](https://nhb-toolbox.vercel.app/docs/classes/Color)
 
-### 🔍 **Finder - Optimized Array Search**
+---
+
+### 🔍 Finder - Optimized Array Search
 
 Blazing-fast array searching with binary search, fuzzy matching, and smart caching. Perfect for large datasets.
 
@@ -109,9 +113,11 @@ const laptop = productFinder.findOne('laptop', 'category', {
 
 [Documentation →](https://nhb-toolbox.vercel.app/docs/classes/Finder)
 
-### 🆔 **Random ID Generation**
+---
 
-**`generateRandomID`** - Enterprise-grade unique ID generation with prefixes, timestamps, and formatting
+### 🆔 Random ID Generation
+
+**`generateRandomID`** - Enterprise-grade unique ID generation with prefixes, timestamps, and formatting.
 
 ```typescript
 generateRandomID({
@@ -124,7 +130,32 @@ generateRandomID({
 
 [Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/string/generateRandomID)
 
-### 🎨 **Color System Utilities**
+---
+
+### 🔢 Pluralize Strings and More
+
+**`pluralizer`** - Handles English word pluralization and singularization with support for irregular forms and uncountable nouns.
+
+```ts
+import { pluralizer } from 'nhb-toolbox';
+
+pluralizer.pluralize('child'); // "children"
+pluralizer.pluralize('category', { count: 3 }); // "categories"
+pluralizer.pluralize('child', { count: 1, inclusive: true }); // "1 child"
+
+pluralizer.toSingular('geese'); // "goose"
+pluralizer.toSingular('children'); // "child"
+
+pluralizer.isPlural('children'); // true
+pluralizer.isSingular('child'); // true
+pluralizer.isPlural('fish'); // false (uncountable)
+```
+
+[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/string/pluralizer)
+
+---
+
+### 🎨 Color System Utilities
 
 **`getColorForInitial`** - Deterministic color mapping system for consistent UI theming
 
@@ -137,6 +168,8 @@ getColorForInitial('Banana', 50); // '#00376E80' (50% opacity)
 ```
 
 [Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/color/getColorForInitial)
+
+---
 
 ### FormData Preparation
 
@@ -169,7 +202,9 @@ const formData = createFormData({
 
 [Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/form/createFormData)
 
-### 🛡️ **Sanitize Data**
+---
+
+### 🛡️ Data Sanitization
 
 Clean and normalize strings/objects by trimming whitespace, removing empty values, and applying customizable filters.
 
@@ -192,7 +227,9 @@ sanitizeData(user, { ignoreNullish: true }, 'partial');
 
 [Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/object/sanitizeData)
 
-### 🔄 **JSON Hydration**
+---
+
+### 🔄 JSON Hydration
 
 **`parseJSON`** - Bulletproof JSON parsing with primitive conversion
 
@@ -202,19 +239,9 @@ parseJSON('{"value":"42"}'); // { value: 42 } (auto-converts numbers)
 
 [Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/misc/parseJSON)
 
-### 💰 **Format Currency**
+---
 
-Intelligent currency formatting with automatic locale detection and 150+ supported currencies.
-
-```typescript
-console.log(formatCurrency(99.99, 'EUR')); // "99,99 €"
-console.log(formatCurrency('5000', 'JPY')); // "￥5,000" (ja-JP locale)
-console.log(formatCurrency('5000', 'BDT')); // "৫,০০০.০০৳" (bn-BD locale)
-```
-
-[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/number/formatCurrency)
-
-### 🔢 **Number to Words**
+### 🔢 Number to Words
 
 Convert numbers to human-readable words (supports up to 100 quintillion).
 
@@ -224,7 +251,9 @@ numberToWords(125); // "one hundred twenty-five"
 
 [Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/number/numberToWords)
 
-### 🔢 **Advanced Number Operations**
+---
+
+### 🔢 Advanced Number Operations
 
 **`getNumbersInRange`** - Generate intelligent number sequences with prime, even/odd, and custom filtering capabilities
 
@@ -249,7 +278,9 @@ calculatePercentage({
 
 [Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/number/calculatePercentage)
 
-### 🔄 **Extract Updated Fields**
+---
+
+### 🔄 Extract Updated Fields
 
 Detect exactly what changed between two objects (including deep nested changes).
 
@@ -262,7 +293,9 @@ extractUpdatedFields(dbRecord, update);
 
 [Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/object/extractUpdatedFields)
 
-### ⚡ **Performance Optimizers**
+---
+
+### ⚡ Performance Optimizers
 
 **`throttleAction`** - Precision control for high-frequency events
 

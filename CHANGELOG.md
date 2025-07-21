@@ -6,7 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
-## [4.13.0] - 2025-07-21
+## [4.13.1] - 2025-07-22
+
+- **Updated** docs in [README](README.md) for `pluralizer`.
+
+## [4.13.0] - 2025-07-22
 
 - **Added** new `Pluralizer` class and utility `pluralizer` (shared instance of `Pluralizer` class) with multiple methods.
 - **Refactored** codes in number utilities, introduced new `normalizeNumber` utility.
