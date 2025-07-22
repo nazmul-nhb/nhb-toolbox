@@ -62,6 +62,7 @@ export const irregularRules: readonly [string, string][] =
 		['passerby', 'passersby'],
 
 		['honey', 'honeys'],
+		['virus', 'viruses'],
 
 		// Words ending in with a consonant and `o`.
 		['echo', 'echoes'],
@@ -85,14 +86,11 @@ export const irregularRules: readonly [string, string][] =
 /** Plural rules and replacements */
 export const pluralRules: readonly PluralizeRule[] =
 	/* @__PURE__ */ Object.freeze([
+		[/s$/i, 's'],
 		[/(\P{ASCII})$/u, '$1'],
 		[/(pe)(rson|ople)$/i, '$1ople'],
 		[/(child)(?:ren)?$/i, '$1ren'],
 		[/(matr|cod|mur|sil|vert|ind|append)(?:ix|ex)$/i, '$1ices'],
-		[
-			/(alumn|syllab|vir|radi|nucle|fung|cact|stimul|termin|bacill|foc|uter|loc|strat)(?:us|i)$/i,
-			'$1i',
-		],
 		[/(alumn|alg|vertebr)(?:a|ae)$/i, '$1ae'],
 		[
 			/(apheli|hyperbat|periheli|asyndet|noumen|phenomen|criteri|organ|prolegomen|hedr|automat)a$/i,
@@ -118,8 +116,10 @@ export const pluralRules: readonly PluralizeRule[] =
 		[/(quiz)$/i, '$1zes'],
 		[/m[ae]n$/i, 'men'],
 		[/eaux$/i, '$0'],
-		// fallback
-		[/s$/i, 's'], // <--- final catch-all
+		[
+			/(alumn|syllab|vir|radi|nucle|fung|cact|stimul|termin|bacill|foc|uter|loc|strat)(?:us|i)$/i,
+			'$1i',
+		],
 	]);
 
 /** Uncountable constants */
@@ -385,6 +385,7 @@ export const uncountables = /* @__PURE__ */ Object.freeze(
 /** Singular rules and replacements */
 export const singularRules: readonly PluralizeRule[] =
 	/* @__PURE__ */ Object.freeze([
+		[/s$/i, ''],
 		[/(\P{ASCII})$/u, '$1'],
 		[/(pe)(rson|ople)$/i, '$1rson'],
 		[/(child)ren$/i, '$1'],
@@ -400,10 +401,6 @@ export const singularRules: readonly PluralizeRule[] =
 		[
 			/(agend|addend|millenni|dat|extrem|bacteri|desiderat|strat|candelabr|errat|ov|symposi|curricul|quor)a$/i,
 			'$1um',
-		],
-		[
-			/(alumn|syllab|vir|radi|nucle|fung|cact|stimul|termin|bacill|foc|uter|loc|strat)(?:us|i)$/i,
-			'$1us',
 		],
 		[/(test)(?:is|es)$/i, '$1is'],
 		[/(movie|twelve|abuse|e[mn]u)s$/i, '$1'],
@@ -447,6 +444,8 @@ export const singularRules: readonly PluralizeRule[] =
 		[/(^analy)ses$/i, '$1sis'],
 		[/([ti])a$/i, '$1um'],
 		[/(n)ews$/i, '$1ews'],
-		// <-- put generic catch-all last
-		[/s$/i, ''],
+		[
+			/(alumn|syllab|vir|radi|nucle|fung|cact|stimul|termin|bacill|foc|uter|loc|strat)(?:us|i)$/i,
+			'$1us',
+		],
 	]);

@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.13.3-6] - 2025-07-22
+
+- **Reordered** rules for `pluralizer` and fixed other issues.
+
 ## [4.13.3] - 2025-07-22
 
 - **Updated** pluralization/uncountable rules, case restoration method and fixed other bugs in `pluralizer`.
