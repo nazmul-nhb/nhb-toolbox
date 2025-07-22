@@ -144,6 +144,13 @@ export class Pluralizer {
 		this.#singularRules.push([rule, replacement]);
 	}
 
+	/**
+	 * * Add a word or pattern that should never change between singular and plural.
+	 * @param word A word or regex pattern.
+	 * @example
+	 * pluralizer.addUncountable('fish');
+	 * pluralizer.addUncountable(/pok[eé]mon$/i);
+	 */
 	addUncountable(word: string | RegExp): void {
 		this.#uncountables.add(
 			typeof word === 'string' ? word?.toLowerCase() : word
@@ -151,11 +158,11 @@ export class Pluralizer {
 	}
 
 	/**
-	 * * Add a word or pattern that should never change between singular and plural.
-	 * @param word A word or regex pattern.
+	 * * Add a custom irregular form.
+	 * @param single Singular word.
+	 * @param plural Plural word.
 	 * @example
-	 * pluralizer.addUncountable('fish');
-	 * pluralizer.addUncountable(/pok[eé]mon$/i);
+	 * pluralizer.addIrregular('person', 'people');
 	 */
 	addIrregular(single: string, plural: string): void {
 		const singleLower = single?.toLowerCase();
