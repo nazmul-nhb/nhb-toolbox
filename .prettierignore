@@ -3,3 +3,4 @@ node_modules
 .estimator
 __*__
 *.md
+!__dump__

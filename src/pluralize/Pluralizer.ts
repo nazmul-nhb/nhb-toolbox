@@ -1,5 +1,11 @@
+import { isNonEmptyString } from '../guards/primitives';
 import { normalizeNumber } from '../number/utilities';
-import { irregularRules, pluralRules, uncountables } from './rules';
+import {
+	irregularRules,
+	pluralRules,
+	singularRules,
+	uncountables,
+} from './rules';
 import type { IrregularMap, PluralizeOptions, PluralizeRule } from './types';
 
 /**
@@ -26,7 +32,7 @@ export class Pluralizer {
 
 	/**
 	 * Initializes the Pluralizer with default rules and exceptions.
-	 * Automatically loads irregular rules, pluralization rules, and uncountable nouns.
+	 * Automatically loads irregular, pluralization and singular rules along with pre-defined uncountable nouns.
 	 */
 	constructor() {
 		this.#loadRules();
@@ -43,22 +49,44 @@ export class Pluralizer {
 			this.addPluralRule(rule, replacement);
 		});
 
+		// ! Load singular rules
+		singularRules.forEach(([rule, replacement]) => {
+			this.addSingularRule(rule, replacement);
+		});
+
 		// ! Load uncountables
 		uncountables.forEach((word) => {
 			this.addUncountable(word);
 		});
 	}
 
-	#restoreCase(word: string, token: string): string {
-		if (word === word.toUpperCase()) return token.toUpperCase();
-		if (word[0] === word[0].toUpperCase()) {
-			return token.charAt(0).toUpperCase() + token.slice(1).toLowerCase();
+	#restoreCase(original: string, transformed: string): string {
+		let result = '';
+
+		for (let i = 0; i < transformed.length; i++) {
+			const origChar = original[i];
+
+			if (origChar) {
+				if (
+					origChar.toUpperCase() === origChar &&
+					origChar.toLowerCase() !== origChar
+				) {
+					result += transformed[i].toUpperCase();
+				} else {
+					result += transformed[i].toLowerCase();
+				}
+			} else {
+				result += transformed[i].toLowerCase();
+			}
 		}
-		return token.toLowerCase();
+
+		return result;
 	}
 
 	#sanitizeWord(word: string, rules: PluralizeRule[]): string {
-		if (!word.length || this.#isUncountable(word)) {
+		if (!isNonEmptyString(word)) return '';
+
+		if (this.#isUncountable(word)) {
 			return word;
 		}
 
@@ -77,7 +105,7 @@ export class Pluralizer {
 	 * Supports both string and RegExp entries.
 	 */
 	#isUncountable(word: string): boolean {
-		const lower = word.toLowerCase();
+		const lower = word?.toLowerCase();
 
 		for (const entry of this.#uncountables) {
 			if (typeof entry === 'string') {
@@ -101,7 +129,7 @@ export class Pluralizer {
 	}
 
 	/**
-	 * Add a new singularization rule.
+	 * * Add a new singularization rule.
 	 * @param rule Pattern to match plural words.
 	 * @param replacement Replacement pattern for singular form.
 	 * @example
@@ -113,26 +141,26 @@ export class Pluralizer {
 
 	addUncountable(word: string | RegExp): void {
 		this.#uncountables.add(
-			typeof word === 'string' ? word.toLowerCase() : word
+			typeof word === 'string' ? word?.toLowerCase() : word
 		);
 	}
 
 	/**
-	 * Add a word or pattern that should never change between singular and plural.
+	 * * Add a word or pattern that should never change between singular and plural.
 	 * @param word A word or regex pattern.
 	 * @example
 	 * pluralizer.addUncountable('fish');
 	 * pluralizer.addUncountable(/pok[eé]mon$/i);
 	 */
 	addIrregular(single: string, plural: string): void {
-		const singleLower = single.toLowerCase();
-		const pluralLower = plural.toLowerCase();
+		const singleLower = single?.toLowerCase();
+		const pluralLower = plural?.toLowerCase();
 		this.#irregularSingles[singleLower] = pluralLower;
 		this.#irregularPlurals[pluralLower] = singleLower;
 	}
 
 	/**
-	 * Get the proper singular or plural form based on count.
+	 * * Get the proper singular or plural form based on optional count.
 	 * @param word Target word to pluralize or singularize.
 	 * @param options Optional count and inclusive formatting.
 	 * @returns The transformed word.
@@ -153,14 +181,14 @@ export class Pluralizer {
 	}
 
 	/**
-	 * Convert a word to its plural form.
+	 * * Convert a word to its plural form.
 	 * @param word Singular form of the word.
 	 * @returns Plural form of the word.
 	 * @example
 	 * pluralizer.toPlural('analysis'); // "analyses"
 	 */
 	toPlural(word: string): string {
-		if (!word) return '';
+		if (!isNonEmptyString(word)) return '';
 
 		const lower = word.toLowerCase();
 
@@ -177,14 +205,14 @@ export class Pluralizer {
 	}
 
 	/**
-	 * Convert a word to its singular form.
+	 * * Convert a word to its singular form.
 	 * @param word Plural form of the word.
 	 * @returns Singular form of the word.
 	 * @example
 	 * pluralizer.toSingular('geese'); // "goose"
 	 */
 	toSingular(word: string): string {
-		if (!word) return '';
+		if (!isNonEmptyString(word)) return '';
 
 		const lower = word.toLowerCase();
 
@@ -201,7 +229,7 @@ export class Pluralizer {
 	}
 
 	/**
-	 * Check if a given word is plural.
+	 * * Check if a given word is plural.
 	 * @param word Word to check.
 	 * @returns True if the word is plural, otherwise false.
 	 * @example
@@ -215,7 +243,7 @@ export class Pluralizer {
 	}
 
 	/**
-	 * Check if a given word is singular.
+	 * * Check if a given word is singular.
 	 * @param word Word to check.
 	 * @returns True if the word is singular, otherwise false.
 	 * @example
