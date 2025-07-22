@@ -1,6 +1,6 @@
 import type { PluralizeRule } from './types';
 
-/** Irregular rules and replacements */
+/** Irregular singular → plural mappings */
 export const irregularRules: readonly [string, string][] =
 	/* @__PURE__ */ Object.freeze([
 		// Pronouns
@@ -26,71 +26,80 @@ export const irregularRules: readonly [string, string][] =
 		['her', 'their'],
 
 		// Common irregulars
-		['child', 'children'],
-		['person', 'people'],
-		['man', 'men'],
-		['woman', 'women'],
-		['tooth', 'teeth'],
-		['foot', 'feet'],
-		['mouse', 'mice'],
-		['goose', 'geese'],
-		['ox', 'oxen'],
-		['leaf', 'leaves'],
-		['datum', 'data'],
-		['medium', 'media'],
 		['analysis', 'analyses'],
-		['diagnosis', 'diagnoses'],
+		['anathema', 'anathemata'],
+		['appendix', 'appendices'],
+		['automaton', 'automata'],
 		['basis', 'bases'],
-		['thesis', 'theses'],
-		['crisis', 'crises'],
-		['phenomenon', 'phenomena'],
-		['criterion', 'criteria'],
-		['index', 'indices'],
-		['matrix', 'matrices'],
-		['vertex', 'vertices'],
-		['quiz', 'quizzes'],
-		['die', 'dice'],
-		['yes', 'yeses'],
-		['human', 'humans'],
-		['proof', 'proofs'],
+		['calf', 'calves'],
 		['carve', 'carves'],
-		['valve', 'valves'],
-		['looey', 'looies'],
-		['thief', 'thieves'],
-		['groove', 'grooves'],
-		['pickaxe', 'pickaxes'],
-		['passerby', 'passersby'],
-
-		['honey', 'honeys'],
-		['virus', 'viruses'],
-
-		// Words ending in with a consonant and `o`.
+		['child', 'children'],
+		['codex', 'codices'],
+		['criterion', 'criteria'],
+		['crisis', 'crises'],
+		['datum', 'data'],
+		['diagnosis', 'diagnoses'],
+		['die', 'dice'],
+		['dogma', 'dogmata'],
 		['echo', 'echoes'],
-		['dingo', 'dingoes'],
-		['mango', 'mangoes'],
-		['volcano', 'volcanoes'],
-		['tornado', 'tornadoes'],
-		['torpedo', 'torpedoes'],
-		// Ends with `us`.
+		['elf', 'elves'],
+		['foot', 'feet'],
 		['genus', 'genera'],
-		['viscus', 'viscera'],
-		// Ends with `ma`.
+		['goose', 'geese'],
+		['groove', 'grooves'],
+		['half', 'halves'],
+		['hedron', 'hedra'],
+		['hero', 'heroes'],
+		['hoof', 'hooves'],
+		['human', 'humans'],
+		['honey', 'honeys'],
+		['index', 'indices'],
+		['leaf', 'leaves'],
+		['lemma', 'lemmata'],
+		['loaf', 'loaves'],
+		['looey', 'looies'],
+		['man', 'men'],
+		['mango', 'mangoes'],
+		['matrix', 'matrices'],
+		['medium', 'media'],
+		['mouse', 'mice'],
+		['neurosis', 'neuroses'],
+		['noumenon', 'noumena'],
+		['organon', 'organa'],
+		['ox', 'oxen'],
+		['passerby', 'passersby'],
+		['person', 'people'],
+		['phenomenon', 'phenomena'],
+		['pickaxe', 'pickaxes'],
+		['potato', 'potatoes'],
+		['prolegomenon', 'prolegomena'],
+		['proof', 'proofs'],
+		['quiz', 'quizzes'],
+		['schema', 'schemata'],
+		['self', 'selves'],
+		['shelf', 'shelves'],
 		['stigma', 'stigmata'],
 		['stoma', 'stomata'],
-		['dogma', 'dogmata'],
-		['lemma', 'lemmata'],
-		['schema', 'schemata'],
-		['anathema', 'anathemata'],
+		['thief', 'thieves'],
+		['tooth', 'teeth'],
+		['tomato', 'tomatoes'],
+		['torpedo', 'torpedoes'],
+		['tornado', 'tornadoes'],
+		['valve', 'valves'],
+		['vertex', 'vertices'],
+		['virus', 'viruses'],
+		['viscus', 'viscera'],
+		['volcano', 'volcanoes'],
+		['woman', 'women'],
+		['wolf', 'wolves'],
+		['yes', 'yeses'],
 	]);
 
-/** Plural rules and replacements */
+/** Pluralization rules with regex and replacements */
 export const pluralRules: readonly PluralizeRule[] =
 	/* @__PURE__ */ Object.freeze([
-		[/s$/i, 's'],
-		[/(\P{ASCII})$/u, '$1'],
 		[/(pe)(rson|ople)$/i, '$1ople'],
 		[/(child)(?:ren)?$/i, '$1ren'],
-		[/(matr|cod|mur|sil|vert|ind|append)(?:ix|ex)$/i, '$1ices'],
 		[/(alumn|alg|vertebr)(?:a|ae)$/i, '$1ae'],
 		[
 			/(apheli|hyperbat|periheli|asyndet|noumen|phenomen|criteri|organ|prolegomen|hedr|automat)a$/i,
@@ -109,7 +118,10 @@ export const pluralRules: readonly PluralizeRule[] =
 		[/(x|ch|ss|sh|zz)$/i, '$1es'],
 		[/(her|at|gr)o$/i, '$1oes'],
 		[/sis$/i, 'ses'],
-		[/(?:(kni|wi|li)fe|(ar|l|ea|eo|oa|hoo)f)$/i, '$1$2ves'],
+		[/^(chief|chef|belief|roof|cliff|reef)$/i, '$1s'],
+		[/(seraph|cherub)$/i, '$1im'],
+		[/(kni|wi|li)fe$/i, '$1ves'],
+		[/(ar|l|ea|eo|oa|hoo)f$/i, '$1ves'],
 		[/([^aeiouy]|qu)y$/i, '$1ies'],
 		[/(tive)$/i, '$1s'],
 		[/(hive)$/i, '$1s'],
@@ -122,9 +134,81 @@ export const pluralRules: readonly PluralizeRule[] =
 		],
 	]);
 
-/** Uncountable constants */
+/** Singularization rules with regex and replacements */
+export const singularRules: readonly PluralizeRule[] =
+	/* @__PURE__ */ Object.freeze([
+		[/s$/i, ''],
+		[/(\P{ASCII})$/u, '$1'],
+		[/(pe)(rson|ople)$/i, '$1rson'],
+		[/(child)ren$/i, '$1'],
+		[/(eau)x?$/i, '$1'],
+		[/men$/i, 'man'],
+		[/(matr|append)ices$/i, '$1ix'],
+		[/(cod|mur|sil|vert|ind)ices$/i, '$1ex'],
+		[/(alumn|alg|vertebr)ae$/i, '$1a'],
+		[
+			/(apheli|hyperbat|periheli|asyndet|noumen|phenomen|criteri|organ|prolegomen|hedr|automat)a$/i,
+			'$1on',
+		],
+		[
+			/(agend|addend|millenni|dat|extrem|bacteri|desiderat|strat|candelabr|errat|ov|symposi|curricul|quor)a$/i,
+			'$1um',
+		],
+		[/(test)(?:is|es)$/i, '$1is'],
+		[/(movie|twelve|abuse|e[mn]u)s$/i, '$1'],
+		[
+			/(analy|diagno|parenthe|progno|synop|the|empha|cri|ne)(?:sis|ses)$/i,
+			'$1sis',
+		],
+		[
+			/(x|ch|ss|sh|zz|tto|go|cho|alias|[^aou]us|t[lm]as|gas|(?:her|at|gr)o|[aeiou]ris)(?:es)?$/i,
+			'$1',
+		],
+		[/^(chief|chef|belief|roof|cliff|reef)s$/i, '$1'],
+		[/(seraph|cherub)im$/i, '$1'],
+		[/\b((?:tit)?m|l)ice$/i, '$1ouse'],
+		[/\b(mon|smil)ies$/i, '$1ey'],
+		[
+			/\b([pl]|zomb|(?:neck|cross)?t|coll|faer|food|gen|goon|group|lass|talk|goal|cut)ies$/i,
+			'$1ie',
+		],
+		[/ies$/i, 'y'],
+		[/(kni|wi|li)ves$/i, '$1fe'],
+		[/(ar|l|ea|eo|oa|hoo)ves$/i, '$1f'],
+		[/(ar|(?:wo|[ae])l|[eo][ao])ves$/i, '$1f'],
+		[
+			/(wi|kni|(?:after|half|high|low|mid|non|night|[^\w]|^)li)ves$/i,
+			'$1fe',
+		],
+		[/(ss)$/i, '$1'],
+		[/(quiz)zes$/i, '$1'],
+		[/(vert|ind)ices$/i, '$1ex'],
+		[/^(ox)en$/i, '$1'],
+		[/(alias|status)es$/i, '$1'],
+		[/(octop|vir)i$/i, '$1us'],
+		[/(cris|ax|test)es$/i, '$1is'],
+		[/(shoe)s$/i, '$1'],
+		[/(her|at|gr)oes$/i, '$1o'],
+		[/oes$/i, 'o'],
+		[/(bus)es$/i, '$1'],
+		[/ices$/i, 'ex'],
+		[/(hive)s$/i, '$1'],
+		[/(tive)s$/i, '$1'],
+		[/([^f])ves$/i, '$1fe'],
+		[/([lr])ves$/i, '$1f'],
+		[/(^analy)ses$/i, '$1sis'],
+		[/([ti])a$/i, '$1um'],
+		[/(n)ews$/i, '$1ews'],
+		[
+			/(alumn|syllab|vir|radi|nucle|fung|cact|stimul|termin|bacill|foc|uter|loc|strat)(?:us|i)$/i,
+			'$1us',
+		],
+	]);
+
+/** Uncountable words */
 export const uncountables = /* @__PURE__ */ Object.freeze(
 	new Set([
+		// common
 		'aircraft',
 		'alcohol',
 		'ammo',
@@ -176,6 +260,7 @@ export const uncountables = /* @__PURE__ */ Object.freeze(
 		'wildlife',
 		'you',
 
+		// abstract
 		'adulthood',
 		'advertising',
 		'anger',
@@ -187,9 +272,9 @@ export const uncountables = /* @__PURE__ */ Object.freeze(
 		'botany',
 		'carbon',
 		'chaos',
-		'coffee',
 		'cheese',
 		'childhood',
+		'coffee',
 		'compassion',
 		'cotton',
 		'dancing',
@@ -365,7 +450,7 @@ export const uncountables = /* @__PURE__ */ Object.freeze(
 		'zinc',
 		'zoology',
 
-		// RegEx(es)
+		// regex-based uncountables
 		/pok[eé]mon$/i,
 		/[^aeiou]ese$/i,
 		/deer$/i,
@@ -381,71 +466,3 @@ export const uncountables = /* @__PURE__ */ Object.freeze(
 		/jeans$/i,
 	])
 );
-
-/** Singular rules and replacements */
-export const singularRules: readonly PluralizeRule[] =
-	/* @__PURE__ */ Object.freeze([
-		[/s$/i, ''],
-		[/(\P{ASCII})$/u, '$1'],
-		[/(pe)(rson|ople)$/i, '$1rson'],
-		[/(child)ren$/i, '$1'],
-		[/(eau)x?$/i, '$1'],
-		[/men$/i, 'man'],
-		[/(matr|append)ices$/i, '$1ix'],
-		[/(cod|mur|sil|vert|ind)ices$/i, '$1ex'],
-		[/(alumn|alg|vertebr)ae$/i, '$1a'],
-		[
-			/(apheli|hyperbat|periheli|asyndet|noumen|phenomen|criteri|organ|prolegomen|hedr|automat)a$/i,
-			'$1on',
-		],
-		[
-			/(agend|addend|millenni|dat|extrem|bacteri|desiderat|strat|candelabr|errat|ov|symposi|curricul|quor)a$/i,
-			'$1um',
-		],
-		[/(test)(?:is|es)$/i, '$1is'],
-		[/(movie|twelve|abuse|e[mn]u)s$/i, '$1'],
-		[
-			/(analy|diagno|parenthe|progno|synop|the|empha|cri|ne)(?:sis|ses)$/i,
-			'$1sis',
-		],
-		[
-			/(x|ch|ss|sh|zz|tto|go|cho|alias|[^aou]us|t[lm]as|gas|(?:her|at|gr)o|[aeiou]ris)(?:es)?$/i,
-			'$1',
-		],
-		[/(seraph|cherub)im$/i, '$1'],
-		[/\b((?:tit)?m|l)ice$/i, '$1ouse'],
-		[/\b(mon|smil)ies$/i, '$1ey'],
-		[
-			/\b([pl]|zomb|(?:neck|cross)?t|coll|faer|food|gen|goon|group|lass|talk|goal|cut)ies$/i,
-			'$1ie',
-		],
-		[/ies$/i, 'y'],
-		[/(ar|(?:wo|[ae])l|[eo][ao])ves$/i, '$1f'],
-		[
-			/(wi|kni|(?:after|half|high|low|mid|non|night|[^\w]|^)li)ves$/i,
-			'$1fe',
-		],
-		[/(ss)$/i, '$1'],
-		[/(quiz)zes$/i, '$1'],
-		[/(matr)ices$/i, '$1ix'],
-		[/(vert|ind)ices$/i, '$1ex'],
-		[/^(ox)en$/i, '$1'],
-		[/(alias|status)es$/i, '$1'],
-		[/(octop|vir)i$/i, '$1us'],
-		[/(cris|ax|test)es$/i, '$1is'],
-		[/(shoe)s$/i, '$1'],
-		[/(o)es$/i, '$1'],
-		[/(bus)es$/i, '$1'],
-		[/ices$/i, 'ex'],
-		[/(hive)s$/i, '$1'],
-		[/(tive)s$/i, '$1'],
-		[/([^f])ves$/i, '$1fe'],
-		[/([lr])ves$/i, '$1f'],
-		[/(^analy)ses$/i, '$1sis'],
-		[/([ti])a$/i, '$1um'],
-		[/(n)ews$/i, '$1ews'],
-		[
-			/(alumn|syllab|vir|radi|nucle|fung|cact|stimul|termin|bacill|foc|uter|loc|strat)(?:us|i)$/i,
-			'$1us',
-		],
-	]);
