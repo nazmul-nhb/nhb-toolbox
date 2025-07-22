@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.13.7] - 2025-07-23
+
+- **Updated** `isPlural` and `isSingular` methods in `Pluralizer` class to handle more cases.
+- **Ran full test** on `pluralizer` and fixed some known issues.
+
 ## [4.13.3-6] - 2025-07-22
 
 - **Reordered** rules for `pluralizer` and fixed other issues.

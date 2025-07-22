@@ -1,6 +1,6 @@
 {
   "name": "nhb-toolbox",
-  "version": "4.13.6",
+  "version": "4.13.7",
   "description": "A versatile collection of smart, efficient, and reusable utility functions and classes for everyday development needs.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -8,6 +8,7 @@
   "sideEffects": false,
   "scripts": {
     "test": "jest --coverage --verbose",
+    "start": "start coverage/lcov-report/index.html",
     "prepublishOnly": "nhb-build",
     "format": "nhb-format",
     "lint": "nhb-lint",

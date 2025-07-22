@@ -66,25 +66,44 @@ export class Pluralizer {
 	}
 
 	#restoreCase(original: string, transformed: string): string {
-		let result = '';
+		// Exact match
+		if (original === transformed) return transformed;
 
+		// Entire original is lowercase
+		if (original === original.toLowerCase()) {
+			return transformed.toLowerCase();
+		}
+
+		// Entire original is uppercase
+		if (original === original.toUpperCase()) {
+			return transformed.toUpperCase();
+		}
+
+		// Title case (first letter uppercase, rest lowercase)
+		if (
+			original[0] === original[0].toUpperCase() &&
+			original.slice(1) === original.slice(1).toLowerCase()
+		) {
+			return (
+				transformed.charAt(0).toUpperCase() +
+				transformed.slice(1).toLowerCase()
+			);
+		}
+
+		// Mixed case: per-character casing
+		let result = '';
 		for (let i = 0; i < transformed.length; i++) {
 			const origChar = original[i];
-
-			if (origChar) {
-				if (
-					origChar.toUpperCase() === origChar &&
-					origChar.toLowerCase() !== origChar
-				) {
-					result += transformed[i].toUpperCase();
-				} else {
-					result += transformed[i].toLowerCase();
-				}
+			if (
+				origChar &&
+				origChar === origChar.toUpperCase() &&
+				origChar !== origChar.toLowerCase()
+			) {
+				result += transformed[i].toUpperCase();
 			} else {
 				result += transformed[i].toLowerCase();
 			}
 		}
-
 		return result;
 	}
 
@@ -248,9 +267,16 @@ export class Pluralizer {
 	 * pluralizer.isPlural('children'); // true
 	 */
 	isPlural(word: string): boolean {
-		const lower = word?.toLowerCase();
-		if (this.#isUncountable(word)) return false;
-		if (this.#irregularPlurals?.[lower]) return true;
+		if (!isNonEmptyString(word)) return false;
+		const lower = word.toLowerCase();
+
+		// if uncountable return true
+		if (this.#isUncountable(lower)) return true;
+		// directly known as plural
+		if (this.#irregularPlurals[lower]) return true;
+		// directly known as singular
+		if (this.#irregularSingles[lower]) return false;
+
 		return this.toSingular(lower) !== lower;
 	}
 
@@ -262,10 +288,17 @@ export class Pluralizer {
 	 * pluralizer.isSingular('child'); // true
 	 */
 	isSingular(word: string): boolean {
-		const lower = word?.toLowerCase();
-		if (this.#isUncountable(word)) return false;
-		if (this.#irregularSingles?.[lower]) return true;
-		return this.toPlural(lower) !== lower;
+		if (!isNonEmptyString(word)) return false;
+		const lower = word.toLowerCase();
+
+		// if uncountable return true
+		if (this.#isUncountable(lower)) return true;
+		// directly known as singular
+		if (this.#irregularSingles[lower]) return true;
+		// directly known as plural
+		if (this.#irregularPlurals[lower]) return false;
+
+		return this.toSingular(lower) === lower;
 	}
 }
 

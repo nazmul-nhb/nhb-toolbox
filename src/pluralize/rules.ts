@@ -68,7 +68,6 @@ export const irregularRules: readonly [string, string][] =
 		['organon', 'organa'],
 		['ox', 'oxen'],
 		['passerby', 'passersby'],
-		['person', 'people'],
 		['phenomenon', 'phenomena'],
 		['pickaxe', 'pickaxes'],
 		['potato', 'potatoes'],
@@ -98,6 +97,7 @@ export const irregularRules: readonly [string, string][] =
 /** Pluralization rules with regex and replacements */
 export const pluralRules: readonly PluralizeRule[] =
 	/* @__PURE__ */ Object.freeze([
+		[/s?$/i, 's'],
 		[/(pe)(rson|ople)$/i, '$1ople'],
 		[/(child)(?:ren)?$/i, '$1ren'],
 		[/(alumn|alg|vertebr)(?:a|ae)$/i, '$1ae'],

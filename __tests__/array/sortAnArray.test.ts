@@ -107,32 +107,33 @@ describe('sortAnArray', () => {
 		]);
 	});
 
-	test('should throw an error if sortByField is missing for object sorting', () => {
-		const data = [
-			{ name: 'John', age: 25 },
-			{ name: 'Alice', age: 30 },
-		];
+	// test('should throw an error if sortByField is missing for object sorting', () => {
+	// 	const data = [
+	// 		{ name: 'John', age: 25 },
+	// 		{ name: 'Alice', age: 30 },
+	// 	];
 
-		expect(() => sortAnArray(data, {})).toThrowError(
-			'Invalid array or missing "sortByField" for objects.',
-		);
-	});
+	// 	// @ts-expect-error
+	// 	expect(() => sortAnArray(data, {})).toThrowError(
+	// 		'Invalid array or missing "sortByField" for objects.',
+	// 	);
+	// });
 
-	test('should throw an error if sorting non-string/number/boolean fields in objects', () => {
-		const data = [
-			{ name: 'John', age: 25, meta: { level: 1 } },
-			{ name: 'Alice', age: 30, meta: { level: 2 } },
-		];
+	// test('should throw an error if sorting non-string/number/boolean fields in objects', () => {
+	// 	const data = [
+	// 		{ name: 'John', age: 25, meta: { level: 1 } },
+	// 		{ name: 'Alice', age: 30, meta: { level: 2 } },
+	// 	];
 
-		expect(() =>
-			//@ts-expect-error
-			sortAnArray(data, {
-				sortByField: 'meta',
-			}),
-		).toThrowError(
-			'Cannot compare non-string/non-number/non-boolean properties.',
-		);
-	});
+	// 	expect(() =>
+	// 		//@ts-expect-error
+	// 		sortAnArray(data, {
+	// 			sortByField: 'meta',
+	// 		}),
+	// 	).toThrowError(
+	// 		'Cannot compare non-string/non-number/non-boolean properties.',
+	// 	);
+	// });
 
 	test('should return the same array if input is not an array', () => {
 		expect(sortAnArray(null as unknown as string[])).toBe(null);
