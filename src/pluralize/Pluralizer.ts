@@ -17,6 +17,11 @@ import type { IrregularMap, PluralizeOptions, PluralizeRule } from './types';
  * - Automatically loads common irregular forms and uncountable nouns.
  * - Supports options for count-based pluralization, allowing for inclusive formatting.
  * - This class is useful for applications that need to handle natural language processing, such as chatbots, content management systems, or any text processing tasks that require accurate pluralization.
+ *
+ * @remarks For simpler pluralization (plural with only 's'), please refer to {@link https://nhb-toolbox.vercel.app/docs/utilities/string/formatUnitWithPlural formatUnitWithPlural} instead.
+ *
+ * @remarks For ready to use instance, please refer to {@link https://nhb-toolbox.vercel.app/docs/utilities/string/pluralizer pluralizer} instead.
+ *
  * @example
  * const pluralizer = new Pluralizer();
  * pluralizer.pluralize('child'); // "children"
@@ -258,10 +263,12 @@ export class Pluralizer {
 }
 
 /**
- * Default shared instance of {@link Pluralizer}.
+ * Default shared instance of {@link https://nhb-toolbox.vercel.app/docs/classes/Pluralizer Pluralizer}.
  *
  * - _Use this when you don’t need multiple configurations._
  * - _It comes preloaded with standard pluralization rules, irregular forms, and uncountable nouns._
+ *
+ * @remarks For simpler pluralization (plural with only 's'), please refer to {@link https://nhb-toolbox.vercel.app/docs/utilities/string/formatUnitWithPlural formatUnitWithPlural} instead.
  *
  * * Handles English word pluralization and singularization with support for irregular forms and uncountable nouns.
  *

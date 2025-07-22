@@ -221,6 +221,8 @@ export function extractURLs(str: string): string[] {
 /**
  * * Returns a grammatically correct unit string, optionally prefixed with the number.
  *
+ * @remarks For complex and versatile pluralization, please refer to {@link https://nhb-toolbox.vercel.app/docs/utilities/string/pluralizer pluralizer} or {@link https://nhb-toolbox.vercel.app/docs/classes/Pluralizer Pluralizer Class} instead.
+ *
  * @param count The numeric value to determine singular or plural.
  * @param unit The unit name (e.g., "day", "hour").
  * @param withNumber Whether to prefix the count before the unit. Defaults to `true`.
