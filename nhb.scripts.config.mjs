@@ -54,33 +54,40 @@ export default defineScriptConfig({
         excludePaths: ['node_modules', 'dist', 'build']
     },
     module: {
-        destination: 'src',
         force: false,
-        customTemplates: {
-            'Chronos Plugin': {
+        defaultTemplate: 'chronos-plugin',
+        templates: {
+            'chronos-plugin': {
                 createFolder: false,
                 destination: 'src/date/plugins',
-                files: (moduleName) => [
-                    {
-                        name: `${moduleName}Plugin.ts`, content: `type ChronosConstructor = import('../Chronos').Chronos;
+                files: generatePlugin,
+            },
+        },
+    }
+});
+
+// ! Custom Templates
+
+/** @type {import('nhb-scripts').FileGenerator} */
+function generatePlugin(pluginName) {
+    return [
+        {
+            name: `${pluginName}Plugin.ts`, content: `type ChronosConstructor = import('../Chronos').Chronos;
 type MainChronos = typeof import('../Chronos').Chronos;
 
 declare module '../Chronos' {
     interface Chronos {
 
-        ${moduleName}(): void;
+        ${pluginName}(): void;
     }
 }
 
-/** * Plugin to inject ${moduleName} method */
-export const ${moduleName}Plugin = (ChronosClass: MainChronos): void => {
-    ChronosClass.prototype.${moduleName} = function (this: ChronosConstructor): void {
+/** * Plugin to inject ${pluginName} method */
+export const ${pluginName}Plugin = (ChronosClass: MainChronos): void => {
+    ChronosClass.prototype.${pluginName} = function (this: ChronosConstructor): void {
         // Logic
     };
 };`
-                    },
-                ]
-            },
         },
-    }
-});
+    ]
+}
