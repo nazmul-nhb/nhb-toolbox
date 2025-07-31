@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.13.9] - 2025-07-31
+
+- **Added** new `Chronos` method `getTimeZoneName()` to get full time-zone name.
+- **Added** new `Chronos` `timeZonePlugin` method `getTimeZoneNameShort()` to get abbreviated time-zone name.
+
 ## [4.13.7] - 2025-07-23
 
 - **Updated** `isPlural` and `isSingular` methods in `Pluralizer` class to handle more cases.

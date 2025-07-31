@@ -222,7 +222,7 @@ export const TIME_ZONES = /* @__PURE__ */ Object.freeze({
 	/** Israel Standard Time */
 	'IST-ISRAEL': 2 * 60,
 	/** Israel Daylight Time (DST) */
-	'IST-IL': 2 * 60,
+	'IST-DST': 3 * 60,
 	/** Eastern European Summer Time */
 	EEST: 3 * 60,
 	/** Moscow Time (Russia-West) */

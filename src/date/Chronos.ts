@@ -1446,6 +1446,19 @@ export class Chronos {
 		return extractMinutesFromUTC(this.#offset);
 	}
 
+	/**
+	 * @instance Returns the current time zone name as a full descriptive string (e.g. `"Bangladesh Standard Time"`).
+	 * @remarks
+	 * - This method uses a predefined mapping of UTC offsets to time zone names.
+	 * - If multiple time zones share the same UTC offset, it returns the **first match** from the predefined list.
+	 * - If no match is found (which is rare), it falls back to returning the UTC offset (e.g. `"UTC+06:00"`).
+	 */
+	getTimeZoneName(): string {
+		const UTC = `UTC${this.getTimeZoneOffset()}` as UTCOffSet;
+
+		return TIME_ZONE_LABELS?.[UTC] ?? UTC;
+	}
+
 	/** @instance Returns new Chronos instance in UTC */
 	toUTC(): Chronos {
 		if (this.#offset === 'UTC+00:00') {

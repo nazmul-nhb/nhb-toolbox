@@ -1,4 +1,4 @@
-import { INTERNALS, TIME_ZONES } from '../constants';
+import { INTERNALS, TIME_ZONE_LABELS, TIME_ZONES } from '../constants';
 import { isValidUTCOffSet } from '../guards';
 import type { TimeZone, UTCOffSet } from '../types';
 import { extractMinutesFromUTC, formatUTCOffset } from '../utils';
@@ -15,6 +15,15 @@ declare module '../Chronos' {
 		 * @returns A new instance of `Chronos` with time in the given timezone. Invalid input sets time-zone to `UTC`.
 		 */
 		timeZone(zone: TimeZone | UTCOffSet): ChronosConstructor;
+
+		/**
+		 * @instance Returns the current time zone abbreviation (e.g. `"BST"` for `Bangladesh Standard Time`).
+		 * @remarks
+		 * - This method uses a predefined mapping of UTC offsets to abbreviated time zone codes.
+		 * - If multiple time zones share the same UTC offset, it returns the **first abbreviation** from the list.
+		 * - If no match is found (which is rare), it returns the UTC offset (e.g. `"UTC+06:00"`).
+		 */
+		getTimeZoneNameShort(): TimeZone | UTCOffSet;
 	}
 }
 
@@ -31,7 +40,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 			targetOffset = extractMinutesFromUTC(zone);
 			stringOffset = zone;
 		} else {
-			targetOffset = TIME_ZONES[zone] ?? TIME_ZONES['UTC'];
+			targetOffset = TIME_ZONES?.[zone] ?? TIME_ZONES['UTC'];
 			stringOffset = formatUTCOffset(targetOffset);
 		}
 
@@ -50,5 +59,32 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 			'timeZone',
 			stringOffset
 		);
+	};
+
+	ChronosClass.prototype.getTimeZoneNameShort = function (
+		this: ChronosConstructor
+	): TimeZone | UTCOffSet {
+		const mins = this.getTimeZoneOffsetMinutes();
+
+		const UTC = formatUTCOffset(mins);
+
+		const timeZone = TIME_ZONE_LABELS?.[UTC];
+
+		let result = timeZone
+			?.split(' ')
+			?.filter(Boolean)
+			?.map((part) => part?.charAt(0))
+			?.join('')
+			?.replace(/\W/g, '') as TimeZone | undefined;
+
+		if (!result) {
+			const zones = Object.entries(TIME_ZONES) as Array<
+				[TimeZone, number]
+			>;
+
+			result = zones.find((zone) => zone?.[1] === mins)?.[0];
+		}
+
+		return result ?? formatUTCOffset(mins);
 	};
 };
