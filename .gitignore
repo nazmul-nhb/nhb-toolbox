@@ -3,5 +3,4 @@ __*.*
 coverage
 # TODO.md
 dist
-src/files
 .estimator
