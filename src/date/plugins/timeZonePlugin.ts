@@ -18,16 +18,18 @@ declare module '../Chronos' {
 
 		/**
 		 * @instance Returns the current time zone abbreviation (e.g. `"BST"` for `Bangladesh Standard Time`).
+		 * @param utc Optional UTC offset in `"UTC+06:00"` format. When passed, it bypasses the current time zone offset.
+		 * @returns Time zone name in full descriptive string or UTC offset if it is not a valid time zone.
 		 * @remarks
 		 * - This method uses a predefined mapping of UTC offsets to abbreviated time zone codes.
 		 * - If multiple time zones share the same UTC offset, it returns the **first abbreviation** from the list.
 		 * - If no match is found (which is rare), it returns the UTC offset (e.g. `"UTC+06:00"`).
 		 */
-		getTimeZoneNameShort(): TimeZone | UTCOffSet;
+		getTimeZoneNameShort(utc?: UTCOffSet): TimeZone | UTCOffSet;
 	}
 }
 
-/** * Plugin to inject `timeZone` method */
+/** * Plugin to inject `timeZone` related methods */
 export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	ChronosClass.prototype.timeZone = function (
 		this: ChronosConstructor,
@@ -62,9 +64,11 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	};
 
 	ChronosClass.prototype.getTimeZoneNameShort = function (
-		this: ChronosConstructor
+		this: ChronosConstructor,
+		utc?: UTCOffSet
 	): TimeZone | UTCOffSet {
-		const mins = this.getTimeZoneOffsetMinutes();
+		const mins =
+			utc ? extractMinutesFromUTC(utc) : this.getTimeZoneOffsetMinutes();
 
 		const UTC = formatUTCOffset(mins);
 

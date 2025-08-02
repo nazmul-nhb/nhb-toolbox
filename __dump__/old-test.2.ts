@@ -394,133 +394,115 @@
 
 // console.info(convertArrayToString([], { separator: ';' }));
 
-// const inv_data = [
-// 	{
-// 		id: 487,
-// 		debit: 12500,
-// 		credit: 0,
-// 	},
-// 	{
-// 		id: 488,
-// 		debit: 250,
-// 		credit: 0,
-// 	},
-// 	{
-// 		id: 489,
-// 		debit: 12500,
-// 		credit: 0,
-// 	},
-// 	{
-// 		id: 490,
-// 		debit: 250,
-// 		credit: 0,
-// 	},
-// 	{
-// 		id: 491,
-// 		debit: 12500,
-// 		credit: 0,
-// 	},
-// 	{
-// 		id: 492,
-// 		debit: 250,
-// 		credit: 0,
-// 	},
-// 	{
-// 		id: 493,
-// 		debit: 0,
-// 		credit: -250,
-// 	},
-// 	{
-// 		id: 494,
-// 		debit: -250,
-// 		credit: 0,
-// 	},
-// 	{
-// 		id: 495,
-// 		debit: 0,
-// 		credit: 250,
-// 	},
-// 	{
-// 		id: 496,
-// 		debit: 0,
-// 		credit: 50000,
-// 	},
-// 	{
-// 		id: 497,
-// 		debit: -60000,
-// 		credit: 0,
-// 	},
-// 	{
-// 		id: 498,
-// 		debit: -500,
-// 		credit: 0,
-// 	},
+// const words = [
+// 	// ✅ Irregular classical plurals
+// 	'appendix', // → appendices
+// 	'codex', // → codices
+// 	'matrix', // → matrices
+// 	'index', // → indices
+// 	'vertex', // → vertices
+
+// 	// ✅ Latin/Greek classical endings
+// 	'alumna', // → alumnae
+// 	'alga', // → algae
+// 	'vertebra', // → vertebrae
+// 	'phenomenon', // → phenomena
+// 	'criterion', // → criteria
+// 	'prolegomenon', // → prolegomena
+// 	'automaton', // → automata
+// 	'stigma', // → stigmata
+// 	'stoma', // → stomata
+// 	'lemma', // → lemmata
+
+// 	// ✅ -um to -a
+// 	'bacterium', // → bacteria
+// 	'curriculum', // → curricula
+// 	'datum', // → data
+// 	'millennium', // → millennia
+// 	'candelabrum', // → candelabra
+// 	'erratum', // → errata
+// 	'ovum', // → ova
+// 	'symposium', // → symposia
+
+// 	// ✅ -us to -i
+// 	'octopus', // → octopi (edge classical vs English debate)
+// 	'cactus', // → cacti
+// 	'fungus', // → fungi
+// 	'focus', // → foci
+// 	'nucleus', // → nuclei
+// 	'radius', // → radii
+// 	'stimulus', // → stimuli
+// 	'terminus', // → termini
+// 	'bacillus', // → bacilli
+// 	'uterus', // → uteri (weird but valid)
+// 	'locus', // → loci
+// 	'stratus', // → strati
+
+// 	// ✅ -is to -es
+// 	'analysis', // → analyses
+// 	'basis', // → bases
+// 	'crisis', // → crises
+// 	'diagnosis', // → diagnoses
+// 	'parenthesis', // → parentheses
+// 	'thesis', // → theses
+// 	'synopsis', // → synopses
+// 	'emphasis', // → emphases
+// 	'neurosis', // → neuroses
+
+// 	// ✅ -on to -a
+// 	'noumenon', // → noumena
+// 	'organon', // → organa
+// 	'hedron', // → hedra
+
+// 	// ✅ English irregulars
+// 	'child', // → children
+// 	'person', // → people
+// 	'man', // → men
+// 	'woman', // → women
+// 	'tooth', // → teeth
+// 	'foot', // → feet
+// 	'goose', // → geese
+// 	'mouse', // → mice
+// 	'ox', // → oxen
+
+// 	// ✅ Edge endings
+// 	'quiz', // → quizzes
+// 	'bus', // → buses
+// 	'hero', // → heroes
+// 	'potato', // → potatoes
+// 	'tomato', // → tomatoes
+// 	'echo', // → echoes
+// 	'torpedo', // → torpedoes
+// 	'veto', // → vetoes
+
+// 	// ✅ -y to -ies
+// 	'fly', // → flies
+// 	'puppy', // → puppies
+// 	'cherry', // → cherries
+
+// 	// ✅ -f / -fe to -ves
+// 	'leaf', // → leaves
+// 	'wolf', // → wolves
+// 	'knife', // → knives
+// 	'life', // → lives
+// 	'shelf', // → shelves
+// 	'thief', // → thieves
+// 	'calf', // → calves
+// 	'loaf', // → loaves
+// 	'elf', // → elves
+// 	'half', // → halves
+
+// 	// ✅ Exceptions that stay -s
+// 	'chief', // → chiefs
+// 	'roof', // → roofs
+// 	'cliff', // → cliffs
+// 	'belief', // → beliefs
+// 	'reef', // → reefs
+
+// 	// ✅ Already plural/uncountable
+// 	'series', // → series
+// 	'species', // → species
+// 	'news', // → news
+// 	'equipment', // → equipment
+// 	'information', // → information
 // ];
-
-// const folio_data = [
-// 	{
-// 		id: 2149,
-// 		debit: '12500.00',
-// 		credit: '0.00',
-// 	},
-// 	{
-// 		id: 2150,
-// 		debit: '250.00',
-// 		credit: '0.00',
-// 	},
-// 	{
-// 		id: 2151,
-// 		debit: '12500.00',
-// 		credit: '0.00',
-// 	},
-// 	{
-// 		id: 2152,
-// 		debit: '250.00',
-// 		credit: '0.00',
-// 	},
-// 	{
-// 		id: 2153,
-// 		debit: '12500.00',
-// 		credit: '0.00',
-// 	},
-// 	{
-// 		id: 2154,
-// 		debit: '250.00',
-// 		credit: '0.00',
-// 	},
-// 	{
-// 		id: 2293,
-// 		debit: '0.00',
-// 		credit: '-250.00',
-// 	},
-// 	{
-// 		id: 2294,
-// 		debit: '-250.00',
-// 		credit: '0.00',
-// 	},
-// 	{
-// 		id: 2295,
-// 		debit: '0.00',
-// 		credit: '250.00',
-// 	},
-// 	{
-// 		id: 2296,
-// 		debit: '0.00',
-// 		credit: '50000.00',
-// 	},
-// 	{
-// 		id: 2297,
-// 		debit: '-60000.00',
-// 		credit: '0.00',
-// 	},
-// 	{
-// 		id: 2298,
-// 		debit: '-500.00',
-// 		credit: '0.00',
-// 	},
-// ];
-
-// console.info(sumByField(inv_data, 'debit'));
-// console.info(sumByField(folio_data, 'debit'));
-// console.info(isNumericString(8));
-

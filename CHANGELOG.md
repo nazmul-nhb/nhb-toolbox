@@ -6,10 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
-<!-- ## [4.13.10] - 2025-08-02
+## [4.13.10] - 2025-08-02
 
 - **Updated** docs for `isPlural` and `isSingular` methods in `Pluralizer`.
-- **Updated** `getTimeZoneName()` and `getTimeZoneNameShort()` methods in `Chronos` to accept option UTC offset as parameter. -->
+- **Updated** `getTimeZoneName()` and `getTimeZoneNameShort()` methods in `Chronos` to accept an optional UTC offset.
+- **Changed** return type of `getTimeZoneName()` to `string | UTCOffset` using `LooseLiteral<UTCOffset>`.
 
 ## [4.13.9] - 2025-07-31
 

@@ -47,7 +47,7 @@
 	"explorer.fileNesting.patterns": {
 		"tsconfig.json": "tsconfig.*.json, env.d.ts, next-env.d.ts",
 		"vite.config.*": "jsconfig*, vitest.config.*, cypress.config.*, playwright.config.*",
-		"package.json": "package-lock.json, pnpm*, bun.lockb, .npmrc, .nvmrc, .ncurc, .yarnrc*, yarn*, .eslint*, eslint*, .prettier*, prettier*, .editorconfig, nodemon.json",
+		"package.json": "package-lock.json, pnpm*, bun.lockb, .npmrc, .nvmrc, .ncurc, .yarnrc*, yarn*, .eslint*, eslint*, .prettier*, prettier*, .editorconfig, nodemon.json, nhb.scripts.config*",
 		"vercel.json": ".vercel*, vercel*",
 		"readme.md": "*.md, license, LICENSE",
 		"tailwind.config.*js": "tailwind.*",

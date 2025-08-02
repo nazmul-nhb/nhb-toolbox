@@ -3,15 +3,42 @@
 > “I solve problems you face daily”
 
 <p>
-  <a href="https://www.npmjs.com/package/nhb-toolbox" aria-label="Downloads">
+  <!-- NPM Info -->
+  <a href="https://www.npmjs.com/package/nhb-toolbox" aria-label="NPM Downloads">
     <img src="https://img.shields.io/npm/dm/nhb-toolbox.svg?label=DOWNLOADS&style=flat&color=red&logo=npm" alt="Downloads" />
   </a>
-  <a href="https://www.npmjs.com/package/nhb-toolbox" aria-label="Version">
-    <img src="https://img.shields.io/npm/v/nhb-toolbox.svg?label=NPM&style=flat&color=teal&logo=npm" alt="Latest Version" />
+  <a href="https://www.npmjs.com/package/nhb-toolbox" aria-label="NPM Version">
+    <img src="https://img.shields.io/npm/v/nhb-toolbox.svg?label=VERSION&style=flat&color=teal&logo=npm" alt="Latest Version" />
   </a>
-  <a href="https://bundlephobia.com/result?p=nhb-toolbox" aria-label="Bundle size">
+  <a href="https://bundlephobia.com/result?p=nhb-toolbox" aria-label="Bundle Size">
     <img src="https://img.shields.io/bundlephobia/minzip/nhb-toolbox?style=flat&color=purple&label=SIZE&logo=nodedotjs" alt="Bundle Size" />
   </a>
+
+  <!-- Project Metadata -->
+  <a href="https://github.com/nazmul-nhb/nhb-toolbox" aria-label="TypeScript">
+    <img src="https://img.shields.io/badge/BUILT%20with-TypeScript-3178C6?style=flat&logo=typescript&logoColor=blue" alt="Built with TypeScript" />
+  </a>
+  <a href="https://github.com/nazmul-nhb/nhb-toolbox/actions" aria-label="Build Status">
+    <img src="https://img.shields.io/github/actions/workflow/status/nazmul-nhb/nhb-toolbox/publish.yml?label=BUILD%20%26%20PUBLISH&style=flat&logo=github" alt="Build Status" />
+  </a>
+  <a href="https://github.com/nazmul-nhb/nhb-toolbox" aria-label="Project Status">
+    <img src="https://img.shields.io/badge/STATUS-maintained-brightgreen?style=flat&logo=git" alt="Maintained" />
+  </a>
+  <a href="https://github.com/nazmul-nhb/nhb-toolbox/commits/main" aria-label="Last Commit">
+    <img src="https://img.shields.io/github/last-commit/nazmul-nhb/nhb-toolbox?style=flat&label=LAST%20COMMIT&logo=git" alt="Last Commit" />
+  </a>
+
+  <!-- GitHub Meta -->
+  <a href="https://github.com/nazmul-nhb/nhb-toolbox/stargazers" aria-label="GitHub Stars">
+    <img src="https://img.shields.io/github/stars/nazmul-nhb/nhb-toolbox?style=flat&label=STARS&logo=github" alt="GitHub stars" />
+  </a>
+  <a href="https://github.com/nazmul-nhb/nhb-toolbox/issues" aria-label="Open Issues">
+    <img src="https://img.shields.io/github/issues/nazmul-nhb/nhb-toolbox?style=flat&label=ISSUES&logo=github" alt="Open Issues" />
+  </a>
+  <a href="https://github.com/nazmul-nhb/nhb-toolbox/pulls" aria-label="Open Pull Requests">
+    <img src="https://img.shields.io/github/issues-pr/nazmul-nhb/nhb-toolbox?style=flat&label=PRs&logo=github" alt="Pull Requests" />
+  </a>
+
   <a href="https://www.npmjs.com/package/nhb-toolbox" aria-label="License">
     <img src="https://img.shields.io/npm/l/nhb-toolbox.svg?label=LICENSE&style=flat&color=orange&logo=open-source-initiative" alt="License" />
   </a>

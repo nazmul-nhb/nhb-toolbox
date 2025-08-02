@@ -148,7 +148,7 @@ export const TIME_ZONES = /* @__PURE__ */ Object.freeze({
 	/** Acre Time (Brazil-West) */
 	ACT: -5 * 60,
 	/** Atlantic Standard Time (Canada-Maritime, Caribbean) */
-	AST: -4 * 60,
+	'AST-Atlantic': -4 * 60,
 	/** Bolivia Time */
 	BOT: -4 * 60,
 	/** Venezuelan Standard Time */

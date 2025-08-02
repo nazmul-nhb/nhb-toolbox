@@ -2,7 +2,7 @@ import { isValidArray } from '../guards/non-primitives';
 import { isString } from '../guards/primitives';
 import type { Enumerate, LocaleCode, NumberRange } from '../number/types';
 import { getOrdinal, roundToNearest } from '../number/utilities';
-import type { TupleOf } from '../utils/types';
+import type { LooseLiteral, TupleOf } from '../utils/types';
 import {
 	DAYS,
 	INTERNALS,
@@ -1448,13 +1448,15 @@ export class Chronos {
 
 	/**
 	 * @instance Returns the current time zone name as a full descriptive string (e.g. `"Bangladesh Standard Time"`).
+	 * @param utc Optional UTC offset in `"UTC+06:00"` format. When passed, it bypasses the current time zone offset.
+	 * @returns Time zone name in full descriptive string or UTC offset if it is not a valid time zone.
 	 * @remarks
 	 * - This method uses a predefined mapping of UTC offsets to time zone names.
 	 * - If multiple time zones share the same UTC offset, it returns the **first match** from the predefined list.
 	 * - If no match is found (which is rare), it falls back to returning the UTC offset (e.g. `"UTC+06:00"`).
 	 */
-	getTimeZoneName(): string {
-		const UTC = `UTC${this.getTimeZoneOffset()}` as UTCOffSet;
+	getTimeZoneName(utc?: UTCOffSet): LooseLiteral<UTCOffSet> {
+		const UTC = utc ?? (`UTC${this.getTimeZoneOffset()}` as UTCOffSet);
 
 		return TIME_ZONE_LABELS?.[UTC] ?? UTC;
 	}
