@@ -262,9 +262,11 @@ export class Pluralizer {
 	/**
 	 * * Check if a given word is plural.
 	 * @param word Word to check.
-	 * @returns True if the word is plural, otherwise false.
+	 * @returns `true` if the word is plural, otherwise `false`.
+	 * @remarks Always returns `true` for uncountable nouns.
 	 * @example
 	 * pluralizer.isPlural('children'); // true
+	 * pluralizer.isPlural('water'); // true
 	 */
 	isPlural(word: string): boolean {
 		if (!isNonEmptyString(word)) return false;
@@ -284,8 +286,10 @@ export class Pluralizer {
 	 * * Check if a given word is singular.
 	 * @param word Word to check.
 	 * @returns True if the word is singular, otherwise false.
+	 * @remarks Always returns `true` for uncountable nouns.
 	 * @example
 	 * pluralizer.isSingular('child'); // true
+	 * pluralizer.isPlural('water'); // true
 	 */
 	isSingular(word: string): boolean {
 		if (!isNonEmptyString(word)) return false;

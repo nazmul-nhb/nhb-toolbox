@@ -148,7 +148,7 @@ pluralizer.toSingular('children'); // "child"
 
 pluralizer.isPlural('children'); // true
 pluralizer.isSingular('child'); // true
-pluralizer.isPlural('fish'); // false (uncountable)
+pluralizer.isPlural('fish'); // true (uncountable)
 ```
 
 [Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/string/pluralizer)
