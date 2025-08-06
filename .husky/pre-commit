@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+if [ -f "pnpm-lock.yaml" ]; then
+  pnpm exec lint-staged
+elif [ -f "yarn.lock" ]; then
+  yarn lint-staged
+elif [ -f "bun.lockb" ]; then
+  bunx lint-staged
+else
+  npx lint-staged
+fi

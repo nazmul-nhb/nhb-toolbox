@@ -52,7 +52,7 @@ export default defineScriptConfig({
 		],
 	},
 	commit: {
-		runFormatter: true,
+		runFormatter: false,
 	},
 	count: {
 		defaultPath: 'src/index.ts',
