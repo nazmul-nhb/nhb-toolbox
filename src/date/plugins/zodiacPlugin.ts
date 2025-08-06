@@ -1,3 +1,4 @@
+import type { NumberRange } from '../../number/types';
 import { ZODIAC_PRESETS } from '../constants';
 import type { ZodiacOptions, ZodiacSign } from '../types';
 
@@ -23,17 +24,22 @@ export const zodiacPlugin = (ChronosClass: MainChronos): void => {
 	): ZodiacSign {
 		const { birthDate, preset = 'western', custom } = options ?? {};
 
-		let month: number;
-		let date: number;
+		let month: NumberRange<1, 12>;
+		let date: NumberRange<1, 31>;
 
 		if (birthDate && birthDate?.includes('-')) {
-			[month, date] = birthDate.split('-').map(Number);
+			[month, date] = birthDate.split('-').map(Number) as [
+				NumberRange<1, 12>,
+				NumberRange<1, 31>,
+			];
 		} else {
 			month = this.isoMonth;
 			date = this.date;
 		}
 
-		const signs = custom ?? ZODIAC_PRESETS[preset];
+		const signs = [...(custom ?? ZODIAC_PRESETS[preset])].sort(
+			(a, b) => a[1][0] * 100 + a[1][1] - (b[1][0] * 100 + b[1][1])
+		);
 
 		for (let i = signs.length - 1; i >= 0; i--) {
 			const [sign, [m, d]] = signs[i];
