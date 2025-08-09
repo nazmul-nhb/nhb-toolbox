@@ -70,7 +70,7 @@ jobs:
       - name: Publish to NPM Registry
         if: env.VERSION_UNCHANGED == 'false'
         run: |
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
           if [[ "$VERSION" =~ -(alpha|beta|rc) ]]; then
             echo "Pre-release detected, tag 'next'"
             pnpm publish --access public --tag next
@@ -79,7 +79,7 @@ jobs:
             pnpm publish --access public
           fi
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # Publish to GitHub Packages
       - name: Publish to GitHub Packages
