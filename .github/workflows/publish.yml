@@ -85,11 +85,11 @@ jobs:
       - name: Publish to GitHub Packages
         if: env.VERSION_UNCHANGED == 'false'
         run: |
-          echo "@${GITHUB_REPOSITORY_OWNER}:registry=https://npm.pkg.github.com" > ~/.npmrc
+          echo "@nazmul-nhb:registry=https://npm.pkg.github.com" > ~/.npmrc
           echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" >> ~/.npmrc
 
           ORIGINAL_NAME=$(jq -r .name package.json)
-          npm pkg set name="@${GITHUB_REPOSITORY_OWNER}/nhb-toolbox"
+          npm pkg set name="@nazmul-nhb/nhb-toolbox"
 
           if [[ "$VERSION" =~ -(alpha|beta|rc) ]]; then
             echo "Pre-release detected, tag 'next'"
