@@ -93,10 +93,10 @@ jobs:
 
           if [[ "$VERSION" =~ -(alpha|beta|rc) ]]; then
             echo "Pre-release detected, tag 'next'"
-            pnpm publish --access public --tag next --registry https://npm.pkg.github.com
+            pnpm publish --access public --tag next --registry https://npm.pkg.github.com --no-git-checks
           else
             echo "Stable release, tag 'latest'"
-            pnpm publish --access public --registry https://npm.pkg.github.com
+            pnpm publish --access public --registry https://npm.pkg.github.com --no-git-checks
           fi
 
           # Restore original package.json name
