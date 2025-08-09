@@ -81,28 +81,35 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Setup Node.js for GitHub Packages
+        if: env.VERSION_UNCHANGED == 'false'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://npm.pkg.github.com/
+          scope: "@nazmul-nhb"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # Publish to GitHub Packages
       - name: Publish to GitHub Packages
         if: env.VERSION_UNCHANGED == 'false'
         run: |
-          echo "@nazmul-nhb:registry=https://npm.pkg.github.com" > ~/.npmrc
-          echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" >> ~/.npmrc
-
           ORIGINAL_NAME=$(jq -r .name package.json)
           npm pkg set name="@nazmul-nhb/nhb-toolbox"
 
           if [[ "$VERSION" =~ -(alpha|beta|rc) ]]; then
             echo "Pre-release detected, tag 'next'"
-            pnpm publish --access public --tag next --registry https://npm.pkg.github.com --no-git-checks
+            pnpm publish --access public --tag next --no-git-checks
           else
             echo "Stable release, tag 'latest'"
-            pnpm publish --access public --registry https://npm.pkg.github.com --no-git-checks
+            pnpm publish --access public --no-git-checks
           fi
 
           # Restore original package.json name
           npm pkg set name="$ORIGINAL_NAME"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Create a Git tag if version is different
       - name: Create Git Tag
