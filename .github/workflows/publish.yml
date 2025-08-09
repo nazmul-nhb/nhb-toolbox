@@ -1,4 +1,4 @@
-name: Publish to NPM and Release with Tag
+name: Publish to NPM & GitHub Packages and Release with Tag
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
 permissions:
   contents: write
   id-token: write
+  packages: write
 
 jobs:
   publish:
@@ -65,19 +66,43 @@ jobs:
         if: env.VERSION_UNCHANGED == 'false'
         run: pnpm install --frozen-lockfile --store-dir ~/.pnpm-store
 
-      # Publish to NPM only if version is different
-      - name: Publish to NPM
+      # Publish to NPM Registry
+      - name: Publish to NPM Registry
         if: env.VERSION_UNCHANGED == 'false'
         run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
           if [[ "$VERSION" =~ -(alpha|beta|rc) ]]; then
-            echo "Pre-release version detected, publishing with tag 'next'"
+            echo "Pre-release detected, tag 'next'"
             pnpm publish --access public --tag next
           else
-            echo "Stable version detected, publishing with default tag 'latest'"
+            echo "Stable release, tag 'latest'"
             pnpm publish --access public
           fi
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Publish to GitHub Packages
+      - name: Publish to GitHub Packages
+        if: env.VERSION_UNCHANGED == 'false'
+        run: |
+          echo "@${GITHUB_REPOSITORY_OWNER}:registry=https://npm.pkg.github.com" > ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" >> ~/.npmrc
+
+          ORIGINAL_NAME=$(jq -r .name package.json)
+          npm pkg set name="@${GITHUB_REPOSITORY_OWNER}/nhb-toolbox"
+
+          if [[ "$VERSION" =~ -(alpha|beta|rc) ]]; then
+            echo "Pre-release detected, tag 'next'"
+            pnpm publish --access public --tag next --registry https://npm.pkg.github.com
+          else
+            echo "Stable release, tag 'latest'"
+            pnpm publish --access public --registry https://npm.pkg.github.com
+          fi
+
+          # Restore original package.json name
+          npm pkg set name="$ORIGINAL_NAME"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Create a Git tag if version is different
       - name: Create Git Tag
@@ -95,6 +120,7 @@ jobs:
           name: "Version ${{ env.VERSION }}"
           body: |
             - 📦 Find in [NPM Registry](https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }}).
+            - 📦 Also available in [GitHub Packages](https://github.com/${{ github.repository }}/pkgs/npm/nhb-toolbox).
             - 📄 Full Docs at [Official Docs](https://nhb-toolbox.vercel.app)
             - 🆕 [See what's new in the changelog](./CHANGELOG.md)
         env:
