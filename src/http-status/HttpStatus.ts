@@ -1,0 +1,118 @@
+import { HTTP_STATUS_DATA } from './constants';
+import type {
+	StatusCategory,
+	StatusCode,
+	StatusEntry,
+	StatusName,
+} from './types';
+
+/**
+ * Utility for retrieving and managing HTTP status codes with rich MDN-based metadata.
+ *
+ * @remarks
+ * - Supports lookup by code or name (both `SOME_NAME` and `Some Name` formats).
+ * - Allows adding custom codes and overriding messages.
+ * - Pre-grouped categories for quick filtering.
+ */
+export class HttpStatus {
+	#codesByNumber: Map<StatusCode, StatusEntry>;
+	#codesByName: Map<StatusName, StatusEntry>;
+
+	/**
+	 * Static category groups for quick reference.
+	 * Populated at runtime from the provided data.
+	 */
+	static Groups: Record<StatusCategory, StatusCode[]> = {
+		informational: [],
+		success: [],
+		redirection: [],
+		clientError: [],
+		serverError: [],
+	};
+
+	constructor() {
+		this.#codesByNumber = new Map();
+		this.#codesByName = new Map();
+
+		// Initialize status code data
+		for (const entry of HTTP_STATUS_DATA) {
+			this.#storeEntry(entry);
+			HttpStatus.Groups[entry.category].push(entry.code);
+		}
+	}
+
+	/**
+	 * Get status entry by numeric HTTP code.
+	 * @param code HTTP status code.
+	 * @returns Matching status entry or `undefined` if not found.
+	 */
+	getByCode(code: StatusCode): StatusEntry | undefined {
+		return this.#codesByNumber.get(code);
+	}
+
+	/**
+	 * Get status entry by name (either SOME_NAME or "Some Name").
+	 * @param name Status name.
+	 * @returns Matching status entry or `undefined` if not found.
+	 */
+	getByName(name: StatusName): StatusEntry | undefined {
+		return (
+			this.#codesByName.get(name.toUpperCase()) ||
+			this.#codesByName.get(name)
+		);
+	}
+
+	/**
+	 * Override the short message of an existing code.
+	 * @param code HTTP status code.
+	 * @param newMessage Custom message.
+	 * @returns `true` if updated, `false` if code not found.
+	 */
+	setMessage(code: StatusCode, newMessage: string): boolean {
+		const entry = this.#codesByNumber.get(code);
+
+		if (!entry) {
+			return false;
+		} else {
+			entry.message = newMessage;
+			return true;
+		}
+	}
+
+	/**
+	 * Add a new HTTP status code entry.
+	 * @param entry The new status entry to add.
+	 * @returns `true` if added, `false` if code already exists.
+	 */
+	addCode(entry: StatusEntry): boolean {
+		if (this.#codesByNumber.has(entry.code)) {
+			return false;
+		} else {
+			this.#storeEntry(entry);
+			HttpStatus.Groups[entry.category].push(entry.code);
+			return true;
+		}
+	}
+
+	/**
+	 * List all codes, optionally filtered by category.
+	 * @param category Optional category filter.
+	 * @returns Array of status entries.
+	 */
+	list(category?: StatusCategory): StatusEntry[] {
+		if (!category) {
+			return [...this.#codesByNumber.values()];
+		} else {
+			return [...this.#codesByNumber.values()].filter(
+				(e) => e.category === category
+			);
+		}
+	}
+
+	/** * Internal helper to store an entry in all lookup maps. */
+	#storeEntry(entry: StatusEntry) {
+		this.#codesByNumber.set(entry.code, { ...entry });
+		this.#codesByName.set(entry.name, { ...entry });
+		this.#codesByName.set(entry.readableName, { ...entry });
+	}
+}
