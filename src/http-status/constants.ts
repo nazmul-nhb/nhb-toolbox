@@ -1,5 +1,5 @@
 /** Data for HTTP Status Codes */
-export const HTTP_STATUS_DATA = [
+export const HTTP_STATUS_DATA = /* @__PURE__ */ Object.freeze([
 	{
 		category: 'informational',
 		link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/100',
@@ -629,10 +629,10 @@ export const HTTP_STATUS_DATA = [
 		description:
 			'Indicates that the client needs to authenticate to gain network access.',
 	},
-] as const;
+] as const);
 
 /** List of HTTP Status Names with Corresponding Codes */
-export const HTTP_STATUS_CODES = {
+export const HTTP_STATUS_CODES = /* @__PURE__ */ Object.freeze({
 	/**
 	 * * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/100 Continue}
 	 * - This interim response indicates that the client should continue the request or ignore the response if the request is already finished.
@@ -952,4 +952,4 @@ export const HTTP_STATUS_CODES = {
 	 * - Indicates that the client needs to authenticate to gain network access.
 	 */
 	NETWORK_AUTHENTICATION_REQUIRED: 511,
-} as const;
+} as const);
