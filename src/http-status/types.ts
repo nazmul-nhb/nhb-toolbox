@@ -16,6 +16,9 @@ export type StatusNameReadable = LooseLiteral<
 	(typeof HTTP_STATUS_DATA)[number]['readableName']
 >;
 
+/** Name for the Status Code in both Human readable and Uppercase snake case */
+export type HttpStatusName = StatusName | StatusNameReadable;
+
 /** * Categories of HTTP status codes: `"informational"`, `"success"`, `"redirection"`, `"clientError`" or `"serverError"` */
 export type StatusCategory = (typeof HTTP_STATUS_DATA)[number]['category'];
 

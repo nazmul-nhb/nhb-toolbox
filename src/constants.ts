@@ -36,3 +36,10 @@ export {
 } from './number/constants';
 
 export { LOWERCASE as LOWERCASED_WORDS } from './string/constants';
+
+export {
+	HTTP_STATUS_CODES,
+	HTTP_STATUS_CODES as HTTP_STATUS,
+	HTTP_STATUS_CODES as HTTP_CODES,
+	HTTP_STATUS_CODES as STATUS_CODES,
+} from './http-status/constants';

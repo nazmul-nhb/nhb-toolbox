@@ -1,10 +1,9 @@
 import { HTTP_STATUS_DATA } from './constants';
 import type {
+	HttpStatusName,
 	StatusCategory,
 	StatusCode,
 	StatusEntry,
-	StatusName,
-	StatusNameReadable,
 } from './types';
 
 /**
@@ -43,11 +42,11 @@ import type {
  */
 export class HttpStatus {
 	#codesByNumber: Map<StatusCode, StatusEntry>;
-	#codesByName: Map<StatusName | StatusNameReadable, StatusEntry>;
+	#codesByName: Map<HttpStatusName, StatusEntry>;
 
 	/**
-	 * Static category groups for quick reference.
-	 * Populated at runtime from the provided data.
+	 * * Static category groups for quick reference.
+	 * * Populated at runtime from the provided data.
 	 */
 	static Groups: Record<StatusCategory, StatusCode[]> = {
 		informational: [],
@@ -82,7 +81,7 @@ export class HttpStatus {
 	 * @param name Status name.
 	 * @returns Matching status entry or `undefined` if not found.
 	 */
-	getByName(name: StatusName | StatusNameReadable): StatusEntry | undefined {
+	getByName(name: HttpStatusName): StatusEntry | undefined {
 		return this.#codesByName.get(name);
 	}
 

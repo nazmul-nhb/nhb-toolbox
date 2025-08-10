@@ -446,6 +446,9 @@ export {
 	isSet as isValidSet,
 } from './guards/non-primitives';
 
+// ! HTTP Status
+export { HttpStatus, httpStatus } from './http-status/HttpStatus';
+
 // ! Special Type Guards
 export {
 	isBase64,

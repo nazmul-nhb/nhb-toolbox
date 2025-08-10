@@ -631,7 +631,7 @@ export const HTTP_STATUS_DATA = [
 	},
 ] as const;
 
-/** List of HTTPS STATUS NAMES WITH CODES */
+/** List of HTTP Status Names with Corresponding Codes */
 export const HTTP_STATUS_CODES = {
 	/**
 	 * * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/100 Continue}
