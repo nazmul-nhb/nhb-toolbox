@@ -4,10 +4,11 @@ import type {
 	StatusCode,
 	StatusEntry,
 	StatusName,
+	StatusNameReadable,
 } from './types';
 
 /**
- * Utility for retrieving and managing HTTP status codes with rich MDN-based metadata.
+ * * Utility for retrieving and managing HTTP status codes with rich MDN-based metadata.
  *
  * @remarks
  * - Supports lookup by code or name (both `SOME_NAME` and `Some Name` formats).
@@ -16,7 +17,7 @@ import type {
  */
 export class HttpStatus {
 	#codesByNumber: Map<StatusCode, StatusEntry>;
-	#codesByName: Map<StatusName, StatusEntry>;
+	#codesByName: Map<StatusName | StatusNameReadable, StatusEntry>;
 
 	/**
 	 * Static category groups for quick reference.
@@ -55,11 +56,8 @@ export class HttpStatus {
 	 * @param name Status name.
 	 * @returns Matching status entry or `undefined` if not found.
 	 */
-	getByName(name: StatusName): StatusEntry | undefined {
-		return (
-			this.#codesByName.get(name.toUpperCase()) ||
-			this.#codesByName.get(name)
-		);
+	getByName(name: StatusName | StatusNameReadable): StatusEntry | undefined {
+		return this.#codesByName.get(name);
 	}
 
 	/**
@@ -80,18 +78,28 @@ export class HttpStatus {
 	}
 
 	/**
-	 * Add a new HTTP status code entry.
-	 * @param entry The new status entry to add.
-	 * @returns `true` if added, `false` if code already exists.
+	 * Add one or more new HTTP status code entries.
+	 *
+	 * @remarks
+	 * - If a code already exists, it will be skipped and not overwritten.
+	 * - Returns `true` if at least one code was successfully added.
+	 * - Returns `false` if all provided codes already exist.
+	 *
+	 * @param entries One or more status entries to add.
+	 * @returns `true` if at least one code was added, otherwise `false`.
 	 */
-	addCode(entry: StatusEntry): boolean {
-		if (this.#codesByNumber.has(entry.code)) {
-			return false;
-		} else {
-			this.#storeEntry(entry);
-			HttpStatus.Groups[entry.category].push(entry.code);
-			return true;
+	addCode(...entries: StatusEntry[]): boolean {
+		let added = false;
+
+		for (const entry of entries) {
+			if (!this.#codesByNumber.has(entry.code)) {
+				this.#storeEntry(entry);
+				HttpStatus.Groups[entry.category].push(entry.code);
+				added = true;
+			}
 		}
+
+		return added;
 	}
 
 	/**
@@ -104,7 +112,7 @@ export class HttpStatus {
 			return [...this.#codesByNumber.values()];
 		} else {
 			return [...this.#codesByNumber.values()].filter(
-				(e) => e.category === category
+				(entry) => entry.category === category
 			);
 		}
 	}

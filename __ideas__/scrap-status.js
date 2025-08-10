@@ -31,13 +31,20 @@ function scrapData() {
         }
     });
 
-    return data;
+    // Convert data to string representation
+    const objString = data.reduce((acc, d) => {
+        return acc + `
+        /**\n * * {@link ${d.link} ${d.readableName}} \n* - ${d.description}\n  */
+    ${d.name}: ${d.code},`;
+    }, '{');
+
+    // Close the object
+    const finalString = objString + '\n}';
+
+    return { data, obj: finalString };
 }
 
-/**
- * 
- * @param {string | null | undefined} category 
- */
+/** @param {string | null | undefined} category */
 function fixCategory(category) {
     switch (category) {
         case "Informational responses":

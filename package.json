@@ -136,6 +136,10 @@
       "types": "./dist/dts/form/types.d.ts",
       "default": "./dist/dts/form/types.d.ts"
     },
+    "./http-status/types": {
+      "types": "./dist/dts/http-status/types.d.ts",
+      "default": "./dist/dts/http-status/types.d.ts"
+    },
     "./number/types": {
       "types": "./dist/dts/number/types.d.ts",
       "default": "./dist/dts/number/types.d.ts"
@@ -216,6 +220,9 @@
       ],
       "form/types": [
         "dist/dts/form/types.d.ts"
+      ],
+      "http-status/types": [
+        "dist/dts/http-status/types.d.ts"
       ],
       "number/types": [
         "dist/dts/number/types.d.ts"
