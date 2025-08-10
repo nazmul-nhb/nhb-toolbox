@@ -29,9 +29,9 @@ export interface StatusEntry {
 	readableName: StatusNameReadable;
 	/** Link to full `MDN` Docs if available */
 	link?: string;
-	/** Short message, Can override using `setMessage` method */
+	/** Short message, Can override using `httpStatus.setMessage` method */
 	message: string;
-	/** MDN description if available */
+	/** A brief description if available */
 	description: string;
 	/** The type of HTTP Status: `"informational"`, `"success"`, `"redirection"`, `"clientError`" or `"serverError"` */
 	category: StatusCategory;

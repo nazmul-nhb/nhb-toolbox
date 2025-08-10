@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.14.0] - 2025-08-11
+
+- **Added** new class `HttpStatus` for retrieving and managing HTTP status codes.
+
 ## [4.13.11] - 2025-08-06
 
 - **Fixed** an issue with `getZodiacSign` method in `Chronos` that could not return correct *Vedic* sign.
