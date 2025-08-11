@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.14.1-3] - 2025-08-11 - 2025-08-12
+
+- **Updated** JSDoc, dev dependencies and **fixed** minor issues.
+
 ## [4.14.0] - 2025-08-11
 
 - **Added** new class `HttpStatus` for retrieving and managing HTTP status codes.

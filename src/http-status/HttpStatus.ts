@@ -12,10 +12,10 @@ import type {
  * @remarks
  * - Supports lookup by code or name (both `SOME_NAME` and `Some Name` formats).
  * - Allows adding custom codes and overriding messages for existing ones.
- * - Provides pre-grouped categories for quick filtering (see {@link HttpStatus.Groups}).
+ * - Provides pre-grouped categories for quick filtering (see {@link https://nhb-toolbox.vercel.app/docs/classes/HttpStatus#groups-static-property HttpStatus.Groups}).
  * - Intended to be reusable — create multiple instances if you want separate registries.
  *
- * @see {@link httpStatus} for the default preloaded singleton instance.
+ * @see {@link https://nhb-toolbox.vercel.app/docs/utilities/misc/httpStatus httpStatus} for the default preloaded singleton instance.
  *
  * @example
  * ```ts
@@ -151,7 +151,7 @@ export class HttpStatus {
 }
 
 /**
- * * Default singleton instance of {@link HttpStatus} class.
+ * * Default singleton instance of {@link https://nhb-toolbox.vercel.app/docs/classes/HttpStatus HttpStatus} class.
  *
  * @remarks
  * - Preloaded with all MDN-based HTTP status codes.
