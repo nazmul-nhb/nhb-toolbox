@@ -71,7 +71,7 @@ export default defineScriptConfig({
 	},
 });
 
-// ! Custom Templates
+// ! ============= Custom Templates ============= ! //
 
 /** @type {import('nhb-scripts').FileGenerator} */
 function generatePlugin(pluginName) {
