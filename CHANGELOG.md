@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.14.4-6] - 2025-08-13 - 2025-08-14
+
+- **Updated** internal logic of `convertStringCase` utility, added new `options` parameter.
+
 ## [4.14.1-3] - 2025-08-11 - 2025-08-12
 
 - **Updated** JSDoc, dev dependencies and **fixed** minor issues.
