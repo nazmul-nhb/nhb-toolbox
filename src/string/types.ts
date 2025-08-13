@@ -47,6 +47,22 @@ export type CaseFormat =
 	| 'UPPERCASE'
 	| 'lowercase';
 
+/** * Options for convertStringCase. */
+export interface StringCaseOptions {
+	/**
+	 * Preserve acronym-like tokens (tokens that are ALL UPPERCASE with length >= 2)
+	 * when converting to PascalCase / Title Case / camelCase (mid tokens).
+	 *
+	 * Behavior summary:
+	 * - PascalCase: keep acronyms intact (API -> API).
+	 * - camelCase: first token acronyms are lowercased entirely (API -> api),
+	 *   subsequent token acronyms are preserved (API -> API).
+	 * - Title Case: acronym tokens are preserved (API).
+	 * - snake_case / kebab-case: tokens are lowercased (xml-http-request).
+	 */
+	preserveAcronyms?: boolean;
+}
+
 /** Options for masking a string. */
 export interface MaskOptions {
 	/** Number of characters to keep at the start. Defaults to `1`. */

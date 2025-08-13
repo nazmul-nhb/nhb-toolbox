@@ -1,120 +1,5 @@
 import { trimString } from './basics';
-import { LOWERCASE } from './constants';
-import type { CaseFormat, MaskOptions } from './types';
-
-/**
- * * Converts a string to a specified case format such as `camelCase`, `snake_case`, `kebab-case`, `PascalCase`, `Title Case`, `lowercase`, or `UPPERCASE`.
- *
- * - This function handles non-alphanumeric characters (e.g., spaces, hyphens, underscores, dots, slashes) as word delimiters. For `Title Case`, prepositions, articles, conjunctions, and auxiliary verbs are not capitalized unless they appear at the start of the title.
- * - You can also convert the string to `lowercase` or `UPPERCASE`, but it's recommended to use default string methods like `string.toLowerCase()` and `string.toUpperCase()` for these cases.
- *
- * @param string The input string to be converted. The string should have words separated by non-alphanumeric characters (e.g., spaces, hyphens, underscores, etc.).
- * @param format The format to convert the string to. The available formats are:
- *   - `'camelCase'`: Converts to camelCase (e.g., `myVariableName`).
- *   - `'snake_case'`: Converts to snake_case (e.g., `my_variable_name`).
- *   - `'kebab-case'`: Converts to kebab-case (e.g., `my-variable-name`).
- *   - `'PascalCase'`: Converts to PascalCase (e.g., `MyVariableName`).
- *   - `'Title Case'`: Converts to Title Case (e.g., `My Variable Name`), where certain words like `prepositions, articles, conjunctions and auxiliary verbs` are not capitalized unless at the start.
- *   - `'lowercase'`: Converts the string to all lowercase characters.
- *   - `'UPPERCASE'`: Converts the string to all uppercase characters.
- * @returns The formatted string in the specified case format.
- * @example
- * convertStringCase('my-example_string', 'camelCase'); // returns 'myExampleString'
- * convertStringCase('my-example_string', 'snake_case'); // returns 'my_example_string'
- * convertStringCase('my-example_string', 'kebab-case'); // returns 'my-example-string'
- * convertStringCase('my example string', 'Title Case'); // returns 'My Example String'
- * convertStringCase('my example string', 'lowercase'); // returns 'my example string'
- * convertStringCase('my example string', 'UPPERCASE'); // returns 'MY EXAMPLE STRING'
- */
-export function convertStringCase(string: string, format: CaseFormat): string {
-	/** Lowercase prepositions, articles, conjunctions, and auxiliary verbs */
-	type Lower = (typeof LOWERCASE)[number];
-
-	if (!string || typeof string !== 'string') return '';
-
-	const start = string?.match(/^[^\d\w\s]+/)?.[0] || '';
-	const end = string?.match(/[^\d\w\s]+$/)?.[0] || '';
-	const core = string?.replace(/^[^\d\w\s]+|[^\w\s]+$/g, '').trim();
-
-	const titleCase = core
-		?.split(/\s+/g)
-		?.map((part) => {
-			const startSymbol = part.match(/^[^\d\w\s]+/)?.[0] || ''; // Capture leading symbols
-			const endSymbol = part.match(/[^\d\w\s]+$/)?.[0] || ''; // Capture trailing symbols
-			const coreWord = part.replace(/^[^\d\w\s]+|[^\d\w\s]+$/g, ''); // Remove them for processing
-
-			if (LOWERCASE.includes(coreWord?.toLowerCase() as Lower)) {
-				return startSymbol + coreWord?.toLowerCase() + endSymbol;
-			}
-
-			return (
-				startSymbol +
-				coreWord?.charAt(0)?.toUpperCase() +
-				coreWord?.slice(1)?.toLowerCase() +
-				endSymbol
-			);
-		})
-		.join(' ');
-
-	const formattedString = string?.replace(
-		/[^a-zA-Z0-9]+(.)?/g,
-		(_, chr: string) => (chr ? chr?.toUpperCase() : '')
-	);
-
-	if (!formattedString) return '';
-
-	switch (format) {
-		case 'camelCase':
-			// return formattedString.replace(/[A-Z]/g, (letter, index) =>
-			// 	index === 0 ? letter.toUpperCase() : letter.toLowerCase(),
-			// );
-			return (
-				formattedString.charAt(0).toLowerCase() +
-				formattedString.slice(1)
-			);
-
-		case 'snake_case':
-			return /[^a-zA-Z0-9]/.test(string) ?
-					string.split(/\W+/g).join('_').toLowerCase()
-				:	formattedString.replace(/[A-Z]/g, (letter, index) =>
-						index === 0 ?
-							letter.toLowerCase()
-						:	`_${letter.toLowerCase()}`
-					);
-
-		case 'kebab-case':
-			return /[^a-zA-Z0-9]/.test(string) ?
-					string.split(/\W+/g).join('-').toLowerCase()
-				:	formattedString.replace(/[A-Z]/g, (letter, index) =>
-						index === 0 ?
-							letter.toLowerCase()
-						:	`-${letter.toLowerCase()}`
-					);
-
-		case 'PascalCase':
-			return (
-				formattedString.charAt(0).toUpperCase() +
-				formattedString.slice(1)
-			);
-
-		case 'Title Case':
-			return (
-				start +
-				titleCase.charAt(0).toUpperCase() +
-				titleCase.slice(1) +
-				end
-			);
-
-		case 'lowercase':
-			return start + core.toLowerCase() + end;
-
-		case 'UPPERCASE':
-			return start + core.toUpperCase() + end;
-
-		default:
-			return formattedString;
-	}
-}
+import type { MaskOptions } from './types';
 
 /**
  * * Replaces all occurrences of a string or pattern in the given input string.
@@ -151,11 +36,11 @@ export const replaceAllInString = (
  * @param input - The string to be converted.
  * @returns The slugified string.
  */
-export const slugifyString = (input: string): Lowercase<string> => {
-	return trimString(input)
+export const slugifyString = (input: string): string => {
+	return trimString(normalizeString(input))
 		?.toLowerCase()
 		?.replace(/[^a-z0-9]+/g, '-')
-		?.replace(/^-+|-+$/g, '') as Lowercase<string>;
+		?.replace(/^-+|-+$/g, '');
 };
 
 /**
@@ -197,7 +82,7 @@ export const reverseString = (input: string): string => {
  * @returns The normalized string.
  */
 export function normalizeString(str: string): string {
-	return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+	return str?.normalize('NFD')?.replace(/[\u0300-\u036f]/g, '');
 }
 
 /**
@@ -206,7 +91,7 @@ export function normalizeString(str: string): string {
  * @returns An array of extracted email addresses.
  */
 export function extractEmails(str: string): string[] {
-	return str.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g) || [];
+	return str?.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g) || [];
 }
 
 /**

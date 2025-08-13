@@ -33,8 +33,9 @@ export {
 	isSnakeCase,
 } from './string/guards';
 
+export { convertStringCase } from './string/case';
+
 export {
-	convertStringCase,
 	extractEmails,
 	extractURLs,
 	formatUnitWithPlural as formatNumberWithPluralUnit,

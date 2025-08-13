@@ -8,6 +8,7 @@
   "sideEffects": false,
   "scripts": {
     "test": "jest --coverage --verbose",
+    "test:watch": "jest --onlyChanged --verbose --watch",
     "start": "start coverage/lcov-report/index.html",
     "prepublishOnly": "nhb-build",
     "format": "nhb-format",
