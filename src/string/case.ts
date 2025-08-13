@@ -180,8 +180,18 @@ export function convertStringCase(
 					if (i !== 0 && i !== arr.length - 1 && smallSet.has(tlc)) {
 						return tlc;
 					}
+					// If preserveAcronyms is enabled, preserve acronym-like subparts inside hyphenated tokens.
+					// Example: "XML-HTTP" -> ["XML","HTTP"] -> preserved -> "XML-HTTP"
+					if (preserveAcronyms && t.includes('-')) {
+						return t
+							.split('-')
+							.map((sub) =>
+								isAcronym(sub) ? sub : capitalize(sub)
+							)
+							.join('-');
+					}
 					if (preserveAcronyms && isAcronym(t)) {
-						return t;
+						return t.split('-');
 					}
 					return capitalize(t);
 				})

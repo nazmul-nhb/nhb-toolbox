@@ -42,6 +42,14 @@ describe('convertStringCase - basic conversions', () => {
 			'Xml-http Request'
 		);
 	});
+
+	test('Convert special cased string to Title Case', () => {
+		expect(
+			convertStringCase('XML-HTTP_request', 'Title Case', {
+				preserveAcronyms: true,
+			})
+		).toBe('XML-HTTP Request');
+	});
 });
 
 describe('convertStringCase - unicode and boundaries', () => {
