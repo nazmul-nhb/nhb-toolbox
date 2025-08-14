@@ -19,7 +19,7 @@ import type { CaseFormat, StringCaseOptions } from './types';
  *   - `'Title Case'` → Title Case (e.g., `My Variable Name`)
  *   - `'lowercase'` → all lowercase [ It is recommended to use built-in string method `string.toLowerCase()` ]
  *   - `'UPPERCASE'` → all uppercase [ It is recommended to use built-in string method `string.toUpperCase()` ]
- * @param options - Optional configuration settings.
+ * @param options - Optional configuration options for more control.
  *
  * @returns The converted string, with leading/trailing punctuation preserved.
  *
@@ -79,8 +79,8 @@ export function convertStringCase(
 	format: CaseFormat,
 	options?: StringCaseOptions
 ): string {
-	/** Lowercase prepositions, articles, conjunctions, and auxiliary verbs */ type Lower =
-		(typeof LOWERCASE)[number];
+	/** Lowercase prepositions, articles, conjunctions, and auxiliary verbs */
+	type Lower = (typeof LOWERCASE)[number];
 
 	if (!value || typeof value !== 'string') return '';
 
@@ -104,7 +104,7 @@ export function convertStringCase(
 		.replace(/^[^\p{L}\p{N}\s]+|[^\p{L}\p{N}\s]+$/gu, '')
 		.trim();
 
-	const lower = (s: string) => s.toLowerCase();
+	const lowerCase = (s: string) => s.toLowerCase();
 	const isAcronym = (s: string) => s.length >= 2 && /^[\p{Lu}]+$/u.test(s);
 	const capitalize = (s: string) =>
 		s.length === 0 ?
@@ -137,63 +137,64 @@ export function convertStringCase(
 
 	switch (format) {
 		case 'camelCase': {
-			const firstToken = tokens[0];
-			const first = lower(firstToken);
-
-			const rest = tokens
+			const middle = tokens
 				.slice(1)
-				.map((t) => {
-					if (preserveAcronyms && isAcronym(t)) {
-						return t; // preserve acronym as-is
+				.map((token) => {
+					if (preserveAcronyms && isAcronym(token)) {
+						return token; // preserve acronym as-is
 					}
-					return capitalize(t);
+					return capitalize(token);
 				})
 				.join('');
-			return start.concat(first.concat(rest), end);
+			return start.concat(lowerCase(tokens[0]).concat(middle), end);
 		}
 
 		case 'PascalCase': {
 			const body = tokens
-				.map((t) => {
-					if (preserveAcronyms && isAcronym(t)) return t;
-					return capitalize(t);
+				.map((token) => {
+					if (preserveAcronyms && isAcronym(token)) return token;
+					return capitalize(token);
 				})
 				.join('');
 			return start.concat(body, end);
 		}
 
 		case 'snake_case': {
-			const body = tokens.map((t) => lower(t)).join('_');
+			const body = tokens.map((token) => lowerCase(token)).join('_');
 			return start.concat(body, end);
 		}
 
 		case 'kebab-case': {
-			const body = tokens.map((t) => lower(t)).join('-');
+			const body = tokens.map((token) => lowerCase(token)).join('-');
 			return start.concat(body, end);
 		}
 
 		case 'Title Case': {
 			const title = tokens
-				.map((t, i, arr) => {
-					const tlc = t.toLowerCase() as Lower;
+				.map((token, idx, self) => {
+					const tokenLower = token.toLowerCase() as Lower;
 					// keep small words lowercase unless first or last
-					if (i !== 0 && i !== arr.length - 1 && smallSet.has(tlc)) {
-						return tlc;
+					if (
+						idx !== 0 &&
+						idx !== self.length - 1 &&
+						smallSet.has(tokenLower)
+					) {
+						return tokenLower;
 					}
 					// If preserveAcronyms is enabled, preserve acronym-like subparts inside hyphenated tokens.
 					// Example: "XML-HTTP" -> ["XML","HTTP"] -> preserved -> "XML-HTTP"
-					if (preserveAcronyms && t.includes('-')) {
-						return t
+					if (preserveAcronyms && token.includes('-')) {
+						return token
 							.split('-')
 							.map((sub) =>
 								isAcronym(sub) ? sub : capitalize(sub)
 							)
 							.join('-');
 					}
-					if (preserveAcronyms && isAcronym(t)) {
-						return t.split('-');
+					if (preserveAcronyms && isAcronym(token)) {
+						return token.split('-');
 					}
-					return capitalize(t);
+					return capitalize(token);
 				})
 				.join(' ');
 			return start.concat(title, end);

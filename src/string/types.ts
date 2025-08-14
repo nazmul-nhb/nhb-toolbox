@@ -47,7 +47,7 @@ export type CaseFormat =
 	| 'UPPERCASE'
 	| 'lowercase';
 
-/** * Options for convertStringCase. */
+/** * Options for `convertStringCase`. */
 export interface StringCaseOptions {
 	/**
 	 * Preserve acronym-like tokens (tokens that are ALL UPPERCASE with length >= 2)
