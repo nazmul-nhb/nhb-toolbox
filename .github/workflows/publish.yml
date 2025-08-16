@@ -115,20 +115,16 @@ jobs:
       - name: Generate Release Notes
         if: env.VERSION_UNCHANGED == 'false'
         id: gen_notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # include if you want PR metadata
         run: |
-          # install only if not present; npx will fetch if needed
-          # changelog-maker prints the section since the last tag to stdout by default
-          pnpm dlx --yes changelog-maker > release_notes.md
+          # generate markdown into a file (pnpm dlx does not support --yes)
+          pnpm dlx changelog-maker > release_notes.md
 
-          # optionally trim or post-process here (sed/perl) if needed
-
-          # set the multiline output in a safe way so next steps can use it
-          # (GITHUB_OUTPUT is the recommended way)
+          # push file contents into the step output (safe multiline)
           echo "body<<EOF" >> "$GITHUB_OUTPUT"
           cat release_notes.md >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Create GitHub Release if version is different
       - name: Create Release
