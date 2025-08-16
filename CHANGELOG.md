@@ -6,10 +6,14 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.14.4-9] - 2025-08-16
+
+- **Fixed** minor _internal issues_ and **updated** JSDoc for `Pluralizer`.
+
 ## [4.14.4-8] - 2025-08-13 - 2025-08-14
 
 - **Updated** internal logic of `convertStringCase` utility, added new `options` parameter.
-- **Fixed** multiple internal issues and JSDoc; Optimized internal logic.
+- **Fixed** multiple _internal issues_ and JSDoc; Optimized internal logic.
 
 ## [4.14.1-3] - 2025-08-11 - 2025-08-12
 
@@ -21,7 +25,7 @@ All notable changes to the package will be documented here.
 
 ## [4.13.11] - 2025-08-06
 
-- **Fixed** an issue with `getZodiacSign` method in `Chronos` that could not return correct *Vedic* sign.
+- **Fixed** an issue with `getZodiacSign` method in `Chronos` that could not return correct _Vedic_ sign.
 
 ## [4.13.10] - 2025-08-02
 
@@ -188,7 +192,7 @@ All notable changes to the package will be documented here.
 
 ### 🕧 Updates for Chronos
 
-- **Reduced** bloat by moving *rarely used* `Chronos` methods to plugin system.
+- **Reduced** bloat by moving _rarely used_ `Chronos` methods to plugin system.
 - **Changed** plugin import paths as `import { somePlugin } from nhb-toolbox/plugins/somePlugin` format so the users can assume the path easily.
 - **Updated** parameter type for `isBusinessHour` method: instead of multiple parameters can accept one options object now.
 
@@ -295,5 +299,5 @@ All notable changes to the package will be documented here.
 ### Improved
 
 - 🌲 Full **tree-shaking support** for ESM builds (CommonJS remains unaffected).
-- 🌲 *From the beginning the library was tree-shakable* but now it's **properly tree-shakable** for ESM builds.
+- 🌲 _From the beginning the library was tree-shakable_ but now it's **properly tree-shakable** for ESM builds.
 - 📦 CommonJS (`cjs`) build remains unaffected and stable.
