@@ -18,9 +18,10 @@ import type { IrregularMap, PluralizeOptions, PluralizeRule } from './types';
  * - Supports options for count-based pluralization, allowing for inclusive formatting.
  * - This class is useful for applications that need to handle natural language processing, such as chatbots, content management systems, or any text processing tasks that require accurate pluralization.
  *
- * @remarks For simpler pluralization (plural with only 's'), please refer to {@link https://nhb-toolbox.vercel.app/docs/utilities/string/formatUnitWithPlural formatUnitWithPlural} instead.
+ * @remarks
+ * - For simpler pluralization (plural with only 's'), please refer to {@link https://nhb-toolbox.vercel.app/docs/utilities/string/formatUnitWithPlural formatUnitWithPlural} instead.
  *
- * @remarks For ready to use instance, please refer to {@link https://nhb-toolbox.vercel.app/docs/utilities/string/pluralizer pluralizer} instead.
+ * - For ready to use instance, please refer to {@link https://nhb-toolbox.vercel.app/docs/utilities/string/pluralizer pluralizer} instead.
  *
  * @example
  * const pluralizer = new Pluralizer();

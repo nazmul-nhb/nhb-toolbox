@@ -111,6 +111,25 @@ jobs:
           git tag v${{ env.VERSION }}
           git push origin v${{ env.VERSION }}
 
+      # Generate release notes (markdown) for the release
+      - name: Generate Release Notes
+        if: env.VERSION_UNCHANGED == 'false'
+        id: gen_notes
+        run: |
+          # install only if not present; npx will fetch if needed
+          # changelog-maker prints the section since the last tag to stdout by default
+          pnpm dlx --yes changelog-maker > release_notes.md
+
+          # optionally trim or post-process here (sed/perl) if needed
+
+          # set the multiline output in a safe way so next steps can use it
+          # (GITHUB_OUTPUT is the recommended way)
+          echo "body<<EOF" >> "$GITHUB_OUTPUT"
+          cat release_notes.md >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # Create GitHub Release if version is different
       - name: Create Release
         if: env.VERSION_UNCHANGED == 'false'
@@ -120,8 +139,9 @@ jobs:
           name: "Version ${{ env.VERSION }}"
           body: |
             - 📦 Find in [NPM Registry](https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }}).
-            - 📦 Also available in [GitHub Packages](https://github.com/${{ github.repository }}/pkgs/npm/nhb-toolbox).
+            - 📦 Also Available in [GitHub Packages](https://github.com/${{ github.repository }}/pkgs/npm/nhb-toolbox).
             - 📄 Full Docs at [Official Docs](https://nhb-toolbox.vercel.app)
-            - 🆕 [See what's new in the changelog](./CHANGELOG.md)
+            - 🆕 [See the Full CHANGELOG](./CHANGELOG.md)
+            ${{ steps.gen_notes.outputs.body }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
