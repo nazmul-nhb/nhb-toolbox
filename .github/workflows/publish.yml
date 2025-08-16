@@ -130,25 +130,21 @@ jobs:
       - name: Create Release
         if: env.VERSION_UNCHANGED == 'false'
         uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: "v${{ env.VERSION }}"
-          name: "Version ${{ env.VERSION }}"
+          name: "v${{ env.VERSION }}"
           body: |
-            ## 📦 nhb-toolbox — v${{ env.VERSION }}
-
-            **Compare changes:** [${{ env.LATEST_TAG }}...v${{ env.VERSION }}](https://github.com/${{ github.repository }}/compare/${{ env.LATEST_TAG }}...v${{ env.VERSION }})
-
-            ### 🔑 Highlights
-            - Short summary of most important changes (breaking changes, new features, or bugfixes).
-            - If this is a pre-release: _pre-release_ (alpha/beta/rc) tag applied.
+            ## 📦 nhb-toolbox v${{ env.VERSION }}
               
             ### 🆕 Release Notes
             ${{ steps.gen_notes.outputs.body }}
 
+            **Compare Changes:** [${{ env.LATEST_TAG }} vs v${{ env.VERSION }}](https://github.com/${{ github.repository }}/compare/${{ env.LATEST_TAG }}...v${{ env.VERSION }})
+
             ### 📄 Full Changelog
-            The full changelog is maintained in the repository: [CHANGELOG.md](./CHANGELOG.md)
+            - The full changelog is maintained in the repository: [CHANGELOG.md](./CHANGELOG.md)
 
             ---
-            _Docs: https://nhb-toolbox.vercel.app • NPM: https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }} • GitHub Packages: https://github.com/${{ github.repository }}/pkgs/npm/nhb-toolbox_
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            **[Docs](https://nhb-toolbox.vercel.app) • [NPM](https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }}) • [GitHub Packages](https://github.com/${{ github.repository }}/pkgs/npm/nhb-toolbox)**
