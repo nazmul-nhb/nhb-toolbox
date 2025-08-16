@@ -122,7 +122,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # include if you want PR metadata
         run: |
           # generate markdown into a file (pnpm dlx does not support --yes)
-          pnpm dlx changelog-maker "${{ env.LATEST_TAG }}..HEAD" > release_notes.md
+          pnpm dlx changelog-maker > release_notes.md
 
           # push file contents into the step output (safe multiline)
           echo "body<<EOF" >> "$GITHUB_OUTPUT"
