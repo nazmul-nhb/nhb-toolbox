@@ -294,3 +294,36 @@ describe('Pluralizer extra casing and edge‑case tests', () => {
 		).toBe('3 children');
 	});
 });
+
+describe('Test if words are singular or plural', () => {
+	it('should return true if it is uncountable', () => {
+		expect(pluralizer.isSingular('cash')).toBeTruthy();
+		expect(pluralizer.isPlural('cash')).toBeTruthy();
+	});
+
+	it('should return true if it is singular and false if plural', () => {
+		expect(pluralizer.isSingular('boy')).toBeTruthy();
+		expect(pluralizer.isPlural('boy')).toBeFalsy();
+	});
+
+	it('should return false if it is singular and true if plural', () => {
+		expect(pluralizer.isSingular('boys')).toBeFalsy();
+		expect(pluralizer.isPlural('boys')).toBeTruthy();
+	});
+});
+
+describe('Test case reservation', () => {
+	it('should return empty string if passes an empty string', () => {
+		expect(pluralizer.toPlural('')).toBe('');
+	});
+
+	it('should return the word itself if it is uncountable', () => {
+		expect(pluralizer.toPlural('Fish')).toBe('Fish');
+		expect(pluralizer.toPlural('FisH')).toBe('FisH');
+	});
+
+	it('should return the plural/singular form', () => {
+		expect(pluralizer.toPlural('Boy')).toBe('Boys');
+		expect(pluralizer.toSingular('Boys')).toBe('Boy');
+	});
+});
