@@ -10,6 +10,7 @@
     "test": "jest --coverage --verbose",
     "test:watch": "jest --onlyChanged --verbose --watch",
     "start": "start coverage/lcov-report/index.html",
+    "meta": "typedoc --options typedoc.json",
     "prepublishOnly": "nhb-build",
     "format": "nhb-format",
     "lint": "nhb-lint",
@@ -69,6 +70,7 @@
     "nhb-scripts": "^1.8.55",
     "prettier": "^3.6.2",
     "ts-jest": "^29.4.1",
+    "typedoc": "^0.28.10",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.39.1"
   },
