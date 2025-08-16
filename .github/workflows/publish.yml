@@ -134,10 +134,21 @@ jobs:
           tag_name: "v${{ env.VERSION }}"
           name: "Version ${{ env.VERSION }}"
           body: |
-            - 📦 Find in [NPM Registry](https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }}).
-            - 📦 Also Available in [GitHub Packages](https://github.com/${{ github.repository }}/pkgs/npm/nhb-toolbox).
-            - 📄 Full Docs at [Official Docs](https://nhb-toolbox.vercel.app)
-            - 🆕 [See the Full CHANGELOG](./CHANGELOG.md)
+            ## 📦 nhb-toolbox — v${{ env.VERSION }}
+
+            **Compare changes:** [${{ env.LATEST_TAG }}...v${{ env.VERSION }}](https://github.com/${{ github.repository }}/compare/${{ env.LATEST_TAG }}...v${{ env.VERSION }})
+
+            ### 🔑 Highlights
+            - Short summary of most important changes (breaking changes, new features, or bugfixes).
+            - If this is a pre-release: _pre-release_ (alpha/beta/rc) tag applied.
+              
+            ### 🆕 Release Notes
             ${{ steps.gen_notes.outputs.body }}
+
+            ### 📄 Full Changelog
+            The full changelog is maintained in the repository: [CHANGELOG.md](./CHANGELOG.md)
+
+            ---
+            _Docs: https://nhb-toolbox.vercel.app • NPM: https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }} • GitHub Packages: https://github.com/${{ github.repository }}/pkgs/npm/nhb-toolbox_
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
