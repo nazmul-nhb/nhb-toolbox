@@ -134,10 +134,10 @@ jobs:
             echo "No commits after $LATEST_TAG -> release_notes.md will be empty"
             printf "" > release_notes.md
           else
-            echo "First commit after tag (FIRST_AFTER): $FIRST_AFTER"
+            echo "First commit after last tag: $FIRST_AFTER"
             git show -s --format="%h %s" "$FIRST_AFTER"
 
-            # generate release notes starting from the first commit AFTER the tag
+            # generate release notes starting from the first commit AFTER last tag
             pnpm dlx changelog-maker --start-ref "$FIRST_AFTER" > release_notes.md
           fi
 
@@ -180,4 +180,4 @@ jobs:
             **Compare Changes:** [${{ env.LATEST_TAG }} vs v${{ env.VERSION }}](https://github.com/${{ github.repository }}/compare/${{ env.LATEST_TAG }}...v${{ env.VERSION }})
 
             ---
-            **(Full CHANGELOG)(./CHANGELOG.md) • [Docs](https://nhb-toolbox.vercel.app) • [NPM](https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }}) • [GitHub Packages](https://github.com/${{ github.repository }}/pkgs/npm/nhb-toolbox)**
+            **[Full CHANGELOG](./CHANGELOG.md) • [Docs](https://nhb-toolbox.vercel.app) • [NPM](https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }}) • [GitHub Packages](https://github.com/${{ github.repository }}/pkgs/npm/nhb-toolbox)**
