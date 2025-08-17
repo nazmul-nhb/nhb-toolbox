@@ -114,7 +114,27 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # include if you want PR metadata
         run: |
-          # generate markdown into a file (pnpm dlx does not support --yes)
+          set -euo pipefail
+
+          echo "LATEST_TAG: ${{ env.LATEST_TAG }}"
+          echo "Commits between ${{ env.LATEST_TAG }} and HEAD (for debug):"
+          git --no-pager log --oneline "${{ env.LATEST_TAG }}..HEAD" || true
+
+          # find the first commit AFTER the tag (earliest in the range)
+          FIRST_AFTER=$(git rev-list --reverse "${{ env.LATEST_TAG }}..HEAD" | head -n 1 || true)
+
+          if [ -z "$FIRST_AFTER" ]; then
+            echo "No commits after ${{ env.LATEST_TAG }} -> release_notes.md will be empty"
+            printf "" > release_notes.md
+          else
+            echo "First commit after tag: $FIRST_AFTER"
+
+            # use the first-after SHA as start-ref (this excludes the tag commit)
+            # changelog-maker is inclusive of start-ref, so starting at the first-after commit gives exactly the commits expected
+            # generate markdown into a file (pnpm dlx does not support --yes)
+            pnpm dlx changelog-maker --start-ref "$FIRST_AFTER" > release_notes.md
+          fi
+
           pnpm dlx changelog-maker --start-ref "${{ env.LATEST_TAG }}" > release_notes.md
 
           # push file contents into the step output (safe multiline)
