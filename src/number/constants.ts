@@ -66,6 +66,22 @@ export const ORDINAL_UNDER_TEEN = /* @__PURE__ */ Object.freeze({
 	twelve: 'twelfth',
 } as Record<string, string>);
 
+/** Ordinals that don't cleanly map by suffix alone */
+export const ORDINAL_TO_CARDINAL = /* @__PURE__ */ Object.freeze({
+	first: 'one',
+	second: 'two',
+	third: 'three',
+	fourth: 'four',
+	fifth: 'five',
+	sixth: 'six',
+	seventh: 'seven',
+	eighth: 'eight',
+	ninth: 'nine',
+	tenth: 'ten',
+	eleventh: 'eleven',
+	twelfth: 'twelve',
+} as Record<string, string>);
+
 /** List of ISO 4217 currency codes */
 export const CURRENCY_CODES = /* @__PURE__ */ Object.freeze([
 	'AED',

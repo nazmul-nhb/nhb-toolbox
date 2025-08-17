@@ -119,6 +119,7 @@ export {
 } from './number/guards';
 
 export {
+	wordsToNumber as cardinalToNumber,
 	numberToWordsOrdinal as cardinalWordsToOrdinal,
 	numberToWords as convertNumberToWords,
 	numberToWordsOrdinal as convertNumberToWordsOrdinal,
@@ -128,8 +129,11 @@ export {
 	numberToWords,
 	numberToWordsOrdinal,
 	convertToRomanNumerals as numericToRoman,
+	wordsToNumber as ordinalToNumber,
 	convertToRomanNumerals as toRoman,
 	convertToRomanNumerals as toRomanNumeral,
+	wordsToNumber,
+	wordsToNumber as wordToNumber,
 } from './number/convert';
 
 export {
