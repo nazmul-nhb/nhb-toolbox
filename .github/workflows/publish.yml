@@ -112,32 +112,45 @@ jobs:
         if: env.VERSION_UNCHANGED == 'false'
         id: gen_notes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # include if you want PR metadata
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
 
-          echo "LATEST_TAG: ${{ env.LATEST_TAG }}"
-          echo "Commits between ${{ env.LATEST_TAG }} and HEAD (for debug):"
-          git --no-pager log --oneline "${{ env.LATEST_TAG }}..HEAD" || true
+          echo "LATEST_TAG: $LATEST_TAG"
+          git fetch --tags --prune
 
-          # find the first commit AFTER the tag (earliest in the range)
-          FIRST_AFTER=$(git rev-list --reverse "${{ env.LATEST_TAG }}..HEAD" | head -n 1 || true)
+          # tag commit SHA
+          TAG_SHA=$(git rev-parse "$LATEST_TAG")
+          echo "TAG_SHA: $TAG_SHA"
+
+          # show commits that are considered by the range (debug)
+          echo "Commits between $LATEST_TAG and HEAD:"
+          git --no-pager log --oneline "$LATEST_TAG..HEAD" || true
+
+          # first commit after the tag (earliest in range)
+          FIRST_AFTER=$(git rev-list --reverse "$LATEST_TAG..HEAD" | head -n 1 || true)
 
           if [ -z "$FIRST_AFTER" ]; then
-            echo "No commits after ${{ env.LATEST_TAG }} -> release_notes.md will be empty"
+            echo "No commits after $LATEST_TAG -> release_notes.md will be empty"
             printf "" > release_notes.md
           else
-            echo "First commit after tag: $FIRST_AFTER"
+            echo "First commit after tag (FIRST_AFTER): $FIRST_AFTER"
+            git show -s --format="%h %s" "$FIRST_AFTER"
 
-            # use the first-after SHA as start-ref (this excludes the tag commit)
-            # changelog-maker is inclusive of start-ref, so starting at the first-after commit gives exactly the commits expected
-            # generate markdown into a file (pnpm dlx does not support --yes)
+            # generate release notes starting from the first commit AFTER the tag
             pnpm dlx changelog-maker --start-ref "$FIRST_AFTER" > release_notes.md
           fi
 
-          pnpm dlx changelog-maker --start-ref "${{ env.LATEST_TAG }}" > release_notes.md
+          # sanity: ensure tag commit SHA is NOT included in generated notes
+          if [ -n "$TAG_SHA" ] && grep -q "$TAG_SHA" release_notes.md 2>/dev/null; then
+            echo "::warning::Tag commit SHA found inside release_notes.md — aborting to avoid including tagged commit"
+            echo "---- release_notes.md (top 60 lines) ----"
+            sed -n '1,60p' release_notes.md || true
+            echo "---- end ----"
+            exit 1
+          fi
 
-          # push file contents into the step output (safe multiline)
+          # export as multiline output
           echo "body<<EOF" >> "$GITHUB_OUTPUT"
           cat release_notes.md >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
@@ -166,8 +179,5 @@ jobs:
 
             **Compare Changes:** [${{ env.LATEST_TAG }} vs v${{ env.VERSION }}](https://github.com/${{ github.repository }}/compare/${{ env.LATEST_TAG }}...v${{ env.VERSION }})
 
-            ### 📄 Full Changelog
-            - The full changelog is maintained in the repository: [CHANGELOG.md](./CHANGELOG.md)
-
             ---
-            **[Docs](https://nhb-toolbox.vercel.app) • [NPM](https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }}) • [GitHub Packages](https://github.com/${{ github.repository }}/pkgs/npm/nhb-toolbox)**
+            **(Full CHANGELOG)(./CHANGELOG.md) • [Docs](https://nhb-toolbox.vercel.app) • [NPM](https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }}) • [GitHub Packages](https://github.com/${{ github.repository }}/pkgs/npm/nhb-toolbox)**
