@@ -107,13 +107,6 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Create a Git tag if version is different
-      - name: Create Git Tag
-        if: env.VERSION_UNCHANGED == 'false'
-        run: |
-          git tag v${{ env.VERSION }}
-          git push origin v${{ env.VERSION }}
-
       # Generate release notes (markdown) for the release
       - name: Generate Release Notes
         if: env.VERSION_UNCHANGED == 'false'
@@ -122,12 +115,19 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # include if you want PR metadata
         run: |
           # generate markdown into a file (pnpm dlx does not support --yes)
-          pnpm dlx changelog-maker > release_notes.md
+          pnpm dlx changelog-maker --start-ref "${{ env.LATEST_TAG }}" > release_notes.md
 
           # push file contents into the step output (safe multiline)
           echo "body<<EOF" >> "$GITHUB_OUTPUT"
           cat release_notes.md >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
+
+      # Create a Git tag if version is different
+      - name: Create Git Tag
+        if: env.VERSION_UNCHANGED == 'false'
+        run: |
+          git tag v${{ env.VERSION }}
+          git push origin v${{ env.VERSION }}
 
       # Create GitHub Release if version is different
       - name: Create Release
