@@ -134,7 +134,7 @@ export function numberToWordsOrdinal(number: Numeric | string) {
 /**
  * * Convert an English cardinal/ordinal word string into a number.
  *
- * - Accepts hyphenated words, "and", ordinals (first, second, ...), negatives, and large scales (thousand, million etc.).
+ * - Accepts hyphenated words, "and", ordinals (first, second, etc.), negatives, and large scales (thousand, million etc.).
  *
  * @example
  * wordsToNumber('forty-two') // 42
@@ -143,8 +143,11 @@ export function numberToWordsOrdinal(number: Numeric | string) {
  * wordsToNumber('twenty-first') // 21
  * wordsToNumber('negative five') // -5
  *
- * @param word - human readable number (cardinal or ordinal)
- * @returns numeric value or NaN if cannot parse
+ * @param word - A human readable number (cardinal or ordinal) in words
+ * @returns Numeric value of the word or NaN if cannot parse
+ *
+ * @remarks
+ * **NOTE** - *For very large numbers (e.g. more than quintillion) results may not always be correct.*
  */
 export function wordsToNumber(word: string): number {
 	if (!word || typeof word !== 'string') return NaN;
@@ -187,14 +190,11 @@ export function wordsToNumber(word: string): number {
 		THOUSANDS.map((w, i) => [w, i === 0 ? 1 : 1000 ** i])
 	);
 
-	const PROTECTED_TOKENS = new Set([
-		...ONES,
-		...TEENS,
-		...TENS,
-		...THOUSANDS,
-		'hundred',
-		'zero',
-	]);
+	const PROTECTED_TOKENS = new Set(
+		[...ONES, ...TEENS, ...TENS, ...THOUSANDS, 'hundred', 'zero'].filter(
+			Boolean
+		)
+	);
 
 	// Handle ordinal forms
 	const tokens = input

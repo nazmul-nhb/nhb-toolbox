@@ -45,11 +45,11 @@ export const THOUSANDS = /* @__PURE__ */ Object.freeze([
 	'trillion',
 	'quadrillion',
 	'quintillion',
-	// ! Needs to modify later, supports up to 10 sextillion! It's a bug!
+	// ! Need to modify later, supports up to 10 sextillion! It's a bug (limitation in JS)!
 	// 'sextillion',
 ] as const);
 
-/** Ordinal number in words against the corresponding cardinal variant */
+/** Ordinal numbers (0-12) in words against the corresponding cardinal variant */
 export const ORDINAL_UNDER_TEEN = /* @__PURE__ */ Object.freeze({
 	zero: 'zeroth',
 	one: 'first',

@@ -6,7 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
-## [4.14.4-9] - 2025-08-16
+## [4.14.10] - 2025-08-17
+
+- **Added** new utility `wordsToNumber` utility with alias: `convertWordsToNumber`, `convertWordToNumber` and `wordToNumber`
+
+## [4.14.9] - 2025-08-16
 
 - **Fixed** minor _internal issues_ and **updated** JSDoc for `Pluralizer`.
 
