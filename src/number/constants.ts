@@ -45,7 +45,7 @@ export const THOUSANDS = /* @__PURE__ */ Object.freeze([
 	'trillion',
 	'quadrillion',
 	'quintillion',
-	// ! Needs to modify later, below supports up to 10 sextillion! It's a bug!
+	// ! Needs to modify later, supports up to 10 sextillion! It's a bug!
 	// 'sextillion',
 ] as const);
 
@@ -80,6 +80,21 @@ export const ORDINAL_TO_CARDINAL = /* @__PURE__ */ Object.freeze({
 	tenth: 'ten',
 	eleventh: 'eleven',
 	twelfth: 'twelve',
+	thirteenth: 'thirteen',
+	fourteenth: 'fourteen',
+	fifteenth: 'fifteen',
+	sixteenth: 'sixteen',
+	seventeenth: 'seventeen',
+	eighteenth: 'eighteen',
+	nineteenth: 'nineteen',
+	twentieth: 'twenty',
+	thirtieth: 'thirty',
+	fortieth: 'forty',
+	fiftieth: 'fifty',
+	sixtieth: 'sixty',
+	seventieth: 'seventy',
+	eightieth: 'eighty',
+	ninetieth: 'ninety',
 } as Record<string, string>);
 
 /** List of ISO 4217 currency codes */

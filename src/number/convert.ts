@@ -149,122 +149,128 @@ export function numberToWordsOrdinal(number: Numeric | string) {
 export function wordsToNumber(word: string): number {
 	if (!word || typeof word !== 'string') return NaN;
 
-	// allow numeric strings directly
 	const trimmed = word.trim();
+
+	// Handle direct numeric strings with commas
+	if (/^[+-]?\d{1,3}(,\d{3})*(\.\d+)?$/.test(trimmed)) {
+		return Number(trimmed.replace(/,/g, ''));
+	}
+
+	// Handle simple numeric strings
 	if (/^[+-]?\d+(\.\d+)?$/.test(trimmed)) return Number(trimmed);
 
 	let input = trimmed.toLowerCase();
 
-	// handle negative prefix words
+	// Handle negative prefix words
 	let negative = false;
 	input = input.replace(/^\s*(minus|negative)\s+/, () => {
 		negative = true;
 		return '';
 	});
 
-	// normalize: replace hyphens, commas; remove "and"
+	// Normalize: replace hyphens; remove "and"
 	input = input
-		.replace(/[-,]/g, ' ')
-		.replace(/\band\b/g, ' ')
+		.replace(/-/g, ' ')
+		.replace(/\s+and\s+/g, ' ')
 		.replace(/\s+/g, ' ')
 		.trim();
 
 	if (!input) return NaN;
 
-	// build lookup maps from your arrays
-	const onesMap = new Map<string, number>(ONES.map((w, i) => [w, i]));
+	// build lookup maps from arrays
+	const onesMap = new Map<string, number>(
+		ONES.map((w, i) => [w === '' ? 'zero' : w, i])
+	);
 	const teensMap = new Map<string, number>(TEENS.map((w, i) => [w, 10 + i]));
 	const tensMap = new Map<string, number>(TENS.map((w, i) => [w, i * 10]));
 	const scalesMap = new Map<string, number>(
 		THOUSANDS.map((w, i) => [w, i === 0 ? 1 : 1000 ** i])
 	);
 
-	// tokenize and normalize ordinal suffixes like "twenty-first" -> "twenty first"
+	const PROTECTED_TOKENS = new Set([
+		...ONES,
+		...TEENS,
+		...TENS,
+		...THOUSANDS,
+		'hundred',
+		'zero',
+	]);
+
+	// Handle ordinal forms
 	const tokens = input
 		.split(' ')
 		.map((token) => {
-			// strip ordinal suffixes like "th", "st", "nd", "rd" on plain numbers (e.g., "fiftieth" handled below)
-			const tokenStripped = token.replace(
-				/(first|second|third|eleventh|twelfth)$/i,
-				(m) => m.toLowerCase()
-			);
-
-			const ORDINAL_SUFFIXES = /(teenth|tieth|ieth|th|st|nd|rd)$/i;
-
-			// if token is an ordinal word known in map, convert to cardinal word
-			if (ORDINAL_TO_CARDINAL[tokenStripped])
-				return ORDINAL_TO_CARDINAL[tokenStripped];
-			// remove simple ordinal suffix (fiftieth -> fifty? handle common pattern)
-			if (ORDINAL_SUFFIXES.test(tokenStripped)) {
-				// convert xyth -> xy by removing trailing 'th'/'st' etc (best-effort)
-				return tokenStripped.replace(ORDINAL_SUFFIXES, '');
+			if (ORDINAL_TO_CARDINAL[token]) {
+				return ORDINAL_TO_CARDINAL[token];
 			}
-			return tokenStripped;
+
+			if (PROTECTED_TOKENS.has(token)) {
+				return token;
+			}
+
+			// Only strip suffixes if not protected
+			return token.replace(/(teenth|tieth|ieth|th|st|nd|rd)$/i, '');
 		})
 		.filter(Boolean);
 
 	if (tokens.length === 0) return NaN;
 
 	let total = 0;
-	let current = 0;
-	let seenAny = false;
+	let currentNumber = 0;
+	let hasInvalidToken = false;
 
-	for (const raw of tokens) {
-		const token = raw?.toLowerCase();
+	for (const token of tokens) {
+		if (hasInvalidToken) break;
 
-		// direct maps
+		// Handle direct maps
 		if (onesMap.has(token)) {
-			current += onesMap.get(token)!;
-			seenAny = true;
+			currentNumber += onesMap.get(token)!;
+
 			continue;
 		}
 		if (teensMap.has(token)) {
-			current += teensMap.get(token)!;
-			seenAny = true;
+			currentNumber += teensMap.get(token)!;
+
 			continue;
 		}
 		if (tensMap.has(token)) {
-			current += tensMap.get(token)!;
-			seenAny = true;
+			currentNumber += tensMap.get(token)!;
+
 			continue;
 		}
 
-		// 'hundred' multiplier
+		// Handle 'hundred' multiplier
 		if (token === 'hundred') {
-			// if nothing before 'hundred', assume 1 hundred
-			current = (current || 1) * 100;
-			seenAny = true;
+			currentNumber = (currentNumber || 1) * 100;
+
 			continue;
 		}
 
-		// scales like thousand, million, ...
+		// Handle scale words (thousand, million, etc.)
 		if (scalesMap.has(token)) {
 			const scale = scalesMap.get(token)!;
-			if (scale === 1) {
-				// ignore empty scale token (shouldn't happen for '')
+			if (scale > 1) {
+				total += (currentNumber || 1) * scale;
+				currentNumber = 0;
+
 				continue;
 			}
-			// multiply current (or 1) by scale and add to total
-			const toAdd = (current || 1) * scale;
-			total += toAdd;
-			current = 0;
-			seenAny = true;
-			continue;
 		}
 
-		// try to parse token as numeric (defensive)
+		// Handle numeric tokens
 		if (/^\d+$/.test(token)) {
-			current += Number(token);
-			seenAny = true;
+			currentNumber += Number(token);
+
 			continue;
 		}
 
-		// unknown token -> fail parsing
-		return NaN;
+		hasInvalidToken = true;
 	}
 
-	const result = total + current;
-	if (!seenAny || Number.isNaN(result)) return NaN;
+	if (hasInvalidToken) return NaN;
 
-	return negative ? -result : result;
+	// Add any remaining value
+	total += currentNumber;
+
+	return negative ? -total : total;
 }
