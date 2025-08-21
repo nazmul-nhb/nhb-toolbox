@@ -180,4 +180,4 @@ jobs:
             **Compare Changes:** [${{ env.LATEST_TAG }} vs v${{ env.VERSION }}](https://github.com/${{ github.repository }}/compare/${{ env.LATEST_TAG }}...v${{ env.VERSION }})
 
             ---
-            **[Full CHANGELOG](./CHANGELOG.md) • [Docs](https://nhb-toolbox.vercel.app) • [NPM](https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }}) • [GitHub Packages](https://github.com/${{ github.repository }}/pkgs/npm/nhb-toolbox)**
+            **[Full CHANGELOG](./CHANGELOG.md) • [Docs](https://toolbox.nazmul-nhb.dev) • [NPM](https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }}) • [GitHub Packages](https://github.com/${{ github.repository }}/pkgs/npm/nhb-toolbox)**

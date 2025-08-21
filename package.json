@@ -1,6 +1,6 @@
 {
   "name": "nhb-toolbox",
-  "version": "4.14.10",
+  "version": "4.14.11",
   "description": "A versatile collection of smart, efficient, and reusable utility functions and classes for everyday development needs.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -35,7 +35,7 @@
     "type": "git",
     "url": "git+https://github.com/nazmul-nhb/nhb-toolbox.git"
   },
-  "homepage": "https://nhb-toolbox.vercel.app",
+  "homepage": "https://toolbox.nazmul-nhb.dev",
   "author": {
     "name": "Nazmul Hassan",
     "email": "nazmulnhb@gmail.com"

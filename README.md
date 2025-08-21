@@ -53,7 +53,7 @@
 - **Validation Utilities**: Robust data validation patterns
 - **Zero Dependencies**: Framework-agnostic implementation using only native TS/JS with 0 external package
 
-> [Explore Full Documentation →](https://nhb-toolbox.vercel.app/)
+> [Explore Full Documentation →](https://toolbox.nazmul-nhb.dev/)
 
 ---
 
@@ -201,7 +201,7 @@ See [Changelog](CHANGELOG.md) for recent updates.
 - **Modular Design**: Tree-shaking friendly – import only what you need with zero bloat
 - **Zero Dependencies**: No external dependencies - works with any JS/TS framework
 - **IDE Support**: Full type hints with JSDoc-powered API references in your editor
-- **Comprehensive Documentation**: Learn with real-world use cases on [documentation site](https://nhb-toolbox.vercel.app/)
+- **Comprehensive Documentation**: Learn with real-world use cases on [documentation site](https://toolbox.nazmul-nhb.dev/)
 - **Battle-Tested**: Reliable utilities refined through real-world production use
 - **Optimized for Production**: Focused on clean, efficient implementations
 
@@ -213,7 +213,7 @@ See [Changelog](CHANGELOG.md) for recent updates.
 
 The ultimate date/time manipulation class with 100+ methods for parsing, formatting, calculating, and comparing dates. Handles all edge cases and timezones safely.
 
-> 🧩 **Note**: Some methods in `Chronos` are available only through the [plugin system](https://nhb-toolbox.vercel.app/docs/classes/Chronos/plugins#-official-plugins). This modular design ensures the core bundle stays lightweight — plugins are loaded only when needed, reducing unnecessary code in your final build.
+> 🧩 **Note**: Some methods in `Chronos` are available only through the [plugin system](https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/plugins#-official-plugins). This modular design ensures the core bundle stays lightweight — plugins are loaded only when needed, reducing unnecessary code in your final build.
 
 ```typescript
 new Chronos('2025-01-01').addDays(3).format('YYYY-MM-DD'); // "2025-01-04"
@@ -221,7 +221,7 @@ new Chronos('2025-01-01').addDays(3).format('YYYY-MM-DD'); // "2025-01-04"
 chronos('2025-01-01').addDays(3).format('YYYY-MM-DD'); // "2025-01-04"
 ```
 
-[Documentation →](https://nhb-toolbox.vercel.app/docs/classes/Chronos)
+[Documentation →](https://toolbox.nazmul-nhb.dev/docs/classes/Chronos)
 
 ---
 
@@ -235,7 +235,7 @@ const darkerBlue = blue.applyDarkness(20); // 20% darker
 console.log(darkerBlue.hsl); // "hsl(240, 100%, 40%)" (was 50%)
 ```
 
-[Documentation →](https://nhb-toolbox.vercel.app/docs/classes/Color)
+[Documentation →](https://toolbox.nazmul-nhb.dev/docs/classes/Color)
 
 ---
 
@@ -252,7 +252,7 @@ const laptop = productFinder.findOne('laptop', 'category', {
 });
 ```
 
-[Documentation →](https://nhb-toolbox.vercel.app/docs/classes/Finder)
+[Documentation →](https://toolbox.nazmul-nhb.dev/docs/classes/Finder)
 
 ---
 
@@ -269,7 +269,7 @@ generateRandomID({
 }); // "USER-171234567890-AB3C4D5E6F7G"
 ```
 
-[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/string/generateRandomID)
+[Documentation →](https://toolbox.nazmul-nhb.dev/docs/utilities/string/generateRandomID)
 
 ---
 
@@ -292,7 +292,7 @@ pluralizer.isSingular('child'); // true
 pluralizer.isPlural('fish'); // true (uncountable)
 ```
 
-[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/string/pluralizer)
+[Documentation →](https://toolbox.nazmul-nhb.dev/docs/utilities/string/pluralizer)
 
 ---
 
@@ -308,7 +308,7 @@ getColorForInitial(['Alice', 'Bob', 'Charlie']);
 getColorForInitial('Banana', 50); // '#00376E80' (50% opacity)
 ```
 
-[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/color/getColorForInitial)
+[Documentation →](https://toolbox.nazmul-nhb.dev/docs/utilities/color/getColorForInitial)
 
 ---
 
@@ -341,7 +341,7 @@ const formData = createFormData({
 // files[1]=[File2]
 ```
 
-[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/form/createFormData)
+[Documentation →](https://toolbox.nazmul-nhb.dev/docs/utilities/form/createFormData)
 
 ---
 
@@ -366,7 +366,7 @@ sanitizeData(user, { ignoreNullish: true }, 'partial');
 // { name: 'John' }
 ```
 
-[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/object/sanitizeData)
+[Documentation →](https://toolbox.nazmul-nhb.dev/docs/utilities/object/sanitizeData)
 
 ---
 
@@ -378,7 +378,7 @@ sanitizeData(user, { ignoreNullish: true }, 'partial');
 parseJSON('{"value":"42"}'); // { value: 42 } (auto-converts numbers)
 ```
 
-[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/misc/parseJSON)
+[Documentation →](https://toolbox.nazmul-nhb.dev/docs/utilities/misc/parseJSON)
 
 ---
 
@@ -390,7 +390,7 @@ Convert numbers to human-readable words (supports up to 100 quintillion).
 numberToWords(125); // "one hundred twenty-five"
 ```
 
-[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/number/numberToWords)
+[Documentation →](https://toolbox.nazmul-nhb.dev/docs/utilities/number/numberToWords)
 
 ---
 
@@ -404,7 +404,7 @@ getNumbersInRange('prime', { min: 10, max: 30, getAsString: true });
 // "11, 13, 17, 19, 23, 29"
 ```
 
-[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/number/getNumbersInRange)
+[Documentation →](https://toolbox.nazmul-nhb.dev/docs/utilities/number/getNumbersInRange)
 
 **`calculatePercentage`** - Swiss Army knife for percentage calculations with 7 specialized modes
 
@@ -417,7 +417,7 @@ calculatePercentage({
 }); // 50 (50% increase)
 ```
 
-[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/number/calculatePercentage)
+[Documentation →](https://toolbox.nazmul-nhb.dev/docs/utilities/number/calculatePercentage)
 
 ---
 
@@ -432,7 +432,7 @@ extractUpdatedFields(dbRecord, update);
 // { meta: { views: 1 } }
 ```
 
-[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/object/extractUpdatedFields)
+[Documentation →](https://toolbox.nazmul-nhb.dev/docs/utilities/object/extractUpdatedFields)
 
 ---
 
@@ -445,7 +445,7 @@ extractUpdatedFields(dbRecord, update);
 throttleAction(updateScrollPosition, 100);
 ```
 
-[Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/misc/throttleAction)
+[Documentation →](https://toolbox.nazmul-nhb.dev/docs/utilities/misc/throttleAction)
 
 **`debounceAction`** - Intelligent delay for expensive operations
 
@@ -454,9 +454,9 @@ throttleAction(updateScrollPosition, 100);
 debounceAction(fetchResults, 300);
 ```
 
-[Full Documentation →](https://nhb-toolbox.vercel.app/docs/utilities/misc/debounceAction)
+[Full Documentation →](https://toolbox.nazmul-nhb.dev/docs/utilities/misc/debounceAction)
 
-> These utilities represent just a portion of the comprehensive `toolbox`. Each is designed with production-grade reliability and developer experience in mind. Explore more in the [full documentation](https://nhb-toolbox.vercel.app). All the utilities and classes are categorized.
+> These utilities represent just a portion of the comprehensive `toolbox`. Each is designed with production-grade reliability and developer experience in mind. Explore more in the [full documentation](https://toolbox.nazmul-nhb.dev). All the utilities and classes are categorized.
 
 ---
 

@@ -12,7 +12,7 @@ export type Objects = readonly [GenericObject, ...GenericObject[]];
 /**
  * - Prettify all object properties into a readable form.
  *
- * @note It is recommended to use it only with `MergeAll<T>`, `FlattenValue<T>` and/or `FlattenLeafValue<T>`. For other other cases use {@link https://nhb-toolbox.vercel.app/docs/types/utility-types#prettifyt Prettify<T>}
+ * @note It is recommended to use it only with `MergeAll<T>`, `FlattenValue<T>` and/or `FlattenLeafValue<T>`. For other other cases use {@link https://toolbox.nazmul-nhb.dev/docs/types/utility-types#prettifyt Prettify<T>}
  */
 export type Expand<T> =
 	T extends AdvancedTypes ? T
