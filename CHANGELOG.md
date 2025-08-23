@@ -6,7 +6,7 @@ All notable changes to the package will be documented here.
 
 ---
 
-## [4.14.12] - 2025-08-17
+## [4.14.12] - 2025-08-23
 
 - **Updated** _error type_ for `trimString` utility.
 
