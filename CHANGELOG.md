@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.14.12] - 2025-08-17
+
+- **Updated** _error type_ for `trimString` utility.
+
 ## [4.14.10] - 2025-08-17
 
 - **Added** new utility `wordsToNumber` utility with alias: `convertWordsToNumber`, `convertWordToNumber` and `wordToNumber`

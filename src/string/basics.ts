@@ -152,5 +152,7 @@ export function trimString(input: string | string[]): string | string[] {
 		);
 	}
 
-	throw new Error('Invalid input type. Expected string or array of strings!');
+	throw new TypeError('Expected string or array of strings!', {
+		cause: 'Invalid Input Type',
+	});
 }
