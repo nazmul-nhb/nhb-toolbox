@@ -495,5 +495,7 @@ export function convertColorCode(color: ColorType): ConvertedColors<ColorType> {
 		} as ConvertedColors<HSLA>;
 	}
 
-	throw new Error(`Unrecognized Color Format! ${color}`);
+	throw new TypeError(`${color} is not a valid color!`, {
+		cause: 'Unrecognized Color Format',
+	});
 }

@@ -608,7 +608,9 @@ export class Color {
 			return { hex8, rgba, hsla: color };
 		}
 
-		throw new Error(`Unrecognized color format: ${color}`);
+		throw new TypeError(`${color} is not a valid color!`, {
+			cause: 'Unrecognized Color Format',
+		});
 	}
 
 	/**

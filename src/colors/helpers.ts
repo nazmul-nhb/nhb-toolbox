@@ -1,5 +1,14 @@
 import type { Percent } from '../number/types';
-import type { AlphaValue, Hex6, Hex8, HSL, HSLA, RGB, RGBA } from './types';
+import type {
+	AlphaValue,
+	Hex,
+	Hex6,
+	Hex8,
+	HSL,
+	HSLA,
+	RGB,
+	RGBA,
+} from './types';
 
 /**
  * * Converts opacity percentage (0-100) to a 2-digit hex string.
@@ -18,12 +27,12 @@ export const _convertOpacityToHex = (opacity: Percent): string => {
 
 /**
  * * Applies an opacity value to a color string.
- * @param color The color string to apply opacity to.
+ * @param color The color string in hex to apply opacity to.
  * @param opacity The opacity value as a percentage (0-100).
  * @returns The color string with the opacity value applied.
  */
-export const _applyOpacity = (color: string, opacity: string): string => {
-	return color.concat(opacity);
+export const _applyOpacity = (color: Hex, opacity: string): Hex8 => {
+	return color?.slice(0, 7).concat(opacity) as Hex8;
 };
 
 /**

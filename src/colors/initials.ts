@@ -1,10 +1,10 @@
 import type { Percent } from '../number/types';
 import { ALPHABET_COLOR_PALETTE, NUMBER_COLOR_PALETTE } from './constants';
 import { _applyOpacity, _convertOpacityToHex } from './helpers';
-import type { ColorInput, ColorInputArray } from './types';
+import type { ColorInput, ColorInputArray, Hex8 } from './types';
 
 /**
- *  * Generates a hex color based on the first character (initial) of a string or number.
+ *  * Generates a hex (`Hex8` format) color based on the first character (initial) of a string or number.
  *
  * - For numbers, it uses 10 predefined colors (0-9).
  * - For letters, it uses 26 predefined colors (A-Z).
@@ -16,10 +16,10 @@ import type { ColorInput, ColorInputArray } from './types';
 export function getColorForInitial(
 	input: string | number,
 	opacity?: Percent
-): string;
+): Hex8;
 
 /**
- *  * Generates an array of hex colors based on the first character (initial) of an array of strings/numbers or even nested arrays of strings/numbers.
+ *  * Generates an array of hex (`Hex8` format) colors based on the first character (initial) of an array of strings/numbers or even nested arrays of strings/numbers.
  *
  * - For numbers, it uses 10 predefined colors (0-9).
  * - For letters, it uses 26 predefined colors (A-Z).
@@ -32,10 +32,10 @@ export function getColorForInitial(
 export function getColorForInitial(
 	input: ColorInputArray,
 	opacity?: Percent
-): string[];
+): Hex8[];
 
 /**
- *  * Generates a hex color based on the first character (initial) of a string or number; or an array of hex colors based on the first character (initial) of an array of strings/numbers or even nested arrays of strings/numbers.
+ *  * Generates a hex color (`Hex8` format) based on the first character (initial) of a string or number; or an array of hex colors based on the first character (initial) of an array of strings/numbers or even nested arrays of strings/numbers.
  *
  * - For numbers, it uses 10 predefined colors (0-9).
  * - For letters, it uses 26 predefined colors (A-Z).
@@ -48,22 +48,24 @@ export function getColorForInitial(
 export function getColorForInitial(
 	input: ColorInput | ColorInputArray = '',
 	opacity: Percent = 100
-): string | string[] {
+): Hex8 | Hex8[] {
 	let initial: string;
 
 	const hexOpacity = _convertOpacityToHex(opacity);
 
-	const numbers = '0123456789';
+	const NUMBERS = '0123456789';
+
+	const DEFAULT = '#010514';
 
 	// Handle empty string case
-	if (!input) return _applyOpacity('#010514', hexOpacity);
+	if (!input) return _applyOpacity(DEFAULT, hexOpacity);
 
 	// Handle string input
 	if (typeof input === 'string') {
 		initial = input[0];
 
 		// Handle number as string
-		if (numbers.includes(initial)) {
+		if (NUMBERS.includes(initial)) {
 			return _applyOpacity(
 				NUMBER_COLOR_PALETTE[parseInt(initial, 10)],
 				hexOpacity
@@ -78,19 +80,19 @@ export function getColorForInitial(
 			return _applyOpacity(ALPHABET_COLOR_PALETTE[index], hexOpacity);
 		}
 
-		return _applyOpacity('#010514', hexOpacity);
+		return _applyOpacity(DEFAULT, hexOpacity);
 		// Handle number input
 	} else if (typeof input === 'number' && !isNaN(input)) {
 		initial = input.toString()[0];
 
-		if (numbers.includes(initial)) {
+		if (NUMBERS.includes(initial)) {
 			return _applyOpacity(
 				NUMBER_COLOR_PALETTE[parseInt(initial, 10)],
 				hexOpacity
 			);
 		}
 
-		return _applyOpacity('#010514', hexOpacity);
+		return _applyOpacity(DEFAULT, hexOpacity);
 		// Handle array of strings/numbers
 	} else if (Array.isArray(input)) {
 		if (input?.length < 1)
@@ -108,5 +110,5 @@ export function getColorForInitial(
 			.flat();
 	}
 
-	return _applyOpacity('#010514', hexOpacity);
+	return _applyOpacity(DEFAULT, hexOpacity);
 }

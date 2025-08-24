@@ -66,6 +66,14 @@ export type HSLA =
 	| `hsla(${number}, ${number}%, ${number}%, ${number})`
 	| `hsla(${number},${number}%,${number}%,${number})`;
 
+/** Represents an object with `hex` (`hex6`) and `rgb` color */
+export type RandomHexRGB = {
+	/** Represents a hexadecimal color code. */
+	hex: Hex6;
+	/** Represents an RGB color string. */
+	rgb: RGB;
+};
+
 /** * Union type representing a color in Hex6, RGB, or HSL format. */
 export type ColorTypeSolid = Hex6 | RGB | HSL;
 

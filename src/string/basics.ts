@@ -141,7 +141,7 @@ export function trimString(input: string | string[]): string | string[] {
 	if (!input) return '';
 
 	// If the input is a string, trim each word
-	if (typeof input === 'string' && !Array.isArray(input)) {
+	if (typeof input === 'string') {
 		return input?.trim()?.replace(/\s+/g, ' ');
 	}
 
