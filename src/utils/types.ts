@@ -97,7 +97,9 @@ export type KeysOfUnion<T> = T extends T ? keyof T : never;
  * // { a?: string; nested?: { b?: number } }
  */
 export type DeepPartial<T> = {
-	[K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
+	[K in keyof T]?: T[K] extends AdvancedTypes ? T[K]
+	: T[K] extends object ? DeepPartial<T[K]>
+	: T[K];
 };
 
 /**

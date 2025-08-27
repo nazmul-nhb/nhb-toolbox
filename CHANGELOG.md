@@ -6,9 +6,13 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.14.14] - 2025-08-27
+
+- **Updated** `DeepPartial` type to preserve optional properties of advanced types like `File`, `FileList`, `Chronos` etc.
+
 ## [4.14.13] - 2025-08-24
 
-- **Updated** _return type_ for `getColorForInitial` utility and improved _internal logic_ and _error type_ for color generator utilities.
+- **Updated** _return type_ for `getColorForInitial` utility and **improved** _internal logic_ and _error type_ for color generator utilities.
 
 ## [4.14.12] - 2025-08-23
 
