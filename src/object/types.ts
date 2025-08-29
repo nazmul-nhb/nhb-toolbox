@@ -35,14 +35,14 @@ export type MergeAll<T extends readonly GenericObject[]> = {
 };
 
 /** - Dot-notation keys for flattened nested objects with `any` value (including optional properties) */
-export type FlattenKey<T> =
+export type FlattenDotKey<T> =
 	T extends AdvancedTypes ? never
 	: T extends GenericObject ?
 		{
 			[K in keyof T & string]: NonNullable<T[K]> extends Function ? never
 			: NonNullable<T[K]> extends AdvancedTypes ? K
 			: NonNullable<T[K]> extends GenericObject ?
-				`${K}.${FlattenKey<NonNullable<T[K]>>}`
+				`${K}.${FlattenDotKey<NonNullable<T[K]>>}`
 			:	`${K}`;
 		}[keyof T & string]
 	:	never;
@@ -59,8 +59,8 @@ export type DotValue<T, K extends string> =
 	: never;
 
 /** - Flattens the values of a nested object into a single level against the dot-notation key */
-export type FlattenValue<T> = {
-	[K in FlattenKey<T>]: DotValue<T, K>;
+export type FlattenDotValue<T> = {
+	[K in FlattenDotKey<T>]: DotValue<T, K>;
 };
 
 /** - Extracts only leaf-level key names (excluding objects/functions) */
@@ -75,7 +75,7 @@ export type FlattenLeafKey<T> =
 		}[keyof T & string]
 	:	never;
 
-/** - Gets value for a flat leaf key (assumes no there are duplicates! Duplicates are merged into one), */
+/** - Gets value for a flat leaf key (assumes there are no duplicates! Duplicates are merged into one), */
 export type LeafValue<T, K extends string> =
 	K extends keyof T ? T[K]
 	: T extends GenericObject ?

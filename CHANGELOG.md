@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.14.16] - 2025-08-29
+
+- **Updated** types related to _object flattening utilities_: `FlattenDotKey`, `FlattenDotValue`, `FlattenLeafKey`, `FlattenLeafValue` and `LeafValue`.
+
 ## [4.14.14] - 2025-08-27
 
 - **Updated** `DeepPartial` type to preserve optional properties of advanced types like `File`, `FileList`, `Chronos` etc.

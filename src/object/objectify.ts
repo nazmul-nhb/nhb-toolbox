@@ -9,12 +9,12 @@ import type { FlattenPartial } from '../types/index';
 import { isDeepEqual } from '../utils/index';
 import { parseObjectValues } from './sanitize';
 import type {
+	Expand,
+	FlattenDotValue,
 	FlattenLeafValue,
-	FlattenValue,
 	GenericObject,
 	MergeAll,
 	Objects,
-	Expand,
 } from './types';
 
 /**
@@ -82,7 +82,7 @@ export const mergeObjects = <T extends Objects>(
  */
 export const mergeAndFlattenObjects = <T extends Objects>(
 	...objects: T
-): Expand<FlattenValue<MergeAll<T>>> => {
+): Expand<FlattenDotValue<MergeAll<T>>> => {
 	const map = new Map<string, GenericObject>();
 
 	const _flattenObject = (obj: GenericObject, parentKey = '') => {
@@ -111,7 +111,7 @@ export const mergeAndFlattenObjects = <T extends Objects>(
 		result[key] = value;
 	});
 
-	return result as Expand<FlattenValue<MergeAll<T>>>;
+	return result as Expand<FlattenDotValue<MergeAll<T>>>;
 };
 
 /**
@@ -150,7 +150,7 @@ export const flattenObjectKeyValue = <T extends GenericObject>(
  */
 export const flattenObjectDotNotation = <T extends GenericObject>(
 	object: T
-): Expand<FlattenValue<MergeAll<[T]>>> => {
+): Expand<FlattenDotValue<MergeAll<[T]>>> => {
 	/**
 	 * * Recursively flattens an object, transforming nested structures into dot-notation keys.
 	 *
@@ -181,7 +181,7 @@ export const flattenObjectDotNotation = <T extends GenericObject>(
 		return flattened;
 	};
 
-	return _flattenObject(object) as Expand<FlattenValue<MergeAll<[T]>>>;
+	return _flattenObject(object) as Expand<FlattenDotValue<MergeAll<[T]>>>;
 };
 
 /**
