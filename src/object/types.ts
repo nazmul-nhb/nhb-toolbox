@@ -39,10 +39,11 @@ export type FlattenKey<T> =
 	T extends AdvancedTypes ? never
 	: T extends GenericObject ?
 		{
-			[K in keyof T & string]: T[K] extends Function ? never
-			: T[K] extends AdvancedTypes ? K
-			: T[K] extends GenericObject ? `${K}.${FlattenKey<T[K]>}`
-			: `${K}`;
+			[K in keyof T & string]: NonNullable<T[K]> extends Function ? never
+			: NonNullable<T[K]> extends AdvancedTypes ? K
+			: NonNullable<T[K]> extends GenericObject ?
+				`${K}.${FlattenKey<NonNullable<T[K]>>}`
+			:	`${K}`;
 		}[keyof T & string]
 	:	never;
 
@@ -50,7 +51,9 @@ export type FlattenKey<T> =
 export type DotValue<T, K extends string> =
 	K extends `${infer P}.${infer Rest}` ?
 		P extends keyof T ?
-			DotValue<T[P], Rest>
+			undefined extends T[P] ?
+				DotValue<NonNullable<T[P]>, Rest> | undefined
+			:	DotValue<T[P], Rest>
 		:	never
 	: K extends keyof T ? T[K]
 	: never;
@@ -65,9 +68,9 @@ export type FlattenLeafKey<T> =
 	T extends AdvancedTypes ? never
 	: T extends GenericObject ?
 		{
-			[K in keyof T & string]: T[K] extends Function ? never
-			: T[K] extends AdvancedTypes ? K
-			: T[K] extends GenericObject ? FlattenLeafKey<T[K]>
+			[K in keyof T & string]: NonNullable<T[K]> extends Function ? never
+			: NonNullable<T[K]> extends AdvancedTypes ? K
+			: NonNullable<T[K]> extends GenericObject ? FlattenLeafKey<T[K]>
 			: K;
 		}[keyof T & string]
 	:	never;
@@ -77,8 +80,8 @@ export type LeafValue<T, K extends string> =
 	K extends keyof T ? T[K]
 	: T extends GenericObject ?
 		{
-			[P in keyof T & string]: T[P] extends GenericObject ?
-				LeafValue<T[P], K>
+			[P in keyof T & string]: NonNullable<T[P]> extends GenericObject ?
+				LeafValue<NonNullable<T[P]>, K>
 			:	never;
 		}[keyof T & string]
 	:	never;
