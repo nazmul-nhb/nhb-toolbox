@@ -46,10 +46,7 @@ export default [
 			'no-undef': 'error',
 			'@typescript-eslint/no-empty-object-type': 'off',
 			'@typescript-eslint/no-unused-expressions': 'error',
-			'@typescript-eslint/consistent-type-imports': [
-				'warn',
-				{ prefer: 'type-imports' },
-			],
+			'@typescript-eslint/consistent-type-imports': ['warn', { prefer: 'type-imports' }],
 			'no-unused-vars': [
 				'off',
 				{
@@ -99,6 +96,7 @@ export default [
 	},
 	{
 		files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
+		ignores: ['**/__ideas__/**', '**/__dump__/**'],
 		rules: {
 			// Disallow ONLY `console.log`
 			'no-restricted-syntax': [
