@@ -28,9 +28,7 @@ export type Hex6 = Branded<`#${string}`, 'Hex6'>;
  * - G (Green): 0-255
  * - B (Blue): 0-255
  */
-export type RGB =
-	| `rgb(${number}, ${number}, ${number})`
-	| `rgb(${number},${number},${number})`;
+export type RGB = `rgb(${number}, ${number}, ${number})` | `rgb(${number},${number},${number})`;
 
 /**
  * * Represents an HSL color string.
@@ -116,8 +114,7 @@ export type AlphaValues = [number, number, number, number];
  * - If the input is `RGB`, the output includes `Hex` and `HSL`.
  * - If the input is `HSL`, the output includes `Hex` and `RGB`.
  */
-export interface ConvertedColors<T extends ColorType>
-	extends Record<string, ColorType> {
+export interface ConvertedColors<T extends ColorType> extends Record<string, ColorType> {
 	/** - The Hex representation (excluded if the input is already Hex). */
 	hex: T extends Hex6 | ColorTypeAlpha ? never : Hex6;
 	/** - The RGB representation (excluded if the input is already RGB). */

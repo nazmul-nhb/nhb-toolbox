@@ -1,5 +1,5 @@
 /**
- * Copyright 2025 Nazmul Hassan
+ * Copyright 2025 - present Nazmul Hassan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -166,10 +166,7 @@ export { getNumbersInRange } from './number/range';
 // ! Color Utilities
 export { getColorForInitial } from './colors/initials';
 
-export {
-	generateRandomColorInHexRGB,
-	generateRandomHSLColor,
-} from './colors/random';
+export { generateRandomColorInHexRGB, generateRandomHSLColor } from './colors/random';
 
 export {
 	convertColorCode,
@@ -190,10 +187,7 @@ export {
 
 export { Color, Color as Colour } from './colors/Color';
 
-export {
-	extractAlphaColorValues,
-	extractSolidColorValues,
-} from './colors/utils';
+export { extractAlphaColorValues, extractSolidColorValues } from './colors/utils';
 
 // ! Date & Time Utilities
 export {

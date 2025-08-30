@@ -1,9 +1,4 @@
-import type {
-	DotNotationKey,
-	GenericObject,
-	Numberified,
-	Stringified,
-} from './types';
+import type { DotNotationKey, GenericObject, Numberified, Stringified } from './types';
 
 /**
  * * Converts the values of specified keys in an object to numbers.
@@ -15,10 +10,7 @@ import type {
  *   - `convertTo`: The target type, either `"string"` or `"number"`.
  * @returns The modified object with the converted values as `"string"` or `"number"`.
  */
-export function convertObjectValues<
-	T extends GenericObject,
-	C extends 'string' | 'number',
->(
+export function convertObjectValues<T extends GenericObject, C extends 'string' | 'number'>(
 	data: T,
 	options: { keys: DotNotationKey<T>[]; convertTo: C }
 ): C extends 'string' ? Stringified<T>
@@ -35,10 +27,7 @@ export function convertObjectValues<
  *   - `convertTo`: The target type, either `"string"` or `"number"`.
  * @returns The modified array of objects with the converted values as `"string"` or `"number"`.
  */
-export function convertObjectValues<
-	T extends GenericObject,
-	C extends 'string' | 'number',
->(
+export function convertObjectValues<T extends GenericObject, C extends 'string' | 'number'>(
 	data: T[],
 	options: { keys: DotNotationKey<T>[]; convertTo: C }
 ): C extends 'string' ? Stringified<T>[]
@@ -55,10 +44,7 @@ export function convertObjectValues<
  *   - `convertTo`: The target type, either "string" or "number".
  * @returns The modified object or array of objects with the converted values, with updated types.
  */
-export function convertObjectValues<
-	T extends GenericObject,
-	C extends 'string' | 'number',
->(
+export function convertObjectValues<T extends GenericObject, C extends 'string' | 'number'>(
 	data: T | T[],
 	options: { keys: DotNotationKey<T>[]; convertTo: C }
 ): C extends 'string' ? Stringified<T> | Stringified<T>[]
@@ -68,15 +54,10 @@ export function convertObjectValues<
 
 	/** * Helper function to determine if value should be preserved. */
 	const _shouldPreserveValue = (value: unknown): boolean =>
-		convertTo === 'number' &&
-		(typeof value !== 'string' || isNaN(Number(value)));
+		convertTo === 'number' && (typeof value !== 'string' || isNaN(Number(value)));
 
 	/** * Helper function to resolve a dot-notation key path and modify the corresponding value in the object. */
-	const _setValueAtPath = (
-		obj: T,
-		path: string,
-		convertTo: 'string' | 'number'
-	): T => {
+	const _setValueAtPath = (obj: T, path: string, convertTo: 'string' | 'number'): T => {
 		const segments = path.split('.');
 
 		let current: GenericObject = obj;
@@ -99,10 +80,7 @@ export function convertObjectValues<
 					current[key] = Number(value);
 				}
 			} else {
-				if (
-					typeof current?.[key] === 'object' &&
-					current?.[key] !== null
-				) {
+				if (typeof current?.[key] === 'object' && current?.[key] !== null) {
 					current = current?.[key];
 				} else {
 					current[key] = {};
@@ -126,14 +104,12 @@ export function convertObjectValues<
 	};
 
 	if (Array.isArray(data)) {
-		return data?.map((d) => _convertValue(d)) as C extends 'string' ?
-			Stringified<T>[]
+		return data?.map((d) => _convertValue(d)) as C extends 'string' ? Stringified<T>[]
 		: C extends 'number' ? Numberified<T>[]
 		: never;
 	}
 
-	return _convertValue(data) as C extends 'string' ?
-		Stringified<T> | Stringified<T>[]
+	return _convertValue(data) as C extends 'string' ? Stringified<T> | Stringified<T>[]
 	: C extends 'number' ? Numberified<T> | Numberified<T>[]
 	: never;
 }

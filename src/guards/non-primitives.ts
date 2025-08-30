@@ -75,9 +75,7 @@ export function isFunction(value: unknown): value is GenericFn {
  * @param descriptor - The property descriptor to check.
  * @returns `true` if the descriptor is defined and its value is a function; otherwise, `false`.
  */
-export const isMethodDescriptor = (
-	descriptor: PropertyDescriptor | undefined
-): boolean => {
+export const isMethodDescriptor = (descriptor: PropertyDescriptor | undefined): boolean => {
 	return !!descriptor && typeof descriptor?.value === 'function';
 };
 

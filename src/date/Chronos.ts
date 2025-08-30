@@ -3,13 +3,7 @@ import { isString } from '../guards/primitives';
 import type { Enumerate, LocaleCode, NumberRange } from '../number/types';
 import { getOrdinal, roundToNearest } from '../number/utilities';
 import type { LooseLiteral, TupleOf } from '../utils/types';
-import {
-	DAYS,
-	INTERNALS,
-	MONTHS,
-	SORTED_TIME_FORMATS,
-	TIME_ZONE_LABELS,
-} from './constants';
+import { DAYS, INTERNALS, MONTHS, SORTED_TIME_FORMATS, TIME_ZONE_LABELS } from './constants';
 import { isLeapYear } from './guards';
 import type {
 	ChronosFormat,
@@ -270,18 +264,12 @@ export class Chronos {
 			case 'toUTC':
 			case 'utc':
 				return string.replace(
-					this.toISOString().replace(
-						/\.\d+(Z|[+-]\d{2}:\d{2})?$/,
-						''
-					),
+					this.toISOString().replace(/\.\d+(Z|[+-]\d{2}:\d{2})?$/, ''),
 					replacement
 				);
 			default:
 				return string.replace(
-					this.toLocalISOString().replace(
-						/\.\d+(Z|[+-]\d{2}:\d{2})?$/,
-						''
-					),
+					this.toLocalISOString().replace(/\.\d+(Z|[+-]\d{2}:\d{2})?$/, ''),
 					replacement
 				);
 		}
@@ -297,10 +285,7 @@ export class Chronos {
 				);
 			default:
 				return string.indexOf(
-					this.toLocalISOString().replace(
-						/\.\d+(Z|[+-]\d{2}:\d{2})?$/,
-						''
-					)
+					this.toLocalISOString().replace(/\.\d+(Z|[+-]\d{2}:\d{2})?$/, '')
 				);
 		}
 	}
@@ -315,10 +300,7 @@ export class Chronos {
 				);
 			default:
 				return string.split(
-					this.toLocalISOString().replace(
-						/\.\d+(Z|[+-]\d{2}:\d{2})?$/,
-						''
-					)
+					this.toLocalISOString().replace(/\.\d+(Z|[+-]\d{2}:\d{2})?$/, '')
 				);
 		}
 	}
@@ -329,10 +311,7 @@ export class Chronos {
 				return this.toISOString().replace('Z', this.#offset.slice(3));
 			case 'toUTC':
 			case 'utc':
-				return this.#toLocalISOString().replace(
-					this.getUTCOffset(),
-					'Z'
-				);
+				return this.#toLocalISOString().replace(this.getUTCOffset(), 'Z');
 			default:
 				return this.#toLocalISOString();
 		}
@@ -344,10 +323,7 @@ export class Chronos {
 	 * @returns Instance of native Date object.
 	 */
 	#toNewDate(value?: ChronosInput): Date {
-		const date =
-			value instanceof Chronos ?
-				value.toDate()
-			:	new Date(value ?? Date.now());
+		const date = value instanceof Chronos ? value.toDate() : new Date(value ?? Date.now());
 
 		// Check if the date is invalid
 		if (isNaN(date.getTime())) {
@@ -381,20 +357,15 @@ export class Chronos {
 	 * @returns Formatted date string.
 	 */
 	#format(format: string, useUTC = false): string {
-		const year =
-			useUTC ? this.#date.getUTCFullYear() : this.#date.getFullYear();
+		const year = useUTC ? this.#date.getUTCFullYear() : this.#date.getFullYear();
 		const month = useUTC ? this.#date.getUTCMonth() : this.#date.getMonth();
 		const day = useUTC ? this.#date.getUTCDay() : this.#date.getDay();
 		const date = useUTC ? this.#date.getUTCDate() : this.#date.getDate();
 		const hours = useUTC ? this.#date.getUTCHours() : this.#date.getHours();
-		const minutes =
-			useUTC ? this.#date.getUTCMinutes() : this.#date.getMinutes();
-		const seconds =
-			useUTC ? this.#date.getUTCSeconds() : this.#date.getSeconds();
+		const minutes = useUTC ? this.#date.getUTCMinutes() : this.#date.getMinutes();
+		const seconds = useUTC ? this.#date.getUTCSeconds() : this.#date.getSeconds();
 		const milliseconds =
-			useUTC ?
-				this.#date.getUTCMilliseconds()
-			:	this.#date.getMilliseconds();
+			useUTC ? this.#date.getUTCMilliseconds() : this.#date.getMilliseconds();
 		const timeZone = useUTC ? 'Z' : this.getTimeZoneOffset();
 
 		const dateComponents: Record<ChronosFormat, string> = {
@@ -477,10 +448,7 @@ export class Chronos {
 		absolute: boolean,
 		isFuture: boolean
 	): TimeDuration {
-		const entries = Object.entries(result) as [
-			keyof TimeDuration,
-			number,
-		][];
+		const entries = Object.entries(result) as [keyof TimeDuration, number][];
 
 		if (!absolute && !isFuture) {
 			for (const [key, value] of entries) {
@@ -581,9 +549,7 @@ export class Chronos {
 
 	/** @instance Clones and returns a new Chronos instance with the same date. */
 	clone(): Chronos {
-		return new Chronos(this.#date).#withOrigin(
-			this.#ORIGIN as ChronosMethods
-		);
+		return new Chronos(this.#date).#withOrigin(this.#ORIGIN as ChronosMethods);
 	}
 
 	/** @instance Gets the native `Date` instance (read-only). */
@@ -654,10 +620,7 @@ export class Chronos {
 				);
 			case 'toUTC':
 			case 'utc':
-				return this.#toLocalISOString().replace(
-					this.getUTCOffset(),
-					'Z'
-				);
+				return this.#toLocalISOString().replace(this.getUTCOffset(), 'Z');
 			default:
 				return this.#date.toISOString();
 		}
@@ -860,11 +823,7 @@ export class Chronos {
 	 * @param unit The unit to compare.
 	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
-	isSame(
-		other: ChronosInput,
-		unit: TimeUnit,
-		weekStartsOn: Enumerate<7> = 0
-	): boolean {
+	isSame(other: ChronosInput, unit: TimeUnit, weekStartsOn: Enumerate<7> = 0): boolean {
 		const time = other instanceof Chronos ? other : new Chronos(other);
 
 		return (
@@ -879,11 +838,7 @@ export class Chronos {
 	 * @param unit The unit to compare.
 	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
-	isBefore(
-		other: ChronosInput,
-		unit: TimeUnit,
-		weekStartsOn: Enumerate<7> = 0
-	): boolean {
+	isBefore(other: ChronosInput, unit: TimeUnit, weekStartsOn: Enumerate<7> = 0): boolean {
 		const time = other instanceof Chronos ? other : new Chronos(other);
 
 		return (
@@ -898,11 +853,7 @@ export class Chronos {
 	 * @param unit The unit to compare.
 	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
-	isAfter(
-		other: ChronosInput,
-		unit: TimeUnit,
-		weekStartsOn: Enumerate<7> = 0
-	): boolean {
+	isAfter(other: ChronosInput, unit: TimeUnit, weekStartsOn: Enumerate<7> = 0): boolean {
 		const time = other instanceof Chronos ? other : new Chronos(other);
 
 		return (
@@ -923,8 +874,7 @@ export class Chronos {
 		weekStartsOn: Enumerate<7> = 0
 	): boolean {
 		return (
-			this.isSame(other, unit, weekStartsOn) ||
-			this.isBefore(other, unit, weekStartsOn)
+			this.isSame(other, unit, weekStartsOn) || this.isBefore(other, unit, weekStartsOn)
 		);
 	}
 
@@ -940,8 +890,7 @@ export class Chronos {
 		weekStartsOn: Enumerate<7> = 0
 	): boolean {
 		return (
-			this.isSame(other, unit, weekStartsOn) ||
-			this.isAfter(other, unit, weekStartsOn)
+			this.isSame(other, unit, weekStartsOn) || this.isAfter(other, unit, weekStartsOn)
 		);
 	}
 
@@ -1321,10 +1270,7 @@ export class Chronos {
 		const startOfYear = new Chronos(this.year, 1, 1);
 		const startOfFirstWeek = startOfYear.startOf('week', weekStartsOn);
 
-		const week = this.startOf('week', weekStartsOn).diff(
-			startOfFirstWeek,
-			'week'
-		);
+		const week = this.startOf('week', weekStartsOn).diff(startOfFirstWeek, 'week');
 
 		return (week + 1) as NumberRange<1, 53>;
 	}
@@ -1353,10 +1299,7 @@ export class Chronos {
 
 	/** @instance Returns number of days in current month */
 	daysInMonth(): NumberRange<28, 31> {
-		return new Date(this.year, this.month + 1, 0).getDate() as NumberRange<
-			28,
-			31
-		>;
+		return new Date(this.year, this.month + 1, 0).getDate() as NumberRange<28, 31>;
 	}
 
 	/** @instance Converts to object with all date unit parts */
@@ -1404,8 +1347,7 @@ export class Chronos {
 		const offset = -this.#date.getTimezoneOffset();
 		const sign = offset >= 0 ? '+' : '-';
 
-		const pad = (n: number) =>
-			String(Math.floor(Math.abs(n))).padStart(2, '0');
+		const pad = (n: number) => String(Math.floor(Math.abs(n))).padStart(2, '0');
 
 		return `${sign}${pad(offset / 60)}:${pad(offset % 60)}`;
 	}
@@ -1484,9 +1426,7 @@ export class Chronos {
 
 		const relativeOffset = previousOffset - localOffset;
 
-		const localTime = new Date(
-			this.#date.getTime() - relativeOffset * 60 * 1000
-		);
+		const localTime = new Date(this.#date.getTime() - relativeOffset * 60 * 1000);
 
 		return new Chronos(localTime).#withOrigin('toLocal');
 	}
@@ -1519,8 +1459,7 @@ export class Chronos {
 				break;
 			}
 			case 'second': {
-				const fullSecond =
-					date.getSeconds() + date.getMilliseconds() / 1000;
+				const fullSecond = date.getSeconds() + date.getMilliseconds() / 1000;
 
 				const rounded = roundToNearest(fullSecond, nearest);
 				date.setSeconds(rounded, 0);
@@ -1528,9 +1467,7 @@ export class Chronos {
 			}
 			case 'minute': {
 				const fullMinute =
-					date.getMinutes() +
-					date.getSeconds() / 60 +
-					date.getMilliseconds() / 60000;
+					date.getMinutes() + date.getSeconds() / 60 + date.getMilliseconds() / 60000;
 
 				const rounded = roundToNearest(fullMinute, nearest);
 				date.setMinutes(rounded, 0, 0);
@@ -1571,23 +1508,17 @@ export class Chronos {
 				const endOfWeek = new Date(startOfWeek);
 				endOfWeek.setDate(endOfWeek.getDate() + 7);
 
-				const diffToStart = Math.abs(
-					this.#date.getTime() - startOfWeek.getTime()
-				);
+				const diffToStart = Math.abs(this.#date.getTime() - startOfWeek.getTime());
 
-				const diffToEnd = Math.abs(
-					endOfWeek.getTime() - this.#date.getTime()
-				);
+				const diffToEnd = Math.abs(endOfWeek.getTime() - this.#date.getTime());
 
-				const rounded =
-					diffToEnd < diffToStart ? endOfWeek : startOfWeek;
+				const rounded = diffToEnd < diffToStart ? endOfWeek : startOfWeek;
 
 				return new Chronos(rounded).#withOrigin('round');
 			}
 
 			case 'month': {
-				const fullMonth =
-					date.getMonth() + date.getDate() / this.lastDateOfMonth;
+				const fullMonth = date.getMonth() + date.getDate() / this.lastDateOfMonth;
 
 				const roundedMonth = roundToNearest(fullMonth, nearest);
 				date.setMonth(roundedMonth, 1);
@@ -1596,13 +1527,10 @@ export class Chronos {
 			}
 			case 'year': {
 				const dayOfYear = Math.floor(
-					(date.getTime() -
-						new Date(date.getFullYear(), 0, 1).getTime()) /
-						86400000
+					(date.getTime() - new Date(date.getFullYear(), 0, 1).getTime()) / 86400000
 				);
 
-				const isLeap =
-					new Date(date.getFullYear(), 1, 29).getDate() === 29;
+				const isLeap = new Date(date.getFullYear(), 1, 29).getDate() === 29;
 
 				const totalDays = isLeap ? 366 : 365;
 				const fullYear = date.getFullYear() + dayOfYear / totalDays;
@@ -1775,12 +1703,7 @@ export class Chronos {
 		let startDate = this.clone(),
 			endDate = startDate.addWeeks(4);
 
-		const {
-			format = 'local',
-			onlyDays,
-			skipDays,
-			roundDate = false,
-		} = options ?? {};
+		const { format = 'local', onlyDays, skipDays, roundDate = false } = options ?? {};
 
 		if (options) {
 			if ('from' in options || 'to' in options) {
@@ -1816,9 +1739,7 @@ export class Chronos {
 
 			if (shouldFilter) {
 				datesInRange.push(
-					format === 'local' ?
-						current.toLocalISOString()
-					:	current.toISOString()
+					format === 'local' ? current.toLocalISOString() : current.toISOString()
 				);
 			}
 
@@ -1896,10 +1817,7 @@ export class Chronos {
 			second: number;
 		};
 
-		const tokenRegex = new RegExp(
-			Object.keys(tokenPatterns).join('|'),
-			'g'
-		);
+		const tokenRegex = new RegExp(Object.keys(tokenPatterns).join('|'), 'g');
 
 		const trimmedInput = dateStr.trim();
 
@@ -1944,8 +1862,7 @@ export class Chronos {
 	 * @returns Formatted date string in desired format.
 	 */
 	static today(options?: FormatOptions): string {
-		const { format = 'dd, mmm DD, YYYY HH:mm:ss', useUTC = false } =
-			options || {};
+		const { format = 'dd, mmm DD, YYYY HH:mm:ss', useUTC = false } = options || {};
 		const today = new Date();
 		return new Chronos(today).#format(format, useUTC);
 	}
@@ -2035,9 +1952,7 @@ export class Chronos {
 			return timeStr.replace(/([+-]\d{2})(?!:)/, '$1:00');
 		}
 
-		const timeWithDate = `${new Chronos().#format('YYYY-MM-DD')}T${normalizeOffset(
-			time
-		)}`;
+		const timeWithDate = `${new Chronos().#format('YYYY-MM-DD')}T${normalizeOffset(time)}`;
 
 		return new Chronos(timeWithDate).formatStrict(format ?? 'hh:mm:ss a');
 	}
@@ -2063,10 +1978,7 @@ export class Chronos {
 	 * });
 	 * //=> [ '2025-05-28T15:17:10.812Z', '2025-06-04T15:17:10.812Z' ]
 	 */
-	static getDatesForDay(
-		day: WeekDay,
-		options?: RelativeRangeOptions
-	): string[];
+	static getDatesForDay(day: WeekDay, options?: RelativeRangeOptions): string[];
 
 	/**
 	 * @static Returns ISO date strings for each occurrence of a weekday between two fixed dates.
@@ -2128,9 +2040,7 @@ export class Chronos {
 
 		while (current.isSameOrBefore(end, 'day')) {
 			result.push(
-				format === 'local' ?
-					current.toLocalISOString()
-				:	current.toISOString()
+				format === 'local' ? current.toLocalISOString() : current.toISOString()
 			);
 			current = current.add(1, 'week');
 		}
@@ -2143,9 +2053,9 @@ export class Chronos {
 	 * @param dates Date inputs.
 	 */
 	static min(...dates: ChronosInput[]): Chronos {
-		return new Chronos(
-			Math.min(...dates.map((d) => new Chronos(d).valueOf()))
-		).#withOrigin('min');
+		return new Chronos(Math.min(...dates.map((d) => new Chronos(d).valueOf()))).#withOrigin(
+			'min'
+		);
 	}
 
 	/**
@@ -2153,9 +2063,9 @@ export class Chronos {
 	 * @param dates Date inputs.
 	 */
 	static max(...dates: ChronosInput[]): Chronos {
-		return new Chronos(
-			Math.max(...dates.map((d) => new Chronos(d).valueOf()))
-		).#withOrigin('max');
+		return new Chronos(Math.max(...dates.map((d) => new Chronos(d).valueOf()))).#withOrigin(
+			'max'
+		);
 	}
 
 	/**

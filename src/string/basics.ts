@@ -8,10 +8,7 @@ import type { CapitalizeOptions, RandomIdOptions } from './types';
  * @param options Options to customize the capitalization.
  * @returns Capitalized string or fully uppercased string depending on `capitalizeAll` option.
  */
-export function capitalizeString(
-	string: string,
-	options?: CapitalizeOptions
-): string {
+export function capitalizeString(string: string, options?: CapitalizeOptions): string {
 	if (typeof string !== 'string' || !string) return '';
 
 	const trimmedString = string.trim();
@@ -46,11 +43,7 @@ export function capitalizeString(
 	return trimmedString
 		.charAt(0)
 		.toUpperCase()
-		.concat(
-			lowerCaseRest ?
-				trimmedString.slice(1).toLowerCase()
-			:	trimmedString.slice(1)
-		);
+		.concat(lowerCaseRest ? trimmedString.slice(1).toLowerCase() : trimmedString.slice(1));
 }
 
 /**
@@ -96,12 +89,7 @@ export const generateRandomID = (options?: RandomIdOptions): string => {
 		Math.random().toString(36).slice(2, 3)
 	).join('');
 
-	const ID: string = [
-		prefix && prefix.trim(),
-		date,
-		randomString,
-		suffix && suffix.trim(),
-	]
+	const ID: string = [prefix && prefix.trim(), date, randomString, suffix && suffix.trim()]
 		?.filter(Boolean)
 		?.join(separator);
 

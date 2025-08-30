@@ -1,11 +1,7 @@
 import { isNumber } from '../guards/primitives';
 import type { Numeric } from '../types/index';
 import { _find2NumbersHCF, _find2NumbersLCM } from './helpers';
-import type {
-	ConvertedDecimal,
-	DecimalOptions,
-	RandomNumberOptions,
-} from './types';
+import type { ConvertedDecimal, DecimalOptions, RandomNumberOptions } from './types';
 
 /**
  * * Utility to generate a random number between a given range.
@@ -16,12 +12,7 @@ import type {
  * @returns Random number.
  */
 export const getRandomNumber = (options?: RandomNumberOptions): number => {
-	const {
-		min = 0,
-		max = 100,
-		includeMin = true,
-		includeMax = true,
-	} = options || {};
+	const { min = 0, max = 100, includeMin = true, includeMax = true } = options || {};
 
 	let minimum = min,
 		maximum = max;
@@ -144,9 +135,7 @@ export function sumDigits(num: Numeric): number {
  * @returns The sum of the numbers.
  */
 export function sumNumbers(...numbers: Numeric[]): number {
-	return numbers
-		?.map((num) => Number(num))
-		?.reduce((sum, number) => sum + number, 0);
+	return numbers?.map((num) => Number(num))?.reduce((sum, number) => sum + number, 0);
 }
 
 /**

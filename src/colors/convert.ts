@@ -188,12 +188,7 @@ export const convertHexToRgb = (hex: Hex6 | Hex | string): RGB => {
  * @param a - The alpha (opacity) value, in the range 0 to 1.
  * @returns A string representing the color in RGBA format (e.g., `rgba(255, 0, 0, 0.5)`).
  */
-export const convertRgbToRgba = (
-	r: number,
-	g: number,
-	b: number,
-	a: number = 1
-): RGBA => {
+export const convertRgbToRgba = (r: number, g: number, b: number, a: number = 1): RGBA => {
 	let newAlpha = a;
 
 	if (!_isValidAlpha(a)) {
@@ -214,12 +209,7 @@ export const convertRgbToRgba = (
  * @param a - The alpha (opacity) value, in the range 0 to 1.
  * @returns A string representing the color in Hex8 format (e.g., `#FF000080`).
  */
-export const convertRgbaToHex8 = (
-	r: number,
-	g: number,
-	b: number,
-	a: number = 1
-): Hex8 => {
+export const convertRgbaToHex8 = (r: number, g: number, b: number, a: number = 1): Hex8 => {
 	let newAlpha = a;
 
 	if (!_isValidAlpha(a)) {
@@ -230,9 +220,7 @@ export const convertRgbaToHex8 = (
 
 	const hex = convertRgbToHex(r, g, b);
 
-	const alphaHex = _convertOpacityToHex(
-		Math.round(newAlpha * 100) as Percent
-	);
+	const alphaHex = _convertOpacityToHex(Math.round(newAlpha * 100) as Percent);
 
 	return `${hex}${alphaHex}` as Hex8;
 };
@@ -246,12 +234,7 @@ export const convertRgbaToHex8 = (
  * @param a - The alpha (opacity) value, in the range 0 to 1.
  * @returns A string representing the color in RGBA format (e.g., `rgba(255, 0, 0, 0.5)`).
  */
-export const convertHslaToRgba = (
-	h: number,
-	s: number,
-	l: number,
-	a: number = 1
-): RGBA => {
+export const convertHslaToRgba = (h: number, s: number, l: number, a: number = 1): RGBA => {
 	let newAlpha = a;
 
 	if (!_isValidAlpha(a)) {
@@ -280,12 +263,7 @@ export const convertHslaToRgba = (
  * @param a - The alpha (opacity) value, in the range 0 to 1.
  * @returns A string representing the color in HSLA format (e.g., `hsla(0, 100%, 50%, 0.5)`).
  */
-export const convertRgbaToHsla = (
-	r: number,
-	g: number,
-	b: number,
-	a: number = 1
-): HSLA => {
+export const convertRgbaToHsla = (r: number, g: number, b: number, a: number = 1): HSLA => {
 	let newAlpha = a;
 
 	if (!_isValidAlpha(a)) {
@@ -328,12 +306,7 @@ export const convertHex8ToRgba = (hex8: Hex8): RGBA => {
  * @param a - The alpha (opacity) value, in the range 0 to 1.
  * @returns A string representing the color in Hex8 format (e.g., `#658789DF`).
  */
-export const convertHslaToHex8 = (
-	h: number,
-	s: number,
-	l: number,
-	a: number = 1
-): Hex8 => {
+export const convertHslaToHex8 = (h: number, s: number, l: number, a: number = 1): Hex8 => {
 	let newAlpha = a;
 
 	if (!_isValidAlpha(a)) {
@@ -344,9 +317,7 @@ export const convertHslaToHex8 = (
 
 	const hex = convertHslToHex(h, s, l);
 
-	const alphaHex = _convertOpacityToHex(
-		Math.round(newAlpha * 100) as Percent
-	);
+	const alphaHex = _convertOpacityToHex(Math.round(newAlpha * 100) as Percent);
 
 	return `${hex}${alphaHex}` as Hex8;
 };

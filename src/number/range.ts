@@ -61,9 +61,7 @@ export function getNumbersInRange<T extends boolean = false>(
 	};
 
 	if (type === 'prime' && multiplesOf !== undefined) {
-		console.warn(
-			'Warning: The "multiplesOf" option is ignored when the type is "prime"!'
-		);
+		console.warn('Warning: The "multiplesOf" option is ignored when the type is "prime"!');
 	}
 
 	switch (type) {

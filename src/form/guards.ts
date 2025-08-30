@@ -60,9 +60,7 @@ export function isCustomFile(value: unknown): value is CustomFile {
  * @returns `true` if the value is a valid `CustomFile[]`, otherwise `false`.
  */
 export function isCustomFileArray(value: unknown): value is CustomFile[] {
-	return (
-		Array.isArray(value) && value?.length > 0 && value?.every(isCustomFile)
-	);
+	return Array.isArray(value) && value?.length > 0 && value?.every(isCustomFile);
 }
 
 /**
@@ -72,9 +70,7 @@ export function isCustomFileArray(value: unknown): value is CustomFile[] {
  * @returns `true` if the value is a valid `File[]` or `Blob[]`, otherwise `false`.
  */
 export function isFileArray(value: unknown): value is File[] | Blob[] {
-	return (
-		Array.isArray(value) && value?.length > 0 && value?.every(isFileOrBlob)
-	);
+	return Array.isArray(value) && value?.length > 0 && value?.every(isFileOrBlob);
 }
 
 /**

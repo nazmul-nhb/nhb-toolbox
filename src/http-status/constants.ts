@@ -97,8 +97,7 @@ export const HTTP_STATUS_DATA = /* @__PURE__ */ Object.freeze([
 		name: 'RESET_CONTENT',
 		readableName: 'Reset Content',
 		message: 'Reset Content',
-		description:
-			'Tells the user agent to reset the document which sent this request.',
+		description: 'Tells the user agent to reset the document which sent this request.',
 	},
 	{
 		category: 'success',
@@ -156,8 +155,7 @@ export const HTTP_STATUS_DATA = /* @__PURE__ */ Object.freeze([
 		code: 301,
 		name: 'MOVED_PERMANENTLY',
 		readableName: 'Moved Permanently',
-		message:
-			'The URL of the requested resource has been changed permanently',
+		message: 'The URL of the requested resource has been changed permanently',
 		description:
 			'The URL of the requested resource has been changed permanently. The new URL is given in the response.',
 	},
@@ -418,8 +416,7 @@ export const HTTP_STATUS_DATA = /* @__PURE__ */ Object.freeze([
 		name: 'I_M_A_TEAPOT',
 		readableName: "I'm a teapot",
 		message: "I'm a teapot",
-		description:
-			'The server refuses the attempt to brew coffee with a teapot.',
+		description: 'The server refuses the attempt to brew coffee with a teapot.',
 	},
 	{
 		category: 'clientError',
@@ -576,8 +573,7 @@ export const HTTP_STATUS_DATA = /* @__PURE__ */ Object.freeze([
 		name: 'HTTP_VERSION_NOT_SUPPORTED',
 		readableName: 'HTTP Version Not Supported',
 		message: 'HTTP Version Not Supported',
-		description:
-			'The HTTP version used in the request is not supported by the server.',
+		description: 'The HTTP version used in the request is not supported by the server.',
 	},
 	{
 		category: 'serverError',
@@ -606,8 +602,7 @@ export const HTTP_STATUS_DATA = /* @__PURE__ */ Object.freeze([
 		name: 'LOOP_DETECTED',
 		readableName: 'Loop Detected',
 		message: 'Detected an infinite loop',
-		description:
-			'The server detected an infinite loop while processing the request.',
+		description: 'The server detected an infinite loop while processing the request.',
 	},
 	{
 		category: 'serverError',
@@ -626,8 +621,7 @@ export const HTTP_STATUS_DATA = /* @__PURE__ */ Object.freeze([
 		name: 'NETWORK_AUTHENTICATION_REQUIRED',
 		readableName: 'Network Authentication Required',
 		message: 'Network Authentication Required',
-		description:
-			'Indicates that the client needs to authenticate to gain network access.',
+		description: 'Indicates that the client needs to authenticate to gain network access.',
 	},
 ] as const);
 

@@ -1,11 +1,6 @@
 import { isNonEmptyString } from '../guards/primitives';
 import { normalizeNumber } from '../number/utilities';
-import {
-	irregularRules,
-	pluralRules,
-	singularRules,
-	uncountables,
-} from './rules';
+import { irregularRules, pluralRules, singularRules, uncountables } from './rules';
 import type { IrregularMap, PluralizeOptions, PluralizeRule } from './types';
 
 /**
@@ -85,10 +80,7 @@ export class Pluralizer {
 			original[0] === original[0].toUpperCase() &&
 			original.slice(1) === original.slice(1).toLowerCase()
 		) {
-			return (
-				transformed.charAt(0).toUpperCase() +
-				transformed.slice(1).toLowerCase()
-			);
+			return transformed.charAt(0).toUpperCase() + transformed.slice(1).toLowerCase();
 		}
 
 		// Mixed case: per-character casing
@@ -172,9 +164,7 @@ export class Pluralizer {
 	 * pluralizer.addUncountable(/pok[eé]mon$/i);
 	 */
 	addUncountable(word: string | RegExp): void {
-		this.#uncountables.add(
-			typeof word === 'string' ? word?.toLowerCase() : word
-		);
+		this.#uncountables.add(typeof word === 'string' ? word?.toLowerCase() : word);
 	}
 
 	/**
@@ -204,8 +194,7 @@ export class Pluralizer {
 		const count = normalizeNumber(options?.count);
 
 		if (typeof count === 'number') {
-			const pluralized =
-				count > 1 ? this.toPlural(word) : this.toSingular(word);
+			const pluralized = count > 1 ? this.toPlural(word) : this.toSingular(word);
 			return options.inclusive ? `${count} ${pluralized}` : pluralized;
 		}
 
@@ -230,10 +219,7 @@ export class Pluralizer {
 			return this.#restoreCase(word, this.#irregularSingles[lower]);
 		}
 
-		return this.#restoreCase(
-			word,
-			this.#sanitizeWord(lower, this.#pluralRules)
-		);
+		return this.#restoreCase(word, this.#sanitizeWord(lower, this.#pluralRules));
 	}
 
 	/**
@@ -254,10 +240,7 @@ export class Pluralizer {
 			return this.#restoreCase(word, this.#irregularPlurals[lower]);
 		}
 
-		return this.#restoreCase(
-			word,
-			this.#sanitizeWord(lower, this.#singularRules)
-		);
+		return this.#restoreCase(word, this.#sanitizeWord(lower, this.#singularRules));
 	}
 
 	/**

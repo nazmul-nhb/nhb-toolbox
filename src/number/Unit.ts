@@ -89,11 +89,7 @@ export class Unit {
 	 * @param toPrefix The SI prefix of the target unit.
 	 * @returns The converted numeric value.
 	 */
-	static convertByPrefix(
-		value: number,
-		fromPrefix: SIPrefix,
-		toPrefix: SIPrefix
-	): number {
+	static convertByPrefix(value: number, fromPrefix: SIPrefix, toPrefix: SIPrefix): number {
 		const fromMultiplier = PREFIX_MULTIPLIERS[fromPrefix];
 		const toMultiplier = PREFIX_MULTIPLIERS[toPrefix];
 

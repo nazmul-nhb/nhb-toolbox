@@ -87,9 +87,7 @@ export type FirstFieldValue<
 	V extends boolean = false,
 > =
 	V extends true ?
-		FirstFieldKey<T, K1, K2, V> extends (
-			Exclude<FirstFieldKey<T, K1, K2, V>, number>
-		) ?
+		FirstFieldKey<T, K1, K2, V> extends Exclude<FirstFieldKey<T, K1, K2, V>, number> ?
 			string
 		:	number
 	:	string;
@@ -130,8 +128,7 @@ export interface SortByOption<T extends GenericObject> extends OrderOption {
 }
 
 /** * Options for sorting array. */
-export type SortOptions<T> =
-	T extends GenericObject ? SortByOption<T> : OrderOption;
+export type SortOptions<T> = T extends GenericObject ? SortByOption<T> : OrderOption;
 
 /** Optional settings to configure comparison behavior. */
 export interface SortNature {

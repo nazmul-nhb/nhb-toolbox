@@ -28,10 +28,7 @@ export function generateAnagrams(
 		for (let i = 0; i < remaining?.length; i++) {
 			if (limit !== 'all' && uniqueAnagrams.size >= limit) return;
 
-			_permute(
-				str + remaining[i],
-				remaining?.slice(0, i) + remaining?.slice(i + 1)
-			);
+			_permute(str + remaining[i], remaining?.slice(0, i) + remaining?.slice(i + 1));
 		}
 	};
 

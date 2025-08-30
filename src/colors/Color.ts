@@ -1,13 +1,7 @@
 import type { Percent } from '../number/types';
 import { convertColorCode } from './convert';
 import { CSS_COLORS } from './css-colors';
-import {
-	_convertOpacityToHex,
-	_isHSL,
-	_isHSLA,
-	_isRGB,
-	_isRGBA,
-} from './helpers';
+import { _convertOpacityToHex, _isHSL, _isHSLA, _isRGB, _isRGBA } from './helpers';
 import { generateRandomHSLColor } from './random';
 import type {
 	AlphaColors,
@@ -175,9 +169,7 @@ export class Color {
 	constructor(color?: ColorType | CSSColor) {
 		if (color) {
 			if (Color.isCSSColor(color)) {
-				const newColor = new Color(
-					CSS_COLORS[color?.trim() as CSSColor]
-				);
+				const newColor = new Color(CSS_COLORS[color?.trim() as CSSColor]);
 
 				this.hex = newColor.hex;
 				this.hex8 = newColor.hex8;
@@ -186,9 +178,7 @@ export class Color {
 				this.hsl = newColor.hsl;
 				this.hsla = newColor.hsla;
 			} else {
-				const colors = this.#convertColorToOthers(
-					color?.trim() as ColorType
-				);
+				const colors = this.#convertColorToOthers(color?.trim() as ColorType);
 
 				if ('hex8' in colors) {
 					// Extract alpha color values (Hex8, RGBA, HSLA)
@@ -224,8 +214,7 @@ export class Color {
 
 			// Generate random colors
 			this.hex = hex.toUpperCase() as Hex6;
-			this.hex8 =
-				`${hex.toUpperCase()}${_convertOpacityToHex(100)}` as Hex8;
+			this.hex8 = `${hex.toUpperCase()}${_convertOpacityToHex(100)}` as Hex8;
 			this.rgb = rgb;
 			this.rgba = `rgba(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]}, 1)`;
 			this.hsl = hsl;
@@ -357,8 +346,7 @@ export class Color {
 	blendWith(other: ColorType | CSSColor, weight = 0.5): Color {
 		const w = Math.max(0, Math.min(1, weight));
 
-		const converted =
-			Color.isCSSColor(other) ? new Color(other) : new Color(other);
+		const converted = Color.isCSSColor(other) ? new Color(other) : new Color(other);
 
 		const [r1, b1, g1, a1] = extractAlphaColorValues(this.rgba);
 		const [r2, b2, g2, a2] = extractAlphaColorValues(converted.rgba);
@@ -384,15 +372,12 @@ export class Color {
 	 * @returns A number representing the contrast ratio (rounded to 2 decimal places).
 	 */
 	contrastRatio(other: ColorType | CSSColor): number {
-		const newColor =
-			Color.isCSSColor(other) ? new Color(other) : new Color(other);
+		const newColor = Color.isCSSColor(other) ? new Color(other) : new Color(other);
 
 		const luminance = (rgb: RGB): number => {
 			const [r, g, b] = extractSolidColorValues(rgb).map((v) => {
 				const c = v / 255;
-				return c <= 0.03928 ?
-						c / 12.92
-					:	Math.pow((c + 0.055) / 1.055, 2.4);
+				return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
 			});
 
 			return 0.2126 * r + 0.7152 * g + 0.0722 * b;
@@ -436,9 +421,7 @@ export class Color {
 
 		const analogous = [this, new Color(left), new Color(right)];
 
-		return analogous.map((c) =>
-			c.applyOpacity((a * 100) as Percent)
-		) as Analogous;
+		return analogous.map((c) => c.applyOpacity((a * 100) as Percent)) as Analogous;
 	}
 
 	/**
@@ -471,9 +454,7 @@ export class Color {
 
 		const tetrad = [this, new Color(c1), new Color(c2), new Color(c3)];
 
-		return tetrad.map((c) =>
-			c.applyOpacity((a * 100) as Percent)
-		) as Tetrad;
+		return tetrad.map((c) => c.applyOpacity((a * 100) as Percent)) as Tetrad;
 	}
 
 	/**

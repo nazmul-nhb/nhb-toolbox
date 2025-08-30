@@ -23,10 +23,7 @@ export const replaceAllInString = (
 	const regex =
 		typeof find === 'string' ?
 			new RegExp(find, 'g')
-		:	new RegExp(
-				find,
-				find?.flags.includes('g') ? find?.flags : find?.flags + 'g'
-			);
+		:	new RegExp(find, find?.flags.includes('g') ? find?.flags : find?.flags + 'g');
 
 	return trimmedString?.replace(regex, replace);
 };
@@ -113,11 +110,7 @@ export function extractURLs(str: string): string[] {
  * @param withNumber Whether to prefix the count before the unit. Defaults to `true`.
  * @returns Formatted unit string like `"1 day"`, `"2 months"`, or `"hour"`.
  */
-export function formatUnitWithPlural(
-	count: number,
-	unit: string,
-	withNumber = true
-): string {
+export function formatUnitWithPlural(count: number, unit: string, withNumber = true): string {
 	const abs = Math.abs(count);
 	const pluralized = abs === 1 ? unit : `${unit}s`;
 

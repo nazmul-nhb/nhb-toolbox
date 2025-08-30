@@ -1,15 +1,7 @@
 import { isDateLike } from '../date/guards';
-import {
-	isEmptyObject,
-	isNotEmptyObject,
-	isValidArray,
-} from '../guards/non-primitives';
+import { isEmptyObject, isNotEmptyObject, isValidArray } from '../guards/non-primitives';
 import { isNonEmptyString } from '../guards/primitives';
-import type {
-	DotNotationKey,
-	GenericObject,
-	KeyForObject,
-} from '../object/types';
+import type { DotNotationKey, GenericObject, KeyForObject } from '../object/types';
 import {
 	isCustomFile,
 	isCustomFileArray,
@@ -65,9 +57,7 @@ export const createControlledFormData = <T extends GenericObject>(
 
 		return Array.isArray(configs?.requiredKeys) ?
 				configs?.requiredKeys?.some(
-					(path) =>
-						transformedKey === path ||
-						transformedKey?.startsWith(`${path}.`)
+					(path) => transformedKey === path || transformedKey?.startsWith(`${path}.`)
 				)
 			:	configs?.requiredKeys === '*';
 	};
@@ -77,9 +67,7 @@ export const createControlledFormData = <T extends GenericObject>(
 		const transformedKey = _transformKey(key);
 
 		return Array.isArray(configs?.dotNotateNested) ?
-				configs.dotNotateNested.includes(
-					transformedKey as KeyForObject<T>
-				)
+				configs.dotNotateNested.includes(transformedKey as KeyForObject<T>)
 			:	configs?.dotNotateNested === '*';
 	};
 
@@ -102,15 +90,11 @@ export const createControlledFormData = <T extends GenericObject>(
 	};
 
 	/** - Helper to clean object by removing null/undefined/empty values while respecting required keys */
-	const _cleanObject = (
-		obj: GenericObject,
-		parentKey = ''
-	): GenericObject => {
+	const _cleanObject = (obj: GenericObject, parentKey = ''): GenericObject => {
 		return Object.entries(obj).reduce((acc, [key, value]) => {
 			const transformedKey = _transformKey(key);
 
-			const fullKey =
-				parentKey ? `${parentKey}.${transformedKey}` : transformedKey;
+			const fullKey = parentKey ? `${parentKey}.${transformedKey}` : transformedKey;
 
 			// * Skip ignored keys (don't include them in the cleaned object)
 			if (configs?.ignoreKeys?.includes(fullKey as DotNotationKey<T>)) {
@@ -132,10 +116,7 @@ export const createControlledFormData = <T extends GenericObject>(
 						// * Recursively clean nested objects
 						const cleaned = _cleanObject(value, fullKey);
 
-						if (
-							_isRequiredKey(fullKey) ||
-							isNotEmptyObject(cleaned)
-						) {
+						if (_isRequiredKey(fullKey) || isNotEmptyObject(cleaned)) {
 							acc[transformedKey] = cleaned;
 						}
 					}
@@ -176,9 +157,7 @@ export const createControlledFormData = <T extends GenericObject>(
 		const transformedKey = _transformKey(key);
 
 		if (isCustomFileArray(value)) {
-			value?.forEach((file) =>
-				formData.append(transformedKey, file?.originFileObj)
-			);
+			value?.forEach((file) => formData.append(transformedKey, file?.originFileObj));
 		} else if (isFileUpload(value)) {
 			if (value?.fileList) {
 				value?.fileList.forEach((file) =>
@@ -227,10 +206,7 @@ export const createControlledFormData = <T extends GenericObject>(
 				const cleanedValue = _cleanObject(value, key);
 
 				if (isNotEmptyObject(cleanedValue) || _isRequiredKey(key)) {
-					formData.append(
-						transformedKey,
-						JSON.stringify(cleanedValue)
-					);
+					formData.append(transformedKey, JSON.stringify(cleanedValue));
 				}
 			} else {
 				Object.entries(value).forEach(([nestedKey, nestedValue]) => {
@@ -255,8 +231,7 @@ export const createControlledFormData = <T extends GenericObject>(
 		Object.entries(obj).forEach(([key, value]) => {
 			const transformedKey = _transformKey(key);
 
-			const fullKey =
-				parentKey ? `${parentKey}.${transformedKey}` : transformedKey;
+			const fullKey = parentKey ? `${parentKey}.${transformedKey}` : transformedKey;
 
 			// * Skip keys that are in ignoreKeys
 			if (configs?.ignoreKeys?.includes(fullKey as DotNotationKey<T>)) {

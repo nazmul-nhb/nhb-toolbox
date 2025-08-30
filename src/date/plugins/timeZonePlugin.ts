@@ -50,25 +50,19 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		const relativeOffset = targetOffset - previousOffset;
 
 		const adjustedTime = new Date(
-			ChronosClass[INTERNALS].internalDate(this).getTime() +
-				relativeOffset * 60 * 1000
+			ChronosClass[INTERNALS].internalDate(this).getTime() + relativeOffset * 60 * 1000
 		);
 
 		const instance = new ChronosClass(adjustedTime);
 
-		return ChronosClass[INTERNALS].withOrigin(
-			instance,
-			'timeZone',
-			stringOffset
-		);
+		return ChronosClass[INTERNALS].withOrigin(instance, 'timeZone', stringOffset);
 	};
 
 	ChronosClass.prototype.getTimeZoneNameShort = function (
 		this: ChronosConstructor,
 		utc?: UTCOffSet
 	): TimeZone | UTCOffSet {
-		const mins =
-			utc ? extractMinutesFromUTC(utc) : this.getTimeZoneOffsetMinutes();
+		const mins = utc ? extractMinutesFromUTC(utc) : this.getTimeZoneOffsetMinutes();
 
 		const UTC = formatUTCOffset(mins);
 
@@ -82,9 +76,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 			?.replace(/\W/g, '') as TimeZone | undefined;
 
 		if (!result) {
-			const zones = Object.entries(TIME_ZONES) as Array<
-				[TimeZone, number]
-			>;
+			const zones = Object.entries(TIME_ZONES) as Array<[TimeZone, number]>;
 
 			result = zones.find((zone) => zone?.[1] === mins)?.[0];
 		}

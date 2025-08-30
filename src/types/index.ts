@@ -17,14 +17,7 @@ export type FlattenPartial<T> = Partial<{ [K in keyof T]: T[K] }>;
 export type Numeric = number | `${number}`;
 
 /** Union of All Primitive Types (i.e. `string | number | boolean | symbol | bigint | null | undefined`) */
-export type Primitive =
-	| string
-	| number
-	| boolean
-	| symbol
-	| bigint
-	| null
-	| undefined;
+export type Primitive = string | number | boolean | symbol | bigint | null | undefined;
 
 /** Union of Normal Primitive Types (i.e. `string | number | boolean | null | undefined`) */
 export type NormalPrimitive = string | number | boolean | null | undefined;
@@ -62,14 +55,10 @@ export type GenericFn = (...args: unknown[]) => unknown;
 export type VoidFunction = (...args: any[]) => void;
 
 /** Debounced function type after certain delay */
-export type DelayedFn<T extends VoidFunction> = (
-	...args: Parameters<T>
-) => void;
+export type DelayedFn<T extends VoidFunction> = (...args: Parameters<T>) => void;
 
 /** Throttled function type after specific delay */
-export type ThrottledFn<T extends VoidFunction> = (
-	...args: Parameters<T>
-) => void;
+export type ThrottledFn<T extends VoidFunction> = (...args: Parameters<T>) => void;
 
 /** Asynchronous function type */
 export type AsyncFunction<T> = (...args: unknown[]) => Promise<T>;

@@ -92,8 +92,7 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 
 		const noYearMonthDay =
 			now.getMonth() < inputDate.getMonth() ||
-			(now.getMonth() === inputDate.getMonth() &&
-				now.getDate() < inputDate.getDate());
+			(now.getMonth() === inputDate.getMonth() && now.getDate() < inputDate.getDate());
 
 		if (noYearMonthDay) {
 			years--;
@@ -217,21 +216,15 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		}
 	};
 
-	ChronosClass.prototype.isToday = function (
-		this: ChronosConstructor
-	): boolean {
+	ChronosClass.prototype.isToday = function (this: ChronosConstructor): boolean {
 		return this.getRelativeDay() === 0;
 	};
 
-	ChronosClass.prototype.isTomorrow = function (
-		this: ChronosConstructor
-	): boolean {
+	ChronosClass.prototype.isTomorrow = function (this: ChronosConstructor): boolean {
 		return this.getRelativeDay() === 1;
 	};
 
-	ChronosClass.prototype.isYesterday = function (
-		this: ChronosConstructor
-	): boolean {
+	ChronosClass.prototype.isYesterday = function (this: ChronosConstructor): boolean {
 		return this.getRelativeDay() === -1;
 	};
 };

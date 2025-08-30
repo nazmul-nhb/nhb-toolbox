@@ -108,8 +108,7 @@ export const convertToRomanNumerals = (num: Numeric): string => {
  */
 export function numberToWordsOrdinal(number: Numeric | string) {
 	const TEEN_OR_HUNDRED = /(teen|hundred|thousand|(m|b|tr|quadr)illion)$/;
-	const UNDER_TEEN =
-		/(zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)$/;
+	const UNDER_TEEN = /(zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)$/;
 
 	const _fixUnderTeen = (cardinal: string): string => {
 		return ORDINAL_UNDER_TEEN[cardinal];
@@ -181,9 +180,7 @@ export function wordsToNumber(word: string): number {
 	if (!input) return NaN;
 
 	// build lookup maps from arrays
-	const onesMap = new Map<string, number>(
-		ONES.map((w, i) => [w === '' ? 'zero' : w, i])
-	);
+	const onesMap = new Map<string, number>(ONES.map((w, i) => [w === '' ? 'zero' : w, i]));
 	const teensMap = new Map<string, number>(TEENS.map((w, i) => [w, 10 + i]));
 	const tensMap = new Map<string, number>(TENS.map((w, i) => [w, i * 10]));
 	const scalesMap = new Map<string, number>(
@@ -191,9 +188,7 @@ export function wordsToNumber(word: string): number {
 	);
 
 	const PROTECTED_TOKENS = new Set(
-		[...ONES, ...TEENS, ...TENS, ...THOUSANDS, 'hundred', 'zero'].filter(
-			Boolean
-		)
+		[...ONES, ...TEENS, ...TENS, ...THOUSANDS, 'hundred', 'zero'].filter(Boolean)
 	);
 
 	// Handle ordinal forms

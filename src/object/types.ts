@@ -21,17 +21,11 @@ export type Expand<T> =
 
 /** - Converts a union type to an intersection type. */
 type UnionToIntersection<U> =
-	(U extends unknown ? (arg: U) => void : never) extends (
-		(arg: infer I) => void
-	) ?
-		I
-	:	never;
+	(U extends unknown ? (arg: U) => void : never) extends (arg: infer I) => void ? I : never;
 
 /** - Merges all properties of the input objects into a single object type. */
 export type MergeAll<T extends readonly GenericObject[]> = {
-	[K in keyof UnionToIntersection<T[number]>]: UnionToIntersection<
-		T[number]
-	>[K];
+	[K in keyof UnionToIntersection<T[number]>]: UnionToIntersection<T[number]>[K];
 };
 
 /** - Dot-notation keys for flattened nested objects with `any` value (including optional properties) */
@@ -95,10 +89,7 @@ export type FlattenLeafValue<T> = {
  * * Represents a value that can be used in a query object.
  * - Can be a primitive, an array of primitives, or a nested query object.
  */
-export type QueryObjectValue =
-	| NormalPrimitive
-	| NormalPrimitive[]
-	| QueryObject;
+export type QueryObjectValue = NormalPrimitive | NormalPrimitive[] | QueryObject;
 
 /**
  * * Represents a query object with string keys and `QueryObjectValue` values.
@@ -115,9 +106,8 @@ export type DotNotationKeyStrict<T> =
 	: T extends StrictObject ?
 		{
 			[K in keyof T & string]: T[K] extends Function ? never
-			: T[K] extends StrictObject ?
-				`${K}` | `${K}.${DotNotationKey<T[K]>}`
-			:	`${K}`;
+			: T[K] extends StrictObject ? `${K}` | `${K}.${DotNotationKey<T[K]>}`
+			: `${K}`;
 		}[keyof T & string]
 	:	never;
 
@@ -127,9 +117,8 @@ export type DotNotationKey<T> =
 	: T extends GenericObject ?
 		{
 			[K in keyof T & string]: T[K] extends Function ? never
-			: T[K] extends GenericObject ?
-				`${K}` | `${K}.${DotNotationKey<T[K]>}`
-			:	`${K}`;
+			: T[K] extends GenericObject ? `${K}` | `${K}.${DotNotationKey<T[K]>}`
+			: `${K}`;
 		}[keyof T & string]
 	:	never;
 

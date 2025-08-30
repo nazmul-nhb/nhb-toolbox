@@ -1,8 +1,4 @@
-import {
-	isArrayOfType,
-	isObject,
-	isValidArray,
-} from '../guards/non-primitives';
+import { isArrayOfType, isObject, isValidArray } from '../guards/non-primitives';
 import { isBoolean, isNumber, isString } from '../guards/primitives';
 import type { GenericObject } from '../object/types';
 import type { OrderOption, SortByOption, SortOptions } from './types';
@@ -17,10 +13,7 @@ import { naturalSort } from './utils';
  * @param options - Sorting options.
  * @returns The sorted array.
  */
-export function sortAnArray<T extends GenericObject>(
-	array: T[],
-	options: SortByOption<T>
-): T[];
+export function sortAnArray<T extends GenericObject>(array: T[], options: SortByOption<T>): T[];
 
 /**
  * * Sorts an array of `strings`, `numbers` or `boolean`.
@@ -46,33 +39,28 @@ export function sortAnArray<T extends string | number | boolean>(
  * @param options - Sorting options for objects.
  * @returns The sorted array.
  */
-export function sortAnArray<
-	T extends number | string | boolean | GenericObject,
->(array: T[], options?: SortOptions<T>): T[] {
+export function sortAnArray<T extends number | string | boolean | GenericObject>(
+	array: T[],
+	options?: SortOptions<T>
+): T[] {
 	if (!isValidArray(array)) return array;
 
 	// Check if the array contains strings
 	if (isArrayOfType(array, isString)) {
 		return [...array].sort((a, b) =>
-			options?.sortOrder === 'desc' ?
-				naturalSort(b, a)
-			:	naturalSort(a, b)
+			options?.sortOrder === 'desc' ? naturalSort(b, a) : naturalSort(a, b)
 		);
 	}
 
 	// Check if the array contains numbers
 	if (isArrayOfType(array, isNumber)) {
-		return [...array].sort((a, b) =>
-			options?.sortOrder === 'desc' ? b - a : a - b
-		);
+		return [...array].sort((a, b) => (options?.sortOrder === 'desc' ? b - a : a - b));
 	}
 
 	// Check if the array contains booleans
 	if (isArrayOfType(array, isBoolean)) {
 		return [...array].sort((a, b) =>
-			options?.sortOrder === 'desc' ?
-				Number(b) - Number(a)
-			:	Number(a) - Number(b)
+			options?.sortOrder === 'desc' ? Number(b) - Number(a) : Number(a) - Number(b)
 		);
 	}
 
@@ -82,10 +70,7 @@ export function sortAnArray<
 			const _getKeyValue = (obj: T, path: string): unknown => {
 				return path
 					.split('.')
-					.reduce<unknown>(
-						(acc, key) => (acc as T)?.[key as keyof T],
-						obj
-					);
+					.reduce<unknown>((acc, key) => (acc as T)?.[key as keyof T], obj);
 			};
 
 			const keyA = _getKeyValue(a, options?.sortByField);
@@ -102,9 +87,7 @@ export function sortAnArray<
 			}
 
 			if (typeof keyA === 'number' && typeof keyB === 'number') {
-				return options?.sortOrder === 'desc' ?
-						keyB - keyA
-					:	keyA - keyB;
+				return options?.sortOrder === 'desc' ? keyB - keyA : keyA - keyB;
 			}
 
 			if (typeof keyA === 'boolean' && typeof keyB === 'boolean') {

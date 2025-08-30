@@ -1,10 +1,6 @@
 import { isDateLike } from '../date/guards';
 import { isFileOrBlob } from '../form/guards';
-import {
-	isEmptyObject,
-	isNotEmptyObject,
-	isObject,
-} from '../guards/non-primitives';
+import { isEmptyObject, isNotEmptyObject, isObject } from '../guards/non-primitives';
 import type { FlattenPartial } from '../types/index';
 import { isDeepEqual } from '../utils/index';
 import { parseObjectValues } from './sanitize';
@@ -38,9 +34,7 @@ import type {
  * );
  * // => { a: 1, b: 2, p: { c: 3, e: 5 }, d: 4, f: 6 }
  */
-export const mergeObjects = <T extends Objects>(
-	...objects: T
-): Expand<MergeAll<T>> => {
+export const mergeObjects = <T extends Objects>(...objects: T): Expand<MergeAll<T>> => {
 	const map = new Map<string, GenericObject>();
 
 	for (const obj of objects) {
@@ -158,10 +152,7 @@ export const flattenObjectDotNotation = <T extends GenericObject>(
 	 * @param prefix - The prefix to prepend to each key. Used for nested objects.
 	 * @returns A flattened version of the input object.
 	 */
-	const _flattenObject = (
-		source: GenericObject,
-		prefix: keyof T = ''
-	): GenericObject => {
+	const _flattenObject = (source: GenericObject, prefix: keyof T = ''): GenericObject => {
 		const flattened: GenericObject = {};
 
 		for (const [key, value] of Object.entries(source)) {
@@ -198,10 +189,7 @@ export const extractUpdatedFields = <T extends GenericObject>(
 	const updatedFields: FlattenPartial<T> = {};
 
 	for (const key in updatedObject) {
-		if (
-			key in baseObject &&
-			!isDeepEqual(updatedObject[key], baseObject[key])
-		) {
+		if (key in baseObject && !isDeepEqual(updatedObject[key], baseObject[key])) {
 			if (updatedObject[key] && isNotEmptyObject(updatedObject[key])) {
 				updatedFields[key] = extractUpdatedFields(
 					baseObject[key],
@@ -227,10 +215,7 @@ export const extractUpdatedFields = <T extends GenericObject>(
  * @param updatedObject The modified object containing potential new fields.
  * @returns A new object containing only the new fields.
  */
-export const extractNewFields = <
-	T extends GenericObject,
-	U extends GenericObject,
->(
+export const extractNewFields = <T extends GenericObject, U extends GenericObject>(
 	baseObject: T,
 	updatedObject: FlattenPartial<T> & FlattenPartial<U>
 ): FlattenPartial<U> => {
@@ -240,10 +225,7 @@ export const extractNewFields = <
 		if (!(key in baseObject)) {
 			// Directly assign new fields
 			newFields[key as keyof FlattenPartial<U>] = updatedObject[key];
-		} else if (
-			isNotEmptyObject(updatedObject[key]) &&
-			isNotEmptyObject(baseObject[key])
-		) {
+		} else if (isNotEmptyObject(updatedObject[key]) && isNotEmptyObject(baseObject[key])) {
 			// Recursively extract new fields inside nested objects
 			const nestedNewFields = extractNewFields(
 				baseObject[key] as T,
@@ -251,8 +233,7 @@ export const extractNewFields = <
 			);
 
 			if (isNotEmptyObject(nestedNewFields)) {
-				newFields[key as keyof FlattenPartial<U>] =
-					nestedNewFields as T[keyof T];
+				newFields[key as keyof FlattenPartial<U>] = nestedNewFields as T[keyof T];
 			}
 		}
 	}
@@ -267,10 +248,7 @@ export const extractNewFields = <
  * @param updatedObject The modified object containing potential updates.
  * @returns An object containing modified fields and new fields separately.
  */
-export const extractUpdatedAndNewFields = <
-	T extends GenericObject,
-	U extends GenericObject,
->(
+export const extractUpdatedAndNewFields = <T extends GenericObject, U extends GenericObject>(
 	baseObject: T,
 	updatedObject: FlattenPartial<T> & FlattenPartial<U>
 ): FlattenPartial<T> & FlattenPartial<U> => {

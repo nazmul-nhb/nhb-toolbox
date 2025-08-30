@@ -16,11 +16,7 @@ export class Paginator {
 	 * @param options - The options for pagination.
 	 */
 	constructor(options: PaginatorOptions) {
-		const {
-			totalItems,
-			itemsPerPage = 10,
-			currentPage = 1,
-		} = options ?? {};
+		const { totalItems, itemsPerPage = 10, currentPage = 1 } = options ?? {};
 
 		this.#totalItems = Math.max(0, Number(totalItems));
 		this.#perPage = Math.max(1, Number(itemsPerPage));
@@ -91,12 +87,7 @@ export class Paginator {
 		);
 		const totalPages = Math.ceil(newTotalItems / newItemsPerPage);
 		const newCurrentPage = Math.min(
-			Math.max(
-				1,
-				options.currentPage ?
-					Number(options.currentPage)
-				:	this.#currentPage
-			),
+			Math.max(1, options.currentPage ? Number(options.currentPage) : this.#currentPage),
 			totalPages
 		);
 
@@ -165,9 +156,7 @@ export class Paginator {
 	 * @returns The next page number or null if it's the last page.
 	 */
 	nextPage(): number | null {
-		return this.#currentPage < this.totalPages() ?
-				this.#currentPage + 1
-			:	null;
+		return this.#currentPage < this.totalPages() ? this.#currentPage + 1 : null;
 	}
 
 	/**
@@ -220,26 +209,17 @@ export class Paginator {
 		const edgeCount = Math.max(0, options.edgeCount ?? 1);
 		const siblingCount = Math.max(0, options.siblingCount ?? 1);
 		const start = Math.max(this.#currentPage - siblingCount, edgeCount + 1);
-		const end = Math.min(
-			this.#currentPage + siblingCount,
-			total - edgeCount
-		);
+		const end = Math.min(this.#currentPage + siblingCount, total - edgeCount);
 
 		const _getRange = (from: number, to: number): number[] => {
-			return from > to ?
-					[]
-				:	Array.from({ length: to - from + 1 }, (_, i) => from + i);
+			return from > to ? [] : Array.from({ length: to - from + 1 }, (_, i) => from + i);
 		};
 
 		const startPages = _getRange(1, edgeCount);
 		const middlePages = _getRange(start, end);
 		const endPages = _getRange(total - edgeCount + 1, total);
 
-		const pages = new Set<number>([
-			...startPages,
-			...middlePages,
-			...endPages,
-		]);
+		const pages = new Set<number>([...startPages, ...middlePages, ...endPages]);
 
 		return Array.from(pages).sort((a, b) => a - b);
 	}

@@ -11,11 +11,7 @@ import type { SortNature } from './types';
  * @param options.localeAware - If true, uses localeCompare for string chunk comparisons. Defaults to `false`.
  * @returns A negative number if `a` comes before `b`, a positive number if `a` comes after `b`, or 0 if equal.
  */
-export function naturalSort(
-	a: string,
-	b: string,
-	options?: SortNature
-): number {
+export function naturalSort(a: string, b: string, options?: SortNature): number {
 	const { caseInsensitive = true, localeAware = false } = options || {};
 
 	/**
@@ -62,11 +58,7 @@ export function naturalSort(
 		let bChunk = bChunks[i];
 
 		// Normalize string chunks if case-insensitive
-		if (
-			caseInsensitive &&
-			typeof aChunk === 'string' &&
-			typeof bChunk === 'string'
-		) {
+		if (caseInsensitive && typeof aChunk === 'string' && typeof bChunk === 'string') {
 			aChunk = aChunk?.toLowerCase();
 			bChunk = bChunk?.toLowerCase();
 		}

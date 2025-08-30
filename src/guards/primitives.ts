@@ -1,8 +1,4 @@
-import type {
-	FalsyPrimitive,
-	NormalPrimitive,
-	Primitive,
-} from '../types/index';
+import type { FalsyPrimitive, NormalPrimitive, Primitive } from '../types/index';
 
 /**
  * * Type guard to check whether a value is a finite number (excluding `NaN` and `Infinity`).
@@ -93,14 +89,7 @@ export function isBigInt(value: unknown): value is bigint {
 export function isPrimitive(value: unknown): value is Primitive {
 	return (
 		value === null ||
-		[
-			'string',
-			'number',
-			'boolean',
-			'symbol',
-			'bigint',
-			'undefined',
-		].includes(typeof value)
+		['string', 'number', 'boolean', 'symbol', 'bigint', 'undefined'].includes(typeof value)
 	);
 }
 
@@ -110,10 +99,7 @@ export function isPrimitive(value: unknown): value is Primitive {
  * @returns `true` if the value is a primitive, otherwise `false`.
  */
 export function isNormalPrimitive(value: unknown): value is NormalPrimitive {
-	return (
-		value == null ||
-		['string', 'number', 'boolean', 'undefined'].includes(typeof value)
-	);
+	return value == null || ['string', 'number', 'boolean', 'undefined'].includes(typeof value);
 }
 
 /**

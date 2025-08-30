@@ -7,9 +7,7 @@ import type { ClockTime, HourMinutes, UTCOffSet } from './types';
  * @param time - The time string to extract from.
  * @return The extracted hour and minute as number tuple.
  */
-export function extractHourMinute(
-	time: `-${ClockTime}` | ClockTime
-): [number, number] {
+export function extractHourMinute(time: `-${ClockTime}` | ClockTime): [number, number] {
 	const [hour, minute] = time.split(':').map(Number);
 
 	return [hour, minute];
@@ -24,9 +22,7 @@ export function extractHourMinute(
 export function getTotalMinutes(time: `-${ClockTime}` | ClockTime): number {
 	const isNegative = time.startsWith('-');
 
-	const [h, m] = extractHourMinute(
-		isNegative ? (time.slice(1) as ClockTime) : time
-	);
+	const [h, m] = extractHourMinute(isNegative ? (time.slice(1) as ClockTime) : time);
 
 	const total = h * 60 + m;
 
@@ -49,9 +45,7 @@ export function getCurrentDateTime(): Date {
  * @param utc UTC value in `UTC-01:30` or `UTC+01:30` format.
  * @returns The UTC value in `HH:MM` format.
  */
-export function extractTimeFromUTC(
-	utc: UTCOffSet
-): `-${ClockTime}` | ClockTime {
+export function extractTimeFromUTC(utc: UTCOffSet): `-${ClockTime}` | ClockTime {
 	return utc.replace(/^UTC[+]?/g, '') as `-${ClockTime}` | ClockTime;
 }
 
@@ -78,9 +72,7 @@ export function extractMinutesFromUTC(utc: UTCOffSet): number {
  * convertMinutesToTime(-45); // "0:45"
  */
 export function convertMinutesToTime(minutes: Numeric): HourMinutes {
-	const numMIn = Math.abs(
-		typeof minutes === 'number' ? minutes : Number(minutes)
-	);
+	const numMIn = Math.abs(typeof minutes === 'number' ? minutes : Number(minutes));
 
 	return `${String(Math.floor(numMIn / 60))}:${String(numMIn % 60).padStart(2, '0')}` as HourMinutes;
 }

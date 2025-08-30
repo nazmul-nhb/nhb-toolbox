@@ -10,8 +10,7 @@ import type { Unit } from './Unit';
 
 // * Enumerate & Enumerate Internal: builds a union of all numbers from 0 to N - 1
 type EnumerateInternal<N extends number, Acc extends number[] = []> =
-	Acc['length'] extends N ? Acc[number]
-	:	EnumerateInternal<N, [...Acc, Acc['length']]>;
+	Acc['length'] extends N ? Acc[number] : EnumerateInternal<N, [...Acc, Acc['length']]>;
 
 /**
  * * Builds a union of numeric literals from `0` to `N - 1`.
@@ -26,8 +25,7 @@ export type Enumerate<N extends number> = EnumerateInternal<N>;
 
 // * Helper: Add 1 to a number
 type AddOne<N extends number, Acc extends unknown[] = []> =
-	Acc['length'] extends N ? [...Acc, unknown]['length']
-	:	AddOne<N, [...Acc, unknown]>;
+	Acc['length'] extends N ? [...Acc, unknown]['length'] : AddOne<N, [...Acc, unknown]>;
 
 /**
  *
@@ -78,17 +76,10 @@ export interface DecimalOptions<T extends boolean | undefined = false> {
 export type ConvertedDecimal<T> = T extends true ? `${number}` : number;
 
 /** - Type of numbers to generate */
-export type NumberType =
-	| 'any'
-	| 'natural'
-	| 'odd'
-	| 'even'
-	| 'prime'
-	| 'random';
+export type NumberType = 'any' | 'natural' | 'odd' | 'even' | 'prime' | 'random';
 
 /** - Options for generating numbers in a range */
-export interface RangeOptions<T extends boolean = false>
-	extends RandomNumberOptions {
+export interface RangeOptions<T extends boolean = false> extends RandomNumberOptions {
 	/** Separator for the string format if `getAsString` is `true`. Defaults to `", "`. */
 	separator?: T extends true ? string : never;
 	/** The multiples of which number to consider in the result. */
@@ -98,13 +89,10 @@ export interface RangeOptions<T extends boolean = false>
 }
 
 /** - The return type of the `getNumbersInRange` function */
-export type RangedNumbers<T extends boolean = false> =
-	T extends true ? string : number[];
+export type RangedNumbers<T extends boolean = false> = T extends true ? string : number[];
 
 /** List of ISO 4217 currency codes. */
-export type CurrencyCode =
-	| keyof typeof CURRENCY_LOCALES
-	| (typeof CURRENCY_CODES)[number];
+export type CurrencyCode = keyof typeof CURRENCY_LOCALES | (typeof CURRENCY_CODES)[number];
 
 /** - List of all supported BCP 47 locales */
 export type LocaleCode =
@@ -216,11 +204,7 @@ export type PercentageOptions = (
 
 /** * Static methods from `Unit` class that accept a single number argument and return a number. */
 export type UnitNumberMethods = {
-	[K in keyof typeof Unit]: (typeof Unit)[K] extends (
-		(value: number) => number
-	) ?
-		K
-	:	never;
+	[K in keyof typeof Unit]: (typeof Unit)[K] extends (value: number) => number ? K : never;
 }[keyof typeof Unit];
 
 /** - Short forms of units */

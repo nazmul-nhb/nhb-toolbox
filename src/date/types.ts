@@ -199,11 +199,7 @@ export interface ChronosInternals {
 	 * @param label - Optional UTC offset label
 	 * @returns A new Chronos instance
 	 */
-	withOrigin(
-		instance: Chronos,
-		method: ChronosMethods,
-		label?: UTCOffSet
-	): Chronos;
+	withOrigin(instance: Chronos, method: ChronosMethods, label?: UTCOffSet): Chronos;
 
 	/**
 	 * * Access to `#toNewDate` private method
@@ -587,13 +583,7 @@ export interface FormatOptions {
 }
 
 /** Definition of day part names. */
-export type DayPart =
-	| 'night'
-	| 'midnight'
-	| 'lateNight'
-	| 'morning'
-	| 'afternoon'
-	| 'evening';
+export type DayPart = 'night' | 'midnight' | 'lateNight' | 'morning' | 'afternoon' | 'evening';
 
 /** Object type for extracting day parts. */
 export type DayPartConfig = Record<DayPart, [ClockHour, ClockHour]>;
@@ -608,9 +598,7 @@ export type ZodiacSign = (typeof WESTERN_ZODIAC_SIGNS)[number][0];
 export type ZodiacPreset = keyof typeof ZODIAC_PRESETS;
 
 /** Shape of Zodiac signs array */
-export type ZodiacArray = Array<
-	[ZodiacSign, [NumberRange<1, 12>, NumberRange<1, 31>]]
->;
+export type ZodiacArray = Array<[ZodiacSign, [NumberRange<1, 12>, NumberRange<1, 31>]]>;
 
 /** Options for configuring Zodiac sign getter */
 export interface ZodiacOptions {

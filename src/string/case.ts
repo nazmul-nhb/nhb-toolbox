@@ -89,27 +89,20 @@ export function convertStringCase(
 	// Unicode-aware regexes
 	const LEADING_PUNCTUATION = /^[^\p{L}\p{N}\s]+/u;
 	const TRAILING_PUNCTUATION = /[^\p{L}\p{N}\s]+$/u;
-	const SEPARATOR =
-		format === 'Title Case' ? /[^\p{L}\p{N}-]+/gu : /[^\p{L}\p{N}]+/gu;
-	const CAMEL_BOUNDARY =
-		/(?<=[\p{Ll}\p{N}])(?=\p{Lu})|(?<=[\p{Lu}])(?=\p{Lu}[\p{Ll}])/u;
-	const LETTER_NUMBER_BOUNDARY =
-		/(?<=[\p{L}])(?=\p{N})|(?<=[\p{N}])(?=\p{L})/u;
+	const SEPARATOR = format === 'Title Case' ? /[^\p{L}\p{N}-]+/gu : /[^\p{L}\p{N}]+/gu;
+	const CAMEL_BOUNDARY = /(?<=[\p{Ll}\p{N}])(?=\p{Lu})|(?<=[\p{Lu}])(?=\p{Lu}[\p{Ll}])/u;
+	const LETTER_NUMBER_BOUNDARY = /(?<=[\p{L}])(?=\p{N})|(?<=[\p{N}])(?=\p{L})/u;
 
 	// preserve leading/trailing punctuation (but not spaces)
 	const start = value.match(LEADING_PUNCTUATION)?.[0] ?? '';
 	const end = value.match(TRAILING_PUNCTUATION)?.[0] ?? '';
 	// core trimmed of leading/trailing punctuation (but keep internal separators)
-	const core = value
-		.replace(/^[^\p{L}\p{N}\s]+|[^\p{L}\p{N}\s]+$/gu, '')
-		.trim();
+	const core = value.replace(/^[^\p{L}\p{N}\s]+|[^\p{L}\p{N}\s]+$/gu, '').trim();
 
 	const lowerCase = (s: string) => s.toLowerCase();
 	const isAcronym = (s: string) => s.length >= 2 && /^[\p{Lu}]+$/u.test(s);
 	const capitalize = (s: string) =>
-		s.length === 0 ?
-			''
-		:	s.charAt(0).toUpperCase().concat(s.slice(1).toLowerCase());
+		s.length === 0 ? '' : s.charAt(0).toUpperCase().concat(s.slice(1).toLowerCase());
 
 	// Tokenize into logical words:
 	// 1) split on explicit separators (space, underscore, dash, punctuation)
@@ -174,11 +167,7 @@ export function convertStringCase(
 				.map((token, idx, self) => {
 					const tokenLower = token.toLowerCase() as Lower;
 					// keep small words lowercase unless first or last
-					if (
-						idx !== 0 &&
-						idx !== self.length - 1 &&
-						smallSet.has(tokenLower)
-					) {
+					if (idx !== 0 && idx !== self.length - 1 && smallSet.has(tokenLower)) {
 						return tokenLower;
 					}
 					// If preserveAcronyms is enabled, preserve acronym-like subparts inside hyphenated tokens.
@@ -186,9 +175,7 @@ export function convertStringCase(
 					if (preserveAcronyms && token.includes('-')) {
 						return token
 							.split('-')
-							.map((sub) =>
-								isAcronym(sub) ? sub : capitalize(sub)
-							)
+							.map((sub) => (isAcronym(sub) ? sub : capitalize(sub)))
 							.join('-');
 					}
 					if (preserveAcronyms && isAcronym(token)) {

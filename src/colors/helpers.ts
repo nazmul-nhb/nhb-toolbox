@@ -1,14 +1,5 @@
 import type { Percent } from '../number/types';
-import type {
-	AlphaValue,
-	Hex,
-	Hex6,
-	Hex8,
-	HSL,
-	HSLA,
-	RGB,
-	RGBA,
-} from './types';
+import type { AlphaValue, Hex, Hex6, Hex8, HSL, HSLA, RGB, RGBA } from './types';
 
 /**
  * * Converts opacity percentage (0-100) to a 2-digit hex string.
@@ -55,10 +46,7 @@ export const _generateRandomHSL = (): HSL => {
  * @param newColor - The new color to compare.
  * @returns `Boolean` : `true` if the new color is similar to the previous one.
  */
-export const _isSimilarToLast = (
-	recentColors: string[],
-	newColor: string
-): boolean => {
+export const _isSimilarToLast = (recentColors: string[], newColor: string): boolean => {
 	if (recentColors?.length === 0) return false;
 
 	const newHSL = newColor.match(/hsl\((\d+), (\d+)%, (\d+)%\)/);
@@ -80,11 +68,7 @@ export const _isSimilarToLast = (
 	const saturationDifference = Math.abs(newSaturation - lastSaturation);
 	const lightnessDifference = Math.abs(newLightness - lastLightness);
 
-	return (
-		hueDifference < 48 &&
-		saturationDifference < 24 &&
-		lightnessDifference < 16
-	);
+	return hueDifference < 48 && saturationDifference < 24 && lightnessDifference < 16;
 };
 
 /**
@@ -121,11 +105,7 @@ export function _isRGB(color: string): color is RGB {
 		);
 	if (!match) return false;
 	const [r, g, b] = match.slice(1).map(Number);
-	return (
-		_isValidRGBComponent(r) &&
-		_isValidRGBComponent(g) &&
-		_isValidRGBComponent(b)
-	);
+	return _isValidRGBComponent(r) && _isValidRGBComponent(g) && _isValidRGBComponent(b);
 }
 
 /**
@@ -181,12 +161,7 @@ export function _isHSLA(color: string): color is HSLA {
 		);
 	if (!match) return false;
 	const [h, s, l, a] = match.slice(1).map(Number);
-	return (
-		_isValidHue(h) &&
-		_isValidPercentage(s) &&
-		_isValidPercentage(l) &&
-		_isValidAlpha(a)
-	);
+	return _isValidHue(h) && _isValidPercentage(s) && _isValidPercentage(l) && _isValidAlpha(a);
 }
 
 /**

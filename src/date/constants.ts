@@ -34,48 +34,21 @@ export const YEAR_FORMATS = /* @__PURE__ */ Object.freeze([
 	'yy',
 ] as const);
 
-export const MONTH_FORMATS = /* @__PURE__ */ Object.freeze([
-	'M',
-	'MM',
-	'mmm',
-	'mmmm',
-] as const);
+export const MONTH_FORMATS = /* @__PURE__ */ Object.freeze(['M', 'MM', 'mmm', 'mmmm'] as const);
 
-export const DATE_FORMATS = /* @__PURE__ */ Object.freeze([
-	'DD',
-	'D',
-	'Do',
-] as const);
+export const DATE_FORMATS = /* @__PURE__ */ Object.freeze(['DD', 'D', 'Do'] as const);
 
-export const DAY_FORMATS = /* @__PURE__ */ Object.freeze([
-	'd',
-	'dd',
-	'ddd',
-] as const);
+export const DAY_FORMATS = /* @__PURE__ */ Object.freeze(['d', 'dd', 'ddd'] as const);
 
-export const HOUR_FORMATS = /* @__PURE__ */ Object.freeze([
-	'H',
-	'HH',
-	'hh',
-	'h',
-] as const);
+export const HOUR_FORMATS = /* @__PURE__ */ Object.freeze(['H', 'HH', 'hh', 'h'] as const);
 
-export const MINUTE_FORMATS = /* @__PURE__ */ Object.freeze([
-	'mm',
-	'm',
-] as const);
+export const MINUTE_FORMATS = /* @__PURE__ */ Object.freeze(['mm', 'm'] as const);
 
-export const SECOND_FORMATS = /* @__PURE__ */ Object.freeze([
-	'ss',
-	's',
-] as const);
+export const SECOND_FORMATS = /* @__PURE__ */ Object.freeze(['ss', 's'] as const);
 
 export const ZONE_FORMATS = /* @__PURE__ */ Object.freeze(['ZZ'] as const);
 
-export const MILLISECOND_FORMATS = /* @__PURE__ */ Object.freeze([
-	'ms',
-	'mss',
-] as const);
+export const MILLISECOND_FORMATS = /* @__PURE__ */ Object.freeze(['ms', 'mss'] as const);
 
 export const TIME_FORMATS = /* @__PURE__ */ Object.freeze(['a', 'A'] as const);
 

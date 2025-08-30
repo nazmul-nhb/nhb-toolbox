@@ -161,8 +161,7 @@ export type OmitByValue<T, ValueType> = {
  * type UserWithId = RequireOnly<User, 'id'>;
  * // { id: number; name?: string }
  */
-export type RequireOnly<T, K extends keyof T> = Partial<T> &
-	Required<Pick<T, K>>;
+export type RequireOnly<T, K extends keyof T> = Partial<T> & Required<Pick<T, K>>;
 
 /**
  * * Forces TypeScript to simplify a complex or inferred type into a more readable flat object.
@@ -402,6 +401,5 @@ export type RemoveNever<T> = {
  * // Result: { firstName: string; lastName: string }
  */
 export type RenameKeys<T, R extends Partial<Record<keyof T, string>>> = {
-	[K in keyof T as K extends keyof R ? Extract<R[K], string | number | symbol>
-	:	K]: T[K];
+	[K in keyof T as K extends keyof R ? Extract<R[K], string | number | symbol> : K]: T[K];
 };

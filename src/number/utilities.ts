@@ -30,8 +30,7 @@ export const formatCurrency = (
 	currency: CurrencyCode = 'USD',
 	locale?: LocaleCode
 ): string => {
-	const selectedLocale: LocaleCode =
-		locale ? locale : CURRENCY_LOCALES[currency];
+	const selectedLocale: LocaleCode = locale ? locale : CURRENCY_LOCALES[currency];
 
 	return new Intl.NumberFormat(selectedLocale, {
 		style: 'currency',
@@ -49,11 +48,7 @@ export const formatCurrency = (
  * @example clampNumber(5, 10, 20) → 10
  * @example clampNumber(25, 10, 20) → 20
  */
-export const clampNumber = (
-	value: number,
-	min: number,
-	max: number
-): number => {
+export const clampNumber = (value: number, min: number, max: number): number => {
 	return Math.max(min, Math.min(value, max));
 };
 

@@ -20,10 +20,7 @@ export const generateRandomHSLColor = (maxColors: number = 16): HSL => {
 	// Keep generating until a unique color is found that is also different from the last one
 	do {
 		color = _generateRandomHSL();
-	} while (
-		generatedColors.has(color) ||
-		_isSimilarToLast(recentColors, color)
-	);
+	} while (generatedColors.has(color) || _isSimilarToLast(recentColors, color));
 
 	// Add the newly generated color to the set and recent colors
 	generatedColors.add(color);

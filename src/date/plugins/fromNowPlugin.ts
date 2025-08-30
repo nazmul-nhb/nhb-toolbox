@@ -81,15 +81,7 @@ export const fromNowPlugin = (ChronosClass: MainChronos): void => {
 			years--;
 		}
 
-		const unitOrder = [
-			'year',
-			'month',
-			'week',
-			'day',
-			'hour',
-			'minute',
-			'second',
-		] as const;
+		const unitOrder = ['year', 'month', 'week', 'day', 'hour', 'minute', 'second'] as const;
 
 		const lvlIdx = unitOrder.indexOf(level);
 
@@ -113,10 +105,7 @@ export const fromNowPlugin = (ChronosClass: MainChronos): void => {
 		if (lvlIdx >= unitOrder.indexOf('minute') && minutes > 0) {
 			parts?.push(formatUnitWithPlural(minutes, 'minute'));
 		}
-		if (
-			lvlIdx >= unitOrder.indexOf('second') &&
-			(seconds > 0 || parts?.length === 0)
-		) {
+		if (lvlIdx >= unitOrder.indexOf('second') && (seconds > 0 || parts?.length === 0)) {
 			parts?.push(formatUnitWithPlural(seconds, 'second'));
 		}
 

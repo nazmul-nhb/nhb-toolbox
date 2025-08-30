@@ -1,10 +1,6 @@
 // @ts-check
 
-import {
-	defineScriptConfig,
-	fixJsExtensions,
-	fixTypeExports,
-} from 'nhb-scripts';
+import { defineScriptConfig, fixJsExtensions, fixTypeExports } from 'nhb-scripts';
 
 export default defineScriptConfig({
 	format: {
@@ -34,9 +30,7 @@ export default defineScriptConfig({
 					distPath: 'dist/dts',
 					packageJsonPath: 'package.json',
 					typeFileCandidates: ['types.d.ts', 'interfaces.d.ts'],
-					extraPatterns: [
-						{ pattern: 'plugins', folderName: 'plugins' },
-					],
+					extraPatterns: [{ pattern: 'plugins', folderName: 'plugins' }],
 					extraStatic: {
 						'./types': {
 							types: './dist/dts/types/index.d.ts',
@@ -73,7 +67,11 @@ export default defineScriptConfig({
 
 // ! ============= Custom Templates ============= ! //
 
-/** @type {import('nhb-scripts').FileGenerator} */
+/**
+ *  @import { FileGenerator } from 'nhb-scripts';
+ */
+
+/** @type { FileGenerator } */
 function generatePlugin(pluginName) {
 	return [
 		{

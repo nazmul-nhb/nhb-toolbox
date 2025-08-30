@@ -21,10 +21,7 @@ export {
 	DEFAULT_SEASONS as WESTERN_SEASONS,
 } from './date/seasons';
 
-export {
-	ALPHABET_COLOR_PALETTE,
-	NUMBER_COLOR_PALETTE,
-} from './colors/constants';
+export { ALPHABET_COLOR_PALETTE, NUMBER_COLOR_PALETTE } from './colors/constants';
 
 export { CSS_COLORS } from './colors/css-colors';
 

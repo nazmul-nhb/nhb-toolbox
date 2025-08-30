@@ -1,9 +1,7 @@
 import type { OwnKeys } from '../types/index';
 import type { FindOptions } from './types';
 
-type KeySelector<T> =
-	| Extract<OwnKeys<T>, string | number>
-	| ((item: T) => string | number);
+type KeySelector<T> = Extract<OwnKeys<T>, string | number> | ((item: T) => string | number);
 
 type CacheEntry<T> = { result: T[]; timestamp: number };
 
@@ -78,8 +76,7 @@ export class Finder<T> {
 			data,
 		} = options ?? {};
 
-		const source =
-			typeof data === 'function' ? data() : (data ?? this.#items);
+		const source = typeof data === 'function' ? data() : (data ?? this.#items);
 
 		if (!source?.length) return [];
 
@@ -91,9 +88,7 @@ export class Finder<T> {
 		const getKey = Finder.#createMemoizedKeyGetter(rawGetKey);
 
 		const normalizedMatcher =
-			caseInsensitive && typeof matcher === 'string' ?
-				matcher.toLowerCase()
-			:	matcher;
+			caseInsensitive && typeof matcher === 'string' ? matcher.toLowerCase() : matcher;
 
 		if (cacheKey) {
 			const entry = this.#cachedResult.get(cacheKey);
@@ -111,16 +106,11 @@ export class Finder<T> {
 			results = source.filter((item) => {
 				const key = getKey(item);
 				const value =
-					caseInsensitive && typeof key === 'string' ?
-						key.toLowerCase()
-					:	key;
+					caseInsensitive && typeof key === 'string' ? key.toLowerCase() : key;
 				return value === normalizedMatcher;
 			});
 		} else {
-			const sorted =
-				needSorting ?
-					this.#sortAndCache(source, getKey, cacheKey)
-				:	source;
+			const sorted = needSorting ? this.#sortAndCache(source, getKey, cacheKey) : source;
 
 			const firstMatch = this.binarySearch(
 				sorted,
@@ -141,9 +131,7 @@ export class Finder<T> {
 					const key = getKey(item);
 
 					const value =
-						caseInsensitive && typeof key === 'string' ?
-							key.toLowerCase()
-						:	key;
+						caseInsensitive && typeof key === 'string' ? key.toLowerCase() : key;
 
 					return value === base;
 				});
@@ -193,8 +181,7 @@ export class Finder<T> {
 			data,
 		} = options ?? {};
 
-		const source =
-			typeof data === 'function' ? data() : (data ?? this.#items);
+		const source = typeof data === 'function' ? data() : (data ?? this.#items);
 
 		if (!source?.length) return undefined;
 
@@ -206,9 +193,7 @@ export class Finder<T> {
 		const getKey = Finder.#createMemoizedKeyGetter(rawGetKey);
 
 		const normalizedMatcher =
-			caseInsensitive && typeof matcher === 'string' ?
-				matcher.toLowerCase()
-			:	matcher;
+			caseInsensitive && typeof matcher === 'string' ? matcher.toLowerCase() : matcher;
 
 		if (cacheKey) {
 			const entry = this.#cachedResult.get(cacheKey);
@@ -226,16 +211,12 @@ export class Finder<T> {
 			result = source?.find((item) => {
 				const key = getKey(item);
 				const value =
-					caseInsensitive && typeof key === 'string' ?
-						key.toLowerCase()
-					:	key;
+					caseInsensitive && typeof key === 'string' ? key.toLowerCase() : key;
 				return value === normalizedMatcher;
 			});
 		} else {
 			result = this.binarySearch(
-				needSorting ?
-					this.#sortAndCache(source, getKey, cacheKey)
-				:	source,
+				needSorting ? this.#sortAndCache(source, getKey, cacheKey) : source,
 				normalizedMatcher,
 				getKey,
 				caseInsensitive
@@ -243,12 +224,7 @@ export class Finder<T> {
 		}
 
 		if (!result && fuzzy && typeof normalizedMatcher === 'string') {
-			return this.fuzzySearch(
-				source,
-				normalizedMatcher,
-				getKey,
-				caseInsensitive
-			);
+			return this.fuzzySearch(source, normalizedMatcher, getKey, caseInsensitive);
 		}
 
 		if (cacheKey && result) {
@@ -319,9 +295,7 @@ export class Finder<T> {
 			const mid = Math.floor((min + max) / 2);
 			const midKey = keySelector(sorted[mid]);
 			const key =
-				caseInsensitive && typeof midKey === 'string' ?
-					midKey.toLowerCase()
-				:	midKey;
+				caseInsensitive && typeof midKey === 'string' ? midKey.toLowerCase() : midKey;
 
 			if (key === matcher) return sorted[mid];
 			if (key < matcher) min = mid + 1;
@@ -383,11 +357,7 @@ export class Finder<T> {
 	 * @param cacheKey Optional cache key for storing the result.
 	 * @returns
 	 */
-	#sortAndCache(
-		data: T[],
-		getKey: (item: T) => string | number,
-		cacheKey?: string
-	) {
+	#sortAndCache(data: T[], getKey: (item: T) => string | number, cacheKey?: string) {
 		if (cacheKey) {
 			const entry = this.#sortedCache.get(cacheKey);
 

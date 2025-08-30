@@ -54,8 +54,7 @@ export function createOptionsArray<
  */
 export function removeDuplicatesFromArray<T>(array: T[]): T[] {
 	return array?.filter(
-		(item, index, self) =>
-			index === self?.findIndex((el) => isDeepEqual(el, item))
+		(item, index, self) => index === self?.findIndex((el) => isDeepEqual(el, item))
 	);
 }
 
@@ -144,10 +143,10 @@ export function splitArray<T>(arr: T[], chunkSize: number): Array<T[]> {
  * - Returns an empty array if the input is invalid or empty.
  * - Groups objects even when the group key is `undefined` or `null` (object with `null` & `undefined` property-values are grouped together).
  */
-export function splitArrayByProperty<
-	T extends GenericObject,
-	P extends NestedPrimitiveKey<T>,
->(source: T[] | undefined, property: P): Array<T[]> {
+export function splitArrayByProperty<T extends GenericObject, P extends NestedPrimitiveKey<T>>(
+	source: T[] | undefined,
+	property: P
+): Array<T[]> {
 	if (!isValidArray(source)) return [];
 
 	const grouped = {} as Record<string, T[]>;
@@ -191,11 +190,7 @@ export function rotateArray<T>(arr: T[], steps: number): T[] {
  * @param toIndex The new index for the element.
  * @returns A new array with the element moved.
  */
-export function moveArrayElement<T>(
-	arr: T[],
-	fromIndex: number,
-	toIndex: number
-): T[] {
+export function moveArrayElement<T>(arr: T[], fromIndex: number, toIndex: number): T[] {
 	const newArr = [...arr];
 
 	const [item] = newArr.splice(fromIndex, 1);

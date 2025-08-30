@@ -13,10 +13,7 @@ import type { ColorInput, ColorInputArray, Hex8 } from './types';
  * @param opacity - A value from 0 to 100 representing the opacity percentage.
  * @returns A hex color for the first character of the provided string/number.
  */
-export function getColorForInitial(
-	input: string | number,
-	opacity?: Percent
-): Hex8;
+export function getColorForInitial(input: string | number, opacity?: Percent): Hex8;
 
 /**
  *  * Generates an array of hex (`Hex8` format) colors based on the first character (initial) of an array of strings/numbers or even nested arrays of strings/numbers.
@@ -29,10 +26,7 @@ export function getColorForInitial(
  * @param opacity - A value from 0 to 100 representing the opacity percentage.
  * @returns A hex color for a string/number, or an array of hex colors for each element of the provided array.
  */
-export function getColorForInitial(
-	input: ColorInputArray,
-	opacity?: Percent
-): Hex8[];
+export function getColorForInitial(input: ColorInputArray, opacity?: Percent): Hex8[];
 
 /**
  *  * Generates a hex color (`Hex8` format) based on the first character (initial) of a string or number; or an array of hex colors based on the first character (initial) of an array of strings/numbers or even nested arrays of strings/numbers.
@@ -66,10 +60,7 @@ export function getColorForInitial(
 
 		// Handle number as string
 		if (NUMBERS.includes(initial)) {
-			return _applyOpacity(
-				NUMBER_COLOR_PALETTE[parseInt(initial, 10)],
-				hexOpacity
-			);
+			return _applyOpacity(NUMBER_COLOR_PALETTE[parseInt(initial, 10)], hexOpacity);
 		}
 
 		const upperInitial = initial.toUpperCase();
@@ -86,18 +77,15 @@ export function getColorForInitial(
 		initial = input.toString()[0];
 
 		if (NUMBERS.includes(initial)) {
-			return _applyOpacity(
-				NUMBER_COLOR_PALETTE[parseInt(initial, 10)],
-				hexOpacity
-			);
+			return _applyOpacity(NUMBER_COLOR_PALETTE[parseInt(initial, 10)], hexOpacity);
 		}
 
 		return _applyOpacity(DEFAULT, hexOpacity);
 		// Handle array of strings/numbers
 	} else if (Array.isArray(input)) {
 		if (input?.length < 1)
-			return [...ALPHABET_COLOR_PALETTE, ...NUMBER_COLOR_PALETTE].map(
-				(color) => _applyOpacity(color, hexOpacity)
+			return [...ALPHABET_COLOR_PALETTE, ...NUMBER_COLOR_PALETTE].map((color) =>
+				_applyOpacity(color, hexOpacity)
 			);
 
 		return input

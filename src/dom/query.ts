@@ -88,13 +88,8 @@ export function updateQueryParam(key: string, value: string) {
  * @param parsePrimitives - Whether to convert stringified primitives into real values (default: true).
  * @returns An object where keys are strings and values can be string, array, number, boolean, or null.
  */
-export const parseQueryString = (
-	query: string,
-	parsePrimitives = true
-): StrictObject => {
-	const params = new URLSearchParams(
-		query.startsWith('?') ? query.slice(1) : query
-	);
+export const parseQueryString = (query: string, parsePrimitives = true): StrictObject => {
+	const params = new URLSearchParams(query.startsWith('?') ? query.slice(1) : query);
 
 	const entries: StrictObject = {};
 
@@ -102,8 +97,7 @@ export const parseQueryString = (
 		if (key in entries) {
 			const current = entries[key];
 
-			const array =
-				Array.isArray(current) ? [...current, value] : [current, value];
+			const array = Array.isArray(current) ? [...current, value] : [current, value];
 
 			entries[key] = parsePrimitives ? deepParsePrimitives(array) : array;
 		} else {

@@ -37,9 +37,7 @@ export const filterArrayOfObjects = <T extends GenericObject>(
 	return array?.filter((item) =>
 		Object.entries(conditions)?.every(([key, conditionFn]) => {
 			if (typeof conditionFn === 'function') {
-				return conditionFn(
-					item[key as keyof T] as T[keyof T] | undefined
-				);
+				return conditionFn(item[key as keyof T] as T[keyof T] | undefined);
 			}
 			return true;
 		})

@@ -1,10 +1,5 @@
 import { HTTP_STATUS_DATA } from './constants';
-import type {
-	HttpStatusName,
-	StatusCategory,
-	StatusCode,
-	StatusEntry,
-} from './types';
+import type { HttpStatusName, StatusCategory, StatusCode, StatusEntry } from './types';
 
 /**
  * * Utility class for retrieving and managing HTTP status codes with rich MDN-based metadata.

@@ -154,23 +154,18 @@ export class Currency {
 			const res = await fetch(url, { redirect: 'error' });
 
 			if (!res.ok)
-				throw new Error(
-					`FrankFurter Error: ${res.status}. "${res.statusText}"`
-				);
+				throw new Error(`FrankFurter Error: ${res.status}. "${res.statusText}"`);
 
 			const data: FrankFurter = await res.json();
 
 			if (!data.rates?.[to]) {
-				throw new Error(
-					`Currency "${to}" not found in FrankFurter Database!`
-				);
+				throw new Error(`Currency "${to}" not found in FrankFurter Database!`);
 			}
 
 			return data.rates[to] / this.#amount;
 		} catch (error) {
 			throw new Error(
-				(error as Error).message ||
-					`Failed to fetch data from FrankFurter API`
+				(error as Error).message || `Failed to fetch data from FrankFurter API`
 			);
 		}
 	}

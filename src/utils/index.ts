@@ -121,9 +121,7 @@ export function convertArrayToString<T extends Primitive | GenericObject>(
 		return array?.join(separator);
 	} else if (isArrayOfType(array, isNotEmptyObject)) {
 		if (options && 'target' in options) {
-			return array
-				?.map((el) => _resolveNestedKey(el, options?.target))
-				?.join(separator);
+			return array?.map((el) => _resolveNestedKey(el, options?.target))?.join(separator);
 		} else {
 			return '';
 		}
@@ -146,10 +144,7 @@ export function convertArrayToString<T extends Primitive | GenericObject>(
  *
  * debouncedSearch('laptop'); // Executes after 300ms of inactivity.
  */
-export function debounceAction<T extends VoidFunction>(
-	callback: T,
-	delay = 300
-): DelayedFn<T> {
+export function debounceAction<T extends VoidFunction>(callback: T, delay = 300): DelayedFn<T> {
 	let timeoutId: ReturnType<typeof setTimeout> | undefined = undefined;
 
 	return (...args: Parameters<T>) => {
@@ -223,9 +218,7 @@ export function getInstanceMethodNames(cls: Constructor): string[] {
  */
 export function getStaticMethodNames(cls: Constructor): string[] {
 	const methods = Object.getOwnPropertyNames(cls).filter((method) => {
-		return (
-			method !== 'prototype' && method !== 'name' && method !== 'length'
-		);
+		return method !== 'prototype' && method !== 'name' && method !== 'length';
 	});
 
 	return sortAnArray(methods);
@@ -261,10 +254,7 @@ export function getInstanceGetterNames(cls: Constructor): string[] {
 	const descriptors = Object.getOwnPropertyDescriptors(cls.prototype);
 
 	const result = Object.entries(descriptors)
-		.filter(
-			([key, desc]) =>
-				typeof desc.get === 'function' && key !== 'constructor'
-		)
+		.filter(([key, desc]) => typeof desc.get === 'function' && key !== 'constructor')
 		.map(([key]) => key);
 
 	return sortAnArray(result);
@@ -280,10 +270,7 @@ export function getStaticGetterNames(cls: Constructor): string[] {
 	const descriptors = Object.getOwnPropertyDescriptors(cls);
 
 	const result = Object.entries(descriptors)
-		.filter(
-			([key, desc]) =>
-				typeof desc.get === 'function' && key !== 'prototype'
-		)
+		.filter(([key, desc]) => typeof desc.get === 'function' && key !== 'prototype')
 		.map(([key]) => key);
 
 	return sortAnArray(result);
@@ -329,10 +316,7 @@ export function getClassDetails(cls: Constructor): ClassDetails {
  *
  * @see `parseJsonToObject` for strict object-only parsing.
  */
-export const parseJSON = <T = unknown>(
-	value: string,
-	parsePrimitives = true
-): T => {
+export const parseJSON = <T = unknown>(value: string, parsePrimitives = true): T => {
 	try {
 		const parsed = JSON.parse(value);
 

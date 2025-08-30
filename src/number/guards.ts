@@ -46,9 +46,7 @@ export function isPerfectSquare(num: number): boolean {
  * @returns `true` if the number is a Fibonacci number, otherwise `false`.
  */
 export function isFibonacci(num: number): boolean {
-	return (
-		isPerfectSquare(5 * num * num + 4) || isPerfectSquare(5 * num * num - 4)
-	);
+	return isPerfectSquare(5 * num * num + 4) || isPerfectSquare(5 * num * num - 4);
 }
 
 /**

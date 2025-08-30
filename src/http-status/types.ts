@@ -2,14 +2,10 @@ import type { LooseLiteral } from '../utils/types';
 import type { HTTP_STATUS_DATA } from './constants';
 
 /** HTTP Status Code, e.g. `404`, `500` etc. */
-export type StatusCode = LooseLiteral<
-	(typeof HTTP_STATUS_DATA)[number]['code']
->;
+export type StatusCode = LooseLiteral<(typeof HTTP_STATUS_DATA)[number]['code']>;
 
 /** Name for the Status Code in Uppercase snake case, e.g. `"NOT_FOUND"`, `"INTERNAL_SERVER_ERROR"` */
-export type StatusName = LooseLiteral<
-	(typeof HTTP_STATUS_DATA)[number]['name']
->;
+export type StatusName = LooseLiteral<(typeof HTTP_STATUS_DATA)[number]['name']>;
 
 /** Name for the Status Code in Human readable form, e.g. `"Not Found"`, `"Internal Server Error"`  */
 export type StatusNameReadable = LooseLiteral<

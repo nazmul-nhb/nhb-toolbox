@@ -1,15 +1,6 @@
 import { isDateLike } from '../date/guards';
-import {
-	isCustomFile,
-	isFileList,
-	isFileOrBlob,
-	isFileUpload,
-} from '../form/guards';
-import {
-	isArrayOfType,
-	isNotEmptyObject,
-	isObject,
-} from '../guards/non-primitives';
+import { isCustomFile, isFileList, isFileOrBlob, isFileUpload } from '../form/guards';
+import { isArrayOfType, isNotEmptyObject, isObject } from '../guards/non-primitives';
 import { isString } from '../guards/primitives';
 import { trimString } from '../string/basics';
 import type { Any, FlattenPartial, PartialOrRequired } from '../types/index';
@@ -40,10 +31,7 @@ export function sanitizeData(input: string[]): string[];
  * @param _return - By default return type is as it is, passing this parameter `true` makes the return type `Partial<T>`.
  * @returns A new object with the specified modifications.
  */
-export function sanitizeData<
-	T extends GenericObject,
-	B extends PartialOrRequired = 'required',
->(
+export function sanitizeData<T extends GenericObject, B extends PartialOrRequired = 'required'>(
 	object: T,
 	options?: SanitizeOptions<T>,
 	_return?: B
@@ -58,10 +46,7 @@ export function sanitizeData<
  * @param _return - By default return type is as it is, passing this parameter `partial` makes the return type `Partial<T>`.
  * @returns A new sanitized array with the specified modifications.
  */
-export function sanitizeData<
-	T extends GenericObject,
-	B extends PartialOrRequired = 'required',
->(
+export function sanitizeData<T extends GenericObject, B extends PartialOrRequired = 'required'>(
 	array: T[],
 	options?: SanitizeOptions<T>,
 	_return?: B
@@ -76,10 +61,7 @@ export function sanitizeData<
  * @param _return - By default return type is as it is, passing this parameter `partial` makes the return type `Partial<T>`.
  * @returns A new string, object or array of strings or objects with the specified modifications.
  */
-export function sanitizeData<
-	T extends GenericObject,
-	B extends PartialOrRequired = 'required',
->(
+export function sanitizeData<T extends GenericObject, B extends PartialOrRequired = 'required'>(
 	input: string | string[] | T | T[],
 	options?: SanitizeOptions<T>,
 	_return?: B
@@ -107,9 +89,7 @@ export function sanitizeData<
 	 */
 	const _isRequiredKey = (key: string) => {
 		return Array.isArray(requiredKeys) ?
-				requiredKeys?.some(
-					(path) => key === path || key.startsWith(`${path}.`)
-				)
+				requiredKeys?.some((path) => key === path || key.startsWith(`${path}.`))
 			:	requiredKeys === '*';
 	};
 
@@ -182,11 +162,7 @@ export function sanitizeData<
 			}
 
 			// Exclude nullish values if specified
-			if (
-				ignoreNullish &&
-				!_isRequiredKey(fullKeyPath) &&
-				value == null
-			) {
+			if (ignoreNullish && !_isRequiredKey(fullKeyPath) && value == null) {
 				return acc;
 			}
 
@@ -205,10 +181,7 @@ export function sanitizeData<
 					acc[key as keyof T] = value as T[keyof T];
 				} else {
 					// Recursively process nested objects
-					const processedValue = _processObject(
-						value as T,
-						fullKeyPath
-					);
+					const processedValue = _processObject(value as T, fullKeyPath);
 					// Add the property conditionally if it's not an empty object
 					if (
 						!ignoreEmpty ||
@@ -221,11 +194,7 @@ export function sanitizeData<
 			} else if (value && Array.isArray(value)) {
 				const processedArray = _processArray(value, fullKeyPath);
 
-				if (
-					!ignoreEmpty ||
-					_isRequiredKey(fullKeyPath) ||
-					processedArray?.length > 0
-				) {
+				if (!ignoreEmpty || _isRequiredKey(fullKeyPath) || processedArray?.length > 0) {
 					acc[key as keyof T] = processedArray as T[keyof T];
 				}
 			} else {
@@ -262,8 +231,7 @@ export function sanitizeData<
 
 	// Process object
 	if (isObject(input)) {
-		return _processObject(input) as B extends 'partial' ? FlattenPartial<T>
-		:	T;
+		return _processObject(input) as B extends 'partial' ? FlattenPartial<T> : T;
 	}
 
 	return input;

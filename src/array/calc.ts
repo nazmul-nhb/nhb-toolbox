@@ -1,10 +1,6 @@
 import { isValidArray } from '../guards/non-primitives';
 import { roundNumber } from '../number/basics';
-import type {
-	GenericObject,
-	NestedPrimitiveKey,
-	NumericDotKey,
-} from '../object/types';
+import type { GenericObject, NestedPrimitiveKey, NumericDotKey } from '../object/types';
 import { _getNumericProp, _resolveNestedKey } from './helpers';
 import { splitArrayByProperty } from './transform';
 
@@ -21,16 +17,16 @@ import { splitArrayByProperty } from './transform';
  * sumFieldDifference([{ buy: 10, sell: 3 }, { buy: 8, sell: 5 }], 'buy', 'sell');
  * // => 10
  */
-export function sumFieldDifference<
-	T extends GenericObject,
-	P extends NumericDotKey<T>,
->(data: T[] | undefined, first: P, second: P, roundTo = 2): number {
+export function sumFieldDifference<T extends GenericObject, P extends NumericDotKey<T>>(
+	data: T[] | undefined,
+	first: P,
+	second: P,
+	roundTo = 2
+): number {
 	if (!isValidArray(data)) return 0;
 
 	const total = data?.reduce((acc, item) => {
-		return (
-			acc + (_getNumericProp(item, first) - _getNumericProp(item, second))
-		);
+		return acc + (_getNumericProp(item, first) - _getNumericProp(item, second));
 	}, 0);
 
 	return roundNumber(total, roundTo);
@@ -55,10 +51,7 @@ export function sumByField<T extends GenericObject>(
 ): number {
 	if (!isValidArray(data)) return 0;
 
-	const total = data?.reduce(
-		(acc, item) => acc + _getNumericProp(item, field),
-		0
-	);
+	const total = data?.reduce((acc, item) => acc + _getNumericProp(item, field), 0);
 
 	return roundNumber(total, roundTo);
 }
@@ -82,10 +75,7 @@ export function averageByField<T extends GenericObject>(
 ): number {
 	if (!isValidArray(data)) return 0;
 
-	const total = data?.reduce(
-		(acc, item) => acc + _getNumericProp(item, field),
-		0
-	);
+	const total = data?.reduce((acc, item) => acc + _getNumericProp(item, field), 0);
 
 	return roundNumber(total / data.length, roundTo);
 }
@@ -114,11 +104,7 @@ export function groupAndSumByField<T extends GenericObject>(
 	const groups = splitArrayByProperty(data, groupBy);
 
 	const result = groups.map((group) => ({
-		[`${_resolveNestedKey(group[0], groupBy)}`]: sumByField(
-			group,
-			sumBy,
-			roundTo
-		),
+		[`${_resolveNestedKey(group[0], groupBy)}`]: sumByField(group, sumBy, roundTo),
 	}));
 
 	return result;
@@ -148,11 +134,7 @@ export function groupAndAverageByField<T extends GenericObject>(
 	const groups = splitArrayByProperty(data, groupBy);
 
 	const result = groups.map((group) => ({
-		[`${_resolveNestedKey(group[0], groupBy)}`]: averageByField(
-			group,
-			averageBy,
-			roundTo
-		),
+		[`${_resolveNestedKey(group[0], groupBy)}`]: averageByField(group, averageBy, roundTo),
 	}));
 
 	return result;

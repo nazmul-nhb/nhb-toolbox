@@ -7,10 +7,7 @@ import { isString } from './primitives';
  * @returns `true` if the value is a valid email, otherwise `false`.
  */
 export function isEmail(value: unknown): value is string {
-	return (
-		isString(value) &&
-		/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)
-	);
+	return isString(value) && /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
 }
 
 /**
@@ -39,9 +36,7 @@ export function isDateString(value: unknown): value is string {
 export function isUUID(value: unknown): value is string {
 	return (
 		isString(value) &&
-		/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-			value
-		)
+		/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)
 	);
 }
 
@@ -87,9 +82,7 @@ export function isURL(value: unknown): value is string {
 export function isBase64(value: unknown): value is string {
 	return (
 		isString(value) &&
-		/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(
-			value
-		)
+		/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(value)
 	);
 }
 
@@ -109,8 +102,7 @@ export function isPhoneNumber(value: unknown): value is string {
  */
 export function isIPAddress(value: unknown): value is string {
 	return (
-		isString(value) &&
-		/^(?:\d{1,3}\.){3}\d{1,3}$|^([a-f0-9:]+:+)+[a-f0-9]+$/i.test(value)
+		isString(value) && /^(?:\d{1,3}\.){3}\d{1,3}$|^([a-f0-9:]+:+)+[a-f0-9]+$/i.test(value)
 	);
 }
 
@@ -133,9 +125,5 @@ export function isEnvironment(env: string): boolean {
  * @returns `true` if the value is a string that fully represents a finite number.
  */
 export function isNumericString(value: unknown): value is `${number}` {
-	return (
-		isString(value) &&
-		value?.trim() !== '' &&
-		Number.isFinite(Number(value))
-	);
+	return isString(value) && value?.trim() !== '' && Number.isFinite(Number(value));
 }

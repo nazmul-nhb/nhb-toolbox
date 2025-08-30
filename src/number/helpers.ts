@@ -6,10 +6,7 @@ import { ONES, TEENS, TENS } from './constants';
  * @param multiples The multiples of which number.
  * @returns Array of multiples of the desired number
  */
-export const _applyMultiples = (
-	array: number[],
-	multiples?: number
-): number[] => {
+export const _applyMultiples = (array: number[], multiples?: number): number[] => {
 	if (!multiples) return array;
 	return array?.filter((n) => n % multiples === 0);
 };

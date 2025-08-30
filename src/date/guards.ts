@@ -43,10 +43,7 @@ export function isValidUTCOffSet(value: unknown): value is UTCOffSet {
  * @returns `true` if the year is a leap year, `false` otherwise.
  */
 export function isLeapYear(year: Numeric): boolean {
-	return (
-		(Number(year) % 4 === 0 && Number(year) % 100 !== 0) ||
-		Number(year) % 400 === 0
-	);
+	return (Number(year) % 4 === 0 && Number(year) % 100 !== 0) || Number(year) % 400 === 0;
 }
 
 /**
@@ -92,9 +89,7 @@ export function isDateLike(value: unknown): boolean {
 		if (
 			typeof v.toJSON === 'function' &&
 			typeof v.toString === 'function' &&
-			['PlainDate', 'ZonedDateTime', 'Instant'].includes(
-				v.constructor?.name ?? ''
-			)
+			['PlainDate', 'ZonedDateTime', 'Instant'].includes(v.constructor?.name ?? '')
 		) {
 			return true;
 		}
