@@ -6,9 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
-## [4.14.16] - 2025-08-29
+## [4.14.16] - 2025-08-30
 
-- **Updated** types related to _object flattening utilities_: `FlattenDotKey`, `FlattenDotValue`, `FlattenLeafKey`, `FlattenLeafValue` and `LeafValue`.
+- **Updated** _types_ related to _object flattening utilities_: `FlattenDotKey`, `DotValue`, `FlattenDotValue`, `FlattenLeafKey`, `LeafValue` and `FlattenLeafValue`.
+- **Made** all the (output) properties of `FlattenDotValue` and `FlattenLeafValue` _optional_ to avoid issues.
 
 ## [4.14.14] - 2025-08-27
 

@@ -60,7 +60,7 @@ export type DotValue<T, K extends string> =
 
 /** - Flattens the values of a nested object into a single level against the dot-notation key */
 export type FlattenDotValue<T> = {
-	[K in FlattenDotKey<T>]: DotValue<T, K>;
+	[K in FlattenDotKey<T>]?: DotValue<T, K>;
 };
 
 /** - Extracts only leaf-level key names (excluding objects/functions) */
@@ -88,7 +88,7 @@ export type LeafValue<T, K extends string> =
 
 /** - Final flattened object with only leaf keys */
 export type FlattenLeafValue<T> = {
-	[K in FlattenLeafKey<T>]: LeafValue<T, K>;
+	[K in FlattenLeafKey<T>]?: LeafValue<T, K>;
 };
 
 /**
