@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.0] - 2025-08-31
+
+- **Added** new class `LogStyler` and its chainable `Stylog` utility to log styled input in the console.
+
 ## [4.14.16] - 2025-08-30
 
 - **Updated** _types_ related to _object flattening utilities_: `FlattenDotKey`, `DotValue`, `FlattenDotValue`, `FlattenLeafKey`, `LeafValue` and `FlattenLeafValue`.

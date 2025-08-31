@@ -188,17 +188,17 @@ export class LogStyler {
  * @example
  * Stylog.green.bold.bgBlue.log('Hello World');
  */
-export type Stylog = LogStyler & {
-	[K in Styles]: Stylog;
+export type StylogChain = LogStyler & {
+	[K in Styles]: StylogChain;
 };
 
 /**
  * * Create a proxied instance of `LogStyler` that supports dynamic style chaining.
  *
  * @param styler Base `LogStyler` instance.
- * @returns Proxied `Stylog` instance with dynamic chaining support.
+ * @returns Proxied `LogStyler` instance with dynamic chaining support (`StylogChain`).
  */
-function createStylogProxy(styler: LogStyler): Stylog {
+function createStylogProxy(styler: LogStyler): StylogChain {
 	return new Proxy(styler, {
 		get(target, prop: Styles) {
 			if (prop in target) {
@@ -218,7 +218,7 @@ function createStylogProxy(styler: LogStyler): Stylog {
 				return createStylogProxy(target.style(prop));
 			}
 		},
-	}) as Stylog;
+	}) as StylogChain;
 }
 
 /**
@@ -248,4 +248,4 @@ function createStylogProxy(styler: LogStyler): Stylog {
  * // Works in the browser console too
  * Stylog.cornflowerblue.italic.log('Hello from the browser');
  */
-export const Stylog: Stylog = createStylogProxy(new LogStyler());
+export const Stylog: StylogChain = createStylogProxy(new LogStyler());
