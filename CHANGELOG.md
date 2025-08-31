@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.1] - 2025-08-31
+
+- **Exported** _helper function and guards_ used for `Stylog` and `LogStyler`: `hexToAnsi`, `isCSSColor`, `isBGColor`, `isTextStyle`.
+
 ## [4.20.0] - 2025-08-31
 
 - **Added** new class `LogStyler` and its chainable `Stylog` utility to log styled input in the console.
