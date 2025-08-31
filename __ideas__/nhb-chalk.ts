@@ -1,12 +1,20 @@
 import { convertHexToRgb } from '../src/colors/convert';
 import { CSS_COLORS } from '../src/colors/css-colors';
 import type { Hex } from '../src/colors/types';
+import { isBrowser } from '../src/index';
 import type { Any } from '../src/types/index';
 
 /** Extract all CSS color names */
 export type CSSColorName = keyof typeof CSS_COLORS;
 
-export type TextStyle = 'bold' | 'dim' | 'italic' | 'underline' | 'strikethrough' | 'inverse';
+export type TextStyle =
+	| 'bold'
+	| 'bolder'
+	| 'dim'
+	| 'italic'
+	| 'underline'
+	| 'strikethrough'
+	| 'inverse';
 
 export type Styles = CSSColorName | `bg${Capitalize<CSSColorName>}` | TextStyle;
 
@@ -25,6 +33,7 @@ function extractColorName(bgColor: string): CSSColorName {
 /** ANSI styles for non-color text effects */
 const ANSI_TEXT_STYLES: Record<TextStyle, [string, string]> = {
 	bold: ['\x1b[1m', '\x1b[22m'],
+	bolder: ['\x1b[1m', '\x1b[22m'],
 	dim: ['\x1b[2m', '\x1b[22m'],
 	italic: ['\x1b[3m', '\x1b[23m'],
 	underline: ['\x1b[4m', '\x1b[24m'],
@@ -35,6 +44,7 @@ const ANSI_TEXT_STYLES: Record<TextStyle, [string, string]> = {
 /** Browser CSS equivalents */
 const CSS_TEXT_STYLES: Record<TextStyle, string> = {
 	bold: 'font-weight: bold',
+	bolder: 'font-weight: bolder',
 	dim: 'opacity: 0.7',
 	italic: 'font-style: italic',
 	underline: 'text-decoration: underline',
@@ -53,11 +63,10 @@ class LogStyler {
 		return new LogStyler([...this.#styles, style]);
 	}
 
-	/**
-	 * Apply formatting to input
-	 */
-	#applyStyles(input: Any): string | [string, string[]] {
-		if (typeof window !== 'undefined') {
+	#applyStyles(input: Any, stringify = false): string | [string, string[]] {
+		const stringified = stringify === true ? JSON.stringify(input) : input;
+
+		if (isBrowser()) {
 			// Browser CSS
 			const cssList: string[] = [];
 			for (const style of this.#styles) {
@@ -71,7 +80,7 @@ class LogStyler {
 					cssList.push(`color: ${color}`);
 				}
 			}
-			return [`%c${input}`, cssList];
+			return [`%c${stringified}`, cssList];
 		} else {
 			// Node ANSI
 			let openSeq = '';
@@ -93,19 +102,19 @@ class LogStyler {
 					closeSeq = close + closeSeq;
 				}
 			}
-			return openSeq + input + closeSeq;
+			return openSeq + stringified + closeSeq;
 		}
 	}
 
 	/**
 	 * Print styled input to console
 	 */
-	public log(input: Any): void {
-		if (typeof window !== 'undefined') {
-			const [fmt, cssList] = this.#applyStyles(input) as [string, string[]];
+	public log(input: Any, stringify = false): void {
+		if (isBrowser()) {
+			const [fmt, cssList] = this.#applyStyles(input, stringify) as [string, string[]];
 			console.log(fmt, cssList.join(';'));
 		} else {
-			console.log(this.#applyStyles(input));
+			console.log(this.#applyStyles(input, stringify));
 		}
 	}
 }
