@@ -1,5 +1,5 @@
 import type { Enumerate, NumberRange } from '../number/types';
-import type { LooseLiteral } from '../utils/types';
+import type { LooseLiteral, RequireAtLeast } from '../utils/types';
 import type { Chronos } from './Chronos';
 import type {
 	DATE_FORMATS,
@@ -165,15 +165,15 @@ export type StrictFormat = LooseLiteral<
 /** Iterable `Chronos` object properties */
 export interface ChronosObject {
 	year: number;
-	month: number;
-	isoMonth: number;
-	date: number;
-	weekDay: number;
-	isoWeekDay: number;
-	hour: number;
-	minute: number;
-	second: number;
-	millisecond: number;
+	month: Enumerate<12>;
+	isoMonth: NumberRange<1, 12>;
+	date: NumberRange<1, 31>;
+	weekDay: Enumerate<7>;
+	isoWeekDay: NumberRange<1, 7>;
+	hour: Enumerate<24>;
+	minute: Enumerate<60>;
+	second: Enumerate<60>;
+	millisecond: Milliseconds;
 	timestamp: number;
 	unix: number;
 }
@@ -336,7 +336,7 @@ export interface ChronosStatics {
 	 * @description
 	 * This function serves as a wrapper around the `Chronos` class constructor and allows you to create a new `Chronos` instance from various types of date representations.
 	 *
-	 * @param year The full year designation is required for cross-century date accuracy. If year is between 0 and 99 is used, then year is assumed to be 1900 + year.
+	 * @param year The full year designation is required for cross-century date accuracy. If year is between 0 and 99, year is assumed to be 1900 + year.
 	 * @param month The month as a number between 1 and 12 (January to December).
 	 * @param date The date as a number between 1 and 31.
 	 * @param hours Must be supplied if minutes is supplied. A number from 0 to 23 (midnight to 11pm) that specifies the hour.
@@ -727,7 +727,7 @@ export interface RelativeDateRange {
 export type DatesInRangeOptions = RangeWithDates | RelativeDateRange;
 
 /** Millisecond from `0-999` */
-export type MilliSecond = Enumerate<999> | 999;
+export type Milliseconds = Enumerate<999> | 999;
 
 /** Date of the month as `0` padded numeric string e.g. `01`, `18` */
 export type DateString = `0${NumberRange<1, 9>}` | `${NumberRange<10, 31>}`;
@@ -817,3 +817,29 @@ export interface DateLike {
 		name: string;
 	};
 }
+
+/**
+ * * Options for `Chronos` _static_ method `with()`
+ *
+ * @remarks
+ * - At least one property must be provided.
+ */
+export type ChronosWithOptions = RequireAtLeast<
+	{
+		/** The full year (e.g., 2025). Years 0–99 are interpreted as 1900–1999. */
+		year: number;
+		/** Month number from 1 (January) to 12 (December). */
+		month: NumberRange<1, 12>;
+		/** Day of the month, from 1 to 31. */
+		date: NumberRange<1, 31>;
+		/** Hour of the day, from 0 (midnight) to 23 (11 PM). */
+		hour: Enumerate<24>;
+		/** Minutes of the hour, from 0 to 59. */
+		minute: Enumerate<60>;
+		/** Seconds of the minute, from 0 to 59. */
+		second: Enumerate<60>;
+		/** Milliseconds of the second, from 0 to 999. */
+		millisecond: Milliseconds;
+	},
+	1
+>;

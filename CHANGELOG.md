@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.10] - 2025-09-01
+
+- **Added** new _utility types_: `RequireAtLeast`, `RequireExactly`, `RequireBetween`.
+- **Added** new _static_ `Chronos` method `Chronos.with(options)` to create `Chronos` instance from specified _time component(s)_.
+
 ## [4.20.1] - 2025-08-31
 
 - **Exported** _helper function and guards_ used for `Stylog` and `LogStyler`: `hexToAnsi`, `isCSSColor`, `isBGColor`, `isTextStyle`.

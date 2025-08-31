@@ -209,9 +209,9 @@ See [Changelog](CHANGELOG.md) for recent updates.
 
 ## Signature Utilities
 
-### 🕰️ Chronos - Time Mastery
+### 🕰️ Date & Time Mastery
 
-The ultimate date/time manipulation class with 100+ methods for parsing, formatting, calculating, and comparing dates. Handles all edge cases and timezones safely.
+**`Chronos`** - The ultimate date/time manipulation class with 100+ methods for parsing, formatting, calculating, and comparing dates. Handles all edge cases and timezones safely.
 
 > 🧩 **Note**: Some methods in `Chronos` are available only through the [plugin system](https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/plugins#-official-plugins). This modular design ensures the core bundle stays lightweight — plugins are loaded only when needed, reducing unnecessary code in your final build.
 
@@ -225,9 +225,9 @@ chronos('2025-01-01').addDays(3).format('YYYY-MM-DD'); // "2025-01-04"
 
 ---
 
-### 🎨 Color - Professional Color Manipulation
+### 🎨 Professional Color Manipulation
 
-Convert between color formats, generate palettes, check accessibility contrast, and perform advanced color math with perfect type safety.
+**`Color`** - Convert between color formats, generate palettes, check accessibility contrast, and perform advanced color math with perfect type safety.
 
 ```typescript
 const blue = new Color('#0000ff');
@@ -239,9 +239,9 @@ console.log(darkerBlue.hsl); // "hsl(240, 100%, 40%)" (was 50%)
 
 ---
 
-### 🔍 Finder - Optimized Array Search
+### 🔍 Optimized Array Search
 
-Blazing-fast array searching with binary search, fuzzy matching, and smart caching. Perfect for large datasets.
+**`Finder`** - Blazing-fast array searching with binary search, fuzzy matching, and smart caching. Perfect for large datasets.
 
 ```typescript
 const productFinder = new Finder(products);
@@ -314,7 +314,7 @@ getColorForInitial('Banana', 50); // '#00376E80' (50% opacity)
 
 ### FormData Preparation
 
-Convert JavaScript objects into `FormData` with extensive configuration options for handling nested structures, files, and data transformations.
+**`createFormData`** - Convert JavaScript objects into `FormData` with extensive configuration options for handling nested structures, files, and data transformations.
 
 ```typescript
 import { createFormData } from 'nhb-toolbox';
@@ -347,7 +347,7 @@ const formData = createFormData({
 
 ### 🛡️ Data Sanitization
 
-Clean and normalize strings/objects by trimming whitespace, removing empty values, and applying customizable filters.
+**`sanitizeData`** - Clean and normalize strings/objects by trimming whitespace, removing empty values, and applying customizable filters.
 
 ```typescript
 const user = {
@@ -384,7 +384,7 @@ parseJSON('{"value":"42"}'); // { value: 42 } (auto-converts numbers)
 
 ### 🔢 Number to Words
 
-Convert numbers to human-readable words (supports up to 100 quintillion).
+**`numberToWords`** - Convert numbers to human-readable words (supports up to 100 quintillion).
 
 ```typescript
 numberToWords(125); // "one hundred twenty-five"
@@ -423,7 +423,7 @@ calculatePercentage({
 
 ### 🔄 Extract Updated Fields
 
-Detect exactly what changed between two objects (including deep nested changes).
+**`extractUpdatedFields`** - Detect exactly what changed between two objects (including deep nested changes).
 
 ```typescript
 const dbRecord = { id: 1, content: 'Hello', meta: { views: 0 } };
@@ -433,6 +433,28 @@ extractUpdatedFields(dbRecord, update);
 ```
 
 [Documentation →](https://toolbox.nazmul-nhb.dev/docs/utilities/object/extractUpdatedFields)
+
+---
+
+### 🎨 Style Console Output(s)
+
+**`Stylog`** - `Chalk`-like minimal utility to style console output(s) in both Node.js & Browser environment(s) (supports named CSS colors).
+
+```typescript
+// Basic coloring
+Stylog.error.log('Error message');
+Stylog.success.log('Success message');
+Stylog.info.log('Info message');
+Stylog.whitesmoke.log('I am White!');
+
+// Multiple styles
+Stylog.blue.bold.underline.log('I am Bold Underlined Blue!');
+
+// With object stringification
+Stylog.magenta.italic.log({ data: 'value' }, true);
+```
+
+[Documentation →](https://toolbox.nazmul-nhb.dev/docs/utilities/misc/stylog)
 
 ---
 
@@ -456,7 +478,7 @@ debounceAction(fetchResults, 300);
 
 [Full Documentation →](https://toolbox.nazmul-nhb.dev/docs/utilities/misc/debounceAction)
 
-> These utilities represent just a portion of the comprehensive `toolbox`. Each is designed with production-grade reliability and developer experience in mind. Explore more in the [full documentation](https://toolbox.nazmul-nhb.dev). All the utilities and classes are categorized.
+> These utilities represent just a portion of the comprehensive `nhb-toolbox`. Each is designed with production-grade reliability and developer experience in mind. Explore more in the [full documentation](https://toolbox.nazmul-nhb.dev). All the utilities and classes are categorized.
 
 ---
 

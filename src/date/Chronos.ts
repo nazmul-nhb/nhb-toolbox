@@ -12,10 +12,11 @@ import type {
 	ChronosMethods,
 	ChronosObject,
 	ChronosPlugin,
+	ChronosWithOptions,
 	DateRangeOptions,
 	DatesInRangeOptions,
 	FormatOptions,
-	MilliSecond,
+	Milliseconds,
 	MonthName,
 	Quarter,
 	RangeWithDates,
@@ -151,7 +152,7 @@ export class Chronos {
 	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
 	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
 	 *
-	 * @param year The full year designation is required for cross-century date accuracy. If year is between 0 and 99 is used, then year is assumed to be 1900 + year.
+	 * @param year The full year designation is required for cross-century date accuracy. If year is between 0 and 99, year is assumed to be 1900 + year.
 	 * @param month The month as a number between 1 and 12 (January to December).
 	 * @param date The date as a number between 1 and 31.
 	 * @param hours Must be supplied if minutes is supplied. A number from 0 to 23 (midnight to 11pm) that specifies the hour.
@@ -193,7 +194,7 @@ export class Chronos {
 	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
 	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
 	 *
-	 * @param valueOrYear The value in number, string, Date or Chronos format or the full year designation is required for cross-century date accuracy. If year is between 0 and 99 is used, then year is assumed to be 1900 + year.
+	 * @param valueOrYear The value in number, string, Date or Chronos format or the full year designation is required for cross-century date accuracy. If year is between 0 and 99, year is assumed to be 1900 + year.
 	 * @param month The month as a number between 1 and 12 (January to December).
 	 * @param date The date as a number between 1 and 31.
 	 * @param hours Must be supplied if minutes is supplied. A number from 0 to 23 (midnight to 11pm) that specifies the hour.
@@ -501,12 +502,12 @@ export class Chronos {
 	}
 
 	/** Gets the millisecond (0-999) of the date. */
-	get millisecond(): MilliSecond {
-		return this.#date.getMilliseconds() as MilliSecond;
+	get millisecond(): Milliseconds {
+		return this.#date.getMilliseconds() as Milliseconds;
 	}
 
 	/** Gets ISO weekday: 1 = Monday, 7 = Sunday */
-	get isoWeekDay() {
+	get isoWeekDay(): NumberRange<1, 7> {
 		const day = this.weekDay;
 
 		return day === 0 ? 7 : day;
@@ -1853,6 +1854,48 @@ export class Chronos {
 				parts?.second ?? 0
 			)
 		).#withOrigin('parse');
+	}
+
+	/**
+	 * @static Creates a new `Chronos` instance with the provided time component(s).
+	 *
+	 * @param options - One or more time components to override.
+	 * @returns A new `Chronos` instance with the provided time components applied.
+	 *
+	 * @remarks
+	 * - Unspecified components are filled with the current time's (`Chronos`) respective values.
+	 * - If the `date` component is omitted and the current day is the last day of its month,
+	 *   the resulting instance will also use the last day of the target month.
+	 *   - _This rule does **not** apply if the `date` component is explicitly provided,
+	 *     even if that value exceeds the last day of the target month._
+	 *
+	 * @example
+	 * // Override only the year and month
+	 * const c = Chronos.with({ year: 2025, month: 12 });
+	 */
+	static with(options: ChronosWithOptions): Chronos {
+		const now = new Chronos();
+
+		const { year, month, date, hour, minute, second, millisecond } = options ?? {};
+
+		const nextLDoM = () => {
+			return now
+				.startOf('month')
+				.set('year', year ?? now.year)
+				.set('month', month ? month - 1 : now.month).lastDateOfMonth;
+		};
+
+		return new Chronos(
+			year ?? now.year,
+			month ?? now.isoMonth,
+			date ? date
+			: now.isLastDayOfMonth() && now.date >= nextLDoM() ? nextLDoM()
+			: now.date,
+			hour ?? now.hour,
+			minute ?? now.minute,
+			second ?? now.second,
+			millisecond ?? now.millisecond
+		).#withOrigin('with');
 	}
 
 	/**
