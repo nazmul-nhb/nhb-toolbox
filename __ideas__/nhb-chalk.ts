@@ -59,7 +59,12 @@ class LogStyler {
 		this.#styles = styles;
 	}
 
-	chain(style: Styles): LogStyler {
+	/**
+	 * * Chain multiple styles to the input. Only the last styles will be applied if similar styles are chained.
+	 * @param style Available styles to apply to the input.
+	 * @returns New instance of `LogStyler`.
+	 */
+	style(style: Styles): LogStyler {
 		return new LogStyler([...this.#styles, style]);
 	}
 
@@ -107,7 +112,9 @@ class LogStyler {
 	}
 
 	/**
-	 * Print styled input to console
+	 * * Print styled input to console.
+	 * @param input Input to print to the console.
+	 * @param stringify Whether to apply `JSON.stringify()`. Defaults to `false`.
 	 */
 	public log(input: Any, stringify = false): void {
 		if (isBrowser()) {
@@ -142,7 +149,7 @@ function createStylogProxy(chain: LogStyler): Stylog {
 				(prop.startsWith('bg') && extractColorName(prop) in CSS_COLORS) ||
 				prop in ANSI_TEXT_STYLES
 			) {
-				return createStylogProxy(target.chain(prop));
+				return createStylogProxy(target.style(prop));
 			}
 		},
 	}) as Stylog;
