@@ -1944,7 +1944,7 @@ export class Chronos {
 	 *
 	 * * *Input will default to today's date and assume local timezone if no offset is provided.*
 	 *
-	 * @param format - Format string accepted by `formatStrict()` method (`TimeParts`). Default: `hh:mm:ss a` → 02:33:36 pm.
+	 * @param format - Format string accepted by `formatStrict()` method (`TimeParts`) for time part only. Default: `hh:mm:ss a` → 02:33:36 pm.
 	 * @returns Formatted time string in local (System) time.
 	 */
 	static formatTimePart(time: string, format?: TimeParts) {

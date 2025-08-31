@@ -403,3 +403,114 @@ export type RemoveNever<T> = {
 export type RenameKeys<T, R extends Partial<Record<keyof T, string>>> = {
 	[K in keyof T as K extends keyof R ? Extract<R[K], string | number | symbol> : K]: T[K];
 };
+
+/** * Build a tuple of given length (helper for type-level arithmetic). */
+export type BuildTuple<L extends number, T extends unknown[] = []> =
+	T['length'] extends L ? T : BuildTuple<L, [...T, unknown]>;
+
+/** * Subtracts `B` from `A` (helper for type-level arithmetic). */
+export type Subtract<A extends number, B extends number> =
+	[...BuildTuple<A>] extends [...BuildTuple<B>, ...infer R] ? R['length'] : never;
+
+/** * Forbids all properties not in `K`. */
+export type Forbid<T, K extends keyof T> = {
+	[P in Exclude<keyof T, K>]?: never;
+};
+
+/**
+ * * Enforces that at least `N` properties of type `T` are required.
+ *
+ * @template T - The base object type.
+ * @template N - The minimum number of required properties.
+ *
+ * @example
+ * interface User {
+ *   id: string;
+ *   name: string;
+ *   email: string;
+ * }
+ *
+ * // Require at least 1 property
+ * type OneRequired = RequireAtLeast<User, 1>;
+ *
+ * const u1: OneRequired = { id: "123" };        // ✅ valid
+ * const u2: OneRequired = { name: "Alice" };    // ✅ valid
+ * const u3: OneRequired = {};                   // ❌ Error
+ *
+ * // Require at least 2 properties
+ * type TwoRequired = RequireAtLeast<User, 2>;
+ *
+ * const u4: TwoRequired = { id: "123", name: "A" };  // ✅ valid
+ * const u5: TwoRequired = { id: "123" };             // ❌ Error
+ */
+export type RequireAtLeast<
+	T extends GenericObject,
+	N extends number,
+	Keys extends keyof T = keyof T,
+> =
+	N extends 1 ? { [K in Keys]-?: Required<Pick<T, K>> & Partial<Omit<T, K>> }[Keys]
+	:	{ [K in Keys]-?: Required<Pick<T, K>> & RequireAtLeast<Omit<T, K>, Subtract<N, 1>> }[Keys];
+
+/**
+ * * Enforces that exactly `N` properties of type `T` are required.
+ * * All other properties remain forbidden.
+ *
+ * @template T - The base object type.
+ * @template N - The exact number of required properties.
+ *
+ * @example
+ * interface Config {
+ *   host: string;
+ *   port: number;
+ *   secure: boolean;
+ * }
+ *
+ * // Exactly 1 property
+ * type OneExact = RequireExactly<Config, 1>;
+ *
+ * const c1: OneExact = { host: "localhost" };   // ✅ valid
+ * const c2: OneExact = { port: 3000 };          // ✅ valid
+ * const c3: OneExact = { host: "a", port: 1 };  // ❌ Error
+ *
+ * // Exactly 2 properties
+ * type TwoExact = RequireExactly<Config, 2>;
+ *
+ * const c4: TwoExact = { host: "a", port: 1 };      			// ✅ valid
+ * const c5: TwoExact = { host: "a" };               			// ❌ Error
+ * const c6: TwoExact = { host: "a", port: 1, secure: true }; 	// ❌ Error
+ */
+export type RequireExactly<T extends GenericObject, N extends number> = {
+	[K in keyof T]: Required<Pick<T, K>> &
+		(N extends 1 ? Forbid<T, K> : RequireExactly<Omit<T, K>, Subtract<N, 1>>);
+}[keyof T];
+
+/**
+ * * Enforces that between `Min` and `Max` properties of type `T` are required.
+ *
+ * @template T - The base object type.
+ * @template Min - The minimum number of required properties.
+ * @template Max - The maximum number of required properties.
+ *
+ * @example
+ * interface Settings {
+ *   theme: string;
+ *   lang: string;
+ *   debug: boolean;
+ * }
+ *
+ * type OneOrTwo = RequireBetween<Settings, 1, 2>;
+ *
+ * const s1: OneOrTwo = { theme: "dark" };                  		// ✅ (1 key)
+ * const s2: OneOrTwo = { theme: "dark", lang: "en" };     	 		// ✅ (2 keys)
+ * const s3: OneOrTwo = { theme: "dark", lang: "en", debug: true }; // ❌ (3 keys)
+ * const s4: OneOrTwo = {};                                 		// ❌ (0 keys)
+ */
+export type RequireBetween<
+	T extends GenericObject,
+	Min extends number,
+	Max extends number,
+	C extends unknown[] = BuildTuple<Max>,
+	Acc extends unknown[] = BuildTuple<Min>,
+> =
+	| RequireExactly<T, Acc['length']>
+	| (Acc['length'] extends Max ? never : RequireBetween<T, Min, Max, C, [...Acc, unknown]>);

@@ -103,6 +103,13 @@
     "pluralizer",
     "date",
     "day",
+    "chalk",
+    "console",
+    "style",
+    "log",
+    "status-codes",
+    "http-status",
+    "http-status-codes",
     "nhb-toolbox"
   ],
   "exports": {
