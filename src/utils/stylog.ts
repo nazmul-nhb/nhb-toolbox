@@ -83,7 +83,10 @@ export function isTextStyle(value: string): value is TextStyle {
 
 /**
  * * Utility class for styling console log output with `ANSI` (`Node.js`) or `CSS` (Browser).
- * @remarks Allows chaining of style methods or initializing with predefined styles.
+ *
+ * @remarks
+ * - Allows chaining of style methods or initializing with predefined styles.
+ * - For fluent, chainable styling with zero configuration use {@link https://toolbox.nazmul-nhb.dev/docs/utilities/misc/stylog Stylog} (`LogStyler` chainable wrapper).
  *
  * @example
  * const styled = new LogStyler(['red', 'bold']);
@@ -247,6 +250,7 @@ function createStylogProxy(styler: LogStyler): StylogChain {
  * - In browsers, styles are applied using `CSS`; in `Node.js`, `ANSI` escape codes are used.
  * - When multiple styles of the same category are chained, the last one wins.
  * - Use `.log(value, stringify?)` to print; set `stringify` to `true` to serialize with `JSON.stringify`.
+ * - If you need custom reusable style configurations, use {@link https://toolbox.nazmul-nhb.dev/docs/classes/LogStyler Stylog} class.
  *
  * @example
  * // Simple color
