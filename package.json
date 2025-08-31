@@ -1,6 +1,6 @@
 {
   "name": "nhb-toolbox",
-  "version": "4.14.16",
+  "version": "4.14.17-rc.1",
   "description": "A versatile collection of smart, efficient, and reusable utility functions and classes for everyday development needs.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -121,6 +121,11 @@
       "import": "./dist/esm/constants.js",
       "require": "./dist/cjs/constants.js"
     },
+    "./stylog": {
+      "types": "./dist/dts/utils/stylog.d.ts",
+      "import": "./dist/esm/utils/stylog.js",
+      "require": "./dist/cjs/utils/stylog.js"
+    },
     "./array/types": {
       "types": "./dist/dts/array/types.d.ts",
       "default": "./dist/dts/array/types.d.ts"
@@ -209,6 +214,9 @@
       ],
       "constants": [
         "dist/dts/constants.d.ts"
+      ],
+      "stylog": [
+        "dist/dts/utils/stylog.d.ts"
       ],
       "array/types": [
         "dist/dts/array/types.d.ts"

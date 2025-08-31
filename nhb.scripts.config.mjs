@@ -41,6 +41,11 @@ export default defineScriptConfig({
 							import: './dist/esm/constants.js',
 							require: './dist/cjs/constants.js',
 						},
+						'./stylog': {
+							types: './dist/dts/utils/stylog.d.ts',
+							import: './dist/esm/utils/stylog.js',
+							require: './dist/cjs/utils/stylog.js',
+						},
 					},
 				}),
 		],

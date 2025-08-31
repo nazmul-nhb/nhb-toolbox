@@ -83,7 +83,7 @@ export default [
 		rules: { 'no-unused-vars': 'off' },
 	},
 	{
-		files: ['src/classes/**/*.ts', 'src/**/*types.ts', 'src/**/types/*.ts'],
+		files: ['**/*/stylog.ts', 'src/**/*types.ts', 'src/**/types/*.ts'],
 		rules: { '@typescript-eslint/no-explicit-any': 'off' },
 	},
 	{
@@ -96,7 +96,7 @@ export default [
 	},
 	{
 		files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
-		ignores: ['**/__ideas__/**', '**/__dump__/**'],
+		ignores: ['**/__ideas__/**', '**/__dump__/**', '**/*/stylog.ts'],
 		rules: {
 			// Disallow ONLY `console.log`
 			'no-restricted-syntax': [

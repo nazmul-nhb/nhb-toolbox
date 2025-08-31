@@ -1,0 +1,251 @@
+import { convertHexToRgb } from '../colors/convert';
+import { CSS_COLORS } from '../colors/css-colors';
+import type { CSSColor, Hex } from '../colors/types';
+import { isBrowser } from '../guards/specials';
+
+/** Non-color text styles */
+export type TextStyle =
+	| 'bold'
+	| 'bolder'
+	| 'dim'
+	| 'italic'
+	| 'underline'
+	| 'strikethrough'
+	| 'inverse';
+
+/** Styles allowed for `LogStyler` or `Stylog` */
+export type Styles = CSSColor | `bg${Capitalize<CSSColor>}` | TextStyle;
+
+/**
+ * * Convert a HEX color into an ANSI escape code sequence.
+ *
+ * @param hex HEX color string.
+ * @param isBg Whether the color should be applied as background (`true`) or foreground (`false`). Defaults to `false`.
+ * @returns Tuple containing the opening and closing ANSI escape sequences.
+ */
+export function hexToAnsi(hex: Hex, isBg = false): [string, string] {
+	const [r, g, b] = (convertHexToRgb(hex).match(/\d+/g) || []).map(Number);
+	const open = `\x1b[${isBg ? 48 : 38};2;${r};${g};${b}m`;
+	const close = `\x1b[${isBg ? 49 : 39}m`;
+	return [open, close];
+}
+
+/**
+ * * Extract the CSS color name from a background-prefixed style key.
+ *
+ * @param bgColor Style key starting with `bg` (e.g. `"bgRed"`).
+ * @returns Extracted CSS color name.
+ */
+function extractColorName(bgColor: string): CSSColor {
+	return bgColor.slice(2).toLowerCase() as CSSColor;
+}
+
+/** ANSI styles for non-color text effects */
+const ANSI_TEXT_STYLES: Record<TextStyle, [string, string]> = /* @__PURE__ */ Object.freeze({
+	bold: ['\x1b[1m', '\x1b[22m'],
+	bolder: ['\x1b[1m', '\x1b[22m'],
+	dim: ['\x1b[2m', '\x1b[22m'],
+	italic: ['\x1b[3m', '\x1b[23m'],
+	underline: ['\x1b[4m', '\x1b[24m'],
+	strikethrough: ['\x1b[9m', '\x1b[29m'],
+	inverse: ['\x1b[7m', '\x1b[27m'],
+});
+
+/** Browser CSS equivalents */
+const CSS_TEXT_STYLES: Record<TextStyle, string> = /* @__PURE__ */ Object.freeze({
+	bold: 'font-weight: bold',
+	bolder: 'font-weight: bolder',
+	dim: 'opacity: 0.7',
+	italic: 'font-style: italic',
+	underline: 'text-decoration: underline',
+	strikethrough: 'text-decoration: line-through',
+	inverse: 'filter: invert(1)',
+});
+
+/**
+ * * Utility class for styling console log output with `ANSI` (`Node.js`) or `CSS` (Browser).
+ * @remarks Allows chaining of style methods or initializing with predefined styles.
+ *
+ * @example
+ * const styled = new LogStyler(['red', 'bold']);
+ * styled.log('Hello World');
+ *
+ * const logger = new LogStyler();
+ * logger.style('blue')
+ *   .style('dim')
+ *   .style('bold')
+ *   .log('Hello Blue');
+ */
+export class LogStyler {
+	readonly #styles: Styles[];
+
+	/**
+	 * * Creates a new `LogStyler` instance.
+	 *
+	 * @param styles - Optional array of initial styles to apply (e.g., ['red', 'bold']). Defaults to an empty array.
+	 *
+	 * @example
+	 * const styled = new LogStyler(['red', 'bold']);
+	 * styled.log('Hello World');
+	 *
+	 * const logger = new LogStyler();
+	 * logger.style('blue')
+	 *   .style('dim')
+	 *   .style('bold')
+	 *   .log('Hello Blue');
+	 */
+	constructor(styles: Styles[] = []) {
+		this.#styles = styles;
+	}
+
+	/**
+	 * * Chain multiple styles to the input.
+	 * @remarks When chaining similar styles, only the last one(s) takes effect.
+	 *
+	 * @param style Style to apply (color, background, or text style).
+	 * @returns A new `LogStyler` instance with the additional style applied.
+	 */
+	style(style: Styles): LogStyler {
+		return new LogStyler([...this.#styles, style]);
+	}
+
+	/**
+	 * * Internal method to apply collected styles to the given input.
+	 * @remarks Supports both ANSI (Node.js) and CSS (Browser).
+	 *
+	 * @param input Value to style (any type).
+	 * @param stringify Whether to stringify the input using `JSON.stringify()`. Defaults to `false`.
+	 * @returns Styled string for Node.js, or a tuple `[format, cssList]` for Browser.
+	 */
+	#applyStyles(input: any, stringify = false): string | [string, string[]] {
+		const stringified = stringify === true ? JSON.stringify(input) : input;
+
+		if (isBrowser()) {
+			// Browser CSS
+			const cssList: string[] = [];
+			for (const style of this.#styles) {
+				if (style in CSS_TEXT_STYLES) {
+					cssList.push(CSS_TEXT_STYLES[style as TextStyle]);
+				} else if (style.startsWith('bg')) {
+					const color = CSS_COLORS[extractColorName(style)];
+					cssList.push(`background: ${color}`);
+				} else {
+					const color = CSS_COLORS[style as CSSColor];
+					cssList.push(`color: ${color}`);
+				}
+			}
+			return [`%c${stringified}`, cssList];
+		} else {
+			// Node ANSI
+			let openSeq = '';
+			let closeSeq = '';
+			for (const style of this.#styles) {
+				if (style in ANSI_TEXT_STYLES) {
+					const [open, close] = ANSI_TEXT_STYLES[style as TextStyle];
+					openSeq += open;
+					closeSeq = close + closeSeq;
+				} else if (style.startsWith('bg')) {
+					const hex = CSS_COLORS[extractColorName(style)];
+					const [open, close] = hexToAnsi(hex, true);
+					openSeq += open;
+					closeSeq = close + closeSeq;
+				} else {
+					const hex = CSS_COLORS[style as CSSColor];
+					const [open, close] = hexToAnsi(hex, false);
+					openSeq += open;
+					closeSeq = close + closeSeq;
+				}
+			}
+			return openSeq + stringified + closeSeq;
+		}
+	}
+
+	/**
+	 * * Print styled input to the console.
+	 *
+	 * @param input Input to print.
+	 * @param stringify Whether to apply `JSON.stringify()` before printing. Defaults to `false`.
+	 */
+	public log(input: any, stringify = false): void {
+		if (isBrowser()) {
+			const [fmt, cssList] = this.#applyStyles(input, stringify) as [string, string[]];
+			console.log(fmt, cssList.join(';'));
+		} else {
+			console.log(this.#applyStyles(input, stringify));
+		}
+	}
+}
+
+/**
+ * * Type representing a fully chainable `LogStyler` instance.
+ * Each property corresponds to a style (foreground color, background color, or text effect) and returns a new `Stylog` instance, allowing fluent chaining like:
+ *
+ * **This type combines:**
+ * - The methods of `LogStyler` (e.g., `.style()`, `.log()`)
+ * - Dynamically generated properties for all available `Styles`
+ *   that return another `Stylog` instance for chaining.
+ *
+ * @example
+ * Stylog.green.bold.bgBlue.log('Hello World');
+ */
+export type Stylog = LogStyler & {
+	[K in Styles]: Stylog;
+};
+
+/**
+ * * Create a proxied instance of `LogStyler` that supports dynamic style chaining.
+ *
+ * @param styler Base `LogStyler` instance.
+ * @returns Proxied `Stylog` instance with dynamic chaining support.
+ */
+function createStylogProxy(styler: LogStyler): Stylog {
+	return new Proxy(styler, {
+		get(target, prop: Styles) {
+			if (prop in target) {
+				const value = target[prop as keyof LogStyler];
+				if (typeof value === 'function') {
+					return value.bind(target);
+				}
+				return value;
+			}
+
+			// If prop is a color or style, chain it
+			if (
+				prop in CSS_COLORS ||
+				(prop.startsWith('bg') && extractColorName(prop) in CSS_COLORS) ||
+				prop in ANSI_TEXT_STYLES
+			) {
+				return createStylogProxy(target.style(prop));
+			}
+		},
+	}) as Stylog;
+}
+
+/**
+ * * Styled console logger with chainable, type-safe color and text effects for both `Node.js` (`ANSI true-color`) and browsers (`CSS` via `%c`).
+ *
+ * @remarks
+ * - Chain any mix of foreground colors (e.g. `green`), background colors (e.g. `bgBlue`), and text styles (e.g. `bold`, `italic`, `underline`).
+ * - In browsers, styles are applied using `CSS`; in `Node.js`, `ANSI` escape codes are used.
+ * - When multiple styles of the same category are chained, the last one wins.
+ * - Use `.log(value, stringify?)` to print; set `stringify` to `true` to serialize with `JSON.stringify`.
+ *
+ * @example
+ * // Simple color
+ * Stylog.green.log('Ready');
+ *
+ * @example
+ * // Foreground + background + effect, with JSON stringification
+ * Stylog.green.bgBlue.bold.log({ a: 121 }, true);
+ *
+ * @example
+ * // Reusable base chain
+ * const base = Stylog.underline;
+ * base.red.log('Error');
+ * base.bgYellow.bold.log('Caution');
+ *
+ * @example
+ * // Works in the browser console too
+ * Stylog.cornflowerblue.italic.log('Hello from the browser');
+ */
+export const Stylog: Stylog = createStylogProxy(new LogStyler());
