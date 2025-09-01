@@ -205,7 +205,7 @@ export class LogStyler {
 	 * const errorMessage = styled.string('Error occurred, using LogStyler');
 	 * // Or with Stylog
 	 * const errorMessage = Stylog.red.bold.string('Error occurred, using Stylog');
-	 * // Returns: "\x1b[31m\x1b[1mError occurred\xx1b[22m\x1b[39m"
+	 * // Returns: "\x1b[31m\x1b[1mError occurred, using Stylog\xx1b[22m\x1b[39m"
 	 *
 	 * @example
 	 * // Use in console (terminal or modern browser consoles)
