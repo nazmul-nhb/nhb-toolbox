@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.16] - 2025-09-01
+
+- **Added** new method `string()` in `LogStyler` (also in `Stylog`) and **made** `applyStyles()` method _public_.
+
 ## [4.20.11] - 2025-09-01
 
 - **Added** new _Symbol_ methods in `Chronos`: `Symbol.isConcatSpreadable` and `Symbol.match`.

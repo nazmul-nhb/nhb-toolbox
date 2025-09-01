@@ -132,54 +132,109 @@ export class LogStyler {
 	}
 
 	/**
-	 * * Internal method to apply collected styles to the given input.
-	 * @remarks Supports both ANSI (Node.js) and CSS (Browser).
+	 * * Returns styled tuple `[format, cssList]` for Browser.
 	 *
-	 * @param input Value to style (any type).
-	 * @param stringify Whether to stringify the input using `JSON.stringify()`. Defaults to `false`.
-	 * @returns Styled string for Node.js, or a tuple `[format, cssList]` for Browser.
+	 * @remarks
+	 * - This method is specifically designed for browser environments and returns a tuple containing the formatted string with `%c` placeholder and an array of CSS styles (`string[]`).
+	 * - Use this when you need direct access to the CSS styling for custom browser output.
+	 * - If you want to format with ANSI escape codes, consider using {@link https://toolbox.nazmul-nhb.dev/docs/classes/LogStyler#stringinput-stringify string} method.
+	 *
+	 * @param input - Value to style (any type).
+	 * @param stringify - Whether to apply `JSON.stringify()` before styling. Defaults to `false`.
+	 * @returns Tuple `[format, cssList]` where:
+	 *   - `format`: String with `%c` placeholder for CSS styling
+	 *   - `cssList`: Array of CSS style strings
+	 *
+	 * @example
+	 * // Basic usage in browser
+	 * const styler = new LogStyler(['red', 'bold']);
+	 * const [format, cssList] = styler.applyStyles('Error message');
+	 * // format: "%cError message"
+	 * // cssList: ["color: #FF0000", "font-weight: bold"]
+	 *
+	 * @example
+	 * // Custom browser output handling
+	 * const styled = new LogStyler(['blue', 'bgYellow', 'italic']);
+	 * const [format, styles] = styled.applyStyles('Warning', true);
+	 *
+	 * // Use with custom logging function
+	 * function customLog(formatted: string, styles: string[]) {
+	 *   const styleString = styles.join('; ');
+	 *   console.log(formatted, styleString);
+	 * }
+	 * customLog(format, styles);
+	 *
+	 * @example
+	 * // With object stringification
+	 * const dataOutput = new LogStyler(['green']).applyStyles({ id: 123 }, true);
+	 * // format: "%c{\"id\":123}"
+	 * // cssList: ["color: #008000"]
 	 */
-	#applyStyles(input: any, stringify = false): string | [string, string[]] {
+	public applyStyles(input: any, stringify = false): [string, string[]] {
 		const stringified = stringify === true ? JSON.stringify(input) : input;
 
-		if (isBrowser()) {
-			// Browser CSS
-			const cssList: string[] = [];
-			for (const style of this.#styles) {
-				if (isTextStyle(style)) {
-					cssList.push(CSS_TEXT_STYLES[style]);
-				} else if (isBGColor(style)) {
-					const color = CSS_COLORS[extractColorName(style)];
-					cssList.push(`background: ${color}`);
-				} else {
-					const color = CSS_COLORS[style];
-					cssList.push(`color: ${color}`);
-				}
+		const cssList: string[] = [];
+
+		for (const style of this.#styles) {
+			if (isTextStyle(style)) {
+				cssList.push(CSS_TEXT_STYLES[style]);
+			} else if (isBGColor(style)) {
+				const color = CSS_COLORS[extractColorName(style)];
+				cssList.push(`background: ${color}`);
+			} else {
+				const color = CSS_COLORS[style];
+				cssList.push(`color: ${color}`);
 			}
-			return [`%c${stringified}`, cssList];
-		} else {
-			// Node ANSI
-			let openSeq = '';
-			let closeSeq = '';
-			for (const style of this.#styles) {
-				if (isTextStyle(style)) {
-					const [open, close] = ANSI_TEXT_STYLES[style];
-					openSeq += open;
-					closeSeq = close + closeSeq;
-				} else if (isBGColor(style)) {
-					const hex = CSS_COLORS[extractColorName(style)];
-					const [open, close] = hexToAnsi(hex, true);
-					openSeq += open;
-					closeSeq = close + closeSeq;
-				} else {
-					const hex = CSS_COLORS[style];
-					const [open, close] = hexToAnsi(hex, false);
-					openSeq += open;
-					closeSeq = close + closeSeq;
-				}
-			}
-			return openSeq + stringified + closeSeq;
 		}
+		return [`%c${stringified}`, cssList];
+	}
+
+	/**
+	 * * Returns the input as a styled string with ANSI escape codes.
+	 *
+	 * @remarks
+	 * - This method returns ANSI-formatted strings suitable for environments that support ANSI escape codes (terminals, modern browser consoles, etc.).
+	 * - For unsupported browsers, consider using the {@link https://toolbox.nazmul-nhb.dev/docs/classes/LogStyler#loginput-stringify log} method to print directly or {@link https://toolbox.nazmul-nhb.dev/docs/classes/LogStyler#applystylesinput-stringify applyStyles} to get styled tuple `[format, cssList]` for Browser.
+	 *
+	 * @param input - Value to style (any type).
+	 * @param stringify - Whether to apply `JSON.stringify()` before styling. Defaults to `false`.
+	 * @returns The styled string with ANSI escape codes.
+	 *
+	 * @example
+	 * const styled = new LogStyler(['red', 'bold']);
+	 * const errorMessage = styled.string('Error occurred, using LogStyler');
+	 * // Or with Stylog
+	 * const errorMessage = Stylog.red.bold.string('Error occurred, using Stylog');
+	 * // Returns: "\x1b[31m\x1b[1mError occurred\xx1b[22m\x1b[39m"
+	 *
+	 * @example
+	 * // Use in console (terminal or modern browser consoles)
+	 * console.error(errorMessage);
+	 * console.info(Stylog.red.bold.string('I support ANSI!'));
+	 */
+	public string(input: any, stringify = false): string {
+		const stringified = stringify === true ? JSON.stringify(input) : input;
+		let openSeq = '',
+			closeSeq = '';
+
+		for (const style of this.#styles) {
+			if (isTextStyle(style)) {
+				const [open, close] = ANSI_TEXT_STYLES[style];
+				openSeq += open;
+				closeSeq = close + closeSeq;
+			} else if (isBGColor(style)) {
+				const hex = CSS_COLORS[extractColorName(style)];
+				const [open, close] = hexToAnsi(hex, true);
+				openSeq += open;
+				closeSeq = close + closeSeq;
+			} else {
+				const hex = CSS_COLORS[style];
+				const [open, close] = hexToAnsi(hex, false);
+				openSeq += open;
+				closeSeq = close + closeSeq;
+			}
+		}
+		return openSeq + stringified + closeSeq;
 	}
 
 	/**
@@ -190,10 +245,10 @@ export class LogStyler {
 	 */
 	public log(input: any, stringify = false): void {
 		if (isBrowser()) {
-			const [fmt, cssList] = this.#applyStyles(input, stringify) as [string, string[]];
+			const [fmt, cssList] = this.applyStyles(input, stringify);
 			console.log(fmt, cssList.join(';'));
 		} else {
-			console.log(this.#applyStyles(input, stringify));
+			console.log(this.string(input, stringify));
 		}
 	}
 }
