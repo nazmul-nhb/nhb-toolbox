@@ -250,13 +250,21 @@ export class Chronos {
 	}
 
 	/**
-	 * * Enables primitive coercion like `console.log`, `${chronos}`, etc.
+	 * * Enables primitive coercion like `+chronos`, `Number(chronos)`, `String(chronos)`, `${chronos}`, etc.
 	 * @param hint - The type hint provided by the JS engine.
 	 * @returns The primitive value based on the hint.
 	 */
 	[Symbol.toPrimitive](hint: string): string | number {
 		if (hint === 'number') return this.valueOf();
-		return this.toLocalISOString();
+		switch (this.#ORIGIN) {
+			case 'timeZone':
+				return this.toISOString();
+			case 'toUTC':
+			case 'utc':
+				return this.#toLocalISOString().replace(this.getUTCOffset(), 'Z');
+			default:
+				return this.toLocalISOString();
+		}
 	}
 
 	[Symbol.replace](string: string, replacement: string): string {
@@ -316,6 +324,21 @@ export class Chronos {
 			default:
 				return this.#toLocalISOString();
 		}
+	}
+
+	get [Symbol.isConcatSpreadable](): boolean {
+		return true;
+	}
+
+	[Symbol.match](string: string): RegExpMatchArray | null {
+		const [datePart, timePart] = this.toLocalISOString().split('.')[0].split('T');
+
+		const fuzzyDate = datePart.replace(/-/g, '[-/]?'); // Allow 2025-09-01, 2025/09/01, or 20250901
+		const fuzzyTime = timePart?.replace(/:/g, '[:.]?'); // Allow 13:26:00, 13.26.00, or 132600
+
+		const pattern = timePart ? `${fuzzyDate}(?:[T ]?${fuzzyTime})?` : fuzzyDate;
+
+		return string.match(new RegExp(pattern));
 	}
 
 	/**
@@ -1864,6 +1887,7 @@ export class Chronos {
 	 *
 	 * @remarks
 	 * - Unspecified components are filled with the current time's (`Chronos`) respective values.
+	 * - For option `month`, value should be number from `1` (January) to `12` (December).
 	 * - If the `date` component is omitted and the current day is the last day of its month,
 	 *   the resulting instance will also use the last day of the target month.
 	 *   - _This rule does **not** apply if the `date` component is explicitly provided,

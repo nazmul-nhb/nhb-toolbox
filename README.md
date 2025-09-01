@@ -312,7 +312,7 @@ getColorForInitial('Banana', 50); // '#00376E80' (50% opacity)
 
 ---
 
-### FormData Preparation
+### 📄 FormData Preparation
 
 **`createFormData`** - Convert JavaScript objects into `FormData` with extensive configuration options for handling nested structures, files, and data transformations.
 

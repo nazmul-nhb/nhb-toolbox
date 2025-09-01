@@ -259,6 +259,9 @@ export type ChronosMethods =
  */
 export type ChronosInput = number | string | Date | Chronos;
 
+/** Represents key of `ChronosStatics` (each method and property) */
+export type ChronosStaticKey = keyof ChronosStatics;
+
 /** All the statics methods in `Chronos` class */
 export interface ChronosStatics {
 	/**
@@ -423,6 +426,26 @@ export interface ChronosStatics {
 	 * @throws `Error` If the date string does not match the format.
 	 */
 	parse(dateStr: string, format: string): Chronos;
+
+	/**
+	 * * Creates a new `Chronos` instance with the provided time component(s).
+	 *
+	 * @param options - One or more time components to override.
+	 * @returns A new `Chronos` instance with the provided time components applied.
+	 *
+	 * @remarks
+	 * - Unspecified components are filled with the current time's (`Chronos`) respective values.
+	 * - For option `month`, value should be number from `1` (January) to `12` (December).
+	 * - If the `date` component is omitted and the current day is the last day of its month,
+	 *   the resulting instance will also use the last day of the target month.
+	 *   - _This rule does **not** apply if the `date` component is explicitly provided,
+	 *     even if that value exceeds the last day of the target month._
+	 *
+	 * @example
+	 * // Override only the year and month
+	 * const c = Chronos.with({ year: 2025, month: 12 });
+	 */
+	with(options: ChronosWithOptions): Chronos;
 
 	/**
 	 * * Creates a UTC-based Chronos instance.

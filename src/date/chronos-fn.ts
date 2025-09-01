@@ -1,5 +1,5 @@
 import { Chronos } from './Chronos';
-import type { ChronosInput, ChronosStatics } from './types';
+import type { ChronosInput, ChronosStaticKey, ChronosStatics } from './types';
 
 /**
  * * Converts a date into a Chronos object and access to all `Chronos` methods and properties.
@@ -47,12 +47,11 @@ import type { ChronosInput, ChronosStatics } from './types';
  * @param seconds Must be supplied if milliseconds is supplied. A number from 0 to 59 that specifies the seconds.
  * @param ms A number from 0 to 999 that specifies the milliseconds.
  *
- * @returns new `Chronos` instance representing the provided date with all methods and properties.
+ * @returns new `Chronos` instance representing the provided date with all `Chronos` methods and properties.
  *
- * @static
  * @remarks
- * Static methods can be accessed from both the `Chronos` class and the `chronos` function.
- * Static methods from the `Chronos` class are copied over to the `chronos` function, so you can call them like:
+ * - Static methods can be accessed from both the `Chronos` class and the `chronos` function.
+ * - Static methods from the `Chronos` class are copied over to the `chronos` wrapper function, so you can call them like:
  * ```ts
  * chronos.parse("2023-12-31", "YYYY-MM-DD");
  * // Or
@@ -68,10 +67,8 @@ const chronos = (
 	seconds?: number,
 	ms?: number
 ) => {
-	let newChronos: Chronos;
-
 	if (typeof valueOrYear === 'number' && typeof month === 'number') {
-		newChronos = /* @__PURE__ */ new Chronos(
+		return new Chronos(
 			valueOrYear,
 			month,
 			date ?? 1,
@@ -81,73 +78,94 @@ const chronos = (
 			ms ?? 0
 		);
 	} else {
-		newChronos = /* @__PURE__ */ new Chronos(valueOrYear);
+		return new Chronos(valueOrYear);
 	}
-
-	return newChronos;
 };
 
 /**
- * @remarks
- * Static methods from the `Chronos` class are copied over to the `chronos` function.
- * Therefore, you can access static methods from `Chronos` both through the `Chronos` class and the `chronos` function.
+ * * Use `chronos` with all static methods from the `Chronos` class.
  *
- * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
- * and convert it to the **equivalent local time** using the current environment's UTC offset.*
+ * @description
+ * It serves as both a constructor for creating `Chronos` instances and a namespace for accessing all static methods from the `Chronos` class.
  *
- * Example usage:
+ * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC and convert it to the **equivalent local time** using the current environment's UTC offset.*
+ *
+ * @example
+ * Example usage as constructor:
  * ```ts
- * chronos.parse("2023-12-31", "YYYY-MM-DD");
- * // Or
- * Chronos.parse("2023-12-31", "YYYY-MM-DD");
+ * const instance = chronos("2023-12-31");
+ * const instanceWithTime = chronos(2023, 12, 31, 15, 30, 0);
  * ```
  *
- * *No need to call `chronos` for accessing the static methods. Simply call the static methods.*
+ * @example
+ * Example usage of static methods:
+ * ```ts
+ * // Both work identically - thanks to automatic Proxy delegation
+ * chronos.parse("2023-12-31", "YYYY-MM-DD");
+ * Chronos.parse("2023-12-31", "YYYY-MM-DD");
+ *
+ * chronos.today();
+ * chronos.isLeapYear(2024);
+ * chronos.min(date1, date2, date3);
+ * ```
+ *
+ * @remarks
+ * - _No need to call `chronos` for accessing the static methods. Simply call the static methods._
  *
  * **Available Static Methods:**
  *
  * ```ts
- * today(options?: FormatOptions): string
- * yesterday(): Chronos;
- * tomorrow(): Chronos
- * now(): number
- * use(plugin: ChronosPlugin): void
- * parse(dateStr: string, format: string): Chronos
- * utc(dateLike: ChronosInput): Chronos
- * min(...dates: ChronosInput[]): Chronos
- * max(...dates: ChronosInput[]): Chronos
- * isLeapYear(date: ChronosInput): boolean
- * isValidDate(value: unknown): boolean
- * isDateString(value: unknown): boolean
- * isValidChronos(value: unknown): boolean
- * formatTimePart(time: string, format?: TimeParts): string
- * getDatesForDay(day: WeekDay, options?: WeekdayOptions): string[]
+ * chronos.today(options?: FormatOptions): string;
+ * chronos.yesterday(): Chronos;
+ * chronos.tomorrow(): Chronos;
+ * chronos.now(): number;
+ * chronos.use(plugin: ChronosPlugin): void;
+ * chronos.with(options: ChronosWithOptions): Chronos;
+ * chronos.parse(dateStr: string, format: string): Chronos;
+ * chronos.utc(dateLike: ChronosInput): Chronos;
+ * chronos.min(...dates: ChronosInput[]): Chronos;
+ * chronos.max(...dates: ChronosInput[]): Chronos;
+ * chronos.isLeapYear(date: ChronosInput): boolean;
+ * chronos.isValidDate(value: unknown): boolean;
+ * chronos.isDateString(value: unknown): boolean;
+ * chronos.isValidChronos(value: unknown): boolean;
+ * chronos.formatTimePart(time: string, format?: TimeParts): string;
+ * chronos.getDatesForDay(day: WeekDay, options?: WeekdayOptions): string[];
  * ```
  */
-const typedChronos = chronos as ChronosStatics;
+const chronosStatics = new Proxy(chronos, {
+	get(target, prop: string, receiver) {
+		// If the property exists on the function itself, return it
+		if (prop in target) {
+			return Reflect.get(target, prop, receiver);
+		}
 
-// ? Add static methods from Chronos class to the chronos function
-// Object.getOwnPropertyNames(Chronos).forEach((method) => {
-// 	// Exclude non-method properties like `length`, `name`, `prototype`
-// 	if (method !== 'prototype' && method !== 'name' && method !== 'length') {
-// 		(chronos as Any)[method] = (Chronos as Any)[method];
-// 	}
-// });
+		// If the property exists on Chronos (and it's not a reserved property), return it
+		if (
+			prop in Chronos &&
+			prop !== 'prototype' &&
+			prop !== 'name' &&
+			prop !== 'length' &&
+			typeof Chronos[prop as ChronosStaticKey] === 'function'
+		) {
+			return Chronos[prop as ChronosStaticKey];
+		}
 
-typedChronos.use = Chronos.use;
-typedChronos.now = Chronos.now;
-typedChronos.min = Chronos.min;
-typedChronos.max = Chronos.max;
-typedChronos.utc = Chronos.utc;
-typedChronos.parse = Chronos.parse;
-typedChronos.today = Chronos.today;
-typedChronos.tomorrow = Chronos.tomorrow;
-typedChronos.yesterday = Chronos.yesterday;
-typedChronos.isLeapYear = Chronos.isLeapYear;
-typedChronos.isValidDate = Chronos.isValidDate;
-typedChronos.isDateString = Chronos.isDateString;
-typedChronos.isValidChronos = Chronos.isValidChronos;
-typedChronos.formatTimePart = Chronos.formatTimePart;
-typedChronos.getDatesForDay = Chronos.getDatesForDay;
+		// Fall back to default behavior
+		return Reflect.get(target, prop, receiver);
+	},
 
-export { typedChronos as chronos };
+	// Handle checking if a property exists
+	has(target, prop: string) {
+		return (
+			prop in target ||
+			(prop in Chronos &&
+				prop !== 'prototype' &&
+				prop !== 'name' &&
+				prop !== 'length' &&
+				typeof Chronos[prop as ChronosStaticKey] === 'function')
+		);
+	},
+}) as ChronosStatics;
+
+export { chronosStatics as chronos };

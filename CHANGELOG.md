@@ -6,6 +6,12 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.11] - 2025-09-01
+
+- **Added** new _Symbol_ methods in `Chronos`: `Symbol.isConcatSpreadable` and `Symbol.match`.
+- **Fixed** string coercion issues with `toPrimitive` _Symbol_ method in `Chronos`.
+- **Redesigned** `chronos` (`Chronos` wrapper) with _Proxy_ and **updated** _TSDoc_ for `chronos`.
+
 ## [4.20.10] - 2025-09-01
 
 - **Added** new _utility types_: `RequireAtLeast`, `RequireExactly`, `RequireBetween`.
