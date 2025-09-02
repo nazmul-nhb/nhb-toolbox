@@ -21,6 +21,25 @@ export type BGColor = `bg${Capitalize<CSSColor>}`;
 export type Styles = CSSColor | BGColor | TextStyle;
 
 /**
+ * Detects color support level of the current terminal.
+ * @returns `0 = none`, `1 = basic (16 colors)`, `2 = 256 colors`, `3 = truecolor`
+ */
+export function detectColorSupport(): 0 | 1 | 2 | 3 {
+	if ('NO_COLOR' in process.env) return 0; // explicit opt-out
+	if ('FORCE_COLOR' in process.env) return 3; // explicit opt-in (max)
+
+	if (!process.stdout.isTTY) return 0;
+
+	const term = process.env.TERM ?? process.env.COLORTERM ?? '';
+
+	if (term === 'dumb') return 0;
+	if (/\b256(color)?\b/i.test(term)) return 2;
+	if (/\btruecolor\b|\b24bit\b/i.test(term)) return 3;
+
+	return 1; // fallback: assume basic 16-color
+}
+
+/**
  * * Convert a HEX color into an ANSI escape code sequence.
  *
  * @param hex HEX color string. e.g. `#000000`
