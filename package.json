@@ -1,6 +1,6 @@
 {
   "name": "nhb-toolbox",
-  "version": "4.20.16",
+  "version": "4.20.17",
   "description": "A versatile collection of smart, efficient, and reusable utility functions and classes for everyday development needs.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -66,7 +66,7 @@
     "husky": "^9.1.7",
     "jest": "^30.1.2",
     "lint-staged": "^16.1.6",
-    "nhb-scripts": "^1.8.60",
+    "nhb-scripts": "^1.8.64",
     "prettier": "^3.6.2",
     "ts-jest": "^29.4.1",
     "typescript": "^5.9.2",

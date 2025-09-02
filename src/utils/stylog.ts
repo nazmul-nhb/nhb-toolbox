@@ -200,7 +200,7 @@ export class LogStyler {
 			} else if (isBGColor(style)) {
 				const color = CSS_COLORS[extractColorName(style)];
 				cssList.push(`background: ${color}`);
-			} else {
+			} else if (isCSSColor(style)) {
 				const color = CSS_COLORS[style];
 				cssList.push(`color: ${color}`);
 			}
@@ -246,14 +246,19 @@ export class LogStyler {
 				const [open, close] = hexToAnsi(hex, true);
 				openSeq += open;
 				closeSeq = close + closeSeq;
-			} else {
+			} else if (isCSSColor(style)) {
 				const hex = CSS_COLORS[style];
 				const [open, close] = hexToAnsi(hex, false);
 				openSeq += open;
 				closeSeq = close + closeSeq;
 			}
 		}
-		return openSeq + stringified + closeSeq;
+
+		if (!detectColorSupport()) {
+			return stringified;
+		} else {
+			return openSeq + stringified + closeSeq;
+		}
 	}
 
 	/**
@@ -270,6 +275,16 @@ export class LogStyler {
 			console.log(this.string(input, stringify));
 		}
 	}
+
+	// hex(code: string): LogStyler {
+	// 	const sanitized = code?.startsWith('#') ? code : `#${code}`;
+
+	// 	if (!_isHex6(sanitized)) {
+	// 		return this;
+	// 	}
+
+	// 	const style = this.style(sanitized as Styles)
+	// }
 }
 
 /**
