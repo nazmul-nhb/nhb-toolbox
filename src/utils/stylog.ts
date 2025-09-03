@@ -2,10 +2,10 @@ import { convertHexToRgb } from '../colors/convert';
 import { CSS_COLORS } from '../colors/css-colors';
 import { isBrowser } from '../guards/specials';
 
-import { _isHex6 } from '../colors/helpers';
-import type { CSSColor, Hex, Hex6, HSL, RGB } from '../colors/types';
+import { _isHex6, _isValidRGBComponent } from '../colors/helpers';
+import type { CSSColor, Hex, Hex6, HSL, RGB, SolidValues } from '../colors/types';
 import { isArrayOfType } from '../guards/non-primitives';
-import { isString } from '../guards/primitives';
+import { isNumber, isString } from '../guards/primitives';
 
 /** Non-color text styles */
 export type TextStyle =
@@ -318,28 +318,67 @@ export class LogStyler {
 		return code?.trim()?.startsWith('#') ? code?.trim() : `#${code?.trim()}`;
 	}
 
-	hex(code: string): LogStyler {
+	#handleHex(code: string, isBg = false): LogStyler {
 		const sanitized = this.#sanitizeHex(code);
 
 		if (!_isHex6(sanitized)) {
 			return this;
 		}
 
-		const style = hexToAnsi(sanitized, false);
+		const style = hexToAnsi(sanitized, isBg);
 
 		return this.#style(sanitized, style);
 	}
 
-	bgHex(code: string): LogStyler {
-		const sanitized = this.#sanitizeHex(code);
+	hex(code: string): LogStyler {
+		return this.#handleHex(code, false);
+	}
 
-		if (!_isHex6(sanitized)) {
+	bgHex(code: string): LogStyler {
+		return this.#handleHex(code, true);
+	}
+
+	#extractRGBValues(code: string): SolidValues {
+		const trimmed = code?.trim();
+
+		return (trimmed?.match(/\d+/g) || []).map(Number) as SolidValues;
+	}
+
+	#validateRGB(...value: number[]) {
+		return value.every(_isValidRGBComponent);
+	}
+
+	#handleRGB(code: string | number, green?: number, blue?: number, isBg = false): LogStyler {
+		if (isString(code)) {
+			const rgb = this.#extractRGBValues(code);
+			if (this.#validateRGB(...rgb)) {
+				return this.#style(rgbToAnsi(...rgb, isBg));
+			} else {
+				return this;
+			}
+		} else if (isNumber(code) && isNumber(green) && isNumber(blue)) {
+			if (this.#validateRGB(code, green, blue)) {
+				return this.#style(rgbToAnsi(code, green, blue, isBg));
+			} else {
+				return this;
+			}
+		} else {
 			return this;
 		}
+	}
 
-		const style = hexToAnsi(sanitized, true);
+	rgb(code: string): LogStyler;
+	rgb(red: number, green: number, blue: number): LogStyler;
 
-		return this.#style(sanitized, style);
+	rgb(code: string | number, green?: number, blue?: number): LogStyler {
+		return this.#handleRGB(code, green, blue, false);
+	}
+
+	bgRGB(code: string): LogStyler;
+	bgRGB(red: number, green: number, blue: number): LogStyler;
+
+	bgRGB(code: string | number, green?: number, blue?: number): LogStyler {
+		return this.#handleRGB(code, green, blue, true);
 	}
 }
 
