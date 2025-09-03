@@ -2,7 +2,10 @@ import { convertHexToRgb } from '../colors/convert';
 import { CSS_COLORS } from '../colors/css-colors';
 import { isBrowser } from '../guards/specials';
 
-import type { CSSColor, Hex } from '../colors/types';
+import { _isHex6 } from '../colors/helpers';
+import type { CSSColor, Hex, Hex6, HSL, RGB } from '../colors/types';
+import { isArrayOfType } from '../guards/non-primitives';
+import { isString } from '../guards/primitives';
 
 /** Non-color text styles */
 export type TextStyle =
@@ -19,6 +22,8 @@ export type BGColor = `bg${Capitalize<CSSColor>}`;
 
 /** Styles allowed for `LogStyler` or `Stylog` */
 export type Styles = CSSColor | BGColor | TextStyle;
+
+export type AnsiSequence = [string, string];
 
 /**
  * Detects color support level of the current terminal.
@@ -39,6 +44,12 @@ export function detectColorSupport(): 0 | 1 | 2 | 3 {
 	return 1; // fallback: assume basic 16-color
 }
 
+function rgbToAnsi(r: number, g: number, b: number, isBg = false): AnsiSequence {
+	const open = `\x1b[${isBg ? 48 : 38};2;${r};${g};${b}m`;
+	const close = `\x1b[${isBg ? 49 : 39}m`;
+	return [open, close];
+}
+
 /**
  * * Convert a HEX color into an ANSI escape code sequence.
  *
@@ -46,11 +57,10 @@ export function detectColorSupport(): 0 | 1 | 2 | 3 {
  * @param isBg Whether the color should be applied as background (`true`) or foreground (`false`). Defaults to `false`.
  * @returns Tuple containing the opening and closing ANSI escape sequences.
  */
-export function hexToAnsi(hex: Hex, isBg = false): [string, string] {
+export function hexToAnsi(hex: Hex, isBg = false): AnsiSequence {
 	const [r, g, b] = (convertHexToRgb(hex).match(/\d+/g) || []).map(Number);
-	const open = `\x1b[${isBg ? 48 : 38};2;${r};${g};${b}m`;
-	const close = `\x1b[${isBg ? 49 : 39}m`;
-	return [open, close];
+
+	return rgbToAnsi(r, g, b, isBg);
 }
 
 /**
@@ -64,7 +74,7 @@ function extractColorName(bgColor: BGColor): CSSColor {
 }
 
 /** ANSI styles for non-color text effects */
-const ANSI_TEXT_STYLES: Record<TextStyle, [string, string]> = /* @__PURE__ */ Object.freeze({
+const ANSI_TEXT_STYLES: Record<TextStyle, AnsiSequence> = /* @__PURE__ */ Object.freeze({
 	bold: ['\x1b[1m', '\x1b[22m'],
 	bolder: ['\x1b[1m', '\x1b[22m'],
 	dim: ['\x1b[2m', '\x1b[22m'],
@@ -100,6 +110,23 @@ export function isTextStyle(value: string): value is TextStyle {
 	return value in CSS_TEXT_STYLES || value in ANSI_TEXT_STYLES;
 }
 
+function isAnsiSequence(seq: unknown[]): seq is AnsiSequence {
+	return (
+		isArrayOfType(seq, isString) &&
+		seq?.length === 2 &&
+		(seq[0].startsWith('\x1b[48') || seq[0].startsWith('\x1b[38')) &&
+		(seq[1].startsWith('\x1b[49') || seq[1].startsWith('\x1b[39'))
+	);
+}
+
+// function isAnsiSeqBG(seq: unknown[]): seq is AnsiSequence {
+// 	return isAnsiSequence(seq) && seq[0].startsWith('\x1b[48') && seq[1].startsWith('\x1b[49');
+// }
+
+// function isAnsiSeqColor(seq: unknown[]): seq is AnsiSequence {
+// 	return isAnsiSequence(seq) && seq[0].startsWith('\x1b[38') && seq[1].startsWith('\x1b[39');
+// }
+
 /**
  * * Utility class for styling console log output with `ANSI` (`Node.js`) or `CSS` (Browser).
  *
@@ -118,7 +145,7 @@ export function isTextStyle(value: string): value is TextStyle {
  *   .log('Hello Blue');
  */
 export class LogStyler {
-	readonly #styles: Styles[];
+	readonly #styles: Array<Styles | AnsiSequence | Hex6 | RGB | HSL>;
 
 	/**
 	 * * Creates a new `LogStyler` instance.
@@ -139,6 +166,10 @@ export class LogStyler {
 		this.#styles = styles;
 	}
 
+	#style(...style: Array<Styles | AnsiSequence | Hex6 | RGB | HSL>): LogStyler {
+		return new LogStyler([...(this.#styles as Styles[]), ...(style as Styles[])]);
+	}
+
 	/**
 	 * * Chain multiple styles to the input.
 	 * @remarks When chaining similar styles, only the last one(s) takes effect.
@@ -147,7 +178,7 @@ export class LogStyler {
 	 * @returns A new `LogStyler` instance with the additional style applied.
 	 */
 	style(style: Styles): LogStyler {
-		return new LogStyler([...this.#styles, style]);
+		return this.#style(style);
 	}
 
 	/**
@@ -195,14 +226,16 @@ export class LogStyler {
 		const cssList: string[] = [];
 
 		for (const style of this.#styles) {
-			if (isTextStyle(style)) {
-				cssList.push(CSS_TEXT_STYLES[style]);
-			} else if (isBGColor(style)) {
-				const color = CSS_COLORS[extractColorName(style)];
-				cssList.push(`background: ${color}`);
-			} else if (isCSSColor(style)) {
-				const color = CSS_COLORS[style];
-				cssList.push(`color: ${color}`);
+			if (isString(style)) {
+				if (isTextStyle(style)) {
+					cssList.push(CSS_TEXT_STYLES[style]);
+				} else if (isBGColor(style)) {
+					const color = CSS_COLORS[extractColorName(style)];
+					cssList.push(`background: ${color}`);
+				} else if (isCSSColor(style)) {
+					const color = CSS_COLORS[style];
+					cssList.push(`color: ${color}`);
+				}
 			}
 		}
 		return [`%c${stringified}`, cssList];
@@ -237,20 +270,25 @@ export class LogStyler {
 			closeSeq = '';
 
 		for (const style of this.#styles) {
-			if (isTextStyle(style)) {
-				const [open, close] = ANSI_TEXT_STYLES[style];
-				openSeq += open;
-				closeSeq = close + closeSeq;
-			} else if (isBGColor(style)) {
-				const hex = CSS_COLORS[extractColorName(style)];
-				const [open, close] = hexToAnsi(hex, true);
-				openSeq += open;
-				closeSeq = close + closeSeq;
-			} else if (isCSSColor(style)) {
-				const hex = CSS_COLORS[style];
-				const [open, close] = hexToAnsi(hex, false);
-				openSeq += open;
-				closeSeq = close + closeSeq;
+			if (isString(style)) {
+				if (isTextStyle(style)) {
+					const [open, close] = ANSI_TEXT_STYLES[style];
+					openSeq += open;
+					closeSeq = close + closeSeq;
+				} else if (isBGColor(style)) {
+					const hex = CSS_COLORS[extractColorName(style)];
+					const [open, close] = hexToAnsi(hex, true);
+					openSeq += open;
+					closeSeq = close + closeSeq;
+				} else if (isCSSColor(style)) {
+					const hex = CSS_COLORS[style];
+					const [open, close] = hexToAnsi(hex, false);
+					openSeq += open;
+					closeSeq = close + closeSeq;
+				}
+			} else if (isAnsiSequence(style)) {
+				openSeq += style[0];
+				closeSeq = style[1] + closeSeq;
 			}
 		}
 
@@ -276,15 +314,33 @@ export class LogStyler {
 		}
 	}
 
-	// hex(code: string): LogStyler {
-	// 	const sanitized = code?.startsWith('#') ? code : `#${code}`;
+	#sanitizeHex(code: string): string {
+		return code?.trim()?.startsWith('#') ? code?.trim() : `#${code?.trim()}`;
+	}
 
-	// 	if (!_isHex6(sanitized)) {
-	// 		return this;
-	// 	}
+	hex(code: string): LogStyler {
+		const sanitized = this.#sanitizeHex(code);
 
-	// 	const style = this.style(sanitized as Styles)
-	// }
+		if (!_isHex6(sanitized)) {
+			return this;
+		}
+
+		const style = hexToAnsi(sanitized, false);
+
+		return this.#style(sanitized, style);
+	}
+
+	bgHex(code: string): LogStyler {
+		const sanitized = this.#sanitizeHex(code);
+
+		if (!_isHex6(sanitized)) {
+			return this;
+		}
+
+		const style = hexToAnsi(sanitized, true);
+
+		return this.#style(sanitized, style);
+	}
 }
 
 /**
