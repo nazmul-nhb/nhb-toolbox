@@ -358,13 +358,13 @@ export class LogStyler {
 		return this.#handleHex(code, true);
 	}
 
-	#extractSolidColorValues(code: string): SolidValues {
+	#extractColorValues(code: string): SolidValues {
 		const trimmed = code?.trim();
 
 		return (trimmed?.match(/[\d.]+%?/g) || []).map(parseFloat) as SolidValues;
 	}
 
-	#validateRGB(...value: number[]) {
+	#isValidRGB(...value: number[]) {
 		return value.every(_isValidRGBComponent);
 	}
 
@@ -375,8 +375,8 @@ export class LogStyler {
 		isBg = false
 	): StylogChain {
 		if (isString(code)) {
-			const rgb = this.#extractSolidColorValues(code);
-			if (this.#validateRGB(...rgb)) {
+			const rgb = this.#extractColorValues(code);
+			if (this.#isValidRGB(...rgb)) {
 				return this.#style(
 					rgbToAnsi(...rgb, isBg),
 					isBg ?
@@ -387,7 +387,7 @@ export class LogStyler {
 				return createStylogProxy(this);
 			}
 		} else if (isNumber(code) && isNumber(green) && isNumber(blue)) {
-			if (this.#validateRGB(code, green, blue)) {
+			if (this.#isValidRGB(code, green, blue)) {
 				return this.#style(
 					rgbToAnsi(code, green, blue, isBg),
 					isBg ?
@@ -416,7 +416,7 @@ export class LogStyler {
 		return this.#handleRGB(code, green, blue, true);
 	}
 
-	#validateHSL(h: number, s: number, l: number) {
+	#isValidHSL(h: number, s: number, l: number) {
 		return _isValidHue(h) && _isValidPercentage(s) && _isValidPercentage(l);
 	}
 
@@ -427,15 +427,15 @@ export class LogStyler {
 		isBg = false
 	): StylogChain {
 		if (isString(code)) {
-			const hsl = this.#extractSolidColorValues(code);
+			const hsl = this.#extractColorValues(code);
 			console.log(hsl);
-			if (this.#validateHSL(...hsl)) {
+			if (this.#isValidHSL(...hsl)) {
 				return this.#handleRGB(convertHslToRgb(...hsl), undefined, undefined, isBg);
 			} else {
 				return createStylogProxy(this);
 			}
 		} else if (isNumber(code) && isNumber(saturation) && isNumber(lightness)) {
-			if (this.#validateHSL(code, saturation, lightness)) {
+			if (this.#isValidHSL(code, saturation, lightness)) {
 				return this.#handleRGB(
 					convertHslToRgb(code, saturation, lightness),
 					undefined,
@@ -451,11 +451,16 @@ export class LogStyler {
 	}
 
 	hsl(code: string): StylogChain;
+
 	hsl(hue: number, saturation: number, lightness: number): StylogChain;
 
 	hsl(code: string | number, saturation?: number, lightness?: number): StylogChain {
 		return this.#handleHSL(code, saturation, lightness, false);
 	}
+
+	bgHSL(code: string): StylogChain;
+
+	bgHSL(hue: number, saturation: number, lightness: number): StylogChain;
 
 	bgHSL(code: string | number, saturation?: number, lightness?: number): StylogChain {
 		return this.#handleHSL(code, saturation, lightness, true);
