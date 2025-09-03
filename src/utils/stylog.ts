@@ -1,11 +1,17 @@
-import { convertHexToRgb } from '../colors/convert';
+import { convertHexToRgb, convertHslToRgb } from '../colors/convert';
 import { CSS_COLORS } from '../colors/css-colors';
-import { isBrowser } from '../guards/specials';
-
-import { _isHex6, _isValidRGBComponent } from '../colors/helpers';
-import type { CSSColor, Hex, Hex6, HSL, RGB, SolidValues } from '../colors/types';
+import {
+	_isHex6,
+	_isRGB,
+	_isValidHue,
+	_isValidPercentage,
+	_isValidRGBComponent,
+} from '../colors/helpers';
 import { isArrayOfType } from '../guards/non-primitives';
 import { isNumber, isString } from '../guards/primitives';
+import { isBrowser } from '../guards/specials';
+
+import type { CSSColor, Hex, Hex6, RGB, SolidValues } from '../colors/types';
 
 /** Non-color text styles */
 export type TextStyle =
@@ -145,7 +151,7 @@ function isAnsiSequence(seq: unknown[]): seq is AnsiSequence {
  *   .log('Hello Blue');
  */
 export class LogStyler {
-	readonly #styles: Array<Styles | AnsiSequence | Hex6 | RGB | HSL>;
+	readonly #styles: Array<Styles | AnsiSequence | Hex6 | RGB | `bg-${Hex6}` | `bg-${RGB}`>;
 
 	/**
 	 * * Creates a new `LogStyler` instance.
@@ -166,8 +172,10 @@ export class LogStyler {
 		this.#styles = styles;
 	}
 
-	#style(...style: Array<Styles | AnsiSequence | Hex6 | RGB | HSL>): LogStyler {
-		return new LogStyler([...(this.#styles as Styles[]), ...(style as Styles[])]);
+	#style(...style: Array<Styles | AnsiSequence | Hex6 | RGB | `bg-${Hex6}` | `bg-${RGB}`>) {
+		return createStylogProxy(
+			new LogStyler([...(this.#styles as Styles[]), ...(style as Styles[])])
+		);
 	}
 
 	/**
@@ -175,9 +183,9 @@ export class LogStyler {
 	 * @remarks When chaining similar styles, only the last one(s) takes effect.
 	 *
 	 * @param style Style to apply (color, background, or text style).
-	 * @returns A new `LogStyler` instance with the additional style applied.
+	 * @returns A new `LogStyler` instance combined with `StylogChain` with the additional style applied.
 	 */
-	style(style: Styles): LogStyler {
+	style(style: Styles): StylogChain {
 		return this.#style(style);
 	}
 
@@ -235,10 +243,22 @@ export class LogStyler {
 				} else if (isCSSColor(style)) {
 					const color = CSS_COLORS[style];
 					cssList.push(`color: ${color}`);
+				} else if (this.#isValidHexOrRGB(style)) {
+					if (style.startsWith('bg-')) {
+						cssList.push(`background: ${style?.replace('bg-', '')}`);
+					} else {
+						cssList.push(`color: ${style}`);
+					}
 				}
 			}
 		}
 		return [`%c${stringified}`, cssList];
+	}
+
+	#isValidHexOrRGB(color: string) {
+		const pure = color?.replace('bg-', '');
+
+		return _isHex6(pure) || _isRGB(pure);
 	}
 
 	/**
@@ -325,9 +345,9 @@ export class LogStyler {
 			return this;
 		}
 
-		const style = hexToAnsi(sanitized, isBg);
+		const ansi = hexToAnsi(sanitized, isBg);
 
-		return this.#style(sanitized, style);
+		return this.#style(isBg ? `bg-${sanitized}` : sanitized, ansi);
 	}
 
 	hex(code: string): LogStyler {
@@ -338,47 +358,107 @@ export class LogStyler {
 		return this.#handleHex(code, true);
 	}
 
-	#extractRGBValues(code: string): SolidValues {
+	#extractSolidColorValues(code: string): SolidValues {
 		const trimmed = code?.trim();
 
-		return (trimmed?.match(/\d+/g) || []).map(Number) as SolidValues;
+		return (trimmed?.match(/[\d.]+%?/g) || []).map(parseFloat) as SolidValues;
 	}
 
 	#validateRGB(...value: number[]) {
 		return value.every(_isValidRGBComponent);
 	}
 
-	#handleRGB(code: string | number, green?: number, blue?: number, isBg = false): LogStyler {
+	#handleRGB(
+		code: string | number,
+		green?: number,
+		blue?: number,
+		isBg = false
+	): StylogChain {
 		if (isString(code)) {
-			const rgb = this.#extractRGBValues(code);
+			const rgb = this.#extractSolidColorValues(code);
 			if (this.#validateRGB(...rgb)) {
-				return this.#style(rgbToAnsi(...rgb, isBg));
+				return this.#style(
+					rgbToAnsi(...rgb, isBg),
+					isBg ?
+						`bg-rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
+					:	`rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
+				);
 			} else {
-				return this;
+				return createStylogProxy(this);
 			}
 		} else if (isNumber(code) && isNumber(green) && isNumber(blue)) {
 			if (this.#validateRGB(code, green, blue)) {
-				return this.#style(rgbToAnsi(code, green, blue, isBg));
+				return this.#style(
+					rgbToAnsi(code, green, blue, isBg),
+					isBg ?
+						`bg-rgb(${code}, ${green}, ${blue})`
+					:	`rgb(${code}, ${green}, ${blue})`
+				);
 			} else {
-				return this;
+				return createStylogProxy(this);
 			}
 		} else {
-			return this;
+			return createStylogProxy(this);
 		}
 	}
 
-	rgb(code: string): LogStyler;
-	rgb(red: number, green: number, blue: number): LogStyler;
+	rgb(code: string): StylogChain;
+	rgb(red: number, green: number, blue: number): StylogChain;
 
-	rgb(code: string | number, green?: number, blue?: number): LogStyler {
+	rgb(code: string | number, green?: number, blue?: number): StylogChain {
 		return this.#handleRGB(code, green, blue, false);
 	}
 
-	bgRGB(code: string): LogStyler;
-	bgRGB(red: number, green: number, blue: number): LogStyler;
+	bgRGB(code: string): StylogChain;
+	bgRGB(red: number, green: number, blue: number): StylogChain;
 
-	bgRGB(code: string | number, green?: number, blue?: number): LogStyler {
+	bgRGB(code: string | number, green?: number, blue?: number): StylogChain {
 		return this.#handleRGB(code, green, blue, true);
+	}
+
+	#validateHSL(h: number, s: number, l: number) {
+		return _isValidHue(h) && _isValidPercentage(s) && _isValidPercentage(l);
+	}
+
+	#handleHSL(
+		code: string | number,
+		saturation?: number,
+		lightness?: number,
+		isBg = false
+	): StylogChain {
+		if (isString(code)) {
+			const hsl = this.#extractSolidColorValues(code);
+			console.log(hsl);
+			if (this.#validateHSL(...hsl)) {
+				return this.#handleRGB(convertHslToRgb(...hsl), undefined, undefined, isBg);
+			} else {
+				return createStylogProxy(this);
+			}
+		} else if (isNumber(code) && isNumber(saturation) && isNumber(lightness)) {
+			if (this.#validateHSL(code, saturation, lightness)) {
+				return this.#handleRGB(
+					convertHslToRgb(code, saturation, lightness),
+					undefined,
+					undefined,
+					isBg
+				);
+			} else {
+				return createStylogProxy(this);
+			}
+		} else {
+			return createStylogProxy(this);
+		}
+	}
+
+	hsl(code: string): StylogChain;
+	hsl(hue: number, saturation: number, lightness: number): StylogChain;
+
+	hsl(code: string | number, saturation?: number, lightness?: number): StylogChain {
+		return this.#handleHSL(code, saturation, lightness, false);
+	}
+
+	bgHSL(code: string | number, saturation?: number, lightness?: number): StylogChain {
+		return this.#handleHSL(code, saturation, lightness, true);
 	}
 }
 
@@ -455,4 +535,4 @@ function createStylogProxy(styler: LogStyler): StylogChain {
  * // Works in the browser console too
  * Stylog.cornflowerblue.italic.log('Hello from the browser');
  */
-export const Stylog: StylogChain = createStylogProxy(new LogStyler());
+export const Stylog = createStylogProxy(new LogStyler());
