@@ -103,90 +103,110 @@ const CSS_TEXT_STYLES: Record<TextStyle, string> = /* @__PURE__ */ Object.freeze
 
 const ANSI_16_COLORS = /* @__PURE__ */ Object.freeze({
 	// Foreground Colors
-	black: ['\x1b[30m', '\x1b[39m'],
-	red: ['\x1b[31m', '\x1b[39m'],
-	green: ['\x1b[32m', '\x1b[39m'],
-	yellow: ['\x1b[33m', '\x1b[39m'],
-	blue: ['\x1b[34m', '\x1b[39m'],
-	purple: ['\x1b[35m', '\x1b[39m'],
-	cyan: ['\x1b[36m', '\x1b[39m'],
-	white: ['\x1b[37m', '\x1b[39m'],
+	black: [30, 39],
+	red: [31, 39],
+	green: [32, 39],
+	yellow: [33, 39],
+	blue: [34, 39],
+	purple: [35, 39],
+	cyan: [36, 39],
+	white: [37, 39],
 
 	// Bright Foreground Colors
-	blackBright: ['\x1b[90m', '\x1b[39m'],
-	redBright: ['\x1b[91m', '\x1b[39m'],
-	greenBright: ['\x1b[92m', '\x1b[39m'],
-	yellowBright: ['\x1b[93m', '\x1b[39m'],
-	blueBright: ['\x1b[94m', '\x1b[39m'],
-	purpleBright: ['\x1b[95m', '\x1b[39m'],
-	cyanBright: ['\x1b[96m', '\x1b[39m'],
-	whiteBright: ['\x1b[97m', '\x1b[39m'],
+	blackBright: [90, 39],
+	redBright: [91, 39],
+	greenBright: [92, 39],
+	yellowBright: [93, 39],
+	blueBright: [94, 39],
+	purpleBright: [95, 39],
+	cyanBright: [96, 39],
+	whiteBright: [97, 39],
 
 	// Background Colors
-	bgBlack: ['\x1b[40m', '\x1b[49m'],
-	bgRed: ['\x1b[41m', '\x1b[49m'],
-	bgGreen: ['\x1b[42m', '\x1b[49m'],
-	bgYellow: ['\x1b[43m', '\x1b[49m'],
-	bgBlue: ['\x1b[44m', '\x1b[49m'],
-	bgPurple: ['\x1b[45m', '\x1b[49m'],
-	bgCyan: ['\x1b[46m', '\x1b[49m'],
-	bgWhite: ['\x1b[47m', '\x1b[49m'],
+	bgBlack: [40, 49],
+	bgRed: [41, 49],
+	bgGreen: [42, 49],
+	bgYellow: [43, 49],
+	bgBlue: [44, 49],
+	bgPurple: [45, 49],
+	bgCyan: [46, 49],
+	bgWhite: [47, 49],
 
 	// Bright Background Colors
-	bgBlackBright: ['\x1b[100m', '\x1b[49m'],
-	bgRedBright: ['\x1b[101m', '\x1b[49m'],
-	bgGreenBright: ['\x1b[102m', '\x1b[49m'],
-	bgYellowBright: ['\x1b[103m', '\x1b[49m'],
-	bgBlueBright: ['\x1b[104m', '\x1b[49m'],
-	bgPurpleBright: ['\x1b[105m', '\x1b[49m'],
-	bgCyanBright: ['\x1b[106m', '\x1b[49m'],
-	bgWhiteBright: ['\x1b[107m', '\x1b[49m'],
+	bgBlackBright: [100, 49],
+	bgRedBright: [101, 49],
+	bgGreenBright: [102, 49],
+	bgYellowBright: [103, 49],
+	bgBlueBright: [104, 49],
+	bgPurpleBright: [105, 49],
+	bgCyanBright: [106, 49],
+	bgWhiteBright: [107, 49],
 } as const);
+
+function isAnsi16Color(value: unknown): value is Ansi16Value {
+	return (
+		isArrayOfType(value, isNumber) &&
+		value?.length === 2 &&
+		value[0] >= 30 &&
+		value[0] <= 107 &&
+		(value[1] === 39 || value[1] === 49)
+	);
+}
+
+function isCSS16Color(value: string): value is CSS16Color {
+	return value?.startsWith('css-') && value?.replace('css-', '') in CSS_16_COLORS;
+}
 
 // Browser CSS equivalents for ANSI 16 colors
-const CSS_16_COLORS: Record<Ansi16Colors, string> = /* @__PURE__ */ Object.freeze({
+const CSS_16_COLORS = /* @__PURE__ */ Object.freeze({
 	// Foreground Colors
-	black: 'color: #000000',
-	red: 'color: #800000',
-	green: 'color: #008000',
-	yellow: 'color: #808000',
-	blue: 'color: #000080',
-	purple: 'color: #800080',
-	cyan: 'color: #008080',
-	white: 'color: #c0c0c0',
+	black: '#000000',
+	red: '#800000',
+	green: '#008000',
+	yellow: '#808000',
+	blue: '#000080',
+	purple: '#800080',
+	cyan: '#008080',
+	white: '#c0c0c0',
 
 	// Bright Foreground Colors
-	blackBright: 'color: #808080',
-	redBright: 'color: #ff0000',
-	greenBright: 'color: #00ff00',
-	yellowBright: 'color: #ffff00',
-	blueBright: 'color: #0000ff',
-	purpleBright: 'color: #ff00ff',
-	cyanBright: 'color: #00ffff',
-	whiteBright: 'color: #ffffff',
+	blackBright: '#808080',
+	redBright: '#ff0000',
+	greenBright: '#00ff00',
+	yellowBright: '#ffff00',
+	blueBright: '#0000ff',
+	purpleBright: '#ff00ff',
+	cyanBright: '#00ffff',
+	whiteBright: '#ffffff',
 
 	// Background Colors
-	bgBlack: 'background: #000000',
-	bgRed: 'background: #800000',
-	bgGreen: 'background: #008000',
-	bgYellow: 'background: #808000',
-	bgBlue: 'background: #000080',
-	bgPurple: 'background: #800080',
-	bgCyan: 'background: #008080',
-	bgWhite: 'background: #c0c0c0',
+	bgBlack: '#000000',
+	bgRed: '#800000',
+	bgGreen: '#008000',
+	bgYellow: '#808000',
+	bgBlue: '#000080',
+	bgPurple: '#800080',
+	bgCyan: '#008080',
+	bgWhite: '#c0c0c0',
 
 	// Bright Background Colors
-	bgBlackBright: 'background: #808080',
-	bgRedBright: 'background: #ff0000',
-	bgGreenBright: 'background: #00ff00',
-	bgYellowBright: 'background: #ffff00',
-	bgBlueBright: 'background: #0000ff',
-	bgPurpleBright: 'background: #ff00ff',
-	bgCyanBright: 'background: #00ffff',
-	bgWhiteBright: 'background: #ffffff',
-} as const);
+	bgBlackBright: '#808080',
+	bgRedBright: '#ff0000',
+	bgGreenBright: '#00ff00',
+	bgYellowBright: '#ffff00',
+	bgBlueBright: '#0000ff',
+	bgPurpleBright: '#ff00ff',
+	bgCyanBright: '#00ffff',
+	bgWhiteBright: '#ffffff',
+} as unknown as Record<Ansi16Color, Hex6>);
 
-export type Ansi16Colors = keyof typeof ANSI_16_COLORS;
+function css16ToHex(value: CSS16Color): Hex6 {
+	return CSS_16_COLORS?.[value?.replace('css-', '') as Ansi16Color];
+}
+
+export type Ansi16Color = keyof typeof ANSI_16_COLORS;
+export type CSS16Color = `css-${Ansi16Color}`;
+export type Ansi16Value = (typeof ANSI_16_COLORS)[Ansi16Color];
 
 /** * Check if a string represents a valid `CSSColor`. */
 export function isCSSColor(value: string): value is CSSColor {
@@ -203,7 +223,7 @@ export function isTextStyle(value: string): value is TextStyle {
 	return value in CSS_TEXT_STYLES || value in ANSI_TEXT_STYLES;
 }
 
-function isAnsiSequence(seq: unknown[]): seq is AnsiSequence {
+function isAnsiSequence(seq: unknown): seq is AnsiSequence {
 	return (
 		isArrayOfType(seq, isString) &&
 		seq?.length === 2 &&
@@ -211,14 +231,6 @@ function isAnsiSequence(seq: unknown[]): seq is AnsiSequence {
 		(seq[1].startsWith('\x1b[49') || seq[1].startsWith('\x1b[39'))
 	);
 }
-
-// function isAnsiSeqBG(seq: unknown[]): seq is AnsiSequence {
-// 	return isAnsiSequence(seq) && seq[0].startsWith('\x1b[48') && seq[1].startsWith('\x1b[49');
-// }
-
-// function isAnsiSeqColor(seq: unknown[]): seq is AnsiSequence {
-// 	return isAnsiSequence(seq) && seq[0].startsWith('\x1b[38') && seq[1].startsWith('\x1b[39');
-// }
 
 /**
  * * Utility class for styling console log output with `ANSI` (`Node.js`) or `CSS` (Browser).
@@ -238,7 +250,16 @@ function isAnsiSequence(seq: unknown[]): seq is AnsiSequence {
  *   .log('Hello Blue');
  */
 export class LogStyler {
-	readonly #styles: Array<Styles | AnsiSequence | Hex6 | RGB | `bg-${Hex6}` | `bg-${RGB}`>;
+	readonly #styles: Array<
+		| Styles
+		| AnsiSequence
+		| Ansi16Value
+		| CSS16Color
+		| Hex6
+		| RGB
+		| `bg-${Hex6}`
+		| `bg-${RGB}`
+	>;
 
 	/**
 	 * * Creates a new `LogStyler` instance.
@@ -259,7 +280,18 @@ export class LogStyler {
 		this.#styles = styles;
 	}
 
-	#style(...style: Array<Styles | AnsiSequence | Hex6 | RGB | `bg-${Hex6}` | `bg-${RGB}`>) {
+	#style(
+		...style: Array<
+			| Styles
+			| AnsiSequence
+			| Ansi16Value
+			| CSS16Color
+			| Hex6
+			| RGB
+			| `bg-${Hex6}`
+			| `bg-${RGB}`
+		>
+	) {
 		return createStylogProxy(
 			new LogStyler([...(this.#styles as Styles[]), ...(style as Styles[])])
 		);
@@ -272,18 +304,15 @@ export class LogStyler {
 	 * @param style Style to apply (color, background, or text style).
 	 * @returns A new `LogStyler` instance combined with `StylogChain` with the additional style applied.
 	 */
-	style(style: Styles): StylogChain {
-		return this.#style(style);
+	style(...style: Styles[]): StylogChain {
+		return this.#style(...style);
 	}
 
-	ansi16(...colors: Ansi16Colors[]): LogStyler {
-		colors.forEach((color) => {
-			// Add the ANSI sequence and CSS style to the internal styles array
-			this.#styles.push(ANSI_16_COLORS[color] as AnsiSequence);
-			this.#styles.push(color as CSSColor); // Store the color name for CSS fallback
-		});
+	ansi16(color: Ansi16Color): StylogChain {
+		this.#styles.push(ANSI_16_COLORS[color]);
+		this.#styles.push(`css-${color}`);
 
-		return this;
+		return createStylogProxy(this);
 	}
 
 	/**
@@ -346,15 +375,20 @@ export class LogStyler {
 					} else {
 						cssList.push(`color: ${style}`);
 					}
-				} else if (style in CSS_16_COLORS) {
-					cssList.push(CSS_16_COLORS[style as Ansi16Colors]);
+				} else if (isCSS16Color(style)) {
+					const color = css16ToHex(style);
+
+					const colorValue =
+						style.startsWith('css-bg') ? `background: ${color}` : `color: ${color}`;
+
+					cssList.push(colorValue);
 				}
 			}
 		}
 		return [`%c${stringified}`, cssList];
 	}
 
-	#isValidHexOrRGB(color: string) {
+	#isValidHexOrRGB(color: string): color is Hex6 | RGB | `bg-${Hex6}` | `bg-${RGB}` {
 		const pure = color?.replace('bg-', '');
 
 		return _isHex6(pure) || _isRGB(pure);
@@ -405,15 +439,15 @@ export class LogStyler {
 					openSeq += open;
 					closeSeq = close + closeSeq;
 				} else if (style in ANSI_16_COLORS) {
-					const [open, close] = ANSI_16_COLORS[style as Ansi16Colors];
+					const [open, close] = ANSI_16_COLORS[style as Ansi16Color];
 					openSeq += open;
 					closeSeq = close + closeSeq;
 				}
 			} else if (isAnsiSequence(style)) {
 				openSeq += style[0];
 				closeSeq = style[1] + closeSeq;
-			} else if (style in ANSI_16_COLORS) {
-				const [open, close] = ANSI_16_COLORS[style as Ansi16Colors];
+			} else if (isAnsi16Color(style)) {
+				const [open, close] = style.map((s) => `\x1b[${s}m`);
 				openSeq += open;
 				closeSeq = close + closeSeq;
 			}
