@@ -7,11 +7,18 @@ import {
 	_isValidPercentage,
 	_isValidRGBComponent,
 } from '../colors/helpers';
-import { isArrayOfType } from '../guards/non-primitives';
 import { isNumber, isString } from '../guards/primitives';
 import { isBrowser } from '../guards/specials';
 
 import type { CSSColor, Hex, Hex6, RGB, SolidValues } from '../colors/types';
+import { ANSI_16_COLORS, ANSI_TEXT_STYLES, CSS_TEXT_STYLES } from './constants';
+import {
+	_css16ToHex,
+	_extractColorName,
+	_isAnsi16ColorValue,
+	_isAnsiSequence,
+	_isCSS16Color,
+} from './helpers';
 
 /** Non-color text styles */
 export type TextStyle =
@@ -22,6 +29,15 @@ export type TextStyle =
 	| 'underline'
 	| 'strikethrough'
 	| 'inverse';
+
+/** Represents `ANSI-16` color names available in `LogStyler` */
+export type Ansi16Color = keyof typeof ANSI_16_COLORS;
+
+/** Represents `ANSI-16` color names with `css-` prefix available in `LogStyler` */
+export type CSS16Color = `css-${Ansi16Color}`;
+
+/** Represents the value of `ANSI-16` color codes */
+export type Ansi16Value = (typeof ANSI_16_COLORS)[Ansi16Color];
 
 /** Represents a css color starting with `bg` (e.g. `"bgRed"`). */
 export type BGColor = `bg${Capitalize<CSSColor>}`;
@@ -50,7 +66,7 @@ export function detectColorSupport(): 0 | 1 | 2 | 3 {
 	return 1; // fallback: assume basic 16-color
 }
 
-function rgbToAnsi(r: number, g: number, b: number, isBg = false): AnsiSequence {
+export function rgbToAnsi(r: number, g: number, b: number, isBg = false): AnsiSequence {
 	const open = `\x1b[${isBg ? 48 : 38};2;${r};${g};${b}m`;
 	const close = `\x1b[${isBg ? 49 : 39}m`;
 	return [open, close];
@@ -64,149 +80,10 @@ function rgbToAnsi(r: number, g: number, b: number, isBg = false): AnsiSequence 
  * @returns Tuple containing the opening and closing ANSI escape sequences.
  */
 export function hexToAnsi(hex: Hex, isBg = false): AnsiSequence {
-	const [r, g, b] = (convertHexToRgb(hex).match(/\d+/g) || []).map(Number);
+	const [r, g, b] = (convertHexToRgb(hex).match(/\d+/g) || []).map(parseFloat);
 
 	return rgbToAnsi(r, g, b, isBg);
 }
-
-/**
- * * Extract the CSS color name from a background-prefixed style key.
- *
- * @param bgColor Style key starting with `bg` (e.g. `"bgRed"`).
- * @returns Extracted CSS color name.
- */
-function extractColorName(bgColor: BGColor): CSSColor {
-	return bgColor.slice(2).toLowerCase() as CSSColor;
-}
-
-/** ANSI styles for non-color text effects */
-const ANSI_TEXT_STYLES: Record<TextStyle, AnsiSequence> = /* @__PURE__ */ Object.freeze({
-	bold: ['\x1b[1m', '\x1b[22m'],
-	bolder: ['\x1b[1m', '\x1b[22m'],
-	dim: ['\x1b[2m', '\x1b[22m'],
-	italic: ['\x1b[3m', '\x1b[23m'],
-	underline: ['\x1b[4m', '\x1b[24m'],
-	strikethrough: ['\x1b[9m', '\x1b[29m'],
-	inverse: ['\x1b[7m', '\x1b[27m'],
-});
-
-/** Browser CSS equivalents */
-const CSS_TEXT_STYLES: Record<TextStyle, string> = /* @__PURE__ */ Object.freeze({
-	bold: 'font-weight: bold',
-	bolder: 'font-weight: bolder',
-	dim: 'opacity: 0.7',
-	italic: 'font-style: italic',
-	underline: 'text-decoration: underline',
-	strikethrough: 'text-decoration: line-through',
-	inverse: 'filter: invert(1)',
-});
-
-const ANSI_16_COLORS = /* @__PURE__ */ Object.freeze({
-	// Foreground Colors
-	black: [30, 39],
-	red: [31, 39],
-	green: [32, 39],
-	yellow: [33, 39],
-	blue: [34, 39],
-	purple: [35, 39],
-	cyan: [36, 39],
-	white: [37, 39],
-
-	// Bright Foreground Colors
-	blackBright: [90, 39],
-	redBright: [91, 39],
-	greenBright: [92, 39],
-	yellowBright: [93, 39],
-	blueBright: [94, 39],
-	purpleBright: [95, 39],
-	cyanBright: [96, 39],
-	whiteBright: [97, 39],
-
-	// Background Colors
-	bgBlack: [40, 49],
-	bgRed: [41, 49],
-	bgGreen: [42, 49],
-	bgYellow: [43, 49],
-	bgBlue: [44, 49],
-	bgPurple: [45, 49],
-	bgCyan: [46, 49],
-	bgWhite: [47, 49],
-
-	// Bright Background Colors
-	bgBlackBright: [100, 49],
-	bgRedBright: [101, 49],
-	bgGreenBright: [102, 49],
-	bgYellowBright: [103, 49],
-	bgBlueBright: [104, 49],
-	bgPurpleBright: [105, 49],
-	bgCyanBright: [106, 49],
-	bgWhiteBright: [107, 49],
-} as const);
-
-function isAnsi16Color(value: unknown): value is Ansi16Value {
-	return (
-		isArrayOfType(value, isNumber) &&
-		value?.length === 2 &&
-		value[0] >= 30 &&
-		value[0] <= 107 &&
-		(value[1] === 39 || value[1] === 49)
-	);
-}
-
-function isCSS16Color(value: string): value is CSS16Color {
-	return value?.startsWith('css-') && value?.replace('css-', '') in CSS_16_COLORS;
-}
-
-// Browser CSS equivalents for ANSI 16 colors
-const CSS_16_COLORS = /* @__PURE__ */ Object.freeze({
-	// Foreground Colors
-	black: '#000000',
-	red: '#800000',
-	green: '#008000',
-	yellow: '#808000',
-	blue: '#000080',
-	purple: '#800080',
-	cyan: '#008080',
-	white: '#c0c0c0',
-
-	// Bright Foreground Colors
-	blackBright: '#808080',
-	redBright: '#ff0000',
-	greenBright: '#00ff00',
-	yellowBright: '#ffff00',
-	blueBright: '#0000ff',
-	purpleBright: '#ff00ff',
-	cyanBright: '#00ffff',
-	whiteBright: '#ffffff',
-
-	// Background Colors
-	bgBlack: '#000000',
-	bgRed: '#800000',
-	bgGreen: '#008000',
-	bgYellow: '#808000',
-	bgBlue: '#000080',
-	bgPurple: '#800080',
-	bgCyan: '#008080',
-	bgWhite: '#c0c0c0',
-
-	// Bright Background Colors
-	bgBlackBright: '#808080',
-	bgRedBright: '#ff0000',
-	bgGreenBright: '#00ff00',
-	bgYellowBright: '#ffff00',
-	bgBlueBright: '#0000ff',
-	bgPurpleBright: '#ff00ff',
-	bgCyanBright: '#00ffff',
-	bgWhiteBright: '#ffffff',
-} as unknown as Record<Ansi16Color, Hex6>);
-
-function css16ToHex(value: CSS16Color): Hex6 {
-	return CSS_16_COLORS?.[value?.replace('css-', '') as Ansi16Color];
-}
-
-export type Ansi16Color = keyof typeof ANSI_16_COLORS;
-export type CSS16Color = `css-${Ansi16Color}`;
-export type Ansi16Value = (typeof ANSI_16_COLORS)[Ansi16Color];
 
 /** * Check if a string represents a valid `CSSColor`. */
 export function isCSSColor(value: string): value is CSSColor {
@@ -221,15 +98,6 @@ export function isBGColor(value: string): value is BGColor {
 /** * Check if a string represent `TextStyle` used in `LogStyler`. */
 export function isTextStyle(value: string): value is TextStyle {
 	return value in CSS_TEXT_STYLES || value in ANSI_TEXT_STYLES;
-}
-
-function isAnsiSequence(seq: unknown): seq is AnsiSequence {
-	return (
-		isArrayOfType(seq, isString) &&
-		seq?.length === 2 &&
-		(seq[0].startsWith('\x1b[48') || seq[0].startsWith('\x1b[38')) &&
-		(seq[1].startsWith('\x1b[49') || seq[1].startsWith('\x1b[39'))
-	);
 }
 
 /**
@@ -404,7 +272,7 @@ export class LogStyler {
 				if (isTextStyle(style)) {
 					cssList.push(CSS_TEXT_STYLES[style]);
 				} else if (isBGColor(style)) {
-					const color = CSS_COLORS[extractColorName(style)];
+					const color = CSS_COLORS[_extractColorName(style)];
 					cssList.push(`background: ${color}`);
 				} else if (isCSSColor(style)) {
 					const color = CSS_COLORS[style];
@@ -415,8 +283,8 @@ export class LogStyler {
 					} else {
 						cssList.push(`color: ${style}`);
 					}
-				} else if (isCSS16Color(style)) {
-					const color = css16ToHex(style);
+				} else if (_isCSS16Color(style)) {
+					const color = _css16ToHex(style);
 
 					const colorValue =
 						style.startsWith('css-bg') ? `background: ${color}` : `color: ${color}`;
@@ -469,7 +337,7 @@ export class LogStyler {
 					openSeq += open;
 					closeSeq = close + closeSeq;
 				} else if (isBGColor(style)) {
-					const hex = CSS_COLORS[extractColorName(style)];
+					const hex = CSS_COLORS[_extractColorName(style)];
 					const [open, close] = hexToAnsi(hex, true);
 					openSeq += open;
 					closeSeq = close + closeSeq;
@@ -478,15 +346,11 @@ export class LogStyler {
 					const [open, close] = hexToAnsi(hex, false);
 					openSeq += open;
 					closeSeq = close + closeSeq;
-				} else if (style in ANSI_16_COLORS) {
-					const [open, close] = ANSI_16_COLORS[style as Ansi16Color];
-					openSeq += open;
-					closeSeq = close + closeSeq;
 				}
-			} else if (isAnsiSequence(style)) {
+			} else if (_isAnsiSequence(style)) {
 				openSeq += style[0];
 				closeSeq = style[1] + closeSeq;
-			} else if (isAnsi16Color(style)) {
+			} else if (_isAnsi16ColorValue(style)) {
 				const [open, close] = style.map((s) => `\x1b[${s}m`);
 				openSeq += open;
 				closeSeq = close + closeSeq;
