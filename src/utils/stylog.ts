@@ -20,6 +20,8 @@ import {
 	_isCSS16Color,
 } from './helpers';
 
+// ! ======= Type Definitions ======= ! //
+
 /** Non-color text styles */
 export type TextStyle =
 	| 'bold'
@@ -45,10 +47,30 @@ export type BGColor = `bg${Capitalize<CSSColor>}`;
 /** Styles allowed for `LogStyler` or `Stylog` */
 export type Styles = CSSColor | BGColor | TextStyle;
 
+/** A `tuple of strings` that represents `ANSI` color code with special closing and ending */
 export type AnsiSequence = [string, string];
 
 /**
- * Detects color support level of the current terminal.
+ * * Type representing a fully chainable `LogStyler` instance.
+ *
+ * @remarks - Each property corresponds to a style (foreground color, background color, or text effect) and returns a new `Stylog` instance, allowing fluent chaining like:
+ *
+ * **This type combines:**
+ * - The methods of `LogStyler` (e.g., `.style()`, `.log()`)
+ * - Dynamically generated properties for all available `Styles`
+ *   that return another `Stylog` instance for chaining.
+ *
+ * @example
+ * Stylog.green.bold.bgBlue.log('Hello World');
+ */
+export type StylogChain = LogStyler & {
+	[K in Styles]: StylogChain;
+};
+
+// ! ======= Utility Functions ======= ! //
+
+/**
+ * * Detects color support level of the current terminal/shell.
  * @returns `0 = none`, `1 = basic (16 colors)`, `2 = 256 colors`, `3 = truecolor`
  */
 export function detectColorSupport(): 0 | 1 | 2 | 3 {
@@ -63,9 +85,18 @@ export function detectColorSupport(): 0 | 1 | 2 | 3 {
 	if (/\b256(color)?\b/i.test(term)) return 2;
 	if (/\btruecolor\b|\b24bit\b/i.test(term)) return 3;
 
-	return 1; // fallback: assume basic 16-color
+	return 1; // fallback to basic 16-color
 }
 
+/**
+ * * Convert `RGB` color components into an `ANSI` escape code sequence.
+ *
+ * @param r Red component (`0-255`).
+ * @param g Green component (`0-255`).
+ * @param b Blue component (`0-255`).
+ * @param isBg Whether the color should be applied as background (`true`) or foreground (`false`). Defaults to `false`.
+ * @returns Tuple containing the opening and closing `ANSI` escape sequences.
+ */
 export function rgbToAnsi(r: number, g: number, b: number, isBg = false): AnsiSequence {
 	const open = `\x1b[${isBg ? 48 : 38};2;${r};${g};${b}m`;
 	const close = `\x1b[${isBg ? 49 : 39}m`;
@@ -73,16 +104,16 @@ export function rgbToAnsi(r: number, g: number, b: number, isBg = false): AnsiSe
 }
 
 /**
- * * Convert a HEX color into an ANSI escape code sequence.
+ * * Convert a HEX color into an `ANSI` escape code sequence.
  *
  * @param hex HEX color string. e.g. `#000000`
  * @param isBg Whether the color should be applied as background (`true`) or foreground (`false`). Defaults to `false`.
- * @returns Tuple containing the opening and closing ANSI escape sequences.
+ * @returns Tuple containing the opening and closing `ANSI` escape sequences.
  */
 export function hexToAnsi(hex: Hex, isBg = false): AnsiSequence {
-	const [r, g, b] = (convertHexToRgb(hex).match(/\d+/g) || []).map(parseFloat);
+	const rgb = (convertHexToRgb(hex).match(/\d+/g) || []).map(parseFloat) as SolidValues;
 
-	return rgbToAnsi(r, g, b, isBg);
+	return rgbToAnsi(...rgb, isBg);
 }
 
 /** * Check if a string represents a valid `CSSColor`. */
@@ -99,6 +130,8 @@ export function isBGColor(value: string): value is BGColor {
 export function isTextStyle(value: string): value is TextStyle {
 	return value in CSS_TEXT_STYLES || value in ANSI_TEXT_STYLES;
 }
+
+// ! ======= Implementation of LogStyler ======= ! //
 
 /**
  * * Utility class for styling console log output with `ANSI` (`Node.js`) or `CSS` (Browser).
@@ -296,12 +329,6 @@ export class LogStyler {
 		return [`%c${stringified}`, cssList];
 	}
 
-	#isValidHexOrRGB(color: string): color is Hex6 | RGB | `bg-${Hex6}` | `bg-${RGB}` {
-		const pure = color?.replace('bg-', '');
-
-		return _isHex6(pure) || _isRGB(pure);
-	}
-
 	/**
 	 * * Returns the input as a styled string with ANSI escape codes.
 	 *
@@ -377,6 +404,12 @@ export class LogStyler {
 		} else {
 			console.log(this.string(input, stringify));
 		}
+	}
+
+	#isValidHexOrRGB(color: string): color is Hex6 | RGB | `bg-${Hex6}` | `bg-${RGB}` {
+		const pure = color?.replace('bg-', '');
+
+		return _isHex6(pure) || _isRGB(pure);
 	}
 
 	#sanitizeHex(code: string): string {
@@ -520,9 +553,9 @@ export class LogStyler {
 
 	/**
 	 * * Apply an RGB color to the text foreground using individual components.
-	 * @param red - Red component (0-255).
-	 * @param green - Green component (0-255).
-	 * @param blue - Blue component (0-255).
+	 * @param red - Red component (`0-255`).
+	 * @param green - Green component (`0-255`).
+	 * @param blue - Blue component (`0-255`).
 	 * @returns A new `StylogChain` instance with the RGB color applied.
 	 *
 	 * @example
@@ -539,6 +572,7 @@ export class LogStyler {
 	 */
 	rgb(red: number, green: number, blue: number): StylogChain;
 
+	/** * Apply an RGB color to the text foreground using string or individual components. */
 	rgb(code: string | number, green?: number, blue?: number): StylogChain {
 		return this.#handleRGB(code, green, blue, false);
 	}
@@ -570,10 +604,10 @@ export class LogStyler {
 
 	/**
 	 * * Apply an RGB color to the text background using individual components.
-	 * @param red - Red component (0-255).
-	 * @param green - Green component (0-255).
-	 * @param blue - Blue component (0-255).
-	 * @returns A new StylogChain instance with the RGB background color applied.
+	 * @param red - Red component (`0-255`).
+	 * @param green - Green component (`0-255`).
+	 * @param blue - Blue component (`0-255`).
+	 * @returns A new `StylogChain` instance with the RGB background color applied.
 	 *
 	 * @example
 	 * // Individual components
@@ -589,6 +623,7 @@ export class LogStyler {
 	 */
 	bgRGB(red: number, green: number, blue: number): StylogChain;
 
+	/** * Apply an RGB color to the text background using string or individual components. */
 	bgRGB(code: string | number, green?: number, blue?: number): StylogChain {
 		return this.#handleRGB(code, green, blue, true);
 	}
@@ -673,6 +708,7 @@ export class LogStyler {
 	 */
 	hsl(hue: number, saturation: number, lightness: number): StylogChain;
 
+	/** * Apply an HSL color to the text foreground using string or individual components. */
 	hsl(code: string | number, saturation?: number, lightness?: number): StylogChain {
 		return this.#handleHSL(code, saturation, lightness, false);
 	}
@@ -723,27 +759,13 @@ export class LogStyler {
 	 */
 	bgHSL(hue: number, saturation: number, lightness: number): StylogChain;
 
+	/** * Apply an HSL color to the text background using string or individual components. */
 	bgHSL(code: string | number, saturation?: number, lightness?: number): StylogChain {
 		return this.#handleHSL(code, saturation, lightness, true);
 	}
 }
 
-/**
- * * Type representing a fully chainable `LogStyler` instance.
- *
- * @remarks - Each property corresponds to a style (foreground color, background color, or text effect) and returns a new `Stylog` instance, allowing fluent chaining like:
- *
- * **This type combines:**
- * - The methods of `LogStyler` (e.g., `.style()`, `.log()`)
- * - Dynamically generated properties for all available `Styles`
- *   that return another `Stylog` instance for chaining.
- *
- * @example
- * Stylog.green.bold.bgBlue.log('Hello World');
- */
-export type StylogChain = LogStyler & {
-	[K in Styles]: StylogChain;
-};
+// ! ======= Implementation of Stylog ======= ! //
 
 /**
  * * Create a proxied instance of `LogStyler` that supports dynamic style chaining.

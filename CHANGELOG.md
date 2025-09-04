@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.17] - 2025-09-02
+
+- **Added** _color support detector_ for shell/console for `Stylog`/`LogStyler`.
+
 ## [4.20.16] - 2025-09-01
 
 - **Added** new method `string()` in `LogStyler` (also in `Stylog`) and **made** `applyStyles()` method _public_.

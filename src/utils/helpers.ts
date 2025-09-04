@@ -15,6 +15,7 @@ export function _extractColorName(bgColor: BGColor): CSSColor {
 	return bgColor.slice(2).toLowerCase() as CSSColor;
 }
 
+/** * Check if a string represents a valid `AnsiSequence`. */
 export function _isAnsiSequence(seq: unknown): seq is AnsiSequence {
 	return (
 		isArrayOfType(seq, isString) &&
@@ -24,6 +25,7 @@ export function _isAnsiSequence(seq: unknown): seq is AnsiSequence {
 	);
 }
 
+/** * Check if a value represents a valid `Ansi16Value`. */
 export function _isAnsi16ColorValue(value: unknown): value is Ansi16Value {
 	return (
 		isArrayOfType(value, isNumber) &&
@@ -34,10 +36,17 @@ export function _isAnsi16ColorValue(value: unknown): value is Ansi16Value {
 	);
 }
 
+/** * Check if a value represents a valid `CSS16Color` against `Ansi16Value`. */
 export function _isCSS16Color(value: string): value is CSS16Color {
 	return value?.startsWith('css-') && value?.replace('css-', '') in CSS_16_COLORS;
 }
 
+/**
+ * * Convert a `CSS16Color` value in `Hex6` format
+ *
+ * @param value `CSS16Color` value to convert
+ * @returns Converted `CSS16Color` value in `Hex6` format
+ */
 export function _css16ToHex(value: CSS16Color): Hex6 {
 	return CSS_16_COLORS?.[value?.replace('css-', '') as Ansi16Color];
 }
