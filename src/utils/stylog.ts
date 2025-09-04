@@ -291,7 +291,7 @@ export class LogStyler {
 			| `bg-${Hex6}`
 			| `bg-${RGB}`
 		>
-	) {
+	): StylogChain {
 		return createStylogProxy(
 			new LogStyler([...(this.#styles as Styles[]), ...(style as Styles[])])
 		);
@@ -309,10 +309,7 @@ export class LogStyler {
 	}
 
 	ansi16(color: Ansi16Color): StylogChain {
-		this.#styles.push(ANSI_16_COLORS[color]);
-		this.#styles.push(`css-${color}`);
-
-		return createStylogProxy(this);
+		return this.#style(ANSI_16_COLORS[color], `css-${color}`);
 	}
 
 	/**
