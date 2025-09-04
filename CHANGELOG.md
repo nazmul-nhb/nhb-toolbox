@@ -6,6 +6,17 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.20] - 2025-09-04
+
+### 🎨 Updates for Stylog/LogStyler
+
+- **Reorganized** full `stylog` module.
+- **Renamed** `string()` method to `toANSI()` and `applyStyles()` to `toCSS()`.
+- **Added** new `ansi16()` method to apply `ANSI-16` color codes.
+- **Added** new `hsl()` and `bgHSL()` methods to colorize using custom `hsl` color values.
+- **Added** new `rgb()` and `bgRGB()` methods to colorize using custom `rgb` color values.
+- **Added** new `hex()` and `bgHex()` methods to colorize using custom `hex` color values.
+
 ## [4.20.17] - 2025-09-02
 
 - **Added** _color support detector_ for shell/console for `Stylog`/`LogStyler`.

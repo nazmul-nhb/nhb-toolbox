@@ -23,6 +23,7 @@ export const CSS_TEXT_STYLES: Record<TextStyle, string> = /* @__PURE__ */ Object
 	inverse: 'filter: invert(1)',
 });
 
+/** Records of ANSI-16 colors with values */
 export const ANSI_16_COLORS = /* @__PURE__ */ Object.freeze({
 	// Foreground Colors
 	black: [30, 39],
@@ -65,7 +66,7 @@ export const ANSI_16_COLORS = /* @__PURE__ */ Object.freeze({
 	bgWhiteBright: [107, 49],
 } as const);
 
-// Browser CSS equivalents for ANSI 16 colors
+/** Browser CSS equivalents for ANSI 16 colors */
 export const CSS_16_COLORS = /* @__PURE__ */ Object.freeze({
 	// Foreground Colors
 	black: '#000000',
