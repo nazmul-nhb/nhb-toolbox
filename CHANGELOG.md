@@ -108,7 +108,7 @@ All notable changes to the package will be documented here.
 
 ## [4.13.3] - 2025-07-22
 
-- **Updated** pluralization/uncountable rules, case restoration method and fixed other bugs in `pluralizer`.
+- **Updated** _pluralization/uncountable rules_, _case restoration method_ and fixed other bugs in `pluralizer`.
 - **Updated** docs for `pluralizer`, `Pluralizer` and `formatUnitWithPlural`.
 
 ## [4.13.1] - 2025-07-22
@@ -259,7 +259,7 @@ All notable changes to the package will be documented here.
 
 ### 🕧 Updates for Chronos
 
-- All plugin imports now use statement like `import { somePlugin } from 'nhb-toolbox/plugins/plugin-path';`
+- All _plugin_ imports now use statement like `import { somePlugin } from 'nhb-toolbox/plugins/plugin-path';`
 - **Updated** `getZodiacSign` method: includes 2 presets `western` and `vedic` with aliases `tropical` and `sidereal`.
 - **Fixed** issues in `getZodiacSign` method which previously could not parse some date/month range.
 
@@ -358,5 +358,5 @@ All notable changes to the package will be documented here.
 ### Improved
 
 - 🌲 Full **tree-shaking support** for ESM builds (CommonJS remains unaffected).
-- 🌲 _From the beginning the library was tree-shakable_ but now it's **properly tree-shakable** for ESM builds.
-- 📦 CommonJS (`cjs`) build remains unaffected and stable.
+  - 🌲 _From the beginning the library was tree-shakable_ but now it's **properly tree-shakable** for ESM builds.
+  - 📦 CommonJS (`cjs`) build remains unaffected and stable.
