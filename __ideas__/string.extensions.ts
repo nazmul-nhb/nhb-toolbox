@@ -9,35 +9,33 @@ declare global {
 }
 
 /**
- * Define a method on String.prototype in an idempotent way.
+ * Define a method on any prototype in an idempotent way.
  * - Non-enumerable by default (like native methods).
- * - Won't overwrite unless you pass { overwrite: true }.
- * - Uses the string value of `this` safely.
+ * - Won't overwrite unless { overwrite: true }.
  */
-function defineStringMethod<Args extends unknown[], Return>(
-	name: string,
-	impl: (this: string, ...args: Args) => Return,
+function defineMethod<
+	Proto extends object,
+	Name extends Readonly<string>,
+	Args extends unknown[],
+	Return,
+>(
+	proto: Proto,
+	name: Name,
+	impl: (...args: Args) => Return,
 	options?: {
-		/** Overwrite an existing method with the same name. Default: false */
 		overwrite?: boolean;
-		/** Property enumerability. Default: false */
 		enumerable?: boolean;
-		/** Property configurability. Default: false */
 		configurable?: boolean;
-		/** Property writability. Default: true */
 		writable?: boolean;
 	}
 ): void {
-	const proto = String.prototype;
 	const alreadyExists = Object.prototype.hasOwnProperty.call(proto, name);
 
 	if (alreadyExists && !options?.overwrite) return;
 
 	Object.defineProperty(proto, name, {
-		value: function (this: string, ...args: Args) {
-			// Ensure to operate on the primitive string value
-			const s = this != null ? this.toString() : '';
-			return impl.call(s, ...args);
+		value: function (this: Proto, ...args: Args) {
+			return impl.apply(this, args);
 		},
 		enumerable: options?.enumerable ?? false,
 		configurable: options?.configurable ?? false,
@@ -50,18 +48,30 @@ function defineStringMethod<Args extends unknown[], Return>(
  * Import this file once at app startup.
  */
 export function registerStringMethods(): void {
-	defineStringMethod(
+	defineMethod(
+		String.prototype,
 		'convertCase',
-		function (this: string, format: CaseFormat, options?: StringCaseOptions) {
+		function (this: String, format: CaseFormat, options?: StringCaseOptions) {
 			return convertStringCase(this.toString(), format, options);
 		}
 	);
 
-	defineStringMethod('capitalize', function (this: string, options?: CapitalizeOptions) {
-		return capitalizeString(this.toString(), options);
-	});
+	defineMethod(
+		String.prototype,
+		'capitalize',
+		function (this: String, options?: CapitalizeOptions) {
+			return capitalizeString(this.toString(), options);
+		}
+	);
 
-	// Add more methods with defineStringMethod('methodName', impl)
+	// Add more methods with defineMethod('methodName', impl)
+}
+
+export function defineNumberMethods(): void {
+	// Number example
+	defineMethod(Number.prototype, 'double', function (this: Number) {
+		return this.valueOf() * 2;
+	});
 }
 
 // ! Manual Way

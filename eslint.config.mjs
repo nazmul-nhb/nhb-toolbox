@@ -91,6 +91,10 @@ export default [
 		rules: { '@typescript-eslint/no-require-imports': 'off' },
 	},
 	{
+		files: ['**/*.extensions.ts'],
+		rules: { '@typescript-eslint/no-wrapper-object-types': 'off' },
+	},
+	{
 		files: ['**/*plugins.ts', '**/plugins/*.ts'],
 		rules: { '@typescript-eslint/consistent-type-imports': 'off' },
 	},
