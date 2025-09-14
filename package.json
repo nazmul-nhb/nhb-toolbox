@@ -173,6 +173,10 @@
       "types": "./dist/dts/utils/types.d.ts",
       "default": "./dist/dts/utils/types.d.ts"
     },
+    "./verbalizer/types": {
+      "types": "./dist/dts/verbalizer/types.d.ts",
+      "default": "./dist/dts/verbalizer/types.d.ts"
+    },
     "./plugins/businessPlugin": {
       "types": "./dist/dts/date/plugins/businessPlugin.d.ts",
       "import": "./dist/esm/date/plugins/businessPlugin.js",
@@ -254,6 +258,9 @@
       ],
       "utils/types": [
         "dist/dts/utils/types.d.ts"
+      ],
+      "verbalizer/types": [
+        "dist/dts/verbalizer/types.d.ts"
       ],
       "plugins/businessPlugin": [
         "dist/dts/date/plugins/businessPlugin.d.ts"
