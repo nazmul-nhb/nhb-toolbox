@@ -1,6 +1,6 @@
 // @ts-check
 
-// https://www.gingersoftware.com/content/grammar-rules/verbs/list-of-irregular-verbs
+// ? https://www.gingersoftware.com/content/grammar-rules/verbs/list-of-irregular-verbs
 
 function loadVerbs() {
 	const body = document.querySelector('tbody');

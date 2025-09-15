@@ -153,6 +153,7 @@ export const irregularVerbs: Readonly<Array<[string, string, string]>> =
 export const pastRules: readonly VerbRule[] = /* @__PURE__ */ Object.freeze([
 	[/([aeiou])y$/i, '$1yed'], // play → played, stay → stayed
 	[/e$/i, 'ed'], // bake → baked
+	[/([aeiou])lf$/i, '$1lved'],
 	[/([^aeiou])y$/i, '$1ied'], // study → studied, mummify → mummified
 	[/([^aeiou])([aeiou])([^aeiou])$/i, '$1$2$3$3ed'], // stop → stopped
 	[/$/i, 'ed'], // walk → walked
@@ -162,7 +163,17 @@ export const pastRules: readonly VerbRule[] = /* @__PURE__ */ Object.freeze([
 export const pastParticipleRules: readonly VerbRule[] = /* @__PURE__ */ Object.freeze([
 	[/([aeiou])y$/i, '$1yed'], // play → played
 	[/e$/i, 'ed'], // bake → baked
+	[/([aeiou])lf$/i, '$1lved'],
 	[/([^aeiou])y$/i, '$1ied'], // study → studied, mummify → mummified
 	[/([^aeiou])([aeiou])([^aeiou])$/i, '$1$2$3$3ed'], // stop → stopped
 	[/$/i, 'ed'], // walk → walked
+]);
+
+/** Base form recovery rules (reverse of pastRules) */
+export const baseRules: readonly VerbRule[] = Object.freeze([
+	[/([aeiou])yed$/i, '$1y'], // played → play
+	[/ied$/i, 'y'], // studied → study
+	[/([aeiou])lved$/i, '$1lf'], // shelved → shelf
+	[/([bcdfghjklmnpqrstvwxyz])\1ed$/i, '$1'], // stopped → stop
+	[/ed$/i, ''], // walked → walk, baked → bake
 ]);

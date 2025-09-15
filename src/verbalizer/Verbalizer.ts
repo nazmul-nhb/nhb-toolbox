@@ -1,5 +1,5 @@
 import { isNonEmptyString } from '../guards/primitives';
-import { irregularVerbs, pastParticipleRules, pastRules } from './rules';
+import { baseRules, irregularVerbs, pastParticipleRules, pastRules } from './rules';
 import type { IrregularVerbMap, VerbRule } from './types';
 
 /**
@@ -19,8 +19,9 @@ import type { IrregularVerbMap, VerbRule } from './types';
  * verbalizer.toBase('went'); // "go"
  */
 export class Verbalizer {
+	readonly #baseRules: VerbRule[] = [];
 	readonly #pastRules: VerbRule[] = [];
-	readonly #pastParticipleRules: VerbRule[] = [];
+	readonly #participleRules: VerbRule[] = [];
 	readonly #irregularVerbs: IrregularVerbMap = {};
 
 	/**
@@ -37,6 +38,11 @@ export class Verbalizer {
 			this.addIrregular(base, past, pastParticiple);
 		});
 
+		// Load base reverse rules
+		baseRules.forEach(([rule, replacement]) => {
+			this.addBaseRule(rule, replacement);
+		});
+
 		// Load past tense rules
 		pastRules.forEach(([rule, replacement]) => {
 			this.addPastRule(rule, replacement);
@@ -44,7 +50,7 @@ export class Verbalizer {
 
 		// Load past participle rules
 		pastParticipleRules.forEach(([rule, replacement]) => {
-			this.addPastParticipleRule(rule, replacement);
+			this.addParticipleRule(rule, replacement);
 		});
 	}
 
@@ -89,6 +95,17 @@ export class Verbalizer {
 	}
 
 	/**
+	 * Add a new base tense conjugation rule.
+	 * @param rule Pattern to match past/participle form of verbs.
+	 * @param replacement Replacement pattern for base tense form.
+	 * @example
+	 * verbalizer.addBaseRule(/ied$/i, 'y');
+	 */
+	addBaseRule(rule: RegExp, replacement: string): void {
+		this.#baseRules.push([rule, replacement]);
+	}
+
+	/**
 	 * Add a new past tense conjugation rule.
 	 * @param rule Pattern to match base verbs.
 	 * @param replacement Replacement pattern for past tense form.
@@ -104,10 +121,10 @@ export class Verbalizer {
 	 * @param rule Pattern to match base verbs.
 	 * @param replacement Replacement pattern for past participle form.
 	 * @example
-	 * verbalizer.addPastParticipleRule(/e$/i, 'ed');
+	 * verbalizer.addParticipleRule(/e$/i, 'ed');
 	 */
-	addPastParticipleRule(rule: RegExp, replacement: string): void {
-		this.#pastParticipleRules.push([rule, replacement]);
+	addParticipleRule(rule: RegExp, replacement: string): void {
+		this.#participleRules.push([rule, replacement]);
 	}
 
 	/**
@@ -171,7 +188,7 @@ export class Verbalizer {
 			return this.#restoreCase(verb, this.#irregularVerbs[lower].participle);
 		}
 
-		return this.#restoreCase(verb, this.#applyRules(lower, this.#pastParticipleRules));
+		return this.#restoreCase(verb, this.#applyRules(lower, this.#participleRules));
 	}
 
 	/**
@@ -191,29 +208,8 @@ export class Verbalizer {
 			return this.#restoreCase(verb, this.#irregularVerbs[lower].base);
 		}
 
-		// Try reversing past tense rules
-		let result = this.#applyRules(
-			lower,
-			this.#pastRules.map(([rule, replacement]) => {
-				const reversedRule = new RegExp(replacement.replace('$1', '(\\w+)'));
-				const reversedReplacement = rule.source.replace('$', '');
-				return [reversedRule, reversedReplacement];
-			})
-		);
-
-		// If no change, try reversing past participle rules
-		if (result === lower) {
-			result = this.#applyRules(
-				lower,
-				this.#pastParticipleRules.map(([rule, replacement]) => {
-					const reversedRule = new RegExp(replacement.replace('$1', '(\\w+)'));
-					const reversedReplacement = rule.source.replace('$', '');
-					return [reversedRule, reversedReplacement];
-				})
-			);
-		}
-
-		return this.#restoreCase(verb, result);
+		// Use base reverse rules if not irregular verb
+		return this.#restoreCase(verb, this.#applyRules(lower, this.#baseRules));
 	}
 
 	/**

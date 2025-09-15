@@ -14,15 +14,17 @@ export const irregularRules: readonly [string, string][] = /* @__PURE__ */ Objec
 	['herself', 'themselves'],
 	['himself', 'themselves'],
 	['themself', 'themselves'],
-	['is', 'are'],
-	['was', 'were'],
-	['has', 'have'],
 	['this', 'these'],
 	['that', 'those'],
 	['my', 'our'],
 	['its', 'their'],
 	['his', 'their'],
 	['her', 'their'],
+
+	// Verbs
+	['is', 'are'],
+	['was', 'were'],
+	['has', 'have'],
 
 	// Common irregulars
 	['analysis', 'analyses'],
