@@ -211,7 +211,7 @@ export class Pluralizer {
 	toPlural(word: string): string {
 		if (!isNonEmptyString(word)) return '';
 
-		const lower = word.toLowerCase();
+		const lower = word?.trim()?.toLowerCase();
 
 		if (this.#isUncountable(word)) return word;
 
@@ -232,7 +232,7 @@ export class Pluralizer {
 	toSingular(word: string): string {
 		if (!isNonEmptyString(word)) return '';
 
-		const lower = word.toLowerCase();
+		const lower = word?.trim()?.toLowerCase();
 
 		if (this.#isUncountable(word)) return word;
 
@@ -254,7 +254,7 @@ export class Pluralizer {
 	 */
 	isPlural(word: string): boolean {
 		if (!isNonEmptyString(word)) return false;
-		const lower = word.toLowerCase();
+		const lower = word?.trim()?.toLowerCase();
 
 		// if uncountable return true
 		if (this.#isUncountable(lower)) return true;
@@ -277,7 +277,7 @@ export class Pluralizer {
 	 */
 	isSingular(word: string): boolean {
 		if (!isNonEmptyString(word)) return false;
-		const lower = word.toLowerCase();
+		const lower = word?.trim()?.toLowerCase();
 
 		// if uncountable return true
 		if (this.#isUncountable(lower)) return true;

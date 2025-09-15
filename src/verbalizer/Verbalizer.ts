@@ -162,7 +162,7 @@ export class Verbalizer {
 	toPast(verb: string): string {
 		if (!isNonEmptyString(verb)) return '';
 
-		const lower = verb.toLowerCase();
+		const lower = verb?.trim()?.toLowerCase();
 
 		if (this.#irregularVerbs[lower]?.past) {
 			return this.#restoreCase(verb, this.#irregularVerbs[lower].past);
@@ -182,7 +182,7 @@ export class Verbalizer {
 	toParticiple(verb: string): string {
 		if (!isNonEmptyString(verb)) return '';
 
-		const lower = verb.toLowerCase();
+		const lower = verb?.trim()?.toLowerCase();
 
 		if (this.#irregularVerbs[lower]?.participle) {
 			return this.#restoreCase(verb, this.#irregularVerbs[lower].participle);
@@ -202,7 +202,7 @@ export class Verbalizer {
 	toBase(verb: string): string {
 		if (!isNonEmptyString(verb)) return '';
 
-		const lower = verb.toLowerCase();
+		const lower = verb?.trim()?.toLowerCase();
 
 		if (this.#irregularVerbs[lower]?.base) {
 			return this.#restoreCase(verb, this.#irregularVerbs[lower].base);
@@ -223,7 +223,7 @@ export class Verbalizer {
 	isPast(verb: string): boolean {
 		if (!isNonEmptyString(verb)) return false;
 
-		const lower = verb.toLowerCase();
+		const lower = verb?.trim()?.toLowerCase();
 
 		return (
 			this.#irregularVerbs[lower]?.past === lower ||
@@ -233,16 +233,16 @@ export class Verbalizer {
 
 	/**
 	 * Check if a given verb is in its past participle form.
-	 * @param word Verb to check.
+	 * @param verb Verb to check.
 	 * @returns True if the verb is in past participle form, otherwise false.
 	 * @example
 	 * verbalizer.isPastParticiple('gone'); // true
 	 * verbalizer.isPastParticiple('go'); // false
 	 */
-	isPastParticiple(word: string): boolean {
-		if (!isNonEmptyString(word)) return false;
+	isPastParticiple(verb: string): boolean {
+		if (!isNonEmptyString(verb)) return false;
 
-		const lower = word.toLowerCase();
+		const lower = verb?.trim()?.toLowerCase();
 
 		return (
 			this.#irregularVerbs[lower]?.participle === lower ||
@@ -252,16 +252,16 @@ export class Verbalizer {
 
 	/**
 	 * Check if a given verb is in its base form.
-	 * @param word Verb to check.
+	 * @param verb Verb to check.
 	 * @returns True if the verb is in base form, otherwise false.
 	 * @example
 	 * verbalizer.isBase('run'); // true
 	 * verbalizer.isBase('ran'); // false
 	 */
-	isBase(word: string): boolean {
-		if (!isNonEmptyString(word)) return false;
+	isBase(verb: string): boolean {
+		if (!isNonEmptyString(verb)) return false;
 
-		const lower = word.toLowerCase();
+		const lower = verb?.trim()?.toLowerCase();
 
 		return this.#irregularVerbs[lower]?.base === lower || this.toBase(lower) === lower;
 	}
