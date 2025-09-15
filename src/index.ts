@@ -62,6 +62,9 @@ export {
 // ! Pluralizer Class and Its Default Instance
 export { Pluralizer, pluralizer } from './pluralize/Pluralizer';
 
+// ! Verbalizer Class and Its Default instance
+export { Verbalizer, verbalizer } from './verbalizer/Verbalizer';
+
 // ! Number Utilities
 export {
 	getAverage as calculateAverage,

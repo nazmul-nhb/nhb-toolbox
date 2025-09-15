@@ -25,8 +25,8 @@ export class Verbalizer {
 	readonly #irregularVerbs: IrregularVerbMap = {};
 
 	/**
-	 * Initializes the Verbalizer with default rules and irregular verbs.
-	 * Automatically loads irregular verbs and conjugation rules for past and past participle forms.
+	 * Initializes `Verbalizer` with default rules and irregular verbs.
+	 * Automatically loads irregular verbs and conjugation rules for base, past and past participle forms.
 	 */
 	constructor() {
 		this.#loadRules();
@@ -97,7 +97,7 @@ export class Verbalizer {
 	}
 
 	/**
-	 * Add a new base tense conjugation rule.
+	 * * Add a new base tense conjugation rule.
 	 * @param rule Pattern to match past/participle form of verbs.
 	 * @param replacement Replacement pattern for base tense form.
 	 * @example
@@ -108,7 +108,7 @@ export class Verbalizer {
 	}
 
 	/**
-	 * Add a new past tense conjugation rule.
+	 * * Add a new past tense conjugation rule.
 	 * @param rule Pattern to match base verbs.
 	 * @param replacement Replacement pattern for past tense form.
 	 * @example
@@ -119,7 +119,7 @@ export class Verbalizer {
 	}
 
 	/**
-	 * Add a new past participle conjugation rule.
+	 * * Add a new past participle conjugation rule.
 	 * @param rule Pattern to match base verbs.
 	 * @param replacement Replacement pattern for past participle form.
 	 * @example
@@ -130,7 +130,7 @@ export class Verbalizer {
 	}
 
 	/**
-	 * Add a custom irregular verb.
+	 * * Add a custom irregular verb.
 	 * @param base Base form of the verb.
 	 * @param past Past tense form.
 	 * @param participle Past participle form.
@@ -154,7 +154,7 @@ export class Verbalizer {
 	}
 
 	/**
-	 * Convert a verb to its past tense form.
+	 * * Convert a verb to its past tense form.
 	 * @param verb Base form of the verb.
 	 * @returns Past tense form of the verb.
 	 * @example
@@ -174,7 +174,7 @@ export class Verbalizer {
 	}
 
 	/**
-	 * Convert a verb to its past participle form.
+	 * * Convert a verb to its past participle form.
 	 * @param verb Base form of the verb.
 	 * @returns Past participle form of the verb.
 	 * @example
@@ -194,7 +194,7 @@ export class Verbalizer {
 	}
 
 	/**
-	 * Convert a verb to its base form.
+	 * * Convert a verb to its base form.
 	 * @param verb Past or past participle form of the verb.
 	 * @returns Base form of the verb.
 	 * @example
@@ -215,7 +215,7 @@ export class Verbalizer {
 	}
 
 	/**
-	 * Check if a given verb is in its past tense form.
+	 * * Check if a given verb is in its past tense form.
 	 * @param verb Verb to check.
 	 * @returns True if the verb is in past tense, otherwise false.
 	 * @example
@@ -234,7 +234,7 @@ export class Verbalizer {
 	}
 
 	/**
-	 * Check if a given verb is in its past participle form.
+	 * * Check if a given verb is in its past participle form.
 	 * @param verb Verb to check.
 	 * @returns True if the verb is in past participle form, otherwise false.
 	 * @example
@@ -253,7 +253,7 @@ export class Verbalizer {
 	}
 
 	/**
-	 * Check if a given verb is in its base form.
+	 * * Check if a given verb is in its base form.
 	 * @param verb Verb to check.
 	 * @returns True if the verb is in base form, otherwise false.
 	 * @example
@@ -270,7 +270,7 @@ export class Verbalizer {
 }
 
 /**
- * Default shared instance of `Verbalizer`.
+ * * Default shared instance of `Verbalizer`.
  *
  * - Use this when you don’t need multiple configurations.
  * - It comes preloaded with standard conjugation rules and irregular verbs.
