@@ -33,28 +33,30 @@ export class Verbalizer {
 	}
 
 	#loadRules(): void {
-		// Load irregular verbs
+		// ! Load irregular verbs
 		irregularVerbs.forEach(([base, past, pastParticiple]) => {
 			this.addIrregular(base, past, pastParticiple);
 		});
 
-		// Load base reverse rules
+		// ! Load base reverse rules
 		baseRules.forEach(([rule, replacement]) => {
 			this.addBaseRule(rule, replacement);
 		});
 
-		// Load past tense rules
+		// ! Load past tense rules
 		pastRules.forEach(([rule, replacement]) => {
 			this.addPastRule(rule, replacement);
 		});
 
-		// Load past participle rules
+		// ! Load past participle rules
 		pastParticipleRules.forEach(([rule, replacement]) => {
 			this.addParticipleRule(rule, replacement);
 		});
 	}
 
 	#restoreCase(original: string, transformed: string): string {
+		original = original?.trim();
+
 		if (original === transformed) return transformed;
 		if (original === original.toLowerCase()) return transformed.toLowerCase();
 		if (original === original.toUpperCase()) return transformed.toUpperCase();

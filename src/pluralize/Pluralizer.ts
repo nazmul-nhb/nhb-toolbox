@@ -62,6 +62,8 @@ export class Pluralizer {
 	}
 
 	#restoreCase(original: string, transformed: string): string {
+		original = original?.trim();
+
 		// Exact match
 		if (original === transformed) return transformed;
 
