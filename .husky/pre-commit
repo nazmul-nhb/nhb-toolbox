@@ -7,3 +7,4 @@ elif [ -f "bun.lockb" ]; then
 else
   npx lint-staged
 fi
+# can be modified as per need

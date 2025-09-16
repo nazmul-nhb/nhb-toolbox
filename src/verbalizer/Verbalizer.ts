@@ -190,7 +190,7 @@ export class Verbalizer {
 			return this.#restoreCase(verb, irregularEntry.past);
 		}
 
-		return this.#restoreCase(verb, this.#applyRules(lower, this.#pastRules));
+		return this.#restoreCase(verb, this.#applyRules(this.toBase(lower), this.#pastRules));
 	}
 
 	/**
@@ -212,7 +212,10 @@ export class Verbalizer {
 			return this.#restoreCase(verb, irregularEntry.participle);
 		}
 
-		return this.#restoreCase(verb, this.#applyRules(lower, this.#participleRules));
+		return this.#restoreCase(
+			verb,
+			this.#applyRules(this.toBase(lower), this.#participleRules)
+		);
 	}
 
 	/**
