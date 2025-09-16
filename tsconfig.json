@@ -23,7 +23,6 @@
 		"forceConsistentCasingInFileNames": true,
 		"allowJs": true,
 		"checkJs": true,
-		"removeComments": false,
 		"preserveWatchOutput": true
 	},
 	"include": ["src/**/*.ts", "src/**/*.d.ts"],

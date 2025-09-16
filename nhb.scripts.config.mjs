@@ -20,7 +20,10 @@ export default defineScriptConfig({
 			{
 				cmd: 'tsc',
 				args: ['-p', 'tsconfig.esm.json'],
-				options: { stdio: 'inherit' },
+			},
+			{
+				cmd: 'tsc',
+				args: ['-p', 'tsconfig.dts.json'],
 			},
 		],
 		after: [
