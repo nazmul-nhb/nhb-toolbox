@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.30] - 2025-09-17
+
+- **Reduced** _unpacked size_ by **removing** _tsdoc comments_ from js (both `cjs` and `esm`) outputs.
+- **Updated** tsdoc for `Verbalizer/verbalizer`: **added** reference to documentation site.
+
 ## [4.20.27] - 2025-09-16
 
 - **Fixed** _issues_: (**failed to convert already past/participle regular verbs**) with `toPast()` and `toParticiple()` methods in `Verbalizer/verbalizer`.

@@ -12,6 +12,9 @@ import type { IrregularEntry, VerbRule } from './types';
  * - Preserves case sensitivity of input verbs.
  * - This class is useful for natural language processing tasks, such as chatbots, text analysis, or content generation systems requiring accurate verb conjugation.
  *
+ * @remarks
+ * For ready to use instance, please refer to {@link https://toolbox.nazmul-nhb.dev/docs/utilities/string/verbalizer verbalizer} instead.
+ *
  * @example
  * const verbalizer = new Verbalizer();
  * verbalizer.toPast('run'); // "ran"
@@ -291,10 +294,11 @@ export class Verbalizer {
 }
 
 /**
- * * Default shared instance of `Verbalizer`.
+ * Default shared instance of {@link https://toolbox.nazmul-nhb.dev/docs/classes/Verbalizer Verbalizer}.
  *
  * - Use this when you don’t need multiple configurations.
  * - It comes preloaded with standard conjugation rules and irregular verbs.
+ * -
  *
  * @example
  * import { verbalizer } from 'nhb-toolbox';
