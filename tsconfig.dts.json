@@ -1,10 +1,10 @@
 {
 	"extends": "./tsconfig.json",
 	"compilerOptions": {
-		"removeComments": false,
+		"declaration": true,
 		"outDir": "./dist/dts",
-		"declarationDir": "./dist/dts",
+		"removeComments": false,
 		"emitDeclarationOnly": true,
-		"declaration": true
+		"declarationDir": "./dist/dts"
 	}
 }
