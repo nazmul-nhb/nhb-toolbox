@@ -61,6 +61,7 @@ export class Pluralizer {
 		});
 	}
 
+	/** Restore case order(s) */
 	#restoreCase(original: string, transformed: string): string {
 		original = original?.trim();
 
@@ -77,7 +78,7 @@ export class Pluralizer {
 			return transformed.toUpperCase();
 		}
 
-		// Title case (first letter uppercase, rest lowercase)
+		// Sentence case (first letter uppercase, rest lowercase)
 		if (
 			original[0] === original[0].toUpperCase() &&
 			original.slice(1) === original.slice(1).toLowerCase()
@@ -102,7 +103,8 @@ export class Pluralizer {
 		return result;
 	}
 
-	#sanitizeWord(word: string, rules: PluralizeRule[]): string {
+	/** Apply corresponding rules */
+	#applyRules(word: string, rules: PluralizeRule[]): string {
 		if (!isNonEmptyString(word)) return '';
 
 		if (this.#isUncountable(word)) {
@@ -121,18 +123,17 @@ export class Pluralizer {
 
 	/**
 	 * Check if a word is uncountable.
-	 * Supports both string and RegExp entries.
+	 * Supports both `string` and `RegExp` entries.
 	 */
 	#isUncountable(word: string): boolean {
-		const lower = word?.toLowerCase();
-
 		for (const entry of this.#uncountables) {
 			if (typeof entry === 'string') {
-				if (entry === lower) return true;
+				if (entry.toLowerCase() === word) return true;
 			} else {
-				if (entry.test(word)) return true;
+				if (entry?.test(word)) return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -215,13 +216,13 @@ export class Pluralizer {
 
 		const lower = word?.trim()?.toLowerCase();
 
-		if (this.#isUncountable(word)) return word;
+		if (this.#isUncountable(lower)) return word;
 
 		if (this.#irregularSingles[lower]) {
 			return this.#restoreCase(word, this.#irregularSingles[lower]);
 		}
 
-		return this.#restoreCase(word, this.#sanitizeWord(lower, this.#pluralRules));
+		return this.#restoreCase(word, this.#applyRules(lower, this.#pluralRules));
 	}
 
 	/**
@@ -236,13 +237,13 @@ export class Pluralizer {
 
 		const lower = word?.trim()?.toLowerCase();
 
-		if (this.#isUncountable(word)) return word;
+		if (this.#isUncountable(lower)) return word;
 
 		if (this.#irregularPlurals[lower]) {
 			return this.#restoreCase(word, this.#irregularPlurals[lower]);
 		}
 
-		return this.#restoreCase(word, this.#sanitizeWord(lower, this.#singularRules));
+		return this.#restoreCase(word, this.#applyRules(lower, this.#singularRules));
 	}
 
 	/**

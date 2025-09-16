@@ -6,10 +6,14 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.26] - 2025-09-16
+
+- **Optimized** _internal logic_ in both `Pluralizer` and `Verbalizer`.
+
 ## [4.20.24] - 2025-09-15
 
 - **Added** new class `Verbalizer` and its shared instance `verbalizer` for verb form(s) manipulation.
-- **Updated** `Pluralizer/pluralizer`'s internal mechanism to _trim_ input(s) and output(s).
+- **Updated** `Pluralizer/pluralizer`'s _internal mechanism_ to _trim_ input(s) and output(s).
 
 ## [4.20.20] - 2025-09-04
 

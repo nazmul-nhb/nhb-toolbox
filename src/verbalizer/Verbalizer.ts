@@ -1,6 +1,6 @@
 import { isNonEmptyString } from '../guards/primitives';
 import { baseRules, irregularVerbs, pastParticipleRules, pastRules } from './rules';
-import type { IrregularVerbMap, VerbRule } from './types';
+import type { IrregularEntry, VerbRule } from './types';
 
 /**
  * * Handles English verb conjugation between base, past tense, and past participle forms.
@@ -22,7 +22,8 @@ export class Verbalizer {
 	readonly #baseRules: VerbRule[] = [];
 	readonly #pastRules: VerbRule[] = [];
 	readonly #participleRules: VerbRule[] = [];
-	readonly #irregularVerbs: IrregularVerbMap = {};
+	readonly #irregularVerbs: Record<string, IrregularEntry> = {};
+	readonly #reverseIrregular: Record<string, string> = {};
 
 	/**
 	 * Initializes `Verbalizer` with default rules and irregular verbs.
@@ -54,12 +55,20 @@ export class Verbalizer {
 		});
 	}
 
+	/** Restore case order(s) */
 	#restoreCase(original: string, transformed: string): string {
 		original = original?.trim();
 
+		// Exact match
 		if (original === transformed) return transformed;
+
+		// Entire original is lowercase
 		if (original === original.toLowerCase()) return transformed.toLowerCase();
+
+		// Entire original is uppercase
 		if (original === original.toUpperCase()) return transformed.toUpperCase();
+
+		// Title case (first letter uppercase, rest lowercase)
 		if (
 			original[0] === original[0].toUpperCase() &&
 			original.slice(1) === original.slice(1).toLowerCase()
@@ -67,6 +76,7 @@ export class Verbalizer {
 			return transformed.charAt(0).toUpperCase() + transformed.slice(1).toLowerCase();
 		}
 
+		// Mixed case: per-character casing
 		let result = '';
 		for (let i = 0; i < transformed.length; i++) {
 			const origChar = original[i];
@@ -83,6 +93,7 @@ export class Verbalizer {
 		return result;
 	}
 
+	/** Apply corresponding rules */
 	#applyRules(verb: string, rules: VerbRule[]): string {
 		if (!isNonEmptyString(verb)) return '';
 
@@ -94,6 +105,13 @@ export class Verbalizer {
 		}
 
 		return verb;
+	}
+
+	/** Find irregular verb entry */
+	#findIrregularEntry(verb: string) {
+		const base = this.#irregularVerbs[verb] ? verb : this.#reverseIrregular[verb];
+
+		return base ? this.#irregularVerbs[base] : undefined;
 	}
 
 	/**
@@ -143,14 +161,14 @@ export class Verbalizer {
 		const participleLower = participle?.toLowerCase();
 
 		this.#irregularVerbs[baseLower] = {
+			base: baseLower,
 			past: pastLower,
 			participle: participleLower,
 		};
-		this.#irregularVerbs[pastLower] = {
-			base: baseLower,
-			participle: participleLower,
-		};
-		this.#irregularVerbs[participleLower] = { base: baseLower, past: pastLower };
+
+		// reverse map
+		this.#reverseIrregular[pastLower] = baseLower;
+		this.#reverseIrregular[participleLower] = baseLower;
 	}
 
 	/**
@@ -166,8 +184,10 @@ export class Verbalizer {
 
 		const lower = verb?.trim()?.toLowerCase();
 
-		if (this.#irregularVerbs[lower]?.past) {
-			return this.#restoreCase(verb, this.#irregularVerbs[lower].past);
+		const irregularEntry = this.#findIrregularEntry(lower);
+
+		if (irregularEntry) {
+			return this.#restoreCase(verb, irregularEntry.past);
 		}
 
 		return this.#restoreCase(verb, this.#applyRules(lower, this.#pastRules));
@@ -186,8 +206,10 @@ export class Verbalizer {
 
 		const lower = verb?.trim()?.toLowerCase();
 
-		if (this.#irregularVerbs[lower]?.participle) {
-			return this.#restoreCase(verb, this.#irregularVerbs[lower].participle);
+		const irregularEntry = this.#findIrregularEntry(lower);
+
+		if (irregularEntry) {
+			return this.#restoreCase(verb, irregularEntry.participle);
 		}
 
 		return this.#restoreCase(verb, this.#applyRules(lower, this.#participleRules));
@@ -206,8 +228,10 @@ export class Verbalizer {
 
 		const lower = verb?.trim()?.toLowerCase();
 
-		if (this.#irregularVerbs[lower]?.base) {
-			return this.#restoreCase(verb, this.#irregularVerbs[lower].base);
+		const irregularEntry = this.#findIrregularEntry(lower);
+
+		if (irregularEntry) {
+			return this.#restoreCase(verb, irregularEntry.base);
 		}
 
 		// Use base reverse rules if not irregular verb
@@ -227,10 +251,7 @@ export class Verbalizer {
 
 		const lower = verb?.trim()?.toLowerCase();
 
-		return (
-			this.#irregularVerbs[lower]?.past === lower ||
-			this.toPast(this.toBase(lower)) === lower
-		);
+		return this.toPast(lower) === lower;
 	}
 
 	/**
@@ -246,10 +267,7 @@ export class Verbalizer {
 
 		const lower = verb?.trim()?.toLowerCase();
 
-		return (
-			this.#irregularVerbs[lower]?.participle === lower ||
-			this.toParticiple(this.toBase(lower)) === lower
-		);
+		return this.toParticiple(lower) === lower;
 	}
 
 	/**
@@ -265,7 +283,7 @@ export class Verbalizer {
 
 		const lower = verb?.trim()?.toLowerCase();
 
-		return this.#irregularVerbs[lower]?.base === lower || this.toBase(lower) === lower;
+		return this.toBase(lower) === lower;
 	}
 }
 
