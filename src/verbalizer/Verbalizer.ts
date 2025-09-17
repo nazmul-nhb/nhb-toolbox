@@ -16,10 +16,10 @@ import type { IrregularEntry, VerbRule } from './types';
  * For ready to use instance, please refer to {@link https://toolbox.nazmul-nhb.dev/docs/utilities/string/verbalizer verbalizer} instead.
  *
  * @example
- * const verbalizer = new Verbalizer();
- * verbalizer.toPast('run'); // "ran"
- * verbalizer.toParticiple('go'); // "gone"
- * verbalizer.toBase('went'); // "go"
+ * const myVerbalizer = new Verbalizer();
+ * myVerbalizer.toPast('run'); // "ran"
+ * myVerbalizer.toParticiple('go'); // "gone"
+ * myVerbalizer.toBase('went'); // "go"
  */
 export class Verbalizer {
 	readonly #baseRules: VerbRule[] = [];
@@ -71,7 +71,7 @@ export class Verbalizer {
 		// Entire original is uppercase
 		if (original === original.toUpperCase()) return transformed.toUpperCase();
 
-		// Title case (first letter uppercase, rest lowercase)
+		// Sentence case (first letter uppercase, rest lowercase)
 		if (
 			original[0] === original[0].toUpperCase() &&
 			original.slice(1) === original.slice(1).toLowerCase()
@@ -81,8 +81,10 @@ export class Verbalizer {
 
 		// Mixed case: per-character casing
 		let result = '';
+
 		for (let i = 0; i < transformed.length; i++) {
 			const origChar = original[i];
+
 			if (
 				origChar &&
 				origChar === origChar.toUpperCase() &&
@@ -93,6 +95,7 @@ export class Verbalizer {
 				result += transformed[i].toLowerCase();
 			}
 		}
+
 		return result;
 	}
 
@@ -265,10 +268,10 @@ export class Verbalizer {
 	 * @param verb Verb to check.
 	 * @returns True if the verb is in past participle form, otherwise false.
 	 * @example
-	 * verbalizer.isPastParticiple('gone'); // true
-	 * verbalizer.isPastParticiple('go'); // false
+	 * verbalizer.isParticiple('gone'); // true
+	 * verbalizer.isParticiple('go'); // false
 	 */
-	isPastParticiple(verb: string): boolean {
+	isParticiple(verb: string): boolean {
 		if (!isNonEmptyString(verb)) return false;
 
 		const lower = verb?.trim()?.toLowerCase();
