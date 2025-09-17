@@ -46,13 +46,13 @@ export type NonNullishPrimitiveKey<T> = {
 export type FalsyPrimitive = false | 0 | '' | null | undefined;
 
 /** A generic class constructor */
-export type Constructor = new (...args: any[]) => unknown;
+export type Constructor = new (...args: any) => any;
 
 /** Generic function type */
-export type GenericFn = (...args: unknown[]) => unknown;
+export type GenericFn = (...args: any) => any;
 
 /** Generic function type that returns `void` */
-export type VoidFunction = (...args: any[]) => void;
+export type VoidFunction = (...args: any) => void;
 
 /** Debounced function type after certain delay */
 export type DelayedFn<T extends VoidFunction> = (...args: Parameters<T>) => void;
@@ -61,7 +61,7 @@ export type DelayedFn<T extends VoidFunction> = (...args: Parameters<T>) => void
 export type ThrottledFn<T extends VoidFunction> = (...args: Parameters<T>) => void;
 
 /** Asynchronous function type */
-export type AsyncFunction<T> = (...args: unknown[]) => Promise<T>;
+export type AsyncFunction<T> = (...args: any) => Promise<T>;
 
 /** Advanced types to exclude from counting as object key */
 export type AdvancedTypes =
