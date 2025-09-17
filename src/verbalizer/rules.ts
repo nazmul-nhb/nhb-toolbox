@@ -15,9 +15,6 @@ export const irregularVerbs: Readonly<Array<[string, string, string]>> =
 		['will', 'would', ''],
 		['shall', 'should', ''],
 
-		// ['spell', 'spelt', 'spelt'],
-		// ['spill', 'spilt', 'spilt'],
-
 		['arise', 'arose', 'arisen'],
 		['awake', 'awoke', 'awoken'],
 		['bear', 'bore', 'born'],
@@ -86,7 +83,6 @@ export const irregularVerbs: Readonly<Array<[string, string, string]>> =
 		['leave', 'left', 'left'],
 		['lend', 'lent', 'lent'],
 		['lie', 'lay', 'lain'],
-		['lie', 'lied', 'lied'],
 		['light', 'lit', 'lit'],
 		['lose', 'lost', 'lost'],
 		['make', 'made', 'made'],
@@ -159,6 +155,7 @@ export const pastRules: readonly VerbRule[] = /* @__PURE__ */ Object.freeze([
 	[/e$/i, 'ed'], // bake → baked
 	[/([aeiou])lf$/i, '$1lved'],
 	[/([^aeiou])y$/i, '$1ied'], // study → studied, mummify → mummified
+	[/([^aeiou])ic$/i, '$1icked'],
 	[/([^aeiou])([aeiou])([^aeiou])$/i, '$1$2$3$3ed'], // stop → stopped
 	[/$/i, 'ed'], // walk → walked
 ]);
@@ -169,6 +166,7 @@ export const pastParticipleRules: readonly VerbRule[] = /* @__PURE__ */ Object.f
 	[/e$/i, 'ed'], // bake → baked
 	[/([aeiou])lf$/i, '$1lved'],
 	[/([^aeiou])y$/i, '$1ied'], // study → studied, mummify → mummified
+	[/([^aeiou])ic$/i, '$1icked'],
 	[/([^aeiou])([aeiou])([^aeiou])$/i, '$1$2$3$3ed'], // stop → stopped
 	[/$/i, 'ed'], // walk → walked
 ]);
@@ -176,8 +174,14 @@ export const pastParticipleRules: readonly VerbRule[] = /* @__PURE__ */ Object.f
 /** Base form recovery rules (reverse of pastRules) */
 export const baseRules: readonly VerbRule[] = Object.freeze([
 	[/([aeiou])yed$/i, '$1y'], // played → play
+	[/^([^aeiouwy])ied$/i, '$1ie'],
 	[/ied$/i, 'y'], // studied → study
 	[/([aeiou])lved$/i, '$1lf'], // shelved → shelf
+	[/([^aeiou])icked$/i, '$1ic'],
 	[/([bcdfghjklmnpqrstvwxyz])\1ed$/i, '$1'], // stopped → stop
-	[/ed$/i, ''], // walked → walk, baked → bake
+	[/([aeiou])ked$/i, '$1ke'], // baked → bake
+	[/ined$/i, 'ine'], // mined → mine
+	[/eted$/i, 'ete'], // deleted → delete
+	[/gued$/i, 'gue'],
+	[/ed$/i, ''], // walked → walk (fallback)
 ]);

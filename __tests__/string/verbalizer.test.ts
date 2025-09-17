@@ -1,6 +1,6 @@
-import { verbalizer } from '../../src/index'; // adjust path to your class
+import { verbalizer } from '../../src/index';
 
-describe('Verbalizer form checks', () => {
+describe('Verb form checks', () => {
 	// Add some irregulars for testing
 	beforeAll(() => {
 		verbalizer.addIrregular('go', 'went', 'gone');
@@ -16,6 +16,9 @@ describe('Verbalizer form checks', () => {
 			expect(verbalizer.isBase('be')).toBe(true);
 			expect(verbalizer.isBase('put')).toBe(true);
 			expect(verbalizer.isBase('walk')).toBe(true); // regular
+			expect(verbalizer.isBase('mummify')).toBe(true); // regular
+			expect(verbalizer.isBase('stop')).toBe(true); // regular
+			expect(verbalizer.isBase('mine')).toBe(true); // regular
 		});
 
 		test('returns false for non-base forms', () => {
@@ -24,6 +27,9 @@ describe('Verbalizer form checks', () => {
 			expect(verbalizer.isBase('was')).toBe(false);
 			expect(verbalizer.isBase('been')).toBe(false);
 			expect(verbalizer.isBase('walked')).toBe(false);
+			expect(verbalizer.isBase('mummified')).toBe(false);
+			expect(verbalizer.isBase('stopped')).toBe(false);
+			expect(verbalizer.isBase('mined')).toBe(false);
 		});
 	});
 
@@ -34,6 +40,9 @@ describe('Verbalizer form checks', () => {
 			expect(verbalizer.isPast('was')).toBe(true);
 			expect(verbalizer.isPast('put')).toBe(true);
 			expect(verbalizer.isPast('walked')).toBe(true); // regular
+			expect(verbalizer.isPast('mummified')).toBe(true); // regular
+			expect(verbalizer.isPast('stopped')).toBe(true); // regular
+			expect(verbalizer.isPast('mined')).toBe(true); // regular
 		});
 
 		test('returns false for non-past forms', () => {
@@ -41,29 +50,39 @@ describe('Verbalizer form checks', () => {
 			expect(verbalizer.isPast('gone')).toBe(false);
 			expect(verbalizer.isPast('be')).toBe(false);
 			expect(verbalizer.isPast('walk')).toBe(false);
+			expect(verbalizer.isPast('mummify')).toBe(false);
+			expect(verbalizer.isPast('stop')).toBe(false);
+			expect(verbalizer.isPast('mine')).toBe(false);
 		});
 	});
 
-	describe('isPastParticiple()', () => {
+	describe('isParticiple()', () => {
 		test('returns true for past participle forms', () => {
-			expect(verbalizer.isPastParticiple('gone')).toBe(true);
-			expect(verbalizer.isPastParticiple('run')).toBe(true);
-			expect(verbalizer.isPastParticiple('been')).toBe(true);
-			expect(verbalizer.isPastParticiple('put')).toBe(true);
-			expect(verbalizer.isPastParticiple('walked')).toBe(true); // regular
+			expect(verbalizer.isParticiple('gone')).toBe(true);
+			expect(verbalizer.isParticiple('run')).toBe(true);
+			expect(verbalizer.isParticiple('been')).toBe(true);
+			expect(verbalizer.isParticiple('put')).toBe(true);
+			expect(verbalizer.isParticiple('walked')).toBe(true); // regular
+			expect(verbalizer.isParticiple('mummified')).toBe(true); // regular
+			expect(verbalizer.isParticiple('stopped')).toBe(true); // regular
+			expect(verbalizer.isParticiple('mined')).toBe(true); // regular
 		});
 
 		test('returns false for non-participle forms', () => {
-			expect(verbalizer.isPastParticiple('go')).toBe(false);
-			expect(verbalizer.isPastParticiple('ran')).toBe(false);
-			expect(verbalizer.isPastParticiple('was')).toBe(false);
-			expect(verbalizer.isPastParticiple('walk')).toBe(false);
+			expect(verbalizer.isParticiple('go')).toBe(false);
+			expect(verbalizer.isParticiple('ran')).toBe(false);
+			expect(verbalizer.isParticiple('was')).toBe(false);
+			expect(verbalizer.isParticiple('walk')).toBe(false);
+			expect(verbalizer.isParticiple('mummify')).toBe(false);
+			expect(verbalizer.isParticiple('stop')).toBe(false);
+			expect(verbalizer.isParticiple('mine')).toBe(false);
 		});
 	});
 
 	describe('Consistency checks', () => {
+		const verbs = ['go', 'run', 'walk', 'be', 'put', 'mummify', 'mine', 'stop', 'panic'];
+
 		test('base → past → base should round-trip correctly', () => {
-			const verbs = ['go', 'run', 'walk', 'be', 'put'];
 			for (const v of verbs) {
 				const past = verbalizer.toPast(v);
 				expect(verbalizer.toBase(past)).toBe(v);
@@ -71,7 +90,6 @@ describe('Verbalizer form checks', () => {
 		});
 
 		test('base → participle → base should round-trip correctly', () => {
-			const verbs = ['go', 'run', 'walk', 'be', 'put'];
 			for (const v of verbs) {
 				const part = verbalizer.toParticiple(v);
 				expect(verbalizer.toBase(part)).toBe(v);

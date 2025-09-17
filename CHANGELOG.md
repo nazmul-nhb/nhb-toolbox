@@ -6,6 +6,12 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.32] - 2025-09-17
+
+- **Renamed** `isPastParticiple()` method to `isParticiple()` in `Verbalizer/verbalizer`.
+- **Optimized** _internal logic_ for `toPast()` and `toParticiple()` methods in `Verbalizer/verbalizer`.
+- **Updated** all the _rules_ for `Verbalizer/verbalizer`.
+
 ## [4.20.30] - 2025-09-17
 
 - **Reduced** _unpacked size_ by **removing** _tsdoc comments_ from js (both `cjs` and `esm`) outputs.

@@ -99,6 +99,11 @@ export class Verbalizer {
 		return result;
 	}
 
+	/** Apply base rule to already trimmed and lowercased verb */
+	#applyBaseRule(verb: string) {
+		return this.#applyRules(verb, this.#baseRules);
+	}
+
 	/** Apply corresponding rules */
 	#applyRules(verb: string, rules: VerbRule[]): string {
 		if (!isNonEmptyString(verb)) return '';
@@ -196,7 +201,10 @@ export class Verbalizer {
 			return this.#restoreCase(verb, irregularEntry.past);
 		}
 
-		return this.#restoreCase(verb, this.#applyRules(this.toBase(lower), this.#pastRules));
+		return this.#restoreCase(
+			verb,
+			this.#applyRules(this.#applyBaseRule(lower), this.#pastRules)
+		);
 	}
 
 	/**
@@ -220,7 +228,7 @@ export class Verbalizer {
 
 		return this.#restoreCase(
 			verb,
-			this.#applyRules(this.toBase(lower), this.#participleRules)
+			this.#applyRules(this.#applyBaseRule(lower), this.#participleRules)
 		);
 	}
 
@@ -244,7 +252,7 @@ export class Verbalizer {
 		}
 
 		// Use base reverse rules if not irregular verb
-		return this.#restoreCase(verb, this.#applyRules(lower, this.#baseRules));
+		return this.#restoreCase(verb, this.#applyBaseRule(lower));
 	}
 
 	/**
