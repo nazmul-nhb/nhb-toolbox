@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.40] - 2025-09-18
+
+- **Added** new **utility types**: `DeepPartialAll`, `Join`,`Split` along with `ValidArray`, `List` and _more_.
+
 ## [4.20.32] - 2025-09-17
 
 - **Renamed** `isPastParticiple()` method to `isParticiple()` in `Verbalizer/verbalizer`.

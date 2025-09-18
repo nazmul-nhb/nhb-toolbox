@@ -180,14 +180,14 @@ export type Equal<X, Y> =
 export type ValidArray<T> = [T, ...Array<T>];
 
 /**
- * * A readonly array of elements of type `A`.
+ * * A readonly array of elements of type `T`.
  *
  * @remarks
- * - Shorthand for `ReadonlyArray<A>`. Used to represent immutable lists.
+ * - Shorthand for `ReadonlyArray<T>`. Used to represent immutable lists.
  *
  * @example
- * type Numbers = List<number>;   	// readonly number[]
- * const arr: Numbers = [1, 2, 3]; 	// ✅ OK
+ * type Numbers = List<number>;	// readonly number[]
+ * const arr: Numbers = [1, 2, 3];	// ✅ OK
  * arr.push(4);                   	// ❌ Error (readonly)
  */
-export type List<A = any> = ReadonlyArray<A>;
+export type List<T = any> = ReadonlyArray<T>;

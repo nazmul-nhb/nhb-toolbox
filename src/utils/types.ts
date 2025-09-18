@@ -1,5 +1,5 @@
 import type { GenericObject, NestedPrimitiveKey } from '../object/types';
-import type { AdvancedTypes, Numeric } from '../types/index';
+import type { AdvancedTypes, List, NormalPrimitive, Numeric } from '../types/index';
 
 /** Options to initialize Paginator */
 export interface PaginatorOptions {
@@ -532,3 +532,82 @@ export type RequireBetween<
 > =
 	| RequireExactly<T, Acc['length']>
 	| (Acc['length'] extends Max ? never : RequireBetween<T, Min, Max, C, [...Acc, unknown]>);
+
+/**
+ * * Cast one type to another while preserving compatibility.
+ *
+ * @remarks
+ * - Ensures that `A1` extends `A2`. If not, falls back to `A2`.
+ * - Useful for enforcing constraints on generics or parameters.
+ *
+ * @param A1 - Type to check.
+ * @param A2 - Type to cast to.
+ * @returns `A1` if it extends `A2`, otherwise `A2`.
+ *
+ * @example
+ * type T0 = Cast<'42', string>; // '42'
+ * type T1 = Cast<'42', number>; // number
+ * type T2 = Cast<42, number>;   // 42
+ */
+export type Cast<A1, A2> = A1 extends A2 ? A1 : A2;
+
+/**
+ * * Remove the last element of a list (array).
+ *
+ * @remarks Produces a new tuple/list type with the last element removed.
+ *
+ * @example
+ * type T0 = Pop<[1, 2, 3]>;    // [1, 2]
+ * type T1 = Pop<[]>;           // []
+ * type T2 = Pop<['a']>;        // []
+ */
+export type Pop<L extends List> =
+	L extends readonly [...infer El, any] | readonly [...infer El, any?] ? El : L;
+
+type __Split<S extends string, D extends string, T extends string[] = []> =
+	S extends `${infer BS}${D}${infer AS}` ? __Split<AS, D, [...T, BS]> : [...T, S];
+
+type _Split<S extends string, D extends string = ''> =
+	D extends '' ? Pop<__Split<S, D>> : __Split<S, D>;
+
+/**
+ * ✂️ Split a string literal by a given delimiter into a list of strings.
+ *
+ * @remarks
+ * Produces a tuple of substrings by splitting `S` at each occurrence of `D`.
+ *
+ * @param S - String literal to split.
+ * @param D - Delimiter to split on (default: empty string, i.e., character split).
+ * @returns A list of string literals.
+ *
+ * @example
+ * type T0 = Split<'a,b,c', ','>; // ['a', 'b', 'c']
+ * type T1 = Split<'hello', ''>;  // ['h', 'e', 'l', 'l', 'o']
+ * type T2 = Split<'foo-bar', '-'>; // ['foo', 'bar']
+ */
+export type Split<S extends string, D extends string = ''> =
+	_Split<S, D> extends infer X ? Cast<X, string[]> : never;
+
+type _Join<T extends List, D extends string> =
+	T extends [] ? ''
+	: T extends [NormalPrimitive] ? `${T[0]}`
+	: T extends [NormalPrimitive, ...infer R] ? `${T[0]}${D}${_Join<R, D>}`
+	: string;
+
+/**
+ * * Join a list of string/number/boolean literals into a single string.
+ *
+ * @remarks
+ * Concatenates elements of `T` into a single string, separated by delimiter `D`.
+ *
+ * @param T - List of string/number/boolean literals.
+ * @param D - Delimiter to insert between elements (default: space `" "`).
+ * @returns A concatenated string literal.
+ *
+ * @example
+ * type T0 = Join<['a', 'b', 'c'], ','>; // "a,b,c"
+ * type T1 = Join<['2025', '09', '18'], '-'>; // "2025-09-18"
+ * type T2 = Join<['hello', 'world']>; // "hello world"
+ */
+export type Join<T extends List<NormalPrimitive>, D extends string = ' '> =
+	_Join<T, D> extends infer X ? Cast<X, string> : never;

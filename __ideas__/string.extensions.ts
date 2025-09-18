@@ -1,6 +1,6 @@
 import { capitalizeString, convertStringCase } from '../src/index';
 import type { CapitalizeOptions, CaseFormat, StringCaseOptions } from '../src/string/types';
-import { type Split } from './type-ideas';
+import type { Split } from '../src/utils/types';
 
 export function splitString<T extends string, S extends string = ''>(
 	str: T,
