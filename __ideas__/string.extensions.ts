@@ -1,10 +1,22 @@
 import { capitalizeString, convertStringCase } from '../src/index';
 import type { CapitalizeOptions, CaseFormat, StringCaseOptions } from '../src/string/types';
+import { type Split } from './type-ideas';
+
+export function splitString<T extends string, S extends string = ''>(
+	str: T,
+	separator = '' as S
+): Split<T, S> {
+	return str?.split(separator) as Split<T, S>;
+}
 
 declare global {
 	interface String {
 		convertCase(format: CaseFormat, options?: StringCaseOptions): string;
 		capitalize(options?: CapitalizeOptions): string;
+		typedSplit<T extends string, S extends string = ''>(
+			this: T,
+			separator?: S
+		): Split<T, S>;
 	}
 }
 
@@ -63,6 +75,12 @@ export function registerStringMethods(): void {
 			return capitalizeString(this.toString(), options);
 		}
 	);
+
+	defineMethod(String.prototype, 'typedSplit', function <
+		S extends string = '',
+	>(this: String, separator?: S) {
+		return splitString(this.toString(), separator);
+	});
 
 	// Add more methods with defineMethod('methodName', impl)
 }

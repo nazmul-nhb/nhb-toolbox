@@ -83,7 +83,7 @@ export default [
 		rules: { 'no-unused-vars': 'off' },
 	},
 	{
-		files: ['src/**/*types.ts', 'src/**/types/*.ts'],
+		files: ['src/**/*types.ts', 'src/**/types/*.ts', '__ideas__/**/*.ts'],
 		rules: { '@typescript-eslint/no-explicit-any': 'off' },
 	},
 	{
