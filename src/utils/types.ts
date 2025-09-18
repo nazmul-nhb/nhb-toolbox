@@ -89,7 +89,11 @@ export type ValueOf<T> = T[keyof T];
 export type KeysOfUnion<T> = T extends T ? keyof T : never;
 
 /**
- * * Recursively makes all properties in an object type optional.
+ * * Recursively makes all potential standard js object properties optional.
+ *
+ * @remarks
+ * - It excludes complex types like `Array`, `Map`, `File`, `Date`, `Chronos` etc. from being recursively partial.
+ * - Please, refer to {@link AdvancedTypes} to learn more about these complex types.
  *
  * @example
  * type Config = { a: string; nested: { b: number } };
@@ -101,6 +105,20 @@ export type DeepPartial<T> = {
 	: T[K] extends object ? DeepPartial<T[K]>
 	: T[K];
 };
+
+/**
+ * * Recursively makes all properties in any object or array type optional.
+ *
+ * @example
+ * type Config = { a: string; nested: { b: number } };
+ * type PartialConfig = DeepPartial<Config>;
+ * // { a?: string; nested?: { b?: number } }
+ */
+export type DeepPartialAll<T> =
+	T extends Array<infer El> ? Array<DeepPartialAll<El>>
+	:	{
+			[K in keyof T]?: DeepPartialAll<T[K]>;
+		};
 
 /**
  * * Removes `readonly` modifiers from all properties of an object type.

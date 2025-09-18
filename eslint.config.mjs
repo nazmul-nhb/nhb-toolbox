@@ -79,6 +79,10 @@ export default [
 		rules: { '@typescript-eslint/no-unsafe-function-type': 'off' },
 	},
 	{
+		files: ['__ideas__/**/*.ts'],
+		rules: { '@typescript-eslint/no-unused-vars': 'off' },
+	},
+	{
 		files: ['src/**/*types.ts', 'src/**/*interfaces.ts'],
 		rules: { 'no-unused-vars': 'off' },
 	},
@@ -100,7 +104,7 @@ export default [
 	},
 	{
 		files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
-		ignores: ['**/__ideas__/**', '**/__dump__/**'],
+		ignores: ['**/__ideas__/**', '**/__dump__/**', '__test.*'],
 		rules: {
 			// Disallow ONLY `console.log`
 			'no-restricted-syntax': [

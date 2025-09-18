@@ -34,8 +34,9 @@
 	},
 	"editor.codeActionsOnSave": {
 		"source.fixAll.eslint": "explicit",
-		"source.fixAll.tslint": "explicit",
-		"source.removeUnused.ts": "explicit",
+		"source.fixAll.tseslint": "explicit",
+		"source.fixAll.markdownlint": "explicit",
+		// "source.removeUnused.ts": "explicit",
 		"source.addMissingImports.ts": "explicit",
 		"source.removeUnusedImports": "explicit",
 		"source.fixAll.ts": "explicit",

@@ -1,4 +1,5 @@
 import type { NormalPrimitive } from '../src/types/index';
+import type { DeepPartialAll } from '../src/utils/types';
 
 export type Expect<T extends true> = T;
 
@@ -67,3 +68,20 @@ export type Join<T extends List<NormalPrimitive>, D extends string = ' '> =
 	_Join<T, D> extends infer X ? Cast<X, string> : never;
 
 'hello world'.typedSplit('o ');
+
+type MyType = {
+	a: string;
+	b: number;
+	c: {
+		d: string;
+		e: {
+			f: Date;
+			g: {
+				h: string;
+				i: string;
+			}[];
+		};
+	};
+};
+
+type Result = DeepPartialAll<MyType>;
