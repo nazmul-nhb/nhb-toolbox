@@ -1,5 +1,5 @@
 import type { NormalPrimitive } from '../src/types/index';
-import type { DeepPartialAll } from '../src/utils/types';
+import type { TupleOf } from '../src/utils/types';
 
 export type Expect<T extends true> = T;
 
@@ -84,4 +84,4 @@ type MyType = {
 	};
 };
 
-type Result = DeepPartialAll<MyType>;
+type Result = TupleOf<MyType, 5>;

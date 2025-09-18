@@ -129,3 +129,39 @@ export interface ClassDetails {
 
 /** Literal type for `partial` and `required` */
 export type PartialOrRequired = 'partial' | 'required';
+
+/**
+ * - Utility type to assert that a given type condition evaluates to `true`.
+ *
+ * @remarks
+ * - This type is mainly used in **type-level tests** to enforce that a condition (usually produced by {@link Equal}) is satisfied.
+ * - If the condition is not `true`, TypeScript will raise an error at compile time.
+ *
+ * @example
+ * // Passes ✅
+ * type Test1 = Expect<true>;
+ *
+ * // Fails ❌ - will cause a type error
+ * type Test2 = Expect<false>;
+ */
+export type Expect<T extends true> = T;
+
+/**
+ * * Utility type that checks whether two types `X` and `Y` are strictly equal.
+ *
+ * @remarks
+ * - This type uses conditional types and generic inference tricks to compare whether two types are identical.
+ * - It resolves to `true` if `X` and `Y` are the same type, otherwise `false`.
+ *
+ * _Typically used together with {@link Expect} for type-level assertions in tests._
+ *
+ * @example
+ * type Test1 = Equal<string, string>; // true
+ * type Test2 = Equal<string, number>; // false
+ *
+ * // Example with Expect
+ * type Check = Expect<Equal<'a', 'a'>>; // ✅ Compiles
+ * type Fail  = Expect<Equal<'a', 'b'>>; // ❌ Type error
+ */
+export type Equal<X, Y> =
+	(<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2 ? true : false;
