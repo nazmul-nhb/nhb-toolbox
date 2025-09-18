@@ -1,14 +1,7 @@
-import type { NormalPrimitive } from '../src/types/index';
+import type { NormalPrimitive, ValidArray } from '../src/types/index';
 import type { TupleOf } from '../src/utils/types';
 
-export type Expect<T extends true> = T;
-
-export type Equal<X, Y> =
-	(<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2 ? true : false;
-
-type NonEmptyArray<T> = [T, ...Array<T>];
-
-export const makeEnum = <T>(values: NonEmptyArray<T>) => {
+export const makeEnum = <T>(values: ValidArray<T>) => {
 	return values[0];
 };
 

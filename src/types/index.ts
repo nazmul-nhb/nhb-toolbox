@@ -165,3 +165,29 @@ export type Expect<T extends true> = T;
  */
 export type Equal<X, Y> =
 	(<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2 ? true : false;
+
+/**
+ * * Ensures that an array has **at least one element**.
+ *
+ * @remarks
+ * - This type enforces non-empty arrays by requiring the first element `T`, followed by zero or more additional `T`s.
+ *
+ * @example
+ * type NonEmpty = ValidArray<number>; 	// [number, ...number[]]
+ * const arr1: NonEmpty = [1];       	// ✅ OK
+ * const arr2: NonEmpty = [];        	// ❌ Error (empty array not allowed)
+ */
+export type ValidArray<T> = [T, ...Array<T>];
+
+/**
+ * * A readonly array of elements of type `A`.
+ *
+ * @remarks
+ * - Shorthand for `ReadonlyArray<A>`. Used to represent immutable lists.
+ *
+ * @example
+ * type Numbers = List<number>;   	// readonly number[]
+ * const arr: Numbers = [1, 2, 3]; 	// ✅ OK
+ * arr.push(4);                   	// ❌ Error (readonly)
+ */
+export type List<A = any> = ReadonlyArray<A>;
