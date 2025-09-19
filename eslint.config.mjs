@@ -79,7 +79,7 @@ export default [
 		rules: { '@typescript-eslint/no-unsafe-function-type': 'off' },
 	},
 	{
-		files: ['__ideas__/**/*.ts'],
+		files: ['__ideas__/**/*.ts', '__*.ts'],
 		rules: { '@typescript-eslint/no-unused-vars': 'off' },
 	},
 	{
