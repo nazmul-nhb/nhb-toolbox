@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.44] - 2025-09-20
+
+- **Updated** type related issues in `Finder` class. Now it accepts _array of objects only_.
+
 ## [4.20.40] - 2025-09-18
 
 - **Added** new **utility types**: `DeepPartialAll`, `Join`,`Split` along with `ValidArray`, `List` and _more_.
