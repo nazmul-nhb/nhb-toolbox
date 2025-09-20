@@ -139,7 +139,7 @@ export interface SortNature {
 }
 
 /** * Options for customizing the search behavior. */
-export interface FindOptions<T = unknown> {
+export interface FindOptions<T extends GenericObject = {}> {
 	/** * Enables fuzzy matching when exact match fails. Defaults to `false`. */
 	fuzzy?: boolean;
 	/** * Optional key for caching the result. Defaults to `finder-cache` */

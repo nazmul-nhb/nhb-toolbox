@@ -1,3 +1,4 @@
+import type { GenericObject } from '../object/types';
 import type { OwnKeys } from '../types/index';
 import type { FindOptions } from './types';
 
@@ -9,7 +10,7 @@ type CacheEntry<T> = { result: T[]; timestamp: number };
  * The `Finder` class performs optimized searching on arrays.
  * It supports binary search, fuzzy search, and smart caching with TTL.
  */
-export class Finder<T> {
+export class Finder<T extends GenericObject> {
 	static readonly #DEFAULT_TTL = 1000 * 60 * 5;
 
 	readonly #cachedResult: Map<string, CacheEntry<T>> = new Map();
@@ -248,7 +249,7 @@ export class Finder<T> {
 		supplier: () => Promise<T[]>,
 		matcher: string | number,
 		keySelector: KeySelector<T>,
-		options?: Omit<FindOptions<T>, 'items'>
+		options?: Omit<FindOptions<T>, 'data'>
 	): Promise<T[]> {
 		const items = await supplier();
 
@@ -266,7 +267,7 @@ export class Finder<T> {
 		supplier: () => Promise<T[]>,
 		matcher: string | number,
 		keySelector: KeySelector<T>,
-		options?: Omit<FindOptions<T>, 'items'>
+		options?: Omit<FindOptions<T>, 'data'>
 	): Promise<T | undefined> {
 		const items = await supplier();
 
