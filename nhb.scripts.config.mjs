@@ -44,6 +44,11 @@ export default defineScriptConfig({
 							import: './dist/esm/constants.js',
 							require: './dist/cjs/constants.js',
 						},
+						'./chronos': {
+							types: './dist/dts/date/Chronos.d.ts',
+							import: './dist/esm/date/Chronos.js',
+							require: './dist/cjs/date/Chronos.js',
+						},
 						'./stylog': {
 							types: './dist/dts/utils/stylog.d.ts',
 							import: './dist/esm/utils/stylog.js',
@@ -55,10 +60,11 @@ export default defineScriptConfig({
 	},
 	commit: {
 		runFormatter: false,
+		wrapPrefixWith: '`',
 	},
 	count: {
 		defaultPath: 'src/index.ts',
-		excludePaths: ['node_modules', 'dist', 'build'],
+		excludePaths: ['node_modules', 'dist', '__tests__', 'coverage'],
 	},
 	module: {
 		force: false,
