@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.46] - 2025-09-22
+
+- `Chronos` class is now _exported via subpath_ `'nhb-toolbox/chronos'`.
+
 ## [4.20.44] - 2025-09-20
 
 - **Updated** type related issues in `Finder` class. Now it accepts _array of objects only_.
