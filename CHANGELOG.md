@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.48] - 2025-09-22
+
+- **Wrapped** `ChronosMethods` type in `LooseLiteral` to allow passing _custom method names_ without _type errors_ when creating a custom [`Chronos Plugin`](https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/plugins#%EF%B8%8F-writing-your-own-custom-plugin).
+- **Updated** _error message_ in `convert` method in `Currency` class.
+
 ## [4.20.46] - 2025-09-22
 
 - `Chronos` class is now _exported via subpath_ `'nhb-toolbox/chronos'`.

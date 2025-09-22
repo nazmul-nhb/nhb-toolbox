@@ -153,13 +153,16 @@ export class Currency {
 		try {
 			const res = await fetch(url, { redirect: 'error' });
 
-			if (!res.ok)
+			if (!res.ok) {
 				throw new Error(`FrankFurter Error: ${res.status}. "${res.statusText}"`);
+			}
 
 			const data: FrankFurter = await res.json();
 
 			if (!data.rates?.[to]) {
-				throw new Error(`Currency "${to}" not found in FrankFurter Database!`);
+				throw new Error(
+					`Currency "${to}" not allowed or not found in FrankFurter Database!`
+				);
 			}
 
 			return data.rates[to] / this.#amount;
