@@ -115,11 +115,10 @@ const chronos = (
  * **Available Static Methods:**
  *
  * ```ts
- * chronos.today(options?: FormatOptions): string;
- * chronos.yesterday(): Chronos;
- * chronos.tomorrow(): Chronos;
  * chronos.now(): number;
- * chronos.use(plugin: ChronosPlugin): void;
+ * chronos.tomorrow(): Chronos;
+ * chronos.yesterday(): Chronos;
+ * chronos.today(options?: FormatOptions): string;
  * chronos.with(options: ChronosWithOptions): Chronos;
  * chronos.parse(dateStr: string, format: string): Chronos;
  * chronos.utc(dateLike: ChronosInput): Chronos;
@@ -131,6 +130,7 @@ const chronos = (
  * chronos.isValidChronos(value: unknown): boolean;
  * chronos.formatTimePart(time: string, format?: TimeParts): string;
  * chronos.getDatesForDay(day: WeekDay, options?: WeekdayOptions): string[];
+ * chronos.use(plugin: ChronosPlugin): void;
  * ```
  */
 const chronosStatics = new Proxy(chronos, {
