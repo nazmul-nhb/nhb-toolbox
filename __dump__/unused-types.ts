@@ -219,7 +219,6 @@
 //     V extends boolean = false,
 // > = { [P in K1 | K2]: P extends K1 ? FirstFieldValue<T, K1, K2, V> : string };
 
-
 // // * Helper: Add 1 to a number
 // type AddOne<N extends number, Acc extends unknown[] = []> =
 //     Acc['length'] extends N ? [...Acc, unknown]['length']
@@ -238,11 +237,9 @@
 //     Enumerate<From>
 // >;
 
-
 // type B = "a" | "b" | "c" | ( string & {})
 
 // const b: B = ""
-
 
 /**
  * Represents an object that has at least one method property,
@@ -259,3 +256,20 @@
 // export type ClassInstance = {
 //     constructor: Constructor;
 // } & object;
+
+// /** - Type of data value converted to `string` */
+// export type Stringified<T> = {
+// 	[K in keyof T]: T[K] extends (infer U)[] ? Stringified<U>[]
+// 	: T[K] extends object | null | undefined ? Stringified<T[K]>
+// 	: T[K] extends string | number ? string
+// 	: T[K];
+// };
+
+// /** - Type of data value converted to `number` */
+// export type Numberified<T> = {
+// 	[K in keyof T]: T[K] extends (infer U)[] ? Numberified<U>[]
+// 	: T[K] extends object | null | undefined ? Numberified<T[K]>
+// 	: T[K] extends string ? number
+// 	: T[K] extends number ? T[K]
+// 	: number;
+// };

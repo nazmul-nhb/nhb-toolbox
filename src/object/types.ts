@@ -1,4 +1,5 @@
 import type { AdvancedTypes, NormalPrimitive } from '../types/index';
+import type { Prettify } from '../utils/types';
 
 /** - Generic object with `unknown` value */
 export type StrictObject = Record<string, unknown>;
@@ -211,19 +212,25 @@ export interface SanitizeOptions<T> {
 	requiredKeys?: '*' | DotNotationKey<T>[];
 }
 
-/** - Type of data value converted to `string` */
-export type Stringified<T> = {
-	[K in keyof T]: T[K] extends (infer U)[] ? Stringified<U>[]
-	: T[K] extends object | null | undefined ? Stringified<T[K]>
-	: T[K] extends string | number ? string
-	: T[K];
-};
+/** Transform a single property */
+type ConvertProp<V, C extends 'string' | 'number'> =
+	C extends 'string' ?
+		V extends string | number ?
+			string
+		:	V
+	: C extends 'number' ?
+		V extends string ?
+			number
+		:	V
+	:	V;
 
-/** - Type of data value converted to `number` */
-export type Numberified<T> = {
-	[K in keyof T]: T[K] extends (infer U)[] ? Numberified<U>[]
-	: T[K] extends object | null | undefined ? Numberified<T[K]>
-	: T[K] extends string ? number
-	: T[K] extends number ? T[K]
-	: number;
-};
+/** Extract sub-keys after prefix like "props." */
+type SubKey<S extends string, P extends string> = S extends `${P}.${infer Rest}` ? Rest : never;
+
+/** Transform only specified keys (dot-notation not expanded yet) */
+export type ConvertedObject<T, Keys extends string, C extends 'string' | 'number'> = Prettify<{
+	[K in Extract<keyof T, string>]: K extends Keys ? ConvertProp<T[K], C>
+	: T[K] extends AdvancedTypes ? T[K]
+	: T[K] extends GenericObject ? ConvertedObject<T[K], SubKey<Keys, K>, C>
+	: T[K];
+}>;

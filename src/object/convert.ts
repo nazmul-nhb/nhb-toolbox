@@ -1,4 +1,4 @@
-import type { DotNotationKey, GenericObject, Numberified, Stringified } from './types';
+import type { ConvertedObject, NumericDotKey, GenericObject } from './types';
 
 /**
  * * Converts the values of specified keys in an object to numbers.
@@ -10,12 +10,11 @@ import type { DotNotationKey, GenericObject, Numberified, Stringified } from './
  *   - `convertTo`: The target type, either `"string"` or `"number"`.
  * @returns The modified object with the converted values as `"string"` or `"number"`.
  */
-export function convertObjectValues<T extends GenericObject, C extends 'string' | 'number'>(
-	data: T,
-	options: { keys: DotNotationKey<T>[]; convertTo: C }
-): C extends 'string' ? Stringified<T>
-: C extends 'number' ? Numberified<T>
-: never;
+export function convertObjectValues<
+	T extends GenericObject,
+	Key extends NumericDotKey<T>,
+	C extends 'string' | 'number',
+>(data: T, options: { keys: Key[]; convertTo: C }): ConvertedObject<T, Key, C>;
 
 /**
  * * Converts the values of specified keys in an array of objects to numbers or strings.
@@ -27,12 +26,11 @@ export function convertObjectValues<T extends GenericObject, C extends 'string' 
  *   - `convertTo`: The target type, either `"string"` or `"number"`.
  * @returns The modified array of objects with the converted values as `"string"` or `"number"`.
  */
-export function convertObjectValues<T extends GenericObject, C extends 'string' | 'number'>(
-	data: T[],
-	options: { keys: DotNotationKey<T>[]; convertTo: C }
-): C extends 'string' ? Stringified<T>[]
-: C extends 'number' ? Numberified<T>[]
-: never;
+export function convertObjectValues<
+	T extends GenericObject,
+	Key extends NumericDotKey<T>,
+	C extends 'string' | 'number',
+>(data: T[], options: { keys: Key[]; convertTo: C }): ConvertedObject<T, Key, C>;
 
 /**
  * * Converts the values of specified keys in an object or array of objects to either string or number.
@@ -44,12 +42,11 @@ export function convertObjectValues<T extends GenericObject, C extends 'string' 
  *   - `convertTo`: The target type, either "string" or "number".
  * @returns The modified object or array of objects with the converted values, with updated types.
  */
-export function convertObjectValues<T extends GenericObject, C extends 'string' | 'number'>(
-	data: T | T[],
-	options: { keys: DotNotationKey<T>[]; convertTo: C }
-): C extends 'string' ? Stringified<T> | Stringified<T>[]
-: C extends 'number' ? Numberified<T> | Numberified<T>[]
-: never {
+export function convertObjectValues<
+	T extends GenericObject,
+	Key extends NumericDotKey<T>,
+	C extends 'string' | 'number',
+>(data: T | T[], options: { keys: Key[]; convertTo: C }): ConvertedObject<T, Key, C> {
 	const { keys, convertTo } = options;
 
 	/** * Helper function to determine if value should be preserved. */
@@ -104,14 +101,10 @@ export function convertObjectValues<T extends GenericObject, C extends 'string' 
 	};
 
 	if (Array.isArray(data)) {
-		return data?.map((d) => _convertValue(d)) as C extends 'string' ? Stringified<T>[]
-		: C extends 'number' ? Numberified<T>[]
-		: never;
+		return data?.map((d) => _convertValue(d)) as ConvertedObject<T, Key, C>;
 	}
 
-	return _convertValue(data) as C extends 'string' ? Stringified<T> | Stringified<T>[]
-	: C extends 'number' ? Numberified<T> | Numberified<T>[]
-	: never;
+	return _convertValue(data) as ConvertedObject<T, Key, C>;
 }
 
 /**
