@@ -1,4 +1,9 @@
-import type { ConvertedObject, NumericDotKey, GenericObject } from './types';
+import type {
+	ConvertedObject,
+	ConvertObjectOptions,
+	GenericObject,
+	NumericDotKey,
+} from './types';
 
 /**
  * * Converts the values of specified keys in an object to numbers.
@@ -14,7 +19,7 @@ export function convertObjectValues<
 	T extends GenericObject,
 	Key extends NumericDotKey<T>,
 	C extends 'string' | 'number',
->(data: T, options: { keys: Key[]; convertTo: C }): ConvertedObject<T, Key, C>;
+>(data: T, options: ConvertObjectOptions<T, Key, C>): ConvertedObject<T, Key, C>;
 
 /**
  * * Converts the values of specified keys in an array of objects to numbers or strings.
@@ -30,7 +35,7 @@ export function convertObjectValues<
 	T extends GenericObject,
 	Key extends NumericDotKey<T>,
 	C extends 'string' | 'number',
->(data: T[], options: { keys: Key[]; convertTo: C }): ConvertedObject<T, Key, C>;
+>(data: Array<T>, options: ConvertObjectOptions<T, Key, C>): Array<ConvertedObject<T, Key, C>>;
 
 /**
  * * Converts the values of specified keys in an object or array of objects to either string or number.
@@ -46,7 +51,10 @@ export function convertObjectValues<
 	T extends GenericObject,
 	Key extends NumericDotKey<T>,
 	C extends 'string' | 'number',
->(data: T | T[], options: { keys: Key[]; convertTo: C }): ConvertedObject<T, Key, C> {
+>(
+	data: T | Array<T>,
+	options: ConvertObjectOptions<T, Key, C>
+): ConvertedObject<T, Key, C> | Array<ConvertedObject<T, Key, C>> {
 	const { keys, convertTo } = options;
 
 	/** * Helper function to determine if value should be preserved. */

@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.50] - 2025-09-25
+
+- **Fixed** _return type_ of `convertObjectValues` utility to correctly reflect the _transformed object structure_ and `keys` option is now _more strict_: **only accepts keys which values are string and/or number** and **the array cannot be left empty**.
+- **Updated** _options type_ for `with()` _static method_ of `Chronos`.
+
 ## [4.20.48] - 2025-09-22
 
 - **Wrapped** `ChronosMethods` type in `LooseLiteral` to allow passing _custom method names_ without _type errors_ when creating a custom [`Chronos Plugin`](https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/plugins#%EF%B8%8F-writing-your-own-custom-plugin).

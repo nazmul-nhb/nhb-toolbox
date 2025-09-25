@@ -1,4 +1,4 @@
-import type { AdvancedTypes, NormalPrimitive } from '../types/index';
+import type { AdvancedTypes, NormalPrimitive, ValidArray } from '../types/index';
 import type { Prettify } from '../utils/types';
 
 /** - Generic object with `unknown` value */
@@ -212,6 +212,17 @@ export interface SanitizeOptions<T> {
 	requiredKeys?: '*' | DotNotationKey<T>[];
 }
 
+export interface ConvertObjectOptions<
+	T extends GenericObject,
+	Key extends NumericDotKey<T>,
+	C extends 'string' | 'number',
+> {
+	/** Array of keys (properties) to convert to `number` or `string` */
+	keys: ValidArray<Key>;
+	/** Convert selected keys to target type: `number` or `string` */
+	convertTo: C;
+}
+
 /** Transform a single property */
 type ConvertProp<V, C extends 'string' | 'number'> =
 	C extends 'string' ?
@@ -224,10 +235,10 @@ type ConvertProp<V, C extends 'string' | 'number'> =
 		:	V
 	:	V;
 
-/** Extract sub-keys after prefix like "props." */
+/** Extract sub-keys after prefix like `"props."` */
 type SubKey<S extends string, P extends string> = S extends `${P}.${infer Rest}` ? Rest : never;
 
-/** Transform only specified keys (dot-notation not expanded yet) */
+/** Transformed shape of the return type of `convertObjectValues` */
 export type ConvertedObject<T, Keys extends string, C extends 'string' | 'number'> = Prettify<{
 	[K in Extract<keyof T, string>]: K extends Keys ? ConvertProp<T[K], C>
 	: T[K] extends AdvancedTypes ? T[K]

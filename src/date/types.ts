@@ -1,5 +1,5 @@
 import type { Enumerate, NumberRange } from '../number/types';
-import type { LooseLiteral, RequireAtLeast } from '../utils/types';
+import type { LooseLiteral } from '../utils/types';
 import type { Chronos } from './Chronos';
 import type { ChronosStatics } from './chronos-statics';
 import type {
@@ -530,24 +530,21 @@ export interface DateLike {
  * * Options for `Chronos` _static_ method `with()`
  *
  * @remarks
- * - At least one property must be provided.
+ * - Should provide at least one property.
  */
-export type ChronosWithOptions = RequireAtLeast<
-	{
-		/** The full year (e.g., 2025). Years 0–99 are interpreted as 1900–1999. */
-		year: number;
-		/** Month number from 1 (January) to 12 (December). */
-		month: NumberRange<1, 12>;
-		/** Day of the month, from 1 to 31. */
-		date: NumberRange<1, 31>;
-		/** Hour of the day, from 0 (midnight) to 23 (11 PM). */
-		hour: Enumerate<24>;
-		/** Minutes of the hour, from 0 to 59. */
-		minute: Enumerate<60>;
-		/** Seconds of the minute, from 0 to 59. */
-		second: Enumerate<60>;
-		/** Milliseconds of the second, from 0 to 999. */
-		millisecond: Milliseconds;
-	},
-	1
->;
+export type ChronosWithOptions = Partial<{
+	/** The full year (e.g., 2025). Years 0–99 are interpreted as 1900–1999. */
+	year: number;
+	/** Month number from 1 (January) to 12 (December). */
+	month: NumberRange<1, 12>;
+	/** Day of the month, from 1 to 31. */
+	date: NumberRange<1, 31>;
+	/** Hour of the day, from 0 (midnight) to 23 (11 PM). */
+	hour: Enumerate<24>;
+	/** Minutes of the hour, from 0 to 59. */
+	minute: Enumerate<60>;
+	/** Seconds of the minute, from 0 to 59. */
+	second: Enumerate<60>;
+	/** Milliseconds of the second, from 0 to 999. */
+	millisecond: Milliseconds;
+}>;
