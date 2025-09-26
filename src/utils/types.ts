@@ -321,9 +321,10 @@ export type OneOf<T, U> = (T & Without<U, T>) | (U & Without<T, U>);
  * @template T - The type to test.
  *
  * @example
- * type A = IsStrictObject<{}>;          // true
+ * type A = IsStrictObject<{}>;          // false
  * type B = IsStrictObject<() => void>;  // false
  * type C = IsStrictObject<string>;      // false
+ * type D = IsStrictObject<{name: string}>; // true
  */
 export type IsStrictObject<T> =
 	T extends object ?

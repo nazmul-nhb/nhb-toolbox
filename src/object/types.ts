@@ -212,6 +212,7 @@ export interface SanitizeOptions<T> {
 	requiredKeys?: '*' | DotNotationKey<T>[];
 }
 
+/** Options for `convertObjectValues` utility */
 export interface ConvertObjectOptions<
 	T extends GenericObject,
 	Key extends NumericDotKey<T>,

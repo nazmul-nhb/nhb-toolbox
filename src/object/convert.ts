@@ -98,7 +98,7 @@ export function convertObjectValues<
 	};
 
 	/** * Recursively process a single object. */
-	const _convertValue = (obj: T): T => {
+	const _convertValue = (obj: T): ConvertedObject<T, Key, C> => {
 		let newObj = structuredClone(obj);
 
 		keys?.forEach((key) => {
@@ -109,10 +109,10 @@ export function convertObjectValues<
 	};
 
 	if (Array.isArray(data)) {
-		return data?.map((d) => _convertValue(d)) as ConvertedObject<T, Key, C>;
+		return data?.map(_convertValue);
 	}
 
-	return _convertValue(data) as ConvertedObject<T, Key, C>;
+	return _convertValue(data);
 }
 
 /**
