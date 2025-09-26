@@ -658,7 +658,7 @@ export class Chronos {
 	 * @param options An object that contains one or more properties that specify comparison options.
 	 */
 	toLocaleString(
-		locale?: LocaleCode | Intl.Locale | (LocaleCode | Intl.Locale)[],
+		locale?: LocaleCode | Intl.Locale | Array<LocaleCode | Intl.Locale>,
 		options?: Intl.DateTimeFormatOptions
 	): string {
 		return this.#date.toLocaleString(locale, options);
@@ -2014,7 +2014,7 @@ export class Chronos {
 	 * @param format - Format string accepted by `formatStrict()` method (`TimeParts`) for time part only. Default: `hh:mm:ss a` → 02:33:36 pm.
 	 * @returns Formatted time string in local (System) time.
 	 */
-	static formatTimePart(time: string, format?: TimeParts) {
+	static formatTimePart(time: string, format?: TimeParts): string {
 		function normalizeOffset(timeStr: string): string {
 			return timeStr.replace(/([+-]\d{2})(?!:)/, '$1:00');
 		}

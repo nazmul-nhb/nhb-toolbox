@@ -100,7 +100,7 @@ declare module '../Chronos' {
     }
 }
 
-/** * Plugin to inject ${pluginName} method */
+/** * Plugin to inject \`${pluginName}\` method */
 export const ${pluginName}Plugin = (ChronosClass: MainChronos): void => {
     ChronosClass.prototype.${pluginName} = function (this: ChronosConstructor): void {
         // Logic

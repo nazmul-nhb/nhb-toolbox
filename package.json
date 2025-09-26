@@ -1,6 +1,6 @@
 {
   "name": "nhb-toolbox",
-  "version": "4.20.50",
+  "version": "4.20.52",
   "description": "A versatile collection of smart, efficient, and reusable utility functions, classes and types for everyday development needs.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -203,6 +203,11 @@
       "import": "./dist/esm/date/plugins/fromNowPlugin.js",
       "require": "./dist/cjs/date/plugins/fromNowPlugin.js"
     },
+    "./plugins/greetingPlugin": {
+      "types": "./dist/dts/date/plugins/greetingPlugin.d.ts",
+      "import": "./dist/esm/date/plugins/greetingPlugin.js",
+      "require": "./dist/cjs/date/plugins/greetingPlugin.js"
+    },
     "./plugins/palindromePlugin": {
       "types": "./dist/dts/date/plugins/palindromePlugin.d.ts",
       "import": "./dist/esm/date/plugins/palindromePlugin.js",
@@ -284,6 +289,9 @@
       ],
       "plugins/fromNowPlugin": [
         "dist/dts/date/plugins/fromNowPlugin.d.ts"
+      ],
+      "plugins/greetingPlugin": [
+        "dist/dts/date/plugins/greetingPlugin.d.ts"
       ],
       "plugins/palindromePlugin": [
         "dist/dts/date/plugins/palindromePlugin.d.ts"

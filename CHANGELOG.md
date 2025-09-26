@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.52] - 2025-09-26
+
+- **Added** new `Chronos` _plugin_ `greetingPlugin` for accessing `getGreeting` method in `Chronos` instances.
+- **Fixed** some _docs and internal type related issues_ in `convertObjectValues` utility.
+
 ## [4.20.50] - 2025-09-25
 
 - **Fixed** _return type_ of `convertObjectValues` utility to correctly reflect the _transformed object structure_ and `keys` option is now _more strict_: **only accepts keys which values are string and/or number** and **the array cannot be left empty**.
