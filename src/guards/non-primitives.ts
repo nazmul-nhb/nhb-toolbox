@@ -1,5 +1,5 @@
 import type { GenericObject } from '../object/types';
-import type { AsyncFunction, GenericFn } from '../types/index';
+import type { AsyncFunction, GenericFn, ValidArray } from '../types/index';
 import { isString } from './primitives';
 
 /**
@@ -41,13 +41,13 @@ export function isNotEmptyObject(value: unknown): value is GenericObject {
 /**
  * * Type guard to check if a value is an object with specific keys.
  * @param value - The value to check.
- * @param keys - The set of keys the object should contain.
+ * @param keys - The list of keys the object should contain.
  * @returns `true` if the value is an object with the specified keys, otherwise `false`.
  */
-export function isObjectWithKeys<T extends Record<string, unknown>>(
+export function isObjectWithKeys<Key extends string>(
 	value: unknown,
-	keys: (keyof T)[]
-): value is T {
+	keys: ValidArray<Key>
+): value is Record<Key, unknown> {
 	return isObject(value) && keys?.every((key) => key in value);
 }
 
