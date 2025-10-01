@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.54] - 2025-10-02
+
+- **Added** new utility `extractObjectKeys` to _extract keys of an object_ with _proper typing_.
+- **Updated** `isObjectWithKeys`: _now properly typed_.
+
 ## [4.20.52] - 2025-09-26
 
 - **Added** new `Chronos` _plugin_ `greetingPlugin` for accessing `getGreeting` method in `Chronos` instances.
