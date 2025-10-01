@@ -318,7 +318,12 @@ export {
 } from './form/guards';
 
 // ! Object Utilities
-export { cloneObject, countObjectFields } from './object/basics';
+export {
+	cloneObject,
+	countObjectFields,
+	extractObjectKeys,
+	extractObjectKeys as extractKeys,
+} from './object/basics';
 
 export {
 	extractNewFields,

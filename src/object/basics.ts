@@ -1,3 +1,4 @@
+import { isNotEmptyObject } from '../guards/non-primitives';
 import type { GenericObject } from './types';
 
 /**
@@ -21,3 +22,17 @@ export const countObjectFields = <T extends GenericObject>(obj: T): number => {
 
 	return 0;
 };
+
+/**
+ * * Extract the keys of an object with proper type-safety.
+ *
+ * @remarks
+ * - It internally uses `Object.keys(...)`.
+ * - For empty object or non-object value, it returns empty array (`[]`).
+ *
+ * @param obj The object from which to extract the keys.
+ * @returns Array of keys from the specified object.
+ */
+export function extractObjectKeys<T extends GenericObject>(obj: T): Array<keyof T> {
+	return isNotEmptyObject(obj) ? Object.keys(obj) : [];
+}
