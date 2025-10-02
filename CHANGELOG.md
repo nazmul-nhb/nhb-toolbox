@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.56] - 2025-10-02
+
+- **Updated** `isDeepEqual` utility: Now it accepts _arguments of unknown types_.
+
 ## [4.20.54] - 2025-10-02
 
 - **Added** new utility `extractObjectKeys` to _extract keys of an object_ with _proper typing_.
