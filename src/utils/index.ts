@@ -1,6 +1,7 @@
 import { _resolveNestedKey } from '../array/helpers';
 import { sortAnArray } from '../array/sort';
 import {
+	isArray,
 	isArrayOfType,
 	isMethodDescriptor,
 	isNotEmptyObject,
@@ -31,7 +32,7 @@ import type {
  * @param b Second value to compare.
  * @returns Whether the values are deeply equal.
  */
-export const isDeepEqual = <T>(a: T, b: T): boolean => {
+export const isDeepEqual = (a: unknown, b: unknown): boolean => {
 	// If both values are strictly equal (handles primitive types and same references)
 	if (a === b) return true;
 
@@ -42,21 +43,19 @@ export const isDeepEqual = <T>(a: T, b: T): boolean => {
 	if (a === null || b === null) return a === b;
 
 	// Check for array equality
-	if (Array.isArray(a) && Array.isArray(b)) {
+	if (isArray(a) && isArray(b)) {
 		if (a?.length !== b?.length) return false;
-		return a?.every((element, index) => isDeepEqual(element, b[index]));
+		return a?.every((element, index) => isDeepEqual(element, b?.[index]));
 	}
 
 	// Check for object equality
-	if (typeof a === 'object' && typeof b === 'object') {
+	if (isObject(a) && isObject(b)) {
 		const aKeys = Object.keys(a);
 		const bKeys = Object.keys(b);
 
 		if (aKeys?.length !== bKeys?.length) return false;
 
-		return aKeys?.every((key) =>
-			isDeepEqual((a as GenericObject)[key], (b as GenericObject)[key])
-		);
+		return aKeys?.every((key) => isDeepEqual(a?.[key], b?.[key]));
 	}
 
 	return false;
