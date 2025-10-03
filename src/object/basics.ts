@@ -53,9 +53,9 @@ export function extractObjectKeysDeep<T extends GenericObject>(obj: T): DeepKeys
 
 		for (const key in candidate) {
 			result.push(key);
-			const value = candidate[key];
-			if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-				result = [...result, ..._getDeepKeys(value)];
+
+			if (isNotEmptyObject(candidate[key])) {
+				result = [...result, ..._getDeepKeys(candidate[key])];
 			}
 		}
 

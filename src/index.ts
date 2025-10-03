@@ -323,6 +323,8 @@ export {
 	countObjectFields,
 	extractObjectKeys,
 	extractObjectKeys as extractKeys,
+	extractObjectKeysDeep,
+	extractObjectKeysDeep as extractKeysDeep,
 } from './object/basics';
 
 export {
