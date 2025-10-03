@@ -612,3 +612,53 @@ type _Join<T extends List, D extends string> =
  */
 export type Join<T extends List<NormalPrimitive>, D extends string = ' '> =
 	_Join<T, D> extends infer X ? Cast<X, string> : never;
+
+/** Turns a union into an intersection */
+type UnionToIntersection<U> =
+	(U extends any ? (arg: U) => void : never) extends (arg: infer I) => void ? I : never;
+
+/** Gets the "last" item of a union */
+type LastOf<T> =
+	UnionToIntersection<T extends any ? () => T : never> extends () => infer R ? R : never;
+
+/** Converts a union to a tuple */
+type UnionToTuple<T, L = LastOf<T>> =
+	[T] extends [never] ? [] : [...UnionToTuple<Exclude<T, L>>, L];
+
+/**
+ * * Converts an array type containing a union of literals into a tuple of those literals.
+ *
+ * @remarks
+ * - Takes an array type `T` (e.g. `("foo" | "bar")[]`) and produces a tuple type (e.g. `["foo", "bar"]`).
+ * - Useful when you want to preserve all possible union members as a tuple literal instead of an array.
+ * - For converting any type to tuple use {@link Tuple}.
+ *
+ * @param T - An array type whose element type is a union.
+ * @returns A tuple type containing each member of the union in order.
+ *
+ * @example
+ * type T0 = ArrayToTuple<("foo" | "bar")[]>; // ["foo", "bar"]
+ * type T1 = ArrayToTuple<(1 | 2 | 3)[]>; // [1, 2, 3]
+ * type T2 = ArrayToTuple<never[]>; // []
+ */
+export type ArrayToTuple<T extends readonly unknown[]> =
+	T[number] extends infer U ? UnionToTuple<U> : never;
+
+/**
+ * * Converts a type into a tuple form.
+ *
+ * @remarks
+ * - If `T` is a union, it produces a tuple containing each member of the union.
+ * - If `T` is a single type, it produces a one-element tuple `[T]`.
+ * - If `T` is `never`, it produces an empty tuple `[]`.
+ *
+ * @param T - The type to convert into a tuple.
+ * @returns A tuple type containing the elements of `T`.
+ *
+ * @example
+ * type T0 = Tuple<"foo" | "bar">; // ["foo", "bar"]
+ * type T1 = Tuple<number>; // [number]
+ * type T2 = Tuple<1 | 2 | 3>; // [1, 2, 3]
+ * type T3 = Tuple<never>; // []
+ */
+export type Tuple<T> = [T] extends [never] ? [] : UnionToTuple<T>;
