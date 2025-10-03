@@ -6,12 +6,13 @@ All notable changes to the package will be documented here.
 
 ---
 
-## [4.20.60] - 2025-10-03
+## [4.20.60] - 2025-10-04
 
 - **Added** new _utility types_ `ArrayToTuple<T[]>` and `Tuple<T>`.
-- **Updated** the _return type_ of `extractObjectKeys`, now it returns properly typed tuple.
+- **Updated** the _return type_ of `extractObjectKeys`, now it returns _tuple of exact top-level keys_.
+- **Added** new utility `extractObjectKeysDeep` to extract _tuple_ of _all nested keys_.
 - **Updated** _query string parser_ utilities to receive _generic return type_.
-- **Added** new utility to parse _literal query string_ `literalQueryStringToObject`.
+- **Added** new utility `literalQueryStringToObject` to parse _literal query string_.
 
 ## [4.20.56] - 2025-10-02
 

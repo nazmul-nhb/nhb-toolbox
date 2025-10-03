@@ -208,10 +208,11 @@ export type NumericDotKey<T> =
 
 /** * Recursively extracts all keys of an object (any depth) as a union. */
 export type DeepKeys<T extends GenericObject> =
-	| keyof T
-	| {
-			[K in keyof T]: T[K] extends GenericObject ? DeepKeys<T[K]> : never;
-	  }[keyof T];
+	T extends AdvancedTypes ? never
+	:	| keyof T
+		| {
+				[K in keyof T]: T[K] extends GenericObject ? DeepKeys<T[K]> : never;
+		  }[keyof T];
 
 /** * Converts the union of keys from {@link DeepKeys<T>} into a tuple. */
 export type DeepKeysTuple<T extends GenericObject> = Tuple<DeepKeys<T>>;
