@@ -367,6 +367,8 @@ export {
 	parseQueryString as getQueryStringAsObject,
 	parseQueryString,
 	parseQueryString as queryStringToObject,
+	parseQueryStringLiteral,
+	parseQueryStringLiteral as literalQueryStringToObject,
 	updateQueryParam,
 } from './dom/query';
 

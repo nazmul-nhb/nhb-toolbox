@@ -22,9 +22,7 @@ import { deepParsePrimitives } from '../utils/index';
  * generateQueryParams({ key1: true, key2: false }); // "?key1=true&key2=false"
  * generateQueryParams({ filters: { category: 'laptop', price: 1000 } }); // "?category=laptop&price=1000"
  */
-export const generateQueryParams = <T extends QueryObject>(
-	params: T = {} as T
-): QueryString => {
+export function generateQueryParams<T extends QueryObject>(params: T = {} as T): QueryString {
 	// Flatten the nested object into key-value pairs
 	const flattenedParams = flattenObjectKeyValue(params);
 
@@ -58,7 +56,7 @@ export const generateQueryParams = <T extends QueryObject>(
 		.join('&');
 
 	return queryParams ? `?${queryParams}` : '';
-};
+}
 
 /**
  * * Get query params as standard `JavaScript` Object `Record<string, string>`. You can define the type by passing a type argument.

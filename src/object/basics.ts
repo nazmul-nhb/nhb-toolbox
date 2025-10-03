@@ -1,6 +1,6 @@
 import { isNotEmptyObject } from '../guards/non-primitives';
 import type { Tuple } from '../utils/types';
-import type { GenericObject } from './types';
+import type { DeepKeysTuple, GenericObject } from './types';
 
 /**
  * * Deep clone an object.
@@ -25,7 +25,7 @@ export const countObjectFields = <T extends GenericObject>(obj: T): number => {
 };
 
 /**
- * * Extracts the keys of an object with proper typing.
+ * * Extracts all the top-level keys of an object as tuple.
  *
  * @remarks
  * - Internally uses `Object.keys(...)`.
@@ -36,4 +36,31 @@ export const countObjectFields = <T extends GenericObject>(obj: T): number => {
  */
 export function extractObjectKeys<T extends GenericObject>(obj: T): Tuple<keyof T> {
 	return (isNotEmptyObject(obj) ? Object.keys(obj) : []) as Tuple<keyof T>;
+}
+
+/**
+ * * Recursively extracts all nested keys from an object as a tuple.
+ *
+ * @remarks
+ * - Returns an empty array (`[]`) for an empty object or a non-object value.
+ *
+ * @param obj The object from which to extract the keys.
+ * @returns An tuple of all the nested keys from the specified object.
+ */
+export function extractObjectKeysDeep<T extends GenericObject>(obj: T): DeepKeysTuple<T> {
+	function _getDeepKeys(candidate: GenericObject): string[] {
+		let result: string[] = [];
+
+		for (const key in candidate) {
+			result.push(key);
+			const value = candidate[key];
+			if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+				result = [...result, ..._getDeepKeys(value)];
+			}
+		}
+
+		return result;
+	}
+
+	return (isNotEmptyObject(obj) ? _getDeepKeys(obj) : []) as DeepKeysTuple<T>;
 }

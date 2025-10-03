@@ -1,5 +1,5 @@
 import type { AdvancedTypes, NormalPrimitive, ValidArray } from '../types/index';
-import type { Prettify, Split } from '../utils/types';
+import type { Prettify, Split, Tuple } from '../utils/types';
 
 /** - Generic object with `unknown` value */
 export type StrictObject = Record<string, unknown>;
@@ -101,6 +101,7 @@ export type QueryObject = { [key: string]: QueryObjectValue };
 /** Generic query object type */
 export type ParsedQueryGeneric = Record<string, NormalPrimitive | NormalPrimitive[]>;
 
+/** Key-value pairs as tuple */
 type QueryPairs<Q extends string> = Split<Q extends `?${infer Rest}` ? Rest : Q, '&'>;
 
 type ValuesOfKey<Pairs extends string[], K extends string> =
@@ -204,6 +205,16 @@ export type NumericDotKey<T> =
 			: never;
 		}[keyof T & string]
 	:	never;
+
+/** * Recursively extracts all keys of an object (any depth) as a union. */
+export type DeepKeys<T extends GenericObject> =
+	| keyof T
+	| {
+			[K in keyof T]: T[K] extends GenericObject ? DeepKeys<T[K]> : never;
+	  }[keyof T];
+
+/** * Converts the union of keys from {@link DeepKeys<T>} into a tuple. */
+export type DeepKeysTuple<T extends GenericObject> = Tuple<DeepKeys<T>>;
 
 /** - Options for `sanitizeData` utility. */
 export interface SanitizeOptions<T> {
