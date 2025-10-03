@@ -1,6 +1,11 @@
 import { flattenObjectKeyValue } from '../object/objectify';
 import { parseObjectValues } from '../object/sanitize';
-import type { ParsedQueryGeneric, QueryObject } from '../object/types';
+import type {
+	ParsedQuery,
+	ParsedQueryGeneric,
+	QueryObject,
+	StrictObject,
+} from '../object/types';
 import type { QueryString } from '../string/types';
 import { deepParsePrimitives } from '../utils/index';
 
@@ -111,4 +116,36 @@ export function parseQueryString<QParams extends ParsedQueryGeneric>(
 	}
 
 	return (parsePrimitives ? parseObjectValues(entries) : entries) as QParams;
+}
+
+/**
+ * Parses a query string (with optional `?` prefix) into an object.
+ * Supports multiple values for the same key by returning arrays.
+ * It returns properly typed object.
+ *
+ * @remarks This utility is designed to parse literal string, for generic use, try {@link parseQueryString}.
+ *
+ * - **Note:** *This function does **not** access or depend on `current URL` a.k.a `window.location.search`.*
+ *
+ * @param query - The literal query string to parse.
+ * @returns An object where keys are strings and values can be string, array, or null/undefined.
+ */
+export function parseQueryStringLiteral<Q extends string>(query: Q): ParsedQuery<Q> {
+	const params = new URLSearchParams(query.startsWith('?') ? query.slice(1) : query);
+
+	const entries: StrictObject = {};
+
+	for (const [key, value] of params.entries()) {
+		if (key in entries) {
+			const current = entries[key];
+
+			const array = Array.isArray(current) ? [...current, value] : [current, value];
+
+			entries[key] = array;
+		} else {
+			entries[key] = value;
+		}
+	}
+
+	return entries as ParsedQuery<Q>;
 }

@@ -98,6 +98,7 @@ export type QueryObjectValue = NormalPrimitive | NormalPrimitive[] | QueryObject
  */
 export type QueryObject = { [key: string]: QueryObjectValue };
 
+/** Generic query object type */
 export type ParsedQueryGeneric = Record<string, NormalPrimitive | NormalPrimitive[]>;
 
 type QueryPairs<Q extends string> = Split<Q extends `?${infer Rest}` ? Rest : Q, '&'>;
