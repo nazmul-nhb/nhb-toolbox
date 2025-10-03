@@ -1,4 +1,5 @@
 import { isNotEmptyObject } from '../guards/non-primitives';
+import type { Tuple } from '../utils/types';
 import type { GenericObject } from './types';
 
 /**
@@ -31,8 +32,8 @@ export const countObjectFields = <T extends GenericObject>(obj: T): number => {
  * - Returns an empty array (`[]`) for an empty object or a non-object value.
  *
  * @param obj The object from which to extract the keys.
- * @returns An array of keys from the specified object.
+ * @returns An tuple of keys from the specified object.
  */
-export function extractObjectKeys<T extends GenericObject>(obj: T): Array<keyof T> {
-	return isNotEmptyObject(obj) ? Object.keys(obj) : [];
+export function extractObjectKeys<T extends GenericObject>(obj: T): Tuple<keyof T> {
+	return (isNotEmptyObject(obj) ? Object.keys(obj) : []) as Tuple<keyof T>;
 }

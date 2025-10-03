@@ -273,3 +273,29 @@
 // 	: T[K] extends number ? T[K]
 // 	: number;
 // };
+
+// ! From number/types
+// type IsEven<N extends number, Even extends unknown[] = [], Odd extends unknown[] = [unknown]> =
+//     [...Odd, ...Odd]['length'] extends N ? false
+//     : [...Even, ...Even]['length'] extends N ? true
+//     : IsEven<N, [...Even, unknown], [...Odd, unknown]>;
+
+// // Filter odds from a union
+// type FilterOdd<U extends number> =
+//     U extends any ?
+//         IsEven<U> extends true ?
+//             never
+//         :	U
+//     :	never;
+
+// // Filter evens from a union
+// type FilterEven<U extends number> =
+//     U extends any ?
+//         IsEven<U> extends true ?
+//             U
+//         :	never
+//     :	never;
+
+// // Build odd/even enumerations
+// export type OddEnumerate<N extends number> = FilterOdd<Enumerate<N>>;
+// export type EvenEnumerate<N extends number> = FilterEven<Enumerate<N>>;

@@ -1,5 +1,5 @@
 import type { AdvancedTypes, NormalPrimitive, ValidArray } from '../types/index';
-import type { Prettify } from '../utils/types';
+import type { Prettify, Split } from '../utils/types';
 
 /** - Generic object with `unknown` value */
 export type StrictObject = Record<string, unknown>;
@@ -97,6 +97,27 @@ export type QueryObjectValue = NormalPrimitive | NormalPrimitive[] | QueryObject
  * - Supports nested objects and arrays.
  */
 export type QueryObject = { [key: string]: QueryObjectValue };
+
+export type ParsedQueryGeneric = Record<string, NormalPrimitive | NormalPrimitive[]>;
+
+type QueryPairs<Q extends string> = Split<Q extends `?${infer Rest}` ? Rest : Q, '&'>;
+
+type ValuesOfKey<Pairs extends string[], K extends string> =
+	Pairs extends [infer Head extends string, ...infer Tail extends string[]] ?
+		Head extends `${K}=${infer V}` ?
+			[V, ...ValuesOfKey<Tail, K>]
+		:	ValuesOfKey<Tail, K>
+	:	[];
+
+/** Query object parsed from a literal string */
+export type ParsedQuery<Q extends string> = Prettify<{
+	[K in QueryPairs<Q>[number] extends `${infer Key}=${string}` ? Key : never]: ValuesOfKey<
+		QueryPairs<Q>,
+		K
+	> extends [infer Only] ?
+		Only
+	:	ValuesOfKey<QueryPairs<Q>, K>;
+}>;
 
 /** - Object type with string or number or boolean as value for each key. */
 export type GenericObjectPrimitive = Record<string, string | number | boolean>;

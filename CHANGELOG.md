@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.60] - 2025-10-03
+
+- **Added** new _utility types_ `ArrayToTuple<T[]>` and `Tuple<T>`.
+- Updated
+
 ## [4.20.56] - 2025-10-02
 
 - **Updated** `isDeepEqual` utility: Now it accepts _arguments of unknown types_.

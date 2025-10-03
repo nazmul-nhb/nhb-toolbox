@@ -1,6 +1,6 @@
 import { flattenObjectKeyValue } from '../object/objectify';
 import { parseObjectValues } from '../object/sanitize';
-import type { QueryObject, StrictObject } from '../object/types';
+import type { ParsedQueryGeneric, QueryObject } from '../object/types';
 import type { QueryString } from '../string/types';
 import { deepParsePrimitives } from '../utils/index';
 
@@ -56,14 +56,14 @@ export const generateQueryParams = <T extends QueryObject>(
 };
 
 /**
- * * Get query params as standard `JavaScript` Object `Record<string, string>`.
+ * * Get query params as standard `JavaScript` Object `Record<string, string>`. You can define the type by passing a type argument.
  *
  * - **Note:** *Extracts query parameters from the current URL (window.location.search).*
  *
  * @returns Query string as key-value paired object. `Record<string, string>`.
  */
-export function getQueryParams(): Record<string, string> {
-	return Object.fromEntries(new URLSearchParams(window?.location?.search));
+export function getQueryParams<QParams extends Record<string, string>>(): QParams {
+	return Object.fromEntries(new URLSearchParams(window?.location?.search)) as QParams;
 }
 
 /**
@@ -82,16 +82,21 @@ export function updateQueryParam(key: string, value: string) {
  * Supports multiple values for the same key by returning arrays.
  * Optionally parses primitive string values into actual types (e.g., "1" → 1, "true" → true).
  *
+ * @remarks This utility is designed to parse generic string, for literal use, try {@link parseQueryStringLiteral}.
+ *
  * - **Note:** *This function does **not** access or depend on `current URL` a.k.a `window.location.search`.*
  *
  * @param query - The query string to parse.
  * @param parsePrimitives - Whether to convert stringified primitives into real values (default: true).
- * @returns An object where keys are strings and values can be string, array, number, boolean, or null.
+ * @returns An object where keys are strings and values can be string, array, number, boolean, or null/undefined.
  */
-export const parseQueryString = (query: string, parsePrimitives = true): StrictObject => {
+export function parseQueryString<QParams extends ParsedQueryGeneric>(
+	query: string,
+	parsePrimitives = true
+): QParams {
 	const params = new URLSearchParams(query.startsWith('?') ? query.slice(1) : query);
 
-	const entries: StrictObject = {};
+	const entries: ParsedQueryGeneric = {};
 
 	for (const [key, value] of params.entries()) {
 		if (key in entries) {
@@ -105,5 +110,5 @@ export const parseQueryString = (query: string, parsePrimitives = true): StrictO
 		}
 	}
 
-	return parsePrimitives ? parseObjectValues(entries) : entries;
-};
+	return (parsePrimitives ? parseObjectValues(entries) : entries) as QParams;
+}
