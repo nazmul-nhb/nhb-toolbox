@@ -1,6 +1,6 @@
 import { isNotEmptyObject } from '../guards/non-primitives';
 import type { Tuple } from '../utils/types';
-import type { DeepKeysTuple, GenericObject } from './types';
+import type { DeepKeys, GenericObject } from './types';
 
 /**
  * * Deep clone an object.
@@ -39,15 +39,15 @@ export function extractObjectKeys<T extends GenericObject>(obj: T): Tuple<keyof 
 }
 
 /**
- * * Recursively extracts all nested keys from an object as a tuple.
+ * * Recursively extracts all nested keys from an object as an array.
  *
  * @remarks
  * - Returns an empty array (`[]`) for an empty object or a non-object value.
  *
  * @param obj The object from which to extract the keys.
- * @returns An tuple of all the nested keys from the specified object.
+ * @returns An array of all the nested keys from the specified object.
  */
-export function extractObjectKeysDeep<T extends GenericObject>(obj: T): DeepKeysTuple<T> {
+export function extractObjectKeysDeep<T extends GenericObject>(obj: T): Array<DeepKeys<T>> {
 	function _getDeepKeys(candidate: GenericObject): string[] {
 		let result: string[] = [];
 
@@ -62,5 +62,5 @@ export function extractObjectKeysDeep<T extends GenericObject>(obj: T): DeepKeys
 		return result;
 	}
 
-	return (isNotEmptyObject(obj) ? _getDeepKeys(obj) : []) as DeepKeysTuple<T>;
+	return (isNotEmptyObject(obj) ? _getDeepKeys(obj) : []) as Array<DeepKeys<T>>;
 }

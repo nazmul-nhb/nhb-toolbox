@@ -5,10 +5,10 @@ import type { DateLike } from '../date/types';
 export type Any = any;
 
 declare const __brand: unique symbol;
-type Brand<B> = { [__brand]: B };
+type $Brand<B> = { [__brand]: B };
 
 /** Create a branded type. */
-export type Branded<T, B> = T & Brand<B>;
+export type Branded<T, B> = T & $Brand<B>;
 
 /** Utility type to flatten Partial type */
 export type FlattenPartial<T> = Partial<{ [K in keyof T]: T[K] }>;

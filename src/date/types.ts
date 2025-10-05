@@ -232,7 +232,7 @@ export interface ChronosInternals {
 /** @internal Helper type to assign instance origin when creating new Chronos instance. */
 export type WithoutOrigin = Omit<Chronos, '#ORIGIN' | 'origin'>;
 
-type PluginMethods = 'timeZone';
+type $PluginMethods = 'timeZone';
 
 /** Methods (both instance and static) in `Chronos` class that return `Chronos` instance. */
 export type ChronosMethods = LooseLiteral<
@@ -252,7 +252,7 @@ export type ChronosMethods = LooseLiteral<
 				K
 			:	never;
 	  }[keyof typeof Chronos]
-	| PluginMethods
+	| $PluginMethods
 >;
 
 /**

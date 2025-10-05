@@ -300,7 +300,7 @@ export type ValueOptional<O, K extends keyof O = keyof O> = {
 	[P in keyof O]: P extends K ? O[P] | undefined : O[P];
 };
 
-type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
+type $Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 
 /**
  * * Creates a type that is either `T` or `U`, but not both at the same time.
@@ -313,7 +313,7 @@ type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
  * type Exclusive = OneOf<A, B>;
  * // Equivalent to: { a: string } | { b: number }
  */
-export type OneOf<T, U> = (T & Without<U, T>) | (U & Without<T, U>);
+export type OneOf<T, U> = (T & $Without<U, T>) | (U & $Without<T, U>);
 
 /**
  * * Checks whether a type is a strict object (excluding functions).
@@ -565,11 +565,11 @@ export type Cast<A1, A2> = A1 extends A2 ? A1 : A2;
 export type Pop<L extends List> =
 	L extends readonly [...infer El, any] | readonly [...infer El, any?] ? El : L;
 
-type __Split<S extends string, D extends string, T extends string[] = []> =
-	S extends `${infer BS}${D}${infer AS}` ? __Split<AS, D, [...T, BS]> : [...T, S];
+type $$Split<S extends string, D extends string, T extends string[] = []> =
+	S extends `${infer BS}${D}${infer AS}` ? $$Split<AS, D, [...T, BS]> : [...T, S];
 
-type _Split<S extends string, D extends string = ''> =
-	D extends '' ? Pop<__Split<S, D>> : __Split<S, D>;
+type $Split<S extends string, D extends string = ''> =
+	D extends '' ? Pop<$$Split<S, D>> : $$Split<S, D>;
 
 /**
  * ✂️ Split a string literal by a given delimiter into a list of strings.
@@ -587,12 +587,12 @@ type _Split<S extends string, D extends string = ''> =
  * type T2 = Split<'foo-bar', '-'>; // ['foo', 'bar']
  */
 export type Split<S extends string, D extends string = ''> =
-	_Split<S, D> extends infer X ? Cast<X, string[]> : never;
+	$Split<S, D> extends infer X ? Cast<X, string[]> : never;
 
-type _Join<T extends List, D extends string> =
+type $Join<T extends List, D extends string> =
 	T extends [] ? ''
 	: T extends [NormalPrimitive] ? `${T[0]}`
-	: T extends [NormalPrimitive, ...infer R] ? `${T[0]}${D}${_Join<R, D>}`
+	: T extends [NormalPrimitive, ...infer R] ? `${T[0]}${D}${$Join<R, D>}`
 	: string;
 
 /**
@@ -611,19 +611,19 @@ type _Join<T extends List, D extends string> =
  * type T2 = Join<['hello', 'world']>; // "hello world"
  */
 export type Join<T extends List<NormalPrimitive>, D extends string = ' '> =
-	_Join<T, D> extends infer X ? Cast<X, string> : never;
+	$Join<T, D> extends infer X ? Cast<X, string> : never;
 
 /** Turns a union into an intersection */
-type UnionToIntersection<U> =
+export type $UnionToIntersection<U> =
 	(U extends any ? (arg: U) => void : never) extends (arg: infer I) => void ? I : never;
 
 /** Gets the "last" item of a union */
-type LastOf<T> =
-	UnionToIntersection<T extends any ? () => T : never> extends () => infer R ? R : never;
+type $LastOf<T> =
+	$UnionToIntersection<T extends any ? () => T : never> extends () => infer R ? R : never;
 
 /** Converts a union to a tuple */
-type UnionToTuple<T, L = LastOf<T>> =
-	[T] extends [never] ? [] : [...UnionToTuple<Exclude<T, L>>, L];
+type $UnionToTuple<T, L = $LastOf<T>> =
+	[T] extends [never] ? [] : [...$UnionToTuple<Exclude<T, L>>, L];
 
 /**
  * * Converts an array type containing a union of literals into a tuple of those literals.
@@ -642,7 +642,7 @@ type UnionToTuple<T, L = LastOf<T>> =
  * type T2 = ArrayToTuple<never[]>; // []
  */
 export type ArrayToTuple<T extends readonly unknown[]> =
-	T[number] extends infer U ? UnionToTuple<U> : never;
+	T[number] extends infer U ? $UnionToTuple<U> : never;
 
 /**
  * * Converts a type into a tuple form.
@@ -661,4 +661,7 @@ export type ArrayToTuple<T extends readonly unknown[]> =
  * type T2 = Tuple<1 | 2 | 3>; // [1, 2, 3]
  * type T3 = Tuple<never>; // []
  */
-export type Tuple<T> = [T] extends [never] ? [] : UnionToTuple<T>;
+export type Tuple<T> = [T] extends [never] ? [] : $UnionToTuple<T>;
+
+/** Helper to make type hovers expand nicely. */
+export type $Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : T;

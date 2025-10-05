@@ -8,9 +8,9 @@ import type {
 } from './constants';
 import type { Unit } from './Unit';
 
-// * Enumerate & Enumerate Internal: builds a union of all numbers from 0 to N - 1
-type EnumerateInternal<N extends number, Acc extends number[] = []> =
-	Acc['length'] extends N ? Acc[number] : EnumerateInternal<N, [...Acc, Acc['length']]>;
+/** Enumerate & Enumerate Internal: builds a union of all numbers from 0 to N - 1 */
+type $EnumerateInternal<N extends number, Acc extends number[] = []> =
+	Acc['length'] extends N ? Acc[number] : $EnumerateInternal<N, [...Acc, Acc['length']]>;
 
 /**
  * * Builds a union of numeric literals from `0` to `N - 1`.
@@ -21,11 +21,11 @@ type EnumerateInternal<N extends number, Acc extends number[] = []> =
  * @example
  * type U = Enumerate<3>; // 0 | 1 | 2
  */
-export type Enumerate<N extends number> = EnumerateInternal<N>;
+export type Enumerate<N extends number> = $EnumerateInternal<N>;
 
-// * Helper: Add 1 to a number
-type AddOne<N extends number, Acc extends unknown[] = []> =
-	Acc['length'] extends N ? [...Acc, unknown]['length'] : AddOne<N, [...Acc, unknown]>;
+/** Helper: Add 1 to a number */
+type $AddOne<N extends number, Acc extends unknown[] = []> =
+	Acc['length'] extends N ? [...Acc, unknown]['length'] : $AddOne<N, [...Acc, unknown]>;
 
 /**
  *
@@ -45,7 +45,7 @@ type AddOne<N extends number, Acc extends unknown[] = []> =
  * @returns A union of numeric literal types from `From` to `To - 1`.
  */
 export type NumberRange<From extends number, To extends number> = Exclude<
-	Enumerate<AddOne<To>>,
+	Enumerate<$AddOne<To>>,
 	Enumerate<From>
 >;
 

@@ -1,5 +1,5 @@
 import type { AdvancedTypes, NormalPrimitive, ValidArray } from '../types/index';
-import type { Prettify, Split, Tuple } from '../utils/types';
+import type { $UnionToIntersection, Prettify, Split, Tuple } from '../utils/types';
 
 /** - Generic object with `unknown` value */
 export type StrictObject = Record<string, unknown>;
@@ -15,18 +15,14 @@ export type Objects = readonly [GenericObject, ...GenericObject[]];
  *
  * @note It is recommended to use it only with `MergeAll<T>`, `FlattenValue<T>` and/or `FlattenLeafValue<T>`. For other other cases use {@link https://toolbox.nazmul-nhb.dev/docs/types/utility-types#prettifyt Prettify<T>}
  */
-export type Expand<T> =
+export type ExpandAll<T> =
 	T extends AdvancedTypes ? T
-	: T extends GenericObject ? { [K in keyof T]: Expand<T[K]> }
+	: T extends GenericObject ? { [K in keyof T]: ExpandAll<T[K]> }
 	: T;
-
-/** - Converts a union type to an intersection type. */
-type UnionToIntersection<U> =
-	(U extends unknown ? (arg: U) => void : never) extends (arg: infer I) => void ? I : never;
 
 /** - Merges all properties of the input objects into a single object type. */
 export type MergeAll<T extends readonly GenericObject[]> = {
-	[K in keyof UnionToIntersection<T[number]>]: UnionToIntersection<T[number]>[K];
+	[K in keyof $UnionToIntersection<T[number]>]: $UnionToIntersection<T[number]>[K];
 };
 
 /** - Dot-notation keys for flattened nested objects with `any` value (including optional properties) */
@@ -101,24 +97,25 @@ export type QueryObject = { [key: string]: QueryObjectValue };
 /** Generic query object type */
 export type ParsedQueryGeneric = Record<string, NormalPrimitive | NormalPrimitive[]>;
 
-/** Key-value pairs as tuple */
-type QueryPairs<Q extends string> = Split<Q extends `?${infer Rest}` ? Rest : Q, '&'>;
+/** Create tuples (key-value pairs) from query string, e.g. `$QueryPairs<'hello=hola&hello=hi'>` to `["hello=hola", "hello=hi"]` */
+type $QueryPairs<Q extends string> = Split<Q extends `?${infer Rest}` ? Rest : Q, '&'>;
 
-type ValuesOfKey<Pairs extends string[], K extends string> =
+/** If a provided key has multiple values, convert the values into a separate tuple, e.g. `$ValuesOfKey<['hello=hi', 'hello=bye'], 'hello'>` to `["hi", "bye"]` */
+type $ValuesOfKey<Pairs extends string[], K extends string> =
 	Pairs extends [infer Head extends string, ...infer Tail extends string[]] ?
 		Head extends `${K}=${infer V}` ?
-			[V, ...ValuesOfKey<Tail, K>]
-		:	ValuesOfKey<Tail, K>
+			[V, ...$ValuesOfKey<Tail, K>]
+		:	$ValuesOfKey<Tail, K>
 	:	[];
 
 /** Query object parsed from a literal string */
 export type ParsedQuery<Q extends string> = Prettify<{
-	[K in QueryPairs<Q>[number] extends `${infer Key}=${string}` ? Key : never]: ValuesOfKey<
-		QueryPairs<Q>,
+	[K in $QueryPairs<Q>[number] extends `${infer Key}=${string}` ? Key : never]: $ValuesOfKey<
+		$QueryPairs<Q>,
 		K
 	> extends [infer Only] ?
 		Only
-	:	ValuesOfKey<QueryPairs<Q>, K>;
+	:	$ValuesOfKey<$QueryPairs<Q>, K>;
 }>;
 
 /** - Object type with string or number or boolean as value for each key. */
@@ -194,7 +191,7 @@ export type NestedPrimitiveKey<T> =
 		}[keyof T & string]
 	:	never;
 
-/** Extract only number, string, undefined and null keys from an object, including nested dot-notation keys.  */
+/** - Extract only number, string, undefined and null keys from an object, including nested dot-notation keys.  */
 export type NumericDotKey<T> =
 	T extends AdvancedTypes ? never
 	: T extends GenericObject ?
@@ -206,7 +203,7 @@ export type NumericDotKey<T> =
 		}[keyof T & string]
 	:	never;
 
-/** * Recursively extracts all keys of an object (any depth) as a union. */
+/** - Recursively extracts all keys of an object (includes nested keys) as a union. */
 export type DeepKeys<T extends GenericObject> =
 	T extends AdvancedTypes ? never
 	:	| keyof T
@@ -214,7 +211,7 @@ export type DeepKeys<T extends GenericObject> =
 				[K in keyof T]: T[K] extends GenericObject ? DeepKeys<T[K]> : never;
 		  }[keyof T];
 
-/** * Converts the union of keys from {@link DeepKeys<T>} into a tuple. */
+/** - Converts the union of keys from {@link DeepKeys<T>} into a tuple. */
 export type DeepKeysTuple<T extends GenericObject> = Tuple<DeepKeys<T>>;
 
 /** - Options for `sanitizeData` utility. */
@@ -259,7 +256,7 @@ export interface ConvertObjectOptions<
 }
 
 /** Transform a single property */
-type ConvertProp<V, C extends 'string' | 'number'> =
+type $ConvertProp<V, C extends 'string' | 'number'> =
 	C extends 'string' ?
 		V extends string | number ?
 			string
@@ -271,12 +268,13 @@ type ConvertProp<V, C extends 'string' | 'number'> =
 	:	V;
 
 /** Extract sub-keys after prefix like `"props."` */
-type SubKey<S extends string, P extends string> = S extends `${P}.${infer Rest}` ? Rest : never;
+type $SubKey<S extends string, P extends string> =
+	S extends `${P}.${infer Rest}` ? Rest : never;
 
 /** Transformed shape of the return type of `convertObjectValues` */
 export type ConvertedObject<T, Keys extends string, C extends 'string' | 'number'> = Prettify<{
-	[K in Extract<keyof T, string>]: K extends Keys ? ConvertProp<T[K], C>
+	[K in Extract<keyof T, string>]: K extends Keys ? $ConvertProp<T[K], C>
 	: T[K] extends AdvancedTypes ? T[K]
-	: T[K] extends GenericObject ? ConvertedObject<T[K], SubKey<Keys, K>, C>
+	: T[K] extends GenericObject ? ConvertedObject<T[K], $SubKey<Keys, K>, C>
 	: T[K];
 }>;

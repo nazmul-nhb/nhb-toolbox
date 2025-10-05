@@ -17,6 +17,7 @@ export default [
 			'coverage/*',
 			'**/*.test.ts',
 			'**/__tests__/**/*',
+			'.VSCodeCounter/*',
 		],
 	},
 	{

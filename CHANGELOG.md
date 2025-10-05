@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.64] - 2025-10-05
+
+- **Updated** `extractObjectKeysDeep` no longer returns a _tuple_, instead now it returns an _array of keys_ (string literal).
+
 ## [4.20.60] - 2025-10-04
 
 - **Added** new _utility types_ `ArrayToTuple<T[]>` and `Tuple<T>`.
