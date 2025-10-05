@@ -25,7 +25,7 @@ export function isValidArray<T>(value: unknown): value is Array<T> {
  * @param value - The value to check.
  * @returns `true` if the value is an object, otherwise `false`.
  */
-export function isObject(value: unknown): value is Record<string, unknown> {
+export function isObject(value: unknown): value is GenericObject {
 	return value !== null && typeof value === 'object' && !isArray(value);
 }
 
@@ -47,7 +47,7 @@ export function isNotEmptyObject(value: unknown): value is GenericObject {
 export function isObjectWithKeys<Key extends string>(
 	value: unknown,
 	keys: ValidArray<Key>
-): value is Record<Key, unknown> {
+): value is { [K in Key]: unknown } {
 	return isObject(value) && keys?.every((key) => key in value);
 }
 
@@ -106,7 +106,7 @@ export function isArrayOfType<T>(
  * @param value - The value to check.
  * @returns `true` if the value is a Promise, otherwise `false`.
  */
-export function isPromise(value: unknown): value is Promise<unknown> {
+export function isPromise<T>(value: unknown): value is Promise<T> {
 	return isObject(value) && isFunction(value.then);
 }
 
