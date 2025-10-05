@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.66] - 2025-10-05
+
+- **Updated** `isObjectWithKeys`: now returns more _structured object shape_ with provided keys.
+
 ## [4.20.64] - 2025-10-05
 
 - **Updated** `extractObjectKeys`: now have _overload signatures_, returns a _tuple_ or an _array of keys_ (string literal).
