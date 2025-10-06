@@ -232,28 +232,32 @@ export interface ChronosInternals {
 /** @internal Helper type to assign instance origin when creating new Chronos instance. */
 export type WithoutOrigin = Omit<Chronos, '#ORIGIN' | 'origin'>;
 
-type $PluginMethods = 'timeZone';
+/** Alias for `typeof Chronos` */
+export type $Chronos = typeof Chronos;
+
+/** * Instance methods that return `Chronos` instance */
+export type $InstanceMethods = {
+	[K in keyof WithoutOrigin]: Chronos extends {
+		[Key in K]: (...args: any[]) => Chronos;
+	} ?
+		K
+	:	never;
+}[keyof WithoutOrigin];
+
+/** * Static methods that return `Chronos` instance */
+export type $StaticMethods = {
+	[K in keyof $Chronos]: $Chronos extends {
+		[Key in K]: (...args: any[]) => Chronos;
+	} ?
+		K
+	:	never;
+}[keyof $Chronos];
+
+/** * Plugin methods that return `Chronos` instance */
+export type $PluginMethods = LooseLiteral<'timeZone'>;
 
 /** Methods (both instance and static) in `Chronos` class that return `Chronos` instance. */
-export type ChronosMethods = LooseLiteral<
-	| {
-			// Instance methods that return `Chronos`
-			[K in keyof WithoutOrigin]: Chronos extends {
-				[key in K]: (...args: any[]) => Chronos;
-			} ?
-				K
-			:	never;
-	  }[keyof WithoutOrigin]
-	| {
-			// Static methods that return `Chronos`
-			[K in keyof typeof Chronos]: typeof Chronos extends {
-				[key in K]: (...args: any[]) => Chronos;
-			} ?
-				K
-			:	never;
-	  }[keyof typeof Chronos]
-	| $PluginMethods
->;
+export type ChronosMethods = $InstanceMethods | $StaticMethods | $PluginMethods;
 
 /**
  * * Accepted Input type for `Chronos`
@@ -487,7 +491,7 @@ export interface SeasonOptions {
 // ! ======= SEASON CONFIG TYPES END ======== //
 
 /** * A plugin that augments the Chronos class with methods or properties. */
-export type ChronosPlugin = (ChronosClass: typeof Chronos) => void;
+export type ChronosPlugin = (ChronosClass: $Chronos) => void;
 
 /** Options for configuring business hour */
 export interface BusinessHourOptions {
@@ -529,8 +533,7 @@ export interface DateLike {
 /**
  * * Options for `Chronos` _static_ method `with()`
  *
- * @remarks
- * - Should provide at least one property.
+ * @remarks Should provide at least one property.
  */
 export type ChronosWithOptions = Partial<{
 	/** The full year (e.g., 2025). Years 0–99 are interpreted as 1900–1999. */
