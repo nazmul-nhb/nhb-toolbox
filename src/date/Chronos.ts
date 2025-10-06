@@ -2051,7 +2051,7 @@ export class Chronos {
 	 * @static Returns ISO date strings for each occurrence of a weekday between two fixed dates.
 	 *
 	 * @param day - The weekday to match (e.g., `'Monday'`, `'Friday'`).
-	 * @param options - Absolute date range (e.g. `'2025-06-30'`, ` new Date()`, `new Chronos()` etc.) and output format (local with timezone or utc).
+	 * @param options - Date range (from/to, e.g. `'2025-06-30'`, ` new Date()`, `new Chronos()` etc.) and output format (local with timezone or utc).
 	 * @returns Array of ISO date strings in the specified format. Returns empty array if no matches in the range.
 	 *
 	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/statics#getdatesforday the documentation site} for detailed usage.
@@ -2070,7 +2070,7 @@ export class Chronos {
 	 * @static Returns ISO date strings for each occurrence of a weekday.
 	 *
 	 * @param day - The weekday to match (e.g., `'Wednesday'`, `'Sunday'`).
-	 * @param options - Relative range (e.g., 7 days, 4 weeks) or Absolute date range and output format.
+	 * @param options - Relative range (e.g., 7 days, 4 weeks) or date range (from/to) and output format.
 	 * @returns Array of ISO date strings in the specified format.
 	 *
 	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/statics#getdatesforday the documentation site} for detailed usage.

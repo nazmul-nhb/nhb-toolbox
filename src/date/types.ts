@@ -237,19 +237,19 @@ export type $Chronos = typeof Chronos;
 
 /** * Instance methods that return `Chronos` instance */
 export type $InstanceMethods = {
-	[K in keyof WithoutOrigin]: Chronos extends {
-		[Key in K]: (...args: any[]) => Chronos;
+	[Method in keyof WithoutOrigin]: Chronos extends {
+		[Instance in Method]: (...args: any[]) => Chronos;
 	} ?
-		K
+		Method
 	:	never;
 }[keyof WithoutOrigin];
 
 /** * Static methods that return `Chronos` instance */
 export type $StaticMethods = {
-	[K in keyof $Chronos]: $Chronos extends {
-		[Key in K]: (...args: any[]) => Chronos;
+	[Method in keyof $Chronos]: $Chronos extends {
+		[Instance in Method]: (...args: any[]) => Chronos;
 	} ?
-		K
+		Method
 	:	never;
 }[keyof $Chronos];
 

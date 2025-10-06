@@ -6,6 +6,14 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.69] - 2025-10-07
+
+### 🕧 Updates in Chronos
+
+- **Added** _alias_ for some methods available through _plugins_: `greet` for `getGreeting`, `getSeasonName` for `season`, `zodiac` for `getZodiacSign`
+- **Updated** behaviors of `isWeekend`, `isWorkDay` and `isBusinessHour` methods from `businessPlugin`, now accepts _indices of weekend day as tuple_.
+- **Updated** _internal states_ for most of the plugins; **Renamed** some internal _types_ and _exposed_ some.
+
 ## [4.20.66] - 2025-10-05
 
 - **Updated** `isObjectWithKeys`: now returns more _structured object shape_ with provided keys.

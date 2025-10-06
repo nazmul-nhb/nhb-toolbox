@@ -20,7 +20,7 @@ declare module '../Chronos' {
 		 * @description
 		 * Determines whether the current date is considered part of the weekend.
 		 *
-		 * Behavior:
+		 * **Behavior:**
 		 * - By default (`weekStartsOn = 0`, `weekendLength = 2`), Saturday (6) and Friday (5) are considered weekend.
 		 * - `weekStartsOn` sets the start of the week for calculating weekend days.
 		 * - `weekendLength` sets how many days at the end of the week are treated as weekend.
@@ -56,13 +56,11 @@ declare module '../Chronos' {
 		 * @description
 		 * Determines whether the current date is considered as workday. Internally uses {@link isWeekend} method.
 		 *
-		 * Behavior:
+		 * **Behavior:**
 		 * - By default (`weekStartsOn = 0`, `weekendLength = 2`), Saturday (6) and Friday (5) are considered weekend.
 		 * - `weekStartsOn` sets the start of the week for calculating weekend days.
 		 * - `weekendLength` sets how many days at the end of the week are treated as weekend.
 		 * - `weekendDays`, if provided, is used directly as the weekend days instead of calculating from `weekStartsOn` + `weekendLength`.
-		 *
-		 * @remarks Please, refer to {@link isWeekend} method.
 		 */
 		isWorkday<Length extends NumberRange<1, 4>>(
 			weekStartsOn?: Enumerate<7>,
@@ -82,7 +80,16 @@ declare module '../Chronos' {
 		 * - Supports standard and overnight business hours. Overnight means `end < start`.
 		 * - Example: `businessStartHour = 22`, `businessEndHour = 6` will cover 10 PM to 6 AM next day.
 		 *
-		 * * *Weekends are determined by `weekStartsOn` and `weekendLength` or `weekdays` array if provided using the {@link isWeekend()} method.*
+		 * * *Weekends are determined by `weekStartsOn` and `weekendLength` or `weekdays` array if provided using the {@link isWeekend} method.*
+		 *
+		 * - If you only want to pass `weekendDays` option you should pass the `weekendLength` option or pass a generic (1-4):
+		 * ```ts
+		 * new Chronos().isBusinessHour<3>({ weekendDays: [0, 2, 4] });
+		 *
+		 * // Or
+		 *
+		 * new Chronos().isBusinessHour({weekendLength: 3, weekendDays: [0, 2, 4] });
+		 * ```
 		 */
 		isBusinessHour<Length extends NumberRange<1, 4>>(
 			options?: BusinessHourOptions<Length>
@@ -100,8 +107,6 @@ declare module '../Chronos' {
 		 * @returns The fiscal quarter (1-4).
 		 */
 		toFiscalQuarter(startMonth?: NumberRange<1, 12>): Quarter;
-
-		countBusinessDays(): number;
 	}
 }
 
