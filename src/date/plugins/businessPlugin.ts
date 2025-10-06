@@ -27,13 +27,13 @@ declare module '../Chronos' {
 		 * - `weekendDays`, if provided, is used directly as the weekend days instead of calculating from `weekStartsOn` + `weekendLength`.
 		 *
 		 * @example
-		 * // Default: Saturday & Sunday
+		 * // Default: Saturday & Friday are weekend
 		 * new Chronos().isWeekend();
 		 *
 		 * // Custom week start (Monday) with 2-day weekend (Saturday & Sunday)
 		 * new Chronos().isWeekend(1, 2);
 		 *
-		 * // Custom 3-day weekend (Friday–Sunday)
+		 * // Custom 3-day weekend (Friday, Saturday, Sunday)
 		 * new Chronos().isWeekend(1, 3);
 		 *
 		 * // Fully custom weekend days (Sunday, Friday, Saturday)

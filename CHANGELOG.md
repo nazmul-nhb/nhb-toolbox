@@ -6,7 +6,7 @@ All notable changes to the package will be documented here.
 
 ---
 
-## [4.20.69] - 2025-10-07
+## [4.20.69-70] - 2025-10-07
 
 ### 🕧 Updates in Chronos
 
