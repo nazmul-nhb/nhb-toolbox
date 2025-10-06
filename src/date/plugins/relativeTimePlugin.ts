@@ -89,13 +89,16 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `relative time` related methods */
 export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
+	const internalDate = ChronosClass[INTERNALS].internalDate;
+	const newDate = ChronosClass[INTERNALS].toNewDate;
+
 	ChronosClass.prototype.getRelativeYear = function (
 		this: ChronosConstructor,
 		time?: ChronosInput
 	): number {
-		const inputDate = ChronosClass[INTERNALS].internalDate(this);
+		const inputDate = internalDate(this);
 
-		const now = ChronosClass[INTERNALS].toNewDate(this, time);
+		const now = newDate(this, time);
 
 		let years = inputDate.getFullYear() - now.getFullYear();
 
@@ -114,8 +117,8 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		this: ChronosConstructor,
 		time?: ChronosInput
 	): number {
-		const now = ChronosClass[INTERNALS].toNewDate(this, time);
-		const inputDate = ChronosClass[INTERNALS].internalDate(this);
+		const now = newDate(this, time);
+		const inputDate = internalDate(this);
 
 		let months =
 			(inputDate.getFullYear() - now.getFullYear()) * 12 +
@@ -142,12 +145,12 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		this: ChronosConstructor,
 		time?: ChronosInput
 	): number {
-		const today = ChronosClass[INTERNALS].toNewDate(this, time);
+		const today = newDate(this, time);
 		// Set the time of today to 00:00:00 for comparison purposes
 		today.setHours(0, 0, 0, 0);
 
 		// Normalize the input date to 00:00:00
-		const inputDate = ChronosClass[INTERNALS].internalDate(this);
+		const inputDate = internalDate(this);
 		inputDate.setHours(0, 0, 0, 0);
 
 		const diffTime = inputDate.getTime() - today.getTime();
@@ -160,9 +163,7 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		this: ChronosConstructor,
 		time?: ChronosInput
 	): number {
-		const diff =
-			ChronosClass[INTERNALS].internalDate(this).getTime() -
-			ChronosClass[INTERNALS].toNewDate(this, time).getTime();
+		const diff = internalDate(this).getTime() - newDate(this, time).getTime();
 
 		return Math.floor(diff / (1000 * 60 * 60));
 	};
@@ -171,9 +172,7 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		this: ChronosConstructor,
 		time?: ChronosInput
 	): number {
-		const diff =
-			ChronosClass[INTERNALS].internalDate(this).getTime() -
-			ChronosClass[INTERNALS].toNewDate(this, time).getTime();
+		const diff = internalDate(this).getTime() - newDate(this, time).getTime();
 
 		return Math.floor(diff / (1000 * 60));
 	};
@@ -182,9 +181,7 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		this: ChronosConstructor,
 		time?: ChronosInput
 	): number {
-		const diff =
-			ChronosClass[INTERNALS].internalDate(this).getTime() -
-			ChronosClass[INTERNALS].toNewDate(this, time).getTime();
+		const diff = internalDate(this).getTime() - newDate(this, time).getTime();
 		return Math.floor(diff / 1000);
 	};
 
@@ -192,10 +189,7 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		this: ChronosConstructor,
 		time?: ChronosInput
 	): number {
-		return (
-			ChronosClass[INTERNALS].internalDate(this).getTime() -
-			ChronosClass[INTERNALS].toNewDate(this, time).getTime()
-		);
+		return internalDate(this).getTime() - newDate(this, time).getTime();
 	};
 
 	ChronosClass.prototype.compare = function (

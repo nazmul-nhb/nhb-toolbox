@@ -1,4 +1,6 @@
+import { isValidArray } from '../../guards/non-primitives';
 import type { Enumerate, NumberRange } from '../../number/types';
+import type { TupleOf } from '../../utils/types';
 import { INTERNALS } from '../constants';
 import type { BusinessHourOptions, Quarter } from '../types';
 
@@ -10,34 +12,63 @@ declare module '../Chronos' {
 		/**
 		 * @instance Checks if the current date falls on a weekend.
 		 *
-		 * @param weekStartsOn Optional day the week starts on (0–6). Default is `0` (Sunday).
-		 * @param weekendLength Optional length of the weekend (1 or 2). Default is `2`.
-		 * @returns Whether the date is a weekend.
+		 * @param weekStartsOn Optional. The day index (0–6) that the week starts on. Default is `0` (Sunday).
+		 * @param weekendLength Optional. The number of consecutive days at the end of the week considered as weekend. Must be between 1 and 4. Default is `2`.
+		 * @param weekendDays Optional. A tuple of custom weekend day indices (0–6). Its length must match `weekendLength`. If provided, this overrides `weekStartsOn` + `weekendLength` calculation.
+		 * @returns `true` if the current date is a weekend day according to the provided parameters; otherwise `false`.
 		 *
 		 * @description
-		 * Weekend is determined based on `weekStartsOn` and `weekendLength`.
+		 * Determines whether the current date is considered part of the weekend.
 		 *
-		 * - `weekStartsOn` is a 0-based index (0 = Sunday, 1 = Monday, ..., 6 = Saturday).
-		 * - `weekendLength` defines how many days are considered weekend (1 or 2). Default is 2.
-		 *   If 1, only the last day of the week is treated as weekend.
-		 *   If 2, the last two days are treated as weekend.
+		 * Behavior:
+		 * - By default (`weekStartsOn = 0`, `weekendLength = 2`), Saturday (6) and Friday (5) are considered weekend.
+		 * - `weekStartsOn` sets the start of the week for calculating weekend days.
+		 * - `weekendLength` sets how many days at the end of the week are treated as weekend.
+		 * - `weekendDays`, if provided, is used directly as the weekend days instead of calculating from `weekStartsOn` + `weekendLength`.
+		 *
+		 * @example
+		 * // Default: Saturday & Sunday
+		 * new Chronos().isWeekend();
+		 *
+		 * // Custom week start (Monday) with 2-day weekend (Saturday & Sunday)
+		 * new Chronos().isWeekend(1, 2);
+		 *
+		 * // Custom 3-day weekend (Friday–Sunday)
+		 * new Chronos().isWeekend(1, 3);
+		 *
+		 * // Fully custom weekend days (Sunday, Friday, Saturday)
+		 * new Chronos().isWeekend(0, 3, [0, 5, 6]);
 		 */
-		isWeekend(weekStartsOn?: Enumerate<7>, weekendLength?: 1 | 2): boolean;
+		isWeekend<Length extends NumberRange<1, 4>>(
+			weekStartsOn?: Enumerate<7>,
+			weekendLength?: Length,
+			weekendDays?: TupleOf<Enumerate<7>, Length>
+		): boolean;
 
 		/**
 		 * @instance Checks if the current date is a workday (non-weekend day).
 		 *
-		 * @param weekStartsOn Optional day the week starts on (0–6). Default is `0` (Sunday).
-		 * @param weekendLength Optional length of the weekend (1 or 2). Default is `2`.
-		 * @returns Whether the date is a workday.
+		 * @param weekStartsOn Optional. The day index (0–6) that the week starts on. Default is `0` (Sunday).
+		 * @param weekendLength Optional. The number of consecutive days at the end of the week considered as weekend. Must be between 1 and 4. Default is `2`.
+		 * @param weekendDays Optional. A tuple of custom weekend day indices (0–6). Its length must match `weekendLength`. If provided, this overrides `weekStartsOn` + `weekendLength` calculation.
+		 * @returns `true` if the current date is a weekend day according to the provided parameters; otherwise `false`.
 		 *
 		 * @description
-		 * Weekends are determined by `weekStartsOn` and `weekendLength`.
+		 * Determines whether the current date is considered part of the weekend.
 		 *
-		 * - `weekStartsOn` is a 0-based index (0 = Sunday, 1 = Monday, ..., 6 = Saturday).
-		 * - `weekendLength` defines how many days are considered weekend (1 or 2). Default is 2.
+		 * Behavior:
+		 * - By default (`weekStartsOn = 0`, `weekendLength = 2`), Saturday (6) and Friday (5) are considered weekend.
+		 * - `weekStartsOn` sets the start of the week for calculating weekend days.
+		 * - `weekendLength` sets how many days at the end of the week are treated as weekend.
+		 * - `weekendDays`, if provided, is used directly as the weekend days instead of calculating from `weekStartsOn` + `weekendLength`.
+		 *
+		 * @remarks Please, refer to {@link isWeekend} method.
 		 */
-		isWorkday(weekStartsOn?: Enumerate<7>, weekendLength?: 1 | 2): boolean;
+		isWorkday<Length extends NumberRange<1, 4>>(
+			weekStartsOn?: Enumerate<7>,
+			weekendLength?: Length,
+			weekendDays?: TupleOf<Enumerate<7>, Length>
+		): boolean;
 
 		/**
 		 * @instance Checks if the current date and time fall within business hours.
@@ -57,7 +88,9 @@ declare module '../Chronos' {
 		 * - If `weekendLength` is `1`, only the last day of the week is treated as weekend.
 		 * - If `weekendLength` is `2`, the last two days are treated as weekend.
 		 */
-		isBusinessHour(options?: BusinessHourOptions): boolean;
+		isBusinessHour<Length extends NumberRange<1, 4>>(
+			options?: BusinessHourOptions<Length>
+		): boolean;
 
 		/**
 		 * @instance Returns the academic year based on a typical start in July and end in June.
@@ -71,51 +104,65 @@ declare module '../Chronos' {
 		 * @returns The fiscal quarter (1-4).
 		 */
 		toFiscalQuarter(startMonth?: NumberRange<1, 12>): Quarter;
+
+		countBusinessDays(): number;
 	}
 }
 
 /** * Plugin to inject `business` related methods */
 export const businessPlugin = (ChronosClass: MainChronos): void => {
-	ChronosClass.prototype.isWeekend = function (
+	const internalDate = ChronosClass[INTERNALS].internalDate;
+
+	ChronosClass.prototype.isWeekend = function <Length extends NumberRange<1, 4>>(
 		this: ChronosConstructor,
 		weekStartsOn: Enumerate<7> = 0,
-		weekendLength: 1 | 2 = 2
+		weekendLength: Length = 2 as Length,
+		weekendDays?: TupleOf<Enumerate<7>, Length>
 	): boolean {
-		const day = ChronosClass[INTERNALS].internalDate(this).getDay();
-		const lastDayOfWeek = (weekStartsOn + 6) % 7;
-		const secondLastDay = (weekStartsOn + 5) % 7;
+		const day = internalDate(this).getDay() as Enumerate<7>;
 
-		if (weekendLength === 1) {
-			return day === lastDayOfWeek;
+		// Use custom weekend days if provided
+		if (isValidArray<Enumerate<7>>(weekendDays)) {
+			return (weekendDays as TupleOf<Enumerate<7>, 4>).includes(day);
 		}
 
-		return day === lastDayOfWeek || day === secondLastDay;
+		// Auto-calculate weekend days from start & length
+		const lastDayOfWeek = (weekStartsOn + 6) % 7;
+
+		const computedWeekendDays = Array.from(
+			{ length: weekendLength },
+			(_, i) => (lastDayOfWeek - i + 7) % 7
+		);
+
+		return computedWeekendDays.includes(day);
 	};
 
-	ChronosClass.prototype.isWorkday = function (
+	ChronosClass.prototype.isWorkday = function <Length extends NumberRange<1, 4>>(
 		this: ChronosConstructor,
 		weekStartsOn: Enumerate<7> = 0,
-		weekendLength: 1 | 2 = 2
+		weekendLength: Length = 2 as Length,
+		weekendDays?: TupleOf<Enumerate<7>, Length>
 	): boolean {
-		return !this.isWeekend(weekStartsOn, weekendLength);
+		return !this.isWeekend(weekStartsOn, weekendLength, weekendDays);
 	};
 
-	ChronosClass.prototype.isBusinessHour = function (
+	ChronosClass.prototype.isBusinessHour = function <Length extends NumberRange<1, 4>>(
 		this: ChronosConstructor,
-		options?: BusinessHourOptions
+		options?: BusinessHourOptions<Length>
 	): boolean {
 		const {
 			businessStartHour = 9,
 			businessEndHour = 17,
 			weekStartsOn = 0,
-			weekendLength = 2,
+			weekendLength = 2 as Length,
+			weekendDays,
 		} = options ?? {};
 
-		if (this.isWeekend(weekStartsOn, weekendLength)) {
+		if (this.isWeekend(weekStartsOn, weekendLength, weekendDays)) {
 			return false;
 		}
 
-		const hour = ChronosClass[INTERNALS].internalDate(this).getHours();
+		const hour = internalDate(this).getHours();
 
 		if (businessStartHour === businessEndHour) {
 			return false;
@@ -134,7 +181,7 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 		this: ChronosConstructor,
 		startMonth: NumberRange<1, 12> = 7
 	): Quarter {
-		const month = ChronosClass[INTERNALS].internalDate(this).getMonth() + 1;
+		const month = internalDate(this).getMonth() + 1;
 		const adjusted = (month - startMonth + 12) % 12;
 		return (Math.floor(adjusted / 3) + 1) as Quarter;
 	};
@@ -142,8 +189,8 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 	ChronosClass.prototype.toAcademicYear = function (
 		this: ChronosConstructor
 	): `${number}-${number}` {
-		const year = ChronosClass[INTERNALS].internalDate(this).getFullYear();
-		const month = ChronosClass[INTERNALS].internalDate(this).getMonth();
+		const year = internalDate(this).getFullYear();
+		const month = internalDate(this).getMonth();
 
 		if (month >= 6) {
 			return `${year}-${year + 1}`;

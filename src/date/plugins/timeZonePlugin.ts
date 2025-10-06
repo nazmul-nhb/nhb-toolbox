@@ -31,6 +31,8 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `timeZone` related methods */
 export const timeZonePlugin = (ChronosClass: MainChronos): void => {
+	const internal = ChronosClass[INTERNALS];
+
 	ChronosClass.prototype.timeZone = function (
 		this: ChronosConstructor,
 		zone: TimeZone | UTCOffSet
@@ -50,12 +52,12 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		const relativeOffset = targetOffset - previousOffset;
 
 		const adjustedTime = new Date(
-			ChronosClass[INTERNALS].internalDate(this).getTime() + relativeOffset * 60 * 1000
+			internal.internalDate(this).getTime() + relativeOffset * 60 * 1000
 		);
 
 		const instance = new ChronosClass(adjustedTime);
 
-		return ChronosClass[INTERNALS].withOrigin(instance, 'timeZone', stringOffset);
+		return internal.withOrigin(instance, 'timeZone', stringOffset);
 	};
 
 	ChronosClass.prototype.getTimeZoneNameShort = function (

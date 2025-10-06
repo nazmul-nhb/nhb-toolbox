@@ -1,5 +1,5 @@
 import type { Enumerate, NumberRange } from '../number/types';
-import type { LooseLiteral } from '../utils/types';
+import type { LooseLiteral, TupleOf } from '../utils/types';
 import type { Chronos } from './Chronos';
 import type { ChronosStatics } from './chronos-statics';
 import type {
@@ -494,7 +494,7 @@ export interface SeasonOptions {
 export type ChronosPlugin = (ChronosClass: $Chronos) => void;
 
 /** Options for configuring business hour */
-export interface BusinessHourOptions {
+export interface BusinessHourOptions<Length extends NumberRange<1, 4>> {
 	/** - Optional starting hour of business time (0–23). Defaults to `9` (9 AM). */
 	businessStartHour?: Enumerate<24>;
 	/** - Optional ending hour of business time (0–23). Defaults to `17` (5 PM). */
@@ -502,7 +502,9 @@ export interface BusinessHourOptions {
 	/** - Optional day the week starts on (0–6). Default is `0` (Sunday). */
 	weekStartsOn?: Enumerate<7>;
 	/** - Optional weekend length (1 or 2). Default is `2`.*/
-	weekendLength?: 1 | 2;
+	weekendLength?: Length;
+	/** - Tuple of indices of weekend days. Default is `undefined`. */
+	weekendDays?: TupleOf<Enumerate<7>, Length>;
 }
 
 /** Interface representing a date-like object. */

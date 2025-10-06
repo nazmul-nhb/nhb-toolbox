@@ -25,15 +25,16 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `fromNow` method */
 export const fromNowPlugin = (ChronosClass: MainChronos): void => {
+	const internal = ChronosClass[INTERNALS];
+
 	ChronosClass.prototype.fromNow = function (
 		this: ChronosConstructor,
 		level: Exclude<TimeUnit, 'millisecond'> = 'minute',
 		withSuffixPrefix: boolean = true,
 		time?: ChronosInput
 	): string {
-		const now = ChronosClass[INTERNALS].toNewDate(this, time);
-
-		const target = ChronosClass[INTERNALS].internalDate(this);
+		const now = internal.toNewDate(this, time);
+		const target = internal.internalDate(this);
 
 		const isFuture = target > now;
 
