@@ -12,10 +12,20 @@ declare module '../Chronos' {
 		 * @returns The name of the season the current date falls under.
 		 */
 		season(options?: SeasonOptions): string;
+
+		/**
+		 * @instance Returns the current season name based on optional season rules or presets.
+		 *
+		 * @remarks This method alias for {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/names#season season} method.
+		 *
+		 * @param options Configuration with optional custom seasons or preset name.
+		 * @returns The name of the season the current date falls under.
+		 */
+		getSeasonName(options?: SeasonOptions): string;
 	}
 }
 
-/** * Plugin to inject `season` method */
+/** * Plugin to inject `season`/`getSeasonName` method */
 export const seasonPlugin = (ChronosClass: MainChronos): void => {
 	ChronosClass.prototype.season = function (
 		this: ChronosConstructor,
@@ -53,5 +63,12 @@ export const seasonPlugin = (ChronosClass: MainChronos): void => {
 		}
 
 		return 'Unknown';
+	};
+
+	ChronosClass.prototype.getSeasonName = function (
+		this: ChronosConstructor,
+		options?: SeasonOptions
+	): string {
+		return this.season(options);
 	};
 };

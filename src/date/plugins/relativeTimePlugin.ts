@@ -12,12 +12,14 @@ declare module '../Chronos' {
 		 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
 		 */
 		getRelativeYear(time?: ChronosInput): number;
+
 		/**
 		 * @instance Returns the number of full months between the input date and now.
 		 * @param time Optional time to compare with the `Chronos` date/time.
 		 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
 		 */
 		getRelativeMonth(time?: ChronosInput): number;
+
 		/**
 		 * @instance Determines if the given date is today, tomorrow, yesterday or any relative day.
 		 * @param date - The date to compare (Date object).
@@ -29,30 +31,35 @@ declare module '../Chronos' {
 		 *  - Other positive or negative numbers for other relative days (e.g., `-2` for two days ago, `2` for two days ahead).
 		 */
 		getRelativeWeek(time?: ChronosInput): number;
+
 		/**
 		 * @instance Returns the number of full hours between the input date and now.
 		 * @param time Optional time to compare with the `Chronos` date/time.
 		 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
 		 */
 		getRelativeDay(time?: ChronosInput): number;
+
 		/**
 		 * @instance Determines how many full weeks apart the input date is from the `Chronos` instance.
 		 * @param time Optional time to compare with the `Chronos` date/time.
 		 * @returns Difference in weeks; negative if past, positive if future.
 		 */
 		getRelativeHour(time?: ChronosInput): number;
+
 		/**
 		 * @instance Returns the number of full minutes between the input date and now.
 		 * @param time Optional time to compare with the `Chronos` date/time.
 		 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
 		 */
 		getRelativeMinute(time?: ChronosInput): number;
+
 		/**
 		 * @instance Returns the number of full seconds between the input date and now.
 		 * @param time Optional time to compare with the `Chronos` date/time.
 		 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
 		 */
 		getRelativeSecond(time?: ChronosInput): number;
+
 		/**
 		 * @instance Returns the number of milliseconds between the input date and now.
 		 * @param time Optional time to compare with the `Chronos` date/time.
@@ -71,8 +78,10 @@ declare module '../Chronos' {
 
 		/** @instance Checks if the current date is today. */
 		isToday(): boolean;
+
 		/** @instance Checks if the current date is tomorrow. */
 		isTomorrow(): boolean;
+
 		/** @instance Checks if the current date is yesterday. */
 		isYesterday(): boolean;
 	}

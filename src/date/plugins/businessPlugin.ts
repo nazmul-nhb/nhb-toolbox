@@ -23,6 +23,7 @@ declare module '../Chronos' {
 		 *   If 2, the last two days are treated as weekend.
 		 */
 		isWeekend(weekStartsOn?: Enumerate<7>, weekendLength?: 1 | 2): boolean;
+
 		/**
 		 * @instance Checks if the current date is a workday (non-weekend day).
 		 *
@@ -37,6 +38,7 @@ declare module '../Chronos' {
 		 * - `weekendLength` defines how many days are considered weekend (1 or 2). Default is 2.
 		 */
 		isWorkday(weekStartsOn?: Enumerate<7>, weekendLength?: 1 | 2): boolean;
+
 		/**
 		 * @instance Checks if the current date and time fall within business hours.
 		 *
