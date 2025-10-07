@@ -46,7 +46,7 @@ declare module '../Chronos' {
 		/**
 		 * @instance Checks if the current date falls on a weekend using indices of weekend days.
 		 *
-		 * @param weekendDays Optional. A tuple of custom weekend day indices (0–6). Can pass only 1-4 elements.
+		 * @param weekendDays A tuple of custom weekend day indices (0–6). Can pass only 1-4 elements.
 		 * @returns `true` if the current date is a weekend day according to the provided `weekendDays`; otherwise `false`.
 		 *
 		 * @description
