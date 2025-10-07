@@ -197,9 +197,9 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 		this: ChronosConstructor,
 		options?: $BusinessHourOptions
 	): boolean {
-		const { businessStartHour = 9, businessEndHour = 17 } = options ?? {};
-
 		const _isBusinessHour = (): boolean => {
+			const { businessStartHour = 9, businessEndHour = 17 } = options ?? {};
+
 			if (businessStartHour === businessEndHour) {
 				return false;
 			}

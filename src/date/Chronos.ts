@@ -474,19 +474,21 @@ export class Chronos {
 	): TimeDuration {
 		const entries = Object.entries(result) as [keyof TimeDuration, number][];
 
+		const updated = {} as TimeDuration;
+
 		if (!absolute && !isFuture) {
 			for (const [key, value] of entries) {
 				if (value !== 0) {
-					result[key] = value * -1;
+					updated[key] = value * -1;
 				}
 			}
 		} else if (absolute) {
 			for (const [key, value] of entries) {
-				result[key] = Math.abs(value);
+				updated[key] = Math.abs(value);
 			}
 		}
 
-		return result;
+		return updated;
 	}
 
 	/** Gets the full year of the date. */

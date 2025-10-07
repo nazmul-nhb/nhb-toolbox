@@ -168,28 +168,47 @@ export type StrictFormat = LooseLiteral<
 
 /** Iterable `Chronos` object properties */
 export interface ChronosObject {
+	/** Full year (e.g., 2025). */
 	year: number;
+	/** Month index starting from 0 (January = 0). */
 	month: Enumerate<12>;
+	/** ISO month number starting from 1 (January = 1). */
 	isoMonth: NumberRange<1, 12>;
+	/** Day of the month (1–31). */
 	date: NumberRange<1, 31>;
+	/** Day of the week index (0–6, Sunday = 0). */
 	weekDay: Enumerate<7>;
+	/** ISO day of the week number (1–7, Monday = 1). */
 	isoWeekDay: NumberRange<1, 7>;
+	/** Hour of the day (0–23). */
 	hour: Enumerate<24>;
+	/** Minute of the hour (0–59). */
 	minute: Enumerate<60>;
+	/** Second of the minute (0–59). */
 	second: Enumerate<60>;
+	/** Milliseconds within the second. */
 	millisecond: Milliseconds;
+	/** Timestamp in milliseconds since the Unix epoch. */
 	timestamp: number;
+	/** Unix timestamp in seconds since the epoch. */
 	unix: number;
 }
 
 /** Return object type of `duration` method of `Chronos`. */
 export interface TimeDuration {
+	/** Total number of years. */
 	years: number;
+	/** Number of months remaining after full years are counted. */
 	months: number;
+	/** Number of days remaining after full months are counted. */
 	days: number;
+	/** Number of hours remaining after full days are counted. */
 	hours: number;
+	/** Number of minutes remaining after full hours are counted. */
 	minutes: number;
+	/** Number of seconds remaining after full minutes are counted. */
 	seconds: number;
+	/** Number of milliseconds remaining after full seconds are counted. */
 	milliseconds: number;
 }
 
