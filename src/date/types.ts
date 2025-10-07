@@ -532,7 +532,7 @@ export interface BusinessOptionsBasic extends $BusinessHourBaseOptions {
 
 /** Options for configuring business hour with `weekendDays` tuple */
 export interface BusinessOptionsWeekends extends $BusinessHourBaseOptions {
-	/** - Tuple of indices of weekend days. Default is `undefined`. */
+	/** - Tuple of indices (0-6) of weekend days. Can pass only 1-4 elements. Default is `undefined`. */
 	weekendDays?: RangeTuple<Enumerate<7>, 1, 4> | undefined;
 }
 

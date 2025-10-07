@@ -6,6 +6,14 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.80] - 2025-10-07
+
+### 🕧 Updates in Chronos
+
+- **Added** _overload signatures_ for `isWeekend`, `isWorkDay` and `isBusinessHour` methods from `businessPlugin`.
+- **Fixed** issues with `isBusinessHour`: previously skipped _business start and end hours_ in some cases.
+- **Added** new _utility type_ `RangeTuple` to create _ranged tuple_.
+
 ## [4.20.69-70] - 2025-10-07
 
 ### 🕧 Updates in Chronos

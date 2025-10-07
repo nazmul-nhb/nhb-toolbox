@@ -40,37 +40,24 @@ declare module '../Chronos' {
 		 *
 		 * // Custom 3-day weekend (Friday, Saturday, Sunday)
 		 * new Chronos().isWeekend(1, 3);
-		 *
-		 * // Fully custom weekend days (Sunday, Friday, Saturday)
-		 * new Chronos().isWeekend(0, 3, [0, 5, 6]);
 		 */
 		isWeekend(weekStartsOn?: Enumerate<7>, weekendLength?: NumberRange<1, 4>): boolean;
 
 		/**
 		 * @instance Checks if the current date falls on a weekend using indices of weekend days.
 		 *
-		 * @param weekendDays Optional. A tuple of custom weekend day indices (0–6). Its length must match `weekendLength`. If provided, this overrides `weekStartsOn` + `weekendLength` calculation.
+		 * @param weekendDays Optional. A tuple of custom weekend day indices (0–6). Can pass only 1-4 elements.
 		 * @returns `true` if the current date is a weekend day according to the provided `weekendDays`; otherwise `false`.
 		 *
 		 * @description
 		 * Determines whether the current date is considered part of the weekend.
 		 *
 		 * **Behavior:**
-		 * - By default (`weekStartsOn = 0`, `weekendLength = 2`), Saturday (6) and Friday (5) are considered weekend.
-		 * - `weekendDays`, if not `undefined`, is used directly as the weekend days instead of calculating from `weekStartsOn` + `weekendLength`.
+		 * - `weekendDays` is used directly as the weekend days instead of calculating from `weekStartsOn` + `weekendLength`.
 		 *
 		 * @example
-		 * // Default: Saturday & Friday are weekend
-		 * new Chronos().isWeekend();
-		 *
-		 * // Custom week start (Monday) with 2-day weekend (Saturday & Sunday)
-		 * new Chronos().isWeekend(1, 2);
-		 *
-		 * // Custom 3-day weekend (Friday, Saturday, Sunday)
-		 * new Chronos().isWeekend(1, 3);
-		 *
 		 * // Fully custom weekend days (Sunday, Friday, Saturday)
-		 * new Chronos().isWeekend(0, 3, [0, 5, 6]);
+		 * new Chronos().isWeekend([0, 5, 6]);
 		 */
 		isWeekend(weekendDays: RangeTuple<Enumerate<7>, 1, 4>): boolean;
 
@@ -94,15 +81,14 @@ declare module '../Chronos' {
 		/**
 		 * @instance Checks if the current date is a workday (non-weekend day) using indices of weekend days.
 		 *
-		 * @param weekendDays Optional. A tuple of custom weekend day indices (0–6).
+		 * @param weekendDays A tuple of custom weekend day indices (0–6). Can pass only 1-4 elements.
 		 * @returns `true` if the current date is a work day according to the provided `weekendDays`; otherwise `false`.
 		 *
 		 * @description
 		 * Determines whether the current date is considered as workday. Internally uses {@link isWeekend} method.
 		 *
 		 * **Behavior:**
-		 * - By default (`weekStartsOn = 0`, `weekendLength = 2`), Saturday (6) and Friday (5) are considered weekend.
-		 * - `weekendDays`, if not `undefined`, is used directly as the weekend days instead of calculating from `weekStartsOn` + `weekendLength`.
+		 * - `weekendDays` is used directly as the weekend days instead of calculating from `weekStartsOn` + `weekendLength`.
 		 */
 		isWorkday(weekendDays: RangeTuple<Enumerate<7>, 1, 4>): boolean;
 
