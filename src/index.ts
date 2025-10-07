@@ -88,6 +88,9 @@ export {
 	factorial,
 	factorial as calculateFactorial,
 	factorial as getFactorial,
+	getFactors,
+	getFactors as factorsOf,
+	getFactors as getDivisors,
 } from './number/basics';
 
 export { Currency } from './number/Currency';
