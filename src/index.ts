@@ -85,6 +85,9 @@ export {
 	sumDigits,
 	sumNumbers,
 	sumNumbers as sumOfNumbers,
+	factorial,
+	factorial as calculateFactorial,
+	factorial as getFactorial,
 } from './number/basics';
 
 export { Currency } from './number/Currency';

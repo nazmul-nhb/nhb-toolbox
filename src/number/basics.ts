@@ -2,6 +2,7 @@ import { isNumber } from '../guards/primitives';
 import type { Numeric } from '../types/index';
 import { _find2NumbersHCF, _find2NumbersLCM } from './helpers';
 import type { ConvertedDecimal, DecimalOptions, RandomNumberOptions } from './types';
+import { normalizeNumber } from './utilities';
 
 /**
  * * Utility to generate a random number between a given range.
@@ -114,6 +115,43 @@ export const calculateLCM = (...numbers: Numeric[]): number => {
 
 	return lcm;
 };
+
+/**
+ * * Computes the factorial of a non-negative numeric value recursively.
+ *
+ * @remarks
+ * - Returns `undefined` if the input is negative, not numeric, or `undefined`.
+ * - Factorial of `0` and `1` is `1`.
+ *
+ * @param number - The input value whose factorial should be calculated.
+ * Can be any `Numeric` type (e.g., number-like input).
+ *
+ * @returns The factorial result as a number if valid, otherwise `undefined`.
+ *
+ * @example
+ * ```ts
+ * factorial(5); // → 120
+ * factorial(0); // → 1
+ * factorial(-3); // → undefined
+ * factorial(undefined); // → undefined
+ * ```
+ *
+ * @notes
+ * - Uses recursive approach internally.
+ * - Input is normalized via `normalizeNumber` before computation.
+ * - May return large values quickly due to factorial growth rate.
+ */
+export function factorial(number: Numeric | undefined): number | undefined {
+	const num = normalizeNumber(number);
+
+	if (!isNumber(num) || num < 0) {
+		return undefined;
+	} else if (num === 0 || num === 1) {
+		return 1;
+	} else {
+		return num * (factorial(num - 1) ?? 1);
+	}
+}
 
 /**
  * * Sums up all digits of a number.

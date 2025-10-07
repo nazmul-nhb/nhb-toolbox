@@ -1,5 +1,8 @@
 import type { ValidArray } from '../src/types/index';
-import type { TupleOf } from '../src/utils/types';
+import type { RangeTuple, TupleOf } from '../src/utils/types';
+import { registerStringMethods } from './string.extensions';
+
+registerStringMethods();
 
 export const makeEnum = <T>(values: ValidArray<T>) => {
 	return values[0];
@@ -30,3 +33,4 @@ type MyType = {
 };
 
 type Result = TupleOf<MyType, 5>;
+type Result2 = RangeTuple<MyType, 2, 5>;
