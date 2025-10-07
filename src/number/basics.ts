@@ -123,8 +123,7 @@ export const calculateLCM = (...numbers: Numeric[]): number => {
  * - Returns `undefined` if the input is negative, not numeric, or `undefined`.
  * - Factorial of `0` and `1` is `1`.
  *
- * @param number - The input value whose factorial should be calculated.
- * Can be any `Numeric` type (e.g., number-like input).
+ * @param number - A numeric input value whose factorial should be calculated.
  *
  * @returns The factorial result as a number if valid, otherwise `undefined`.
  *
