@@ -278,6 +278,34 @@ export type TupleToUnion<T extends readonly unknown[]> = T[number];
 export type TupleOf<T, N extends number, R extends unknown[] = []> =
 	R['length'] extends N ? R : TupleOf<T, N, [...R, T]>;
 
+/** * Build a tuple of given length (helper for type-level arithmetic). */
+export type $BuildTuple<L extends number, T extends unknown[] = []> =
+	T['length'] extends L ? T : $BuildTuple<L, [...T, unknown]>;
+
+/** * Produce a union of numbers `From | From+1 | ... | To`. */
+export type $Range<
+	From extends number,
+	To extends number,
+	Arr extends unknown[] = $BuildTuple<From>,
+	Result = never,
+> =
+	Arr['length'] extends To ? Result | To
+	:	$Range<From, To, [...Arr, unknown], Result | Arr['length']>;
+
+/**
+ * * Creates a tuple with length between `Min` and `Max` (inclusive).
+ *
+ * @example
+ * type Ranged = RangeTuple<string, 2, 4>;
+ * // Ranged -> [string, string] | [string, string, string] | [string, string, string, string]
+ */
+export type RangeTuple<T, Min extends number, Max extends number> =
+	$Range<Min, Max> extends infer N ?
+		N extends number ?
+			TupleOf<T, N>
+		:	never
+	:	never;
+
 /**
  * * Makes selected or all properties of an object type optional (only the values, not the keys).
  *
@@ -300,7 +328,7 @@ export type ValueOptional<O, K extends keyof O = keyof O> = {
 	[P in keyof O]: P extends K ? O[P] | undefined : O[P];
 };
 
-type $Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
+export type $Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 
 /**
  * * Creates a type that is either `T` or `U`, but not both at the same time.
@@ -423,16 +451,12 @@ export type RenameKeys<T, R extends Partial<Record<keyof T, string>>> = {
 	[K in keyof T as K extends keyof R ? Extract<R[K], string | number | symbol> : K]: T[K];
 };
 
-/** * Build a tuple of given length (helper for type-level arithmetic). */
-export type BuildTuple<L extends number, T extends unknown[] = []> =
-	T['length'] extends L ? T : BuildTuple<L, [...T, unknown]>;
-
 /** * Subtracts `B` from `A` (helper for type-level arithmetic). */
-export type Subtract<A extends number, B extends number> =
-	[...BuildTuple<A>] extends [...BuildTuple<B>, ...infer R] ? R['length'] : never;
+export type $Subtract<A extends number, B extends number> =
+	[...$BuildTuple<A>] extends [...$BuildTuple<B>, ...infer R] ? R['length'] : never;
 
 /** * Forbids all properties not in `K`. */
-export type Forbid<T, K extends keyof T> = {
+export type $Forbid<T, K extends keyof T> = {
 	[P in Exclude<keyof T, K>]?: never;
 };
 
@@ -468,7 +492,9 @@ export type RequireAtLeast<
 	Keys extends keyof T = keyof T,
 > =
 	N extends 1 ? { [K in Keys]-?: Required<Pick<T, K>> & Partial<Omit<T, K>> }[Keys]
-	:	{ [K in Keys]-?: Required<Pick<T, K>> & RequireAtLeast<Omit<T, K>, Subtract<N, 1>> }[Keys];
+	:	{
+			[K in Keys]-?: Required<Pick<T, K>> & RequireAtLeast<Omit<T, K>, $Subtract<N, 1>>;
+		}[Keys];
 
 /**
  * * Enforces that exactly `N` properties of type `T` are required.
@@ -500,7 +526,7 @@ export type RequireAtLeast<
  */
 export type RequireExactly<T extends GenericObject, N extends number> = {
 	[K in keyof T]: Required<Pick<T, K>> &
-		(N extends 1 ? Forbid<T, K> : RequireExactly<Omit<T, K>, Subtract<N, 1>>);
+		(N extends 1 ? $Forbid<T, K> : RequireExactly<Omit<T, K>, $Subtract<N, 1>>);
 }[keyof T];
 
 /**
@@ -528,8 +554,8 @@ export type RequireBetween<
 	T extends GenericObject,
 	Min extends number,
 	Max extends number,
-	C extends unknown[] = BuildTuple<Max>,
-	Acc extends unknown[] = BuildTuple<Min>,
+	C extends unknown[] = $BuildTuple<Max>,
+	Acc extends unknown[] = $BuildTuple<Min>,
 > =
 	| RequireExactly<T, Acc['length']>
 	| (Acc['length'] extends Max ? never : RequireBetween<T, Min, Max, C, [...Acc, unknown]>);
