@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.84] - 2025-10-07
+
+- **Added** new _number utility_ `factorial` and its alias to calculate factorial of a given number.
+
 ## [4.20.80] - 2025-10-07
 
 ### 🕧 Updates in Chronos
