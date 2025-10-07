@@ -5,6 +5,7 @@ import type { RangeTuple } from '../../utils/types';
 import { INTERNALS } from '../constants';
 import type {
 	$BusinessHourOptions,
+	AcademicYear,
 	BusinessOptionsBasic,
 	BusinessOptionsWeekends,
 	Quarter,
@@ -143,7 +144,7 @@ declare module '../Chronos' {
 		 * @instance Returns the academic year based on a typical start in July and end in June.
 		 * @returns The academic year in format `YYYY-YYYY`.
 		 */
-		toAcademicYear(): `${number}-${number}`;
+		toAcademicYear(): AcademicYear;
 
 		/**
 		 * @instance Returns the fiscal quarter based on custom fiscal year start (defaults to July).
@@ -230,12 +231,11 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 	): Quarter {
 		const month = internalDate(this).getMonth() + 1;
 		const adjusted = (month - startMonth + 12) % 12;
+
 		return (Math.floor(adjusted / 3) + 1) as Quarter;
 	};
 
-	ChronosClass.prototype.toAcademicYear = function (
-		this: ChronosConstructor
-	): `${number}-${number}` {
+	ChronosClass.prototype.toAcademicYear = function (this: ChronosConstructor): AcademicYear {
 		const year = internalDate(this).getFullYear();
 		const month = internalDate(this).getMonth();
 

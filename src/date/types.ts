@@ -322,6 +322,9 @@ export type DayPartConfig = Record<DayPart, [ClockHour, ClockHour]>;
 /** Quarters of the year */
 export type Quarter = 1 | 2 | 3 | 4;
 
+/** Academic year, e.g. `2024-2025` */
+export type AcademicYear = `${number}-${number}`;
+
 /** Names of Zodiac signs */
 export type ZodiacSign = (typeof WESTERN_ZODIAC_SIGNS)[number][0];
 
