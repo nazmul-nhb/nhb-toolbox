@@ -21,7 +21,6 @@ declare module '../Chronos' {
 		 *
 		 * @param weekStartsOn Optional. The day index (0–6) that the week starts on. Default is `0` (Sunday).
 		 * @param weekendLength Optional. The number of consecutive days at the end of the week considered as weekend. Must be between 1 and 4. Default is `2`.
-		 * @param weekendDays Optional. A tuple of custom weekend day indices (0–6). Its length must match `weekendLength`. If provided, this overrides `weekStartsOn` + `weekendLength` calculation.
 		 * @returns `true` if the current date is a weekend day according to the provided parameters; otherwise `false`.
 		 *
 		 * @description
@@ -31,7 +30,6 @@ declare module '../Chronos' {
 		 * - By default (`weekStartsOn = 0`, `weekendLength = 2`), Saturday (6) and Friday (5) are considered weekend.
 		 * - `weekStartsOn` sets the start of the week for calculating weekend days.
 		 * - `weekendLength` sets how many days at the end of the week are treated as weekend.
-		 * - `weekendDays`, if provided, is used directly as the weekend days instead of calculating from `weekStartsOn` + `weekendLength`.
 		 *
 		 * @example
 		 * // Default: Saturday & Friday are weekend
@@ -120,7 +118,7 @@ declare module '../Chronos' {
 		 * - Supports standard and overnight business hours. Overnight means `end < start`.
 		 * - Example: `businessStartHour = 22`, `businessEndHour = 6` will cover 10 PM to 6 AM next day.
 		 *
-		 * * *Weekends are determined by `weekStartsOn` and `weekendLength` using the {@link isWeekDay} method.*
+		 * * *Weekends are determined by `weekStartsOn` and `weekendLength` using the {@link isWorkday} method.*
 		 */
 		isBusinessHour(options?: BusinessOptionsBasic): boolean;
 
@@ -136,7 +134,7 @@ declare module '../Chronos' {
 		 * - Supports standard and overnight business hours. Overnight means `end < start`.
 		 * - Example: `businessStartHour = 22`, `businessEndHour = 6` will cover 10 PM to 6 AM next day.
 		 *
-		 * * *Weekends are determined by `weekdays` array using the {@link isWeekDay} method.*
+		 * * *Weekends are determined by `weekendDays` tuple using the {@link isWorkday} method.*
 		 */
 		isBusinessHour(options?: BusinessOptionsWeekends): boolean;
 
