@@ -6,9 +6,13 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.86] - 2025-10-08
+
+- **Added** new _number utility_ `getFactors` and its alias to calculate _factors_ of a given number (_integer_).
+
 ## [4.20.84] - 2025-10-07
 
-- **Added** new _number utility_ `factorial` and its alias to calculate factorial of a given number.
+- **Added** new _number utility_ `factorial` and its alias to calculate _factorial_ of a given number (_integer_).
 
 ## [4.20.80] - 2025-10-07
 

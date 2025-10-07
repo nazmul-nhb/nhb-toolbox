@@ -117,7 +117,7 @@ export const calculateLCM = (...numbers: Numeric[]): number => {
 };
 
 /**
- * * Computes the factorial of a non-negative numeric value recursively.
+ * * Computes the factorial of a non-negative numeric value (integer).
  *
  * @remarks
  * - Returns `undefined` if the input is negative, not numeric, non-integer, or `undefined`.
@@ -154,7 +154,7 @@ export function factorial(int: Numeric | undefined): number | undefined {
 }
 
 /**
- * * Efficiently computes all positive integer factors (divisors) of a normalized number.
+ * * Efficiently computes all positive integer factors (divisors) of a number.
  *
  * @param int - Numeric value to find factors for. Non-integer or negative values return an empty array.
  *
