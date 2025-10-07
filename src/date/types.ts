@@ -1,5 +1,5 @@
 import type { Enumerate, NumberRange } from '../number/types';
-import type { LooseLiteral, TupleOf } from '../utils/types';
+import type { LooseLiteral, RangeTuple } from '../utils/types';
 import type { Chronos } from './Chronos';
 import type { ChronosStatics } from './chronos-statics';
 import type {
@@ -493,19 +493,29 @@ export interface SeasonOptions {
 /** * A plugin that augments the Chronos class with methods or properties. */
 export type ChronosPlugin = (ChronosClass: $Chronos) => void;
 
-/** Options for configuring business hour */
-export interface BusinessHourOptions<Length extends NumberRange<1, 4>> {
+export interface $BusinessHourBaseOptions {
 	/** - Optional starting hour of business time (0–23). Defaults to `9` (9 AM). */
 	businessStartHour?: Enumerate<24>;
 	/** - Optional ending hour of business time (0–23). Defaults to `17` (5 PM). */
 	businessEndHour?: Enumerate<24>;
-	/** - Optional day the week starts on (0–6). Default is `0` (Sunday). */
-	weekStartsOn?: Enumerate<7>;
-	/** - Optional weekend length (1 or 2). Default is `2`.*/
-	weekendLength?: Length;
-	/** - Tuple of indices of weekend days. Default is `undefined`. */
-	weekendDays?: TupleOf<Enumerate<7>, Length>;
 }
+
+/** Options for configuring business hour with `weekStartsOn` and `weekendLength` */
+export interface BusinessOptionsBasic extends $BusinessHourBaseOptions {
+	/** - Optional day the week starts on (0–6). Default is `0` (Sunday). */
+	weekStartsOn?: Enumerate<7> | undefined;
+	/** - Optional weekend length (1-4). Default is `2`.*/
+	weekendLength?: NumberRange<1, 4> | undefined;
+}
+
+/** Options for configuring business hour with `weekendDays` tuple */
+export interface BusinessOptionsWeekends extends $BusinessHourBaseOptions {
+	/** - Tuple of indices of weekend days. Default is `undefined`. */
+	weekendDays?: RangeTuple<Enumerate<7>, 1, 4> | undefined;
+}
+
+/** Options for configuring business hour */
+export type $BusinessHourOptions = BusinessOptionsBasic | BusinessOptionsWeekends;
 
 /** Interface representing a date-like object. */
 export interface DateLike {
