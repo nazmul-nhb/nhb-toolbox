@@ -101,7 +101,7 @@ export default [
 		rules: { '@typescript-eslint/no-wrapper-object-types': 'off' },
 	},
 	{
-		files: ['**/*plugins.ts', '**/plugins/*.ts'],
+		files: ['**/*plugins.ts', '**/plugins/*.ts', '**/__ideas__/**'],
 		rules: { '@typescript-eslint/consistent-type-imports': 'off' },
 	},
 	{
