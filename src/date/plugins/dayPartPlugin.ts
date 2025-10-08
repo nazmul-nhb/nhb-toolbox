@@ -7,7 +7,7 @@ type MainChronos = typeof import('../Chronos').Chronos;
 declare module '../Chronos' {
 	interface Chronos {
 		/**
-		 * * Returns the part of day (`'midnight', 'lateNight', 'night', 'morning', 'afternoon', 'evening'`) based on the current hour.
+		 * @instance Returns the part of day (`'midnight', 'lateNight', 'night', 'morning', 'afternoon', 'evening'`) based on the current hour.
 		 *
 		 * *Supports both normal and wraparound (overnight) ranges.*
 		 *

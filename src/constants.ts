@@ -7,6 +7,8 @@ export {
 	WESTERN_ZODIAC_SIGNS,
 } from './date/constants';
 
+export { COUNTRIES } from './date/countries';
+
 export {
 	AUSTRALIA_SEASONS,
 	BANGLADESH_SEASONS,

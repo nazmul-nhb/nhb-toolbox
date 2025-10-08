@@ -18,8 +18,10 @@ declare module '../Chronos' {
 
 		/**
 		 * @instance Returns the current time zone abbreviation (e.g. `"BST"` for `Bangladesh Standard Time`).
+		 *
 		 * @param utc Optional UTC offset in `"UTC+06:00"` format. When passed, it bypasses the current time zone offset.
 		 * @returns Time zone name in full descriptive string or UTC offset if it is not a valid time zone.
+		 *
 		 * @remarks
 		 * - This method uses a predefined mapping of UTC offsets to abbreviated time zone codes.
 		 * - If multiple time zones share the same UTC offset, it returns the **first abbreviation** from the list.

@@ -17,6 +17,7 @@
     "build": "nhb-build",
     "commit": "nhb-commit",
     "module": "nhb-module",
+    "plugin": "nhb-module -t chronos-plugin -d src/date/plugins",
     "count": "nhb-count",
     "delete": "nhb-delete",
     "prepare": "husky"
@@ -38,7 +39,8 @@
   "homepage": "https://toolbox.nazmul-nhb.dev",
   "author": {
     "name": "Nazmul Hassan",
-    "email": "nazmulnhb@gmail.com"
+    "email": "nazmulnhb@gmail.com",
+    "url": "https://nazmul-nhb.dev"
   },
   "contributors": [
     {

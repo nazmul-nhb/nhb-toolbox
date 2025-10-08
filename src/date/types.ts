@@ -18,6 +18,7 @@ import type {
 	YEAR_FORMATS,
 	ZODIAC_PRESETS,
 } from './constants';
+import type { COUNTRIES } from './countries';
 import type { SEASON_PRESETS } from './seasons';
 
 // ! Re-export `ChronosStatics`
@@ -283,7 +284,6 @@ export type ChronosMethods = $InstanceMethods | $StaticMethods | $PluginMethods;
  *
  * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
  * and convert it to the **equivalent local time** using the current environment's UTC offset.*
- *
  */
 export type ChronosInput = number | string | Date | Chronos;
 
@@ -585,3 +585,24 @@ export type ChronosWithOptions = Partial<{
 	/** Milliseconds of the second, from 0 to 999. */
 	millisecond: Milliseconds;
 }>;
+
+export type $Countries = (typeof COUNTRIES)[number];
+
+export type CountryName = $Countries['country_name'];
+
+export type CountryCode = $Countries['country_code'];
+
+export type CountryISO = $Countries['iso_code'];
+
+export type CountryShortISO = $Countries['iso_code_short'];
+
+export type Country = CountryName | CountryISO | CountryShortISO;
+
+export interface HolidayDef {
+	/** A function (year) => Date(s) for that holiday in that year, or fixed dates */
+	dates: MonthDateString | ((year: number) => Date[]);
+	/** Human name / label, optional */
+	name?: string;
+	/** Country or country code, optional */
+	country?: Country;
+}
