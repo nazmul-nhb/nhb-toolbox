@@ -1,3 +1,6 @@
+import type { $Countries } from '../object/types';
+import type { LooseLiteral } from '../utils/types';
+
 /** - Options for `capitalizeString` function. */
 export interface CapitalizeOptions {
 	/** If true, capitalizes the first letter of each word (space separated). Defaults to `false`. */
@@ -75,3 +78,18 @@ export interface MaskOptions {
 
 /** Formatted query string as `?${string}` = `?key=value&...` or empty string. */
 export type QueryString = `?${string}` | '';
+
+/** Full country name */
+export type CountryName = $Countries['country_name'];
+
+/** Country code, e.g. `"880" | "973" | "994" | "1-242" ...` */
+export type CountryCode = $Countries['country_code'];
+
+/** ISO country country codes (3-character), e.g. `"BGD" | "BRB" | "BLR" ...` */
+export type CountryISO = $Countries['iso_code'];
+
+/** ISO country country codes (2-character), e.g. `"BD" | "BB" | "BY" ...` */
+export type CountryShortISO = $Countries['iso_code_short'];
+
+/** ISO 2 character country code or any string */
+export type Country = LooseLiteral<CountryShortISO>;

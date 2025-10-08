@@ -7,8 +7,6 @@ export {
 	WESTERN_ZODIAC_SIGNS,
 } from './date/constants';
 
-export { COUNTRIES } from './date/countries';
-
 export {
 	AUSTRALIA_SEASONS,
 	BANGLADESH_SEASONS,
@@ -36,9 +34,11 @@ export {
 
 export { LOWERCASE as LOWERCASED_WORDS } from './string/constants';
 
+export { COUNTRIES } from './object/countries';
+
 export {
-	HTTP_STATUS_CODES,
-	HTTP_STATUS_CODES as HTTP_STATUS,
 	HTTP_STATUS_CODES as HTTP_CODES,
+	HTTP_STATUS_CODES as HTTP_STATUS,
+	HTTP_STATUS_CODES,
 	HTTP_STATUS_CODES as STATUS_CODES,
 } from './http-status/constants';

@@ -1,5 +1,6 @@
 import type { AdvancedTypes, NormalPrimitive, ValidArray } from '../types/index';
 import type { $UnionToIntersection, Prettify, Split, Tuple } from '../utils/types';
+import type { COUNTRIES } from './countries';
 
 /** - Generic object with `unknown` value */
 export type StrictObject = Record<string, unknown>;
@@ -278,3 +279,6 @@ export type ConvertedObject<T, Keys extends string, C extends 'string' | 'number
 	: T[K] extends GenericObject ? ConvertedObject<T[K], $SubKey<Keys, K>, C>
 	: T[K];
 }>;
+
+/** Array of country information (as object) */
+export type $Countries = (typeof COUNTRIES)[number];

@@ -1,5 +1,6 @@
-import type { Country, HolidayDef, MonthDateString } from '../src/date/types';
+import type { HolidayDef, MonthDateString } from '../src/date/types';
 import { isArray } from '../src/guards/non-primitives';
+import type { Country } from '../src/string/types';
 
 type ChronosConstructor = import('../src/date/Chronos').Chronos;
 type MainChronos = typeof import('../src/date/Chronos').Chronos;

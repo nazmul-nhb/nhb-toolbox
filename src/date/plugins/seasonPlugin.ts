@@ -16,7 +16,7 @@ declare module '../Chronos' {
 		/**
 		 * @instance Returns the current season name based on optional season rules or presets.
 		 *
-		 * @remarks This method alias for {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/names#season season} method.
+		 * @remarks This method is an alias for {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/names#season season} method.
 		 *
 		 * @param options Configuration with optional custom seasons or preset name.
 		 * @returns The name of the season the current date falls under.

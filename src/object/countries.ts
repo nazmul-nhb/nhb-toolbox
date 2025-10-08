@@ -1,3 +1,4 @@
+/** List of countries with full-name, country code ISO country code (both 2 & 3 character) */
 export const COUNTRIES = /* @__PURE__ */ Object.freeze([
 	{
 		country_name: 'Afghanistan',

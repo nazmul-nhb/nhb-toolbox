@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.87] - 2025-10-08
+
+- **Added** new _constants_ and _types_ related to _country information_, e.g. _full country name, code, ISO code_ etc.
+
 ## [4.20.86] - 2025-10-08
 
 - **Added** new _number utility_ `getFactors` and its alias to calculate _factors_ of a given number (_integer_).

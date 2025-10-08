@@ -1,4 +1,5 @@
 import type { Enumerate, NumberRange } from '../number/types';
+import type { Country } from '../string/types';
 import type { LooseLiteral, RangeTuple } from '../utils/types';
 import type { Chronos } from './Chronos';
 import type { ChronosStatics } from './chronos-statics';
@@ -18,7 +19,6 @@ import type {
 	YEAR_FORMATS,
 	ZODIAC_PRESETS,
 } from './constants';
-import type { COUNTRIES } from './countries';
 import type { SEASON_PRESETS } from './seasons';
 
 // ! Re-export `ChronosStatics`
@@ -586,24 +586,7 @@ export type ChronosWithOptions = Partial<{
 	millisecond: Milliseconds;
 }>;
 
-/** Array of country information */
-export type $Countries = (typeof COUNTRIES)[number];
-
-/** Full country name */
-export type CountryName = $Countries['country_name'];
-
-/** Country code, e.g. `"880" | "973" | "994" | "1-242" ...` */
-export type CountryCode = $Countries['country_code'];
-
-/** ISO country country codes (3-character), e.g. `"BGD" | "BRB" | "BLR" ...` */
-export type CountryISO = $Countries['iso_code'];
-
-/** ISO country country codes (2-character), e.g. `"BD" | "BB" | "BY" ...` */
-export type CountryShortISO = $Countries['iso_code_short'];
-
-/** ISO 2 character country code or any string */
-export type Country = LooseLiteral<CountryShortISO>;
-
+/** Planned holiday definition. **Not Implemented Yet!** */
 export interface HolidayDef {
 	/** A function (year) => Date(s) for that holiday in that year, or fixed dates */
 	dates: MonthDateString[] | ((year: number) => Date[]);
