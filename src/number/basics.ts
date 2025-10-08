@@ -119,9 +119,6 @@ export const calculateLCM = (...numbers: Numeric[]): number => {
 /**
  * * Computes the factorial of a non-negative numeric value (integer).
  *
- * @remarks
- * - Returns `undefined` if the input is negative, not numeric, non-integer, or `undefined`.
- *
  * @param int - A numeric input value (integer) whose factorial should be calculated.
  *
  * @returns The factorial result as a number if valid, otherwise `undefined`.
@@ -135,11 +132,12 @@ export const calculateLCM = (...numbers: Numeric[]): number => {
  * factorial(5.5); // → undefined
  * ```
  *
- * @notes
+ * @remarks
  * - Factorial of `0` and `1` is `1`.
  * - Uses recursive approach internally.
  * - Input is normalized via `normalizeNumber` before computation.
  * - May return large values quickly due to factorial growth rate.
+ * - Returns `undefined` if the input is negative, not numeric, non-integer, or `undefined`.
  */
 export function factorial(int: Numeric | undefined): number | undefined {
 	const num = normalizeNumber(int);
@@ -168,7 +166,7 @@ export function factorial(int: Numeric | undefined): number | undefined {
  * getFactors(undefined); // → []
  * ```
  *
- * @notes
+ * @remarks
  * - Uses the square root method for better performance (`O(√n)`).
  * - Returns an empty array for invalid, negative, or non-integer input.
  */
