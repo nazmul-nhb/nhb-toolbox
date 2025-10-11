@@ -10,6 +10,7 @@ import {
 	THOUSANDS,
 } from './constants';
 import { _convertLessThanThousand } from './helpers';
+import type { RomanNumeral } from './types';
 
 /**
  * * Converts a numeric value into its corresponding English word representation.
@@ -93,6 +94,62 @@ export const convertToRomanNumerals = (num: Numeric): string => {
 		}
 	}
 	return result;
+};
+
+/**
+ * * Converts a Roman numeral to an Arabic number.
+ * @param roman - The Roman numeral to convert. Case-insensitive and must represent a valid Roman numeral (I–MMMCMXCIX).
+ * @returns The numeric (Arabic) representation.
+ *
+ * @example
+ * romanToInteger("XXIX") → 29
+ * romanToInteger("mmxxv") → 2025
+ */
+export const romanToInteger = (roman: RomanNumeral): number => {
+	const romanMap: Record<string, number> = {
+		I: 1,
+		V: 5,
+		X: 10,
+		L: 50,
+		C: 100,
+		D: 500,
+		M: 1000,
+	};
+
+	if (typeof roman !== 'string' || !roman?.trim()) {
+		throw new TypeError('Input must be a non-empty string!');
+	}
+
+	const upperRoman = roman.toUpperCase().trim();
+	let total = 0;
+	let prevValue = 0;
+
+	for (let i = upperRoman.length - 1; i >= 0; i--) {
+		const char = upperRoman[i];
+		const value = romanMap[char];
+
+		if (!value) {
+			throw new Error(`Invalid Roman numeral character: '${char}'!`);
+		}
+
+		if (value < prevValue) {
+			total -= value;
+		} else {
+			total += value;
+			prevValue = value;
+		}
+	}
+
+	if (total <= 0 || total >= 4000) {
+		throw new RangeError('Resulting number must be between 1 and 3999!');
+	}
+
+	// Optional: validate by reconverting
+	if (convertToRomanNumerals(total) !== upperRoman) {
+		throw new Error('Invalid or malformed Roman numeral!');
+	}
+
+	return total;
 };
 
 /**

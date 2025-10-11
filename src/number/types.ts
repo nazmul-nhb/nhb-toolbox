@@ -1,3 +1,4 @@
+import type { LooseLiteral, Repeat } from '../utils/types';
 import type {
 	CURRENCY_CODES,
 	CURRENCY_LOCALES,
@@ -215,3 +216,66 @@ export type UnitLabel = (typeof UNITS)[UnitKey];
 
 /** - Prefixes for SI units */
 export type SIPrefix = keyof typeof PREFIX_MULTIPLIERS;
+
+/**
+ * * Roman numeral base letters (upper-case only).
+ *
+ * Includes:
+ * - `I` → 1
+ * - `V` → 5
+ * - `X` → 10
+ * - `L` → 50
+ * - `C` → 100
+ * - `D` → 500
+ * - `M` → 1000
+ */
+export type $RomanBase = 'I' | 'V' | 'X' | 'L' | 'C' | 'D' | 'M';
+
+/**
+ * * Represents repeated Roman numeral sequences (1–5 characters long), enabling IntelliSense autocompletion for sequential Roman characters.
+ *
+ * - Suggests Roman base letters after each character.
+ * - Supports up to 5-character combinations for performance.
+ * - Does **not** validate Roman numeral correctness (e.g., `VVVV` is allowed).
+ *
+ * @example
+ * ```ts
+ * // ✅ Valid according to type (even if not a real Roman numeral)
+ * const a: $RomanRepeated = 'MMXII';
+ * const b: $RomanRepeated = 'VVVV';
+ * ```
+ *
+ * @remarks
+ * **Limitations:**
+ * - Only supports up to **5-character** combinations (`Repeat<$RomanBase, 5>`) using {@link Repeat}.
+ * - Increasing beyond 5 leads to TypeScript recursion/union complexity issues.
+ * - Designed purely for **editor IntelliSense**, not runtime validation.
+ */
+
+export type $RomanRepeated =
+	| $RomanBase
+	| Repeat<$RomanBase, 2>
+	| Repeat<$RomanBase, 3>
+	| Repeat<$RomanBase, 4>
+	| Repeat<$RomanBase, 5>;
+
+/**
+ * * Comprehensive Roman numeral string type.
+ *
+ * Includes both upper and lowercase Roman letters, with support for loose
+ * literal fallbacks (via {@link LooseLiteral}) to accept arbitrary strings
+ * while still providing IntelliSense suggestions for known Roman combinations.
+ *
+ * @example
+ * ```ts
+ * const a: RomanNumeral = 'xiv';   // ✅ IntelliSense suggests Roman letters
+ * const b: RomanNumeral = 'MMX';   // ✅ Supported
+ * const c: RomanNumeral = 'xyz';   // ⚠️ Allowed only via LooseLiteral fallback
+ * ```
+ *
+ * @remarks
+ * - Combines {@link $RomanRepeated} and its lowercase variants.
+ * - The {@link LooseLiteral} wrapper allows non-literal strings (e.g., variables) without losing IntelliSense for literals.
+ * - Does not enforce valid Roman numeral formation.
+ */
+export type RomanNumeral = LooseLiteral<$RomanRepeated | Lowercase<$RomanRepeated>>;

@@ -691,3 +691,26 @@ export type Tuple<T> = [T] extends [never] ? [] : $UnionToTuple<T>;
 
 /** Helper to make type hovers expand nicely. */
 export type $Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : T;
+
+/**
+ * Recursively join the string S for each element in the tuple A.
+ * Returns an empty string for an empty tuple.
+ */
+export type $JoinRepeat<S extends string, A extends unknown[]> =
+	A extends [unknown, ...infer Rest] ? `${S}${$JoinRepeat<S, Rest>}` : '';
+
+/**
+ * * Repeat string `S`, `N` times.
+ *
+ * @example
+ * ```ts
+ * type L10 = Repeat<'l', 10>; // "llllllllll"
+ *
+ * type AB3 = Repeat<'a' | 'b', 3>; // "aab" | "aaa" | "aba" | "abb" | "bab" | "baa" | "bba" | "bbb"
+ * ```
+ *
+ * **Limitations:**
+ * - `N` must be a literal number.
+ * - If `S` is a union (e.g. 'a'|'b'), the resulting union grows exponentially with N.
+ */
+export type Repeat<S extends string, N extends number> = $JoinRepeat<S, $BuildTuple<N>>;
