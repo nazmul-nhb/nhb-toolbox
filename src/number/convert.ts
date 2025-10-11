@@ -1,4 +1,4 @@
-import { isNumber } from '../guards/primitives';
+import { isNonEmptyString, isNumber } from '../guards/primitives';
 import { isNumericString } from '../guards/specials';
 import type { Numeric } from '../types/index';
 import {
@@ -116,11 +116,12 @@ export const romanToInteger = (roman: RomanNumeral): number => {
 		M: 1000,
 	};
 
-	if (typeof roman !== 'string' || !roman?.trim()) {
-		throw new TypeError('Input must be a non-empty string!');
+	if (!isNonEmptyString(roman) || !roman?.trim()) {
+		throw new TypeError('Input must be a non-empty string');
 	}
 
 	const upperRoman = roman.toUpperCase().trim();
+
 	let total = 0;
 	let prevValue = 0;
 
@@ -129,7 +130,7 @@ export const romanToInteger = (roman: RomanNumeral): number => {
 		const value = romanMap[char];
 
 		if (!value) {
-			throw new Error(`Invalid Roman numeral character: '${char}'!`);
+			throw new Error(`Invalid Roman numeral character: '${char}'`);
 		}
 
 		if (value < prevValue) {
@@ -141,10 +142,10 @@ export const romanToInteger = (roman: RomanNumeral): number => {
 	}
 
 	if (total <= 0 || total >= 4000) {
-		throw new RangeError('Resulting number must be between 1 and 3999!');
+		throw new RangeError('Resulting number must be between 1 and 3999');
 	}
 
-	// Optional: validate by reconverting
+	// Validate by reconverting
 	if (convertToRomanNumerals(total) !== upperRoman) {
 		throw new Error('Invalid or malformed Roman numeral!');
 	}
