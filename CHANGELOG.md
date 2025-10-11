@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.88] - 2025-10-11
+
+- **Added** new utility `romanToInteger` and its _aliases_ to convert _Roman numerals_ to _Arabic numeric_ representation and **updated** _input validation_ for `convertToRomanNumerals`.
+- **Added** new _utility type_ `Repeat` to repeat literal string, it works like `String.prototype.repeat()` but on _type-level_.
+
 ## [4.20.87] - 2025-10-08
 
 - **Added** new _constants_ and _types_ related to _country information_, e.g. _full country name, code, ISO code_ etc.

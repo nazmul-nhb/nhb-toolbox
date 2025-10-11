@@ -252,12 +252,15 @@ export type $RomanBase = 'I' | 'V' | 'X' | 'L' | 'C' | 'D' | 'M';
  * - Designed purely for **editor IntelliSense**, not runtime validation.
  */
 
-export type $RomanRepeated =
+export type $RomanNumeralCap =
 	| $RomanBase
 	| Repeat<$RomanBase, 2>
 	| Repeat<$RomanBase, 3>
 	| Repeat<$RomanBase, 4>
 	| Repeat<$RomanBase, 5>;
+
+/** * Represents repeated Roman numeral sequences (1–5 characters long) in uppercase letters and any string */
+export type RomanNumeralCap = Uppercase<LooseLiteral<$RomanNumeralCap>>;
 
 /**
  * * Comprehensive Roman numeral string type.
@@ -274,8 +277,8 @@ export type $RomanRepeated =
  * ```
  *
  * @remarks
- * - Combines {@link $RomanRepeated} and its lowercase variants.
+ * - Combines {@link $RomanNumeralCap} and its lowercase variants.
  * - The {@link LooseLiteral} wrapper allows non-literal strings (e.g., variables) without losing IntelliSense for literals.
  * - Does not enforce valid Roman numeral formation.
  */
-export type RomanNumeral = LooseLiteral<$RomanRepeated | Lowercase<$RomanRepeated>>;
+export type RomanNumeral = LooseLiteral<$RomanNumeralCap | Lowercase<$RomanNumeralCap>>;

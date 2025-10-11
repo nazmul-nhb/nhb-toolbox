@@ -10,7 +10,8 @@ import {
 	THOUSANDS,
 } from './constants';
 import { _convertLessThanThousand } from './helpers';
-import type { RomanNumeral } from './types';
+import type { RomanNumeral, RomanNumeralCap } from './types';
+import { normalizeNumber } from './utilities';
 
 /**
  * * Converts a numeric value into its corresponding English word representation.
@@ -64,10 +65,12 @@ export function numberToWords(num: Numeric): string {
  *
  * @example convertToRomanNumerals(29) → "XXIX"
  */
-export const convertToRomanNumerals = (value: Numeric): RomanNumeral => {
-	let num = Number(value);
+export const convertToRomanNumerals = (value: Numeric): RomanNumeralCap => {
+	let num = normalizeNumber(value);
 
-	if (num <= 0 || num >= 4000) throw new RangeError('Number must be between 1 and 3999');
+	if (!num || num <= 0 || num >= 4000) {
+		throw new RangeError('Number must be between 1 and 3999');
+	}
 
 	const romanMap: [number, string][] = [
 		[1000, 'M'],
@@ -85,18 +88,19 @@ export const convertToRomanNumerals = (value: Numeric): RomanNumeral => {
 		[1, 'I'],
 	];
 
-	let result = '';
+	let result: RomanNumeralCap = '';
 	for (const [value, numeral] of romanMap) {
 		while (num >= value) {
 			result += numeral;
 			num -= value;
 		}
 	}
+
 	return result;
 };
 
 /**
- * * Converts a Roman numeral to an Arabic number.
+ * * Converts a Roman numeral to its Arabic numeric representation.
  * @param roman - The Roman numeral to convert. Case-insensitive but must represent a valid Roman numeral (I–MMMCMXCIX) otherwise throws error.
  * @returns The numeric (Arabic) representation.
  *
@@ -119,7 +123,7 @@ export const romanToInteger = (roman: RomanNumeral): number => {
 		throw new TypeError('Input must be a non-empty string');
 	}
 
-	const upperRoman = roman.toUpperCase().trim();
+	const upperRoman = roman?.toUpperCase()?.trim();
 
 	let total = 0;
 	let prevValue = 0;
