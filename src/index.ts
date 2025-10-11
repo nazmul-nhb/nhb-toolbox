@@ -68,14 +68,20 @@ export { Verbalizer, verbalizer } from './verbalizer/Verbalizer';
 // ! Number Utilities
 export {
 	getAverage as calculateAverage,
+	factorial as calculateFactorial,
 	calculateHCF as calculateGCD,
 	calculateHCF,
 	calculateLCM as calculateLCD,
 	calculateLCM,
 	convertToDecimal,
 	convertToDecimal as convertToFixed,
+	factorial,
+	getFactors as factorsOf,
 	getAverage,
 	getAverage as getAverageOfNumbers,
+	getFactors as getDivisors,
+	factorial as getFactorial,
+	getFactors,
 	getRandomNumber as getRandomInt,
 	getRandomNumber,
 	sumNumbers as getSumOfNumbers,
@@ -85,12 +91,6 @@ export {
 	sumDigits,
 	sumNumbers,
 	sumNumbers as sumOfNumbers,
-	factorial,
-	factorial as calculateFactorial,
-	factorial as getFactorial,
-	getFactors,
-	getFactors as factorsOf,
-	getFactors as getDivisors,
 } from './number/basics';
 
 export { Currency } from './number/Currency';
@@ -128,9 +128,13 @@ export {
 } from './number/guards';
 
 export {
+	convertToRomanNumerals as arabicToRoman,
 	numberToWordsOrdinal as cardinalWordsToOrdinal,
 	numberToWords as convertNumberToWords,
 	numberToWordsOrdinal as convertNumberToWordsOrdinal,
+	romanToInteger as convertRomanToArabic,
+	romanToInteger as convertRomanToInteger,
+	romanToInteger as convertRomanToNumeric,
 	convertToRomanNumerals,
 	wordsToNumber as convertWordsToNumber,
 	wordsToNumber as convertWordToNumber,
@@ -139,6 +143,9 @@ export {
 	numberToWords,
 	numberToWordsOrdinal,
 	convertToRomanNumerals as numericToRoman,
+	romanToInteger as romanToArabic,
+	romanToInteger,
+	romanToInteger as romanToNumeric,
 	convertToRomanNumerals as toRoman,
 	convertToRomanNumerals as toRomanNumeral,
 	wordsToNumber,
@@ -327,10 +334,10 @@ export {
 export {
 	cloneObject,
 	countObjectFields,
-	extractObjectKeys,
 	extractObjectKeys as extractKeys,
-	extractObjectKeysDeep,
 	extractObjectKeysDeep as extractKeysDeep,
+	extractObjectKeys,
+	extractObjectKeysDeep,
 } from './object/basics';
 
 export {
@@ -373,10 +380,10 @@ export {
 	generateQueryParams,
 	getQueryParams,
 	parseQueryString as getQueryStringAsObject,
-	parseQueryString,
-	parseQueryString as queryStringToObject,
-	parseQueryStringLiteral,
 	parseQueryStringLiteral as literalQueryStringToObject,
+	parseQueryString,
+	parseQueryStringLiteral,
+	parseQueryString as queryStringToObject,
 	updateQueryParam,
 } from './dom/query';
 

@@ -59,16 +59,15 @@ export function numberToWords(num: Numeric): string {
 
 /**
  * * Converts a number to a Roman numeral.
- * @param num - The number to convert. Number must be `between 1 and 3999`.
+ * @param value - The number to convert. Number must be `between 1 and 3999`.
  * @returns The Roman numeral representation.
  *
  * @example convertToRomanNumerals(29) → "XXIX"
  */
-export const convertToRomanNumerals = (num: Numeric): string => {
-	let number = Number(num);
+export const convertToRomanNumerals = (value: Numeric): RomanNumeral => {
+	let num = Number(value);
 
-	if (number <= 0 || number >= 4000)
-		throw new RangeError('Number must be between 1 and 3999');
+	if (num <= 0 || num >= 4000) throw new RangeError('Number must be between 1 and 3999');
 
 	const romanMap: [number, string][] = [
 		[1000, 'M'],
@@ -88,9 +87,9 @@ export const convertToRomanNumerals = (num: Numeric): string => {
 
 	let result = '';
 	for (const [value, numeral] of romanMap) {
-		while (number >= value) {
+		while (num >= value) {
 			result += numeral;
-			number -= value;
+			num -= value;
 		}
 	}
 	return result;
@@ -98,7 +97,7 @@ export const convertToRomanNumerals = (num: Numeric): string => {
 
 /**
  * * Converts a Roman numeral to an Arabic number.
- * @param roman - The Roman numeral to convert. Case-insensitive and must represent a valid Roman numeral (I–MMMCMXCIX).
+ * @param roman - The Roman numeral to convert. Case-insensitive but must represent a valid Roman numeral (I–MMMCMXCIX) otherwise throws error.
  * @returns The numeric (Arabic) representation.
  *
  * @example
