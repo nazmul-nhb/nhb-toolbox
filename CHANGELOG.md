@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.89] - 2025-10-12
+
+- **Updated** behavior of `fromNow()` `Chronos` method: _excluded_ `week` level and _included_ `millisecond` for consistency. **Refactored** _internal logic_.
+
 ## [4.20.88] - 2025-10-11
 
 - **Added** new utility `romanToInteger` and its _aliases_ to convert _Roman numerals_ to _Arabic numeric_ representation and **updated** _input validation_ for `convertToRomanNumerals`.

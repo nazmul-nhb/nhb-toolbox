@@ -1,5 +1,4 @@
 import { formatUnitWithPlural } from '../../string/convert';
-import type { Tuple } from '../../utils/types';
 import { INTERNALS } from '../constants';
 import type { ChronosInput, FromNowUnit } from '../types';
 
@@ -83,7 +82,7 @@ export const fromNowPlugin = (ChronosClass: MainChronos): void => {
 			years--;
 		}
 
-		const unitOrder: Tuple<FromNowUnit> = [
+		const unitOrder: Array<FromNowUnit> = [
 			'year',
 			'month',
 			'day',
@@ -97,33 +96,35 @@ export const fromNowPlugin = (ChronosClass: MainChronos): void => {
 
 		const parts: string[] = [];
 
-		/** Push to `parts` array */
+		/** Push value-unit string to `parts` array */
 		const _pushToParts = (value: number, unit: FromNowUnit) => {
 			parts.push(formatUnitWithPlural(value, unit));
 		};
 
-		if (lvlIdx >= 0 && years > 0 && lvlIdx >= unitOrder.indexOf('year')) {
+		/** Check if a unit level is required */
+		const _isLevelRequired = (unit: FromNowUnit) => {
+			return lvlIdx >= unitOrder.indexOf(unit);
+		};
+
+		if (years > 0) {
 			_pushToParts(years, 'year');
 		}
-		if (lvlIdx >= unitOrder.indexOf('month') && months > 0) {
+		if (_isLevelRequired('month') && months > 0) {
 			_pushToParts(months, 'month');
 		}
-		if (lvlIdx >= unitOrder.indexOf('day') && days > 0) {
+		if (_isLevelRequired('day') && days > 0) {
 			_pushToParts(days, 'day');
 		}
-		if (lvlIdx >= unitOrder.indexOf('hour') && hours > 0) {
+		if (_isLevelRequired('hour') && hours > 0) {
 			_pushToParts(hours, 'hour');
 		}
-		if (lvlIdx >= unitOrder.indexOf('minute') && minutes > 0) {
+		if (_isLevelRequired('minute') && minutes > 0) {
 			_pushToParts(minutes, 'minute');
 		}
-		if (lvlIdx >= unitOrder.indexOf('second') && seconds > 0) {
+		if (_isLevelRequired('second') && seconds > 0) {
 			_pushToParts(seconds, 'second');
 		}
-		if (
-			lvlIdx >= unitOrder.indexOf('millisecond') &&
-			(milliseconds > 0 || parts?.length === 0)
-		) {
+		if (_isLevelRequired('millisecond') && (milliseconds > 0 || parts?.length === 0)) {
 			_pushToParts(milliseconds, 'millisecond');
 		}
 
@@ -138,6 +139,6 @@ export const fromNowPlugin = (ChronosClass: MainChronos): void => {
 			}
 		}
 
-		return `${prefix}${parts?.join(' ')}${suffix}`;
+		return parts.length ? `${prefix}${parts?.join(' ')}${suffix}` : `0 ${level}`;
 	};
 };

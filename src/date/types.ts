@@ -95,7 +95,7 @@ export type TimeUnit =
 	| 'second'
 	| 'millisecond';
 
-/** Name of time unit from year to millisecond, except `'week'` */
+/** Name of time unit from `year` to `millisecond`, except `week` */
 export type FromNowUnit = Exclude<TimeUnit, 'week'>;
 
 /** Year in either 4 or 2 digits format */

@@ -57,3 +57,5 @@ Checks if the formatted date (e.g., YYYYMMDD or DDMMYYYY) is a palindrome.
 <!-- ## 10. `toFiscalQuarter(fiscalStartMonth = 4): 1 | 2 | 3 | 4` -->
 
 Returns fiscal quarter based on custom fiscal year start month (April by default).
+
+## 11. `count` for counting any unit from a start to end date

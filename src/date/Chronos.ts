@@ -1221,7 +1221,7 @@ export class Chronos {
 		});
 	}
 
-	/** @instance Returns a short human-readable string like "2h ago", "in 5m" */
+	/** @instance Returns a short human-readable string like "2h ago", "in 5m". From `year` to `second`. */
 	fromNowShort(): string {
 		const now = new Chronos();
 		const diffInSeconds = this.diff(now, 'second');
