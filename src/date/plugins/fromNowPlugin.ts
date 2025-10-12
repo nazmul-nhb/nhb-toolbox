@@ -10,14 +10,14 @@ declare module '../Chronos' {
 		/**
 		 * @instance Returns full time difference from now (or a specified time) down to a given level.
 		 *
-		 * @param level Determines the smallest unit to include in the output (e.g., 'minute' will show up to minutes, ignoring seconds). Defaults to `minute`.
+		 * @param level Determines the smallest unit to include in the output (e.g., 'minute' will show up to minutes, ignoring seconds). Defaults to `second`.
 		 * @param withSuffixPrefix If `true`, adds `"in"` or `"ago"` depending on whether the time is in the future or past. Defaults to `true`.
 		 * @param time An optional time value to compare with (`string`, `number`, `Date`, or `Chronos` instance). Defaults to `now`.
 		 * @returns The difference as a human-readable string, e.g., `2 years 1 month 9 days 18 hours 56 minutes ago`.
 		 *
 		 *  @remarks
 		 * - This method calculates the **elapsed time difference** (exclusive of the end day), consistent with libraries like `Day.js` and `Luxon`.
-		 * - If you need an *inclusive calendar-style* difference (counting both start and end days), add one day manually to the result.
+		 * - If you need an *inclusive calendar-style* difference (counting both start and end days), adjust one day manually before calling `fromNow()`.
 		 */
 		fromNow(level?: FromNowUnit, withSuffixPrefix?: boolean, time?: ChronosInput): string;
 	}
@@ -29,7 +29,7 @@ export const fromNowPlugin = (ChronosClass: MainChronos): void => {
 
 	ChronosClass.prototype.fromNow = function (
 		this: ChronosConstructor,
-		level: FromNowUnit = 'minute',
+		level: FromNowUnit = 'second',
 		withSuffixPrefix: boolean = true,
 		time?: ChronosInput
 	): string {

@@ -6,10 +6,14 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.91] - 2025-10-12
+
+- **Updated** _tsdoc_ for `fromNow()` `Chronos` method: modified _@remarks_ section.
+
 ## [4.20.90] - 2025-10-12
 
 - **Updated** `formatUnitWithPlural` utility: now returns _singular unit_ for both `0` and `1`.
-- **Update** `fromNow()` `Chronos` method: **fixed** issues when provided unit level value is `0`.
+- **Updated** `fromNow()` `Chronos` method: **fixed** issues when provided unit level value is `0`.
 
 ## [4.20.89] - 2025-10-12
 
