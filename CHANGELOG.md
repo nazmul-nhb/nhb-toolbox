@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.20.92] - 2025-10-12
+
+- **Fixed** `RomanNumeralCap` type and **added** _@remarks_ section.
+
 ## [4.20.91] - 2025-10-12
 
 - **Updated** _tsdoc_ for `fromNow()` `Chronos` method: modified _@remarks_ section.

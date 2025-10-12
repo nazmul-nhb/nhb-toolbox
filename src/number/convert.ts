@@ -88,7 +88,7 @@ export const convertToRomanNumerals = (value: Numeric): RomanNumeralCap => {
 		[1, 'I'],
 	];
 
-	let result: RomanNumeralCap = '';
+	let result = '';
 	for (const [value, numeral] of romanMap) {
 		while (num >= value) {
 			result += numeral;

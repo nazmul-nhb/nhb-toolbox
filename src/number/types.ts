@@ -259,8 +259,13 @@ export type $RomanNumeralCap =
 	| Repeat<$RomanBase, 4>
 	| Repeat<$RomanBase, 5>;
 
-/** * Represents repeated Roman numeral sequences (1–5 characters long) in uppercase letters and any string */
-export type RomanNumeralCap = Uppercase<LooseLiteral<$RomanNumeralCap>>;
+/**
+ *  * Represents repeated Roman numeral sequences (1–5 characters long, not always a valid roman numeral) in uppercase letters and any string
+ *
+ * @remarks
+ * - The {@link LooseLiteral} wrapper allows non-literal strings (e.g., variables) without losing IntelliSense for {@link $RomanNumeralCap} literals.
+ * - Does not enforce valid Roman numeral formation. */
+export type RomanNumeralCap = LooseLiteral<$RomanNumeralCap>;
 
 /**
  * * Comprehensive Roman numeral string type.
