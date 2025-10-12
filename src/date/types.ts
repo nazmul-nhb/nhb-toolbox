@@ -306,8 +306,11 @@ export type NegativeUTCHour = `-0${Enumerate<10>}` | `-${NumberRange<10, 14>}`;
 /** UTC Minutes as quarters */
 export type UTCMinute = '00' | '15' | '30' | '45';
 
-/** UTC offset as `UTC-HH:MM` format */
-export type UTCOffSet = `UTC${PositiveUTCHour | NegativeUTCHour}:${UTCMinute}`;
+/** UTC offset in `±HH:mm` format */
+export type $UTCOffset = `${PositiveUTCHour | NegativeUTCHour}:${UTCMinute}`;
+
+/** UTC offset in `UTC±HH:mm` format */
+export type UTCOffSet = `UTC${$UTCOffset}`;
 
 /** Chronos Date Format options */
 export interface FormatOptions {

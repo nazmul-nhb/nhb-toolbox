@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.21.4] - 2025-10-13
+
+- **Added** new type `$UTCOffset` and applied in corresponding `Chronos` methods.
+
 ## [4.21.1] - 2025-10-13
 
 - **Updated** `TypeScript` compiler target from `ESNext` to `ES2023` for *more stable and predictable* `JavaScript` output.

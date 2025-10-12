@@ -6,6 +6,7 @@ import type { LooseLiteral, TupleOf } from '../utils/types';
 import { DAYS, INTERNALS, MONTHS, SORTED_TIME_FORMATS, TIME_ZONE_LABELS } from './constants';
 import { isLeapYear } from './guards';
 import type {
+	$UTCOffset,
 	ChronosFormat,
 	ChronosInput,
 	ChronosInternals,
@@ -231,7 +232,7 @@ export class Chronos {
 
 		this.#ORIGIN = 'root';
 		this.origin = this.#ORIGIN;
-		this.#offset = `UTC${this.getUTCOffset()}` as UTCOffSet;
+		this.#offset = `UTC${this.getUTCOffset()}`;
 	}
 
 	*[Symbol.iterator](): IterableIterator<[string, number]> {
@@ -1166,7 +1167,7 @@ export class Chronos {
 	diff(other: ChronosInput, unit: TimeUnit): number {
 		const time = other instanceof Chronos ? other : new Chronos(other);
 
-		const msDiff = this.#date.getTime() - time.toDate().getTime();
+		const msDiff = this.#date.getTime() - time.#date.getTime();
 
 		switch (unit) {
 			case 'millisecond':
@@ -1369,13 +1370,13 @@ export class Chronos {
 	 *
 	 * @returns The (local) system's UTC offset in `±HH:mm` format.
 	 */
-	getUTCOffset(): string {
+	getUTCOffset(): $UTCOffset {
 		const offset = -this.#date.getTimezoneOffset();
 		const sign = offset >= 0 ? '+' : '-';
 
 		const pad = (n: number) => String(Math.floor(Math.abs(n))).padStart(2, '0');
 
-		return `${sign}${pad(offset / 60)}:${pad(offset % 60)}`;
+		return `${sign}${pad(offset / 60)}:${pad(offset % 60)}` as $UTCOffset;
 	}
 
 	/**
@@ -1385,8 +1386,8 @@ export class Chronos {
 	 *
 	 * @returns The timezone offset string in `±HH:mm` format maintaining the current timezone regardless of system having different one.
 	 */
-	getTimeZoneOffset(): string {
-		return this.#offset.replace('UTC', '');
+	getTimeZoneOffset(): $UTCOffset {
+		return this.#offset.replace('UTC', '') as $UTCOffset;
 	}
 
 	/**
@@ -1424,7 +1425,7 @@ export class Chronos {
 	 * - If no match is found (which is rare), it falls back to returning the UTC offset (e.g. `"UTC+06:00"`).
 	 */
 	getTimeZoneName(utc?: UTCOffSet): LooseLiteral<UTCOffSet> {
-		const UTC = utc ?? (`UTC${this.getTimeZoneOffset()}` as UTCOffSet);
+		const UTC = utc ?? `UTC${this.getTimeZoneOffset()}`;
 
 		return TIME_ZONE_LABELS?.[UTC] ?? UTC;
 	}
