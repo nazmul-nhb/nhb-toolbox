@@ -1,4 +1,4 @@
-import { isNonEmptyString, isNumber } from '../guards/primitives';
+import { isInteger, isNonEmptyString, isNumber } from '../guards/primitives';
 import { isNumericString } from '../guards/specials';
 import type { Numeric } from '../types/index';
 import {
@@ -10,7 +10,7 @@ import {
 	THOUSANDS,
 } from './constants';
 import { _convertLessThanThousand } from './helpers';
-import type { RomanNumeral, RomanNumeralCap } from './types';
+import type { LooseRomanNumeral, RomanCapital } from './types';
 import { normalizeNumber } from './utilities';
 
 /**
@@ -59,20 +59,20 @@ export function numberToWords(num: Numeric): string {
 }
 
 /**
- * * Converts a number to a Roman numeral.
- * @param value - The number to convert. Number must be `between 1 and 3999`.
- * @returns The Roman numeral representation.
+ * * Converts a number to an uppercase Roman numeral.
+ * @param value - The number to convert. Number must be an integer and `between 1 and 3999`.
+ * @returns The Roman numeral representation in uppercase.
  *
  * @example convertToRomanNumerals(29) → "XXIX"
  */
-export const convertToRomanNumerals = (value: Numeric): RomanNumeralCap => {
+export const convertToRomanNumerals = (value: Numeric): RomanCapital => {
 	let num = normalizeNumber(value);
 
-	if (!num || num <= 0 || num >= 4000) {
-		throw new RangeError('Number must be between 1 and 3999');
+	if (!isInteger(num) || num <= 0 || num >= 4000) {
+		throw new RangeError('Value must be an integer and between 1 and 3999');
 	}
 
-	const romanMap: [number, string][] = [
+	const romanMap: Array<[number, string]> = [
 		[1000, 'M'],
 		[900, 'CM'],
 		[500, 'D'],
@@ -96,19 +96,19 @@ export const convertToRomanNumerals = (value: Numeric): RomanNumeralCap => {
 		}
 	}
 
-	return result;
+	return result as RomanCapital;
 };
 
 /**
  * * Converts a Roman numeral to its Arabic numeric representation.
- * @param roman - The Roman numeral to convert. Case-insensitive but must represent a valid Roman numeral (I–MMMCMXCIX) otherwise throws error.
- * @returns The numeric (Arabic) representation.
+ * @param roman - The Roman numeral to convert. Case-insensitive but must represent a valid Roman numeral (`I`–`MMMCMXCIX`) otherwise throws runtime error.
+ * @returns The numeric (Arabic) representation of the Roman numeral.
  *
  * @example
  * romanToInteger("XXIX") → 29
  * romanToInteger("mmxxv") → 2025
  */
-export const romanToInteger = (roman: RomanNumeral): number => {
+export const romanToInteger = (roman: LooseRomanNumeral): number => {
 	const romanMap: Record<string, number> = {
 		I: 1,
 		V: 5,

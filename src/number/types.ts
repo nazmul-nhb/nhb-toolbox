@@ -1,4 +1,4 @@
-import type { LooseLiteral, Repeat } from '../utils/types';
+import type { LooseLiteral } from '../utils/types';
 import type {
 	CURRENCY_CODES,
 	CURRENCY_LOCALES,
@@ -217,73 +217,51 @@ export type UnitLabel = (typeof UNITS)[UnitKey];
 /** - Prefixes for SI units */
 export type SIPrefix = keyof typeof PREFIX_MULTIPLIERS;
 
-/**
- * * Roman numeral base letters (upper-case only).
- *
- * Includes:
- * - `I` → 1
- * - `V` → 5
- * - `X` → 10
- * - `L` → 50
- * - `C` → 100
- * - `D` → 500
- * - `M` → 1000
- */
-export type $RomanBase = 'I' | 'V' | 'X' | 'L' | 'C' | 'D' | 'M';
+/** Roman numerals representing only the thousand (1000, 2000 and 3000) */
+type $Thousands = '' | 'M' | 'MM' | 'MMM';
+/** Roman numerals representing only the hundreds (100, 200, ... 900) */
+type $Hundreds = '' | 'C' | 'CC' | 'CCC' | 'CD' | 'D' | 'DC' | 'DCC' | 'DCCC' | 'CM';
+/** Roman numerals representing only the tens (10, 20, ... 90) */
+type $Tens = '' | 'X' | 'XX' | 'XXX' | 'XL' | 'L' | 'LX' | 'LXX' | 'LXXX' | 'XC';
+/** Roman numerals representing only the ones (1-9) */
+type $Ones = '' | 'I' | 'II' | 'III' | 'IV' | 'V' | 'VI' | 'VII' | 'VIII' | 'IX';
+/** Roman numerals representing the combination of thousands, hundreds, tens and ones */
+type $RawRoman = `${$Thousands}${$Hundreds}${$Tens}${$Ones}`;
 
 /**
- * * Represents repeated Roman numeral sequences (1–5 characters long), enabling IntelliSense autocompletion for sequential Roman characters.
+ * * Literal type representing every valid Roman numeral (uppercase) from 1 to 3999 (I .. MMMCMXCIX).
  *
- * - Suggests Roman base letters after each character.
- * - Supports up to 5-character combinations for performance.
- * - Does **not** validate Roman numeral correctness (e.g., `VVVV` is allowed).
+ * @example
+ *   const a: RomanCapital = "MMXXV"; // ✅ OK
+ *   const b: RomanCapital = "MMMM";  // 🛑 Error (4000 not allowed)
+ *   const c: RomanCapital = "";      // 🛑 Error (0 not allowed)
+ */
+export type RomanCapital = Exclude<$RawRoman, ''>;
+
+/**
+ * * Strict Roman numeral in both literal lower and uppercase (1-3999).
  *
  * @example
  * ```ts
- * // ✅ Valid according to type (even if not a real Roman numeral)
- * const a: $RomanRepeated = 'MMXII';
- * const b: $RomanRepeated = 'VVVV';
+ * 	const a: RomanNumeral = 'xiv';   // ✅ Lowercase: OK
+ * 	const b: RomanNumeral = 'MMX';   // ✅ Uppercase: OK
+ * 	const c: RomanNumeral = 'xyz';   // 🛑 Invalid: Error (xyz not allowed)
  * ```
- *
- * @remarks
- * **Limitations:**
- * - Only supports up to **5-character** combinations (`Repeat<$RomanBase, 5>`) using {@link Repeat}.
- * - Increasing beyond 5 leads to TypeScript recursion/union complexity issues.
- * - Designed purely for **editor IntelliSense**, not runtime validation.
  */
-
-export type $RomanNumeralCap =
-	| $RomanBase
-	| Repeat<$RomanBase, 2>
-	| Repeat<$RomanBase, 3>
-	| Repeat<$RomanBase, 4>
-	| Repeat<$RomanBase, 5>;
+export type RomanNumeral = RomanCapital | Lowercase<RomanCapital>;
 
 /**
- *  * Represents repeated Roman numeral sequences (1–5 characters long, not always a valid roman numeral) in uppercase letters and any string
- *
- * @remarks
- * - The {@link LooseLiteral} wrapper allows non-literal strings (e.g., variables) without losing IntelliSense for {@link $RomanNumeralCap} literals.
- * - Does not enforce valid Roman numeral formation. */
-export type RomanNumeralCap = LooseLiteral<$RomanNumeralCap>;
-
-/**
- * * Comprehensive Roman numeral string type.
- *
- * Includes both upper and lowercase Roman letters, with support for loose
- * literal fallbacks (via {@link LooseLiteral}) to accept arbitrary strings
- * while still providing IntelliSense suggestions for known Roman combinations.
+ * * Comprehensive valid Roman numeral in both literal lower and uppercase (1-3999) & any string type.
  *
  * @example
  * ```ts
- * const a: RomanNumeral = 'xiv';   // ✅ IntelliSense suggests Roman letters
- * const b: RomanNumeral = 'MMX';   // ✅ Supported
- * const c: RomanNumeral = 'xyz';   // ⚠️ Allowed only via LooseLiteral fallback
+ * 	const a: LooseRomanNumeral = 'xiv';   // ✅ IntelliSense suggests Roman letters
+ * 	const b: LooseRomanNumeral = 'MMX';   // ✅ Supported
+ * 	const c: LooseRomanNumeral = 'xyz';   // ⚠️ Allowed only via LooseLiteral fallback
  * ```
  *
  * @remarks
- * - Combines {@link $RomanNumeralCap} and its lowercase variants.
+ * - Combines {@link RomanCapital} and its lowercase variants, see {@link RomanNumeral}.
  * - The {@link LooseLiteral} wrapper allows non-literal strings (e.g., variables) without losing IntelliSense for literals.
- * - Does not enforce valid Roman numeral formation.
  */
-export type RomanNumeral = LooseLiteral<$RomanNumeralCap | Lowercase<$RomanNumeralCap>>;
+export type LooseRomanNumeral = LooseLiteral<RomanNumeral>;
