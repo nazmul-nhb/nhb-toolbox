@@ -2,7 +2,6 @@
 	"compilerOptions": {
 		"target": "ES2023",
 		"lib": ["DOM", "ESNext"],
-		"paths": { "*": ["./src/*"] },
 		"baseUrl": ".",
 		"rootDir": "./src",
 		"outDir": "./dist",
@@ -21,6 +20,7 @@
 		"resolveJsonModule": true,
 		"forceConsistentCasingInFileNames": true,
 		"allowJs": true,
+		"pretty": true,
 		"checkJs": true,
 		"preserveWatchOutput": true
 	},
