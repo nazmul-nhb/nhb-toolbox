@@ -139,6 +139,6 @@ export const fromNowPlugin = (ChronosClass: MainChronos): void => {
 			}
 		}
 
-		return parts.length ? `${prefix}${parts?.join(' ')}${suffix}` : `0 ${level}`;
+		return `${prefix}${parts.length ? parts?.join(' ') : `0 ${level}`}${suffix}`;
 	};
 };

@@ -112,7 +112,7 @@ export function extractURLs(str: string): string[] {
  */
 export function formatUnitWithPlural(count: number, unit: string, withNumber = true): string {
 	const abs = Math.abs(count);
-	const pluralized = abs === 1 ? unit : `${unit}s`;
+	const pluralized = abs <= 1 ? unit : `${unit}s`;
 
 	return withNumber ? `${count} ${pluralized}` : pluralized;
 }
