@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.21.0] - 2025-10-12
+
+- **Renamed** `RomanNumeralCap` type to `RomanCapital` and allow only strict `1-3999` and `RomanNumeral` type to `LooseRomanNumeral`.
+- **Removed** all _Roman numeral type helpers_ and **recreated** a _strict_ `RomanNumeral` with other _internal types_.
+
 ## [4.20.92] - 2025-10-12
 
 - **Fixed** `RomanNumeralCap` type and **added** _@remarks_ section.

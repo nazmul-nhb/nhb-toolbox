@@ -63,7 +63,7 @@ export function numberToWords(num: Numeric): string {
  * @param value - The number to convert. Number must be an integer and `between 1 and 3999`.
  * @returns The Roman numeral representation in uppercase.
  *
- * @example convertToRomanNumerals(29) → "XXIX"
+ * @example convertToRomanNumerals(29) // → "XXIX"
  */
 export const convertToRomanNumerals = (value: Numeric): RomanCapital => {
 	let num = normalizeNumber(value);
@@ -105,8 +105,8 @@ export const convertToRomanNumerals = (value: Numeric): RomanCapital => {
  * @returns The numeric (Arabic) representation of the Roman numeral.
  *
  * @example
- * romanToInteger("XXIX") → 29
- * romanToInteger("mmxxv") → 2025
+ * romanToInteger("XXIX") // → 29
+ * romanToInteger("mmxxv") // → 2025
  */
 export const romanToInteger = (roman: LooseRomanNumeral): number => {
 	const romanMap: Record<string, number> = {
