@@ -84,6 +84,7 @@ export interface GreetingConfigs {
 	defaultMessage?: string;
 }
 
+/** Name of time unit from year to millisecond */
 export type TimeUnit =
 	| 'year'
 	| 'month'
@@ -93,6 +94,9 @@ export type TimeUnit =
 	| 'minute'
 	| 'second'
 	| 'millisecond';
+
+/** Name of time unit from year to millisecond, except `'week'` */
+export type FromNowUnit = Exclude<TimeUnit, 'week'>;
 
 /** Year in either 4 or 2 digits format */
 export type Year = (typeof YEAR_FORMATS)[number];
