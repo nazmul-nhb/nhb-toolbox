@@ -6,137 +6,142 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.21.1] - 2025-10-13
+
+- **Updated** `TypeScript` compiler target from `ESNext` to `ES2023` for *more stable and predictable* `JavaScript` output.
+  - *Ensures consistent syntax across `TypeScript` versions.*
+
 ## [4.21.0] - 2025-10-12
 
 - **Renamed** `RomanNumeralCap` type to `RomanCapital` and allow only strict `1-3999` and `RomanNumeral` type to `LooseRomanNumeral`.
-- **Removed** all _Roman numeral type helpers_ and **recreated** a _strict_ `RomanNumeral` with other _internal types_.
+- **Removed** all *Roman numeral type helpers* and **recreated** a *strict* `RomanNumeral` with other *internal types*.
 
 ## [4.20.92] - 2025-10-12
 
-- **Fixed** `RomanNumeralCap` type and **added** _@remarks_ section.
+- **Fixed** `RomanNumeralCap` type and **added** *@remarks* section.
 
 ## [4.20.91] - 2025-10-12
 
-- **Updated** _tsdoc_ for `fromNow()` `Chronos` method: modified _@remarks_ section.
+- **Updated** *tsdoc* for `fromNow()` `Chronos` method: modified *@remarks* section.
 
 ## [4.20.90] - 2025-10-12
 
-- **Updated** `formatUnitWithPlural` utility: now returns _singular unit_ for both `0` and `1`.
+- **Updated** `formatUnitWithPlural` utility: now returns *singular unit* for both `0` and `1`.
 - **Updated** `fromNow()` `Chronos` method: **fixed** issues when provided unit level value is `0`.
 
 ## [4.20.89] - 2025-10-12
 
-- **Updated** behavior of `fromNow()` `Chronos` method: _excluded_ `week` level and _included_ `millisecond` for consistency. **Refactored** _internal logic_.
+- **Updated** behavior of `fromNow()` `Chronos` method: *excluded* `week` level and *included* `millisecond` for consistency. **Refactored** *internal logic*.
 
 ## [4.20.88] - 2025-10-11
 
-- **Added** new utility `romanToInteger` and its _aliases_ to convert _Roman numerals_ to _Arabic numeric_ representation and **updated** _input validation_ for `convertToRomanNumerals`.
-- **Added** new _utility type_ `Repeat` to repeat literal string, it works like `String.prototype.repeat()` but on _type-level_.
+- **Added** new utility `romanToInteger` and its *aliases* to convert *Roman numerals* to *Arabic numeric* representation and **updated** *input validation* for `convertToRomanNumerals`.
+- **Added** new *utility type* `Repeat` to repeat literal string, it works like `String.prototype.repeat()` but on *type-level*.
 
 ## [4.20.87] - 2025-10-08
 
-- **Added** new _constants_ and _types_ related to _country information_, e.g. _full country name, code, ISO code_ etc.
+- **Added** new *constants* and *types* related to *country information*, e.g. *full country name, code, ISO code* etc.
 
 ## [4.20.86] - 2025-10-08
 
-- **Added** new _number utility_ `getFactors` and its alias to calculate _factors_ of a given number (_integer_).
+- **Added** new *number utility* `getFactors` and its alias to calculate *factors* of a given number (*integer*).
 
 ## [4.20.84] - 2025-10-07
 
-- **Added** new _number utility_ `factorial` and its alias to calculate _factorial_ of a given number (_integer_).
+- **Added** new *number utility* `factorial` and its alias to calculate *factorial* of a given number (*integer*).
 
 ## [4.20.80] - 2025-10-07
 
 ### 🕧 Updates in Chronos
 
-- **Added** _overload signatures_ for `isWeekend`, `isWorkDay` and `isBusinessHour` methods from `businessPlugin`.
-- **Fixed** issues with `isBusinessHour`: previously skipped _business start and end hours_ in some cases.
-- **Added** new _utility type_ `RangeTuple` to create _ranged tuple_.
+- **Added** *overload signatures* for `isWeekend`, `isWorkDay` and `isBusinessHour` methods from `businessPlugin`.
+- **Fixed** issues with `isBusinessHour`: previously skipped *business start and end hours* in some cases.
+- **Added** new *utility type* `RangeTuple` to create *ranged tuple*.
 
 ## [4.20.69-70] - 2025-10-07
 
 ### 🕧 Updates in Chronos
 
-- **Added** _alias_ for some methods available through _plugins_: `greet` for `getGreeting`, `getSeasonName` for `season`, `zodiac` for `getZodiacSign`
-- **Updated** behaviors of `isWeekend`, `isWorkDay` and `isBusinessHour` methods from `businessPlugin`, now accepts _indices of weekend day as tuple_.
-- **Updated** _internal states_ for most of the plugins; **Renamed** some internal _types_ and _exposed_ some.
+- **Added** *alias* for some methods available through *plugins*: `greet` for `getGreeting`, `getSeasonName` for `season`, `zodiac` for `getZodiacSign`
+- **Updated** behaviors of `isWeekend`, `isWorkDay` and `isBusinessHour` methods from `businessPlugin`, now accepts *indices of weekend day as tuple*.
+- **Updated** *internal states* for most of the plugins; **Renamed** some internal *types* and *exposed* some.
 
 ## [4.20.66] - 2025-10-05
 
-- **Updated** `isObjectWithKeys`: now returns more _structured object shape_ with provided keys.
+- **Updated** `isObjectWithKeys`: now returns more *structured object shape* with provided keys.
 
 ## [4.20.64] - 2025-10-05
 
-- **Updated** `extractObjectKeys`: now have _overload signatures_, returns a _tuple_ or an _array of keys_ (string literal).
-- **Updated** `extractObjectKeysDeep` no longer returns a _tuple_, instead now it returns an _array of keys_ (string literal).
+- **Updated** `extractObjectKeys`: now have *overload signatures*, returns a *tuple* or an *array of keys* (string literal).
+- **Updated** `extractObjectKeysDeep` no longer returns a *tuple*, instead now it returns an *array of keys* (string literal).
 
 ## [4.20.60] - 2025-10-04
 
-- **Added** new _utility types_ `ArrayToTuple<T[]>` and `Tuple<T>`.
-- **Updated** the _return type_ of `extractObjectKeys`, now it returns _tuple of exact top-level keys_.
-- **Added** new utility `extractObjectKeysDeep` to extract _tuple_ of _all nested keys_.
-- **Updated** _query string parser_ utilities to receive _generic return type_.
-- **Added** new utility `literalQueryStringToObject` to parse _literal query string_.
+- **Added** new *utility types* `ArrayToTuple<T[]>` and `Tuple<T>`.
+- **Updated** the *return type* of `extractObjectKeys`, now it returns *tuple of exact top-level keys*.
+- **Added** new utility `extractObjectKeysDeep` to extract *tuple* of *all nested keys*.
+- **Updated** *query string parser* utilities to receive *generic return type*.
+- **Added** new utility `literalQueryStringToObject` to parse *literal query string*.
 
 ## [4.20.56] - 2025-10-02
 
-- **Updated** `isDeepEqual` utility: Now it accepts _arguments of unknown types_.
+- **Updated** `isDeepEqual` utility: Now it accepts *arguments of unknown types*.
 
 ## [4.20.54] - 2025-10-02
 
-- **Added** new utility `extractObjectKeys` to _extract keys of an object_ with _proper typing_.
-- **Updated** `isObjectWithKeys`: _now properly typed_.
+- **Added** new utility `extractObjectKeys` to *extract keys of an object* with *proper typing*.
+- **Updated** `isObjectWithKeys`: *now properly typed*.
 
 ## [4.20.52] - 2025-09-26
 
-- **Added** new `Chronos` _plugin_ `greetingPlugin` for accessing `getGreeting` method in `Chronos` instances.
-- **Fixed** some _docs and internal type related issues_ in `convertObjectValues` utility.
+- **Added** new `Chronos` *plugin* `greetingPlugin` for accessing `getGreeting` method in `Chronos` instances.
+- **Fixed** some *docs and internal type related issues* in `convertObjectValues` utility.
 
 ## [4.20.50] - 2025-09-25
 
-- **Fixed** _return type_ of `convertObjectValues` utility to correctly reflect the _transformed object structure_ and `keys` option is now _more strict_: **only accepts keys which values are string and/or number** and **the array cannot be left empty**.
-- **Updated** _options type_ for `with()` _static method_ of `Chronos`.
+- **Fixed** *return type* of `convertObjectValues` utility to correctly reflect the *transformed object structure* and `keys` option is now *more strict*: **only accepts keys which values are string and/or number** and **the array cannot be left empty**.
+- **Updated** *options type* for `with()` *static method* of `Chronos`.
 
 ## [4.20.48] - 2025-09-22
 
-- **Wrapped** `ChronosMethods` type in `LooseLiteral` to allow passing _custom method names_ without _type errors_ when creating a custom [`Chronos Plugin`](https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/plugins#%EF%B8%8F-writing-your-own-custom-plugin).
-- **Updated** _error message_ in `convert` method in `Currency` class.
+- **Wrapped** `ChronosMethods` type in `LooseLiteral` to allow passing *custom method names* without *type errors* when creating a custom [`Chronos Plugin`](https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/plugins#%EF%B8%8F-writing-your-own-custom-plugin).
+- **Updated** *error message* in `convert` method in `Currency` class.
 
 ## [4.20.46] - 2025-09-22
 
-- `Chronos` class is now _exported via subpath_ `'nhb-toolbox/chronos'`.
+- `Chronos` class is now *exported via subpath* `'nhb-toolbox/chronos'`.
 
 ## [4.20.44] - 2025-09-20
 
-- **Updated** type related issues in `Finder` class. Now it accepts _array of objects only_.
+- **Updated** type related issues in `Finder` class. Now it accepts *array of objects only*.
 
 ## [4.20.40] - 2025-09-18
 
-- **Added** new **utility types**: `DeepPartialAll`, `Join`,`Split` along with `ValidArray`, `List` and _more_.
+- **Added** new **utility types**: `DeepPartialAll`, `Join`,`Split` along with `ValidArray`, `List` and *more*.
 
 ## [4.20.32] - 2025-09-17
 
 - **Renamed** `isPastParticiple()` method to `isParticiple()` in `Verbalizer/verbalizer`.
-- **Optimized** _internal logic_ for `toPast()` and `toParticiple()` methods in `Verbalizer/verbalizer`.
-- **Updated** all the _rules_ for `Verbalizer/verbalizer`.
+- **Optimized** *internal logic* for `toPast()` and `toParticiple()` methods in `Verbalizer/verbalizer`.
+- **Updated** all the *rules* for `Verbalizer/verbalizer`.
 
 ## [4.20.30] - 2025-09-17
 
-- **Reduced** _unpacked size_ by **removing** _tsdoc comments_ from js (both `cjs` and `esm`) outputs.
+- **Reduced** *unpacked size* by **removing** *tsdoc comments* from js (both `cjs` and `esm`) outputs.
 - **Updated** tsdoc for `Verbalizer/verbalizer`: **added** reference to documentation site.
 
 ## [4.20.27] - 2025-09-16
 
-- **Fixed** _issues_: (**failed to convert already past/participle regular verbs**) with `toPast()` and `toParticiple()` methods in `Verbalizer/verbalizer`.
+- **Fixed** *issues*: (**failed to convert already past/participle regular verbs**) with `toPast()` and `toParticiple()` methods in `Verbalizer/verbalizer`.
 
 ## [4.20.26] - 2025-09-16
 
-- **Optimized** _internal logic_ in both `Pluralizer` and `Verbalizer`.
+- **Optimized** *internal logic* in both `Pluralizer` and `Verbalizer`.
 
 ## [4.20.24] - 2025-09-15
 
 - **Added** new class `Verbalizer` and its shared instance `verbalizer` for verb form(s) manipulation.
-- **Updated** `Pluralizer/pluralizer`'s _internal mechanism_ to _trim_ input(s) and output(s).
+- **Updated** `Pluralizer/pluralizer`'s *internal mechanism* to *trim* input(s) and output(s).
 
 ## [4.20.20] - 2025-09-04
 
@@ -151,26 +156,26 @@ All notable changes to the package will be documented here.
 
 ## [4.20.17] - 2025-09-02
 
-- **Added** _color support detector_ for shell/console for `Stylog`/`LogStyler`.
+- **Added** *color support detector* for shell/console for `Stylog`/`LogStyler`.
 
 ## [4.20.16] - 2025-09-01
 
-- **Added** new method `string()` in `LogStyler` (also in `Stylog`) and **made** `applyStyles()` method _public_.
+- **Added** new method `string()` in `LogStyler` (also in `Stylog`) and **made** `applyStyles()` method *public*.
 
 ## [4.20.11] - 2025-09-01
 
-- **Added** new _Symbol_ methods in `Chronos`: `Symbol.isConcatSpreadable` and `Symbol.match`.
-- **Fixed** string coercion issues with `toPrimitive` _Symbol_ method in `Chronos`.
-- **Redesigned** `chronos` (`Chronos` wrapper) with _Proxy_ and **updated** _TSDoc_ for `chronos`.
+- **Added** new *Symbol* methods in `Chronos`: `Symbol.isConcatSpreadable` and `Symbol.match`.
+- **Fixed** string coercion issues with `toPrimitive` *Symbol* method in `Chronos`.
+- **Redesigned** `chronos` (`Chronos` wrapper) with *Proxy* and **updated** *TSDoc* for `chronos`.
 
 ## [4.20.10] - 2025-09-01
 
-- **Added** new _utility types_: `RequireAtLeast`, `RequireExactly`, `RequireBetween`.
-- **Added** new _static_ `Chronos` method `Chronos.with(options)` to create `Chronos` instance from specified _time component(s)_.
+- **Added** new *utility types*: `RequireAtLeast`, `RequireExactly`, `RequireBetween`.
+- **Added** new *static* `Chronos` method `Chronos.with(options)` to create `Chronos` instance from specified *time component(s)*.
 
 ## [4.20.1] - 2025-08-31
 
-- **Exported** _helper function and guards_ used for `Stylog` and `LogStyler`: `hexToAnsi`, `isCSSColor`, `isBGColor`, `isTextStyle`.
+- **Exported** *helper function and guards* used for `Stylog` and `LogStyler`: `hexToAnsi`, `isCSSColor`, `isBGColor`, `isTextStyle`.
 
 ## [4.20.0] - 2025-08-31
 
@@ -178,8 +183,8 @@ All notable changes to the package will be documented here.
 
 ## [4.14.16] - 2025-08-30
 
-- **Updated** _types_ related to _object flattening utilities_: `FlattenDotKey`, `DotValue`, `FlattenDotValue`, `FlattenLeafKey`, `LeafValue` and `FlattenLeafValue`.
-- **Made** all the (output) properties of `FlattenDotValue` and `FlattenLeafValue` _optional_ to avoid issues.
+- **Updated** *types* related to *object flattening utilities*: `FlattenDotKey`, `DotValue`, `FlattenDotValue`, `FlattenLeafKey`, `LeafValue` and `FlattenLeafValue`.
+- **Made** all the (output) properties of `FlattenDotValue` and `FlattenLeafValue` *optional* to avoid issues.
 
 ## [4.14.14] - 2025-08-27
 
@@ -187,11 +192,11 @@ All notable changes to the package will be documented here.
 
 ## [4.14.13] - 2025-08-24
 
-- **Updated** _return type_ for `getColorForInitial` utility and **improved** _internal logic_ and _error type_ for color generator utilities.
+- **Updated** *return type* for `getColorForInitial` utility and **improved** *internal logic* and *error type* for color generator utilities.
 
 ## [4.14.12] - 2025-08-23
 
-- **Updated** _error type_ for `trimString` utility.
+- **Updated** *error type* for `trimString` utility.
 
 ## [4.14.10] - 2025-08-17
 
@@ -199,12 +204,12 @@ All notable changes to the package will be documented here.
 
 ## [4.14.9] - 2025-08-16
 
-- **Fixed** minor _internal issues_ and **updated** JSDoc for `Pluralizer`.
+- **Fixed** minor *internal issues* and **updated** JSDoc for `Pluralizer`.
 
 ## [4.14.4-8] - 2025-08-13 - 2025-08-14
 
 - **Updated** internal logic of `convertStringCase` utility, added new `options` parameter.
-- **Fixed** multiple _internal issues_ and JSDoc; Optimized internal logic.
+- **Fixed** multiple *internal issues* and JSDoc; Optimized internal logic.
 
 ## [4.14.1-3] - 2025-08-11 - 2025-08-12
 
@@ -216,7 +221,7 @@ All notable changes to the package will be documented here.
 
 ## [4.13.11] - 2025-08-06
 
-- **Fixed** an issue with `getZodiacSign` method in `Chronos` that could not return correct _Vedic_ sign.
+- **Fixed** an issue with `getZodiacSign` method in `Chronos` that could not return correct *Vedic* sign.
 
 ## [4.13.10] - 2025-08-02
 
@@ -240,7 +245,7 @@ All notable changes to the package will be documented here.
 
 ## [4.13.3] - 2025-07-22
 
-- **Updated** _pluralization/uncountable rules_, _case restoration method_ and fixed other bugs in `pluralizer`.
+- **Updated** *pluralization/uncountable rules*, *case restoration method* and fixed other bugs in `pluralizer`.
 - **Updated** docs for `pluralizer`, `Pluralizer` and `formatUnitWithPlural`.
 
 ## [4.13.1] - 2025-07-22
@@ -383,7 +388,7 @@ All notable changes to the package will be documented here.
 
 ### 🕧 Updates for Chronos
 
-- **Reduced** bloat by moving _rarely used_ `Chronos` methods to plugin system.
+- **Reduced** bloat by moving *rarely used* `Chronos` methods to plugin system.
 - **Changed** plugin import paths as `import { somePlugin } from nhb-toolbox/plugins/somePlugin` format so the users can assume the path easily.
 - **Updated** parameter type for `isBusinessHour` method: instead of multiple parameters can accept one options object now.
 
@@ -391,7 +396,7 @@ All notable changes to the package will be documented here.
 
 ### 🕧 Updates for Chronos
 
-- All _plugin_ imports now use statement like `import { somePlugin } from 'nhb-toolbox/plugins/plugin-path';`
+- All *plugin* imports now use statement like `import { somePlugin } from 'nhb-toolbox/plugins/plugin-path';`
 - **Updated** `getZodiacSign` method: includes 2 presets `western` and `vedic` with aliases `tropical` and `sidereal`.
 - **Fixed** issues in `getZodiacSign` method which previously could not parse some date/month range.
 
@@ -490,5 +495,5 @@ All notable changes to the package will be documented here.
 ### Improved
 
 - 🌲 Full **tree-shaking support** for ESM builds (CommonJS remains unaffected).
-  - 🌲 _From the beginning the library was tree-shakable_ but now it's **properly tree-shakable** for ESM builds.
+  - 🌲 *From the beginning the library was tree-shakable* but now it's **properly tree-shakable** for ESM builds.
   - 📦 CommonJS (`cjs`) build remains unaffected and stable.
