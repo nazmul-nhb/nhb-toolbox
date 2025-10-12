@@ -9,7 +9,7 @@ All notable changes to the package will be documented here.
 ## [4.20.90] - 2025-10-12
 
 - **Updated** `formatUnitWithPlural` utility: now returns _singular unit_ for both `0` and `1`.
-- **Update** `fromNow()` `Chronos` method: fixed issues related to 0 value for provided unit level.
+- **Update** `fromNow()` `Chronos` method: **fixed** issues when provided unit level value is `0`.
 
 ## [4.20.89] - 2025-10-12
 
