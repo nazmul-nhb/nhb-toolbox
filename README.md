@@ -7,8 +7,8 @@
   <a href="https://www.npmjs.com/package/nhb-toolbox" aria-label="NPM Downloads">
     <img src="https://img.shields.io/npm/dm/nhb-toolbox.svg?label=DOWNLOADS&style=flat&color=red&logo=npm" alt="Downloads" />
   </a>
-  <a href="https://www.npmjs.com/package/nhb-toolbox" aria-label="NPM Version">
-    <img src="https://img.shields.io/npm/v/nhb-toolbox.svg?label=VERSION&style=flat&color=teal&logo=npm" alt="Latest Version" />
+  <a href="https://www.npmjs.com/package/nhb-toolbox" aria-label="Latest Version">
+    <img src="https://img.shields.io/npm/v/nhb-toolbox.svg?label=NPM&style=flat&color=teal&logo=npm" alt="Latest Version" />
   </a>
   <a href="https://bundlephobia.com/result?p=nhb-toolbox" aria-label="Bundle Size">
     <img src="https://img.shields.io/bundlephobia/minzip/nhb-toolbox?style=flat&color=purple&label=SIZE&logo=nodedotjs" alt="Bundle Size" />
