@@ -220,6 +220,11 @@
       "import": "./dist/esm/date/plugins/relativeTimePlugin.js",
       "require": "./dist/cjs/date/plugins/relativeTimePlugin.js"
     },
+    "./plugins/roundPlugin": {
+      "types": "./dist/dts/date/plugins/roundPlugin.d.ts",
+      "import": "./dist/esm/date/plugins/roundPlugin.js",
+      "require": "./dist/cjs/date/plugins/roundPlugin.js"
+    },
     "./plugins/seasonPlugin": {
       "types": "./dist/dts/date/plugins/seasonPlugin.d.ts",
       "import": "./dist/esm/date/plugins/seasonPlugin.js",
@@ -300,6 +305,9 @@
       ],
       "plugins/relativeTimePlugin": [
         "dist/dts/date/plugins/relativeTimePlugin.d.ts"
+      ],
+      "plugins/roundPlugin": [
+        "dist/dts/date/plugins/roundPlugin.d.ts"
       ],
       "plugins/seasonPlugin": [
         "dist/dts/date/plugins/seasonPlugin.d.ts"

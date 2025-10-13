@@ -227,7 +227,7 @@ export interface ChronosInternals {
 	 * @param label - Optional UTC offset label
 	 * @returns A new Chronos instance
 	 */
-	withOrigin(instance: Chronos, method: ChronosMethods, label?: UTCOffSet): Chronos;
+	withOrigin(instance: Chronos, method: PluginMethods, label?: UTCOffSet): Chronos;
 
 	/**
 	 * * Access to `#toNewDate` private method
@@ -278,7 +278,10 @@ export type $StaticMethods = {
 }[keyof $Chronos];
 
 /** * Plugin methods that return `Chronos` instance */
-export type $PluginMethods = LooseLiteral<'timeZone'>;
+export type $PluginMethods = 'timeZone' | 'round';
+
+/** * Plugin methods that return `Chronos` instance + any custom name */
+export type PluginMethods = LooseLiteral<'timeZone' | 'round'>;
 
 /** Methods (both instance and static) in `Chronos` class that return `Chronos` instance. */
 export type ChronosMethods = $InstanceMethods | $StaticMethods | $PluginMethods;
