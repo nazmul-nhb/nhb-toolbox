@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.21.10] - 2025-10-13
+
+- **Moved** `round` method to `Chronos` *plugin system*, usable via `roundPlugin`.
+- **Updated** *tsdoc* for some `Chronos` methods with *proper references.*
+
 ## [4.21.4] - 2025-10-13
 
 - **Added** new type `$UTCOffset` and applied in corresponding `Chronos` methods.
