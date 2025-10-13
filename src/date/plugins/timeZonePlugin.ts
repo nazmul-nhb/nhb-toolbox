@@ -1,3 +1,4 @@
+import type { LooseLiteral } from '../../utils/types';
 import { INTERNALS, TIME_ZONE_LABELS, TIME_ZONES } from '../constants';
 import { isValidUTCOffSet } from '../guards';
 import type { TimeZone, UTCOffSet } from '../types';
@@ -17,6 +18,19 @@ declare module '../Chronos' {
 		timeZone(zone: TimeZone | UTCOffSet): ChronosConstructor;
 
 		/**
+		 * @instance Returns the current time zone name as a full descriptive string (e.g. `"Bangladesh Standard Time"`).
+		 *
+		 * @param utc Optional UTC offset in `"UTC+06:00"` format. When passed, it bypasses the current time zone offset.
+		 * @returns Time zone name in full descriptive string or UTC offset if it is not a valid time zone.
+		 *
+		 * @remarks
+		 * - This method uses a predefined mapping of UTC offsets to time zone names.
+		 * - If multiple time zones share the same UTC offset, it returns the **first match** from the predefined list.
+		 * - If no match is found (which is rare), it falls back to returning the UTC offset (e.g. `"UTC+06:00"`).
+		 */
+		getTimeZoneName(utc?: UTCOffSet): LooseLiteral<UTCOffSet>;
+
+		/**
 		 * @instance Returns the current time zone abbreviation (e.g. `"BST"` for `Bangladesh Standard Time`).
 		 *
 		 * @param utc Optional UTC offset in `"UTC+06:00"` format. When passed, it bypasses the current time zone offset.
@@ -34,6 +48,7 @@ declare module '../Chronos' {
 /** * Plugin to inject `timeZone` related methods */
 export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	const internal = ChronosClass[INTERNALS];
+	const inDate = internal.internalDate;
 
 	ChronosClass.prototype.timeZone = function (
 		this: ChronosConstructor,
@@ -53,13 +68,20 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		const previousOffset = this.getTimeZoneOffsetMinutes();
 		const relativeOffset = targetOffset - previousOffset;
 
-		const adjustedTime = new Date(
-			internal.internalDate(this).getTime() + relativeOffset * 60 * 1000
-		);
+		const adjustedTime = new Date(inDate(this).getTime() + relativeOffset * 60 * 1000);
 
 		const instance = new ChronosClass(adjustedTime);
 
 		return internal.withOrigin(instance, 'timeZone', stringOffset);
+	};
+
+	ChronosClass.prototype.getTimeZoneName = function (
+		this: ChronosConstructor,
+		utc?: UTCOffSet
+	): LooseLiteral<UTCOffSet> {
+		const UTC = utc ?? `UTC${this.getTimeZoneOffset()}`;
+
+		return TIME_ZONE_LABELS?.[UTC] ?? UTC;
 	};
 
 	ChronosClass.prototype.getTimeZoneNameShort = function (
@@ -73,9 +95,9 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		const timeZone = TIME_ZONE_LABELS?.[UTC];
 
 		let result = timeZone
-			?.split(' ')
+			?.split(/\s+/)
 			?.filter(Boolean)
-			?.map((part) => part?.charAt(0))
+			?.map((part) => part?.[0])
 			?.join('')
 			?.replace(/\W/g, '') as TimeZone | undefined;
 
@@ -86,5 +108,31 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		}
 
 		return result ?? formatUTCOffset(mins);
+	};
+
+	ChronosClass.prototype.toString = function (this: ChronosConstructor): string {
+		const offset = internal.offset(this);
+
+		switch (this.origin) {
+			case 'timeZone': {
+				const gmt = offset.replace('UTC', 'GMT').replace(':', '');
+				const label = TIME_ZONE_LABELS[offset] ?? offset;
+
+				return inDate(this)
+					.toString()
+					.replace(/GMT[+-]\d{4}\s+\([^)]+\)/, `${gmt} (${label})`);
+			}
+			case 'toUTC':
+			case 'utc': {
+				return inDate(this)
+					.toString()
+					.replace(
+						/GMT[+-]\d{4}\s+\([^)]+\)/,
+						`GMT+0000 (Coordinated Universal Time)`
+					);
+			}
+			default:
+				return inDate(this).toString();
+		}
 	};
 };

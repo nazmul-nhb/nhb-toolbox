@@ -2,8 +2,8 @@ import { isValidArray } from '../guards/non-primitives';
 import { isString } from '../guards/primitives';
 import type { Enumerate, LocaleCode, NumberRange } from '../number/types';
 import { getOrdinal } from '../number/utilities';
-import type { LooseLiteral, TupleOf } from '../utils/types';
-import { DAYS, INTERNALS, MONTHS, SORTED_TIME_FORMATS, TIME_ZONE_LABELS } from './constants';
+import type { TupleOf } from '../utils/types';
+import { DAYS, INTERNALS, MONTHS, SORTED_TIME_FORMATS } from './constants';
 import { isLeapYear } from './guards';
 import type {
 	$UTCOffset,
@@ -586,9 +586,9 @@ export class Chronos {
 			case 'utc': {
 				const mins = this.getUTCOffsetMinutes();
 
-				const date = this.addMinutes(mins);
+				const chronos = this.addMinutes(mins);
 
-				return date.toDate();
+				return chronos.toDate();
 			}
 			default:
 				return new Date(this.#date);
@@ -598,21 +598,14 @@ export class Chronos {
 	/** @instance Returns a string representation of a date. The format of the string depends on the locale. */
 	toString(): string {
 		switch (this.#ORIGIN) {
-			case 'timeZone': {
-				const gmt = this.#offset.replace('UTC', 'GMT').replace(':', '');
-				const label = TIME_ZONE_LABELS[this.#offset] ?? this.#offset;
-
-				return this.#date
-					.toString()
-					.replace(/GMT[+-]\d{4} \([^)]+\)/, `${gmt} (${label})`);
-			}
 			case 'toUTC':
 			case 'utc': {
-				const mins = this.getUTCOffsetMinutes();
-
-				const date = this.addMinutes(mins);
-
-				return date.toString();
+				return this.#date
+					.toString()
+					.replace(
+						/GMT[+-]\d{4}\s+\([^)]+\)/,
+						`GMT+0000 (Coordinated Universal Time)`
+					);
 			}
 			default:
 				return this.#date.toString();
@@ -628,9 +621,9 @@ export class Chronos {
 				const previousOffset = this.getTimeZoneOffsetMinutes();
 				const currentOffset = this.getUTCOffsetMinutes();
 
-				const date = this.addMinutes(-previousOffset - currentOffset);
+				const chronos = this.addMinutes(-previousOffset - currentOffset);
 
-				return date.#toLocalISOString();
+				return chronos.#toLocalISOString();
 			}
 			default:
 				return this.#toLocalISOString();
@@ -1415,21 +1408,6 @@ export class Chronos {
 	 */
 	getTimeZoneOffsetMinutes(): number {
 		return extractMinutesFromUTC(this.#offset);
-	}
-
-	/**
-	 * @instance Returns the current time zone name as a full descriptive string (e.g. `"Bangladesh Standard Time"`).
-	 * @param utc Optional UTC offset in `"UTC+06:00"` format. When passed, it bypasses the current time zone offset.
-	 * @returns Time zone name in full descriptive string or UTC offset if it is not a valid time zone.
-	 * @remarks
-	 * - This method uses a predefined mapping of UTC offsets to time zone names.
-	 * - If multiple time zones share the same UTC offset, it returns the **first match** from the predefined list.
-	 * - If no match is found (which is rare), it falls back to returning the UTC offset (e.g. `"UTC+06:00"`).
-	 */
-	getTimeZoneName(utc?: UTCOffSet): LooseLiteral<UTCOffSet> {
-		const UTC = utc ?? `UTC${this.getTimeZoneOffset()}`;
-
-		return TIME_ZONE_LABELS?.[UTC] ?? UTC;
 	}
 
 	/** @instance Returns new `Chronos` instance in UTC */

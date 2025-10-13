@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.21.14] - 2025-10-14
+
+- **Moved** `getTimeZoneName` method to `Chronos` *plugin system*, usable via `timeZonePlugin` and enhanced `timeZonePlugin`.
+
 ## [4.21.10] - 2025-10-13
 
 - **Moved** `round` method to `Chronos` *plugin system*, usable via `roundPlugin`.
