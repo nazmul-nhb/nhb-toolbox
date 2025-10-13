@@ -88,15 +88,15 @@ yarn add nhb-toolbox
 
 ---
 
+### Installing from GitHub Packages
+  
+GitHub Packages requires authentication and scoped package names.
+
 <details>
 
   <summary>
-
-### Installing from GitHub Packages
-
+    <strong>Details</strong>
   </summary>
-  
-GitHub Packages requires authentication and scoped package names.
 
 #### Step 1: Authenticate with GitHub Packages
 
@@ -172,7 +172,7 @@ Example `.npmrc` snippet:
 
 | Registry        | Package Name              | Registry URL                                             | Requires Auth?                 |
 | --------------- | ------------------------- | -------------------------------------------------------- | ------------------------------ |
-| NPM Registry       | `nhb-toolbox`             | [https://registry.npmjs.org](https://registry.npmjs.org) | No                             |
+| NPM Registry    | `nhb-toolbox`             | [https://registry.npmjs.org](https://registry.npmjs.org) | No                             |
 | GitHub Packages | `@nazmul-nhb/nhb-toolbox` | [https://npm.pkg.github.com](https://npm.pkg.github.com) | Yes (PAT with `read:packages`) |
 
 ---
