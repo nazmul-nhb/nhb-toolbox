@@ -43,7 +43,7 @@ import { extractMinutesFromUTC } from './utils';
  * - If a string is provided, it should be in a format that can be parsed by the Date constructor.
  * - If a number is provided, it should be a timestamp (milliseconds since the Unix epoch).
  * - If a Date object is provided, it will be used as is.
- * - If a Chronos object is provided, it will be converted to a Date object.
+ * - If a `Chronos` object is provided, it will be converted to a Date object.
  *
  * **It also accepts number values as following:**
  * - **`year, month, date, hours, minutes, seconds, milliseconds`**: Individual components of a date-time to construct a `Chronos` instance.
@@ -84,7 +84,7 @@ export class Chronos {
 	};
 
 	/**
-	 * * Chronos date/time in Native JS `Date` format.
+	 * * `Chronos` date/time in Native JS `Date` format.
 	 *
 	 * - **NOTE**: It is **HIGHLY** advised *not to rely* on this public property to access native JS `Date`. It's not reliable when timezone and/or UTC related operations are performed. If you really need to use native `Date`, use `toDate` method.  THis property is purely for developer convenience and sugar.
 	 */
@@ -154,12 +154,12 @@ export class Chronos {
 	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
 	 *
 	 * @param year The full year designation is required for cross-century date accuracy. If year is between 0 and 99, year is assumed to be 1900 + year.
-	 * @param month The month as a number between 1 and 12 (January to December).
-	 * @param date The date as a number between 1 and 31.
-	 * @param hours Must be supplied if minutes is supplied. A number from 0 to 23 (midnight to 11pm) that specifies the hour.
-	 * @param minutes Must be supplied if seconds is supplied. A number from 0 to 59 that specifies the minutes.
-	 * @param seconds Must be supplied if milliseconds is supplied. A number from 0 to 59 that specifies the seconds.
-	 * @param ms A number from 0 to 999 that specifies the milliseconds.
+	 * @param month The month as a `number` between 1 and 12 (January to December).
+	 * @param date The date as a `number` between 1 and 31.
+	 * @param hours Must be supplied if minutes is supplied. A `number` from 0 to 23 (midnight to 11pm) that specifies the hour.
+	 * @param minutes Must be supplied if seconds is supplied. A `number` from 0 to 59 that specifies the minutes.
+	 * @param seconds Must be supplied if milliseconds is supplied. A `number` from 0 to 59 that specifies the seconds.
+	 * @param ms A `number` from 0 to 999 that specifies the milliseconds.
 	 *
 	 * @returns Instance of `Chronos` with all methods and properties.
 	 */
@@ -180,10 +180,10 @@ export class Chronos {
 	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
 	 *
 	 * @param value - A date value (`number`, `string`, `Date`, or `Chronos` object).
-	 * - If a string is provided, it should be in a format that can be parsed by the `Date` constructor.
-	 * - If a number is provided, it should be a timestamp (milliseconds since the Unix epoch).
-	 * - If a Date object is provided, it will be used as is.
-	 * - If a Chronos object is provided, it will be used directly.
+	 * - If a `string` is provided, it should be in a format that can be parsed by the `Date` constructor.
+	 * - If a `number` is provided, it should be a timestamp (milliseconds since the Unix epoch).
+	 * - If a `Date` object is provided, it will be used as is.
+	 * - If a `Chronos` object is provided, it will be used directly.
 	 *
 	 * @returns Instance of `Chronos` with all methods and properties.
 	 */
@@ -195,13 +195,13 @@ export class Chronos {
 	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
 	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
 	 *
-	 * @param valueOrYear The value in number, string, Date or Chronos format or the full year designation is required for cross-century date accuracy. If year is between 0 and 99, year is assumed to be 1900 + year.
-	 * @param month The month as a number between 1 and 12 (January to December).
-	 * @param date The date as a number between 1 and 31.
-	 * @param hours Must be supplied if minutes is supplied. A number from 0 to 23 (midnight to 11pm) that specifies the hour.
-	 * @param minutes Must be supplied if seconds is supplied. A number from 0 to 59 that specifies the minutes.
-	 * @param seconds Must be supplied if milliseconds is supplied. A number from 0 to 59 that specifies the seconds.
-	 * @param ms A number from 0 to 999 that specifies the milliseconds.
+	 * @param valueOrYear The value in `number`, `string`, `Date` or `Chronos` format or the full year designation is required for cross-century date accuracy. If year is between 0 and 99, year is assumed to be 1900 + year.
+	 * @param month The month as a `number` between 1 and 12 (January to December).
+	 * @param date The date as a `number` between 1 and 31.
+	 * @param hours Must be supplied if minutes is supplied. A `number` from 0 to 23 (midnight to 11pm) that specifies the hour.
+	 * @param minutes Must be supplied if seconds is supplied. A `number` from 0 to 59 that specifies the minutes.
+	 * @param seconds Must be supplied if milliseconds is supplied. A `number` from 0 to 59 that specifies the seconds.
+	 * @param ms A `number` from 0 to 999 that specifies the milliseconds.
 	 *
 	 * @returns Instance of `Chronos` with all methods and properties.
 	 */
@@ -574,7 +574,7 @@ export class Chronos {
 		return this.getTimeStamp();
 	}
 
-	/** @instance Clones and returns a new Chronos instance with the same date. */
+	/** @instance Clones and returns a new `Chronos` instance with the same date. */
 	clone(): Chronos {
 		return new Chronos(this.#date).#withOrigin(this.#ORIGIN as ChronosMethods);
 	}
@@ -698,7 +698,7 @@ export class Chronos {
 	/**
 	 * @instance Formats the date into a predefined strict string format using local time or UTC.
 	 *
-	 * @remarks Offers over 21,000 predefined formats with full IntelliSense support.
+	 * @remarks Offers `over 21,000` predefined formats with full IntelliSense support.
 	 *
 	 * @param format - The desired format string. Defaults to `'dd, mmm DD, YYYY HH:mm:ss'`
 	 *                 (e.g., `'Sun, Apr 06, 2025 16:11:55'`).
@@ -981,7 +981,7 @@ export class Chronos {
 		return this.isSame(this.lastDayOfMonth(), 'day');
 	}
 
-	/** @instance Returns a new Chronos instance set to the first day of the current month. */
+	/** @instance Returns a new `Chronos` instance set to the first day of the current month. */
 	firstDayOfMonth(): Chronos {
 		const year = this.#date.getFullYear();
 		const month = this.#date.getMonth();
@@ -989,7 +989,7 @@ export class Chronos {
 		return new Chronos(lastDate).#withOrigin('firstDayOfMonth');
 	}
 
-	/** @instance Returns a new Chronos instance set to the last day of the current month. */
+	/** @instance Returns a new `Chronos` instance set to the last day of the current month. */
 	lastDayOfMonth(): Chronos {
 		const year = this.#date.getFullYear();
 		const month = this.#date.getMonth() + 1;
@@ -998,7 +998,7 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Returns a new Chronos instance at the start of a given unit.
+	 * @instance Returns a new `Chronos` instance at the start of a given unit.
 	 * @param unit The unit to reset (e.g., year, month, day).
 	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
@@ -1041,7 +1041,7 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Returns a new Chronos instance at the end of a given unit.
+	 * @instance Returns a new `Chronos` instance at the end of a given unit.
 	 * @param unit The unit to adjust (e.g., year, month, day).
 	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
@@ -1053,7 +1053,7 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Returns a new Chronos instance with the specified unit added.
+	 * @instance Returns a new `Chronos` instance with the specified unit added.
 	 * @param number The number of time unit to add (can be negative).
 	 * @param unit The time unit to add.
 	 */
@@ -1091,7 +1091,7 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Returns a new Chronos instance with the specified unit subtracted.
+	 * @instance Returns a new `Chronos` instance with the specified unit subtracted.
 	 * @param number The number of time unit to subtract (can be negative).
 	 * @param unit The time unit to add.
 	 */
@@ -1125,7 +1125,7 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Returns a new Chronos instance with the specified unit set to the given value.
+	 * @instance Returns a new `Chronos` instance with the specified unit set to the given value.
 	 * @param unit The unit to modify.
 	 * @param value The value to set for the unit.
 	 */
@@ -1254,7 +1254,7 @@ export class Chronos {
 	 * This method assumes ISO week logic, where week 1 is the week containing January 4th.
 	 *
 	 * @param week The ISO week number (1–53) to set the date to.
-	 * @returns A new Chronos instance set to the start (Monday) of the specified week.
+	 * @returns A new `Chronos` instance set to the start (Monday) of the specified week.
 	 */
 	setWeek(week: NumberRange<1, 53>): Chronos {
 		const d = new Date(this.#date);
@@ -1408,7 +1408,7 @@ export class Chronos {
 	/**
 	 * @instance Returns the current `Chronos` instance's UTC offset in minutes.
 	 *
-	 * This reflects the parsed or stored offset used internally by Chronos and follows the same
+	 * This reflects the parsed or stored offset used internally by `Chronos` and follows the same
 	 * sign convention: positive for timezones ahead of UTC, negative for behind.
 	 *
 	 * @returns The UTC offset in minutes maintaining the current timezone regardless of system having different one.
@@ -1432,7 +1432,7 @@ export class Chronos {
 		return TIME_ZONE_LABELS?.[UTC] ?? UTC;
 	}
 
-	/** @instance Returns new Chronos instance in UTC */
+	/** @instance Returns new `Chronos` instance in UTC */
 	toUTC(): Chronos {
 		if (this.#offset === 'UTC+00:00') {
 			return this.#withOrigin('toUTC');
@@ -1447,7 +1447,7 @@ export class Chronos {
 		return new Chronos(utc).#withOrigin('toUTC');
 	}
 
-	/** @instance Returns new Chronos instance in local time */
+	/** @instance Returns new `Chronos` instance in local time */
 	toLocal(): Chronos {
 		const previousOffset = this.getTimeZoneOffsetMinutes();
 
@@ -1683,7 +1683,7 @@ export class Chronos {
 	 * **Example**:
 	 * ```ts
 	 * Chronos.parse('23-12-31 15:30:45', 'YY-MM-DD HH:mm:ss');
-	 * // returns Chronos instance with the parsed date 2023-12-31T15:30:45
+	 * // returns `Chronos` instance with the parsed date 2023-12-31T15:30:45
 	 * ```
 	 *
 	 * @param dateStr - The date string to be parsed
@@ -1860,14 +1860,14 @@ export class Chronos {
 	}
 
 	/**
-	 * @static Creates a UTC-based Chronos instance.
+	 * @static Creates a UTC-based `Chronos` instance.
 	 * If no date is provided, it uses the current date and time.
 	 *
 	 * **This is the base time, meaning conversion in other timezone will consider UTC time as the base time.**
 	 *
 	 * @param dateLike Optional input date to base the UTC time on.
 	 * If omitted, the current system date/time is used.
-	 * @returns A new Chronos instance representing the UTC equivalent of the input.
+	 * @returns A new `Chronos` instance representing the UTC equivalent of the input.
 	 */
 	static utc(dateLike?: ChronosInput): Chronos {
 		const chronos = new Chronos(dateLike);
@@ -2080,7 +2080,7 @@ export class Chronos {
 
 	/**
 	 * @static Checks if the given value is an instance of `Chronos`.
-	 * - Useful for verifying Chronos objects in type guards or validations.
+	 * - Useful for verifying `Chronos` objects in type guards or validations.
 	 * @param value - The value to test.
 	 * @returns `true` if the value is an instance of `Chronos`, otherwise `false`.
 	 */

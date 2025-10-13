@@ -577,7 +577,7 @@ export interface DateLike {
 /**
  * * Options for `Chronos` _static_ method `with()`
  *
- * @remarks Should provide at least one property.
+ * @remarks Should provide at least one property, otherwise use the current date and time.
  */
 export type ChronosWithOptions = Partial<{
 	/** The full year (e.g., 2025). Years 0–99 are interpreted as 1900–1999. */
