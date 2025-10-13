@@ -1366,7 +1366,7 @@ export class Chronos {
 	/**
 	 * @instance Returns the system's current UTC offset formatted as `+06:00` or `-07:00`.
 	 *
-	 * - *Unlike `Date.prototype.getTimezoneOffset()`, which returns the offset in minutes **behind** UTC (positive for locations west of UTC and negative for east), this method returns the more intuitive sign format used in time zone representations (e.g., `UTC+06:00` means 6 hours **ahead** of UTC).*
+	 * - *Unlike JavaScript's {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset `Date.prototype.getTimezoneOffset()`}, which returns the offset in minutes **behind** UTC (positive for locations west of UTC and negative for east), this method returns the more intuitive sign format used in time zone representations (e.g., `+06:00` means 6 hours **ahead** of UTC).*
 	 *
 	 * @returns The (local) system's UTC offset in `±HH:mm` format.
 	 */
@@ -1382,7 +1382,7 @@ export class Chronos {
 	/**
 	 * @instance Returns the timezone offset of this `Chronos` instance in `+06:00` or `-07:00` format maintaining current timezone.
 	 *
-	 * - *Unlike `Date.prototype.getTimezoneOffset()`, which returns the offset in minutes **behind** UTC (positive for locations west of UTC and negative for east), this method returns the more intuitive sign format used in time zone representations (e.g., `UTC+06:00` means 6 hours **ahead** of UTC).*
+	 * - *Unlike JavaScript's {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset Date.prototype.getTimezoneOffset()}, which returns the offset in minutes **behind** UTC (positive for locations west of UTC and negative for east), this method returns the more intuitive sign format used in time zone representations (e.g., `+06:00` means 6 hours **ahead** of UTC).*
 	 *
 	 * @returns The timezone offset string in `±HH:mm` format maintaining the current timezone regardless of system having different one.
 	 */
@@ -1393,7 +1393,7 @@ export class Chronos {
 	/**
 	 * @instance Returns the system's UTC offset in minutes.
 	 *
-	 * - *Unlike JavaScript's `Date.prototype.getTimezoneOffset()`, this method returns a positive value if the local time is ahead of UTC, and negative if behind UTC.*
+	 * - *Unlike JavaScript's {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset Date.prototype.getTimezoneOffset()}, this method returns a positive value if the local time is ahead of UTC, and negative if behind UTC.*
 	 *
 	 * For example, for `UTC+06:00`, this returns `360`; for `UTC-05:30`, this returns `-330`.
 	 *
