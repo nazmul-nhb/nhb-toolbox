@@ -5,9 +5,9 @@ type UnitMap = {
 	temperature: 'celsius' | 'fahrenheit' | 'kelvin';
 };
 
-type UnitCategory = keyof UnitMap;
+type Category = keyof UnitMap;
 
-type Unit = UnitMap[UnitCategory];
+type Unit = UnitMap[Category];
 
 /**
  * Infer the category by unit name
@@ -19,7 +19,7 @@ type InferCategory<U extends Unit> = {
 /**
  * Base class that holds numeric value and source unit.
  */
-class BaseConverter<U extends Unit> {
+class Base<U extends Unit> {
 	protected readonly value: number;
 	protected readonly unit: U;
 
@@ -32,7 +32,7 @@ class BaseConverter<U extends Unit> {
 /**
  * Time-specific conversions
  */
-class TimeConverter extends BaseConverter<UnitMap['time']> {
+class Time extends Base<UnitMap['time']> {
 	toMinutes(): number {
 		if (this.unit === 'second') return this.value / 60;
 		if (this.unit === 'hour') return this.value * 60;
@@ -49,7 +49,7 @@ class TimeConverter extends BaseConverter<UnitMap['time']> {
 /**
  * Length-specific conversions
  */
-class LengthConverter extends BaseConverter<UnitMap['length']> {
+class Length extends Base<UnitMap['length']> {
 	toMeters(): number {
 		const factors: Record<string, number> = {
 			meter: 1,
@@ -64,7 +64,7 @@ class LengthConverter extends BaseConverter<UnitMap['length']> {
 /**
  * Data-specific conversions
  */
-class DataConverter extends BaseConverter<UnitMap['data']> {
+class Data extends Base<UnitMap['data']> {
 	toKilobytes(): number {
 		const factors: Record<string, number> = {
 			byte: 1 / 1024,
@@ -79,7 +79,7 @@ class DataConverter extends BaseConverter<UnitMap['data']> {
 /**
  * Temperature-specific conversions
  */
-class TemperatureConverter extends BaseConverter<UnitMap['temperature']> {
+class Temperature extends Base<UnitMap['temperature']> {
 	toCelsius(): number {
 		if (this.unit === 'fahrenheit') return (this.value - 32) * (5 / 9);
 		if (this.unit === 'kelvin') return this.value - 273.15;
@@ -87,11 +87,11 @@ class TemperatureConverter extends BaseConverter<UnitMap['temperature']> {
 	}
 }
 
-export type ConverterResult<U extends Unit> =
-	InferCategory<U> extends 'time' ? TimeConverter
-	: InferCategory<U> extends 'length' ? LengthConverter
-	: InferCategory<U> extends 'data' ? DataConverter
-	: InferCategory<U> extends 'temperature' ? TemperatureConverter
+export type Converted<U extends Unit> =
+	InferCategory<U> extends 'time' ? Time
+	: InferCategory<U> extends 'length' ? Length
+	: InferCategory<U> extends 'data' ? Data
+	: InferCategory<U> extends 'temperature' ? Temperature
 	: never;
 
 /**
@@ -100,8 +100,8 @@ export type ConverterResult<U extends Unit> =
  * @description Converts values between compatible units (time, length, data, temperature).
  * The returned instance exposes only methods relevant to the provided unit type.
  */
-export function Converter<U extends Unit>(value: number, unit: U): ConverterResult<U> {
-	const category = ((): UnitCategory => {
+export function Converter<U extends Unit>(value: number, unit: U): Converted<U> {
+	const category = ((): Category => {
 		if (['second', 'minute', 'hour', 'day'].includes(unit)) return 'time';
 		if (['meter', 'kilometer', 'mile', 'inch'].includes(unit)) return 'length';
 		if (['byte', 'kilobyte', 'megabyte', 'gigabyte'].includes(unit)) return 'data';
@@ -111,15 +111,12 @@ export function Converter<U extends Unit>(value: number, unit: U): ConverterResu
 
 	switch (category) {
 		case 'time':
-			return new TimeConverter(value, unit as UnitMap['time']) as ConverterResult<U>;
+			return new Time(value, unit as UnitMap['time']) as Converted<U>;
 		case 'length':
-			return new LengthConverter(value, unit as UnitMap['length']) as ConverterResult<U>;
+			return new Length(value, unit as UnitMap['length']) as Converted<U>;
 		case 'data':
-			return new DataConverter(value, unit as UnitMap['data']) as ConverterResult<U>;
+			return new Data(value, unit as UnitMap['data']) as Converted<U>;
 		case 'temperature':
-			return new TemperatureConverter(
-				value,
-				unit as UnitMap['temperature']
-			) as ConverterResult<U>;
+			return new Temperature(value, unit as UnitMap['temperature']) as Converted<U>;
 	}
 }
