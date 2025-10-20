@@ -7,18 +7,14 @@ type UnitMap = {
 
 type Category = keyof UnitMap;
 type Unit = UnitMap[Category];
-type Numeric = number | bigint | `${number}` | `${bigint}`;
+type Numeric = number | bigint | `${number}`;
 
-/**
- * Infer the category by unit name
- */
+/** * Infer the category by unit name */
 type InferCategory<U extends Unit> = {
 	[K in Category]: U extends UnitMap[K] ? K : never;
 }[Category];
 
-/**
- * Base class that holds numeric value and source unit.
- */
+/** * Base class that holds numeric value and source unit. */
 class Base<U extends Unit> {
 	protected readonly value: number;
 	protected readonly unit: U;
@@ -29,9 +25,7 @@ class Base<U extends Unit> {
 	}
 }
 
-/**
- * Time-specific conversions
- */
+/** * Time-specific conversions */
 class Time extends Base<UnitMap['time']> {
 	toMinutes(): number {
 		if (this.unit === 'second') return this.value / 60;
@@ -46,9 +40,7 @@ class Time extends Base<UnitMap['time']> {
 	}
 }
 
-/**
- * Length-specific conversions
- */
+/** * Length-specific conversions */
 class Length extends Base<UnitMap['length']> {
 	toMeters(): number {
 		const factors: Record<string, number> = {
@@ -61,9 +53,7 @@ class Length extends Base<UnitMap['length']> {
 	}
 }
 
-/**
- * Data-specific conversions
- */
+/** * Data-specific conversions */
 class Data extends Base<UnitMap['data']> {
 	toKilobytes(): number {
 		const factors: Record<string, number> = {
@@ -76,9 +66,7 @@ class Data extends Base<UnitMap['data']> {
 	}
 }
 
-/**
- * Temperature-specific conversions
- */
+/** * Temperature-specific conversions */
 class Temperature extends Base<UnitMap['temp']> {
 	toCelsius(): number {
 		if (this.unit === 'fahrenheit') return (this.value - 32) * (5 / 9);
@@ -97,7 +85,7 @@ export type Converted<U extends Unit> =
 	: never;
 
 /**
- * Factory function that returns appropriate converter instance
+ * * Factory function that returns appropriate converter instance
  *
  * @description Converts values between compatible units (time, length, data, temp).
  * The returned instance exposes only methods relevant to the provided unit type.
