@@ -1,11 +1,24 @@
+// type UnitMap = {
+// 	time: 'second' | 'minute' | 'hour' | 'day';
+// 	length: 'meter' | 'kilometer' | 'mile' | 'inch';
+// 	data: 'byte' | 'kilobyte' | 'megabyte' | 'gigabyte';
+// 	temp: 'celsius' | 'fahrenheit' | 'kelvin';
+// };
+
+const UNIT_MAP = {
+	time: ['second', 'minute', 'hour', 'day'],
+	length: ['meter', 'kilometer', 'mile', 'inch'],
+	data: ['byte', 'kilobyte', 'megabyte', 'gigabyte'],
+	temp: ['celsius', 'fahrenheit', 'kelvin'],
+} as const;
+
 type UnitMap = {
-	time: 'second' | 'minute' | 'hour' | 'day';
-	length: 'meter' | 'kilometer' | 'mile' | 'inch';
-	data: 'byte' | 'kilobyte' | 'megabyte' | 'gigabyte';
-	temp: 'celsius' | 'fahrenheit' | 'kelvin';
+	[Key in keyof typeof UNIT_MAP]: (typeof UNIT_MAP)[Key][number];
 };
 
-type Category = keyof UnitMap;
+// type UnitMap = typeof UNIT_MAP;
+
+type Category = keyof typeof UNIT_MAP;
 type Unit = UnitMap[Category];
 type Numeric = number | bigint | `${number}`;
 
@@ -13,6 +26,8 @@ type Numeric = number | bigint | `${number}`;
 type InferCategory<U extends Unit> = {
 	[K in Category]: U extends UnitMap[K] ? K : never;
 }[Category];
+
+export type CategoryUnits<Cat extends Category> = UnitMap[Cat];
 
 /** * Base class that holds numeric value and source unit. */
 class Base<U extends Unit> {
@@ -43,7 +58,7 @@ class Time extends Base<UnitMap['time']> {
 /** * Length-specific conversions */
 class Length extends Base<UnitMap['length']> {
 	toMeters(): number {
-		const factors: Record<string, number> = {
+		const factors: Record<UnitMap['length'], number> = {
 			meter: 1,
 			kilometer: 1000,
 			mile: 1609.34,
@@ -92,20 +107,19 @@ export type Converted<U extends Unit> =
  */
 export function Converter<U extends Unit>(value: number, unit: U): Converted<U> {
 	const category = ((): Category => {
-		if (['second', 'minute', 'hour', 'day'].includes(unit)) return 'time';
-		if (['meter', 'kilometer', 'mile', 'inch'].includes(unit)) return 'length';
-		if (['byte', 'kilobyte', 'megabyte', 'gigabyte'].includes(unit)) return 'data';
-		if (['celsius', 'fahrenheit', 'kelvin'].includes(unit)) return 'temp';
+		for (const [category, values] of Object.entries(UNIT_MAP)) {
+			if ([...values].includes(unit)) return category as Category;
+		}
 		throw new Error(`Unknown unit: ${unit}`);
 	})();
 
 	switch (category) {
 		case 'time':
 			return new Time(value, unit as UnitMap['time']) as Converted<U>;
-		case 'length':
-			return new Length(value, unit as UnitMap['length']) as Converted<U>;
 		case 'data':
 			return new Data(value, unit as UnitMap['data']) as Converted<U>;
+		case 'length':
+			return new Length(value, unit as UnitMap['length']) as Converted<U>;
 		case 'temp':
 			return new Temperature(value, unit as UnitMap['temp']) as Converted<U>;
 	}
