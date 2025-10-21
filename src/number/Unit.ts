@@ -36,7 +36,7 @@ export class Unit {
 	 * @returns A string in the format "value unit".
 	 */
 	toString(): string {
-		return `${this.#value} ${this.#unit ?? ''}`.trim();
+		return ` ${this.#value} ${this.#unit ?? ''}`.trim();
 	}
 
 	/**

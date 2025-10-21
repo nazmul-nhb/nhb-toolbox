@@ -105,7 +105,7 @@ export type Converted<U extends Unit> =
  * @description Converts values between compatible units (time, length, data, temp).
  * The returned instance exposes only methods relevant to the provided unit type.
  */
-export function Converter<U extends Unit>(value: number, unit: U): Converted<U> {
+export function Converter<U extends Unit>(value: Numeric, unit: U): Converted<U> {
 	const category = ((): Category => {
 		for (const [category, values] of Object.entries(UNIT_MAP)) {
 			if ([...values].includes(unit)) return category as Category;
