@@ -25,3 +25,10 @@ export type Converted<U extends Unit> =
 	: InferCategory<U> extends 'data' ? $Data
 	: InferCategory<U> extends 'temp' ? $Temperature
 	: $Base<U>;
+
+export type ConverterFormatOptions = {
+	/** Style of formatting. Default is `'plural'`. */
+	style?: 'compact' | 'scientific' | 'plural';
+	/** Number of decimal places to include. Default is `2`. */
+	decimals?: number;
+};

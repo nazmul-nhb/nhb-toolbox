@@ -1,6 +1,6 @@
 import { formatUnitWithPlural } from '../string/convert';
 import { $Base } from './base';
-import type { UnitMap } from './types';
+import type { ConverterFormatOptions, UnitMap } from './types';
 
 /**
  * @class $Time
@@ -72,13 +72,7 @@ export class $Time extends $Base<UnitMap['time']> {
 	 * @param options Formatting options: `compact`, `scientific`, or `plural`.
 	 * @returns Formatted string like "2 hours", "2h", or "2e+0 h".
 	 */
-	formatTo(
-		target: UnitMap['time'],
-		options?: {
-			style?: 'compact' | 'scientific' | 'plural';
-			decimals?: number;
-		}
-	): string {
+	formatTo(target: UnitMap['time'], options?: ConverterFormatOptions): string {
 		const value = this.to(target);
 		const { style = 'plural', decimals = 2 } = options ?? {};
 		const rounded = Number(value.toFixed(decimals));
