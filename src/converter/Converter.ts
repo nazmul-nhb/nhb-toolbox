@@ -1,6 +1,10 @@
 import type { Numeric } from '../types/index';
+import { $Base } from './base';
 import { UNIT_MAP } from './constants';
-import { $Base, $Data, $Length, $Temperature, $Time } from './converters';
+import { $Data } from './data';
+import { $Length } from './length';
+import { $Temperature } from './temp';
+import { $Time } from './time';
 import type { Category, Converted, Unit, UnitMap } from './types';
 
 /**
@@ -17,7 +21,6 @@ export function Converter<U extends Unit>(value: Numeric, unit?: U): Converted<U
 					return category as Category;
 				}
 			}
-			// throw new Error(`Unknown unit: ${unit}`);
 		}
 	})();
 

@@ -1,6 +1,10 @@
 import type { LooseLiteral } from '../utils/types';
+import type { $Base } from './base';
 import type { UNIT_MAP } from './constants';
-import type { $Base, $Data, $Length, $Temperature, $Time } from './converters';
+import type { $Data } from './data';
+import type { $Length } from './length';
+import type { $Temperature } from './temp';
+import type { $Time } from './time';
 
 export type Category = keyof typeof UNIT_MAP;
 
@@ -15,7 +19,8 @@ export type InferCategory<U extends Unit> = {
 }[Category];
 
 export type Converted<U extends Unit> =
-	InferCategory<U> extends 'time' ? $Time
+	InferCategory<U> extends never ? $Base<U>
+	: InferCategory<U> extends 'time' ? $Time
 	: InferCategory<U> extends 'length' ? $Length
 	: InferCategory<U> extends 'data' ? $Data
 	: InferCategory<U> extends 'temp' ? $Temperature
