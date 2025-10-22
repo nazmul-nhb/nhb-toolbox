@@ -1,14 +1,26 @@
-import { formatUnitWithPlural } from '../string/convert';
 import type { Numeric } from '../types/index';
 import type { Unit } from './types';
+
 /**
- * @class $Base
  * @description Base class providing common mathematical and formatting utilities
  * for all unit converters (time, length, data, temperature, etc.).
  */
-export class $Base<U extends Unit> {
+export class $BaseConverter<U extends Unit> {
 	protected readonly value: number;
 	protected readonly unit: U;
+
+	/** * Returns a grammatically correct unit string, prefixed with the number value. */
+	protected withPluralUnit(value?: number, unit?: Unit): string {
+		const abs = Math.abs(value ?? this.value);
+		const u = unit ?? this.unit;
+
+		const pluralized =
+			abs <= 1 ? u
+			: u ? `${u}s`
+			: '';
+
+		return `${abs} ${pluralized}`.trim();
+	}
 
 	constructor(value: Numeric, unit?: U) {
 		this.value = Number(value);
@@ -44,7 +56,7 @@ export class $Base<U extends Unit> {
 	 * @returns A string like "3 hours" or "1 minute".
 	 */
 	toString(): string {
-		return formatUnitWithPlural(this.value, this.unit ?? '');
+		return this.withPluralUnit();
 	}
 
 	/**

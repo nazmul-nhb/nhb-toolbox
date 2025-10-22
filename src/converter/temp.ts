@@ -1,15 +1,14 @@
-import { formatUnitWithPlural } from '../string/convert';
 import type { Numeric } from '../types/index';
-import { $Base } from './base';
+import { $BaseConverter } from './base';
 import { UNIT_MAP } from './constants';
-import type { ConverterFormatOptions, UnitMap } from './types';
+import type { $TempUnit, ConverterFormatOptions } from './types';
 
 /**
  * @class $Temperature
  * @description Temperature-specific conversions with smart `.to()` and formatting.
  */
-export class $Temperature extends $Base<UnitMap['temp']> {
-	constructor(value: Numeric, unit: UnitMap['temp']) {
+export class $Temperature extends $BaseConverter<$TempUnit> {
+	constructor(value: Numeric, unit: $TempUnit) {
 		super(value, unit);
 	}
 
@@ -17,7 +16,7 @@ export class $Temperature extends $Base<UnitMap['temp']> {
 	 * @private
 	 * @description Conversion helpers between Celsius, Fahrenheit, and Kelvin.
 	 */
-	static #toCelsius(value: number, from: UnitMap['temp']): number {
+	static #toCelsius(value: number, from: $TempUnit): number {
 		switch (from) {
 			case 'fahrenheit':
 				return (value - 32) * (5 / 9);
@@ -28,7 +27,7 @@ export class $Temperature extends $Base<UnitMap['temp']> {
 		}
 	}
 
-	static #fromCelsius(value: number, to: UnitMap['temp']): number {
+	static #fromCelsius(value: number, to: $TempUnit): number {
 		switch (to) {
 			case 'fahrenheit':
 				return value * (9 / 5) + 32;
@@ -52,7 +51,7 @@ export class $Temperature extends $Base<UnitMap['temp']> {
 	 * @param target Target temperature unit.
 	 * @returns Numeric value in target unit.
 	 */
-	to(target: UnitMap['temp']): number {
+	to(target: $TempUnit): number {
 		const celsiusValue = this.toCelsius();
 
 		return $Temperature.#fromCelsius(celsiusValue, target);
@@ -75,19 +74,33 @@ export class $Temperature extends $Base<UnitMap['temp']> {
 	}
 
 	/**
+	 * @instance Converts to all temperature units at once.
+	 * @returns Object containing all unit conversions.
+	 */
+	toAll(): Record<$TempUnit, number> {
+		const result = {} as Record<$TempUnit, number>;
+
+		for (const unit of UNIT_MAP.temp) {
+			result[unit] = this.to(unit);
+		}
+
+		return result;
+	}
+
+	/**
 	 * @instance Formats the converted temperature.
 	 * @param target Target temperature unit.
 	 * @param options Formatting options.
 	 * @returns Formatted string.
 	 */
-	formatTo(target: UnitMap['temp'], options?: ConverterFormatOptions): string {
+	formatTo(target: $TempUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);
 		const { style = 'plural', decimals = 2 } = options ?? {};
 		const rounded = Number(value.toFixed(decimals));
 
 		switch (style) {
 			case 'compact': {
-				const shortLabels: Record<UnitMap['temp'], string> = {
+				const shortLabels: Record<$TempUnit, string> = {
 					celsius: '°C',
 					fahrenheit: '°F',
 					kelvin: 'K',
@@ -97,21 +110,7 @@ export class $Temperature extends $Base<UnitMap['temp']> {
 			case 'scientific':
 				return `${value.toExponential(decimals)} ${target}`;
 			default:
-				return formatUnitWithPlural(rounded, target);
+				return this.withPluralUnit(rounded, target);
 		}
-	}
-
-	/**
-	 * @instance Converts to all temperature units at once.
-	 * @returns Object containing all unit conversions.
-	 */
-	toAll(): Record<UnitMap['temp'], number> {
-		const result = {} as Record<UnitMap['temp'], number>;
-
-		for (const unit of UNIT_MAP.temp) {
-			result[unit] = this.to(unit);
-		}
-
-		return result;
 	}
 }

@@ -1,5 +1,5 @@
 import type { Numeric } from '../types/index';
-import { $Base } from './base';
+import { $BaseConverter } from './base';
 import { UNIT_MAP } from './constants';
 import { $Data } from './data';
 import { $Length } from './length';
@@ -34,6 +34,6 @@ export function Converter<U extends Unit>(value: Numeric, unit?: U): Converted<U
 		case 'temp':
 			return new $Temperature(value, unit as UnitMap['temp']) as Converted<U>;
 		default:
-			return new $Base(value, unit) as Converted<U>;
+			return new $BaseConverter(value, unit) as Converted<U>;
 	}
 }

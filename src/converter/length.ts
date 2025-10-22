@@ -1,16 +1,15 @@
-import { formatUnitWithPlural } from '../string/convert';
 import type { Numeric } from '../types/index';
-import { $Base } from './base';
+import { $BaseConverter } from './base';
 import { UNIT_MAP } from './constants';
-import type { ConverterFormatOptions, UnitMap } from './types';
+import type { $LengthUnit, ConverterFormatOptions } from './types';
 
 /**
  * @class $Length
  * @description Handles conversions between length/distance units with smart `.to()` and `.formatTo()`.
  */
-export class $Length extends $Base<UnitMap['length']> {
+export class $Length extends $BaseConverter<$LengthUnit> {
 	/** * Conversion factors based on meters. */
-	static #factors: Record<UnitMap['length'], number> = {
+	static #factors: Record<$LengthUnit, number> = {
 		millimeter: 0.001,
 		centimeter: 0.01,
 		meter: 1,
@@ -23,7 +22,7 @@ export class $Length extends $Base<UnitMap['length']> {
 		'light-year': 9.4607e15,
 	};
 
-	constructor(value: Numeric, unit: UnitMap['length']) {
+	constructor(value: Numeric, unit: $LengthUnit) {
 		super(value, unit);
 	}
 
@@ -40,7 +39,7 @@ export class $Length extends $Base<UnitMap['length']> {
 	 * @param target Target length unit.
 	 * @returns Numeric value converted to target unit.
 	 */
-	to(target: UnitMap['length']): number {
+	to(target: $LengthUnit): number {
 		const inMeters = this.toMeters();
 		return inMeters / $Length.#factors[target];
 	}
@@ -65,10 +64,10 @@ export class $Length extends $Base<UnitMap['length']> {
 	 * @instance Converts to all length units.
 	 * @returns Object with all unit conversions.
 	 */
-	toAll(): Record<UnitMap['length'], number> {
+	toAll(): Record<$LengthUnit, number> {
 		const inMeters = this.toMeters();
 
-		const result = {} as Record<UnitMap['length'], number>;
+		const result = {} as Record<$LengthUnit, number>;
 
 		for (const unit of UNIT_MAP.length) {
 			result[unit] = inMeters / $Length.#factors[unit];
@@ -83,14 +82,14 @@ export class $Length extends $Base<UnitMap['length']> {
 	 * @param options Formatting options.
 	 * @returns Formatted string like "5 km", "5.00 miles", or "5e+3 m".
 	 */
-	formatTo(target: UnitMap['length'], options?: ConverterFormatOptions): string {
+	formatTo(target: $LengthUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);
 		const { style = 'plural', decimals = 2 } = options ?? {};
 		const rounded = Number(value.toFixed(decimals));
 
 		switch (style) {
 			case 'compact': {
-				const shortLabels: Record<UnitMap['length'], string> = {
+				const shortLabels: Record<$LengthUnit, string> = {
 					millimeter: 'mm',
 					centimeter: 'cm',
 					meter: 'm',
@@ -107,7 +106,7 @@ export class $Length extends $Base<UnitMap['length']> {
 			case 'scientific':
 				return `${value.toExponential(decimals)} ${target}`;
 			default:
-				return formatUnitWithPlural(rounded, target);
+				return this.withPluralUnit(rounded, target);
 		}
 	}
 }

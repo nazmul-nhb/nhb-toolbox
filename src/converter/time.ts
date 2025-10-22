@@ -1,16 +1,15 @@
-import { formatUnitWithPlural } from '../string/convert';
 import type { Numeric } from '../types/index';
-import { $Base } from './base';
+import { $BaseConverter } from './base';
 import { UNIT_MAP } from './constants';
-import type { ConverterFormatOptions, UnitMap } from './types';
+import type { $TimeUnit, ConverterFormatOptions } from './types';
 
 /**
  * @class $Time
  * @description Time-specific conversions with smart `.to()` and formatting options.
  */
-export class $Time extends $Base<UnitMap['time']> {
+export class $Time extends $BaseConverter<$TimeUnit> {
 	/** * Common conversion factors based on seconds. */
-	static #factors: Record<UnitMap['time'], number> = {
+	static #factors: Record<$TimeUnit, number> = {
 		nanosecond: 1e-9,
 		microsecond: 1e-6,
 		millisecond: 1e-3,
@@ -26,7 +25,7 @@ export class $Time extends $Base<UnitMap['time']> {
 		millennium: 31_556_952_000, // 1000 years
 	};
 
-	constructor(value: Numeric, unit: UnitMap['time']) {
+	constructor(value: Numeric, unit: $TimeUnit) {
 		super(value, unit);
 	}
 
@@ -43,7 +42,7 @@ export class $Time extends $Base<UnitMap['time']> {
 	 * @param target Target time unit.
 	 * @returns Numeric value converted to target unit.
 	 */
-	to(target: UnitMap['time']): number {
+	to(target: $TimeUnit): number {
 		const baseInSeconds = this.toSeconds();
 		return baseInSeconds / $Time.#factors[target];
 	}
@@ -73,12 +72,28 @@ export class $Time extends $Base<UnitMap['time']> {
 	}
 
 	/**
+	 * @instance Converts to all time units at once.
+	 * @returns Object with all unit conversions.
+	 */
+	toAll(): Record<$TimeUnit, number> {
+		const inSeconds = this.toSeconds();
+
+		const result = {} as Record<$TimeUnit, number>;
+
+		for (const unit of UNIT_MAP.time) {
+			result[unit] = inSeconds / $Time.#factors[unit];
+		}
+
+		return result;
+	}
+
+	/**
 	 * @instance Formats the converted value with optional formatting style.
 	 * @param target Target unit to format to.
 	 * @param options Formatting options: `compact`, `scientific`, or `plural`.
 	 * @returns Formatted string like "2 hours", "2h", or "2e+0 h".
 	 */
-	formatTo(target: UnitMap['time'], options?: ConverterFormatOptions): string {
+	formatTo(target: $TimeUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);
 		const { style = 'plural', decimals = 2 } = options ?? {};
 		const rounded = Number(value.toFixed(decimals));
@@ -86,7 +101,7 @@ export class $Time extends $Base<UnitMap['time']> {
 		switch (style) {
 			case 'compact': {
 				// Short labels
-				const shortLabels: Record<UnitMap['time'], string> = {
+				const shortLabels: Record<$TimeUnit, string> = {
 					nanosecond: 'ns',
 					microsecond: 'µs',
 					millisecond: 'ms',
@@ -108,23 +123,7 @@ export class $Time extends $Base<UnitMap['time']> {
 				return `${value.toExponential(decimals)} ${target}`;
 
 			default:
-				return formatUnitWithPlural(rounded, target);
+				return this.withPluralUnit(rounded, target);
 		}
-	}
-
-	/**
-	 * @instance Converts to all time units at once.
-	 * @returns Object with all unit conversions.
-	 */
-	toAll(): Record<UnitMap['time'], number> {
-		const inSeconds = this.toSeconds();
-
-		const result = {} as Record<UnitMap['time'], number>;
-
-		for (const unit of UNIT_MAP.time) {
-			result[unit] = inSeconds / $Time.#factors[unit];
-		}
-
-		return result;
 	}
 }

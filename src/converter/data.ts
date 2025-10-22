@@ -1,16 +1,15 @@
-import { formatUnitWithPlural } from '../string/convert';
 import type { Numeric } from '../types/index';
-import { $Base } from './base';
+import { $BaseConverter } from './base';
 import { UNIT_MAP } from './constants';
-import type { ConverterFormatOptions, UnitMap } from './types';
+import type { $DataUnit, ConverterFormatOptions } from './types';
 
 /**
  * @class $Data
  * @description Handles conversions between digital data units (bits, bytes, kilobytes, etc.).
  */
-export class $Data extends $Base<UnitMap['data']> {
+export class $Data extends $BaseConverter<$DataUnit> {
 	/** * Conversion factors based on bytes. */
-	static #factors: Record<UnitMap['data'], number> = {
+	static #factors: Record<$DataUnit, number> = {
 		bit: 1 / 8,
 		byte: 1,
 		kilobit: 128,
@@ -25,7 +24,7 @@ export class $Data extends $Base<UnitMap['data']> {
 		petabyte: 1125899906842624,
 	};
 
-	constructor(value: Numeric, unit: UnitMap['data']) {
+	constructor(value: Numeric, unit: $DataUnit) {
 		super(value, unit);
 	}
 
@@ -42,7 +41,7 @@ export class $Data extends $Base<UnitMap['data']> {
 	 * @param target Target data unit.
 	 * @returns Numeric value converted to target unit.
 	 */
-	to(target: UnitMap['data']): number {
+	to(target: $DataUnit): number {
 		const inBytes = this.toBytes();
 		return inBytes / $Data.#factors[target];
 	}
@@ -67,10 +66,10 @@ export class $Data extends $Base<UnitMap['data']> {
 	 * @instance Converts to all data units.
 	 * @returns Object with all unit conversions.
 	 */
-	toAll(): Record<UnitMap['data'], number> {
+	toAll(): Record<$DataUnit, number> {
 		const inBytes = this.toBytes();
 
-		const result = {} as Record<UnitMap['data'], number>;
+		const result = {} as Record<$DataUnit, number>;
 
 		for (const unit of UNIT_MAP.data) {
 			result[unit] = inBytes / $Data.#factors[unit];
@@ -85,14 +84,14 @@ export class $Data extends $Base<UnitMap['data']> {
 	 * @param options Formatting options.
 	 * @returns Formatted string like "256 MB", "256MB", or "2.56e+2 MB".
 	 */
-	formatTo(target: UnitMap['data'], options?: ConverterFormatOptions): string {
+	formatTo(target: $DataUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);
 		const { style = 'plural', decimals = 2 } = options ?? {};
 		const rounded = Number(value.toFixed(decimals));
 
 		switch (style) {
 			case 'compact': {
-				const shortLabels: Record<UnitMap['data'], string> = {
+				const shortLabels: Record<$DataUnit, string> = {
 					bit: 'b',
 					byte: 'B',
 					kilobit: 'Kb',
@@ -111,7 +110,7 @@ export class $Data extends $Base<UnitMap['data']> {
 			case 'scientific':
 				return `${value.toExponential(decimals)} ${target}`;
 			default:
-				return formatUnitWithPlural(rounded, target);
+				return this.withPluralUnit(rounded, target);
 		}
 	}
 }
