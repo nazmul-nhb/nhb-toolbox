@@ -1,5 +1,6 @@
 import { formatUnitWithPlural } from '../string/convert';
 import { $Base } from './base';
+import { UNIT_MAP } from './constants';
 import type { ConverterFormatOptions, UnitMap } from './types';
 
 /**
@@ -115,7 +116,7 @@ export class $Time extends $Base<UnitMap['time']> {
 
 		const result = {} as Record<UnitMap['time'], number>;
 
-		for (const unit of Object.keys($Time.#factors) as UnitMap['time'][]) {
+		for (const unit of UNIT_MAP.time) {
 			result[unit] = inSeconds / $Time.#factors[unit];
 		}
 

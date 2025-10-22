@@ -1,5 +1,7 @@
 import { formatUnitWithPlural } from '../string/convert';
+import type { Numeric } from '../types/index';
 import { $Base } from './base';
+import { UNIT_MAP } from './constants';
 import type { ConverterFormatOptions, UnitMap } from './types';
 
 /**
@@ -22,6 +24,10 @@ export class $Data extends $Base<UnitMap['data']> {
 		petabit: 140737488355328,
 		petabyte: 1125899906842624,
 	};
+
+	constructor(value: Numeric, unit: UnitMap['data']) {
+		super(value, unit);
+	}
 
 	/**
 	 * @instance Converts current value to bytes.
@@ -63,10 +69,13 @@ export class $Data extends $Base<UnitMap['data']> {
 	 */
 	toAll(): Record<UnitMap['data'], number> {
 		const inBytes = this.toBytes();
+
 		const result = {} as Record<UnitMap['data'], number>;
-		for (const unit of Object.keys($Data.#factors) as UnitMap['data'][]) {
+
+		for (const unit of UNIT_MAP.data) {
 			result[unit] = inBytes / $Data.#factors[unit];
 		}
+
 		return result;
 	}
 

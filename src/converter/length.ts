@@ -1,5 +1,6 @@
 import { formatUnitWithPlural } from '../string/convert';
 import { $Base } from './base';
+import { UNIT_MAP } from './constants';
 import type { ConverterFormatOptions, UnitMap } from './types';
 
 /**
@@ -61,10 +62,13 @@ export class $Length extends $Base<UnitMap['length']> {
 	 */
 	toAll(): Record<UnitMap['length'], number> {
 		const inMeters = this.toMeters();
+
 		const result = {} as Record<UnitMap['length'], number>;
-		for (const unit of Object.keys($Length.#factors) as UnitMap['length'][]) {
+
+		for (const unit of UNIT_MAP.length) {
 			result[unit] = inMeters / $Length.#factors[unit];
 		}
+
 		return result;
 	}
 
