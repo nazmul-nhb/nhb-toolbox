@@ -59,6 +59,14 @@ export {
 	countWords as wordCount,
 } from './string/utilities';
 
+// ! Converter Classes and Their Combined Factory Function
+export { $Data as DataConverter } from './converter/data';
+export { $Length as LengthConverter } from './converter/length';
+export { $Temperature as TemperatureConverter } from './converter/temp';
+export { $Time as TimeConverter } from './converter/time';
+
+export { Converter } from './converter/Converter';
+
 // ! Pluralizer Class and Its Default Instance
 export { Pluralizer, pluralizer } from './pluralize/Pluralizer';
 

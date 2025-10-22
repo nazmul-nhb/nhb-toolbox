@@ -1,4 +1,5 @@
 import { formatUnitWithPlural } from '../string/convert';
+import type { Numeric } from '../types/index';
 import { $Base } from './base';
 import { UNIT_MAP } from './constants';
 import type { ConverterFormatOptions, UnitMap } from './types';
@@ -21,6 +22,10 @@ export class $Length extends $Base<UnitMap['length']> {
 		'nautical-mile': 1852,
 		'light-year': 9.4607e15,
 	};
+
+	constructor(value: Numeric, unit: UnitMap['length']) {
+		super(value, unit);
+	}
 
 	/**
 	 * @instance Converts current value to meters.

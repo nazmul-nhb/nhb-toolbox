@@ -1,4 +1,5 @@
 import { formatUnitWithPlural } from '../string/convert';
+import type { Numeric } from '../types/index';
 import { $Base } from './base';
 import { UNIT_MAP } from './constants';
 import type { ConverterFormatOptions, UnitMap } from './types';
@@ -8,6 +9,10 @@ import type { ConverterFormatOptions, UnitMap } from './types';
  * @description Temperature-specific conversions with smart `.to()` and formatting.
  */
 export class $Temperature extends $Base<UnitMap['temp']> {
+	constructor(value: Numeric, unit: UnitMap['temp']) {
+		super(value, unit);
+	}
+
 	/**
 	 * @private
 	 * @description Conversion helpers between Celsius, Fahrenheit, and Kelvin.

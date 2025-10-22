@@ -1,4 +1,5 @@
 import { formatUnitWithPlural } from '../string/convert';
+import type { Numeric } from '../types/index';
 import { $Base } from './base';
 import { UNIT_MAP } from './constants';
 import type { ConverterFormatOptions, UnitMap } from './types';
@@ -24,6 +25,10 @@ export class $Time extends $Base<UnitMap['time']> {
 		century: 3_155_695_200, // 100 years
 		millennium: 31_556_952_000, // 1000 years
 	};
+
+	constructor(value: Numeric, unit: UnitMap['time']) {
+		super(value, unit);
+	}
 
 	/**
 	 * @instance Converts current value to the base unit (seconds).

@@ -714,3 +714,59 @@ export type $JoinRepeat<S extends string, A extends unknown[]> =
  * - If `S` is a union (e.g. 'a'|'b'), the resulting union grows exponentially with N.
  */
 export type Repeat<S extends string, N extends number> = $JoinRepeat<S, $BuildTuple<N>>;
+
+/**
+ * * Replace all occurrences of substring `Search` in `Str` with `With`.
+ *
+ * @example
+ * ```ts
+ * type Dash = Replace<'hello world', ' ', '-'>; // "hello-world"
+ *
+ * type Underscore = Replace<'a-b-c', '-', '_'>; // "a_b_c"
+ *
+ * type NoSpaces = Replace<' spaced out ', ' ', ''>; // "spacedout"
+ * ```
+ *
+ * **Notes:**
+ * - Works recursively to replace **all** occurrences of `Search`.
+ * - If `Search` does not exist in `Str`, returns `Str` unchanged.
+ * - `Str`, `Search` (Default is space `" "`) and `With` (Default is `"-"`) must be literal string types.
+ */
+export type Replace<
+	Str extends string,
+	Search extends string = ' ',
+	With extends string = '-',
+> =
+	Str extends `${infer First}${Search}${infer Rest}` ?
+		Replace<Rest, Search, With> extends infer Refined ?
+			Refined extends string ?
+				`${First}${With}${Refined}`
+			:	never
+		:	never
+	:	Str;
+
+/**
+ * * Replace the **first occurrence** of substring `Search` in `Str` with `With`.
+ *
+ * @example
+ * ```ts
+ * type Dash = ReplaceFirst<'hello world wide web', ' ', '-'>;
+ * // "hello-world wide web"
+ *
+ * type Underscore = ReplaceFirst<'a-b-c', '-', '_'>;
+ * // "a_b-c"
+ *
+ * type NoSpaces = ReplaceFirst<' spaced out', ' ', ''>;
+ * // "spaced out"
+ * ```
+ *
+ * **Notes:**
+ * - Replaces **only the first** occurrence of `Search`.
+ * - If `Search` does not exist in `Str`, returns `Str` unchanged.
+ * - `Str`, `Search` (Default is space `" "`) and `With` (Default is `"-"`) must be literal string types.
+ */
+export type ReplaceFirst<
+	Str extends string,
+	Search extends string = ' ',
+	With extends string = '-',
+> = Str extends `${infer Before}${Search}${infer After}` ? `${Before}${With}${After}` : Str;
