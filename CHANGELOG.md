@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.23.1] - 2025-10-24
+
+- **Exported** *all the converter classes* from the `nhb-toolbox/converter` sub-path too.
+
 ## [4.23.0] - 2025-10-24
 
 - **Added** new *unit converter classes* and their *combined function* `Converter` (aliased `converter`).

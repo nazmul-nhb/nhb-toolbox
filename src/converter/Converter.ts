@@ -23,7 +23,7 @@ import type {
 import { $Volume } from './volume';
 
 /**
- * @function Converter
+ * @function Converter : This is a unit converter function that creates instances of specific converter classes based on the provided unit.
  *
  * @description Converts values between compatible units (time, length, data, temperature, mass, area, volume).
  * The returned instance exposes only methods relevant to the provided unit type.
@@ -58,3 +58,11 @@ export function Converter<U extends $Unit>(value: Numeric, unit?: U): Converted<
 			return new $BaseConverter(value, unit) as Converted<U>;
 	}
 }
+
+export { $Area as AreaConverter } from './area';
+export { $Data as DataConverter } from './data';
+export { $Length as LengthConverter } from './length';
+export { $Mass as MassConverter } from './mass';
+export { $Temperature as TemperatureConverter } from './temp';
+export { $Time as TimeConverter } from './time';
+export { $Volume as VolumeConverter } from './volume';
