@@ -4,12 +4,14 @@ import { $BaseConverter } from './base';
 import { UNIT_MAP } from './constants';
 import { $Data } from './data';
 import { $Length } from './length';
+import { $Mass } from './mass';
 import { $Temperature } from './temp';
 import { $Time } from './time';
 import type {
 	$AreaUnit,
 	$DataUnit,
 	$LengthUnit,
+	$MassUnit,
 	$TempUnit,
 	$TimeUnit,
 	$Unit,
@@ -46,6 +48,8 @@ export function Converter<U extends $Unit>(value: Numeric, unit?: U): Converted<
 			return new $Data(value, unit as $DataUnit) as Converted<U>;
 		case 'length':
 			return new $Length(value, unit as $LengthUnit) as Converted<U>;
+		case 'mass':
+			return new $Mass(value, unit as $MassUnit) as Converted<U>;
 		case 'temp':
 			return new $Temperature(value, unit as $TempUnit) as Converted<U>;
 		case 'volume':

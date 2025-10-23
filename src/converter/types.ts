@@ -4,6 +4,7 @@ import type { $BaseConverter } from './base';
 import type { UNIT_MAP } from './constants';
 import type { $Data } from './data';
 import type { $Length } from './length';
+import type { $Mass } from './mass';
 import type { $Temperature } from './temp';
 import type { $Time } from './time';
 import type { $Volume } from './volume';
@@ -25,6 +26,7 @@ export type Converted<U extends $Unit> =
 	: InferCategory<U> extends 'area' ? $Area
 	: InferCategory<U> extends 'time' ? $Time
 	: InferCategory<U> extends 'length' ? $Length
+	: InferCategory<U> extends 'mass' ? $Mass
 	: InferCategory<U> extends 'data' ? $Data
 	: InferCategory<U> extends 'temp' ? $Temperature
 	: InferCategory<U> extends 'volume' ? $Volume
@@ -40,6 +42,7 @@ export type ConverterFormatOptions = {
 export type $AreaUnit = UnitMap['area'];
 export type $DataUnit = UnitMap['data'];
 export type $LengthUnit = UnitMap['length'];
+export type $MassUnit = UnitMap['mass'];
 export type $TempUnit = UnitMap['temp'];
 export type $TimeUnit = UnitMap['time'];
 export type $VolumeUnit = UnitMap['volume'];
