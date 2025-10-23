@@ -9,8 +9,18 @@ export class $BaseConverter<U extends $Unit> {
 	protected readonly value: number;
 	protected readonly unit: U;
 
+	/**
+	 * Convert value to other units
+	 * @param value Number or numeric string value to convert.
+	 * @param unit Optional base unit for the provided value.
+	 */
+	constructor(value: Numeric, unit?: U) {
+		this.value = Number(value);
+		this.unit = unit ?? ('' as U);
+	}
+
 	/** * Returns a grammatically correct unit string, prefixed with the number value. */
-	protected withPluralUnit(value?: number, unit?: $Unit): string {
+	protected $withPluralUnit(value?: number, unit?: $Unit): string {
 		const abs = Math.abs(value ?? this.value);
 		const u = unit ?? this.unit;
 
@@ -22,9 +32,10 @@ export class $BaseConverter<U extends $Unit> {
 		return `${abs} ${pluralized}`.trim();
 	}
 
-	constructor(value: Numeric, unit?: U) {
-		this.value = Number(value);
-		this.unit = unit ?? ('' as U);
+	/** * Rounds a numeric value to given decimal places. */
+	protected $round(value: number, decimals = 2): number {
+		const factor = 10 ** decimals;
+		return Math.round(value * factor) / factor;
 	}
 
 	/**
@@ -56,7 +67,7 @@ export class $BaseConverter<U extends $Unit> {
 	 * @returns A string like "3 hours" or "1 minute".
 	 */
 	toString(): string {
-		return this.withPluralUnit();
+		return this.$withPluralUnit();
 	}
 
 	/**
@@ -135,28 +146,21 @@ export class $BaseConverter<U extends $Unit> {
 	 * @returns A new instance with rounded value.
 	 */
 	round(decimals = 0): this {
-		const factor = 10 ** decimals;
-		const rounded = Math.round(this.value * factor) / factor;
+		const rounded = this.$round(this.value, decimals);
 		return new (this.constructor as new (v: number, u: U) => this)(rounded, this.unit);
 	}
 
-	/**
-	 * @instance Returns whether this value is greater than another numeric value.
-	 */
+	/** * @instance Returns whether this value is greater than another numeric value. */
 	gt(n: Numeric): boolean {
 		return this.value > Number(n);
 	}
 
-	/**
-	 * @instance Returns whether this value is less than another numeric value.
-	 */
+	/** * @instance Returns whether this value is less than another numeric value. */
 	lt(n: Numeric): boolean {
 		return this.value < Number(n);
 	}
 
-	/**
-	 * @instance Returns whether this value equals another numeric value.
-	 */
+	/** * @instance Returns whether this value equals another numeric value. */
 	eq(n: Numeric): boolean {
 		return this.value === Number(n);
 	}
@@ -167,6 +171,6 @@ export class $BaseConverter<U extends $Unit> {
 	 * @returns Formatted string.
 	 */
 	format(decimals = 2): string {
-		return `${this.value.toFixed(decimals)} ${this.unit}`;
+		return `${this.$round(this.value, decimals)} ${this.unit}`;
 	}
 }

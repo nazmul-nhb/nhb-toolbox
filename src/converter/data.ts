@@ -5,8 +5,8 @@ import { UNITS } from './constants';
 import type { $DataUnit, ConverterFormatOptions } from './types';
 
 /**
- * @class $Data
- * @description Handles conversions between digital data units (bits, bytes, kilobytes, etc.).
+ * @class DataConverter
+ * @description Handles conversions with smart `.to()`, `.toAll()`, and `.formatTo()`.
  */
 export class $Data extends $BaseConverter<$DataUnit> {
 	/** * Conversion factors based on bytes. */
@@ -25,42 +25,27 @@ export class $Data extends $BaseConverter<$DataUnit> {
 		petabyte: 1125899906842624,
 	};
 
+	/**
+	 * Convert data value to other data units
+	 * @param value Number or numeric string value to convert.
+	 * @param unit Base data unit for the provided value.
+	 */
 	constructor(value: Numeric, unit: $DataUnit) {
 		super(value, unit);
 	}
 
-	/**
-	 * @instance Converts current value to bytes.
-	 * @returns Value in bytes.
-	 */
-	toBytes(): number {
+	/** @instance Converts to base unit (bytes). */
+	#toBytes(): number {
 		return this.value * $Data.#factors[this.unit];
 	}
 
 	/**
-	 * @instance Converts current value to the target unit.
+	 * @instance Converts to target data unit.
 	 * @param target Target data unit.
-	 * @returns Numeric value converted to target unit.
 	 */
 	to(target: $DataUnit): number {
-		const inBytes = this.toBytes();
+		const inBytes = this.#toBytes();
 		return inBytes / $Data.#factors[target];
-	}
-
-	/**
-	 * @instance Converts to megabytes.
-	 * @returns Value in megabytes.
-	 */
-	toMegabytes(): number {
-		return this.to('megabyte');
-	}
-
-	/**
-	 * @instance Converts to gigabytes.
-	 * @returns Value in gigabytes.
-	 */
-	toGigabytes(): number {
-		return this.to('gigabyte');
 	}
 
 	/**
@@ -68,7 +53,7 @@ export class $Data extends $BaseConverter<$DataUnit> {
 	 * @returns Object with all unit conversions.
 	 */
 	toAll(): $Record<$DataUnit, number> {
-		const inBytes = this.toBytes();
+		const inBytes = this.#toBytes();
 
 		const result = {} as $Record<$DataUnit, number>;
 
@@ -83,12 +68,12 @@ export class $Data extends $BaseConverter<$DataUnit> {
 	 * @instance Formats the converted value.
 	 * @param target Target data unit.
 	 * @param options Formatting options.
-	 * @returns Formatted string like "256 MB", "256MB", or "2.56e+2 MB".
+	 * @returns Formatted string like "256MB", "256 megabytes", or "2.56e+2 MB".
 	 */
 	formatTo(target: $DataUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);
 		const { style = 'plural', decimals = 2 } = options ?? {};
-		const rounded = Number(value.toFixed(decimals));
+		const rounded = this.$round(value, decimals);
 
 		switch (style) {
 			case 'compact': {
@@ -111,7 +96,7 @@ export class $Data extends $BaseConverter<$DataUnit> {
 			case 'scientific':
 				return `${value.toExponential(decimals)} ${target}`;
 			default:
-				return this.withPluralUnit(rounded, target);
+				return this.$withPluralUnit(rounded, target);
 		}
 	}
 }

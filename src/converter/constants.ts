@@ -1,3 +1,4 @@
+/** Record of Units */
 export const UNITS = /* @__PURE__ */ Object.freeze({
 	time: [
 		'nanosecond',

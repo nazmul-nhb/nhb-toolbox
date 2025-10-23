@@ -1,13 +1,15 @@
 import type { $Record } from '../object/types';
+import type { Numeric } from '../types/index';
 import { $BaseConverter } from './base';
 import { UNITS } from './constants';
 import type { $AreaUnit, ConverterFormatOptions } from './types';
 
 /**
- * @class $Area
- * @description Area unit conversions with smart `.to()`, `.formatTo()`, and `.toAll()`.
+ * @class AreaConverter
+ * @description Handles conversions with smart `.to()`, `.toAll()`, and `.formatTo()`.
  */
 export class $Area extends $BaseConverter<$AreaUnit> {
+	/** * Conversion factors based on meters. */
 	static #factors: $Record<$AreaUnit, number> = {
 		'square-millimeter': 1e-6,
 		'square-centimeter': 1e-4,
@@ -22,9 +24,16 @@ export class $Area extends $BaseConverter<$AreaUnit> {
 	};
 
 	/**
-	 * @instance Converts to base unit (square meters).
+	 * Convert area value to other area units
+	 * @param value Number or numeric string value to convert.
+	 * @param unit Base area unit for the provided value.
 	 */
-	toSquareMeters(): number {
+	constructor(value: Numeric, unit: $AreaUnit) {
+		super(value, unit);
+	}
+
+	/** @instance Converts to base unit (square meters). */
+	#toSquareMeters(): number {
 		return this.value * $Area.#factors[this.unit];
 	}
 
@@ -33,29 +42,36 @@ export class $Area extends $BaseConverter<$AreaUnit> {
 	 * @param target Target area unit.
 	 */
 	to(target: $AreaUnit): number {
-		const base = this.toSquareMeters();
+		const base = this.#toSquareMeters();
 		return base / $Area.#factors[target];
 	}
 
 	/**
 	 * @instance Converts to all area units.
+	 * @returns Object with all unit conversions.
 	 */
 	toAll(): $Record<$AreaUnit, number> {
-		const base = this.toSquareMeters();
+		const base = this.#toSquareMeters();
+
 		const result = {} as $Record<$AreaUnit, number>;
+
 		for (const unit of UNITS.area) {
 			result[unit] = base / $Area.#factors[unit];
 		}
+
 		return result;
 	}
 
 	/**
-	 * @instance Formats converted area value.
+	 * @instance Formats the converted value and unit.
+	 * @param target Target unit to format to.
+	 * @param options Formatting options.
+	 * @returns Formatted string like "5km²", "5.02 square-miles", or "5e+3 meter".
 	 */
 	formatTo(target: $AreaUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);
 		const { style = 'plural', decimals = 2 } = options ?? {};
-		const rounded = Number(value.toFixed(decimals));
+		const rounded = this.$round(value, decimals);
 
 		switch (style) {
 			case 'compact': {
@@ -76,7 +92,7 @@ export class $Area extends $BaseConverter<$AreaUnit> {
 			case 'scientific':
 				return `${value.toExponential(decimals)} ${target}`;
 			default:
-				return this.withPluralUnit(rounded, target);
+				return this.$withPluralUnit(rounded, target);
 		}
 	}
 }

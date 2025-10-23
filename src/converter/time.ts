@@ -5,8 +5,8 @@ import { UNITS } from './constants';
 import type { $TimeUnit, ConverterFormatOptions } from './types';
 
 /**
- * @class $Time
- * @description Time-specific conversions with smart `.to()` and formatting options.
+ * @class TimeConverter
+ * @description Handles conversions with smart `.to()`, `.toAll()`, and `.formatTo()`.
  */
 export class $Time extends $BaseConverter<$TimeUnit> {
 	/** * Common conversion factors based on seconds. */
@@ -26,50 +26,27 @@ export class $Time extends $BaseConverter<$TimeUnit> {
 		millennium: 31_556_952_000, // 1000 years
 	};
 
+	/**
+	 * Convert time value to other time units
+	 * @param value Number or numeric string value to convert.
+	 * @param unit Base time unit for the provided value.
+	 */
 	constructor(value: Numeric, unit: $TimeUnit) {
 		super(value, unit);
 	}
 
-	/**
-	 * @instance Converts current value to the base unit (seconds).
-	 * @returns Value in seconds.
-	 */
-	toSeconds(): number {
+	/** @instance Converts to base unit (seconds). */
+	#toSeconds(): number {
 		return this.value * $Time.#factors[this.unit];
 	}
 
 	/**
-	 * @instance Converts current value to the target unit.
+	 * @instance Converts to target time unit.
 	 * @param target Target time unit.
-	 * @returns Numeric value converted to target unit.
 	 */
 	to(target: $TimeUnit): number {
-		const baseInSeconds = this.toSeconds();
+		const baseInSeconds = this.#toSeconds();
 		return baseInSeconds / $Time.#factors[target];
-	}
-
-	/**
-	 * @instance Converts to minutes.
-	 * @returns Value in minutes.
-	 */
-	toMinutes(): number {
-		return this.to('minute');
-	}
-
-	/**
-	 * @instance Converts to hours.
-	 * @returns Value in hours.
-	 */
-	toHours(): number {
-		return this.to('hour');
-	}
-
-	/**
-	 * @instance Converts to days.
-	 * @returns Value in days.
-	 */
-	toDays(): number {
-		return this.to('day');
 	}
 
 	/**
@@ -77,7 +54,7 @@ export class $Time extends $BaseConverter<$TimeUnit> {
 	 * @returns Object with all unit conversions.
 	 */
 	toAll(): $Record<$TimeUnit, number> {
-		const inSeconds = this.toSeconds();
+		const inSeconds = this.#toSeconds();
 
 		const result = {} as $Record<$TimeUnit, number>;
 
@@ -89,19 +66,18 @@ export class $Time extends $BaseConverter<$TimeUnit> {
 	}
 
 	/**
-	 * @instance Formats the converted value with optional formatting style.
+	 * @instance Formats the converted value and unit.
 	 * @param target Target unit to format to.
-	 * @param options Formatting options: `compact`, `scientific`, or `plural`.
-	 * @returns Formatted string like "2 hours", "2h", or "2e+0 h".
+	 * @param options Formatting options.
+	 * @returns Formatted string like "5h", "5.25 hours", or "5e+3 minute".
 	 */
 	formatTo(target: $TimeUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);
 		const { style = 'plural', decimals = 2 } = options ?? {};
-		const rounded = Number(value.toFixed(decimals));
+		const rounded = this.$round(value, decimals);
 
 		switch (style) {
 			case 'compact': {
-				// Short labels
 				const shortLabels: $Record<$TimeUnit, string> = {
 					nanosecond: 'ns',
 					microsecond: 'µs',
@@ -124,7 +100,7 @@ export class $Time extends $BaseConverter<$TimeUnit> {
 				return `${value.toExponential(decimals)} ${target}`;
 
 			default:
-				return this.withPluralUnit(rounded, target);
+				return this.$withPluralUnit(rounded, target);
 		}
 	}
 }

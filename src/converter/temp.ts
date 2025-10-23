@@ -5,17 +5,22 @@ import { UNITS } from './constants';
 import type { $TempUnit, ConverterFormatOptions } from './types';
 
 /**
- * @class $Temperature
- * @description Temperature-specific conversions with smart `.to()` and formatting.
+ * @class TemperatureConverter
+ * @description Handles conversions with smart `.to()`, `.toAll()`, and `.formatTo()`.
  */
 export class $Temperature extends $BaseConverter<$TempUnit> {
+	/**
+	 * Convert temperature value to other temperature units
+	 * @param value Number or numeric string value to convert.
+	 * @param unit Base temperature unit for the provided value.
+	 */
 	constructor(value: Numeric, unit: $TempUnit) {
 		super(value, unit);
 	}
 
 	/**
 	 * @private
-	 * @description Conversion helpers between Celsius, Fahrenheit, and Kelvin.
+	 * @description Conversion helper from Fahrenheit and Kelvin to Celsius.
 	 */
 	static #toCelsius(value: number, from: $TempUnit): number {
 		switch (from) {
@@ -28,6 +33,10 @@ export class $Temperature extends $BaseConverter<$TempUnit> {
 		}
 	}
 
+	/**
+	 * @private
+	 * @description Conversion helper from Celsius to Fahrenheit and Kelvin.
+	 */
 	static #fromCelsius(value: number, to: $TempUnit): number {
 		switch (to) {
 			case 'fahrenheit':
@@ -40,43 +49,18 @@ export class $Temperature extends $BaseConverter<$TempUnit> {
 	}
 
 	/**
-	 * @instance Converts current value to Celsius.
-	 * @returns Value in Celsius.
-	 */
-	toCelsius(): number {
-		return $Temperature.#toCelsius(this.value, this.unit);
-	}
-
-	/**
 	 * @instance Converts to target temperature unit.
 	 * @param target Target temperature unit.
-	 * @returns Numeric value in target unit.
 	 */
 	to(target: $TempUnit): number {
-		const celsiusValue = this.toCelsius();
+		const celsiusValue = $Temperature.#toCelsius(this.value, this.unit);
 
 		return $Temperature.#fromCelsius(celsiusValue, target);
 	}
 
 	/**
-	 * @instance Converts to Fahrenheit.
-	 * @returns Value in Fahrenheit.
-	 */
-	toFahrenheit(): number {
-		return this.to('fahrenheit');
-	}
-
-	/**
-	 * @instance Converts to Kelvin.
-	 * @returns Value in Kelvin.
-	 */
-	toKelvin(): number {
-		return this.to('kelvin');
-	}
-
-	/**
 	 * @instance Converts to all temperature units at once.
-	 * @returns Object containing all unit conversions.
+	 * @returns Object with all unit conversions.
 	 */
 	toAll(): $Record<$TempUnit, number> {
 		const result = {} as $Record<$TempUnit, number>;
@@ -89,15 +73,15 @@ export class $Temperature extends $BaseConverter<$TempUnit> {
 	}
 
 	/**
-	 * @instance Formats the converted temperature.
-	 * @param target Target temperature unit.
+	 * @instance Formats the converted value and unit.
+	 * @param target Target unit to format to.
 	 * @param options Formatting options.
-	 * @returns Formatted string.
+	 * @returns Formatted string like "5°F", "5.25 kelvins", or "5e+3 celsius".
 	 */
 	formatTo(target: $TempUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);
 		const { style = 'plural', decimals = 2 } = options ?? {};
-		const rounded = Number(value.toFixed(decimals));
+		const rounded = this.$round(value, decimals);
 
 		switch (style) {
 			case 'compact': {
@@ -111,7 +95,7 @@ export class $Temperature extends $BaseConverter<$TempUnit> {
 			case 'scientific':
 				return `${value.toExponential(decimals)} ${target}`;
 			default:
-				return this.withPluralUnit(rounded, target);
+				return this.$withPluralUnit(rounded, target);
 		}
 	}
 }

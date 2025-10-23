@@ -1,13 +1,15 @@
 import type { $Record } from '../object/types';
+import type { Numeric } from '../types/index';
 import { $BaseConverter } from './base';
 import { UNITS } from './constants';
 import type { $VolumeUnit, ConverterFormatOptions } from './types';
 
 /**
- * @class $Volume
- * @description Volume unit conversions with smart `.to()`, `.formatTo()`, and `.toAll()`.
+ * @class VolumeConverter
+ * @description Handles conversions with smart `.to()`, `.toAll()`, and `.formatTo()`.
  */
 export class $Volume extends $BaseConverter<$VolumeUnit> {
+	/** * Common conversion factors based on cubic-meters. */
 	static #factors: $Record<$VolumeUnit, number> = {
 		'cubic-millimeter': 1e-9,
 		'cubic-centimeter': 1e-6,
@@ -28,28 +30,55 @@ export class $Volume extends $BaseConverter<$VolumeUnit> {
 		teaspoon: 4.92892e-6,
 	};
 
-	toCubicMeters(): number {
+	/**
+	 * Convert volume value to other volume units
+	 * @param value Number or numeric string value to convert.
+	 * @param unit Base volume unit for the provided value.
+	 */
+	constructor(value: Numeric, unit: $VolumeUnit) {
+		super(value, unit);
+	}
+
+	/** @instance Converts to base unit (cubic-meters). */
+	#toCubicMeters(): number {
 		return this.value * $Volume.#factors[this.unit];
 	}
 
+	/**
+	 * @instance Converts to target volume unit.
+	 * @param target Target volume unit.
+	 */
 	to(target: $VolumeUnit): number {
-		const base = this.toCubicMeters();
+		const base = this.#toCubicMeters();
 		return base / $Volume.#factors[target];
 	}
 
+	/**
+	 * @instance Converts to target volume unit.
+	 * @param target Target volume unit.
+	 */
 	toAll(): $Record<$VolumeUnit, number> {
-		const base = this.toCubicMeters();
+		const base = this.#toCubicMeters();
+
 		const result = {} as $Record<$VolumeUnit, number>;
+
 		for (const unit of UNITS.volume) {
 			result[unit] = base / $Volume.#factors[unit];
 		}
+
 		return result;
 	}
 
+	/**
+	 * @instance Formats the converted value and unit.
+	 * @param target Target unit to format to.
+	 * @param options Formatting options.
+	 * @returns Formatted string like "5hm³", "5.25 cubic-meters", or "5e+3 meter".
+	 */
 	formatTo(target: $VolumeUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);
 		const { style = 'plural', decimals = 2 } = options ?? {};
-		const rounded = Number(value.toFixed(decimals));
+		const rounded = this.$round(value, decimals);
 
 		switch (style) {
 			case 'compact': {
@@ -77,7 +106,7 @@ export class $Volume extends $BaseConverter<$VolumeUnit> {
 			case 'scientific':
 				return `${value.toExponential(decimals)} ${target}`;
 			default:
-				return this.withPluralUnit(rounded, target);
+				return this.$withPluralUnit(rounded, target);
 		}
 	}
 }

@@ -5,8 +5,8 @@ import { UNITS } from './constants';
 import type { $LengthUnit, ConverterFormatOptions } from './types';
 
 /**
- * @class $Length
- * @description Handles conversions between length/distance units with smart `.to()` and `.formatTo()`.
+ * @class LengthConverter
+ * @description Handles conversions with smart `.to()`, `.toAll()`, and `.formatTo()`.
  */
 export class $Length extends $BaseConverter<$LengthUnit> {
 	/** * Conversion factors based on meters. */
@@ -23,50 +23,35 @@ export class $Length extends $BaseConverter<$LengthUnit> {
 		'light-year': 9.4607e15,
 	};
 
+	/**
+	 * Convert length/distance value to other length/distance units
+	 * @param value Number or numeric string value to convert.
+	 * @param unit Base length/distance unit for the provided value.
+	 */
 	constructor(value: Numeric, unit: $LengthUnit) {
 		super(value, unit);
 	}
 
-	/**
-	 * @instance Converts current value to meters.
-	 * @returns Value in meters.
-	 */
-	toMeters(): number {
+	/** @instance Converts to base unit (meters). */
+	#toMeters(): number {
 		return this.value * $Length.#factors[this.unit];
 	}
 
 	/**
-	 * @instance Converts current value to the target unit.
-	 * @param target Target length unit.
-	 * @returns Numeric value converted to target unit.
+	 * @instance Converts to target length/distance unit.
+	 * @param target Target length/distance unit.
 	 */
 	to(target: $LengthUnit): number {
-		const inMeters = this.toMeters();
+		const inMeters = this.#toMeters();
 		return inMeters / $Length.#factors[target];
 	}
 
 	/**
-	 * @instance Converts to kilometers.
-	 * @returns Value in kilometers.
-	 */
-	toKilometers(): number {
-		return this.to('kilometer');
-	}
-
-	/**
-	 * @instance Converts to miles.
-	 * @returns Value in miles.
-	 */
-	toMiles(): number {
-		return this.to('mile');
-	}
-
-	/**
-	 * @instance Converts to all length units.
+	 * @instance Converts to all data units.
 	 * @returns Object with all unit conversions.
 	 */
 	toAll(): $Record<$LengthUnit, number> {
-		const inMeters = this.toMeters();
+		const inMeters = this.#toMeters();
 
 		const result = {} as $Record<$LengthUnit, number>;
 
@@ -78,15 +63,15 @@ export class $Length extends $BaseConverter<$LengthUnit> {
 	}
 
 	/**
-	 * @instance Formats the converted value.
+	 * @instance Formats the converted value and unit.
 	 * @param target Target unit to format to.
 	 * @param options Formatting options.
-	 * @returns Formatted string like "5 km", "5.00 miles", or "5e+3 m".
+	 * @returns Formatted string like "5km", "5.12 miles", or "5e+3 meter".
 	 */
 	formatTo(target: $LengthUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);
 		const { style = 'plural', decimals = 2 } = options ?? {};
-		const rounded = Number(value.toFixed(decimals));
+		const rounded = this.$round(value, decimals);
 
 		switch (style) {
 			case 'compact': {
@@ -107,7 +92,7 @@ export class $Length extends $BaseConverter<$LengthUnit> {
 			case 'scientific':
 				return `${value.toExponential(decimals)} ${target}`;
 			default:
-				return this.withPluralUnit(rounded, target);
+				return this.$withPluralUnit(rounded, target);
 		}
 	}
 }

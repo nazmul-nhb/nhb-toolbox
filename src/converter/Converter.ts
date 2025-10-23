@@ -23,9 +23,9 @@ import type {
 import { $Volume } from './volume';
 
 /**
- * * Factory function that returns appropriate converter instance
+ * @function Converter
  *
- * @description Converts values between compatible units (time, length, data, temp).
+ * @description Converts values between compatible units (time, length, data, temperature, mass, area, volume).
  * The returned instance exposes only methods relevant to the provided unit type.
  */
 export function Converter<U extends $Unit>(value: Numeric, unit?: U): Converted<U> {

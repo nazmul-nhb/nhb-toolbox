@@ -1,11 +1,12 @@
 import type { $Record } from '../object/types';
+import type { Numeric } from '../types/index';
 import { $BaseConverter } from './base';
 import { UNITS } from './constants';
 import type { $MassUnit, ConverterFormatOptions } from './types';
 
 /**
- * @class $Mass
- * @description Mass and weight conversions (metric & imperial) with `.to()`, `.formatTo()`, and `.toAll()`.
+ * @class MassConverter
+ * @description Handles conversions with smart `.to()`, `.toAll()`, and `.formatTo()`.
  */
 export class $Mass extends $BaseConverter<$MassUnit> {
 	/** * Common conversion factors relative to 1 kilogram. */
@@ -23,46 +24,54 @@ export class $Mass extends $BaseConverter<$MassUnit> {
 	};
 
 	/**
-	 * @instance Converts current value to kilograms (base unit).
-	 * @returns Value in kilograms.
+	 * Convert mass value to other mass units
+	 * @param value Number or numeric string value to convert.
+	 * @param unit Base mass unit for the provided value.
 	 */
-	toKilograms(): number {
+	constructor(value: Numeric, unit: $MassUnit) {
+		super(value, unit);
+	}
+
+	/** @instance Converts to base unit (kilograms). */
+	#toKilograms(): number {
 		return this.value * $Mass.#factors[this.unit];
 	}
 
 	/**
 	 * @instance Converts to target mass unit.
 	 * @param target Target mass unit.
-	 * @returns Numeric value converted to target unit.
 	 */
 	to(target: $MassUnit): number {
-		const base = this.toKilograms();
+		const base = this.#toKilograms();
 		return base / $Mass.#factors[target];
 	}
 
 	/**
 	 * @instance Converts to all mass units at once.
-	 * @returns Object with all conversions.
+	 * @returns Object with all unit conversions.
 	 */
 	toAll(): $Record<$MassUnit, number> {
-		const base = this.toKilograms();
+		const base = this.#toKilograms();
+
 		const result = {} as $Record<$MassUnit, number>;
+
 		for (const unit of UNITS.mass) {
 			result[unit] = base / $Mass.#factors[unit];
 		}
+
 		return result;
 	}
 
 	/**
-	 * @instance Formats converted value to a readable string.
-	 * @param target Target mass unit.
+	 * @instance Formats the converted value and unit.
+	 * @param target Target unit to format to.
 	 * @param options Formatting options.
-	 * @returns Formatted string.
+	 * @returns Formatted string like "5kg", "5.25 kilograms", or "5e+3 gram".
 	 */
 	formatTo(target: $MassUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);
 		const { style = 'plural', decimals = 2 } = options ?? {};
-		const rounded = Number(value.toFixed(decimals));
+		const rounded = this.$round(value, decimals);
 
 		switch (style) {
 			case 'compact': {
@@ -85,7 +94,7 @@ export class $Mass extends $BaseConverter<$MassUnit> {
 				return `${value.toExponential(decimals)} ${target}`;
 
 			default:
-				return this.withPluralUnit(rounded, target);
+				return this.$withPluralUnit(rounded, target);
 		}
 	}
 }

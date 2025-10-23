@@ -68,7 +68,7 @@ export { $Temperature as TemperatureConverter } from './converter/temp';
 export { $Time as TimeConverter } from './converter/time';
 export { $Volume as VolumeConverter } from './converter/volume';
 
-export { Converter } from './converter/Converter';
+export { Converter, Converter as converter } from './converter/Converter';
 
 // ! Pluralizer Class and Its Default Instance
 export { Pluralizer, pluralizer } from './pluralize/Pluralizer';
