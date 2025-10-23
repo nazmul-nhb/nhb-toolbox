@@ -6,6 +6,7 @@ import type { $Data } from './data';
 import type { $Length } from './length';
 import type { $Temperature } from './temp';
 import type { $Time } from './time';
+import type { $Volume } from './volume';
 
 export type Category = keyof typeof UNIT_MAP;
 
@@ -26,6 +27,7 @@ export type Converted<U extends $Unit> =
 	: InferCategory<U> extends 'length' ? $Length
 	: InferCategory<U> extends 'data' ? $Data
 	: InferCategory<U> extends 'temp' ? $Temperature
+	: InferCategory<U> extends 'volume' ? $Volume
 	: $BaseConverter<U>;
 
 export type ConverterFormatOptions = {

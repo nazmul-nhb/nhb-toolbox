@@ -13,10 +13,12 @@ import type {
 	$TempUnit,
 	$TimeUnit,
 	$Unit,
+	$VolumeUnit,
 	Category,
 	Converted,
 	UnitMap,
 } from './types';
+import { $Volume } from './volume';
 
 /**
  * * Factory function that returns appropriate converter instance
@@ -46,6 +48,8 @@ export function Converter<U extends $Unit>(value: Numeric, unit?: U): Converted<
 			return new $Length(value, unit as $LengthUnit) as Converted<U>;
 		case 'temp':
 			return new $Temperature(value, unit as $TempUnit) as Converted<U>;
+		case 'volume':
+			return new $Volume(value, unit as $VolumeUnit) as Converted<U>;
 		default:
 			return new $BaseConverter(value, unit) as Converted<U>;
 	}

@@ -1,4 +1,4 @@
-export const UNIT_MAP = {
+export const UNIT_MAP = /* @__PURE__ */ Object.freeze({
 	time: [
 		'nanosecond',
 		'microsecond',
@@ -62,7 +62,9 @@ export const UNIT_MAP = {
 		'cubic-foot',
 		'cubic-yard',
 		'liter',
+		'litre',
 		'milliliter',
+		'millilitre',
 		'gallon',
 		'quart',
 		'pint',
@@ -70,4 +72,16 @@ export const UNIT_MAP = {
 		'tablespoon',
 		'teaspoon',
 	],
-} as const;
+	mass: [
+		'microgram',
+		'milligram',
+		'gram',
+		'kilogram',
+		'tonne',
+		'ounce',
+		'pound',
+		'stone',
+		'short-ton',
+		'long-ton',
+	],
+} as const);
