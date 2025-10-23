@@ -6,6 +6,12 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.23.0] - 2025-10-24
+
+- **Added** new *unit converter classes* and their *combined function* `Converter` (aliased `converter`).
+- **Introduced** new *utility types:* `Replace` `ReplaceFirst` and `$Record`.
+- **Exported** `pluralizer`, `verbalizer`, `httpStatus` and new `Converter` utility through *package sub-paths*.
+
 ## [4.21.14] - 2025-10-14
 
 - **Moved** `getTimeZoneName` method to `Chronos` *plugin system*, usable via `timeZonePlugin` and enhanced `timeZonePlugin`.

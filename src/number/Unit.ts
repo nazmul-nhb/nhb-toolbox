@@ -2,7 +2,7 @@ import { PREFIX_MULTIPLIERS } from './constants';
 import type { SIPrefix, UnitKey, UnitNumberMethods } from './types';
 
 /**
- * @class Represents a measurable unit and supports conversions between various types of units.
+ * @class Class to handle conversions between various types of units.
  *
  * Includes static methods for:
  * - Length: meters, feet, kilometers, miles
@@ -16,6 +16,8 @@ import type { SIPrefix, UnitKey, UnitNumberMethods } from './types';
  * - Energy: joules, calories
  * - Pressure: atm, pascals
  * - Frequency: Hz, kHz
+ *
+ * @remarks For more robust unit conversion, please use the `Converter` function which provides category-specific conversion classes.
  */
 export class Unit {
 	readonly #value: number;
