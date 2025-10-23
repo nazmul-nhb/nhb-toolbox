@@ -1,6 +1,6 @@
 {
   "name": "nhb-toolbox",
-  "version": "4.21.14",
+  "version": "4.22.0-rc.1",
   "description": "A versatile collection of smart, efficient, and reusable utility functions, classes and types for everyday development needs.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -29,7 +29,6 @@
     "dist",
     "LICENSE",
     "README.md",
-    "CHANGELOG.md",
     "package.json"
   ],
   "repository": {
@@ -142,6 +141,26 @@
       "import": "./dist/esm/date/Chronos.js",
       "require": "./dist/cjs/date/Chronos.js"
     },
+    "./converter": {
+      "types": "./dist/dts/converter/Converter.d.ts",
+      "import": "./dist/esm/converter/Converter.js",
+      "require": "./dist/cjs/converter/Converter.js"
+    },
+    "./pluralizer": {
+      "types": "./dist/dts/pluralizer/Pluralizer.d.ts",
+      "import": "./dist/esm/pluralizer/Pluralizer.js",
+      "require": "./dist/cjs/pluralizer/Pluralizer.js"
+    },
+    "./verbalizer": {
+      "types": "./dist/dts/verbalizer/Verbalizer.d.ts",
+      "import": "./dist/esm/verbalizer/Verbalizer.js",
+      "require": "./dist/cjs/verbalizer/Verbalizer.js"
+    },
+    "./http-status": {
+      "types": "./dist/dts/http-status/HttpStatus.d.ts",
+      "import": "./dist/esm/http-status/HttpStatus.js",
+      "require": "./dist/cjs/http-status/HttpStatus.js"
+    },
     "./stylog": {
       "types": "./dist/dts/utils/stylog.d.ts",
       "import": "./dist/esm/utils/stylog.js",
@@ -179,9 +198,9 @@
       "types": "./dist/dts/object/types.d.ts",
       "default": "./dist/dts/object/types.d.ts"
     },
-    "./pluralize/types": {
-      "types": "./dist/dts/pluralize/types.d.ts",
-      "default": "./dist/dts/pluralize/types.d.ts"
+    "./pluralizer/types": {
+      "types": "./dist/dts/pluralizer/types.d.ts",
+      "default": "./dist/dts/pluralizer/types.d.ts"
     },
     "./string/types": {
       "types": "./dist/dts/string/types.d.ts",
@@ -257,6 +276,18 @@
       "chronos": [
         "dist/dts/date/Chronos.d.ts"
       ],
+      "converter": [
+        "dist/dts/converter/Converter.d.ts"
+      ],
+      "pluralizer": [
+        "dist/dts/pluralizer/Pluralizer.d.ts"
+      ],
+      "verbalizer": [
+        "dist/dts/verbalizer/Verbalizer.d.ts"
+      ],
+      "http-status": [
+        "dist/dts/http-status/HttpStatus.d.ts"
+      ],
       "stylog": [
         "dist/dts/utils/stylog.d.ts"
       ],
@@ -284,8 +315,8 @@
       "object/types": [
         "dist/dts/object/types.d.ts"
       ],
-      "pluralize/types": [
-        "dist/dts/pluralize/types.d.ts"
+      "pluralizer/types": [
+        "dist/dts/pluralizer/types.d.ts"
       ],
       "string/types": [
         "dist/dts/string/types.d.ts"

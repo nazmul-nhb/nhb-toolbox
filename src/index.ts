@@ -71,7 +71,7 @@ export { $Volume as VolumeConverter } from './converter/volume';
 export { Converter, Converter as converter } from './converter/Converter';
 
 // ! Pluralizer Class and Its Default Instance
-export { Pluralizer, pluralizer } from './pluralize/Pluralizer';
+export { Pluralizer, pluralizer } from './pluralizer/Pluralizer';
 
 // ! Verbalizer Class and Its Default instance
 export { Verbalizer, verbalizer } from './verbalizer/Verbalizer';

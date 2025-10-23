@@ -49,6 +49,26 @@ export default defineScriptConfig({
 							import: './dist/esm/date/Chronos.js',
 							require: './dist/cjs/date/Chronos.js',
 						},
+						'./converter': {
+							types: './dist/dts/converter/Converter.d.ts',
+							import: './dist/esm/converter/Converter.js',
+							require: './dist/cjs/converter/Converter.js',
+						},
+						'./pluralizer': {
+							types: './dist/dts/pluralizer/Pluralizer.d.ts',
+							import: './dist/esm/pluralizer/Pluralizer.js',
+							require: './dist/cjs/pluralizer/Pluralizer.js',
+						},
+						'./verbalizer': {
+							types: './dist/dts/verbalizer/Verbalizer.d.ts',
+							import: './dist/esm/verbalizer/Verbalizer.js',
+							require: './dist/cjs/verbalizer/Verbalizer.js',
+						},
+						'./http-status': {
+							types: './dist/dts/http-status/HttpStatus.d.ts',
+							import: './dist/esm/http-status/HttpStatus.js',
+							require: './dist/cjs/http-status/HttpStatus.js',
+						},
 						'./stylog': {
 							types: './dist/dts/utils/stylog.d.ts',
 							import: './dist/esm/utils/stylog.js',
