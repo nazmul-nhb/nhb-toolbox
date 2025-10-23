@@ -1,6 +1,7 @@
+import type { $Record } from '../object/types';
 import type { Numeric } from '../types/index';
 import { $BaseConverter } from './base';
-import { UNIT_MAP } from './constants';
+import { UNITS } from './constants';
 import type { $LengthUnit, ConverterFormatOptions } from './types';
 
 /**
@@ -9,7 +10,7 @@ import type { $LengthUnit, ConverterFormatOptions } from './types';
  */
 export class $Length extends $BaseConverter<$LengthUnit> {
 	/** * Conversion factors based on meters. */
-	static #factors: Record<$LengthUnit, number> = {
+	static #factors: $Record<$LengthUnit, number> = {
 		millimeter: 0.001,
 		centimeter: 0.01,
 		meter: 1,
@@ -64,12 +65,12 @@ export class $Length extends $BaseConverter<$LengthUnit> {
 	 * @instance Converts to all length units.
 	 * @returns Object with all unit conversions.
 	 */
-	toAll(): Record<$LengthUnit, number> {
+	toAll(): $Record<$LengthUnit, number> {
 		const inMeters = this.toMeters();
 
-		const result = {} as Record<$LengthUnit, number>;
+		const result = {} as $Record<$LengthUnit, number>;
 
-		for (const unit of UNIT_MAP.length) {
+		for (const unit of UNITS.length) {
 			result[unit] = inMeters / $Length.#factors[unit];
 		}
 
@@ -89,7 +90,7 @@ export class $Length extends $BaseConverter<$LengthUnit> {
 
 		switch (style) {
 			case 'compact': {
-				const shortLabels: Record<$LengthUnit, string> = {
+				const shortLabels: $Record<$LengthUnit, string> = {
 					millimeter: 'mm',
 					centimeter: 'cm',
 					meter: 'm',

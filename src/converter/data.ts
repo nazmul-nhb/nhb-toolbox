@@ -1,6 +1,7 @@
+import type { $Record } from '../object/types';
 import type { Numeric } from '../types/index';
 import { $BaseConverter } from './base';
-import { UNIT_MAP } from './constants';
+import { UNITS } from './constants';
 import type { $DataUnit, ConverterFormatOptions } from './types';
 
 /**
@@ -9,7 +10,7 @@ import type { $DataUnit, ConverterFormatOptions } from './types';
  */
 export class $Data extends $BaseConverter<$DataUnit> {
 	/** * Conversion factors based on bytes. */
-	static #factors: Record<$DataUnit, number> = {
+	static #factors: $Record<$DataUnit, number> = {
 		bit: 1 / 8,
 		byte: 1,
 		kilobit: 128,
@@ -66,12 +67,12 @@ export class $Data extends $BaseConverter<$DataUnit> {
 	 * @instance Converts to all data units.
 	 * @returns Object with all unit conversions.
 	 */
-	toAll(): Record<$DataUnit, number> {
+	toAll(): $Record<$DataUnit, number> {
 		const inBytes = this.toBytes();
 
-		const result = {} as Record<$DataUnit, number>;
+		const result = {} as $Record<$DataUnit, number>;
 
-		for (const unit of UNIT_MAP.data) {
+		for (const unit of UNITS.data) {
 			result[unit] = inBytes / $Data.#factors[unit];
 		}
 
@@ -91,7 +92,7 @@ export class $Data extends $BaseConverter<$DataUnit> {
 
 		switch (style) {
 			case 'compact': {
-				const shortLabels: Record<$DataUnit, string> = {
+				const shortLabels: $Record<$DataUnit, string> = {
 					bit: 'b',
 					byte: 'B',
 					kilobit: 'Kb',

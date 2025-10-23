@@ -1,6 +1,7 @@
+import type { $Record } from '../object/types';
 import { $BaseConverter } from './base';
-import { UNIT_MAP } from './constants';
-import type { $MassUnit } from './types';
+import { UNITS } from './constants';
+import type { $MassUnit, ConverterFormatOptions } from './types';
 
 /**
  * @class $Mass
@@ -8,7 +9,7 @@ import type { $MassUnit } from './types';
  */
 export class $Mass extends $BaseConverter<$MassUnit> {
 	/** * Common conversion factors relative to 1 kilogram. */
-	static #factors: Record<$MassUnit, number> = {
+	static #factors: $Record<$MassUnit, number> = {
 		microgram: 1e-9,
 		milligram: 1e-6,
 		gram: 0.001,
@@ -43,10 +44,10 @@ export class $Mass extends $BaseConverter<$MassUnit> {
 	 * @instance Converts to all mass units at once.
 	 * @returns Object with all conversions.
 	 */
-	toAll(): Record<$MassUnit, number> {
+	toAll(): $Record<$MassUnit, number> {
 		const base = this.toKilograms();
-		const result = {} as Record<$MassUnit, number>;
-		for (const unit of UNIT_MAP.mass) {
+		const result = {} as $Record<$MassUnit, number>;
+		for (const unit of UNITS.mass) {
 			result[unit] = base / $Mass.#factors[unit];
 		}
 		return result;
@@ -58,20 +59,14 @@ export class $Mass extends $BaseConverter<$MassUnit> {
 	 * @param options Formatting options.
 	 * @returns Formatted string.
 	 */
-	formatTo(
-		target: $MassUnit,
-		options?: {
-			style?: 'compact' | 'scientific' | 'plural';
-			decimals?: number;
-		}
-	): string {
+	formatTo(target: $MassUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);
 		const { style = 'plural', decimals = 2 } = options ?? {};
 		const rounded = Number(value.toFixed(decimals));
 
 		switch (style) {
 			case 'compact': {
-				const shortLabels: Record<$MassUnit, string> = {
+				const shortLabels: $Record<$MassUnit, string> = {
 					microgram: 'µg',
 					milligram: 'mg',
 					gram: 'g',

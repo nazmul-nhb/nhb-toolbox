@@ -1,5 +1,6 @@
+import type { $Record } from '../object/types';
 import { $BaseConverter } from './base';
-import { UNIT_MAP } from './constants';
+import { UNITS } from './constants';
 import type { $AreaUnit, ConverterFormatOptions } from './types';
 
 /**
@@ -7,7 +8,7 @@ import type { $AreaUnit, ConverterFormatOptions } from './types';
  * @description Area unit conversions with smart `.to()`, `.formatTo()`, and `.toAll()`.
  */
 export class $Area extends $BaseConverter<$AreaUnit> {
-	static #factors: Record<$AreaUnit, number> = {
+	static #factors: $Record<$AreaUnit, number> = {
 		'square-millimeter': 1e-6,
 		'square-centimeter': 1e-4,
 		'square-meter': 1,
@@ -39,10 +40,10 @@ export class $Area extends $BaseConverter<$AreaUnit> {
 	/**
 	 * @instance Converts to all area units.
 	 */
-	toAll(): Record<$AreaUnit, number> {
+	toAll(): $Record<$AreaUnit, number> {
 		const base = this.toSquareMeters();
-		const result = {} as Record<$AreaUnit, number>;
-		for (const unit of UNIT_MAP.area) {
+		const result = {} as $Record<$AreaUnit, number>;
+		for (const unit of UNITS.area) {
 			result[unit] = base / $Area.#factors[unit];
 		}
 		return result;
@@ -58,7 +59,7 @@ export class $Area extends $BaseConverter<$AreaUnit> {
 
 		switch (style) {
 			case 'compact': {
-				const shortLabels: Record<$AreaUnit, string> = {
+				const shortLabels: $Record<$AreaUnit, string> = {
 					'square-millimeter': 'mm²',
 					'square-centimeter': 'cm²',
 					'square-meter': 'm²',

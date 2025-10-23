@@ -1,7 +1,7 @@
 import type { LooseLiteral } from '../utils/types';
 import type { $Area } from './area';
 import type { $BaseConverter } from './base';
-import type { UNIT_MAP } from './constants';
+import type { UNITS } from './constants';
 import type { $Data } from './data';
 import type { $Length } from './length';
 import type { $Mass } from './mass';
@@ -9,10 +9,12 @@ import type { $Temperature } from './temp';
 import type { $Time } from './time';
 import type { $Volume } from './volume';
 
-export type Category = keyof typeof UNIT_MAP;
+type Units = typeof UNITS;
+
+export type Category = keyof Units;
 
 export type UnitMap = {
-	[Key in keyof typeof UNIT_MAP]: (typeof UNIT_MAP)[Key][number];
+	[Key in Category]: Units[Key][number];
 };
 
 export type $Unit = LooseLiteral<UnitMap[Category]>;

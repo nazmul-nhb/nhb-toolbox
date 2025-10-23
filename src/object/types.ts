@@ -282,3 +282,25 @@ export type ConvertedObject<T, Keys extends string, C extends 'string' | 'number
 
 /** Array of country information (as object) */
 export type $Countries = (typeof COUNTRIES)[number];
+
+/**
+ * Construct a `Record` (`object`) type with a set of properties `Key` of type `T`.
+ *
+ * @example
+ * ```ts
+ * type UserRoles = 'admin' | 'editor' | 'viewer';
+ *
+ * type RolePermissions = $Record<UserRoles, string[]>;
+ *
+ * // Resulting type:
+ * // {
+ * //   admin: string[];
+ * //   editor: string[];
+ * //   viewer: string[];
+ * // }
+ * ```
+ *
+ * @remarks Unlike the built-in `Record<K, T>`, this type ensures that all properties are explicitly defined and expanded.
+ */
+export type $Record<Key extends PropertyKey = string, T = any> =
+	{ [K in Key]: T } extends infer O ? { [K in keyof O]: O[K] } : { [K in Key]: T };

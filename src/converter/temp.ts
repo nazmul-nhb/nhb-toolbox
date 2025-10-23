@@ -1,6 +1,7 @@
+import type { $Record } from '../object/types';
 import type { Numeric } from '../types/index';
 import { $BaseConverter } from './base';
-import { UNIT_MAP } from './constants';
+import { UNITS } from './constants';
 import type { $TempUnit, ConverterFormatOptions } from './types';
 
 /**
@@ -77,10 +78,10 @@ export class $Temperature extends $BaseConverter<$TempUnit> {
 	 * @instance Converts to all temperature units at once.
 	 * @returns Object containing all unit conversions.
 	 */
-	toAll(): Record<$TempUnit, number> {
-		const result = {} as Record<$TempUnit, number>;
+	toAll(): $Record<$TempUnit, number> {
+		const result = {} as $Record<$TempUnit, number>;
 
-		for (const unit of UNIT_MAP.temp) {
+		for (const unit of UNITS.temp) {
 			result[unit] = this.to(unit);
 		}
 
@@ -100,7 +101,7 @@ export class $Temperature extends $BaseConverter<$TempUnit> {
 
 		switch (style) {
 			case 'compact': {
-				const shortLabels: Record<$TempUnit, string> = {
+				const shortLabels: $Record<$TempUnit, string> = {
 					celsius: '°C',
 					fahrenheit: '°F',
 					kelvin: 'K',

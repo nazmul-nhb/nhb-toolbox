@@ -1,7 +1,7 @@
 import type { Numeric } from '../types/index';
 import { $Area } from './area';
 import { $BaseConverter } from './base';
-import { UNIT_MAP } from './constants';
+import { UNITS } from './constants';
 import { $Data } from './data';
 import { $Length } from './length';
 import { $Mass } from './mass';
@@ -31,7 +31,7 @@ import { $Volume } from './volume';
 export function Converter<U extends $Unit>(value: Numeric, unit?: U): Converted<U> {
 	const category = ((): Category | undefined => {
 		if (unit) {
-			for (const [category, values] of Object.entries(UNIT_MAP)) {
+			for (const [category, values] of Object.entries(UNITS)) {
 				if ([...values].includes(unit as UnitMap[Category])) {
 					return category as Category;
 				}

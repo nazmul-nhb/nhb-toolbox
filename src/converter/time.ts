@@ -1,6 +1,7 @@
+import type { $Record } from '../object/types';
 import type { Numeric } from '../types/index';
 import { $BaseConverter } from './base';
-import { UNIT_MAP } from './constants';
+import { UNITS } from './constants';
 import type { $TimeUnit, ConverterFormatOptions } from './types';
 
 /**
@@ -9,7 +10,7 @@ import type { $TimeUnit, ConverterFormatOptions } from './types';
  */
 export class $Time extends $BaseConverter<$TimeUnit> {
 	/** * Common conversion factors based on seconds. */
-	static #factors: Record<$TimeUnit, number> = {
+	static #factors: $Record<$TimeUnit, number> = {
 		nanosecond: 1e-9,
 		microsecond: 1e-6,
 		millisecond: 1e-3,
@@ -75,12 +76,12 @@ export class $Time extends $BaseConverter<$TimeUnit> {
 	 * @instance Converts to all time units at once.
 	 * @returns Object with all unit conversions.
 	 */
-	toAll(): Record<$TimeUnit, number> {
+	toAll(): $Record<$TimeUnit, number> {
 		const inSeconds = this.toSeconds();
 
-		const result = {} as Record<$TimeUnit, number>;
+		const result = {} as $Record<$TimeUnit, number>;
 
-		for (const unit of UNIT_MAP.time) {
+		for (const unit of UNITS.time) {
 			result[unit] = inSeconds / $Time.#factors[unit];
 		}
 
@@ -101,7 +102,7 @@ export class $Time extends $BaseConverter<$TimeUnit> {
 		switch (style) {
 			case 'compact': {
 				// Short labels
-				const shortLabels: Record<$TimeUnit, string> = {
+				const shortLabels: $Record<$TimeUnit, string> = {
 					nanosecond: 'ns',
 					microsecond: 'µs',
 					millisecond: 'ms',

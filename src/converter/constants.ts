@@ -1,4 +1,4 @@
-export const UNIT_MAP = /* @__PURE__ */ Object.freeze({
+export const UNITS = /* @__PURE__ */ Object.freeze({
 	time: [
 		'nanosecond',
 		'microsecond',

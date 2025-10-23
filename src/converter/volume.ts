@@ -1,5 +1,6 @@
+import type { $Record } from '../object/types';
 import { $BaseConverter } from './base';
-import { UNIT_MAP } from './constants';
+import { UNITS } from './constants';
 import type { $VolumeUnit, ConverterFormatOptions } from './types';
 
 /**
@@ -7,7 +8,7 @@ import type { $VolumeUnit, ConverterFormatOptions } from './types';
  * @description Volume unit conversions with smart `.to()`, `.formatTo()`, and `.toAll()`.
  */
 export class $Volume extends $BaseConverter<$VolumeUnit> {
-	static #factors: Record<$VolumeUnit, number> = {
+	static #factors: $Record<$VolumeUnit, number> = {
 		'cubic-millimeter': 1e-9,
 		'cubic-centimeter': 1e-6,
 		'cubic-meter': 1,
@@ -36,10 +37,10 @@ export class $Volume extends $BaseConverter<$VolumeUnit> {
 		return base / $Volume.#factors[target];
 	}
 
-	toAll(): Record<$VolumeUnit, number> {
+	toAll(): $Record<$VolumeUnit, number> {
 		const base = this.toCubicMeters();
-		const result = {} as { [K in $VolumeUnit]: number };
-		for (const unit of UNIT_MAP.volume) {
+		const result = {} as $Record<$VolumeUnit, number>;
+		for (const unit of UNITS.volume) {
 			result[unit] = base / $Volume.#factors[unit];
 		}
 		return result;
@@ -52,7 +53,7 @@ export class $Volume extends $BaseConverter<$VolumeUnit> {
 
 		switch (style) {
 			case 'compact': {
-				const shortLabels: Record<$VolumeUnit, string> = {
+				const shortLabels: $Record<$VolumeUnit, string> = {
 					'cubic-millimeter': 'mm³',
 					'cubic-centimeter': 'cm³',
 					'cubic-meter': 'm³',
