@@ -60,6 +60,7 @@ export {
 } from './string/utilities';
 
 // ! Converter Classes and Their Combined Factory Function
+export { $Area as AreaConverter } from './converter/area';
 export { $Data as DataConverter } from './converter/data';
 export { $Length as LengthConverter } from './converter/length';
 export { $Temperature as TemperatureConverter } from './converter/temp';

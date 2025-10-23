@@ -1,11 +1,22 @@
 import type { Numeric } from '../types/index';
+import { $Area } from './area';
 import { $BaseConverter } from './base';
 import { UNIT_MAP } from './constants';
 import { $Data } from './data';
 import { $Length } from './length';
 import { $Temperature } from './temp';
 import { $Time } from './time';
-import type { Category, Converted, Unit, UnitMap } from './types';
+import type {
+	$AreaUnit,
+	$DataUnit,
+	$LengthUnit,
+	$TempUnit,
+	$TimeUnit,
+	$Unit,
+	Category,
+	Converted,
+	UnitMap,
+} from './types';
 
 /**
  * * Factory function that returns appropriate converter instance
@@ -13,7 +24,7 @@ import type { Category, Converted, Unit, UnitMap } from './types';
  * @description Converts values between compatible units (time, length, data, temp).
  * The returned instance exposes only methods relevant to the provided unit type.
  */
-export function Converter<U extends Unit>(value: Numeric, unit?: U): Converted<U> {
+export function Converter<U extends $Unit>(value: Numeric, unit?: U): Converted<U> {
 	const category = ((): Category | undefined => {
 		if (unit) {
 			for (const [category, values] of Object.entries(UNIT_MAP)) {
@@ -25,14 +36,16 @@ export function Converter<U extends Unit>(value: Numeric, unit?: U): Converted<U
 	})();
 
 	switch (category) {
+		case 'area':
+			return new $Area(value, unit as $AreaUnit) as Converted<U>;
 		case 'time':
-			return new $Time(value, unit as UnitMap['time']) as Converted<U>;
+			return new $Time(value, unit as $TimeUnit) as Converted<U>;
 		case 'data':
-			return new $Data(value, unit as UnitMap['data']) as Converted<U>;
+			return new $Data(value, unit as $DataUnit) as Converted<U>;
 		case 'length':
-			return new $Length(value, unit as UnitMap['length']) as Converted<U>;
+			return new $Length(value, unit as $LengthUnit) as Converted<U>;
 		case 'temp':
-			return new $Temperature(value, unit as UnitMap['temp']) as Converted<U>;
+			return new $Temperature(value, unit as $TempUnit) as Converted<U>;
 		default:
 			return new $BaseConverter(value, unit) as Converted<U>;
 	}

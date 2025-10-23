@@ -1,16 +1,16 @@
 import type { Numeric } from '../types/index';
-import type { Unit } from './types';
+import type { $Unit } from './types';
 
 /**
  * @description Base class providing common mathematical and formatting utilities
  * for all unit converters (time, length, data, temperature, etc.).
  */
-export class $BaseConverter<U extends Unit> {
+export class $BaseConverter<U extends $Unit> {
 	protected readonly value: number;
 	protected readonly unit: U;
 
 	/** * Returns a grammatically correct unit string, prefixed with the number value. */
-	protected withPluralUnit(value?: number, unit?: Unit): string {
+	protected withPluralUnit(value?: number, unit?: $Unit): string {
 		const abs = Math.abs(value ?? this.value);
 		const u = unit ?? this.unit;
 
