@@ -2,7 +2,7 @@ import type { $Record } from '../object/types';
 import type { Numeric } from '../types/index';
 import { $BaseConverter } from './base';
 import { UNITS } from './constants';
-import type { $LengthUnit, ConverterFormatOptions } from './types';
+import type { $LengthUnit, FormatToOptions } from './types';
 
 /**
  * @class LengthConverter
@@ -72,7 +72,7 @@ export class $Length extends $BaseConverter<$LengthUnit> {
 	 * @param options Formatting options.
 	 * @returns Formatted string like "5km", "5.12 miles", or "5e+3 meter".
 	 */
-	formatTo(target: $LengthUnit, options?: ConverterFormatOptions): string {
+	formatTo(target: $LengthUnit, options?: FormatToOptions): string {
 		const value = this.to(target);
 
 		const shortLabels: $Record<$LengthUnit, string> = {

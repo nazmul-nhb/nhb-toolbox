@@ -2,7 +2,7 @@ import type { $Record } from '../object/types';
 import type { Numeric } from '../types/index';
 import { $BaseConverter } from './base';
 import { UNITS } from './constants';
-import type { $DataUnit, ConverterFormatOptions } from './types';
+import type { $DataUnit, FormatToOptions } from './types';
 
 /**
  * @class DataConverter
@@ -70,7 +70,7 @@ export class $Data extends $BaseConverter<$DataUnit> {
 	 * @param options Formatting options.
 	 * @returns Formatted string like "256MB", "256 megabytes", or "2.56e+2 MB".
 	 */
-	formatTo(target: $DataUnit, options?: ConverterFormatOptions): string {
+	formatTo(target: $DataUnit, options?: FormatToOptions): string {
 		const value = this.to(target);
 
 		const shortLabels: $Record<$DataUnit, string> = {

@@ -10,25 +10,28 @@ import type { $Time } from './time';
 import type { $Volume } from './volume';
 
 /** - Type for Record of Units */
-type Units = typeof UNITS;
+type UnitsRecord = typeof UNITS;
 
 /** * Category of units supported by the converter. */
-export type Category = keyof Units;
+export type Category = keyof UnitsRecord;
 
 /** * Map of unit categories to their respective units. */
 export type UnitMap = {
-	[Key in Category]: Units[Key][number];
+	[Key in Category]: UnitsRecord[Key][number];
 };
 
 /** * Union type of all supported units. May include any other strings. */
 export type $Unit = LooseLiteral<UnitMap[Category]>;
+
+/** * Type for array of all Units */
+export type Units = Array<UnitMap[Category]>;
 
 /** * Infer the category of a given unit type `U`. */
 export type InferCategory<U extends $Unit> = {
 	[K in Category]: U extends UnitMap[K] ? K : never;
 }[Category];
 
-/** Infer Units belong to a specific Category */
+/** * Infer Units belong to a specific Category */
 export type CategoryUnits<Cat extends Category> = UnitMap[Cat];
 
 /** * Type for the returned converter instance based on the provided unit `U`. */
@@ -43,8 +46,8 @@ export type Converted<U extends $Unit> =
 	: InferCategory<U> extends 'volume' ? $Volume
 	: $BaseConverter<U>;
 
-/** * Options for formatting converted values. */
-export type ConverterFormatOptions = {
+/** * Options for formatting converted values for unit converter method(s). */
+export type FormatToOptions = {
 	/** Style of formatting. Default is `'plural'`. */
 	style?: 'compact' | 'scientific' | 'plural';
 	/** Number of decimal places to include. Default is `2`. */

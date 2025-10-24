@@ -1,7 +1,7 @@
 import type { Numeric } from '../types/index';
 import type { Tuple } from '../utils/types';
 import { UNITS } from './constants';
-import type { $Unit, Category, CategoryUnits, ConverterFormatOptions } from './types';
+import type { $Unit, Category, CategoryUnits, FormatToOptions, Units } from './types';
 
 /**
  * @description Base class providing common mathematical and formatting utilities
@@ -52,7 +52,7 @@ export class $BaseConverter<Unit extends $Unit> {
 		value: number,
 		target: Unit,
 		shortLabels: Record<Unit, string>,
-		options: ConverterFormatOptions | undefined
+		options: FormatToOptions | undefined
 	): string {
 		const { style = 'plural', decimals = 2 } = options ?? {};
 		const rounded = this.$round(value, decimals);
@@ -214,7 +214,7 @@ export class $BaseConverter<Unit extends $Unit> {
 	 * @instance Returns all supported units.
 	 * @returns Array of supported unit strings.
 	 */
-	supportedUnits(): Array<$Unit>;
+	supportedUnits(): Units;
 
 	/**
 	 * @instance Returns all supported units for a specific category.

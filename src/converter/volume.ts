@@ -2,7 +2,7 @@ import type { $Record } from '../object/types';
 import type { Numeric } from '../types/index';
 import { $BaseConverter } from './base';
 import { UNITS } from './constants';
-import type { $VolumeUnit, ConverterFormatOptions } from './types';
+import type { $VolumeUnit, FormatToOptions } from './types';
 
 /**
  * @class VolumeConverter
@@ -79,7 +79,7 @@ export class $Volume extends $BaseConverter<$VolumeUnit> {
 	 * @param options Formatting options.
 	 * @returns Formatted string like "5m³", "5.25 cubic-meters", or "5e+3 meter".
 	 */
-	formatTo(target: $VolumeUnit, options?: ConverterFormatOptions): string {
+	formatTo(target: $VolumeUnit, options?: FormatToOptions): string {
 		const value = this.to(target);
 
 		const shortLabels: $Record<$VolumeUnit, string> = {

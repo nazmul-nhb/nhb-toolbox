@@ -2,7 +2,7 @@ import type { $Record } from '../object/types';
 import type { Numeric } from '../types/index';
 import { $BaseConverter } from './base';
 import { UNITS } from './constants';
-import type { $MassUnit, ConverterFormatOptions } from './types';
+import type { $MassUnit, FormatToOptions } from './types';
 
 /**
  * @class MassConverter
@@ -68,7 +68,7 @@ export class $Mass extends $BaseConverter<$MassUnit> {
 	 * @param options Formatting options.
 	 * @returns Formatted string like "5kg", "5.25 kilograms", or "5e+3 gram".
 	 */
-	formatTo(target: $MassUnit, options?: ConverterFormatOptions): string {
+	formatTo(target: $MassUnit, options?: FormatToOptions): string {
 		const value = this.to(target);
 
 		const shortLabels: $Record<$MassUnit, string> = {

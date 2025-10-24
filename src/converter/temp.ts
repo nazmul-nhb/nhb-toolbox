@@ -2,7 +2,7 @@ import type { $Record } from '../object/types';
 import type { Numeric } from '../types/index';
 import { $BaseConverter } from './base';
 import { UNITS } from './constants';
-import type { $TempUnit, ConverterFormatOptions } from './types';
+import type { $TempUnit, FormatToOptions } from './types';
 
 /**
  * @class TemperatureConverter
@@ -78,7 +78,7 @@ export class $Temperature extends $BaseConverter<$TempUnit> {
 	 * @param options Formatting options.
 	 * @returns Formatted string like "95°F", "5.25 kelvins", or "5e+3 celsius".
 	 */
-	formatTo(target: $TempUnit, options?: ConverterFormatOptions): string {
+	formatTo(target: $TempUnit, options?: FormatToOptions): string {
 		const value = this.to(target);
 
 		const shortLabels: $Record<$TempUnit, string> = {

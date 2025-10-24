@@ -315,7 +315,7 @@ export type $UTCOffset = `${PositiveUTCHour | NegativeUTCHour}:${UTCMinute}`;
 /** UTC offset in `UTC±HH:mm` format */
 export type UTCOffSet = `UTC${$UTCOffset}`;
 
-/** Chronos Date Format options */
+/** `Chronos` Date Format options */
 export interface FormatOptions {
 	/** - The desired format (Default format is dd, `MMM DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55). */
 	format?: string;

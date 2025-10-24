@@ -2,7 +2,7 @@ import type { $Record } from '../object/types';
 import type { Numeric } from '../types/index';
 import { $BaseConverter } from './base';
 import { UNITS } from './constants';
-import type { $TimeUnit, ConverterFormatOptions } from './types';
+import type { $TimeUnit, FormatToOptions } from './types';
 
 /**
  * @class TimeConverter
@@ -71,7 +71,7 @@ export class $Time extends $BaseConverter<$TimeUnit> {
 	 * @param options Formatting options.
 	 * @returns Formatted string like "5h", "5.25 hours", or "5e+3 minute".
 	 */
-	formatTo(target: $TimeUnit, options?: ConverterFormatOptions): string {
+	formatTo(target: $TimeUnit, options?: FormatToOptions): string {
 		const value = this.to(target);
 
 		const shortLabels: $Record<$TimeUnit, string> = {

@@ -2,7 +2,7 @@ import type { $Record } from '../object/types';
 import type { Numeric } from '../types/index';
 import { $BaseConverter } from './base';
 import { UNITS } from './constants';
-import type { $AreaUnit, ConverterFormatOptions } from './types';
+import type { $AreaUnit, FormatToOptions } from './types';
 
 /**
  * @class AreaConverter
@@ -72,7 +72,7 @@ export class $Area extends $BaseConverter<$AreaUnit> {
 	 * @param options Formatting options.
 	 * @returns Formatted string like "5km²", "5.02 square-miles", or "5e+3 meter".
 	 */
-	formatTo(target: $AreaUnit, options?: ConverterFormatOptions): string {
+	formatTo(target: $AreaUnit, options?: FormatToOptions): string {
 		const value = this.to(target);
 
 		const shortLabels: $Record<$AreaUnit, string> = {
