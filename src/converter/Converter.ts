@@ -59,10 +59,13 @@ export function Converter<U extends $Unit>(value: Numeric, unit?: U): Converted<
 	}
 }
 
-export { $Area as AreaConverter } from './area';
-export { $Data as DataConverter } from './data';
-export { $Length as LengthConverter } from './length';
-export { $Mass as MassConverter } from './mass';
-export { $Temperature as TemperatureConverter } from './temp';
-export { $Time as TimeConverter } from './time';
-export { $Volume as VolumeConverter } from './volume';
+export {
+	$Area as AreaConverter,
+	Converter as converter,
+	$Data as DataConverter,
+	$Length as LengthConverter,
+	$Mass as MassConverter,
+	$Temperature as TemperatureConverter,
+	$Time as TimeConverter,
+	$Volume as VolumeConverter,
+};

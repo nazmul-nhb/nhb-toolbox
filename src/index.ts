@@ -60,15 +60,17 @@ export {
 } from './string/utilities';
 
 // ! Converter Classes and Their Combined Factory Function
-export { $Area as AreaConverter } from './converter/area';
-export { $Data as DataConverter } from './converter/data';
-export { $Length as LengthConverter } from './converter/length';
-export { $Mass as MassConverter } from './converter/mass';
-export { $Temperature as TemperatureConverter } from './converter/temp';
-export { $Time as TimeConverter } from './converter/time';
-export { $Volume as VolumeConverter } from './converter/volume';
-
-export { Converter, Converter as converter } from './converter/Converter';
+export {
+	AreaConverter,
+	Converter,
+	converter,
+	DataConverter,
+	LengthConverter,
+	MassConverter,
+	TemperatureConverter,
+	TimeConverter,
+	VolumeConverter,
+} from './converter/Converter';
 
 // ! Pluralizer Class and Its Default Instance
 export { Pluralizer, pluralizer } from './pluralizer/Pluralizer';
