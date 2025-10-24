@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.23.10] - 2025-10-24
+
+- **Added** `metre` variants of units where needed in *converter classes*.
+- **Updated & Optimized** subpath exports for *converter classes* and functions.
+
 ## [4.23.1] - 2025-10-24
 
 - **Exported** *all the converter classes* from the `nhb-toolbox/converter` sub-path too.
