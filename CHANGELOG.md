@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.23.20] - 2025-10-25
+
+- **Fixed** *return type* for `supportedUnits()` *converter method*.
+- **Added** *new package subpath* for `Color` class: `nhb-toolbox/color`.
+
 ## [4.23.11] - 2025-10-24
 
 - **Added** new base method `supportedUnits()` to get an *array/tuple of supported unit names*.

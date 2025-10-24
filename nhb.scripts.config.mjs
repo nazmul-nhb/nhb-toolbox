@@ -49,6 +49,11 @@ export default defineScriptConfig({
 							import: './dist/esm/date/Chronos.js',
 							require: './dist/cjs/date/Chronos.js',
 						},
+						'./color': {
+							types: './dist/dts/colors/Color.d.ts',
+							import: './dist/esm/colors/Color.js',
+							require: './dist/cjs/colors/Color.js',
+						},
 						'./converter': {
 							types: './dist/dts/converter/Converter.d.ts',
 							import: './dist/esm/converter/Converter.js',
@@ -84,7 +89,14 @@ export default defineScriptConfig({
 	},
 	count: {
 		defaultPath: 'src/index.ts',
-		excludePaths: ['node_modules', 'dist', '__tests__', 'coverage'],
+		excludePaths: [
+			'node_modules',
+			'coverage',
+			'dist',
+			'__tests__',
+			'__ideas__',
+			'__dump__',
+		],
 	},
 	module: {
 		force: false,

@@ -1,6 +1,6 @@
 {
   "name": "nhb-toolbox",
-  "version": "4.23.11",
+  "version": "4.23.20",
   "description": "A versatile collection of smart, efficient, and reusable utility functions, classes and types for everyday development needs.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -141,6 +141,11 @@
       "import": "./dist/esm/date/Chronos.js",
       "require": "./dist/cjs/date/Chronos.js"
     },
+    "./color": {
+      "types": "./dist/dts/colors/Color.d.ts",
+      "import": "./dist/esm/colors/Color.js",
+      "require": "./dist/cjs/colors/Color.js"
+    },
     "./converter": {
       "types": "./dist/dts/converter/Converter.d.ts",
       "import": "./dist/esm/converter/Converter.js",
@@ -275,6 +280,9 @@
       ],
       "chronos": [
         "dist/dts/date/Chronos.d.ts"
+      ],
+      "color": [
+        "dist/dts/colors/Color.d.ts"
       ],
       "converter": [
         "dist/dts/converter/Converter.d.ts"
