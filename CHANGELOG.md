@@ -6,10 +6,16 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.23.11] - 2025-10-24
+
+- **Added** new base method `supportedUnits()` to get an *array/tuple of supported unit names*.
+- **Fixed** *precision issues* in several *conversion factors* across *converter classes*.
+- **Optimized** the `formatTo()` method for improved *performance*.
+
 ## [4.23.10] - 2025-10-24
 
 - **Added** `metre` variants of units where needed in *converter classes*.
-- **Updated & Optimized** subpath exports for *converter classes* and functions.
+- **Updated & Optimized** subpath exports for *converter classes* and *functions*.
 
 ## [4.23.1] - 2025-10-24
 

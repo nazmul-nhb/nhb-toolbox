@@ -72,31 +72,22 @@ export class $Data extends $BaseConverter<$DataUnit> {
 	 */
 	formatTo(target: $DataUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);
-		const { style = 'plural', decimals = 2 } = options ?? {};
-		const rounded = this.$round(value, decimals);
 
-		switch (style) {
-			case 'compact': {
-				const shortLabels: $Record<$DataUnit, string> = {
-					bit: 'b',
-					byte: 'B',
-					kilobit: 'Kb',
-					kilobyte: 'KB',
-					megabit: 'Mb',
-					megabyte: 'MB',
-					gigabit: 'Gb',
-					gigabyte: 'GB',
-					terabit: 'Tb',
-					terabyte: 'TB',
-					petabit: 'Pb',
-					petabyte: 'PB',
-				};
-				return `${rounded}${shortLabels[target]}`;
-			}
-			case 'scientific':
-				return `${value.toExponential(decimals)} ${target}`;
-			default:
-				return this.$withPluralUnit(rounded, target);
-		}
+		const shortLabels: $Record<$DataUnit, string> = {
+			bit: 'b',
+			byte: 'B',
+			kilobit: 'Kb',
+			kilobyte: 'KB',
+			megabit: 'Mb',
+			megabyte: 'MB',
+			gigabit: 'Gb',
+			gigabyte: 'GB',
+			terabit: 'Tb',
+			terabyte: 'TB',
+			petabit: 'Pb',
+			petabyte: 'PB',
+		};
+
+		return this.$formatTo(value, target, shortLabels, options);
 	}
 }

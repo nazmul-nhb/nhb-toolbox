@@ -24,7 +24,7 @@ export class $Length extends $BaseConverter<$LengthUnit> {
 		yard: 0.9144,
 		mile: 1609.344,
 		'nautical-mile': 1852,
-		'light-year': 9.4607e15,
+		'light-year': 9.4607_3047_25808e15,
 	};
 
 	/**
@@ -74,33 +74,24 @@ export class $Length extends $BaseConverter<$LengthUnit> {
 	 */
 	formatTo(target: $LengthUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);
-		const { style = 'plural', decimals = 2 } = options ?? {};
-		const rounded = this.$round(value, decimals);
 
-		switch (style) {
-			case 'compact': {
-				const shortLabels: $Record<$LengthUnit, string> = {
-					millimeter: 'mm',
-					centimeter: 'cm',
-					meter: 'm',
-					kilometer: 'km',
-					millimetre: 'mm',
-					centimetre: 'cm',
-					metre: 'm',
-					kilometre: 'km',
-					inch: 'in',
-					foot: 'ft',
-					yard: 'yd',
-					mile: 'mi',
-					'nautical-mile': 'nmi',
-					'light-year': 'ly',
-				};
-				return `${rounded}${shortLabels[target]}`;
-			}
-			case 'scientific':
-				return `${value.toExponential(decimals)} ${target}`;
-			default:
-				return this.$withPluralUnit(rounded, target);
-		}
+		const shortLabels: $Record<$LengthUnit, string> = {
+			millimeter: 'mm',
+			centimeter: 'cm',
+			meter: 'm',
+			kilometer: 'km',
+			millimetre: 'mm',
+			centimetre: 'cm',
+			metre: 'm',
+			kilometre: 'km',
+			inch: 'in',
+			foot: 'ft',
+			yard: 'yd',
+			mile: 'mi',
+			'nautical-mile': 'nmi',
+			'light-year': 'ly',
+		};
+
+		return this.$formatTo(value, target, shortLabels, options);
 	}
 }

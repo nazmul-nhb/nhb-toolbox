@@ -16,11 +16,11 @@ export class $Mass extends $BaseConverter<$MassUnit> {
 		gram: 0.001,
 		kilogram: 1,
 		tonne: 1000,
-		ounce: 0.0283495,
-		pound: 0.453592,
-		stone: 6.35029,
-		'short-ton': 907.185,
-		'long-ton': 1016.05,
+		ounce: 0.028349523125,
+		pound: 0.45359237,
+		stone: 6.35029318,
+		'short-ton': 907.18474,
+		'long-ton': 1016.0469088,
 	};
 
 	/**
@@ -70,31 +70,20 @@ export class $Mass extends $BaseConverter<$MassUnit> {
 	 */
 	formatTo(target: $MassUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);
-		const { style = 'plural', decimals = 2 } = options ?? {};
-		const rounded = this.$round(value, decimals);
 
-		switch (style) {
-			case 'compact': {
-				const shortLabels: $Record<$MassUnit, string> = {
-					microgram: 'µg',
-					milligram: 'mg',
-					gram: 'g',
-					kilogram: 'kg',
-					tonne: 't',
-					ounce: 'oz',
-					pound: 'lb',
-					stone: 'st',
-					'short-ton': 't (US)',
-					'long-ton': 't (UK)',
-				};
-				return `${rounded}${shortLabels[target]}`;
-			}
+		const shortLabels: $Record<$MassUnit, string> = {
+			microgram: 'µg',
+			milligram: 'mg',
+			gram: 'g',
+			kilogram: 'kg',
+			tonne: 't',
+			ounce: 'oz',
+			pound: 'lb',
+			stone: 'st',
+			'short-ton': 't (US)',
+			'long-ton': 't (UK)',
+		};
 
-			case 'scientific':
-				return `${value.toExponential(decimals)} ${target}`;
-
-			default:
-				return this.$withPluralUnit(rounded, target);
-		}
+		return this.$formatTo(value, target, shortLabels, options);
 	}
 }

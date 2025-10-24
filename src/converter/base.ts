@@ -1,25 +1,27 @@
 import type { Numeric } from '../types/index';
-import type { $Unit } from './types';
+import type { Tuple } from '../utils/types';
+import { UNITS } from './constants';
+import type { $Unit, Category, CategoryUnits, ConverterFormatOptions } from './types';
 
 /**
  * @description Base class providing common mathematical and formatting utilities
  * for all unit converters (time, length, data, temperature, etc.).
  */
-export class $BaseConverter<U extends $Unit> {
+export class $BaseConverter<Unit extends $Unit> {
 	protected readonly value: number;
-	protected readonly unit: U;
+	protected readonly unit: Unit;
 
 	/**
 	 * Convert value to other units
 	 * @param value Number or numeric string value to convert.
 	 * @param unit Optional base unit for the provided value.
 	 */
-	constructor(value: Numeric, unit?: U) {
+	constructor(value: Numeric, unit?: Unit) {
 		this.value = Number(value);
-		this.unit = unit ?? ('' as U);
+		this.unit = unit ?? ('' as Unit);
 	}
 
-	/** * Returns a grammatically correct unit string, prefixed with the number value. */
+	/** @protected Returns a grammatically correct unit string, prefixed with the number value. */
 	protected $withPluralUnit(value?: number, unit?: $Unit): string {
 		const abs = Math.abs(value ?? this.value);
 		const u = unit ?? this.unit;
@@ -32,10 +34,37 @@ export class $BaseConverter<U extends $Unit> {
 		return `${abs} ${pluralized}`.trim();
 	}
 
-	/** * Rounds a numeric value to given decimal places. */
+	/** @protected Rounds a numeric value to given decimal places. */
 	protected $round(value: number, decimals = 2): number {
 		const factor = 10 ** decimals;
 		return Math.round(value * factor) / factor;
+	}
+
+	/**
+	 * @protected Shared formatter for all converters.
+	 * @param value Converted value (already computed via `.to(target)`).
+	 * @param target Target unit name.
+	 * @param shortLabels Record of compact unit labels.
+	 * @param options Formatting options.
+	 * @returns Formatted string according to style (compact, plural, scientific).
+	 */
+	protected $formatTo(
+		value: number,
+		target: Unit,
+		shortLabels: Record<Unit, string>,
+		options: ConverterFormatOptions | undefined
+	): string {
+		const { style = 'plural', decimals = 2 } = options ?? {};
+		const rounded = this.$round(value, decimals);
+
+		switch (style) {
+			case 'compact':
+				return `${rounded}${shortLabels[target]}`;
+			case 'scientific':
+				return `${value.toExponential(decimals)} ${target}`;
+			default:
+				return this.$withPluralUnit(rounded, target);
+		}
 	}
 
 	/**
@@ -58,8 +87,8 @@ export class $BaseConverter<U extends $Unit> {
 	 * @instance Returns the unit name.
 	 * @returns The current unit.
 	 */
-	getUnit(): U {
-		return this.unit || ('unknown' as U);
+	getUnit(): Unit {
+		return this.unit || ('unknown' as Unit);
 	}
 
 	/**
@@ -79,8 +108,8 @@ export class $BaseConverter<U extends $Unit> {
 	 * @instance Returns a plain object representation.
 	 * @returns An object with value and unit.
 	 */
-	toObject(): { value: number; unit: U } {
-		return { value: this.value, unit: this.unit || ('unknown' as U) };
+	toObject(): { value: number; unit: Unit } {
+		return { value: this.value, unit: this.unit || ('unknown' as Unit) };
 	}
 
 	/**
@@ -95,7 +124,7 @@ export class $BaseConverter<U extends $Unit> {
 	 * @instance Returns a new instance with the absolute value.
 	 */
 	abs(): this {
-		return new (this.constructor as new (v: number, u: U) => this)(
+		return new (this.constructor as new (v: number, u: Unit) => this)(
 			Math.abs(this.value),
 			this.unit
 		);
@@ -106,7 +135,7 @@ export class $BaseConverter<U extends $Unit> {
 	 * @returns A new instance with updated value.
 	 */
 	add(n: Numeric): this {
-		return new (this.constructor as new (v: number, u: U) => this)(
+		return new (this.constructor as new (v: number, u: Unit) => this)(
 			this.value + Number(n),
 			this.unit
 		);
@@ -117,7 +146,7 @@ export class $BaseConverter<U extends $Unit> {
 	 * @returns A new instance with updated value.
 	 */
 	subtract(n: Numeric): this {
-		return new (this.constructor as new (v: number, u: U) => this)(
+		return new (this.constructor as new (v: number, u: Unit) => this)(
 			this.value - Number(n),
 			this.unit
 		);
@@ -128,7 +157,7 @@ export class $BaseConverter<U extends $Unit> {
 	 * @returns A new instance with updated value.
 	 */
 	multiply(n: Numeric): this {
-		return new (this.constructor as new (v: number, u: U) => this)(
+		return new (this.constructor as new (v: number, u: Unit) => this)(
 			this.value * Number(n),
 			this.unit
 		);
@@ -139,7 +168,7 @@ export class $BaseConverter<U extends $Unit> {
 	 * @returns A new instance with updated value.
 	 */
 	divide(n: Numeric): this {
-		return new (this.constructor as new (v: number, u: U) => this)(
+		return new (this.constructor as new (v: number, u: Unit) => this)(
 			this.value / Number(n),
 			this.unit
 		);
@@ -152,7 +181,7 @@ export class $BaseConverter<U extends $Unit> {
 	 */
 	round(decimals = 0): this {
 		const rounded = this.$round(this.value, decimals);
-		return new (this.constructor as new (v: number, u: U) => this)(rounded, this.unit);
+		return new (this.constructor as new (v: number, u: Unit) => this)(rounded, this.unit);
 	}
 
 	/** * @instance Returns whether this value is greater than another numeric value. */
@@ -179,5 +208,31 @@ export class $BaseConverter<U extends $Unit> {
 	 */
 	format(decimals = 2): string {
 		return this.$withPluralUnit(this.$round(this.value, decimals));
+	}
+
+	/**
+	 * @instance Returns all supported units.
+	 * @returns Array of supported unit strings.
+	 */
+	supportedUnits(): Array<$Unit>;
+
+	/**
+	 * @instance Returns all supported units for a specific category.
+	 * @param category Category to filter units by.
+	 * @returns Tuple of supported units for the specified category.
+	 */
+	supportedUnits<Cat extends Category>(category: Cat): Tuple<CategoryUnits<Cat>>;
+
+	/**
+	 * @instance Returns all supported units, optionally filtered by category.
+	 * @param category Category to filter units by.
+	 * @returns Array or tuple of supported unit strings.
+	 */
+	supportedUnits<Cat extends Category>(category?: Cat) {
+		if (category && category in UNITS) {
+			return [...UNITS[category]];
+		}
+
+		return Object.values(UNITS).flat();
 	}
 }

@@ -73,34 +73,23 @@ export class $Time extends $BaseConverter<$TimeUnit> {
 	 */
 	formatTo(target: $TimeUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);
-		const { style = 'plural', decimals = 2 } = options ?? {};
-		const rounded = this.$round(value, decimals);
 
-		switch (style) {
-			case 'compact': {
-				const shortLabels: $Record<$TimeUnit, string> = {
-					nanosecond: 'ns',
-					microsecond: 'µs',
-					millisecond: 'ms',
-					second: 's',
-					minute: 'min',
-					hour: 'h',
-					day: 'd',
-					week: 'wk',
-					month: 'mo',
-					year: 'yr',
-					decade: 'dec',
-					century: 'cen',
-					millennium: 'mil',
-				};
-				return `${rounded}${shortLabels[target]}`;
-			}
+		const shortLabels: $Record<$TimeUnit, string> = {
+			nanosecond: 'ns',
+			microsecond: 'µs',
+			millisecond: 'ms',
+			second: 's',
+			minute: 'min',
+			hour: 'h',
+			day: 'd',
+			week: 'wk',
+			month: 'mo',
+			year: 'yr',
+			decade: 'dec',
+			century: 'cen',
+			millennium: 'mil',
+		};
 
-			case 'scientific':
-				return `${value.toExponential(decimals)} ${target}`;
-
-			default:
-				return this.$withPluralUnit(rounded, target);
-		}
+		return this.$formatTo(value, target, shortLabels, options);
 	}
 }

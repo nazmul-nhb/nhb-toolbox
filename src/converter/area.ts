@@ -9,7 +9,7 @@ import type { $AreaUnit, ConverterFormatOptions } from './types';
  * @description Handles conversions with smart `.to()`, `.toAll()`, and `.formatTo()`.
  */
 export class $Area extends $BaseConverter<$AreaUnit> {
-	/** * Conversion factors based on meters. */
+	/** * Conversion factors based on square-meters. */
 	static #factors: $Record<$AreaUnit, number> = {
 		'square-millimeter': 1e-6,
 		'square-centimeter': 1e-4,
@@ -20,11 +20,11 @@ export class $Area extends $BaseConverter<$AreaUnit> {
 		'square-metre': 1,
 		'square-kilometre': 1e6,
 		'square-inch': 0.00064516,
-		'square-foot': 0.092903,
-		'square-yard': 0.836127,
-		'square-mile': 2.59e6,
+		'square-foot': 0.09290304,
+		'square-yard': 0.83612736,
+		'square-mile': 2_589_988.110336,
 		hectare: 1e4,
-		acre: 4046.856,
+		acre: 4_046.8564224,
 	};
 
 	/**
@@ -74,33 +74,24 @@ export class $Area extends $BaseConverter<$AreaUnit> {
 	 */
 	formatTo(target: $AreaUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);
-		const { style = 'plural', decimals = 2 } = options ?? {};
-		const rounded = this.$round(value, decimals);
 
-		switch (style) {
-			case 'compact': {
-				const shortLabels: $Record<$AreaUnit, string> = {
-					'square-millimeter': 'mm²',
-					'square-centimeter': 'cm²',
-					'square-meter': 'm²',
-					'square-kilometer': 'km²',
-					'square-millimetre': 'mm²',
-					'square-centimetre': 'cm²',
-					'square-metre': 'm²',
-					'square-kilometre': 'km²',
-					'square-inch': 'in²',
-					'square-foot': 'ft²',
-					'square-yard': 'yd²',
-					'square-mile': 'mi²',
-					hectare: 'ha',
-					acre: 'ac',
-				};
-				return `${rounded}${shortLabels[target]}`;
-			}
-			case 'scientific':
-				return `${value.toExponential(decimals)} ${target}`;
-			default:
-				return this.$withPluralUnit(rounded, target);
-		}
+		const shortLabels: $Record<$AreaUnit, string> = {
+			'square-millimeter': 'mm²',
+			'square-centimeter': 'cm²',
+			'square-meter': 'm²',
+			'square-kilometer': 'km²',
+			'square-millimetre': 'mm²',
+			'square-centimetre': 'cm²',
+			'square-metre': 'm²',
+			'square-kilometre': 'km²',
+			'square-inch': 'in²',
+			'square-foot': 'ft²',
+			'square-yard': 'yd²',
+			'square-mile': 'mi²',
+			hectare: 'ha',
+			acre: 'ac',
+		};
+
+		return this.$formatTo(value, target, shortLabels, options);
 	}
 }

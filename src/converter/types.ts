@@ -28,6 +28,9 @@ export type InferCategory<U extends $Unit> = {
 	[K in Category]: U extends UnitMap[K] ? K : never;
 }[Category];
 
+/** Infer Units belong to a specific Category */
+export type CategoryUnits<Cat extends Category> = UnitMap[Cat];
+
 /** * Type for the returned converter instance based on the provided unit `U`. */
 export type Converted<U extends $Unit> =
 	InferCategory<U> extends never ? $BaseConverter<U>

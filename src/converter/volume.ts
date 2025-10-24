@@ -19,19 +19,19 @@ export class $Volume extends $BaseConverter<$VolumeUnit> {
 		'cubic-centimetre': 1e-6,
 		'cubic-metre': 1,
 		'cubic-kilometre': 1e9,
-		'cubic-inch': 1.6387e-5,
-		'cubic-foot': 0.0283168,
-		'cubic-yard': 0.764555,
+		'cubic-inch': 0.000016387064,
+		'cubic-foot': 0.028316846592,
+		'cubic-yard': 0.764554857984,
 		liter: 0.001,
 		litre: 0.001,
 		milliliter: 1e-6,
 		millilitre: 1e-6,
-		gallon: 0.00378541,
-		quart: 0.000946353,
-		pint: 0.000473176,
-		cup: 0.000236588,
-		tablespoon: 1.47868e-5,
-		teaspoon: 4.92892e-6,
+		gallon: 0.003785411784,
+		quart: 0.000946352946,
+		pint: 0.000473176473,
+		cup: 0.0002365882365,
+		tablespoon: 0.00001478676478125,
+		teaspoon: 0.00000492892159375,
 	};
 
 	/**
@@ -81,40 +81,31 @@ export class $Volume extends $BaseConverter<$VolumeUnit> {
 	 */
 	formatTo(target: $VolumeUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);
-		const { style = 'plural', decimals = 2 } = options ?? {};
-		const rounded = this.$round(value, decimals);
 
-		switch (style) {
-			case 'compact': {
-				const shortLabels: $Record<$VolumeUnit, string> = {
-					'cubic-millimeter': 'mm³',
-					'cubic-centimeter': 'cm³',
-					'cubic-meter': 'm³',
-					'cubic-kilometer': 'km³',
-					'cubic-millimetre': 'mm³',
-					'cubic-centimetre': 'cm³',
-					'cubic-metre': 'm³',
-					'cubic-kilometre': 'km³',
-					'cubic-inch': 'in³',
-					'cubic-foot': 'ft³',
-					'cubic-yard': 'yd³',
-					liter: 'L',
-					litre: 'L',
-					milliliter: 'mL',
-					millilitre: 'mL',
-					gallon: 'gal',
-					quart: 'qt',
-					pint: 'pt',
-					cup: 'c',
-					tablespoon: 'tbsp',
-					teaspoon: 'tsp',
-				};
-				return `${rounded}${shortLabels[target]}`;
-			}
-			case 'scientific':
-				return `${value.toExponential(decimals)} ${target}`;
-			default:
-				return this.$withPluralUnit(rounded, target);
-		}
+		const shortLabels: $Record<$VolumeUnit, string> = {
+			'cubic-millimeter': 'mm³',
+			'cubic-centimeter': 'cm³',
+			'cubic-meter': 'm³',
+			'cubic-kilometer': 'km³',
+			'cubic-millimetre': 'mm³',
+			'cubic-centimetre': 'cm³',
+			'cubic-metre': 'm³',
+			'cubic-kilometre': 'km³',
+			'cubic-inch': 'in³',
+			'cubic-foot': 'ft³',
+			'cubic-yard': 'yd³',
+			liter: 'L',
+			litre: 'L',
+			milliliter: 'mL',
+			millilitre: 'mL',
+			gallon: 'gal',
+			quart: 'qt',
+			pint: 'pt',
+			cup: 'c',
+			tablespoon: 'tbsp',
+			teaspoon: 'tsp',
+		};
+
+		return this.$formatTo(value, target, shortLabels, options);
 	}
 }

@@ -80,22 +80,13 @@ export class $Temperature extends $BaseConverter<$TempUnit> {
 	 */
 	formatTo(target: $TempUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);
-		const { style = 'plural', decimals = 2 } = options ?? {};
-		const rounded = this.$round(value, decimals);
 
-		switch (style) {
-			case 'compact': {
-				const shortLabels: $Record<$TempUnit, string> = {
-					celsius: '°C',
-					fahrenheit: '°F',
-					kelvin: 'K',
-				};
-				return `${rounded}${shortLabels[target]}`;
-			}
-			case 'scientific':
-				return `${value.toExponential(decimals)} ${target}`;
-			default:
-				return this.$withPluralUnit(rounded, target);
-		}
+		const shortLabels: $Record<$TempUnit, string> = {
+			celsius: '°C',
+			fahrenheit: '°F',
+			kelvin: 'K',
+		};
+
+		return this.$formatTo(value, target, shortLabels, options);
 	}
 }
