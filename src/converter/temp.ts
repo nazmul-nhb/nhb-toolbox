@@ -76,7 +76,7 @@ export class $Temperature extends $BaseConverter<$TempUnit> {
 	 * @instance Formats the converted value and unit.
 	 * @param target Target unit to format to.
 	 * @param options Formatting options.
-	 * @returns Formatted string like "5°F", "5.25 kelvins", or "5e+3 celsius".
+	 * @returns Formatted string like "95°F", "5.25 kelvins", or "5e+3 celsius".
 	 */
 	formatTo(target: $TempUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);

@@ -64,7 +64,12 @@ export class $BaseConverter<U extends $Unit> {
 
 	/**
 	 * @instance Returns the original value with formatted pluralized unit.
-	 * @returns A string like "3 hours" or "1 minute".
+	 * @returns A string like `"3 hours"` or `"1 minute"` or `"3"` if no unit is provided.
+	 *
+	 * @remarks
+	 * - This method is automatically called when the instance is used in a string context.
+	 * - For complex and versatile pluralization, please refer to {@link https://toolbox.nazmul-nhb.dev/docs/utilities/string/pluralizer pluralizer} or {@link https://toolbox.nazmul-nhb.dev/docs/classes/Pluralizer Pluralizer Class} instead.
+
 	 */
 	toString(): string {
 		return this.$withPluralUnit();
@@ -166,11 +171,13 @@ export class $BaseConverter<U extends $Unit> {
 	}
 
 	/**
-	 * @instance Returns a human-friendly formatted string with fixed decimals.
-	 * @param decimals Number of decimal places.
-	 * @returns Formatted string.
+	 * @instance Returns a human-friendly formatted string with fixed decimals (if the value is fraction).
+	 * @param decimals Number of decimal places for fractional value.
+	 * @returns Formatted string with proper unit pluralization.
+	 *
+	 * @remarks For complex and versatile pluralization, please refer to {@link https://toolbox.nazmul-nhb.dev/docs/utilities/string/pluralizer pluralizer} or {@link https://toolbox.nazmul-nhb.dev/docs/classes/Pluralizer Pluralizer Class} instead.
 	 */
 	format(decimals = 2): string {
-		return `${this.$round(this.value, decimals)} ${this.unit}`;
+		return this.$withPluralUnit(this.$round(this.value, decimals));
 	}
 }

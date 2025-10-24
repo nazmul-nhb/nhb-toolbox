@@ -77,7 +77,7 @@ export class $Volume extends $BaseConverter<$VolumeUnit> {
 	 * @instance Formats the converted value and unit.
 	 * @param target Target unit to format to.
 	 * @param options Formatting options.
-	 * @returns Formatted string like "5hm³", "5.25 cubic-meters", or "5e+3 meter".
+	 * @returns Formatted string like "5m³", "5.25 cubic-meters", or "5e+3 meter".
 	 */
 	formatTo(target: $VolumeUnit, options?: ConverterFormatOptions): string {
 		const value = this.to(target);

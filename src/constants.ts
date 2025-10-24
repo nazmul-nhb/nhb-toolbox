@@ -34,6 +34,8 @@ export {
 
 export { LOWERCASE as LOWERCASED_WORDS } from './string/constants';
 
+export { UNITS } from './converter/constants';
+
 export { COUNTRIES } from './object/countries';
 
 export {
