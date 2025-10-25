@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.23.21] - 2025-10-25
+
+- **Fixed** *return type* (now maintains *proper order* in the *tuple*) for `supportedUnits()` *converter method*.
+
 ## [4.23.20] - 2025-10-25
 
 - **Fixed** *return type* for `supportedUnits()` *converter method*.
