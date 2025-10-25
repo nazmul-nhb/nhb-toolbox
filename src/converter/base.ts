@@ -27,8 +27,11 @@ export class $BaseConverter<Unit extends $Unit> {
 
 		const pluralized =
 			abs <= 1 ? u
-			: u ? `${u}s`
-			: '';
+			: u ?
+				u?.endsWith('foot') ?
+					'feet'
+				:	`${u}s`
+			:	'';
 
 		return `${abs} ${pluralized}`.trim();
 	}
@@ -97,7 +100,6 @@ export class $BaseConverter<Unit extends $Unit> {
 	 * @remarks
 	 * - This method is automatically called when the instance is used in a string context.
 	 * - For complex and versatile pluralization, please refer to {@link https://toolbox.nazmul-nhb.dev/docs/utilities/string/pluralizer pluralizer} or {@link https://toolbox.nazmul-nhb.dev/docs/classes/Pluralizer Pluralizer Class} instead.
-
 	 */
 	toString(): string {
 		return this.$withPluralUnit();
@@ -119,9 +121,7 @@ export class $BaseConverter<Unit extends $Unit> {
 		return JSON.stringify(this.toObject());
 	}
 
-	/**
-	 * @instance Returns a new instance with the absolute value.
-	 */
+	/** @instance Returns a new instance with the absolute value. */
 	abs(): this {
 		return new (this.constructor as new (v: number, u: Unit) => this)(
 			Math.abs(this.value),
@@ -183,17 +183,17 @@ export class $BaseConverter<Unit extends $Unit> {
 		return new (this.constructor as new (v: number, u: Unit) => this)(rounded, this.unit);
 	}
 
-	/** * @instance Returns whether this value is greater than another numeric value. */
+	/** @instance Returns whether this value is greater than another numeric value. */
 	gt(n: Numeric): boolean {
 		return this.value > Number(n);
 	}
 
-	/** * @instance Returns whether this value is less than another numeric value. */
+	/** @instance Returns whether this value is less than another numeric value. */
 	lt(n: Numeric): boolean {
 		return this.value < Number(n);
 	}
 
-	/** * @instance Returns whether this value equals another numeric value. */
+	/** @instance Returns whether this value equals another numeric value. */
 	eq(n: Numeric): boolean {
 		return this.value === Number(n);
 	}

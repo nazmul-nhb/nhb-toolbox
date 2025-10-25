@@ -10,7 +10,7 @@ import type { $Time } from './time';
 import type { $Volume } from './volume';
 
 /** - Type for Record of Units */
-type UnitsRecord = typeof UNITS;
+export type UnitsRecord = typeof UNITS;
 
 /** * Category of units supported by the converter. */
 export type Category = keyof UnitsRecord;
