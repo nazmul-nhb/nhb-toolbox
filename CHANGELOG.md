@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.23.23] - 2025-10-26
+
+- **Fixed** *pluralization issue* with `'foot' --> 'feet'` for *format methods* in *converter classes*.
+- **Renamed** the export of `GENERAL_UNITS` (used in `Unit` class) and `CATEGORIZED_UNITS` (used in `Converter` classes) from `'nhb-toolbox/constants'`.
+
 ## [4.23.21] - 2025-10-25
 
 - **Fixed** *return type* (now maintains *proper order* in the *tuple*) for `supportedUnits()` *converter method*.
@@ -13,7 +18,7 @@ All notable changes to the package will be documented here.
 ## [4.23.20] - 2025-10-25
 
 - **Fixed** *return type* for `supportedUnits()` *converter method*.
-- **Added** *new package subpath* for `Color` class: `nhb-toolbox/color`.
+- **Added** *new package subpath* for `Color` class: `'nhb-toolbox/color'`.
 
 ## [4.23.11] - 2025-10-24
 
@@ -28,13 +33,13 @@ All notable changes to the package will be documented here.
 
 ## [4.23.1] - 2025-10-24
 
-- **Exported** *all the converter classes* from the `nhb-toolbox/converter` sub-path too.
+- **Exported** *all the converter classes* from the `'nhb-toolbox/converter'` sub-path too.
 
 ## [4.23.0] - 2025-10-24
 
 - **Added** new *unit converter classes* and their *combined function* `Converter` (aliased `converter`).
 - **Introduced** new *utility types:* `Replace` `ReplaceFirst` and `$Record`.
-- **Exported** `pluralizer`, `verbalizer`, `httpStatus` and new `Converter` utility through *package sub-paths*.
+- **Exported** `pluralizer`, `verbalizer`, `httpStatus` and new `Converter` utility through different *package sub-paths*.
 
 ## [4.21.14] - 2025-10-14
 

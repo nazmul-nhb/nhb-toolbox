@@ -29,12 +29,13 @@ export {
 	CURRENCY_CODES,
 	CURRENCY_LOCALES,
 	SUPPORTED_CURRENCIES as FRANKFURTER_CURRENCIES,
+	UNITS as GENERAL_UNITS,
 	LOCALE_CODES,
 } from './number/constants';
 
 export { LOWERCASE as LOWERCASED_WORDS } from './string/constants';
 
-export { UNITS } from './converter/constants';
+export { UNITS as CATEGORIZED_UNITS } from './converter/constants';
 
 export { COUNTRIES } from './object/countries';
 
