@@ -1,7 +1,6 @@
 import type { Numeric } from '../types/index';
-import type { Tuple } from '../utils/types';
 import { UNITS } from './constants';
-import type { $Unit, Category, CategoryUnits, FormatToOptions, Units } from './types';
+import type { $Unit, Category, FormatToOptions, Units, UnitsTuple } from './types';
 
 /**
  * @description Base class providing common mathematical and formatting utilities
@@ -221,7 +220,7 @@ export class $BaseConverter<Unit extends $Unit> {
 	 * @param category Category to filter units by.
 	 * @returns Tuple of supported units for the specified category.
 	 */
-	supportedUnits<Cat extends Category>(category: Cat): Tuple<CategoryUnits<Cat>>;
+	supportedUnits<Cat extends Category>(category: Cat): UnitsTuple<Cat>;
 
 	/**
 	 * @instance Returns all supported units, optionally filtered by category.

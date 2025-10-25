@@ -1,4 +1,4 @@
-import type { LooseLiteral } from '../utils/types';
+import type { LooseLiteral, Mutable } from '../utils/types';
 import type { $Area } from './area';
 import type { $BaseConverter } from './base';
 import type { UNITS } from './constants';
@@ -25,6 +25,9 @@ export type $Unit = LooseLiteral<UnitMap[Category]>;
 
 /** * Type for array of all Units */
 export type Units = Array<UnitMap[Category]>;
+
+/** * Tuple type for Units in a specific Category */
+export type UnitsTuple<Cat extends Category> = Mutable<UnitsRecord[Cat]>;
 
 /** * Infer the category of a given unit type `U`. */
 export type InferCategory<U extends $Unit> = {
