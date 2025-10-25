@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.23.24] - 2025-10-26
+
+- **Fixed** *pluralization issue* with ***suffixed*** `'-foot' --> '-feet'` for *format methods* in *converter classes*.
+
 ## [4.23.23] - 2025-10-26
 
 - **Fixed** *pluralization issue* with `'foot' --> 'feet'` for *format methods* in *converter classes*.

@@ -29,7 +29,7 @@ export class $BaseConverter<Unit extends $Unit> {
 			abs <= 1 ? u
 			: u ?
 				u?.endsWith('foot') ?
-					'feet'
+					u.replace(/foot$/, 'feet')
 				:	`${u}s`
 			:	'';
 
@@ -175,7 +175,7 @@ export class $BaseConverter<Unit extends $Unit> {
 
 	/**
 	 * @instance Rounds to given decimal places.
-	 * @param decimals Number of decimal places to round.
+	 * @param decimals Number of decimal places to round. Default is `0`.
 	 * @returns A new instance with rounded value.
 	 */
 	round(decimals = 0): this {
