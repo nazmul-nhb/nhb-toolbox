@@ -13,7 +13,7 @@ All notable changes to the package will be documented here.
 ## [4.23.23] - 2025-10-26
 
 - **Fixed** *pluralization issue* with `'foot' --> 'feet'` for *format methods* in *converter classes*.
-- **Renamed** the export of `GENERAL_UNITS` (used in `Unit` class) and `CATEGORIZED_UNITS` (used in `Converter` classes) from `'nhb-toolbox/constants'`.
+- **Exported** `GENERAL_UNITS` (used in `Unit` class) and `CATEGORIZED_UNITS` (used in `Converter` classes) from `'nhb-toolbox/constants'`.
 
 ## [4.23.21] - 2025-10-25
 
