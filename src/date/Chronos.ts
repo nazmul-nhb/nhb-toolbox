@@ -84,9 +84,9 @@ export class Chronos {
 	};
 
 	/**
-	 * * `Chronos` date/time in Native JS `Date` format.
+	 * * `Chronos` date/time as Native JS `Date` object.
 	 *
-	 * - **NOTE**: It is **HIGHLY** advised *not to rely* on this public property to access native JS `Date`. It's not reliable when timezone and/or UTC related operations are performed. If you really need to use native `Date`, use `toDate` method.  THis property is purely for developer convenience and sugar.
+	 * - **NOTE**: It is **HIGHLY** advised *not to rely* on this public property to access native JS `Date`. It's not reliable when timezone and/or UTC related operations are performed. If you really need to use native `Date`, use `toDate` method. This property is purely for developer convenience and sugar.
 	 */
 	native: Date;
 
@@ -126,9 +126,6 @@ export class Chronos {
 	/**
 	 * * Creates a new immutable `Chronos` instance.
 	 *
-	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
-	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
-	 *
 	 * @param value - A date value as `Date` object, it will be used as is.
 	 *
 	 * @returns Instance of `Chronos` with all methods and properties.
@@ -137,9 +134,6 @@ export class Chronos {
 
 	/**
 	 * * Creates a new immutable `Chronos` instance.
-	 *
-	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
-	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
 	 *
 	 * @param value - A date value as `Chronos` object.
 	 *
@@ -647,7 +641,7 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Wrapper over native `toLocaleString`
+	 * @instance Wrapper over native `toLocaleString`.
 	 * @description Converts a date and time to a string by using the current or specified locale.
 	 *
 	 * @param locales A locale string, array of locale strings, Intl.Locale object, or array of Intl.Locale objects that contain one or more language or locale tags. If you include more than one locale string, list them in descending order of priority so that the first entry is the preferred locale. If you omit this parameter, the default locale of the JavaScript runtime is used.
@@ -697,9 +691,9 @@ export class Chronos {
 	 *                 (e.g., `'Sun, Apr 06, 2025 16:11:55'`).
 	 *	 - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/format#format-tokens format tokens} for detailed usage.
 	 *
-	 * @param useUTC - If `true`, formats the date in UTC (equivalent to `formatUTC()`);
+	 * @param useUTC - If `true`, formats the date in UTC (equivalent to `formatUTC()`).
 	 *                 Defaults to `false` (local time).
-	 * @returns A formatted date string in the specified format
+	 * @returns A formatted date string in the specified format.
 	 */
 	formatStrict(format?: StrictFormat, useUTC = false): string {
 		return this.#format(format ?? 'dd, mmm DD, YYYY HH:mm:ss', useUTC);
@@ -847,8 +841,8 @@ export class Chronos {
 		const time = other instanceof Chronos ? other : new Chronos(other);
 
 		return (
-			this.startOf(unit, weekStartsOn).toDate().getTime() ===
-			time.startOf(unit, weekStartsOn).toDate().getTime()
+			this.startOf(unit, weekStartsOn).timestamp ===
+			time.startOf(unit, weekStartsOn).timestamp
 		);
 	}
 
@@ -862,8 +856,8 @@ export class Chronos {
 		const time = other instanceof Chronos ? other : new Chronos(other);
 
 		return (
-			this.startOf(unit, weekStartsOn).toDate().getTime() <
-			time.startOf(unit, weekStartsOn).toDate().getTime()
+			this.startOf(unit, weekStartsOn).timestamp <
+			time.startOf(unit, weekStartsOn).timestamp
 		);
 	}
 
@@ -877,8 +871,8 @@ export class Chronos {
 		const time = other instanceof Chronos ? other : new Chronos(other);
 
 		return (
-			this.startOf(unit, weekStartsOn).toDate().getTime() >
-			time.startOf(unit, weekStartsOn).toDate().getTime()
+			this.startOf(unit, weekStartsOn).timestamp >
+			time.startOf(unit, weekStartsOn).timestamp
 		);
 	}
 
