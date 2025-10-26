@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.23.25] - 2025-10-27
+
+- **Updated** tsdoc for `Chronos` *constructor* and **optimized** *internal logic* for some *checker methods*.
+
 ## [4.23.24] - 2025-10-26
 
 - **Fixed** *pluralization issue* with ***suffixed*** `'-foot' --> '-feet'` for *format methods* in *converter classes*.

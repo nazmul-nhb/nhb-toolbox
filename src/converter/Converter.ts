@@ -23,7 +23,7 @@ import type {
 import { $Volume } from './volume';
 
 /**
- * @function Converter : This is a unit converter function that creates instances of specific converter classes based on the provided unit.
+ * @function Converter - This is a unit converter function that creates instances of specific converter class based on the provided unit.
  *
  * @description Converts values between compatible units (time, length, data, temperature, mass, area, volume).
  * The returned instance exposes only methods relevant to the provided unit type.
