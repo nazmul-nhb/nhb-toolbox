@@ -72,6 +72,18 @@ export type RandomHexRGB = {
 	rgb: RGB;
 };
 
+export type ColorName = 'hex' | 'rgb' | 'hsl';
+
+export type RandomColorOptions<Color extends ColorName = 'hex'> = {
+	colorType?: Color;
+	maxColors?: number;
+};
+
+export type RandomColor<Color extends ColorName = 'hex'> =
+	Color extends 'hsl' ? HSL
+	: Color extends 'rgb' ? RGB
+	: Hex6;
+
 /** * Union type representing a color in Hex6, RGB, or HSL format. */
 export type ColorTypeSolid = Hex6 | RGB | HSL;
 

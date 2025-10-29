@@ -1,12 +1,13 @@
 import { convertColorCode } from './convert';
 import { _generateRandomHSL, _isSimilarToLast } from './helpers';
-import type { HSL, RandomHexRGB } from './types';
-
-/** Track previously generated colors. */
-const generatedColors = new Set<string>();
-
-/** Array of recently generated colors */
-const recentColors: string[] = [];
+import type {
+	ColorName,
+	Hex6,
+	HSL,
+	RandomColor,
+	RandomColorOptions,
+	RandomHexRGB,
+} from './types';
 
 /**
  * * Utility to generate a unique random HSL color.
@@ -15,6 +16,12 @@ const recentColors: string[] = [];
  * @returns Generated unique random color in `HSL` format.
  */
 export const generateRandomHSLColor = (maxColors: number = 16): HSL => {
+	/** Track previously generated colors. */
+	const generatedColors = new Set<HSL>();
+
+	/** Array of recently generated colors */
+	const recentColors: HSL[] = [];
+
 	let color: HSL;
 
 	// Keep generating until a unique color is found that is also different from the last one
@@ -43,3 +50,29 @@ export const generateRandomHSLColor = (maxColors: number = 16): HSL => {
 export const generateRandomColorInHexRGB = (maxColors = 16): RandomHexRGB => {
 	return convertColorCode(generateRandomHSLColor(maxColors));
 };
+
+export function generateRandomColor(options?: Pick<RandomColorOptions, 'maxColors'>): Hex6;
+
+export function generateRandomColor<C extends ColorName>(
+	options?: RandomColorOptions<C>
+): RandomColor<C>;
+
+export function generateRandomColor<C extends ColorName>(
+	options?: RandomColorOptions<C>
+): RandomColor<C> {
+	const { colorType = 'hex', maxColors = 16 } = options ?? {};
+
+	const hsl = generateRandomHSLColor(maxColors);
+	const { hex, rgb } = convertColorCode(hsl);
+
+	switch (colorType) {
+		case 'hex':
+			return hex as RandomColor<C>;
+		case 'rgb':
+			return rgb as RandomColor<C>;
+		case 'hsl':
+			return hsl as RandomColor<C>;
+		default:
+			return hex as RandomColor<C>;
+	}
+}
