@@ -195,7 +195,12 @@ export { getNumbersInRange } from './number/range';
 // ! Color Utilities
 export { getColorForInitial } from './colors/initials';
 
-export { generateRandomColorInHexRGB, generateRandomHSLColor } from './colors/random';
+export {
+	generateRandomColor,
+	generateRandomColorInHexRGB,
+	generateRandomHSLColor,
+	generateRandomColor as getRandomColor,
+} from './colors/random';
 
 export {
 	convertColorCode,

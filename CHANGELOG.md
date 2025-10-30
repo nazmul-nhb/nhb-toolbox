@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.24.0] - 2025-10-30
+
+- **Added** new color utility `generateRandomColor` with alias `getRandomColor` and **deprecated** `generateRandomColorInHexRGB`.
+
 ## [4.23.25] - 2025-10-27
 
 - **Updated** tsdoc for `Chronos` *constructor* and **optimized** *internal logic* for some *checker methods*.

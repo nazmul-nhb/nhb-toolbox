@@ -3,10 +3,10 @@ import { _generateRandomHSL, _isSimilarToLast } from './helpers';
 import type { $ColorType, HSL, RandomColor, RandomColorOptions, RandomHexRGB } from './types';
 import { extractSolidColorValues } from './utils';
 
-/** @__PURE__ Track previously generated colors. */
+/** Track previously generated colors. */
 const generatedColors = /* @__PURE__ */ new Set<HSL>();
 
-/** @__PURE__ Array of recently generated colors. */
+/** Array of recently generated colors. */
 const recentColors: HSL[] = /* @__PURE__ */ [];
 
 /**
@@ -36,9 +36,9 @@ export const generateRandomHSLColor = (maxColors: number = 16): HSL => {
 };
 
 /**
- * @deprecated For better performance and flexible use, please use {@link generateRandomColor}!
+ * @deprecated For better performance and flexible use cases, please consider using {@link generateRandomColor}.
  *
- * * Utility to generate a unique random color in Hex6 and RGB format.
+ * * Utility to generate a unique random color in `Hex6` and `RGB` format.
  *
  * @param maxColors - The maximum number of recent colors to store in memory. Default is `16`.
  * @returns An object of generated unique random color in both `Hex` and `RGB` formats.
