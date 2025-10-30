@@ -198,8 +198,10 @@ export { getColorForInitial } from './colors/initials';
 export {
 	generateRandomColor,
 	generateRandomColorInHexRGB,
+	generateRandomHSLColor as generateRandomHSL,
 	generateRandomHSLColor,
 	generateRandomColor as getRandomColor,
+	generateRandomHSLColor as getRandomHSL,
 } from './colors/random';
 
 export {

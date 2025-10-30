@@ -36,7 +36,7 @@ export const generateRandomHSLColor = (maxColors: number = 16): HSL => {
 };
 
 /**
- * @deprecated For better performance and flexible use cases, please consider using {@link generateRandomColor}.
+ * @deprecated For optimized performance and more flexibility, please consider using {@link generateRandomColor}.
  *
  * * Utility to generate a unique random color in `Hex6` and `RGB` format.
  *
@@ -48,7 +48,7 @@ export const generateRandomColorInHexRGB = (maxColors = 16): RandomHexRGB => {
 };
 
 /**
- * * Generates a random color in one of three formats: `Hex6`, `RGB`, or `HSL`.
+ * * Generates a random unique color in one of three formats: `Hex6`, `RGB`, or `HSL`.
  *
  * @remarks
  * - If no `options` or `colorType` option is provided, the function defaults to returning a color in `Hex6` format.
@@ -60,19 +60,17 @@ export const generateRandomColorInHexRGB = (maxColors = 16): RandomHexRGB => {
  *   By default, this value is `16`. Increasing it allows more unique color variations before repeating.
  *
  * @param options - Configuration options for random color generation, including `colorType` and `maxColors`.
- * @returns A random color in the specified format (`Hex6`, `RGB`, or `HSL`).
+ * @returns A random unique color in the specified format (`Hex6`, `RGB`, or `HSL`).
  *
  * @example
- * ```ts
  * const hex = generateRandomColor();
- * // inferred: Hex6
+ * // hex value with inferred type: Hex6
  *
  * const rgb = generateRandomColor({ colorType: 'rgb' });
- * // inferred: RGB
+ * // rgb value with inferred type: RGB
  *
  * const hsl = generateRandomColor({ colorType: 'hsl', maxColors: 32 });
- * // inferred: HSL, with a larger unique color memory pool
- * ```
+ * // hsl value with inferred type: HSL, with a larger unique color memory pool
  */
 export function generateRandomColor<C extends $ColorType | undefined = undefined>(
 	options?: RandomColorOptions<C>

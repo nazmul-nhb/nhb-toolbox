@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.24.1] - 2025-10-30
+
+- **Added** aliases for `generateRandomHSLColor`. **Updated** tsdoc for some color utilities.
+
 ## [4.24.0] - 2025-10-30
 
 - **Added** new color utility `generateRandomColor` with alias `getRandomColor` and **deprecated** `generateRandomColorInHexRGB`.
