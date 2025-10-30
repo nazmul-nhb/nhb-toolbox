@@ -1,13 +1,6 @@
 import { convertColorCode } from './convert';
 import { _generateRandomHSL, _isSimilarToLast } from './helpers';
-import type {
-	ColorName,
-	Hex6,
-	HSL,
-	RandomColor,
-	RandomColorOptions,
-	RandomHexRGB,
-} from './types';
+import type { $ColorType, HSL, RandomColor, RandomColorOptions, RandomHexRGB } from './types';
 
 /**
  * * Utility to generate a unique random HSL color.
@@ -51,13 +44,34 @@ export const generateRandomColorInHexRGB = (maxColors = 16): RandomHexRGB => {
 	return convertColorCode(generateRandomHSLColor(maxColors));
 };
 
-export function generateRandomColor(options?: Pick<RandomColorOptions, 'maxColors'>): Hex6;
-
-export function generateRandomColor<C extends ColorName>(
-	options?: RandomColorOptions<C>
-): RandomColor<C>;
-
-export function generateRandomColor<C extends ColorName>(
+/**
+ * * Generates a random color in one of three formats: `Hex6`, `RGB`, or `HSL`.
+ *
+ * @remarks
+ * - If no `options` or `colorType` option is provided, the function defaults to returning a color in `Hex6` format.
+ * - The `colorType` option determines the return type:
+ *   - `'hex'` → returns a `Hex6` string
+ *   - `'rgb'` → returns an `RGB` object
+ *   - `'hsl'` → returns an `HSL` object
+ * - The `maxColors` option controls how many recently generated colors are kept in memory to prevent repetition.
+ *   By default, this value is `16`. Increasing it allows more unique color variations before repeating.
+ *
+ * @param options - Configuration options for random color generation, including `colorType` and `maxColors`.
+ * @returns A random color in the specified format (`Hex6`, `RGB`, or `HSL`).
+ *
+ * @example
+ * ```ts
+ * const color1 = generateRandomColor();
+ * // inferred: Hex6
+ *
+ * const color2 = generateRandomColor({ colorType: 'rgb' });
+ * // inferred: RGB
+ *
+ * const color3 = generateRandomColor({ colorType: 'hsl', maxColors: 32 });
+ * // inferred: HSL, with a larger unique color memory pool
+ * ```
+ */
+export function generateRandomColor<C extends $ColorType | undefined = undefined>(
 	options?: RandomColorOptions<C>
 ): RandomColor<C> {
 	const { colorType = 'hex', maxColors = 16 } = options ?? {};

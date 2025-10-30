@@ -72,14 +72,19 @@ export type RandomHexRGB = {
 	rgb: RGB;
 };
 
-export type ColorName = 'hex' | 'rgb' | 'hsl';
+/** Basic color type: `hex`, `rgb` or `hsl`. */
+export type $ColorType = 'hex' | 'rgb' | 'hsl';
 
-export type RandomColorOptions<Color extends ColorName = 'hex'> = {
+/** Options for random color generation. */
+export interface RandomColorOptions<Color extends $ColorType | undefined> {
+	/** The type of expected return type of color: `hex`, `rgb` or `hsl`. Default is `'hex'`. */
 	colorType?: Color;
+	/** The maximum number of recent colors to store in memory. Default is `16`. */
 	maxColors?: number;
-};
+}
 
-export type RandomColor<Color extends ColorName = 'hex'> =
+/** Infers the return color type (`Hex6`, `RGB`, or `HSL`) based on the provided color type. */
+export type RandomColor<Color extends $ColorType | undefined = undefined> =
 	Color extends 'hsl' ? HSL
 	: Color extends 'rgb' ? RGB
 	: Hex6;
