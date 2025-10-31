@@ -20,9 +20,6 @@ export type Hex = `#${string}`;
  */
 export type Hex6 = Branded<`#${string}`, 'Hex6'>;
 
-/** Optional space */
-export type $Space = '' | ' ';
-
 /**
  * * Represents an RGB color string.
  * * Format: `rgb(R, G, B)`
@@ -31,7 +28,7 @@ export type $Space = '' | ' ';
  * - G (Green): 0-255
  * - B (Blue): 0-255
  */
-export type RGB = `rgb(${number},${$Space}${number},${$Space}${number})`;
+export type RGB = `rgb(${number}, ${number}, ${number})` | `rgb(${number},${number},${number})`;
 
 /**
  * * Represents an HSL color string.
@@ -41,7 +38,9 @@ export type RGB = `rgb(${number},${$Space}${number},${$Space}${number})`;
  * - S (Saturation): 0-100%
  * - L (Lightness): 0-100%
  */
-export type HSL = `hsl(${number},${$Space}${number}%,${$Space}${number}%)`;
+export type HSL =
+	| `hsl(${number}, ${number}%, ${number}%)`
+	| `hsl(${number},${number}%,${number}%)`;
 
 /**
  * * Represents a hexadecimal color code with optional alpha channel.
@@ -53,13 +52,17 @@ export type Hex8 = Branded<`#${string}`, 'Hex8'>;
  * * Represents an RGBA color string, now includes optional alpha (opacity).
  * * Format: `rgba(R, G, B, A)`
  */
-export type RGBA = `rgba(${number},${$Space}${number},${$Space}${number},${$Space}${number})`;
+export type RGBA =
+	| `rgba(${number}, ${number}, ${number}, ${number})`
+	| `rgba(${number},${number},${number},${number})`;
 
 /**
  * * Represents an HSLA color string with optional alpha channel.
  * * Format: `hsla(H, S%, L%, A)`
  */
-export type HSLA = `hsla(${number},${$Space}${number}%,${$Space}${number}%,${$Space}${number})`;
+export type HSLA =
+	| `hsla(${number}, ${number}%, ${number}%, ${number})`
+	| `hsla(${number},${number}%,${number}%,${number})`;
 
 /** Represents an object with `hex` (`hex6`) and `rgb` color */
 export type RandomHexRGB = {
