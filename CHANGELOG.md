@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.24.4] - 2025-10-31
+
+- **Exported** color *checkers/guards* from *main path*. **Reverted** color types (optimized spacing).
+
 ## [4.24.2] - 2025-10-31
 
 - **Fixed** *return type* when no `'colorType'` option is passed in `generateRandomColor`. **Improved** color related *types*.
