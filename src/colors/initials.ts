@@ -72,8 +72,8 @@ export function getColorForInitial(
 		}
 
 		return _applyOpacity(DEFAULT, hexOpacity);
-		// Handle number input
 	} else if (typeof input === 'number' && !isNaN(input)) {
+		// Handle number input
 		initial = input.toString()[0];
 
 		if (NUMBERS.includes(initial)) {
@@ -81,8 +81,8 @@ export function getColorForInitial(
 		}
 
 		return _applyOpacity(DEFAULT, hexOpacity);
-		// Handle array of strings/numbers
 	} else if (Array.isArray(input)) {
+		// Handle array of strings/numbers
 		if (input?.length < 1)
 			return [...ALPHABET_COLOR_PALETTE, ...NUMBER_COLOR_PALETTE].map((color) =>
 				_applyOpacity(color, hexOpacity)

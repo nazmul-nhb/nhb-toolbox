@@ -20,6 +20,9 @@ export type Hex = `#${string}`;
  */
 export type Hex6 = Branded<`#${string}`, 'Hex6'>;
 
+/** Optional space */
+export type $Space = '' | ' ';
+
 /**
  * * Represents an RGB color string.
  * * Format: `rgb(R, G, B)`
@@ -28,7 +31,7 @@ export type Hex6 = Branded<`#${string}`, 'Hex6'>;
  * - G (Green): 0-255
  * - B (Blue): 0-255
  */
-export type RGB = `rgb(${number}, ${number}, ${number})` | `rgb(${number},${number},${number})`;
+export type RGB = `rgb(${number},${$Space}${number},${$Space}${number})`;
 
 /**
  * * Represents an HSL color string.
@@ -38,9 +41,7 @@ export type RGB = `rgb(${number}, ${number}, ${number})` | `rgb(${number},${numb
  * - S (Saturation): 0-100%
  * - L (Lightness): 0-100%
  */
-export type HSL =
-	| `hsl(${number}, ${number}%, ${number}%)`
-	| `hsl(${number},${number}%,${number}%)`;
+export type HSL = `hsl(${number},${$Space}${number}%,${$Space}${number}%)`;
 
 /**
  * * Represents a hexadecimal color code with optional alpha channel.
@@ -52,17 +53,13 @@ export type Hex8 = Branded<`#${string}`, 'Hex8'>;
  * * Represents an RGBA color string, now includes optional alpha (opacity).
  * * Format: `rgba(R, G, B, A)`
  */
-export type RGBA =
-	| `rgba(${number}, ${number}, ${number}, ${number})`
-	| `rgba(${number},${number},${number},${number})`;
+export type RGBA = `rgba(${number},${$Space}${number},${$Space}${number},${$Space}${number})`;
 
 /**
  * * Represents an HSLA color string with optional alpha channel.
  * * Format: `hsla(H, S%, L%, A)`
  */
-export type HSLA =
-	| `hsla(${number}, ${number}%, ${number}%, ${number})`
-	| `hsla(${number},${number}%,${number}%,${number})`;
+export type HSLA = `hsla(${number},${$Space}${number}%,${$Space}${number}%,${$Space}${number})`;
 
 /** Represents an object with `hex` (`hex6`) and `rgb` color */
 export type RandomHexRGB = {
@@ -76,17 +73,18 @@ export type RandomHexRGB = {
 export type $ColorType = 'hex' | 'rgb' | 'hsl';
 
 /** Options for random color generation. */
-export interface RandomColorOptions<Color extends $ColorType | undefined> {
+export interface RandomColorOptions<C extends $ColorType | undefined> {
 	/** The type of expected return type of color: `hex`, `rgb` or `hsl`. Default is `'hex'`. */
-	colorType?: Color;
+	colorType?: C;
 	/** The maximum number of recent colors to store in memory. Default is `16`. */
 	maxColors?: number;
 }
 
-/** Infers the return color type (`Hex6`, `RGB`, or `HSL`) based on the provided color type. */
-export type RandomColor<Color extends $ColorType | undefined = undefined> =
-	Color extends 'hsl' ? HSL
-	: Color extends 'rgb' ? RGB
+/** Infers random color type (`Hex6`, `RGB`, or `HSL`) based on the provided color type `C`. */
+export type RandomColor<C extends $ColorType | undefined = undefined> =
+	C extends undefined | 'hex' ? Hex6
+	: C extends 'hsl' ? HSL
+	: C extends 'rgb' ? RGB
 	: Hex6;
 
 /** * Union type representing a color in Hex6, RGB, or HSL format. */
