@@ -90,7 +90,7 @@ export class Chronos {
 	 */
 	native: Date;
 
-	/** Origin of the `Chronos` instance (Method that created `new Chronos`), useful fo tracking instance. */
+	/** Origin of the `Chronos` instance (Method that created `new Chronos`), useful for tracking instance. */
 	origin: ChronosMethods | 'root';
 
 	/**
@@ -1638,7 +1638,7 @@ export class Chronos {
 	/**
 	 * @static Parses a date string with a given format (limited support only).
 	 *
-	 * * **Supported format tokens**:
+	 * **Supported format tokens**:
 	 * - `YYYY`: Full year (e.g., 2023)
 	 * - `YY`: Two-digit year (e.g., 23 for 2023, 99 for 1999)
 	 * - `MM`: Month (01-12)
