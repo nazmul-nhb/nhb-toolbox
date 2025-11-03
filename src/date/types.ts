@@ -217,6 +217,25 @@ export interface TimeDuration {
 	milliseconds: number;
 }
 
+/** Key of {@link TimeDuration} */
+export type DurationKey = keyof TimeDuration;
+
+/** Options for formatting duration string */
+export interface DurationOptions {
+	/** The time to compare with. Defaults to `now`. */
+	toTime?: ChronosInput;
+	/** If true, returns all values as positive numbers. Defaults to `true`. */
+	absolute?: boolean;
+	/** Maximum number of units to display, e.g. 2 → "1 hour, 20 minutes" */
+	maxUnits?: NumberRange<1, 7>;
+	/** Separator between units (default: `", "`) */
+	separator?: string;
+	/** Display mode: `"full"` (default) → "2 hours", `"short"` → "2h" */
+	style?: 'full' | 'short';
+	/** Whether to include zero values (default: `false`) */
+	showZero?: boolean;
+}
+
 /** Interface for accessing internal private properties in extended `Chronos` class */
 export interface ChronosInternals {
 	/**

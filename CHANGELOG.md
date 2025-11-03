@@ -6,6 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.25.0] - 2025-11-03
+
+- **Added** new `Chronos` method `durationString(...)` and **Fixed** issues with internal *duration normalization logic*.
+- **Fixed** all *pluralization logic* in `pluralize(...)` method of `Pluralizer` and `formatUnitWithPlural` utility: *Only `1` is considered singular, every other number is plural*.
+
 ## [4.24.4] - 2025-10-31
 
 - **Exported** color *checkers/guards* from *main path*. **Reverted** color types (optimized spacing).

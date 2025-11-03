@@ -2,6 +2,7 @@ import { isValidArray } from '../guards/non-primitives';
 import { isString } from '../guards/primitives';
 import type { Enumerate, LocaleCode, NumberRange } from '../number/types';
 import { getOrdinal } from '../number/utilities';
+import type { $Record } from '../object/types';
 import type { TupleOf } from '../utils/types';
 import { DAYS, INTERNALS, MONTHS, SORTED_TIME_FORMATS } from './constants';
 import { isLeapYear } from './guards';
@@ -16,6 +17,8 @@ import type {
 	ChronosWithOptions,
 	DateRangeOptions,
 	DatesInRangeOptions,
+	DurationKey,
+	DurationOptions,
 	FormatOptions,
 	Milliseconds,
 	MonthName,
@@ -467,9 +470,9 @@ export class Chronos {
 		absolute: boolean,
 		isFuture: boolean
 	): TimeDuration {
-		const entries = Object.entries(result) as [keyof TimeDuration, number][];
+		const entries = Object.entries(result) as Array<[DurationKey, number]>;
 
-		const updated = {} as TimeDuration;
+		const updated = { ...result };
 
 		if (!absolute && !isFuture) {
 			for (const [key, value] of entries) {
@@ -1433,8 +1436,8 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Returns the full time duration breakdown between current input (start) and another time (to).
-	 * @param toTime The time to compare with. Defaults to now.
+	 * @instance Returns the full time duration breakdown between current input (start) and another time (to) as object.
+	 * @param toTime The time to compare with. Defaults to `now`.
 	 * @param absolute If true, returns all values as positive numbers. Defaults to `true`.
 	 * @returns An object of time units: years, months, days, hours, minutes, seconds, milliseconds.
 	 */
@@ -1496,6 +1499,55 @@ export class Chronos {
 		};
 
 		return this.#normalizeDuration(result, absolute, isFuture);
+	}
+
+	/**
+	 * @instance Returns a human-readable formatted duration string between the current instance (start) and another time (to).
+	 * @param options Options to format duration string, including the time to compare with.
+	 * @returns A formatted duration string, e.g. `"2 hours, 5 minutes"` or `"2h 5m"`.
+	 */
+	durationString(options?: DurationOptions): string {
+		const {
+			toTime,
+			absolute = true,
+			maxUnits = 7,
+			separator = ', ',
+			style = 'full',
+			showZero = false,
+		} = options ?? {};
+
+		const duration = this.duration(toTime, absolute);
+
+		const units: $Record<DurationKey, string> = {
+			years: 'y',
+			months: 'mo',
+			days: 'd',
+			hours: 'h',
+			minutes: 'm',
+			seconds: 's',
+			milliseconds: 'ms',
+		};
+
+		const _formatUnit = (unit: DurationKey, value: number): string => {
+			if (style === 'short') {
+				return `${value}${units[unit]}`;
+			}
+
+			const $unit = Math.abs(value) === 1 ? unit.slice(0, -1) : unit;
+
+			return `${value} ${$unit}`;
+		};
+
+		const parts = (Object.entries(duration) as Array<[DurationKey, number]>)
+			.filter(([_, value]) => showZero || Math.abs(value) > 0)
+			.slice(0, maxUnits)
+			.map(([unit, value]) => _formatUnit(unit, value));
+
+		return (
+			parts.length ? parts.join(separator)
+			: style === 'short' ? '0s'
+			: '0 seconds'
+		);
 	}
 
 	/**

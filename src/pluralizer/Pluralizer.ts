@@ -197,8 +197,8 @@ export class Pluralizer {
 		const count = normalizeNumber(options?.count);
 
 		if (typeof count === 'number') {
-			const pluralized = count > 1 ? this.toPlural(word) : this.toSingular(word);
-			return options.inclusive ? `${count} ${pluralized}` : pluralized;
+			const pluralized = count === 1 ? this.toSingular(word) : this.toPlural(word);
+			return options?.inclusive ? `${count} ${pluralized}` : pluralized;
 		}
 
 		return this.toPlural(word);
