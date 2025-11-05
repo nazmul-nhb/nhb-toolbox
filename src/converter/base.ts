@@ -1,5 +1,5 @@
 import type { Numeric } from '../types/index';
-import { UNITS } from './constants';
+import { INVARIANT_UNITS, IRREGULAR_PLURALS, UNITS, Y_TO_IES } from './constants';
 import type { $Unit, Category, FormatToOptions, Units, UnitsTuple } from './types';
 
 /**
@@ -25,15 +25,25 @@ export class $BaseConverter<Unit extends $Unit> {
 		const abs = Math.abs(value ?? this.value);
 		const u = unit ?? this.unit;
 
-		const pluralized =
-			abs <= 1 ? u
-			: u ?
-				u?.endsWith('foot') ?
-					u.replace(/foot$/, 'feet')
-				:	`${u}s`
-			:	'';
+		if (!u) return String(abs);
 
-		return `${abs} ${pluralized}`.trim();
+		let pluralized: string;
+
+		if (abs === 1) {
+			pluralized = u;
+		} else if (IRREGULAR_PLURALS?.[u]) {
+			pluralized = IRREGULAR_PLURALS[u];
+		} else if (INVARIANT_UNITS.has(u)) {
+			pluralized = u;
+		} else if (u.endsWith('foot')) {
+			pluralized = u.replace(/foot$/, 'feet');
+		} else if (u.endsWith('inch')) {
+			pluralized = u.replace(/inch$/, 'inches');
+		} else {
+			pluralized = Y_TO_IES.has(u) ? u.replace(/y$/, 'ies') : `${u}s`;
+		}
+
+		return `${abs} ${pluralized}`;
 	}
 
 	/** @protected Rounds a numeric value to given decimal places. */

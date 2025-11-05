@@ -98,3 +98,16 @@ export const UNITS = /* @__PURE__ */ Object.freeze({
 		'long-ton',
 	],
 } as const);
+
+export const IRREGULAR_PLURALS: Record<string, string> = /* @__PURE__ */ {
+	millennium: 'millennia',
+	century: 'centuries',
+};
+
+export const INVARIANT_UNITS: Set<string> = /* @__PURE__ */ new Set([
+	'celsius',
+	'fahrenheit',
+	'kelvin',
+]);
+
+export const Y_TO_IES = /* @__PURE__ */ new Set(['century']);

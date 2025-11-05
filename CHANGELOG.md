@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.25.10] - 2025-11-06
+
+- **Fixed** *pluralization issues* in the methods of `Converter` classes.
+
 ## [4.25.1-4] - 2025-11-05
 
 - **Added** *alias* for `Chronos` *static method* `use`: `register`.
