@@ -8,7 +8,8 @@ All notable changes to the package will be documented here.
 
 ## [4.25.1-4] - 2025-11-04
 
-- Added alias for Chronos static method use: register.
+- **Added** *alias* for `Chronos` *static method* `use`: `register`.
+- **Updated** *tsdoc* for `Chronos` *static methods* `use` and `register`.
 
 ## [4.25.0] - 2025-11-03
 
