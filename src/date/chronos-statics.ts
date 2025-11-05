@@ -113,7 +113,7 @@ export interface ChronosStatics {
 	 * @param plugin The plugin to inject.
 	 *
 	 * @remarks
-	 * - Using {@link use} method on in `React` projects may trigger *linter error* like `"React Hooks must be called in a React function component or a custom React Hook function."`
+	 * - Using this (`use`) method in `React` projects may trigger *linter error* like `"React Hooks must be called in a React function component or a custom React Hook function."`
 	 * 	- To prevent this incorrect *linter error* in `React` projects, prefer using {@link register} method (alias `use` method).
 	 *
 	 * - **NOTE:** *Once a plugin is injected, all the registered methods for that plugin will be available for the whole project.*
@@ -127,7 +127,7 @@ export interface ChronosStatics {
 	 *
 	 * @remarks
 	 * - This is just an alias for {@link use} method.
-	 * - Using {@link use} method on in `React` projects may trigger *linter error* like `"React Hooks must be called in a React function component or a custom React Hook function."`
+	 * - Using {@link use} method in `React` projects may trigger *linter error* like `"React Hooks must be called in a React function component or a custom React Hook function."`
 	 * 	- To prevent this incorrect *linter error* in `React` projects, prefer using this (`register`) method over {@link use} method.
 	 *
 	 * - **NOTE:** *Once a plugin is injected, all the registered methods for that plugin will be available for the whole project.*

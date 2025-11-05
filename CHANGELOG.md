@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.25.1-4] - 2025-11-04
+
+- Added alias for Chronos static method use: register.
+
 ## [4.25.0] - 2025-11-03
 
 - **Added** new `Chronos` method `durationString(...)` and **Fixed** issues with internal *duration normalization logic*.
