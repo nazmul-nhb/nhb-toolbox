@@ -39,6 +39,7 @@
     <img src="https://img.shields.io/github/issues-pr/nazmul-nhb/nhb-toolbox?style=flat&label=PRs&logo=github" alt="Pull Requests" />
   </a>
 
+  <!-- License Info -->
   <a href="https://www.npmjs.com/package/nhb-toolbox" aria-label="License">
     <img src="https://img.shields.io/npm/l/nhb-toolbox.svg?label=LICENSE&style=flat&color=orange&logo=open-source-initiative" alt="License" />
   </a>
@@ -213,7 +214,7 @@ See [Changelog](CHANGELOG.md) for recent updates.
 
 **`Chronos`** - The ultimate date/time manipulation class with 100+ methods for parsing, formatting, calculating, and comparing dates. Handles all edge cases and timezones safely.
 
-> 🧩 **Note**: Some methods in `Chronos` are available only through the [plugin system](https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/plugins#-official-plugins). This modular design ensures the core bundle stays lightweight — plugins are loaded only when needed, reducing unnecessary code in your final build.
+> 🧩 **Note**: Some methods in `Chronos` are available only through the [**plugin system**](https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/plugins#-official-plugins). This modular design ensures the core bundle stays lightweight — plugins are loaded only when needed, reducing unnecessary code in your final build.
 
 ```typescript
 new Chronos('2025-01-01').addDays(3).format('YYYY-MM-DD'); // "2025-01-04"
