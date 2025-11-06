@@ -1,6 +1,6 @@
 import type { UTCOffSet } from './types';
 
-/** List of time-zones with respective time-zone offsets (in minutes) as object (`{timeZone: offset}`) */
+/** Record of time-zones with respective time-zone offsets (in minutes) as object (`{timeZone: offset}`) */
 export const TIME_ZONES = /* @__PURE__ */ Object.freeze({
 	// ! UTC -12:00 to -01:00 (Mostly Pacific Islands, Americas)
 	/** International Date Line West (Baker Island, Howland Island) */
@@ -291,7 +291,7 @@ export const TIME_ZONES = /* @__PURE__ */ Object.freeze({
 	PETT: 12 * 60,
 } as const);
 
-/** List of time-zone labels/names against their corresponding UTC values as object (`{UTCOffset: timeZoneName}`) */
+/** Record of time-zone labels/names against their corresponding UTC offsets as object (`{UTCOffset: timeZoneName}`) */
 export const TIME_ZONE_LABELS = /* @__PURE__ */ Object.freeze({
 	'UTC-12:00': 'Baker Island Time', // and Howland Island
 	// 'UTC-11:30': 'Niue Time',
@@ -350,7 +350,8 @@ export const TIME_ZONE_LABELS = /* @__PURE__ */ Object.freeze({
 	'UTC+14:00': 'Line Islands Time',
 } as Record<UTCOffSet, string>);
 
-export const TIME_ZONE_ID = /* @__PURE__ */ Object.freeze({
+/** Record of timezone identifiers (from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database}) against their corresponding UTC offsets as object (`{TimeZoneIdentifier: UTCOffset}`) */
+export const TIME_ZONE_IDs = /* @__PURE__ */ Object.freeze({
 	'Africa/Abidjan': 'UTC+00:00',
 	'Africa/Accra': 'UTC+00:00',
 	'Africa/Addis_Ababa': 'UTC+03:00',

@@ -248,6 +248,7 @@ export {
 	isValidTime as isValidTimeString,
 	isValidUTCOffSet as isValidUTC,
 	isValidUTCOffSet,
+	isValidTimeZoneId,
 } from './date/guards';
 
 // ! Chronos

@@ -1,7 +1,8 @@
 import { isString } from '../guards/primitives';
 import { isNumericString } from '../guards/specials';
 import type { Numeric } from '../types/index';
-import type { ClockTime, UTCOffSet } from './types';
+import { TIME_ZONE_IDs } from './timezone';
+import type { ClockTime, TimeZoneIdentifier, UTCOffSet } from './types';
 
 /**
  * * Checks if the provided value is a valid time string in "HH:MM" format.
@@ -29,9 +30,16 @@ export function isValidTime(value: unknown): value is ClockTime {
  * @returns `true` if the value is a valid utc offset, `false` otherwise.
  */
 export function isValidUTCOffSet(value: unknown): value is UTCOffSet {
-	if (!isString(value)) return false;
+	return isString(value) ? /^UTC[+-]?\d{1,2}:\d{2}$/.test(value) : false;
+}
 
-	return /^UTC[+-]?\d{1,2}:\d{2}$/.test(value);
+/**
+ * * Checks if the provided value is a valid timezone identifier from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database} (e.g. `"Africa/Harare"`).
+ * @param value Timezone id to check.
+ * @returns `true` if the value is a valid timezone id, `false` otherwise.
+ */
+export function isValidTimeZoneId(value: unknown): value is TimeZoneIdentifier {
+	return isString(value) ? value in TIME_ZONE_IDs : false;
 }
 
 /**

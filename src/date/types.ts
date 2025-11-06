@@ -19,7 +19,7 @@ import type {
 	ZODIAC_PRESETS,
 } from './constants';
 import type { SEASON_PRESETS } from './seasons';
-import type { TIME_ZONE_ID, TIME_ZONES } from './timezone';
+import type { TIME_ZONE_IDs, TIME_ZONES } from './timezone';
 
 // ! Re-export `ChronosStatics`
 export type { ChronosStatics };
@@ -321,7 +321,7 @@ export type ChronosStaticKey = keyof ChronosStatics;
 export type TimeZone = keyof typeof TIME_ZONES;
 
 /** Timezone identifier from IANA TZ Database */
-export type TimeZoneIdentifier = keyof typeof TIME_ZONE_ID;
+export type TimeZoneIdentifier = keyof typeof TIME_ZONE_IDs;
 
 /** Positive UTC hours */
 export type PositiveUTCHour = `+0${Enumerate<10>}` | `+${NumberRange<10, 14>}`;
