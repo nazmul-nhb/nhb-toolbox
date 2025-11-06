@@ -1,6 +1,7 @@
 import type { LooseLiteral } from '../../utils/types';
-import { INTERNALS, TIME_ZONE_LABELS, TIME_ZONES } from '../constants';
+import { INTERNALS } from '../constants';
 import { isValidUTCOffSet } from '../guards';
+import { TIME_ZONES, TIME_ZONE_LABELS } from '../timezone';
 import type { TimeZone, UTCOffSet } from '../types';
 import { extractMinutesFromUTC, formatUTCOffset } from '../utils';
 

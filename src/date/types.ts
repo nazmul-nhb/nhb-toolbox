@@ -14,12 +14,12 @@ import type {
 	MONTHS,
 	SECOND_FORMATS,
 	TIME_FORMATS,
-	TIME_ZONES,
 	WESTERN_ZODIAC_SIGNS,
 	YEAR_FORMATS,
 	ZODIAC_PRESETS,
 } from './constants';
 import type { SEASON_PRESETS } from './seasons';
+import type { TIME_ZONES } from './timezone';
 
 // ! Re-export `ChronosStatics`
 export type { ChronosStatics };

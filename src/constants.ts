@@ -1,11 +1,11 @@
 export {
 	MONTHS,
-	TIME_ZONE_LABELS,
-	TIME_ZONES,
 	VEDIC_ZODIAC_SIGNS,
 	DAYS as WEEK_DAYS,
 	WESTERN_ZODIAC_SIGNS,
 } from './date/constants';
+
+export { TIME_ZONE_LABELS, TIME_ZONES } from './date/timezone';
 
 export {
 	AUSTRALIA_SEASONS,
