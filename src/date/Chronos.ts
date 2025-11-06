@@ -592,7 +592,7 @@ export class Chronos {
 		}
 	}
 
-	/** @instance Returns a string representation of a date. The format of the string depends on the locale. */
+	/** @instance Returns a string representation of a date. */
 	toString(): string {
 		switch (this.#ORIGIN) {
 			case 'toUTC':

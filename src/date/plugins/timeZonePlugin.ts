@@ -1,8 +1,8 @@
 import type { LooseLiteral } from '../../utils/types';
 import { INTERNALS } from '../constants';
 import { isValidUTCOffSet } from '../guards';
-import { TIME_ZONES, TIME_ZONE_LABELS } from '../timezone';
-import type { TimeZone, UTCOffSet } from '../types';
+import { TIME_ZONES, TIME_ZONE_ID, TIME_ZONE_LABELS } from '../timezone';
+import type { TimeZone, TimeZoneIdentifier, UTCOffSet } from '../types';
 import { extractMinutesFromUTC, formatUTCOffset } from '../utils';
 
 type ChronosConstructor = import('../Chronos').Chronos;
@@ -11,12 +11,12 @@ type MainChronos = typeof import('../Chronos').Chronos;
 declare module '../Chronos' {
 	interface Chronos {
 		/**
-		 * @instance Create a new instance of `Chronos` in the specified timezone.
+		 * @instance Creates a new instance of `Chronos` in the specified timezone.
 		 *
-		 * @param zone - Standard timezone abbreviation (e.g., 'IST', 'UTC', 'EST') or UTC Offset in `UTC-01:30` format.
+		 * @param zone - Standard timezone abbreviation (e.g., 'IST', 'UTC', 'EST' etc.), UTC Offset in `UTC±HH:mm` format or timezone identifier (e.g., `'Africa/Harare'`).
 		 * @returns A new instance of `Chronos` with time in the given timezone. Invalid input sets time-zone to `UTC`.
 		 */
-		timeZone(zone: TimeZone | UTCOffSet): ChronosConstructor;
+		timeZone(zone: TimeZoneIdentifier | TimeZone | UTCOffSet): ChronosConstructor;
 
 		/**
 		 * @instance Returns the current time zone name as a full descriptive string (e.g. `"Bangladesh Standard Time"`).
@@ -49,11 +49,21 @@ declare module '../Chronos' {
 /** * Plugin to inject `timeZone` related methods */
 export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	const internal = ChronosClass[INTERNALS];
-	const inDate = internal.internalDate;
+
+	/**
+	 * * Gets the internal `#date`, a readonly private property (core `Date` object)
+	 * @param instance - Chronos instance to access
+	 * @returns The core internal `Date` object
+	 */
+	const $Date = internal.internalDate;
+
+	const isValidTimeZoneId = (tzId: string | undefined): tzId is TimeZoneIdentifier => {
+		return tzId ? tzId in TIME_ZONE_ID : false;
+	};
 
 	ChronosClass.prototype.timeZone = function (
 		this: ChronosConstructor,
-		zone: TimeZone | UTCOffSet
+		zone: TimeZoneIdentifier | TimeZone | UTCOffSet
 	): ChronosConstructor {
 		let targetOffset: number;
 		let stringOffset: UTCOffSet;
@@ -61,6 +71,9 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		if (isValidUTCOffSet(zone)) {
 			targetOffset = extractMinutesFromUTC(zone);
 			stringOffset = zone;
+		} else if (isValidTimeZoneId(zone)) {
+			stringOffset = TIME_ZONE_ID[zone] as UTCOffSet;
+			targetOffset = extractMinutesFromUTC(stringOffset);
 		} else {
 			targetOffset = TIME_ZONES?.[zone] ?? TIME_ZONES['UTC'];
 			stringOffset = formatUTCOffset(targetOffset);
@@ -69,7 +82,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		const previousOffset = this.getTimeZoneOffsetMinutes();
 		const relativeOffset = targetOffset - previousOffset;
 
-		const adjustedTime = new Date(inDate(this).getTime() + relativeOffset * 60 * 1000);
+		const adjustedTime = new Date($Date(this).getTime() + relativeOffset * 60 * 1000);
 
 		const instance = new ChronosClass(adjustedTime);
 
@@ -119,13 +132,13 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 				const gmt = offset.replace('UTC', 'GMT').replace(':', '');
 				const label = TIME_ZONE_LABELS[offset] ?? offset;
 
-				return inDate(this)
+				return $Date(this)
 					.toString()
 					.replace(/GMT[+-]\d{4}\s+\([^)]+\)/, `${gmt} (${label})`);
 			}
 			case 'toUTC':
 			case 'utc': {
-				return inDate(this)
+				return $Date(this)
 					.toString()
 					.replace(
 						/GMT[+-]\d{4}\s+\([^)]+\)/,
@@ -133,7 +146,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 					);
 			}
 			default:
-				return inDate(this).toString();
+				return $Date(this).toString();
 		}
 	};
 };

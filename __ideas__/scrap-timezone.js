@@ -2,17 +2,21 @@
 
 /**
  *  @typedef {Object} TimeZone
+ *  @property {string} country
  *  @property {string} timeZoneId
  *  @property {string} sdtOffset
+ *  @property {string} dstOffset
  *  @property {string} sdtTzName
  *  @property {string} sdtTzAbr
+ *  @property {string} dstTzName
+ *  @property {string} dstTzAbr
  */
 
-// * @property {string} country
-// * @property { string } dstOffset
-// * @property { string } dstTzName
-// * @property { string } dstTzAbr
+/**
+ * @typedef {Record<string, string>} TimeZoneWithUTC
+ */
 
+/** Scrap timezone data from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia} */
 function scrapTimeZone() {
 	const zoneContainer = document.querySelector('tbody');
 
@@ -20,6 +24,9 @@ function scrapTimeZone() {
 
 	/** @type {Array<TimeZone>} Array of TimeZone objects */
 	const result = [];
+
+	// /** @type {TimeZoneWithUTC} Record of timezone id against UTC Offset */
+	// const result = {};
 
 	rows.forEach((row) => {
 		const cols = [...(row?.querySelectorAll('td') || [])];
@@ -44,20 +51,22 @@ function scrapTimeZone() {
 				''
 			);
 		};
-
-		// const isDoubleCol = cols[6].hasAttribute('colspan');
+		/** Check if a table cell has attribute `colspan` */
+		const hasColSpan = cols[6].hasAttribute('colspan');
 
 		/** @type {TimeZone} Timezone object */
 		const zone = {
-			// country: textContent(0),
+			country: textContent(0),
 			timeZoneId: textContent(1),
 			sdtOffset: `UTC${textContent(4)}`,
-			// dstOffset: `UTC${textContent(5)}`,
+			dstOffset: `UTC${textContent(5)}`,
 			sdtTzName: titleValue(6),
-			// dstTzName: isDoubleCol ? '' : titleValue(7),
+			dstTzName: hasColSpan ? '' : titleValue(7),
 			sdtTzAbr: textContent(6),
-			// dstTzAbr: isDoubleCol ? '' : textContent(7)
+			dstTzAbr: hasColSpan ? '' : textContent(7),
 		};
+
+		// result[textContent(1)] = `UTC${textContent(4)}`;
 
 		result.push(zone);
 	});
