@@ -1,6 +1,6 @@
 import { isValidArray } from '../guards/non-primitives';
 import { isString } from '../guards/primitives';
-import type { Enumerate, LocaleCode, NumberRange } from '../number/types';
+import type { Enumerate, NumberRange } from '../number/types';
 import { getOrdinal } from '../number/utilities';
 import type { $Record } from '../object/types';
 import type { TupleOf } from '../utils/types';
@@ -17,9 +17,11 @@ import type {
 	ChronosWithOptions,
 	DateRangeOptions,
 	DatesInRangeOptions,
+	DateTimeFormatOptions,
 	DurationKey,
 	DurationOptions,
 	FormatOptions,
+	LocalesArguments,
 	Milliseconds,
 	MonthName,
 	Quarter,
@@ -644,17 +646,14 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Wrapper over native `toLocaleString`.
+	 * @instance Wrapper over native `toLocaleString` with improved type system.
 	 * @description Converts a date and time to a string by using the current or specified locale.
 	 *
 	 * @param locales A locale string, array of locale strings, Intl.Locale object, or array of Intl.Locale objects that contain one or more language or locale tags. If you include more than one locale string, list them in descending order of priority so that the first entry is the preferred locale. If you omit this parameter, the default locale of the JavaScript runtime is used.
 	 * @param options An object that contains one or more properties that specify comparison options.
 	 */
-	toLocaleString(
-		locale?: LocaleCode | Intl.Locale | Array<LocaleCode | Intl.Locale>,
-		options?: Intl.DateTimeFormatOptions
-	): string {
-		return this.#date.toLocaleString(locale, options);
+	toLocaleString(locale?: LocalesArguments, options?: DateTimeFormatOptions): string {
+		return this.toUTC().toDate().toLocaleString(locale, options);
 	}
 
 	/** @instance Returns the time value in milliseconds since midnight, January 1, 1970 UTC. */

@@ -1,7 +1,7 @@
 import type { LooseLiteral } from '../../utils/types';
 import { INTERNALS } from '../constants';
 import { isValidTimeZoneId, isValidUTCOffSet } from '../guards';
-import { TIME_ZONES, TIME_ZONE_IDs, TIME_ZONE_LABELS } from '../timezone';
+import { TIME_ZONES, TIME_ZONE_IDS, TIME_ZONE_LABELS } from '../timezone';
 import type { TimeZone, TimeZoneIdentifier, UTCOffSet } from '../types';
 import { extractMinutesFromUTC, formatUTCOffset } from '../utils';
 
@@ -68,7 +68,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 			targetOffset = extractMinutesFromUTC(zone);
 			stringOffset = zone;
 		} else if (isValidTimeZoneId(zone)) {
-			stringOffset = TIME_ZONE_IDs[zone] as UTCOffSet;
+			stringOffset = TIME_ZONE_IDS[zone] as UTCOffSet;
 			targetOffset = extractMinutesFromUTC(stringOffset);
 		} else {
 			targetOffset = TIME_ZONES?.[zone] ?? TIME_ZONES['UTC'];

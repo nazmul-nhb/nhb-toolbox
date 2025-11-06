@@ -351,7 +351,7 @@ export const TIME_ZONE_LABELS = /* @__PURE__ */ Object.freeze({
 } as Record<UTCOffSet, string>);
 
 /** Record of timezone identifiers (from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database}) against their corresponding UTC offsets as object (`{TimeZoneIdentifier: UTCOffset}`) */
-export const TIME_ZONE_IDs = /* @__PURE__ */ Object.freeze({
+export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 	'Africa/Abidjan': 'UTC+00:00',
 	'Africa/Accra': 'UTC+00:00',
 	'Africa/Addis_Ababa': 'UTC+03:00',
@@ -951,7 +951,3 @@ export const TIME_ZONE_IDs = /* @__PURE__ */ Object.freeze({
 	WET: 'UTC+00:00',
 	Zulu: 'UTC+00:00',
 } as const);
-
-// getTimeZoneId
-// formatNative use Intl.xxxx
-//

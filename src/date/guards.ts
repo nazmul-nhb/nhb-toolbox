@@ -1,7 +1,7 @@
 import { isString } from '../guards/primitives';
 import { isNumericString } from '../guards/specials';
 import type { Numeric } from '../types/index';
-import { TIME_ZONE_IDs } from './timezone';
+import { TIME_ZONE_IDS } from './timezone';
 import type { ClockTime, TimeZoneIdentifier, UTCOffSet } from './types';
 
 /**
@@ -39,7 +39,7 @@ export function isValidUTCOffSet(value: unknown): value is UTCOffSet {
  * @returns `true` if the value is a valid timezone id, `false` otherwise.
  */
 export function isValidTimeZoneId(value: unknown): value is TimeZoneIdentifier {
-	return isString(value) ? value in TIME_ZONE_IDs : false;
+	return isString(value) ? value in TIME_ZONE_IDS : false;
 }
 
 /**

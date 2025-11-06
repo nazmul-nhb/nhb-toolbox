@@ -1,4 +1,4 @@
-import type { Enumerate, NumberRange } from '../number/types';
+import type { Enumerate, LocaleCode, NumberRange } from '../number/types';
 import type { Country } from '../string/types';
 import type { LooseLiteral, RangeTuple } from '../utils/types';
 import type { Chronos } from './Chronos';
@@ -19,7 +19,7 @@ import type {
 	ZODIAC_PRESETS,
 } from './constants';
 import type { SEASON_PRESETS } from './seasons';
-import type { TIME_ZONE_IDs, TIME_ZONES } from './timezone';
+import type { TIME_ZONE_IDS, TIME_ZONES } from './timezone';
 
 // ! Re-export `ChronosStatics`
 export type { ChronosStatics };
@@ -164,13 +164,21 @@ export type TimeParts =
 	| `${Exclude<Hour, 'h' | 'hh' | 'H'>}:${Exclude<Minute, 'm'>}:${Exclude<Second, 's'>}:${Exclude<Millisecond, 'ms'>}`
 	| `${Exclude<Hour, 'H' | 'HH' | 'h'>}:${Exclude<Minute, 'm'>}:${Exclude<Second, 's'>}:${Exclude<Millisecond, 'ms'>} ${TimeFormats}`;
 
-type DateTimeConnector = ' ' | ', ' | '; ' | ' - ' | 'T';
 type DateTimeISO = 'YYYY-MM-DDTHH:mm:ss.mssZZ';
+type DateTimeConnector = ' ' | ', ' | '; ' | ' - ' | 'T';
 
 /** Pre-defined literal types for formatting date and time. Optionally can pass any string. */
 export type StrictFormat = LooseLiteral<
 	DateTimeISO | DateParts | TimeParts | `${DateParts}${DateTimeConnector}${TimeParts}`
 >;
+
+/** Locale arguments for `toLocaleString` method. Includes `BCP47` tags and `Intl.Locale`. */
+export type LocalesArguments = LocaleCode | Intl.Locale | Array<LocaleCode | Intl.Locale>;
+
+/** Format options for `toLocaleString` method. Extends `Intl.DateTimeFormatOptions `to update `timeZone` option. */
+export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
+	timeZone?: TimeZoneIdentifier;
+}
 
 /** Iterable `Chronos` object properties */
 export interface ChronosObject {
@@ -321,7 +329,7 @@ export type ChronosStaticKey = keyof ChronosStatics;
 export type TimeZone = keyof typeof TIME_ZONES;
 
 /** Timezone identifier from IANA TZ Database */
-export type TimeZoneIdentifier = keyof typeof TIME_ZONE_IDs;
+export type TimeZoneIdentifier = keyof typeof TIME_ZONE_IDS;
 
 /** Positive UTC hours */
 export type PositiveUTCHour = `+0${Enumerate<10>}` | `+${NumberRange<10, 14>}`;
