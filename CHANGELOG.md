@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.25.11] - 2025-11-06
+
+- **Fixed** *pluralization logic* in `fromNow()` method of `Chronos`: *Only `1` is considered singular, every other number is plural*.
+
 ## [4.25.10] - 2025-11-06
 
 - **Fixed** *pluralization issues* in the methods of `Converter` classes.
