@@ -672,7 +672,7 @@ export class Chronos {
 	 *
 	 * - Supported format tokens include: `YYYY`, `YY`, `mmmm`, `mmm`, `MM`, `M`, `DD`, `D`, `dd`, `ddd`, `Do`, `HH`, `H`, `hh`, `h`, `mm`, `m`, `ss`, `s`, `ms`, `mss`, `a`, `A`, and `ZZ`.
 	 * - *Any token not wrapped in brackets will be parsed and replaced with its corresponding date component.*
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/format#format-tokens format tokens} for detailed usage.
+	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/format#format-tokens format tokens} for details.
 	 *
 	 * @param useUTC - Optional boolean to format the date using UTC time.
 	 * When `true`, it behaves like `formatUTC()` and outputs time based on UTC offset. Defaults to `false`.
@@ -688,11 +688,11 @@ export class Chronos {
 	/**
 	 * @instance Formats the date into a predefined strict string format using local time or UTC.
 	 *
-	 * @remarks Offers `over 21,000` predefined formats with full IntelliSense support.
+	 * @remarks Offers `over 26,500` predefined formats with full IntelliSense support.
 	 *
 	 * @param format - The desired format string. Defaults to `'dd, mmm DD, YYYY HH:mm:ss'`
 	 *                 (e.g., `'Sun, Apr 06, 2025 16:11:55'`).
-	 *	 - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/format#format-tokens format tokens} for detailed usage.
+	 *	- Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/format#format-tokens format tokens} for details.
 	 *
 	 * @param useUTC - If `true`, formats the date in UTC (equivalent to `formatUTC()`).
 	 *                 Defaults to `false` (local time).
@@ -712,7 +712,7 @@ export class Chronos {
 	 *
 	 * - Supported format tokens include: `YYYY`, `YY`, `mmmm`, `mmm`, `MM`, `M`, `DD`, `D`, `dd`, `ddd`, `Do`, `HH`, `H`, `hh`, `h`, `mm`, `m`, `ss`, `s`, `ms`, `mss`, `a`, `A`, and `ZZ`.
 	 * - *Any token not wrapped in brackets will be parsed and replaced with its corresponding date component.*
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/format#format-tokens format tokens} for detailed usage.
+	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/format#format-tokens format tokens} for details.
 	 *
 	 * @returns Formatted date string in desired format (UTC time).
 	 */
@@ -1578,7 +1578,7 @@ export class Chronos {
 	 * @param options - Configuration for the date range. Accepts a fixed (`RangeWithDates`) format.
 	 * @returns Array of ISO date strings in either local or UTC format, excluding any skipped weekdays if specified.
 	 *
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/calculation#getdatesinrange the documentation site} for detailed usage.
+	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/calculation#getdatesinrange the documentation site} for details.
 	 *
 	 * @example
 	 * // Using a fixed date range:
@@ -1607,7 +1607,7 @@ export class Chronos {
 	 * @param options - Configuration for the date range. Accepts a relative (`RelativeDateRange`) format.
 	 * @returns Array of ISO date strings in either local or UTC format, excluding any skipped weekdays if specified.
 	 *
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/calculation#getdatesinrange the documentation site} for detailed usage.
+	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/calculation#getdatesinrange the documentation site} for details.
 	 *
 	 * @example
 	 * // Using a relative date range with skipDays:
@@ -1635,7 +1635,7 @@ export class Chronos {
 	 * @param options - Optional configuration object defining either a fixed or relative date range.
 	 * @returns An array of ISO date strings in local or UTC format, depending on the `format` option.
 	 *
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/calculation#getdatesinrange the documentation site} for detailed usage.
+	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/calculation#getdatesinrange the documentation site} for details.
 	 */
 	getDatesInRange(options?: DatesInRangeOptions): string[] {
 		let startDate = this.clone(),
@@ -1945,7 +1945,7 @@ export class Chronos {
 	 * @param options - Relative range (e.g., 7 days, 4 weeks) and output format (local with timezone or utc).
 	 * @returns Array of ISO date strings in the specified format. Returns empty array if no matches in the time span.
 	 *
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/statics#getdatesforday the documentation site} for detailed usage.
+	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/statics#getdatesforday the documentation site} for details.
 	 *
 	 * @example
 	 * Chronos.getDatesForDay('Wednesday', { span: 7, unit: 'day' });
@@ -1968,7 +1968,7 @@ export class Chronos {
 	 * @param options - Date range (from/to, e.g. `'2025-06-30'`, ` new Date()`, `new Chronos()` etc.) and output format (local with timezone or utc).
 	 * @returns Array of ISO date strings in the specified format. Returns empty array if no matches in the range.
 	 *
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/statics#getdatesforday the documentation site} for detailed usage.
+	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/statics#getdatesforday the documentation site} for details.
 	 *
 	 * @example
 	 * Chronos.getDatesForDay('Monday', {
@@ -1987,7 +1987,7 @@ export class Chronos {
 	 * @param options - Relative range (e.g., 7 days, 4 weeks) or date range (from/to) and output format.
 	 * @returns Array of ISO date strings in the specified format.
 	 *
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/statics#getdatesforday the documentation site} for detailed usage.
+	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/statics#getdatesforday the documentation site} for details.
 	 */
 	static getDatesForDay(day: WeekDay, options?: WeekdayOptions): string[] {
 		let startDate = new Chronos(),

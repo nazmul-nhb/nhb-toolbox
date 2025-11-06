@@ -164,11 +164,12 @@ export type TimeParts =
 	| `${Exclude<Hour, 'h' | 'hh' | 'H'>}:${Exclude<Minute, 'm'>}:${Exclude<Second, 's'>}:${Exclude<Millisecond, 'ms'>}`
 	| `${Exclude<Hour, 'H' | 'HH' | 'h'>}:${Exclude<Minute, 'm'>}:${Exclude<Second, 's'>}:${Exclude<Millisecond, 'ms'>} ${TimeFormats}`;
 
-type DateTimeConnector = ' ' | ', ' | '; ' | ' - ';
+type DateTimeConnector = ' ' | ', ' | '; ' | ' - ' | 'T';
+type DateTimeISO = 'YYYY-MM-DDTHH:mm:ss.mssZZ';
 
-/** Strict pre-defined types for formatting date and time. */
+/** Pre-defined literal types for formatting date and time. Optionally can pass any string. */
 export type StrictFormat = LooseLiteral<
-	DateParts | TimeParts | `${DateParts}${DateTimeConnector}${TimeParts}`
+	DateTimeISO | DateParts | TimeParts | `${DateParts}${DateTimeConnector}${TimeParts}`
 >;
 
 /** Iterable `Chronos` object properties */
@@ -336,7 +337,16 @@ export type UTCOffSet = `UTC${$UTCOffset}`;
 
 /** `Chronos` Date Format options */
 export interface FormatOptions {
-	/** - The desired format (Default format is dd, `MMM DD, YYYY HH:mm:ss` = `Sun, Apr 06, 2025 16:11:55). */
+	/**
+	 * * The desired format (Default format is `'dd, MMM DD, YYYY HH:mm:ss'` = `'Sun, Apr 06, 2025 16:11:55'`).
+	 *
+	 * - To output raw text (i.e., not interpreted as a date token), wrap it in square brackets.
+	 * - For example, `[Today is] ddd` results in `Today is Sunday`, and `YYYY[ year]` results in `2025 year`.
+	 *
+	 * - Supported format tokens include: `YYYY`, `YY`, `mmmm`, `mmm`, `MM`, `M`, `DD`, `D`, `dd`, `ddd`, `Do`, `HH`, `H`, `hh`, `h`, `mm`, `m`, `ss`, `s`, `ms`, `mss`, `a`, `A`, and `ZZ`.
+	 * - *Any token not wrapped in brackets will be parsed and replaced with its corresponding date component.*
+	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/format#format-tokens format tokens} for details.
+	 */
 	format?: string;
 	/** - Whether to use UTC time. Defaults to `false`. */
 	useUTC?: boolean;
