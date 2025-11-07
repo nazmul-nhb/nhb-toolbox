@@ -49,6 +49,7 @@ export default [
 			'@typescript-eslint/no-empty-object-type': 'off',
 			'@typescript-eslint/no-unused-expressions': 'error',
 			'@typescript-eslint/consistent-type-imports': ['warn', { prefer: 'type-imports' }],
+			'no-unreachable': 'warn',
 			'no-unused-vars': [
 				'off',
 				{

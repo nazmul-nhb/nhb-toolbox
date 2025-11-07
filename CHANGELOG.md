@@ -13,7 +13,7 @@ All notable changes to the package will be documented here.
 - **Updated** `Chronos` `timeZonePlugin` method `timeZone` to accept `TimeZoneIdentifier` along with *short timezone names* and *UTC offset*.
 - **Updated** *type interfaces* for `toLocaleString` `Chronos` method: **Created** `LocalesArguments` and `DateTimeFormatOptions` *type* and *interface*.
 - **Added** new *public properties* `timeZoneName` and `timeZoneId` to access *current timezone name and identifier(s)*. **Fixed** *UTC offset* related issues.
-- **Adjusted** `native` property to *provide correct native* `Date`.
+- **Adjusted** `native` property to *provide correct native* `Date`. **Fixed** issues with `toDate` and `toLocalISOString`. Optimized internal codes.
  -->
 
 ## [4.25.11] - 2025-11-06

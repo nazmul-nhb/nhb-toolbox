@@ -40,6 +40,19 @@ import type {
 } from './types';
 import { extractMinutesFromUTC } from './utils';
 
+/** Suffix for `new Date().getUnit()` methods. Replaces `Unit`. */
+type Suffix = 'FullYear' | 'Month' | 'Date' | 'Hours' | 'Minutes' | 'Seconds' | 'Milliseconds';
+
+/** Date parts for `Chronos` as `Record<part, number>` */
+type ChronosDateParts = {
+	year: number;
+	month: number;
+	date: number;
+	hour: number;
+	minute: number;
+	second: number;
+};
+
 /**
  * * Creates a new immutable `Chronos` instance.
  *
@@ -642,7 +655,7 @@ export class Chronos {
 				const mins =
 					this.#offset === 'UTC+00:00' ?
 						this.getUTCOffsetMinutes()
-					:	this.getTimeZoneOffsetMinutes();
+					:	-this.getTimeZoneOffsetMinutes() + this.getUTCOffsetMinutes();
 
 				const chronos = this.addMinutes(mins);
 
@@ -676,12 +689,9 @@ export class Chronos {
 			case 'timeZone':
 			case 'toUTC':
 			case 'utc': {
-				const previousOffset = this.getTimeZoneOffsetMinutes();
-				const currentOffset = this.getUTCOffsetMinutes();
+				const mins = -this.getTimeZoneOffsetMinutes() + this.getUTCOffsetMinutes();
 
-				const chronos = this.addMinutes(-previousOffset - currentOffset);
-
-				return chronos.#toLocalISOString();
+				return this.addMinutes(mins).#toLocalISOString();
 			}
 			default:
 				return this.#toLocalISOString();
@@ -711,8 +721,8 @@ export class Chronos {
 	 * @param locales A locale string, array of locale strings, `Intl.Locale` object, or array of `Intl.Locale` objects that contain one or more language or locale tags (see: {@link LocalesArguments}). If you include more than one locale string, list them in descending order of priority so that the first entry is the preferred locale. If you omit this parameter, the default locale of the JavaScript runtime is used.
 	 * @param options An object that contains one or more properties that specify comparison options (see: {@link DateTimeFormatOptions}).
 	 */
-	toLocaleString(locale?: LocalesArguments, options?: DateTimeFormatOptions): string {
-		return this.toUTC().toDate().toLocaleString(locale, options);
+	toLocaleString(locales?: LocalesArguments, options?: DateTimeFormatOptions): string {
+		return this.toUTC().toDate().toLocaleString(locales, options);
 	}
 
 	/** @instance Returns the time value in milliseconds since midnight, January 1, 1970 UTC. */
@@ -1414,7 +1424,7 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Returns the system's current UTC offset formatted as `+06:00` or `-07:00`.
+	 * @instance Returns the system's current UTC offset formatted as `±HH:mm` (`+06:00` or `-07:00`).
 	 *
 	 * - *Unlike JavaScript's {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset `Date.prototype.getTimezoneOffset()`}, which returns the offset in minutes **behind** UTC (positive for locations west of UTC and negative for east), this method returns the more intuitive sign format used in time zone representations (e.g., `+06:00` means 6 hours **ahead** of UTC).*
 	 *
@@ -1430,7 +1440,7 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Returns the timezone offset of this `Chronos` instance in `+06:00` or `-07:00` format maintaining current timezone.
+	 * @instance Returns the timezone offset of this `Chronos` instance in `±HH:mm` format maintaining current timezone.
 	 *
 	 * - *Unlike JavaScript's {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset Date.prototype.getTimezoneOffset()}, which returns the offset in minutes **behind** UTC (positive for locations west of UTC and negative for east), this method returns the more intuitive sign format used in time zone representations (e.g., `+06:00` means 6 hours **ahead** of UTC).*
 	 *
@@ -1441,7 +1451,7 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Returns the system's UTC offset in minutes.
+	 * @instance Gets the difference in minutes between Universal Coordinated Time (UTC) and the time on the local computer.
 	 *
 	 * - *Unlike JavaScript's {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset Date.prototype.getTimezoneOffset()}, this method returns a positive value if the local time is ahead of UTC, and negative if behind UTC.*
 	 *
@@ -1482,13 +1492,9 @@ export class Chronos {
 
 	/** @instance Returns new `Chronos` instance in local time */
 	toLocal(): Chronos {
-		const previousOffset = this.getTimeZoneOffsetMinutes();
+		const mins = this.getTimeZoneOffsetMinutes() - this.getUTCOffsetMinutes();
 
-		const localOffset = -this.#date.getTimezoneOffset();
-
-		const relativeOffset = previousOffset - localOffset;
-
-		const localTime = new Date(this.#date.getTime() - relativeOffset * 60 * 1000);
+		const localTime = new Date(this.#date.getTime() - mins * 60 * 1000);
 
 		return new Chronos(localTime).#withOrigin('toLocal');
 	}
@@ -1507,13 +1513,19 @@ export class Chronos {
 		const from = isFuture ? now : target;
 		const to = isFuture ? target : now;
 
-		let years = to.getFullYear() - from.getFullYear();
-		let months = to.getMonth() - from.getMonth();
-		let days = to.getDate() - from.getDate();
-		let hours = to.getHours() - from.getHours();
-		let minutes = to.getMinutes() - from.getMinutes();
-		let seconds = to.getSeconds() - from.getSeconds();
-		let milliseconds = to.getMilliseconds() - from.getMilliseconds();
+		const _getDiff = (suffix: Suffix): number => {
+			const method = ('get' + suffix) as `get${Suffix}`;
+
+			return to[method]() - from[method]();
+		};
+
+		let years = _getDiff('FullYear');
+		let months = _getDiff('Month');
+		let days = _getDiff('Date');
+		let hours = _getDiff('Hours');
+		let minutes = _getDiff('Minutes');
+		let seconds = _getDiff('Seconds');
+		let milliseconds = _getDiff('Milliseconds');
 
 		if (milliseconds < 0) {
 			milliseconds += 1000;
@@ -1802,15 +1814,6 @@ export class Chronos {
 			m: 'minute',
 			ss: 'second',
 			s: 'second',
-		};
-
-		type ChronosDateParts = {
-			year: number;
-			month: number;
-			date: number;
-			hour: number;
-			minute: number;
-			second: number;
 		};
 
 		const tokenRegex = new RegExp(Object.keys(tokenPatterns).join('|'), 'g');
