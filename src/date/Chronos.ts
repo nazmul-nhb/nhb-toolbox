@@ -403,7 +403,6 @@ export class Chronos {
 		const instance = new Chronos(this.#date);
 		instance.#ORIGIN = origin;
 		instance.origin = origin;
-		instance.native = instance.toDate();
 
 		if (offset) {
 			instance.#offset = offset;
@@ -417,6 +416,8 @@ export class Chronos {
 		if (tzId) {
 			instance.timeZoneId = tzId;
 		}
+
+		instance.native = instance.toDate();
 
 		return instance;
 	}
@@ -635,7 +636,17 @@ export class Chronos {
 
 				const chronos = this.addMinutes(mins);
 
-				return chronos.toDate();
+				return new Date(chronos.#date);
+			}
+			case 'timeZone': {
+				const mins =
+					this.#offset === 'UTC+00:00' ?
+						this.getUTCOffsetMinutes()
+					:	this.getTimeZoneOffsetMinutes();
+
+				const chronos = this.addMinutes(mins);
+
+				return new Date(chronos.#date);
 			}
 			default:
 				return new Date(this.#date);
