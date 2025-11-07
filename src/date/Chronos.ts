@@ -261,22 +261,6 @@ export class Chronos {
 		this.timeZoneId = this.#getNativeTimeZoneId();
 	}
 
-	/** * Safely get the current timezone name (e.g. "Bangladesh Standard Time"). */
-	#getNativeTimeZone() {
-		const details = new Intl.DateTimeFormat(undefined, {
-			timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-			timeZoneName: 'long',
-		}).formatToParts(this.toDate());
-
-		const tzPart = details.find((p) => p.type === 'timeZoneName');
-		return tzPart?.value ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
-	}
-
-	/** * Safely get the IANA time zone ID (e.g. `"Asia/Dhaka"`, `"Africa/Harare"`). */
-	#getNativeTimeZoneId(): TimeZoneIdentifier {
-		return Intl.DateTimeFormat().resolvedOptions().timeZone as TimeZoneIdentifier;
-	}
-
 	*[Symbol.iterator](): IterableIterator<[string, number]> {
 		yield ['year', this.year];
 		yield ['month', this.month];
@@ -357,6 +341,17 @@ export class Chronos {
 		}
 	}
 
+	[Symbol.match](string: string): RegExpMatchArray | null {
+		const [datePart, timePart] = this.toLocalISOString().split('.')[0].split('T');
+
+		const fuzzyDate = datePart.replace(/-/g, '[-/]?'); // Allow 2025-09-01, 2025/09/01, or 20250901
+		const fuzzyTime = timePart?.replace(/:/g, '[:.]?'); // Allow 13:26:00, 13.26.00, or 132600
+
+		const pattern = timePart ? `${fuzzyDate}(?:[T ]?${fuzzyTime})?` : fuzzyDate;
+
+		return string.match(new RegExp(pattern));
+	}
+
 	get [Symbol.toStringTag](): string {
 		switch (this.#ORIGIN) {
 			case 'timeZone':
@@ -371,17 +366,6 @@ export class Chronos {
 
 	get [Symbol.isConcatSpreadable](): boolean {
 		return true;
-	}
-
-	[Symbol.match](string: string): RegExpMatchArray | null {
-		const [datePart, timePart] = this.toLocalISOString().split('.')[0].split('T');
-
-		const fuzzyDate = datePart.replace(/-/g, '[-/]?'); // Allow 2025-09-01, 2025/09/01, or 20250901
-		const fuzzyTime = timePart?.replace(/:/g, '[:.]?'); // Allow 13:26:00, 13.26.00, or 132600
-
-		const pattern = timePart ? `${fuzzyDate}(?:[T ]?${fuzzyTime})?` : fuzzyDate;
-
-		return string.match(new RegExp(pattern));
 	}
 
 	/**
@@ -433,6 +417,22 @@ export class Chronos {
 		instance.native = instance.toDate();
 
 		return instance;
+	}
+
+	/** * Safely get the current timezone name (e.g. "Bangladesh Standard Time"). */
+	#getNativeTimeZone() {
+		const details = new Intl.DateTimeFormat(undefined, {
+			timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+			timeZoneName: 'long',
+		}).formatToParts(this.toDate());
+
+		const tzPart = details.find((p) => p.type === 'timeZoneName');
+		return tzPart?.value ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+	}
+
+	/** * Safely get the IANA time zone ID (e.g. `"Asia/Dhaka"`, `"Africa/Harare"`). */
+	#getNativeTimeZoneId(): TimeZoneIdentifier {
+		return Intl.DateTimeFormat().resolvedOptions().timeZone as TimeZoneIdentifier;
 	}
 
 	/**
@@ -683,7 +683,7 @@ export class Chronos {
 		}
 	}
 
-	/** @instance Returns ISO string with local time zone offset */
+	/** @instance Returns ISO string with local machine's time zone offset */
 	toLocalISOString(): string {
 		switch (this.#ORIGIN) {
 			case 'timeZone':
