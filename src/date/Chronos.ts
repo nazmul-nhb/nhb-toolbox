@@ -32,6 +32,7 @@ import type {
 	TimeDuration,
 	TimeParts,
 	TimeUnit,
+	// TimeZoneIdentifier,
 	UTCOffSet,
 	WeekDay,
 	WeekdayOptions,
@@ -66,6 +67,7 @@ export class Chronos {
 	readonly #date: Date;
 	#offset: UTCOffSet;
 	#ORIGIN: ChronosMethods | 'root';
+	// readonly timeZoneId: TimeZoneIdentifier;
 
 	static #plugins = new Set<ChronosPlugin>();
 
@@ -79,8 +81,8 @@ export class Chronos {
 			return instance.#offset;
 		},
 
-		withOrigin(instance, method, label) {
-			return instance.#withOrigin(method as ChronosMethods, label);
+		withOrigin(instance, method, offset, tzName) {
+			return instance.#withOrigin(method as ChronosMethods, offset, tzName);
 		},
 
 		toNewDate(instance, value) {
@@ -88,15 +90,21 @@ export class Chronos {
 		},
 	};
 
+	/** Origin of the `Chronos` instance (Method that created `new Chronos`), useful for tracking instance. */
+	origin: ChronosMethods | 'root';
+
 	/**
 	 * * `Chronos` date/time as Native JS `Date` object.
 	 *
-	 * - **NOTE**: It is **HIGHLY** advised *not to rely* on this public property to access native JS `Date`. It's not reliable when timezone and/or UTC related operations are performed. If you really need to use native `Date`, use `toDate` method. This property is purely for developer convenience and sugar.
+	 * - **NOTE**: This property is purely for developer convenience and sugar. It is **HIGHLY** advised *not to rely* on this public property to access native JS `Date`. It may not be reliable when timezone and/or UTC related operations are performed. If you really need to use native `Date`, use {@link toDate} instance method.
 	 */
 	native: Date;
 
-	/** Origin of the `Chronos` instance (Method that created `new Chronos`), useful for tracking instance. */
-	origin: ChronosMethods | 'root';
+	/** Current UTC offset in `UTC±HH:mm` format */
+	utcOffset: UTCOffSet;
+
+	/** Current timezone name */
+	timeZoneName: string;
 
 	/**
 	 * * Creates a new immutable `Chronos` instance.
@@ -232,6 +240,18 @@ export class Chronos {
 		this.#ORIGIN = 'root';
 		this.origin = this.#ORIGIN;
 		this.#offset = `UTC${this.getUTCOffset()}`;
+		this.utcOffset = this.#offset;
+		this.timeZoneName = this.#getNativeTimeZone();
+	}
+
+	#getNativeTimeZone() {
+		const details = new Intl.DateTimeFormat(undefined, {
+			timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+			timeZoneName: 'long',
+		}).formatToParts(this.toDate());
+
+		const tzPart = details.find((p) => p.type === 'timeZoneName');
+		return tzPart?.value ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
 	}
 
 	*[Symbol.iterator](): IterableIterator<[string, number]> {
@@ -364,12 +384,21 @@ export class Chronos {
 	 * @param offset Optional UTC offset in `UTC+12:00` format.
 	 * @returns The `Chronos` instance with the specified origin.
 	 */
-	#withOrigin(origin: ChronosMethods, offset?: UTCOffSet): Chronos {
+	#withOrigin(origin: ChronosMethods, offset?: UTCOffSet, tzName?: string): Chronos {
 		const instance = new Chronos(this.#date);
 		instance.#ORIGIN = origin;
 		instance.origin = origin;
-		instance.native = instance.#date;
-		if (offset) instance.#offset = offset;
+		instance.native = instance.toDate();
+
+		if (offset) {
+			instance.#offset = offset;
+			instance.utcOffset = offset;
+		}
+
+		if (tzName) {
+			instance.timeZoneName = tzName;
+		}
+
 		return instance;
 	}
 
@@ -649,8 +678,8 @@ export class Chronos {
 	 * @instance Wrapper over native `toLocaleString` with improved type system.
 	 * @description Converts a date and time to a string by using the current or specified locale.
 	 *
-	 * @param locales A locale string, array of locale strings, Intl.Locale object, or array of Intl.Locale objects that contain one or more language or locale tags. If you include more than one locale string, list them in descending order of priority so that the first entry is the preferred locale. If you omit this parameter, the default locale of the JavaScript runtime is used.
-	 * @param options An object that contains one or more properties that specify comparison options.
+	 * @param locales A locale string, array of locale strings, `Intl.Locale` object, or array of `Intl.Locale` objects that contain one or more language or locale tags (see: {@link LocalesArguments}). If you include more than one locale string, list them in descending order of priority so that the first entry is the preferred locale. If you omit this parameter, the default locale of the JavaScript runtime is used.
+	 * @param options An object that contains one or more properties that specify comparison options (see: {@link DateTimeFormatOptions}).
 	 */
 	toLocaleString(locale?: LocalesArguments, options?: DateTimeFormatOptions): string {
 		return this.toUTC().toDate().toLocaleString(locale, options);
@@ -1409,7 +1438,7 @@ export class Chronos {
 	/** @instance Returns new `Chronos` instance in UTC */
 	toUTC(): Chronos {
 		if (this.#offset === 'UTC+00:00') {
-			return this.#withOrigin('toUTC');
+			return this.#withOrigin('toUTC', 'UTC+00:00', 'Greenwich Mean Time');
 		}
 
 		const date = this.#date;
@@ -1418,7 +1447,7 @@ export class Chronos {
 
 		const utc = new Date(date.getTime() - previousOffset * 60 * 1000);
 
-		return new Chronos(utc).#withOrigin('toUTC');
+		return new Chronos(utc).#withOrigin('toUTC', 'UTC+00:00', 'Greenwich Mean Time');
 	}
 
 	/** @instance Returns new `Chronos` instance in local time */
@@ -1896,7 +1925,7 @@ export class Chronos {
 		const chronos = new Chronos(dateLike);
 
 		if (chronos.#offset === 'UTC+00:00') {
-			return chronos.#withOrigin('utc');
+			return chronos.#withOrigin('utc', 'UTC+00:00', 'Greenwich Mean Time');
 		}
 
 		const previousOffset = chronos.getTimeZoneOffsetMinutes();
@@ -1905,7 +1934,7 @@ export class Chronos {
 
 		const utc = new Date(date.getTime() - previousOffset * 60 * 1000);
 
-		return new Chronos(utc).#withOrigin('utc');
+		return new Chronos(utc).#withOrigin('utc', 'UTC+00:00', 'Greenwich Mean Time');
 	}
 
 	/**

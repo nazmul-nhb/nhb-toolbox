@@ -82,7 +82,12 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 
 		const instance = new ChronosClass(adjustedTime);
 
-		return internal.withOrigin(instance, 'timeZone', stringOffset);
+		return internal.withOrigin(
+			instance,
+			'timeZone',
+			stringOffset,
+			this.getTimeZoneName(stringOffset)
+		);
 	};
 
 	ChronosClass.prototype.getTimeZoneName = function (

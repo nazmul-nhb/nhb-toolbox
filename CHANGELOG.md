@@ -5,13 +5,14 @@
 All notable changes to the package will be documented here.
 
 ---
-
-## [4.25.20] - 2025-11-06
 <!-- 
-- **Added** new *constant* `TIME_ZONE_IDs` scrapped from [**IANA TZ Database**](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+## [4.25.20] - 2025-11-07
+
+- **Added** new *constant* `TIME_ZONE_IDS` scrapped from [**IANA TZ Database**](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
 - **Added** new *guard* `isValidTimeZoneId` to check if a string value is a valid *timezone identifier* from **IANA Database**.
 - **Updated** `Chronos` `timeZonePlugin` method `timeZone` to accept `TimeZoneIdentifier` along with *short timezone names* and *UTC offset*.
 - **Updated** *type interfaces* for `toLocaleString` `Chronos` method: **Created** `LocalesArguments` and `DateTimeFormatOptions` *type* and *interface*.
+- **Added** new *public property* `timeZoneName` to access *current timezone name*. **Fixed** *UTC offset* related issues.
  -->
 
 ## [4.25.11] - 2025-11-06

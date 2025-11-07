@@ -252,10 +252,15 @@ export interface ChronosInternals {
 	 * * Creates a new Chronos instance with origin tracking
 	 * @param instance - Chronos instance to operate on
 	 * @param method - Name of the method creating this instance
-	 * @param label - Optional UTC offset label
+	 * @param offset - Optional UTC offset label
 	 * @returns A new Chronos instance
 	 */
-	withOrigin(instance: Chronos, method: PluginMethods, label?: UTCOffSet): Chronos;
+	withOrigin(
+		instance: Chronos,
+		method: PluginMethods,
+		offset?: UTCOffSet,
+		tzName?: string
+	): Chronos;
 
 	/**
 	 * * Access to `#toNewDate` private method
