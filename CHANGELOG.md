@@ -12,7 +12,7 @@ All notable changes to the package will be documented here.
 - **Added** new *guard* `isValidTimeZoneId` to check if a string value is a valid *timezone identifier* from **IANA Database**.
 - **Updated** `Chronos` `timeZonePlugin` method `timeZone` to accept `TimeZoneIdentifier` along with *short timezone names* and *UTC offset*.
 - **Updated** *type interfaces* for `toLocaleString` `Chronos` method: **Created** `LocalesArguments` and `DateTimeFormatOptions` *type* and *interface*.
-- **Added** new *public property* `timeZoneName` to access *current timezone name*. **Fixed** *UTC offset* related issues.
+- **Added** new *public properties* `timeZoneName` and `timeZoneId` to access *current timezone name and identifier(s)*. **Fixed** *UTC offset* related issues.
  -->
 
 ## [4.25.11] - 2025-11-06

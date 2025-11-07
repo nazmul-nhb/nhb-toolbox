@@ -2,7 +2,7 @@ import type { LooseLiteral } from '../../utils/types';
 import { INTERNALS } from '../constants';
 import { isValidTimeZoneId, isValidUTCOffSet } from '../guards';
 import { TIME_ZONES, TIME_ZONE_IDS, TIME_ZONE_LABELS } from '../timezone';
-import type { TimeZone, TimeZoneIdentifier, UTCOffSet } from '../types';
+import type { TimeZone, TimeZoneId, TimeZoneIdentifier, UTCOffSet } from '../types';
 import { extractMinutesFromUTC, formatUTCOffset } from '../utils';
 
 type ChronosConstructor = import('../Chronos').Chronos;
@@ -57,22 +57,39 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	 */
 	const $Date = internal.internalDate;
 
+	const getTimeZoneId = (utc: UTCOffSet) => {
+		const obj = { ...TIME_ZONE_IDS } as unknown as Record<TimeZoneIdentifier, UTCOffSet>;
+
+		const tzIds = (Object.keys(obj) as TimeZoneIdentifier[]).filter(
+			(key) => obj[key] === utc
+		);
+
+		if (!tzIds || tzIds.length === 0) return undefined;
+		if (tzIds.length === 1) return tzIds[0];
+
+		return tzIds;
+	};
+
 	ChronosClass.prototype.timeZone = function (
 		this: ChronosConstructor,
 		zone: TimeZoneIdentifier | TimeZone | UTCOffSet
 	): ChronosConstructor {
 		let targetOffset: number;
 		let stringOffset: UTCOffSet;
+		let tzId: TimeZoneId;
 
 		if (isValidUTCOffSet(zone)) {
 			targetOffset = extractMinutesFromUTC(zone);
 			stringOffset = zone;
+			tzId = getTimeZoneId(stringOffset) || stringOffset;
 		} else if (isValidTimeZoneId(zone)) {
 			stringOffset = TIME_ZONE_IDS[zone] as UTCOffSet;
 			targetOffset = extractMinutesFromUTC(stringOffset);
+			tzId = zone;
 		} else {
 			targetOffset = TIME_ZONES?.[zone] ?? TIME_ZONES['UTC'];
 			stringOffset = formatUTCOffset(targetOffset);
+			tzId = getTimeZoneId(stringOffset) || stringOffset;
 		}
 
 		const previousOffset = this.getTimeZoneOffsetMinutes();
@@ -86,7 +103,8 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 			instance,
 			'timeZone',
 			stringOffset,
-			this.getTimeZoneName(stringOffset)
+			this.getTimeZoneName(stringOffset),
+			tzId
 		);
 	};
 

@@ -245,6 +245,8 @@ export interface DurationOptions {
 	showZero?: boolean;
 }
 
+export type TimeZoneId = TimeZoneIdentifier | TimeZoneIdentifier[] | UTCOffSet;
+
 /** Interface for accessing internal private properties in extended `Chronos` class */
 export interface ChronosInternals {
 	/**
@@ -259,7 +261,8 @@ export interface ChronosInternals {
 		instance: Chronos,
 		method: PluginMethods,
 		offset?: UTCOffSet,
-		tzName?: string
+		tzName?: string,
+		tzId?: TimeZoneId
 	): Chronos;
 
 	/**

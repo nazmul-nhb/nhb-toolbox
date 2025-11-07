@@ -32,7 +32,8 @@ import type {
 	TimeDuration,
 	TimeParts,
 	TimeUnit,
-	// TimeZoneIdentifier,
+	TimeZoneId,
+	TimeZoneIdentifier,
 	UTCOffSet,
 	WeekDay,
 	WeekdayOptions,
@@ -67,7 +68,6 @@ export class Chronos {
 	readonly #date: Date;
 	#offset: UTCOffSet;
 	#ORIGIN: ChronosMethods | 'root';
-	// readonly timeZoneId: TimeZoneIdentifier;
 
 	static #plugins = new Set<ChronosPlugin>();
 
@@ -81,8 +81,8 @@ export class Chronos {
 			return instance.#offset;
 		},
 
-		withOrigin(instance, method, offset, tzName) {
-			return instance.#withOrigin(method as ChronosMethods, offset, tzName);
+		withOrigin(instance, method, offset, tzName, tzId) {
+			return instance.#withOrigin(method as ChronosMethods, offset, tzName, tzId);
 		},
 
 		toNewDate(instance, value) {
@@ -105,6 +105,9 @@ export class Chronos {
 
 	/** Current timezone name */
 	timeZoneName: string;
+
+	/** Current timezone identifier */
+	timeZoneId: TimeZoneId;
 
 	/**
 	 * * Creates a new immutable `Chronos` instance.
@@ -242,8 +245,10 @@ export class Chronos {
 		this.#offset = `UTC${this.getUTCOffset()}`;
 		this.utcOffset = this.#offset;
 		this.timeZoneName = this.#getNativeTimeZone();
+		this.timeZoneId = this.#getNativeTimeZoneId();
 	}
 
+	/** * Safely get the current timezone name (e.g. "Bangladesh Standard Time"). */
 	#getNativeTimeZone() {
 		const details = new Intl.DateTimeFormat(undefined, {
 			timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -252,6 +257,11 @@ export class Chronos {
 
 		const tzPart = details.find((p) => p.type === 'timeZoneName');
 		return tzPart?.value ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+	}
+
+	/** * Safely get the IANA time zone ID (e.g. `"Asia/Dhaka"`, `"Africa/Harare"`). */
+	#getNativeTimeZoneId(): TimeZoneIdentifier {
+		return Intl.DateTimeFormat().resolvedOptions().timeZone as TimeZoneIdentifier;
 	}
 
 	*[Symbol.iterator](): IterableIterator<[string, number]> {
@@ -381,10 +391,15 @@ export class Chronos {
 	 * @private Method to tag origin of the `Chronos` instance.
 	 *
 	 * @param origin Origin of the instance, the method name from where it was created.
-	 * @param offset Optional UTC offset in `UTC+12:00` format.
+	 * @param offset Optional UTC offset in `UTC±HH:mm` format.
 	 * @returns The `Chronos` instance with the specified origin.
 	 */
-	#withOrigin(origin: ChronosMethods, offset?: UTCOffSet, tzName?: string): Chronos {
+	#withOrigin(
+		origin: ChronosMethods,
+		offset?: UTCOffSet,
+		tzName?: string,
+		tzId?: TimeZoneId
+	): Chronos {
 		const instance = new Chronos(this.#date);
 		instance.#ORIGIN = origin;
 		instance.origin = origin;
@@ -397,6 +412,10 @@ export class Chronos {
 
 		if (tzName) {
 			instance.timeZoneName = tzName;
+		}
+
+		if (tzId) {
+			instance.timeZoneId = tzId;
 		}
 
 		return instance;
@@ -1438,7 +1457,7 @@ export class Chronos {
 	/** @instance Returns new `Chronos` instance in UTC */
 	toUTC(): Chronos {
 		if (this.#offset === 'UTC+00:00') {
-			return this.#withOrigin('toUTC', 'UTC+00:00', 'Greenwich Mean Time');
+			return this.#withOrigin('toUTC', 'UTC+00:00', 'Greenwich Mean Time', 'UTC');
 		}
 
 		const date = this.#date;
@@ -1447,7 +1466,7 @@ export class Chronos {
 
 		const utc = new Date(date.getTime() - previousOffset * 60 * 1000);
 
-		return new Chronos(utc).#withOrigin('toUTC', 'UTC+00:00', 'Greenwich Mean Time');
+		return new Chronos(utc).#withOrigin('toUTC', 'UTC+00:00', 'Greenwich Mean Time', 'UTC');
 	}
 
 	/** @instance Returns new `Chronos` instance in local time */
