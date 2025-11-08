@@ -1,7 +1,7 @@
 // @ts-check
 
 /**
- *  @typedef {Object} TimeZone
+ *  @typedef {Object} TimeZoneDetails
  *  @property {string} country
  *  @property {string} timeZoneId
  *  @property {string} sdtOffset
@@ -10,9 +10,7 @@
  *  @property {string} sdtTzAbr
  *  @property {string} dstTzName
  *  @property {string} dstTzAbr
- */
-
-/**
+ *
  * @typedef {Record<string, string>} TimeZoneWithUTC
  */
 
@@ -22,7 +20,7 @@ function scrapTimeZone() {
 
 	const rows = [...(zoneContainer?.querySelectorAll('tr') || [])];
 
-	/** @type {Array<TimeZone>} Array of TimeZone objects */
+	/** @type {Array<TimeZoneDetails>} Array of TimeZone objects */
 	const result = [];
 
 	// /** @type {TimeZoneWithUTC} Record of timezone id against UTC Offset */
@@ -55,7 +53,7 @@ function scrapTimeZone() {
 		/** Check if a table cell has attribute `colspan` */
 		const hasColSpan = cols[6].hasAttribute('colspan');
 
-		/** @type {TimeZone} Timezone object */
+		/** @type {TimeZoneDetails} Timezone object */
 		const zone = {
 			country: textContent(0),
 			timeZoneId: textContent(1),
