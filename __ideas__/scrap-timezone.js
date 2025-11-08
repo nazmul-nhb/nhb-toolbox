@@ -51,6 +51,7 @@ function scrapTimeZone() {
 				''
 			);
 		};
+
 		/** Check if a table cell has attribute `colspan` */
 		const hasColSpan = cols[6].hasAttribute('colspan');
 
@@ -58,15 +59,15 @@ function scrapTimeZone() {
 		const zone = {
 			country: textContent(0),
 			timeZoneId: textContent(1),
-			sdtOffset: `UTC${textContent(4)}`,
-			dstOffset: `UTC${textContent(5)}`,
+			sdtOffset: `UTC${textContent(4).replace('−', '-')}`,
+			dstOffset: `UTC${textContent(5).replace('−', '-')}`,
 			sdtTzName: titleValue(6),
 			dstTzName: hasColSpan ? '' : titleValue(7),
 			sdtTzAbr: textContent(6),
 			dstTzAbr: hasColSpan ? '' : textContent(7),
 		};
 
-		// result[textContent(1)] = `UTC${textContent(4)}`;
+		// result[textContent(1)] = `UTC${textContent(4).replace('−', '-')}`;
 
 		result.push(zone);
 	});

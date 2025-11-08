@@ -5,6 +5,11 @@
 All notable changes to the package will be documented here.
 
 ---
+<!-- 
+## [4.26.1] - 2025-11-08
+
+- **Fixed** timezone conversion issues by updating `TIME_ZONE_IDS` constant: **normalized** all negative signs (replaced `'−'` with `'-'`) from UTC offset.
+ -->
 
 ## [4.26.1] - 2025-11-08
 

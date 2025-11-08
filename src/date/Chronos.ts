@@ -126,7 +126,7 @@ export class Chronos {
 	 *
 	 * @remarks
 	 * - Invoking the {@link timeZone} method sets the timezone name that corresponds to the specified UTC offset, or the UTC offset itself if no name exists. For more details on this behavior, see {@link getTimeZoneName}.
-	 * - To retrieve the local system’s native timezone name (or its identifier if the name is unavailable), use the {@link $getNativeTimeZone} instance method.
+	 * - To retrieve the local system's native timezone name (or its identifier if the name is unavailable), use the {@link $getNativeTimeZone} instance method.
 	 */
 	timeZoneName: string;
 
@@ -140,7 +140,7 @@ export class Chronos {
 	 * @remarks
 	 * - By default, when {@link timeZone} is not applied, a single `TimeZoneIdentifier` string is provided.
 	 * - When applied, it may instead return a single identifier string, an array of equivalent identifiers or a UTC offset string.
-	 * - To retrieve the local system’s native timezone identifier, use the {@link $getNativeTimeZoneId} instance method.
+	 * - To retrieve the local system's native timezone identifier, use the {@link $getNativeTimeZoneId} instance method.
 	 */
 	timeZoneId: TimeZoneId;
 
@@ -391,10 +391,10 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Retrieves the local system’s current timezone name (e.g., `"Bangladesh Standard Time"`), or falls back to its corresponding IANA timezone identifier (e.g., `"Asia/Dhaka"`) if the name cannot be determined.
+	 * @instance Retrieves the local system's current timezone name (e.g., `"Bangladesh Standard Time"`), or falls back to its corresponding IANA timezone identifier (e.g., `"Asia/Dhaka"`) if the name cannot be determined.
 	 *
 	 * @remarks
-	 * - This method always reflects the local machine’s timezone, regardless of whether {@link timeZone}, {@link utc}, or {@link toUTC} methods have been applied.
+	 * - This method always reflects the local machine's timezone, regardless of whether {@link timeZone}, {@link utc}, or {@link toUTC} methods have been applied.
 	 * - To access the timezone name of a modified or converted instance, use the {@link timeZoneName} public property instead.
 	 *
 	 * @returns The resolved timezone name or its IANA identifier as a fallback.
@@ -410,13 +410,13 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Retrieves the IANA time zone identifier (e.g., `"Asia/Dhaka"`, `"Africa/Harare"`) for the local system’s current time zone.
+	 * @instance Retrieves the IANA time zone identifier (e.g., `"Asia/Dhaka"`, `"Africa/Harare"`) for the local system's current time zone.
 	 *
 	 * @remarks
-	 * - This method always returns the identifier of the local machine’s time zone, regardless of whether {@link timeZone}, {@link utc}, or {@link toUTC} methods have been applied.
+	 * - This method always returns the identifier of the local machine's time zone, regardless of whether {@link timeZone}, {@link utc}, or {@link toUTC} methods have been applied.
 	 * - To obtain the identifier(s) of a modified or converted instance, use the {@link timeZoneId} public property instead.
 	 *
-	 * @returns The local system’s IANA time zone identifier.
+	 * @returns The local system's IANA time zone identifier.
 	 */
 	$getNativeTimeZoneId(): TimeZoneIdentifier {
 		return Intl.DateTimeFormat().resolvedOptions().timeZone as TimeZoneIdentifier;

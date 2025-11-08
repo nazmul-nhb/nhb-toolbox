@@ -28,6 +28,8 @@ declare module '../Chronos' {
 		 * - This method uses a predefined mapping of UTC offsets to time zone names.
 		 * - If multiple time zones share the same UTC offset, it returns the **first match** from the predefined list.
 		 * - If no match is found (which is rare), it falls back to returning the UTC offset (e.g. `"UTC+06:00"`).
+		 * - To retrieve the local system's native timezone name (or its identifier if the name is unavailable), use the {@link $getNativeTimeZone} instance method.
+		 * - To retrieve the local system's native timezone identifier, use the {@link $getNativeTimeZoneId} instance method.
 		 */
 		getTimeZoneName(utc?: UTCOffSet): LooseLiteral<UTCOffSet>;
 
@@ -41,6 +43,8 @@ declare module '../Chronos' {
 		 * - This method uses a predefined mapping of UTC offsets to abbreviated time zone codes.
 		 * - If multiple time zones share the same UTC offset, it returns the **first abbreviation** from the list.
 		 * - If no match is found (which is rare), it returns the UTC offset (e.g. `"UTC+06:00"`).
+		 * - To retrieve the local system's native timezone name (or its identifier if the name is unavailable), use the {@link $getNativeTimeZone} instance method.
+		 * - To retrieve the local system's native timezone identifier, use the {@link $getNativeTimeZoneId} instance method.
 		 */
 		getTimeZoneNameShort(utc?: UTCOffSet): TimeZone | UTCOffSet;
 	}
@@ -58,7 +62,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	const $Date = internal.internalDate;
 
 	const getTimeZoneId = (utc: UTCOffSet) => {
-		const obj = { ...TIME_ZONE_IDS } as unknown as Record<TimeZoneIdentifier, UTCOffSet>;
+		const obj = { ...TIME_ZONE_IDS } as Record<TimeZoneIdentifier, UTCOffSet>;
 
 		const tzIds = (Object.keys(obj) as TimeZoneIdentifier[]).filter(
 			(key) => obj[key] === utc
@@ -83,7 +87,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 			stringOffset = zone;
 			tzId = getTimeZoneId(stringOffset) || stringOffset;
 		} else if (isValidTimeZoneId(zone)) {
-			stringOffset = TIME_ZONE_IDS[zone] as UTCOffSet;
+			stringOffset = TIME_ZONE_IDS[zone];
 			targetOffset = extractMinutesFromUTC(stringOffset);
 			tzId = zone;
 		} else {
