@@ -114,16 +114,34 @@ export class Chronos {
 	 */
 	native: Date;
 
-	/** Current UTC offset in `UTC±HH:mm` format */
+	/**
+	 * * Current UTC offset in `UTC±HH:mm` format.
+	 *
+	 * - Also accessible via {@link getUTCOffset} instance method without `UTC` prefix (`±HH:mm` format).
+	 */
 	utcOffset: UTCOffSet;
 
-	/** Current timezone name (e.g. `"Bangladesh Standard Time"`) or fallback to timezone identifier if name not found (e.g., `"Asia/Dhaka"`) */
+	/**
+	 * Represents the current timezone name (e.g., `"Bangladesh Standard Time"`), or falls back to the corresponding timezone identifier (e.g., `"Asia/Dhaka"`) if no name can be resolved.
+	 *
+	 * @remarks
+	 * - Invoking the {@link timeZone} method sets the timezone name that corresponds to the specified UTC offset, or the UTC offset itself if no name exists. For more details on this behavior, see {@link getTimeZoneName}.
+	 * - To retrieve the local system’s native timezone name (or its identifier if the name is unavailable), use the {@link $getNativeTimeZone} instance method.
+	 */
 	timeZoneName: string;
 
-	/** Current timezone identifier, array of timezone identifiers or UTC offset.
-	 * - `TimeZoneIdentifier`: (e.g., `"Asia/Dhaka"`)
-	 * - Array of `TimeZoneIdentifier` (e.g., `['Asia/Kathmandu', 'Asia/Katmandu']` for timezones that share same UTC offset like `"UTC+05:45"`)
-	 * - `UTCOffset` if no timezone identifier is found for specific UTC offset (e.g., `"UTC+05:45"`, `"UTC+02:15"` etc.) */
+	/**
+	 * Represents the current timezone context, which can be a single identifier, an array of equivalent identifiers, or a UTC offset.
+	 *
+	 * - **`TimeZoneIdentifier`** — e.g., `"Asia/Dhaka"`. Returned when the {@link timeZone} method has not been invoked. It is default behaviour.
+	 * - **Array of `TimeZoneIdentifier`** — e.g., `['Asia/Kathmandu', 'Asia/Katmandu']`, used when multiple timezones share the same UTC offset such as `"UTC+05:45"`.
+	 * - **`UTCOffset`** — e.g., `"UTC+06:45"` or `"UTC+02:15"`, returned when no named timezone corresponds to a given offset.
+	 *
+	 * @remarks
+	 * - By default, when {@link timeZone} is not applied, a single `TimeZoneIdentifier` string is provided.
+	 * - When applied, it may instead return a single identifier string, an array of equivalent identifiers or a UTC offset string.
+	 * - To retrieve the local system’s native timezone identifier, use the {@link $getNativeTimeZoneId} instance method.
+	 */
 	timeZoneId: TimeZoneId;
 
 	/**
@@ -373,9 +391,13 @@ export class Chronos {
 	}
 
 	/**
-	 * * Safely get the current timezone name (e.g. `"Bangladesh Standard Time"`) or fallback to timezone identifier if name not found (e.g., `"Asia/Dhaka"`) for the local machine's timezone.
+	 * @instance Retrieves the local system’s current timezone name (e.g., `"Bangladesh Standard Time"`), or falls back to its corresponding IANA timezone identifier (e.g., `"Asia/Dhaka"`) if the name cannot be determined.
 	 *
-	 * @remarks If {@link timeZone} or {@link utc}/{@link toUTC} method is applied, it still returns the local machine's timezone info. To access the modified timezone info use {@link timeZoneName} property.
+	 * @remarks
+	 * - This method always reflects the local machine’s timezone, regardless of whether {@link timeZone}, {@link utc}, or {@link toUTC} methods have been applied.
+	 * - To access the timezone name of a modified or converted instance, use the {@link timeZoneName} public property instead.
+	 *
+	 * @returns The resolved timezone name or its IANA identifier as a fallback.
 	 */
 	$getNativeTimeZone() {
 		const details = new Intl.DateTimeFormat(undefined, {
@@ -388,9 +410,13 @@ export class Chronos {
 	}
 
 	/**
-	 * * Safely get the IANA timezone identifier (e.g. `"Asia/Dhaka"`, `"Africa/Harare"` etc.) for the local machine's timezone.
+	 * @instance Retrieves the IANA time zone identifier (e.g., `"Asia/Dhaka"`, `"Africa/Harare"`) for the local system’s current time zone.
 	 *
-	 * @remarks If {@link timeZone} or {@link utc}/{@link toUTC} method is applied, it still returns the local machine's timezone identifier. To access the modified timezone identifier(s) use {@link timeZoneId} property.
+	 * @remarks
+	 * - This method always returns the identifier of the local machine’s time zone, regardless of whether {@link timeZone}, {@link utc}, or {@link toUTC} methods have been applied.
+	 * - To obtain the identifier(s) of a modified or converted instance, use the {@link timeZoneId} public property instead.
+	 *
+	 * @returns The local system’s IANA time zone identifier.
 	 */
 	$getNativeTimeZoneId(): TimeZoneIdentifier {
 		return Intl.DateTimeFormat().resolvedOptions().timeZone as TimeZoneIdentifier;
@@ -527,7 +553,7 @@ export class Chronos {
 		return result;
 	}
 
-	/** @private Returns ISO string with local time zone offset */
+	/** @private Returns ISO string with local timezone offset */
 	#toLocalISOString(): string {
 		const pad = (n: number, p = 2) => String(n).padStart(p, '0');
 
@@ -695,7 +721,7 @@ export class Chronos {
 		}
 	}
 
-	/** @instance Returns ISO string with local machine's time zone offset. */
+	/** @instance Returns ISO string with local machine's timezone offset. */
 	toLocalISOString(): string {
 		switch (this.#ORIGIN) {
 			case 'timeZone':
@@ -1438,7 +1464,7 @@ export class Chronos {
 	/**
 	 * @instance Returns the system's current UTC offset formatted as `±HH:mm` (`+06:00` or `-07:00`).
 	 *
-	 * - *Unlike JavaScript's {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset `Date.prototype.getTimezoneOffset()`}, which returns the offset in minutes **behind** UTC (positive for locations west of UTC and negative for east), this method returns the more intuitive sign format used in time zone representations (e.g., `+06:00` means 6 hours **ahead** of UTC).*
+	 * - *Unlike JavaScript's {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset `Date.prototype.getTimezoneOffset()`}, which returns the offset in minutes **behind** UTC (positive for locations west of UTC and negative for east), this method returns the more intuitive sign format used in timezone representations (e.g., `+06:00` means 6 hours **ahead** of UTC).*
 	 *
 	 * @returns The (local) system's UTC offset in `±HH:mm` format.
 	 */
@@ -1454,7 +1480,7 @@ export class Chronos {
 	/**
 	 * @instance Returns the timezone offset of this `Chronos` instance in `±HH:mm` format maintaining current timezone.
 	 *
-	 * - *Unlike JavaScript's {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset Date.prototype.getTimezoneOffset()}, which returns the offset in minutes **behind** UTC (positive for locations west of UTC and negative for east), this method returns the more intuitive sign format used in time zone representations (e.g., `+06:00` means 6 hours **ahead** of UTC).*
+	 * - *Unlike JavaScript's {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset Date.prototype.getTimezoneOffset()}, which returns the offset in minutes **behind** UTC (positive for locations west of UTC and negative for east), this method returns the more intuitive sign format used in timezone representations (e.g., `+06:00` means 6 hours **ahead** of UTC).*
 	 *
 	 * @returns The timezone offset string in `±HH:mm` format maintaining the current timezone regardless of system having different one.
 	 */
@@ -1487,7 +1513,7 @@ export class Chronos {
 		return extractMinutesFromUTC(this.#offset);
 	}
 
-	/** @instance Returns new `Chronos` instance in UTC */
+	/** @instance Returns new `Chronos` instance in UTC time */
 	toUTC(): Chronos {
 		if (this.#offset === 'UTC+00:00') {
 			return this.#withOrigin('toUTC', 'UTC+00:00', 'Greenwich Mean Time', 'UTC');

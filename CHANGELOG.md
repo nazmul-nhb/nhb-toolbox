@@ -6,7 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
-## [4.26.00] - 2025-11-08
+## [4.26.1] - 2025-11-08
+
+- **Updated** *tsdoc* for some `Chronos` *methods* and *public properties*.
+
+## [4.26.0] - 2025-11-08
 
 ### 🕧 New in Chronos
 
