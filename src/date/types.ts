@@ -1,5 +1,4 @@
 import type { Enumerate, LocaleCode, NumberRange } from '../number/types';
-import type { Country } from '../string/types';
 import type { LooseLiteral, RangeTuple } from '../utils/types';
 import type { Chronos } from './Chronos';
 import type { ChronosStatics } from './chronos-statics';
@@ -245,6 +244,7 @@ export interface DurationOptions {
 	showZero?: boolean;
 }
 
+/** Timezone identifier, array of timezone identifiers or UTC offset. */
 export type TimeZoneId = TimeZoneIdentifier | TimeZoneIdentifier[] | UTCOffSet;
 
 /** Interface for accessing internal private properties in extended `Chronos` class */
@@ -643,11 +643,3 @@ export type ChronosWithOptions = Partial<{
 	/** Milliseconds of the second, from 0 to 999. */
 	millisecond: Milliseconds;
 }>;
-
-/** Planned holiday definition. **Not Implemented Yet!** */
-export interface HolidayDef {
-	/** A function (year) => Date(s) for that holiday in that year, or fixed dates */
-	dates: MonthDateString[] | ((year: number) => Date[]);
-	/** Country or country code, optional */
-	country: Country;
-}

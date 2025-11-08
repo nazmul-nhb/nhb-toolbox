@@ -41,16 +41,17 @@ import type {
 import { extractMinutesFromUTC } from './utils';
 
 /** Suffix for `new Date().getUnit()` methods. Replaces `Unit`. */
-type Suffix = 'FullYear' | 'Month' | 'Date' | 'Hours' | 'Minutes' | 'Seconds' | 'Milliseconds';
+type $Suffix = 'FullYear' | 'Month' | 'Date' | 'Hours' | 'Minutes' | 'Seconds' | 'Milliseconds';
 
 /** Date parts for `Chronos` as `Record<part, number>` */
-type ChronosDateParts = {
+type $DateParts = {
 	year: number;
 	month: number;
 	date: number;
 	hour: number;
 	minute: number;
 	second: number;
+	millisecond: number;
 };
 
 /**
@@ -116,10 +117,13 @@ export class Chronos {
 	/** Current UTC offset in `UTC±HH:mm` format */
 	utcOffset: UTCOffSet;
 
-	/** Current timezone name */
+	/** Current timezone name (e.g. `"Bangladesh Standard Time"`) or fallback to timezone identifier if name not found (e.g., `"Asia/Dhaka"`) */
 	timeZoneName: string;
 
-	/** Current timezone identifier */
+	/** Current timezone identifier, array of timezone identifiers or UTC offset.
+	 * - `TimeZoneIdentifier`: (e.g., `"Asia/Dhaka"`)
+	 * - Array of `TimeZoneIdentifier` (e.g., `['Asia/Kathmandu', 'Asia/Katmandu']` for timezones that share same UTC offset like `"UTC+05:45"`)
+	 * - `UTCOffset` if no timezone identifier is found for specific UTC offset (e.g., `"UTC+05:45"`, `"UTC+02:15"` etc.) */
 	timeZoneId: TimeZoneId;
 
 	/**
@@ -219,7 +223,7 @@ export class Chronos {
 	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
 	 *
 	 * @param valueOrYear The value in `number`, `string`, `Date` or `Chronos` format or the full year designation is required for cross-century date accuracy. If year is between 0 and 99, year is assumed to be 1900 + year.
-	 * @param month The month as a `number` between 1 and 12 (January to December).
+	 * @param month The month as a `number` between 1 and 12 (1: January to 12: December).
 	 * @param date The date as a `number` between 1 and 31.
 	 * @param hours Must be supplied if minutes is supplied. A `number` from 0 to 23 (midnight to 11pm) that specifies the hour.
 	 * @param minutes Must be supplied if seconds is supplied. A `number` from 0 to 59 that specifies the minutes.
@@ -257,8 +261,8 @@ export class Chronos {
 		this.origin = this.#ORIGIN;
 		this.#offset = `UTC${this.getUTCOffset()}`;
 		this.utcOffset = this.#offset;
-		this.timeZoneName = this.#getNativeTimeZone();
-		this.timeZoneId = this.#getNativeTimeZoneId();
+		this.timeZoneName = this.$getNativeTimeZone();
+		this.timeZoneId = this.$getNativeTimeZoneId();
 	}
 
 	*[Symbol.iterator](): IterableIterator<[string, number]> {
@@ -368,6 +372,22 @@ export class Chronos {
 		return true;
 	}
 
+	/** * Safely get the current timezone name (e.g. `"Bangladesh Standard Time"`) or fallback to timezone identifier if name not found (e.g., `"Asia/Dhaka"`). */
+	protected $getNativeTimeZone() {
+		const details = new Intl.DateTimeFormat(undefined, {
+			timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+			timeZoneName: 'long',
+		}).formatToParts(this.toDate());
+
+		const tzPart = details.find((p) => p.type === 'timeZoneName');
+		return tzPart?.value ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+	}
+
+	/** * Safely get the IANA time zone ID (e.g. `"Asia/Dhaka"`, `"Africa/Harare"`). */
+	protected $getNativeTimeZoneId(): TimeZoneIdentifier {
+		return Intl.DateTimeFormat().resolvedOptions().timeZone as TimeZoneIdentifier;
+	}
+
 	/**
 	 * @private Method to create native `Date` instance from date-like data types.
 	 * @param value The value to convert into `Date`.
@@ -417,22 +437,6 @@ export class Chronos {
 		instance.native = instance.toDate();
 
 		return instance;
-	}
-
-	/** * Safely get the current timezone name (e.g. "Bangladesh Standard Time"). */
-	#getNativeTimeZone() {
-		const details = new Intl.DateTimeFormat(undefined, {
-			timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-			timeZoneName: 'long',
-		}).formatToParts(this.toDate());
-
-		const tzPart = details.find((p) => p.type === 'timeZoneName');
-		return tzPart?.value ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
-	}
-
-	/** * Safely get the IANA time zone ID (e.g. `"Asia/Dhaka"`, `"Africa/Harare"`). */
-	#getNativeTimeZoneId(): TimeZoneIdentifier {
-		return Intl.DateTimeFormat().resolvedOptions().timeZone as TimeZoneIdentifier;
 	}
 
 	/**
@@ -645,19 +649,19 @@ export class Chronos {
 		switch (this.#ORIGIN) {
 			case 'toUTC':
 			case 'utc': {
-				const mins = this.getUTCOffsetMinutes();
+				const offset = this.getUTCOffsetMinutes();
 
-				const chronos = this.addMinutes(mins);
+				const chronos = this.addMinutes(offset);
 
 				return new Date(chronos.#date);
 			}
 			case 'timeZone': {
-				const mins =
+				const offset =
 					this.#offset === 'UTC+00:00' ?
 						this.getUTCOffsetMinutes()
 					:	-this.getTimeZoneOffsetMinutes() + this.getUTCOffsetMinutes();
 
-				const chronos = this.addMinutes(mins);
+				const chronos = this.addMinutes(offset);
 
 				return new Date(chronos.#date);
 			}
@@ -689,9 +693,9 @@ export class Chronos {
 			case 'timeZone':
 			case 'toUTC':
 			case 'utc': {
-				const mins = -this.getTimeZoneOffsetMinutes() + this.getUTCOffsetMinutes();
+				const offset = -this.getTimeZoneOffsetMinutes() + this.getUTCOffsetMinutes();
 
-				return this.addMinutes(mins).#toLocalISOString();
+				return this.addMinutes(offset).#toLocalISOString();
 			}
 			default:
 				return this.#toLocalISOString();
@@ -1481,20 +1485,18 @@ export class Chronos {
 			return this.#withOrigin('toUTC', 'UTC+00:00', 'Greenwich Mean Time', 'UTC');
 		}
 
-		const date = this.#date;
+		const offset = this.getTimeZoneOffsetMinutes();
 
-		const previousOffset = this.getTimeZoneOffsetMinutes();
-
-		const utc = new Date(date.getTime() - previousOffset * 60 * 1000);
+		const utc = new Date(this.#date.getTime() - offset * 60 * 1000);
 
 		return new Chronos(utc).#withOrigin('toUTC', 'UTC+00:00', 'Greenwich Mean Time', 'UTC');
 	}
 
 	/** @instance Returns new `Chronos` instance in local time */
 	toLocal(): Chronos {
-		const mins = this.getTimeZoneOffsetMinutes() - this.getUTCOffsetMinutes();
+		const offset = this.getTimeZoneOffsetMinutes() - this.getUTCOffsetMinutes();
 
-		const localTime = new Date(this.#date.getTime() - mins * 60 * 1000);
+		const localTime = new Date(this.#date.getTime() - offset * 60 * 1000);
 
 		return new Chronos(localTime).#withOrigin('toLocal');
 	}
@@ -1513,8 +1515,9 @@ export class Chronos {
 		const from = isFuture ? now : target;
 		const to = isFuture ? target : now;
 
-		const _getDiff = (suffix: Suffix): number => {
-			const method = ('get' + suffix) as `get${Suffix}`;
+		/** Get difference between `to` and `from` for specific unit */
+		const _getDiff = (suffix: $Suffix): number => {
+			const method = ('get' + suffix) as `get${$Suffix}`;
 
 			return to[method]() - from[method]();
 		};
@@ -1764,15 +1767,17 @@ export class Chronos {
 	 * - `YYYY`: Full year (e.g., 2023)
 	 * - `YY`: Two-digit year (e.g., 23 for 2023, 99 for 1999)
 	 * - `MM`: Month (01-12)
-	 * - `M`: Month (1-9)
+	 * - `M`: Month (1-12)
 	 * - `DD`: Day of the month (01-31)
-	 * - `D`: Day of the month (1-9)
+	 * - `D`: Day of the month (1-31)
 	 * - `HH`: Hour (00-23)
-	 * - `H`: Hour (0-9)
+	 * - `H`: Hour (0-23)
 	 * - `mm`: Minute (00-59)
-	 * - `m`: Minute (0-9)
+	 * - `m`: Minute (0-59)
 	 * - `ss`: Second (00-59)
-	 * - `s`: Second (0-9)
+	 * - `s`: Second (0-59)
+	 * - `mss`: Millisecond (000-999)
+	 * - `ms`: Millisecond (0-999)
 	 *
 	 * **Example**:
 	 * ```ts
@@ -1781,7 +1786,7 @@ export class Chronos {
 	 * ```
 	 *
 	 * @param dateStr - The date string to be parsed
-	 * @param format - The format of the date string. Tokens like `YYYY`, `MM`, `DD`, `HH`, `mm`, `ss` are used to specify the structure.
+	 * @param format - The format of the date string. Supported tokens `YYYY`, `YY` `MM`, `M`, `DD`, `D`, `HH`, `H`, `mm`, `m`, `ss`, `s`, `mss`, `ms` are used to specify the structure.
 	 * @returns A new `Chronos` instance representing the parsed date.
 	 * @throws `Error` If the date string does not match the format.
 	 */
@@ -1799,9 +1804,11 @@ export class Chronos {
 			m: '(?<m>\\d{1,2})',
 			ss: '(?<ss>\\d{2})',
 			s: '(?<s>\\d{1,2})',
+			mss: '(?<mss>\\d{3})',
+			ms: '(?<ms>\\d{1,3})',
 		};
 
-		const tokenToComponent: Record<string, keyof ChronosDateParts> = {
+		const tokenToComponent: Record<string, keyof $DateParts> = {
 			YYYY: 'year',
 			YY: 'year',
 			MM: 'month',
@@ -1814,43 +1821,52 @@ export class Chronos {
 			m: 'minute',
 			ss: 'second',
 			s: 'second',
+			mss: 'millisecond',
+			ms: 'millisecond',
 		};
 
-		const tokenRegex = new RegExp(Object.keys(tokenPatterns).join('|'), 'g');
-
-		const trimmedInput = dateStr.trim();
+		const tokenRegExp = new RegExp(
+			Object.keys(tokenPatterns)
+				.sort((a, b) => b.length - a.length)
+				.join('|'),
+			'g'
+		);
 
 		const regexStr = format
-			.trim()
-			.replace(tokenRegex, (token) => tokenPatterns[token] ?? token)
-			.replace(/\s+/g, '\\s*');
+			?.trim()
+			?.replace(tokenRegExp, (token) => tokenPatterns[token] ?? token)
+			?.replace(/\s+/g, '\\s*');
 
-		const match = new RegExp(`^${regexStr}\\s*$`).exec(trimmedInput);
+		const match = new RegExp(`^${regexStr}\\s*$`).exec(dateStr.trim());
 
 		if (!match?.groups) {
-			throw new Error('Invalid date format');
+			throw new Error('Invalid date format!');
 		}
 
-		const parts: Partial<ChronosDateParts> = {};
+		const parts: Partial<$DateParts> = {};
 
 		for (const [token, value] of Object.entries(match.groups)) {
 			const key = tokenToComponent[token];
+
 			if (key) {
 				let num = Number(value);
-				if (token === 'YY') num += num < 100 ? 2000 : 0;
+
+				if (token === 'YY') {
+					num += num < 100 ? 2000 : 0;
+				}
+
 				parts[key] = num;
 			}
 		}
 
 		return new Chronos(
-			new Date(
-				parts?.year ?? 1970,
-				(parts?.month ?? 1) - 1,
-				parts?.date ?? 1,
-				parts?.hour ?? 0,
-				parts?.minute ?? 0,
-				parts?.second ?? 0
-			)
+			parts?.year ?? 1970,
+			parts?.month ?? 1,
+			parts?.date ?? 1,
+			parts?.hour ?? 0,
+			parts?.minute ?? 0,
+			parts?.second ?? 0,
+			parts?.millisecond ?? 0
 		).#withOrigin('parse');
 	}
 
@@ -1961,11 +1977,9 @@ export class Chronos {
 			return chronos.#withOrigin('utc', 'UTC+00:00', 'Greenwich Mean Time');
 		}
 
-		const previousOffset = chronos.getTimeZoneOffsetMinutes();
+		const offset = chronos.getTimeZoneOffsetMinutes();
 
-		const date = chronos.#date;
-
-		const utc = new Date(date.getTime() - previousOffset * 60 * 1000);
+		const utc = new Date(chronos.#date.getTime() - offset * 60 * 1000);
 
 		return new Chronos(utc).#withOrigin('utc', 'UTC+00:00', 'Greenwich Mean Time');
 	}
