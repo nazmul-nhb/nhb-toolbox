@@ -110,7 +110,7 @@ export class Chronos {
 	/**
 	 * * `Chronos` date/time as Native JS `Date` object.
 	 *
-	 * - **NOTE**: This property is purely for developer convenience and sugar. It is **HIGHLY** advised *not to rely* on this public property to access native JS `Date`. It may not be reliable when timezone and/or UTC related operations are performed. If you really need to use native `Date`, use {@link toDate} instance method.
+	 * - Also accessible via {@link toDate} instance method.
 	 */
 	native: Date;
 
@@ -372,8 +372,12 @@ export class Chronos {
 		return true;
 	}
 
-	/** * Safely get the current timezone name (e.g. `"Bangladesh Standard Time"`) or fallback to timezone identifier if name not found (e.g., `"Asia/Dhaka"`). */
-	protected $getNativeTimeZone() {
+	/**
+	 * * Safely get the current timezone name (e.g. `"Bangladesh Standard Time"`) or fallback to timezone identifier if name not found (e.g., `"Asia/Dhaka"`) for the local machine's timezone.
+	 *
+	 * @remarks If {@link timeZone} or {@link utc}/{@link toUTC} method is applied, it still returns the local machine's timezone info. To access the modified timezone info use {@link timeZoneName} property.
+	 */
+	$getNativeTimeZone() {
 		const details = new Intl.DateTimeFormat(undefined, {
 			timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
 			timeZoneName: 'long',
@@ -383,8 +387,12 @@ export class Chronos {
 		return tzPart?.value ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
 	}
 
-	/** * Safely get the IANA time zone ID (e.g. `"Asia/Dhaka"`, `"Africa/Harare"`). */
-	protected $getNativeTimeZoneId(): TimeZoneIdentifier {
+	/**
+	 * * Safely get the IANA timezone identifier (e.g. `"Asia/Dhaka"`, `"Africa/Harare"` etc.) for the local machine's timezone.
+	 *
+	 * @remarks If {@link timeZone} or {@link utc}/{@link toUTC} method is applied, it still returns the local machine's timezone identifier. To access the modified timezone identifier(s) use {@link timeZoneId} property.
+	 */
+	$getNativeTimeZoneId(): TimeZoneIdentifier {
 		return Intl.DateTimeFormat().resolvedOptions().timeZone as TimeZoneIdentifier;
 	}
 
@@ -687,7 +695,7 @@ export class Chronos {
 		}
 	}
 
-	/** @instance Returns ISO string with local machine's time zone offset */
+	/** @instance Returns ISO string with local machine's time zone offset. */
 	toLocalISOString(): string {
 		switch (this.#ORIGIN) {
 			case 'timeZone':
@@ -702,7 +710,7 @@ export class Chronos {
 		}
 	}
 
-	/** @instance Returns a date as a string value in ISO format. */
+	/** @instance Returns a date as a string value in ISO format. Respects timezone. */
 	toISOString(): string {
 		switch (this.#ORIGIN) {
 			case 'timeZone':

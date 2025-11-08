@@ -5,17 +5,26 @@
 All notable changes to the package will be documented here.
 
 ---
-<!-- 
-## [4.25.20] - 2025-11-07
 
-- **Added** new *constant* `TIME_ZONE_IDS` scrapped from [**IANA TZ Database**](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
-- **Added** new *guard* `isValidTimeZoneId` to check if a string value is a valid *timezone identifier* from **IANA Database**.
-- **Updated** `Chronos` `timeZonePlugin` method `timeZone` to accept `TimeZoneIdentifier` along with *short timezone names* and *UTC offset*.
-- **Updated** *type interfaces* for `toLocaleString` `Chronos` method: **Created** `LocalesArguments` and `DateTimeFormatOptions` *type* and *interface*.
-- **Added** new *public properties* `timeZoneName` and `timeZoneId` to access *current timezone name and identifier(s)*. **Fixed** *UTC offset* related issues.
-- **Adjusted** `native` property to *provide correct native* `Date`. **Fixed** issues with `toDate` and `toLocalISOString`. Optimized internal codes.
+## [4.26.00] - 2025-11-08
+
+### 🕧 New in Chronos
+
+- **Added** new *instance methods* `$getNativeTimeZone()` and `$getNativeTimeZoneId()` to access *local machine's timezone name and identifier*.
+- **Added** new *public properties* `timeZoneName`, `timeZoneId` and `utcOffset` to access *current instance's timezone name, identifier(s) and UTC offset*.
+
+### 🕧 Updates in Chronos
+
+- **Updated** `Chronos` `timeZonePlugin` method `timeZone` to accept *timezone identifier* (`TimeZoneIdentifier`) along with *short timezone names* (`TimeZone`) and *UTC offset* (`UTCOffset`).
+- **Fixed** issues with `toDate()` and `toLocalISOString()`: now returns `proper date`. **Fixed** *UTC offset* related issues.
+- **Fixed** issues with `native` property: now *provides correct native* `Date`.
+- **Updated** *type interfaces* for `toLocaleString()` `Chronos` method: **created** `LocalesArguments` and `DateTimeFormatOptions` *type* and *interface*.
 - **Updated** *static* `parse` method to accept *millisecond tokens*.
- -->
+
+### 🛠️ Other Updates
+
+- **Added** new *constant* `TIME_ZONE_IDS` scrapped from [**IANA TZ Database**](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+- **Added** new *guard* `isValidTimeZoneId(...)` to check if a string value is a valid *timezone identifier* from **IANA Database**.
 
 ## [4.25.11] - 2025-11-06
 
