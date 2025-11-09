@@ -21,7 +21,7 @@ import type { SEASON_PRESETS } from './seasons';
 import type { TIME_ZONE_IDS, TIME_ZONE_LABELS, TIME_ZONES } from './timezone';
 
 // ! Re-export `ChronosStatics`
-export type { ChronosStatics };
+export type { ChronosStatics, UTCOffset as UTCOffSet };
 
 /** - Minute in numeric string from `00` to `23` */
 export type ClockHour = `0${Enumerate<10>}` | `${NumberRange<10, 23>}`;
@@ -260,10 +260,10 @@ export interface ChronosInternals {
 	withOrigin(
 		instance: Chronos,
 		method: PluginMethods,
-		offset?: UTCOffSet,
+		offset?: UTCOffset,
 		tzName?: string,
 		tzId?: TimeZoneId,
-		tzTracker?: TimeZoneIdentifier | TimeZone | UTCOffSet
+		tzTracker?: TimeZoneIdentifier | TimeZone | UTCOffset
 	): Chronos;
 
 	/**
@@ -287,7 +287,7 @@ export interface ChronosInternals {
 	 * @param instance - Chronos instance to access
 	 * @returns The stored formatted UTC offset
 	 */
-	offset(instance: Chronos): UTCOffSet;
+	offset(instance: Chronos): UTCOffset;
 }
 
 /** @internal Helper type to assign instance origin when creating new Chronos instance. */
@@ -350,7 +350,7 @@ export type TimeZoneName = NonNullable<
 export type TimeZoneIdentifier = keyof typeof TIME_ZONE_IDS;
 
 /** Timezone identifier, array of timezone identifiers or UTC offset. */
-export type TimeZoneId = TimeZoneIdentifier | TimeZoneIdentifier[] | UTCOffSet;
+export type TimeZoneId = TimeZoneIdentifier | TimeZoneIdentifier[] | UTCOffset;
 
 /** Positive UTC hours */
 export type PositiveUTCHour = `+0${Enumerate<10>}` | `+${NumberRange<10, 14>}`;
@@ -365,7 +365,7 @@ export type UTCMinute = '00' | '15' | '30' | '45';
 export type $UTCOffset = `${PositiveUTCHour | NegativeUTCHour}:${UTCMinute}`;
 
 /** UTC offset in `UTC±HH:mm` format */
-export type UTCOffSet = `UTC${$UTCOffset}`;
+export type UTCOffset = `UTC${$UTCOffset}`;
 
 /** `Chronos` Date Format options */
 export interface FormatOptions {

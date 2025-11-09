@@ -45,9 +45,9 @@
   </a>
 </p>
 
-## TypeScript Utility Library
+## JavaScript/TypeScript Utility Library
 
-**NHB Toolbox** provides battle-tested utilities for professional TypeScript development. Carefully crafted to solve common challenges with elegant, production-ready solutions:
+**NHB Toolbox** provides battle-tested utilities for professional JavaScript/TypeScript development. Carefully crafted to solve common challenges with elegant, production-ready solutions:
 
 - **Helper Functions & Classes**: Reusable solutions for everyday tasks
 - **Type Guards & Predicates**: Runtime safety with perfect type inference

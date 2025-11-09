@@ -5,14 +5,30 @@
 All notable changes to the package will be documented here.
 
 ---
-<!-- 
-## [4.26.1] - 2025-11-08
 
-- **Fixed** timezone conversion issues by updating `TIME_ZONE_IDS` constant: **normalized** all negative signs (replaced `'−'` with `'-'`) from UTC offset.
-- **Redesigned** *time zone determiners* with updated *timezone constants*.
-- **Added** *3 overload signatures* and *internal caching mechanism* for `timeZone(utc?)` method.
-- **Updated** *tsdoc* for some `Chronos` methods. **Created** new type `TimeZoneName`.
- -->
+## [4.26.10] - 2025-11-09
+
+### 🕧 Updates in Chronos
+
+- **Fixed** *timezone conversion issues* by updating `TIME_ZONE_IDS`, and `TIME_ZONES` constants:
+  - Now both the constants have similar *type definitions* and used with `as const` in the codebase.
+
+    ```ts
+    // Example structure after unification
+    const TIME_ZONE_IDS: Record<string, { tzName: string; offset: UTCOffSet }> = {
+      'Asia/Dhaka': { tzName: 'Bangladesh Standard Time', offset: 'UTC+06:00' },
+      // ...
+    };
+
+    const TIME_ZONES: Record<string, { tzName: string; offset: UTCOffSet }> = {
+      BST: { tzName: 'Bangladesh Standard Time', offset: 'UTC+06:00' },
+      // ...
+    };
+    ```
+
+- **Added** new *protected property* `$tzTracker`. **Updated** `withOrigin` and `#withOrigin` methods.
+- **Added** *3 overload signatures* and *internal caching mechanism* for `timeZonePlugin` methods.
+- **Updated** *tsdoc* for some `Chronos` methods. **Created** new type `TimeZoneName` and *more*.
 
 ## [4.26.1] - 2025-11-08
 

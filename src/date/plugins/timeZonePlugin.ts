@@ -8,7 +8,7 @@ import type {
 	TimeZoneId,
 	TimeZoneIdentifier,
 	TimeZoneName,
-	UTCOffSet,
+	UTCOffset,
 } from '../types';
 import { extractMinutesFromUTC } from '../utils';
 
@@ -20,6 +20,8 @@ declare module '../Chronos' {
 		/**
 		 * @instance Creates a new instance of `Chronos` for the specified time zone identifier.
 		 *
+		 * @remarks Using time zone identifier to create time zone instance is the best option.
+		 *
 		 * @param tzId - Time zone identifier (e.g., `'Africa/Harare'`). See: {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia}.
 		 * @returns A new instance of `Chronos` with time in the given time zone identifier. Invalid input sets time-zone to `UTC`.
 		 */
@@ -27,6 +29,8 @@ declare module '../Chronos' {
 
 		/**
 		 * @instance Creates a new instance of `Chronos` for the specified abbreviated time zone name.
+		 *
+		 * @remarks Use abbreviated time zone name to create time zone instance only when you can't figure out the time zone identifier.
 		 *
 		 * @param zone - Standard time zone abbreviation (e.g., `'IST'`, `'UTC'`, `'EST'` etc.). See: {@link https://en.wikipedia.org/wiki/List_of_time_zone_abbreviations Time zone abbreviations on Wikipedia}.
 		 * @returns A new instance of `Chronos` with time in the given time zone abbreviation. Invalid input sets time-zone to `UTC`.
@@ -36,10 +40,12 @@ declare module '../Chronos' {
 		/**
 		 * @instance Creates a new instance of `Chronos` for the specified utc offset.
 		 *
+		 * @remarks Use UTC offset only to create a fictional/unlisted time zone instance.
+		 *
 		 * @param utc - UTC Offset in `UTC±HH:mm` format for fictional or unlisted time zone (e.g., `'UTC+06:15'`).
 		 * @returns A new instance of `Chronos` with time in the given utc offset. Invalid input sets time-zone to `UTC`.
 		 */
-		timeZone(utc: UTCOffSet): ChronosConstructor;
+		timeZone(utc: UTCOffset): ChronosConstructor;
 
 		/**
 		 * @instance Returns the current time zone name as a full descriptive string (e.g. `"Bangladesh Standard Time"`).
@@ -54,7 +60,7 @@ declare module '../Chronos' {
 		 * - To retrieve the local system's native time zone name (or its identifier if the name is unavailable), use the {@link $getNativeTimeZone} instance method.
 		 * - To retrieve the local system's native time zone identifier, use the {@link $getNativeTimeZoneId} instance method.
 		 */
-		getTimeZoneName(utc?: UTCOffSet): LooseLiteral<TimeZoneName | UTCOffSet>;
+		getTimeZoneName(utc?: UTCOffset): LooseLiteral<TimeZoneName | UTCOffset>;
 
 		/**
 		 * @instance Returns the current time zone abbreviation (e.g. `"BST"` for `Bangladesh Standard Time`).
@@ -70,7 +76,7 @@ declare module '../Chronos' {
 		 * - To retrieve the local system's native time zone name (or its identifier if the name is unavailable), use the {@link $getNativeTimeZone} instance method.
 		 * - To retrieve the local system's native time zone identifier, use the {@link $getNativeTimeZoneId} instance method.
 		 */
-		getTimeZoneNameShort(utc?: UTCOffSet): LooseLiteral<TimeZone | UTCOffSet>;
+		getTimeZoneNameShort(utc?: UTCOffset): LooseLiteral<TimeZone | UTCOffset>;
 	}
 }
 
@@ -91,7 +97,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	};
 
 	/** Resolve time zone name from `TIME_ZONE_LABELS` constant using UTC offset or get undefined */
-	const _resolveTzName = (offset: UTCOffSet) => {
+	const _resolveTzName = (offset: UTCOffset) => {
 		if (_isLabelKey(offset)) {
 			return TIME_ZONE_LABELS[offset];
 		}
@@ -100,7 +106,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	};
 
 	/** Get time zone name from `TIME_ZONE_LABELS`, `TIME_ZONE_IDS` or `TIME_ZONES` constants using UTC offset, time zone identifier or time zone abbreviation */
-	const _getTimeZoneName = (zone: TimeZoneIdentifier | TimeZone | UTCOffSet) => {
+	const _getTimeZoneName = (zone: TimeZoneIdentifier | TimeZone | UTCOffset) => {
 		if (isValidUTCOffSet(zone)) {
 			return _resolveTzName(zone);
 		} else if (isValidTimeZoneId(zone)) {
@@ -114,7 +120,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	};
 
 	/** Cache to store time zone id against UTC offset */
-	const TZ_ID_CACHE = new Map<UTCOffSet, TimeZoneIdentifier[]>(
+	const TZ_ID_CACHE = new Map<UTCOffset, TimeZoneIdentifier[]>(
 		Object.entries(TIME_ZONE_IDS).reduce((acc, [id, { offset }]) => {
 			const arr = acc.get(offset) ?? [];
 
@@ -122,11 +128,11 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 			acc.set(offset, arr);
 
 			return acc;
-		}, new Map<UTCOffSet, TimeZoneIdentifier[]>())
+		}, new Map<UTCOffset, TimeZoneIdentifier[]>())
 	);
 
 	/** Get time zone identifier from `TIME_ZONE_IDS` using UTC offset */
-	const _getTimeZoneId = (utc: UTCOffSet) => {
+	const _getTimeZoneId = (utc: UTCOffset) => {
 		const tzIds = TZ_ID_CACHE.get(utc);
 
 		if (!tzIds || tzIds?.length === 0) return undefined;
@@ -137,9 +143,9 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 
 	ChronosClass.prototype.timeZone = function (
 		this: ChronosConstructor,
-		zone: TimeZoneIdentifier | TimeZone | UTCOffSet
+		zone: TimeZoneIdentifier | TimeZone | UTCOffset
 	): ChronosConstructor {
-		let offset: UTCOffSet;
+		let offset: UTCOffset;
 		let tzId: TimeZoneId;
 
 		if (isValidUTCOffSet(zone)) {
@@ -167,8 +173,8 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 
 	ChronosClass.prototype.getTimeZoneName = function (
 		this: ChronosConstructor,
-		utc?: UTCOffSet
-	): LooseLiteral<TimeZoneName | UTCOffSet> {
+		utc?: UTCOffset
+	): LooseLiteral<TimeZoneName | UTCOffset> {
 		const UTC = utc ?? this.utcOffset;
 
 		return _getTimeZoneName(this?.$tzTracker ?? UTC) ?? UTC;
@@ -179,8 +185,8 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 
 	ChronosClass.prototype.getTimeZoneNameShort = function (
 		this: ChronosConstructor,
-		utc?: UTCOffSet
-	): LooseLiteral<TimeZone | UTCOffSet> {
+		utc?: UTCOffset
+	): LooseLiteral<TimeZone | UTCOffset> {
 		const tracker = this?.$tzTracker;
 
 		if (!utc && tracker && tracker in TIME_ZONES) return tracker as TimeZone;

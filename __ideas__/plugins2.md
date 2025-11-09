@@ -119,7 +119,7 @@ declare module '../Chronos' {
   /**
    * Convert the current instance to a specific timezone.
    */
-  timeZone(zone: TimeZone | UTCOffSet): ChronosConstructor;
+  timeZone(zone: TimeZone | UTCOffset): ChronosConstructor;
 
   /**
    * Get the timezone offset in minutes from UTC.
@@ -129,19 +129,19 @@ declare module '../Chronos' {
   /**
    * Get the timezone offset in `UTC±HH:mm` string format.
    */
-  getTimeZoneOffset(): UTCOffSet;
+  getTimeZoneOffset(): UTCOffset;
  }
 }
 
 export const timeZonePlugin = (ChronosClass: MainChronos): void => {
  ChronosClass.prototype.timeZone = function (
   this: ChronosConstructor,
-  zone: TimeZone | UTCOffSet,
+  zone: TimeZone | UTCOffset,
  ): ChronosConstructor {
   let targetOffset: number;
-  let stringOffset: UTCOffSet;
+  let stringOffset: UTCOffset;
 
-  if (isValidUTCOffSet(zone)) {
+  if (isValidUTCOffset(zone)) {
    targetOffset = extractMinutesFromUTC(zone);
    stringOffset = zone;
   } else {
@@ -173,7 +173,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 
  ChronosClass.prototype.getTimeZoneOffset = function (
   this: ChronosConstructor,
- ): UTCOffSet {
+ ): UTCOffset {
   return formatUTCOffset(this.getTimeZoneOffsetMinutes());
  };
 };

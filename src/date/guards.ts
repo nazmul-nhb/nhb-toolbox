@@ -3,7 +3,7 @@ import { isNumericString } from '../guards/specials';
 import { normalizeNumber } from '../number/utilities';
 import type { Numeric } from '../types/index';
 import { TIME_ZONE_IDS } from './timezone';
-import type { ClockTime, TimeZoneIdentifier, UTCOffSet } from './types';
+import type { ClockTime, TimeZoneIdentifier, UTCOffset } from './types';
 
 /**
  * * Checks if the provided value is a valid time string in "HH:MM" format.
@@ -25,12 +25,12 @@ export function isValidTime(value: unknown): value is ClockTime {
 }
 
 /**
- * * Checks if the provided value is a valid UTCOffSet (e.g. `UTC-01:30`).
+ * * Checks if the provided value is a valid `UTCOffset` (e.g. `UTC-01:30`).
  *
  * @param value - The value to check.
  * @returns `true` if the value is a valid utc offset, `false` otherwise.
  */
-export function isValidUTCOffSet(value: unknown): value is UTCOffSet {
+export function isValidUTCOffSet(value: unknown): value is UTCOffset {
 	return isString(value) ? /^UTC[+-]?\d{1,2}:\d{2}$/.test(value) : false;
 }
 

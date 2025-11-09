@@ -37,7 +37,7 @@ import type {
 	TimeZoneId,
 	TimeZoneIdentifier,
 	TimeZoneName,
-	UTCOffSet,
+	UTCOffset,
 	WeekDay,
 	WeekdayOptions,
 } from './types';
@@ -83,7 +83,7 @@ type $DateParts = {
  */
 export class Chronos {
 	readonly #date: Date;
-	#offset: UTCOffSet;
+	#offset: UTCOffset;
 	#ORIGIN: ChronosMethods | 'root';
 
 	static #plugins = new Set<ChronosPlugin>();
@@ -128,7 +128,7 @@ export class Chronos {
 	 *
 	 * - Also accessible via {@link getUTCOffset} instance method without `UTC` prefix (in `±HH:mm` format).
 	 */
-	utcOffset: UTCOffSet;
+	utcOffset: UTCOffset;
 
 	/**
 	 * Represents the current timezone name (e.g., `"Bangladesh Standard Time"`), or falls back to the corresponding timezone identifier (e.g., `"Asia/Dhaka"`) if no name can be resolved.
@@ -154,7 +154,7 @@ export class Chronos {
 	timeZoneId: TimeZoneId;
 
 	/** Tracker to identify the instance created by {@link timeZone} method */
-	protected $tzTracker?: TimeZoneIdentifier | TimeZone | UTCOffSet;
+	protected $tzTracker?: TimeZoneIdentifier | TimeZone | UTCOffset;
 
 	/**
 	 * * Creates a new immutable `Chronos` instance.
@@ -449,10 +449,10 @@ export class Chronos {
 	 */
 	#withOrigin(
 		origin: ChronosMethods,
-		offset?: UTCOffSet,
+		offset?: UTCOffset,
 		tzName?: string,
 		tzId?: TimeZoneId,
-		tzTracker?: TimeZoneIdentifier | TimeZone | UTCOffSet
+		tzTracker?: TimeZoneIdentifier | TimeZone | UTCOffset
 	): Chronos {
 		const instance = new Chronos(this.#date);
 		instance.#ORIGIN = origin;
@@ -2273,3 +2273,5 @@ export class Chronos {
 		Chronos.use(plugin);
 	}
 }
+
+export { chronos } from './chronos-fn';
