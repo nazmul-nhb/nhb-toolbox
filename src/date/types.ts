@@ -314,10 +314,10 @@ export type $StaticMethods = {
 }[keyof $Chronos];
 
 /** * Plugin methods that return `Chronos` instance */
-export type $PluginMethods = 'timeZone' | 'round';
+export type $PluginMethods = `timeZone` | 'round';
 
 /** * Plugin methods that return `Chronos` instance + any custom name */
-export type PluginMethods = LooseLiteral<'timeZone' | 'round'>;
+export type PluginMethods = LooseLiteral<$PluginMethods>;
 
 /** Methods (both instance and static) in `Chronos` class that return `Chronos` instance. */
 export type ChronosMethods = $InstanceMethods | $StaticMethods | $PluginMethods;

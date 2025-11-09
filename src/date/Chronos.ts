@@ -7,6 +7,7 @@ import type { TupleOf } from '../utils/types';
 import { DAYS, INTERNALS, MONTHS, SORTED_TIME_FORMATS } from './constants';
 import { isLeapYear } from './guards';
 import type {
+	$PluginMethods,
 	$UTCOffset,
 	ChronosFormat,
 	ChronosInput,
@@ -96,7 +97,7 @@ export class Chronos {
 		},
 
 		withOrigin(instance, method, offset, tzName, tzId) {
-			return instance.#withOrigin(method as ChronosMethods, offset, tzName, tzId);
+			return instance.#withOrigin(method as $PluginMethods, offset, tzName, tzId);
 		},
 
 		toNewDate(instance, value) {
@@ -117,7 +118,7 @@ export class Chronos {
 	/**
 	 * * Current UTC offset in `UTC±HH:mm` format.
 	 *
-	 * - Also accessible via {@link getUTCOffset} instance method without `UTC` prefix (`±HH:mm` format).
+	 * - Also accessible via {@link getUTCOffset} instance method without `UTC` prefix (in `±HH:mm` format).
 	 */
 	utcOffset: UTCOffSet;
 

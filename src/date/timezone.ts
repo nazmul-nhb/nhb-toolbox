@@ -1,328 +1,879 @@
 import type { UTCOffSet } from './types';
 
-/** Record of time-zones with respective time-zone offsets (in minutes) as object (`{timeZone: offset}`) */
+/** Record of time-zones (abbreviation of timezone names from {@link https://en.wikipedia.org/wiki/List_of_time_zone_abbreviations time zone abbreviations on Wikipedia}) with respective time-zone offsets and full timezone names. */
 export const TIME_ZONES = /* @__PURE__ */ Object.freeze({
-	// ! UTC -12:00 to -01:00 (Mostly Pacific Islands, Americas)
-	/** International Date Line West (Baker Island, Howland Island) */
-	IDLW: -12 * 60,
-	/** Baker Island Time (Uninhabited) */
-	BIT: -12 * 60,
-	/** Samoa Standard Time (American Samoa, Midway) */
-	SST: -11 * 60,
-	/** Niue Time */
-	NUT: -11 * 60,
-	/** Hawaii-Aleutian Standard Time (USA-Hawaii) */
-	HST: -10 * 60,
-	/** Cook Island Time */
-	CKT: -10 * 60,
-	/** Tahiti Time (French Polynesia) */
-	TAHT: -10 * 60,
-	/** Alaska Standard Time (USA-Alaska) */
-	AKST: -9 * 60,
-	/** Gambier Time (French Polynesia) */
-	GAMT: -9 * 60,
-	/** Paraguay Time (Summer UTC-3) */
-	PYT: -9 * 60,
-	/** Marquesas Islands Time (UTC-09:30) */
-	MART: -9.5 * 60,
-	/** Hawaii-Aleutian Daylight Time (USA-Hawaii, DST) */
-	HDT: -9 * 60,
-	/** Pacific Standard Time (USA-West Coast, Canada) */
-	PST: -8 * 60,
-	/** Alaska Daylight Time (USA-Alaska, DST) */
-	AKDT: -8 * 60,
-	/** Mountain Standard Time (USA/Canada Rockies) */
-	MST: -7 * 60,
-	/** Mountain Daylight Time (USA/Canada Rockies, DST) */
-	MDT: -6 * 60,
-	/** Pacific Daylight Time (USA-West Coast, Canada, DST) */
-	PDT: -7 * 60,
-	/** Central Standard Time (USA/Canada Central) */
-	CST: -6 * 60,
-	/** Central Daylight Time (USA/Canada Central, DST) */
-	CDT: -5 * 60,
-	/** Easter Island Time (Chile) */
-	EAST: -6 * 60,
-	/** Eastern Standard Time (USA/Canada East Coast) */
-	EST: -5 * 60,
-	/** Eastern Daylight Time (USA/Canada East Coast, DST) */
-	EDT: -4 * 60,
-	/** Peru Time */
-	PET: -5 * 60,
-	/** Colombia Time */
-	COT: -5 * 60,
-	/** Acre Time (Brazil-West) */
-	ACT: -5 * 60,
-	/** Atlantic Standard Time (Canada-Maritime, Caribbean) */
-	'AST-Atlantic': -4 * 60,
-	/** Bolivia Time */
-	BOT: -4 * 60,
-	/** Venezuelan Standard Time */
-	VET: -4 * 60,
-	/** Guyana Time */
-	GYT: -4 * 60,
-	/** Chile Standard Time */
-	CLT: -4 * 60,
-	/** Atlantic Daylight Time (Canada-Maritime, DST) */
-	ADT: -3 * 60,
-	/** Brasília Time (Brazil-East) */
-	BRT: -3 * 60,
-	/** Argentina Time */
-	ART: -3 * 60,
-	/** Uruguay Time */
-	UYT: -3 * 60,
-	/** Falkland Islands Summer Time */
-	FKST: -3 * 60,
-	/** Saint Pierre and Miquelon Standard Time */
-	PMST: -3 * 60,
-	/** Chile Summer Time (DST) */
-	CLST: -3 * 60,
-	/** French Guiana Time */
-	GFT: -3 * 60,
-	/** Newfoundland Standard Time */
-	NST: -3.5 * 60,
-	/** Newfoundland Daylight Time (DST) */
-	NDT: -2.5 * 60,
-	/** Fernando de Noronha Time (Brazil) */
-	FNT: -2 * 60,
-	/** South Georgia Time */
-	'GST-South Georgia': -2 * 60,
-	/** Brazil Summer Time (DST) */
-	BRST: -2 * 60,
-	/** Azores Time (Portugal) */
-	AZOT: -1 * 60,
-	/** Cape Verde Time */
-	CVT: -1 * 60,
-
-	// ! UTC ±00:00 (Europe, Africa, Greenland)
-	/** Greenwich Mean Time (UK, Iceland, West Africa) */
-	GMT: 0,
-	/** Coordinated Universal Time */
-	UTC: 0,
-	/** Western European Time (Portugal, Morocco) */
-	WET: 0,
-	/** Eastern Greenland Summer Time */
-	EGST: 0,
-	/** Central European Time (France, Germany, Italy) */
-	CET: 1 * 60,
-	/** West Africa Time (Nigeria, Algeria) */
-	WAT: 1 * 60,
-	/** Middle European Time (Historical) */
-	MET: 1 * 60,
-	/** Western European Summer Time (Summer UTC+1) */
-	WEST: 1 * 60,
-	/** British Summer Time (UK DST) */
-	'BST-UK': 1 * 60,
-	/** Central European Summer Time (DST) */
-	CEST: 2 * 60,
-	/** Middle European Summer Time (DST) */
-	MEST: 2 * 60,
-
-	// ! UTC +02:00 to +05:00 (Europe, Africa, Middle East, Russia)
-	/** Eastern European Time (Greece, Finland, Egypt) */
-	EET: 2 * 60,
-	/** Central Africa Time (Sudan, South Africa) */
-	CAT: 2 * 60,
-	/** South Africa Standard Time */
-	SAST: 2 * 60,
-	/** Israel Standard Time */
-	'IST-ISRAEL': 2 * 60,
-	/** Israel Daylight Time (DST) */
-	'IST-DST': 3 * 60,
-	/** Eastern European Summer Time */
-	EEST: 3 * 60,
-	/** Moscow Time (Russia-West) */
-	MSK: 3 * 60,
-	/** Syowa Time (Antarctica) */
-	SYOT: 3 * 60,
-	/** Arabia Standard Time (Iraq, Saudi Arabia) */
-	'AST-ARAB': 3 * 60,
-	/** East Africa Time (Kenya, Ethiopia) */
-	EAT: 3 * 60,
-	/** Iran Standard Time */
-	IRST: 3.5 * 60,
-	/** Iran Daylight Time (DST) */
-	IRDT: 4.5 * 60,
-	/** Armenia Time */
-	AMT: 4 * 60,
-	/** Georgia Time */
-	GET: 4 * 60,
-	/** Azerbaijan Time */
-	AZT: 4 * 60,
-	/** Mauritius Time */
-	MUT: 4 * 60,
-	/** Seychelles Time */
-	SCT: 4 * 60,
-	/** Gulf Standard Time (UAE, Oman) */
-	'GST-GULF': 4 * 60,
-	/** Samara Time (Russia) */
-	SAMT: 4 * 60,
-	/** Pakistan Standard Time */
-	PKT: 5 * 60,
-	/** Tajikistan Time */
-	TJT: 5 * 60,
-	/** Turkmenistan Time */
-	TMT: 5 * 60,
-	/** Uzbekistan Time */
-	UZT: 5 * 60,
-	/** Aqtobe Time (Kazakhstan) */
-	AQTT: 5 * 60,
-	/** Yekaterinburg Time (Russia) */
-	YEKT: 5 * 60,
-	/** Yekaterinburg Summer Time (Russia, DST) */
-	YEKST: 5 * 60,
-	/** India Standard Time */
-	'IST-IN': 5.5 * 60,
-
-	// ! UTC +05:30 to +09:00 (South Asia, Russia, Southeast Asia)
-	/** Nepal Time (UTC+05:45) */
-	NPT: 5.75 * 60,
-	/** Nepal Time (alternative) */
-	'NPT-NEPAL': 5.75 * 60,
-	/** Bangladesh Time */
-	BDT: 6 * 60,
-	/** Bangladesh Standard Time */
-	'BST-BD': 6 * 60,
-	/** Bhutan Time */
-	BTT: 6 * 60,
-	/** Almaty Time (Kazakhstan) */
-	ALMT: 6 * 60,
-	/** Omsk Time (Russia) */
-	OMST: 6 * 60,
-	/** Myanmar Time */
-	MMT: 6.5 * 60,
-	/** Cocos Islands Time */
-	CCT: 6.5 * 60,
-	/** Indochina Time (Thailand, Vietnam) */
-	ICT: 7 * 60,
-	/** Thailand Standard Time */
-	THA: 7 * 60,
-	/** Krasnoyarsk Time (Russia) */
-	KRAT: 7 * 60,
-	/** Western Indonesia Time (Jakarta) */
-	WIB: 7 * 60,
-	/** Hong Kong Time */
-	HKT: 8 * 60,
-	/** China Standard Time */
-	'CST-CHINA': 8 * 60,
-	/** Singapore Time */
-	SGT: 8 * 60,
-	/** Malaysia Time */
-	MYT: 8 * 60,
-	/** Philippines Time */
-	PHT: 8 * 60,
-	/** Irkutsk Time (Russia) */
-	IRKT: 8 * 60,
-	/** Irkutsk Daylight Time (Russia, DST) */
-	'IRKT-DST': 9 * 60,
-	/** Irkutsk Time (Russia, alternative) */
-	'IRKT-RU': 8 * 60,
-	/** Australian Western Standard Time */
-	AWST: 8 * 60,
-	/** Australian Central Western Standard Time (Eucla, UTC+08:45) */
-	ACWST: 8.75 * 60,
-	/** Western Indonesia Time (Bali) */
-	WITA: 8 * 60,
-	/** Japan Standard Time */
-	JST: 9 * 60,
-	/** Korea Standard Time */
-	KST: 9 * 60,
-	/** Palau Time */
-	PWT: 9 * 60,
-	/** Yakutsk Time (Russia) */
-	YAKT: 9 * 60,
-	/** Eastern Indonesia Time (Jayapura) */
-	WIT: 9 * 60,
-
-	// ! UTC +09:30 to +14:00 (Australia, Pacific Islands, Russia)
-	/** Australian Central Standard Time */
-	ACST: 9.5 * 60,
-	/** Australian Central Daylight Time (DST) */
-	ACDT: 10.5 * 60,
-	/** Australian Eastern Standard Time */
-	AEST: 10 * 60,
-	/** Australian Eastern Daylight Time (DST) */
-	AEDT: 11 * 60,
-	/** Vladivostok Time (Russia) */
-	VLAT: 10 * 60,
-	/** Lord Howe Standard Time (UTC+10:30) */
-	LHST: 10.5 * 60,
-	/** Lord Howe Daylight Time (DST +30min) */
-	LHDT: 11 * 60,
-	/** Sakhalin Time (Russia) */
-	SAKT: 11 * 60,
-	/** Magadan Time (Russia) */
-	MAGT: 11 * 60,
-	/** Norfolk Time (Australia) */
-	NFT: 11 * 60,
-	/** Chamorro Standard Time (Guam, Northern Mariana Islands) */
-	CHST: 10 * 60,
-	/** New Zealand Standard Time */
-	NZST: 12 * 60,
-	/** New Zealand Daylight Time (DST) */
-	NZDT: 13 * 60,
-	/** Fiji Time */
-	FJT: 12 * 60,
-	/** Tuvalu Time */
-	TVT: 12 * 60,
-	/** Chatham Standard Time (New Zealand) */
-	CHAST: 12.75 * 60,
-	/** Chatham Daylight Time (New Zealand, DST) */
-	CHADT: 13.75 * 60,
-	/** Chatham Standard Time (alternative) */
-	'CHAST-NZ': 12.75 * 60,
-	/** Phoenix Island Time (Kiribati) */
-	PHOT: 13 * 60,
-	/** Tokelau Time */
-	TKT: 13 * 60,
-	/** Tonga Time */
-	TOT: 13 * 60,
-	/** New Zealand Antarctica Time */
-	NZAT: 13 * 60,
-	/** Line Islands Time (Kiribati) */
-	LINT: 14 * 60,
-
-	// ! Antarctica (used in research stations)
-	/** Rothera Time (Antarctica) */
-	ROTT: -3 * 60,
-	/** Mawson Time (Antarctica) */
-	MAWT: 5 * 60,
-	/** Petropavlovsk-Kamchatsky Time (Russia) */
-	PETT: 12 * 60,
+	ACDT: {
+		tzName: 'Australian Central Daylight Saving Time',
+		offset: 'UTC+10:30',
+	},
+	ACST: {
+		tzName: 'Australian Central Standard Time',
+		offset: 'UTC+09:30',
+	},
+	ACT: {
+		tzName: 'Acre Time',
+		offset: 'UTC-05:00',
+	},
+	'ACT-ASEAN': {
+		tzName: 'ASEAN Common Time',
+		offset: 'UTC+08:00',
+	},
+	ACWST: {
+		tzName: 'Australian Central Western Standard Time (Unofficial)',
+		offset: 'UTC+08:45',
+	},
+	ADT: {
+		tzName: 'Atlantic Daylight Time',
+		offset: 'UTC-03:00',
+	},
+	AEDT: {
+		tzName: 'Australian Eastern Daylight Saving Time',
+		offset: 'UTC+11:00',
+	},
+	AEST: {
+		tzName: 'Australian Eastern Standard Time',
+		offset: 'UTC+10:00',
+	},
+	AET: {
+		tzName: 'Australian Eastern Time',
+		offset: 'UTC+10:00',
+	},
+	AFT: {
+		tzName: 'Afghanistan Time',
+		offset: 'UTC+04:30',
+	},
+	AKDT: {
+		tzName: 'Alaska Daylight Time',
+		offset: 'UTC-08:00',
+	},
+	AKST: {
+		tzName: 'Alaska Standard Time',
+		offset: 'UTC-09:00',
+	},
+	ALMT: {
+		tzName: 'Alma-Ata Time',
+		offset: 'UTC+06:00',
+	},
+	AMST: {
+		tzName: 'Amazon Summer Time (Brazil)',
+		offset: 'UTC-03:00',
+	},
+	'AMT-Brazil': {
+		tzName: 'Amazon Time (Brazil)',
+		offset: 'UTC-04:00',
+	},
+	'AMT-Armenia': {
+		tzName: 'Armenia Time',
+		offset: 'UTC+04:00',
+	},
+	ANAT: {
+		tzName: 'Anadyr Time',
+		offset: 'UTC+12:00',
+	},
+	AQTT: {
+		tzName: 'Aqtobe Time',
+		offset: 'UTC+05:00',
+	},
+	ART: {
+		tzName: 'Argentina Time',
+		offset: 'UTC-03:00',
+	},
+	AST: {
+		tzName: 'Arabia Standard Time',
+		offset: 'UTC+03:00',
+	},
+	'AST-Atlantic': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	AWST: {
+		tzName: 'Australian Western Standard Time',
+		offset: 'UTC+08:00',
+	},
+	AZOST: {
+		tzName: 'Azores Summer Time',
+		offset: 'UTC+00:00',
+	},
+	AZOT: {
+		tzName: 'Azores Standard Time',
+		offset: 'UTC-01:00',
+	},
+	AZT: {
+		tzName: 'Azerbaijan Time',
+		offset: 'UTC+04:00',
+	},
+	BNT: {
+		tzName: 'Brunei Time',
+		offset: 'UTC+08:00',
+	},
+	BIOT: {
+		tzName: 'British Indian Ocean Time',
+		offset: 'UTC+06:00',
+	},
+	BIT: {
+		tzName: 'Baker Island Time',
+		offset: 'UTC-12:00',
+	},
+	BOT: {
+		tzName: 'Bolivia Time',
+		offset: 'UTC-04:00',
+	},
+	BRST: {
+		tzName: 'Brasília Summer Time',
+		offset: 'UTC-02:00',
+	},
+	BRT: {
+		tzName: 'Brasília Time',
+		offset: 'UTC-03:00',
+	},
+	BDT: {
+		tzName: 'Bangladesh Standard Time',
+		offset: 'UTC+06:00',
+	},
+	'BST-BD': {
+		tzName: 'Bangladesh Standard Time',
+		offset: 'UTC+06:00',
+	},
+	'BST-Bougainville': {
+		tzName: 'Bougainville Standard Time',
+		offset: 'UTC+11:00',
+	},
+	'BST-British': {
+		tzName: 'British Summer Time',
+		offset: 'UTC+01:00',
+	},
+	BTT: {
+		tzName: 'Bhutan Time',
+		offset: 'UTC+06:00',
+	},
+	CAT: {
+		tzName: 'Central Africa Time',
+		offset: 'UTC+02:00',
+	},
+	CCT: {
+		tzName: 'Cocos Islands Time',
+		offset: 'UTC+06:30',
+	},
+	'CDT-NA': {
+		tzName: 'Central Daylight Time (North America)',
+		offset: 'UTC-05:00',
+	},
+	'CDT-Cuba': {
+		tzName: 'Cuba Daylight Time',
+		offset: 'UTC-04:00',
+	},
+	CEST: {
+		tzName: 'Central European Summer Time',
+		offset: 'UTC+02:00',
+	},
+	CET: {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	CHADT: {
+		tzName: 'Chatham Daylight Time',
+		offset: 'UTC+13:45',
+	},
+	CHAST: {
+		tzName: 'Chatham Standard Time',
+		offset: 'UTC+12:45',
+	},
+	CHOT: {
+		tzName: 'Choibalsan Standard Time',
+		offset: 'UTC+08:00',
+	},
+	CHOST: {
+		tzName: 'Choibalsan Summer Time',
+		offset: 'UTC+09:00',
+	},
+	CHST: {
+		tzName: 'Chamorro Standard Time',
+		offset: 'UTC+10:00',
+	},
+	CHUT: {
+		tzName: 'Chuuk Time',
+		offset: 'UTC+10:00',
+	},
+	CIST: {
+		tzName: 'Clipperton Island Standard Time',
+		offset: 'UTC-08:00',
+	},
+	CKT: {
+		tzName: 'Cook Island Time',
+		offset: 'UTC-10:00',
+	},
+	CLST: {
+		tzName: 'Chile Summer Time',
+		offset: 'UTC-03:00',
+	},
+	CLT: {
+		tzName: 'Chile Standard Time',
+		offset: 'UTC-04:00',
+	},
+	COST: {
+		tzName: 'Colombia Summer Time',
+		offset: 'UTC-04:00',
+	},
+	COT: {
+		tzName: 'Colombia Time',
+		offset: 'UTC-05:00',
+	},
+	'CST-CA': {
+		tzName: 'Central Standard Time (Central America)',
+		offset: 'UTC-06:00',
+	},
+	'CST-China': {
+		tzName: 'China Standard Time',
+		offset: 'UTC+08:00',
+	},
+	'CST-Cuba': {
+		tzName: 'Cuba Standard Time',
+		offset: 'UTC-05:00',
+	},
+	CT: {
+		tzName: 'Central Time',
+		offset: 'UTC-06:00',
+	},
+	CVT: {
+		tzName: 'Cape Verde Time',
+		offset: 'UTC-01:00',
+	},
+	CWST: {
+		tzName: 'Central Western Standard Time (Australia)',
+		offset: 'UTC+08:45',
+	},
+	CXT: {
+		tzName: 'Christmas Island Time',
+		offset: 'UTC+07:00',
+	},
+	DAVT: {
+		tzName: 'Davis Time',
+		offset: 'UTC+07:00',
+	},
+	DDUT: {
+		tzName: "Dumont d'Urville Time (in French Antarctic Station)",
+		offset: 'UTC+10:00',
+	},
+	DFT: {
+		tzName: 'AIX-specific equivalent of Central European Time',
+		offset: 'UTC+01:00',
+	},
+	EASST: {
+		tzName: 'Easter Island Summer Time',
+		offset: 'UTC-05:00',
+	},
+	EAST: {
+		tzName: 'Easter Island Standard Time',
+		offset: 'UTC-06:00',
+	},
+	EAT: {
+		tzName: 'East Africa Time',
+		offset: 'UTC+03:00',
+	},
+	'ECT-Caribbean': {
+		tzName: 'Eastern Caribbean Time',
+		offset: 'UTC-04:00',
+	},
+	'ECT-Ecuador': {
+		tzName: 'Ecuador Time',
+		offset: 'UTC-05:00',
+	},
+	EDT: {
+		tzName: 'Eastern Daylight Time (North America)',
+		offset: 'UTC-04:00',
+	},
+	EEST: {
+		tzName: 'Eastern European Summer Time',
+		offset: 'UTC+03:00',
+	},
+	EET: {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	EGST: {
+		tzName: 'Eastern Greenland Summer Time',
+		offset: 'UTC+00:00',
+	},
+	EGT: {
+		tzName: 'Eastern Greenland Time',
+		offset: 'UTC-01:00',
+	},
+	EST: {
+		tzName: 'Eastern Standard Time (North America)',
+		offset: 'UTC-05:00',
+	},
+	ET: {
+		tzName: 'Eastern Time (North America)',
+		offset: 'UTC-05:00',
+	},
+	FET: {
+		tzName: 'Further-eastern European Time',
+		offset: 'UTC+03:00',
+	},
+	FJT: {
+		tzName: 'Fiji Time',
+		offset: 'UTC+12:00',
+	},
+	FKST: {
+		tzName: 'Falkland Islands Summer Time',
+		offset: 'UTC-03:00',
+	},
+	FKT: {
+		tzName: 'Falkland Islands Time',
+		offset: 'UTC-04:00',
+	},
+	FNT: {
+		tzName: 'Fernando de Noronha Time',
+		offset: 'UTC-02:00',
+	},
+	GALT: {
+		tzName: 'Galápagos Time',
+		offset: 'UTC-06:00',
+	},
+	GAMT: {
+		tzName: 'Gambier Islands Time',
+		offset: 'UTC-09:00',
+	},
+	GET: {
+		tzName: 'Georgia Standard Time',
+		offset: 'UTC+04:00',
+	},
+	GFT: {
+		tzName: 'French Guiana Time',
+		offset: 'UTC-03:00',
+	},
+	GILT: {
+		tzName: 'Gilbert Island Time',
+		offset: 'UTC+12:00',
+	},
+	GIT: {
+		tzName: 'Gambier Island Time',
+		offset: 'UTC-09:00',
+	},
+	GMT: {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'GST-Georgia': {
+		tzName: 'South Georgia and the South Sandwich Islands Time',
+		offset: 'UTC-02:00',
+	},
+	'GST-Gulf': {
+		tzName: 'Gulf Standard Time',
+		offset: 'UTC+04:00',
+	},
+	GYT: {
+		tzName: 'Guyana Time',
+		offset: 'UTC-04:00',
+	},
+	HDT: {
+		tzName: 'Hawaii–Aleutian Daylight Time',
+		offset: 'UTC-09:00',
+	},
+	HAEC: {
+		tzName: "Heure Avancée d'Europe Centrale (French for CEST)",
+		offset: 'UTC+02:00',
+	},
+	HST: {
+		tzName: 'Hawaii–Aleutian Standard Time',
+		offset: 'UTC-10:00',
+	},
+	HKT: {
+		tzName: 'Hong Kong Time',
+		offset: 'UTC+08:00',
+	},
+	HMT: {
+		tzName: 'Heard and McDonald Islands Time',
+		offset: 'UTC+05:00',
+	},
+	HOVST: {
+		tzName: 'Hovd Summer Time',
+		offset: 'UTC+08:00',
+	},
+	HOVT: {
+		tzName: 'Hovd Time',
+		offset: 'UTC+07:00',
+	},
+	ICT: {
+		tzName: 'Indochina Time',
+		offset: 'UTC+07:00',
+	},
+	IDLW: {
+		tzName: 'International Date Line West time zone',
+		offset: 'UTC-12:00',
+	},
+	IDT: {
+		tzName: 'Israel Daylight Time',
+		offset: 'UTC+03:00',
+	},
+	IOT: {
+		tzName: 'Indian Ocean Time',
+		offset: 'UTC+06:00',
+	},
+	IRDT: {
+		tzName: 'Iran Daylight Time',
+		offset: 'UTC+04:30',
+	},
+	IRKT: {
+		tzName: 'Irkutsk Time',
+		offset: 'UTC+08:00',
+	},
+	IRST: {
+		tzName: 'Iran Standard Time',
+		offset: 'UTC+03:30',
+	},
+	'IST-India': {
+		tzName: 'Indian Standard Time',
+		offset: 'UTC+05:30',
+	},
+	'IST-Ireland': {
+		tzName: 'Irish Standard Time',
+		offset: 'UTC+01:00',
+	},
+	'IST-Israel': {
+		tzName: 'Israel Standard Time',
+		offset: 'UTC+02:00',
+	},
+	JST: {
+		tzName: 'Japan Standard Time',
+		offset: 'UTC+09:00',
+	},
+	KALT: {
+		tzName: 'Kaliningrad Time',
+		offset: 'UTC+02:00',
+	},
+	KGT: {
+		tzName: 'Kyrgyzstan Time',
+		offset: 'UTC+06:00',
+	},
+	KOST: {
+		tzName: 'Kosrae Time',
+		offset: 'UTC+11:00',
+	},
+	KRAT: {
+		tzName: 'Krasnoyarsk Time',
+		offset: 'UTC+07:00',
+	},
+	KST: {
+		tzName: 'Korea Standard Time',
+		offset: 'UTC+09:00',
+	},
+	'LHST-Standard': {
+		tzName: 'Lord Howe Standard Time',
+		offset: 'UTC+10:30',
+	},
+	'LHST-Summer': {
+		tzName: 'Lord Howe Summer Time',
+		offset: 'UTC+11:00',
+	},
+	LINT: {
+		tzName: 'Line Islands Time',
+		offset: 'UTC+14:00',
+	},
+	MAGT: {
+		tzName: 'Magadan Time',
+		offset: 'UTC+12:00',
+	},
+	MART: {
+		tzName: 'Marquesas Islands Time',
+		offset: 'UTC-09:30',
+	},
+	MAWT: {
+		tzName: 'Mawson Station Time',
+		offset: 'UTC+05:00',
+	},
+	MDT: {
+		tzName: 'Mountain Daylight Time (North America)',
+		offset: 'UTC-06:00',
+	},
+	MET: {
+		tzName: 'Middle European Time',
+		offset: 'UTC+01:00',
+	},
+	MEST: {
+		tzName: 'Middle European Summer Time',
+		offset: 'UTC+02:00',
+	},
+	MHT: {
+		tzName: 'Marshall Islands Time',
+		offset: 'UTC+12:00',
+	},
+	MIST: {
+		tzName: 'Macquarie Island Station Time',
+		offset: 'UTC+11:00',
+	},
+	MIT: {
+		tzName: 'Marquesas Islands Time',
+		offset: 'UTC-09:30',
+	},
+	MMT: {
+		tzName: 'Myanmar Standard Time',
+		offset: 'UTC+06:30',
+	},
+	MSK: {
+		tzName: 'Moscow Time',
+		offset: 'UTC+03:00',
+	},
+	'MST-Malay': {
+		tzName: 'Malaysian Standard Time',
+		offset: 'UTC+08:00',
+	},
+	'MST-NA': {
+		tzName: 'Mountain Standard Time (North America)',
+		offset: 'UTC-07:00',
+	},
+	MT: {
+		tzName: 'Mountain Time (North America)',
+		offset: 'UTC-07:00',
+	},
+	MUT: {
+		tzName: 'Mauritius Time',
+		offset: 'UTC+04:00',
+	},
+	MVT: {
+		tzName: 'Maldives Time',
+		offset: 'UTC+05:00',
+	},
+	MYT: {
+		tzName: 'Malaysia Time',
+		offset: 'UTC+08:00',
+	},
+	NCT: {
+		tzName: 'New Caledonia Time',
+		offset: 'UTC+11:00',
+	},
+	NDT: {
+		tzName: 'Newfoundland Daylight Time',
+		offset: 'UTC-02:30',
+	},
+	NFT: {
+		tzName: 'Norfolk Island Time',
+		offset: 'UTC+11:00',
+	},
+	NOVT: {
+		tzName: 'Novosibirsk Time',
+		offset: 'UTC+07:00',
+	},
+	NPT: {
+		tzName: 'Nepal Time',
+		offset: 'UTC+05:45',
+	},
+	NST: {
+		tzName: 'Newfoundland Standard Time',
+		offset: 'UTC-03:30',
+	},
+	NT: {
+		tzName: 'Newfoundland Time',
+		offset: 'UTC-03:30',
+	},
+	NUT: {
+		tzName: 'Niue Time',
+		offset: 'UTC-11:00',
+	},
+	NZDT: {
+		tzName: 'New Zealand Daylight Time',
+		offset: 'UTC+13:00',
+	},
+	NZDST: {
+		tzName: 'New Zealand Daylight Saving Time',
+		offset: 'UTC+13:00',
+	},
+	NZST: {
+		tzName: 'New Zealand Standard Time',
+		offset: 'UTC+12:00',
+	},
+	OMST: {
+		tzName: 'Omsk Time',
+		offset: 'UTC+06:00',
+	},
+	ORAT: {
+		tzName: 'Oral Time',
+		offset: 'UTC+05:00',
+	},
+	PDT: {
+		tzName: 'Pacific Daylight Time (North America)',
+		offset: 'UTC-07:00',
+	},
+	PET: {
+		tzName: 'Peru Time',
+		offset: 'UTC-05:00',
+	},
+	PETT: {
+		tzName: 'Kamchatka Time',
+		offset: 'UTC+12:00',
+	},
+	PGT: {
+		tzName: 'Papua New Guinea Time',
+		offset: 'UTC+10:00',
+	},
+	PHOT: {
+		tzName: 'Phoenix Island Time',
+		offset: 'UTC+13:00',
+	},
+	PHT: {
+		tzName: 'Philippine Time',
+		offset: 'UTC+08:00',
+	},
+	PHST: {
+		tzName: 'Philippine Standard Time',
+		offset: 'UTC+08:00',
+	},
+	PKT: {
+		tzName: 'Pakistan Standard Time',
+		offset: 'UTC+05:00',
+	},
+	PMDT: {
+		tzName: 'Saint Pierre and Miquelon Daylight Time',
+		offset: 'UTC-02:00',
+	},
+	PMST: {
+		tzName: 'Saint Pierre and Miquelon Standard Time',
+		offset: 'UTC-03:00',
+	},
+	PONT: {
+		tzName: 'Pohnpei Standard Time',
+		offset: 'UTC+11:00',
+	},
+	PST: {
+		tzName: 'Pacific Standard Time (North America)',
+		offset: 'UTC-08:00',
+	},
+	PT: {
+		tzName: 'Pacific Time (North America)',
+		offset: 'UTC-08:00',
+	},
+	PWT: {
+		tzName: 'Palau Time',
+		offset: 'UTC+09:00',
+	},
+	PYST: {
+		tzName: 'Paraguay Summer Time',
+		offset: 'UTC-03:00',
+	},
+	PYT: {
+		tzName: 'Paraguay Time',
+		offset: 'UTC-04:00',
+	},
+	RET: {
+		tzName: 'Réunion Time',
+		offset: 'UTC+04:00',
+	},
+	ROTT: {
+		tzName: 'Rothera Research Station Time',
+		offset: 'UTC-03:00',
+	},
+	SAKT: {
+		tzName: 'Sakhalin Island Time',
+		offset: 'UTC+11:00',
+	},
+	SAMT: {
+		tzName: 'Samara Time',
+		offset: 'UTC+04:00',
+	},
+	SAST: {
+		tzName: 'South African Standard Time',
+		offset: 'UTC+02:00',
+	},
+	SBT: {
+		tzName: 'Solomon Islands Time',
+		offset: 'UTC+11:00',
+	},
+	SCT: {
+		tzName: 'Seychelles Time',
+		offset: 'UTC+04:00',
+	},
+	SDT: {
+		tzName: 'Samoa Daylight Time',
+		offset: 'UTC-10:00',
+	},
+	SGT: {
+		tzName: 'Singapore Time',
+		offset: 'UTC+08:00',
+	},
+	SLST: {
+		tzName: 'Sri Lanka Standard Time',
+		offset: 'UTC+05:30',
+	},
+	SRET: {
+		tzName: 'Srednekolymsk Time',
+		offset: 'UTC+11:00',
+	},
+	SRT: {
+		tzName: 'Suriname Time',
+		offset: 'UTC-03:00',
+	},
+	SST: {
+		tzName: 'Samoa Standard Time',
+		offset: 'UTC-11:00',
+	},
+	SYOT: {
+		tzName: 'Showa Station Time',
+		offset: 'UTC+03:00',
+	},
+	TAHT: {
+		tzName: 'Tahiti Time',
+		offset: 'UTC-10:00',
+	},
+	THA: {
+		tzName: 'Thailand Standard Time',
+		offset: 'UTC+07:00',
+	},
+	TFT: {
+		tzName: 'French Southern and Antarctic Time',
+		offset: 'UTC+05:00',
+	},
+	TJT: {
+		tzName: 'Tajikistan Time',
+		offset: 'UTC+05:00',
+	},
+	TKT: {
+		tzName: 'Tokelau Time',
+		offset: 'UTC+13:00',
+	},
+	TLT: {
+		tzName: 'Timor Leste Time',
+		offset: 'UTC+09:00',
+	},
+	TMT: {
+		tzName: 'Turkmenistan Time',
+		offset: 'UTC+05:00',
+	},
+	TRT: {
+		tzName: 'Turkey Time',
+		offset: 'UTC+03:00',
+	},
+	TOT: {
+		tzName: 'Tonga Time',
+		offset: 'UTC+13:00',
+	},
+	TST: {
+		tzName: 'Taiwan Standard Time',
+		offset: 'UTC+08:00',
+	},
+	TVT: {
+		tzName: 'Tuvalu Time',
+		offset: 'UTC+12:00',
+	},
+	ULAST: {
+		tzName: 'Ulaanbaatar Summer Time',
+		offset: 'UTC+09:00',
+	},
+	ULAT: {
+		tzName: 'Ulaanbaatar Standard Time',
+		offset: 'UTC+08:00',
+	},
+	UTC: {
+		tzName: 'Coordinated Universal Time',
+		offset: 'UTC+00:00',
+	},
+	UYST: {
+		tzName: 'Uruguay Summer Time',
+		offset: 'UTC-02:00',
+	},
+	UYT: {
+		tzName: 'Uruguay Standard Time',
+		offset: 'UTC-03:00',
+	},
+	UZT: {
+		tzName: 'Uzbekistan Time',
+		offset: 'UTC+05:00',
+	},
+	VET: {
+		tzName: 'Venezuelan Standard Time',
+		offset: 'UTC-04:00',
+	},
+	VLAT: {
+		tzName: 'Vladivostok Time',
+		offset: 'UTC+10:00',
+	},
+	VOLT: {
+		tzName: 'Volgograd Time',
+		offset: 'UTC+03:00',
+	},
+	VOST: {
+		tzName: 'Vostok Station Time',
+		offset: 'UTC+06:00',
+	},
+	VUT: {
+		tzName: 'Vanuatu Time',
+		offset: 'UTC+11:00',
+	},
+	WAKT: {
+		tzName: 'Wake Island Time',
+		offset: 'UTC+12:00',
+	},
+	WAST: {
+		tzName: 'West Africa Summer Time',
+		offset: 'UTC+02:00',
+	},
+	WAT: {
+		tzName: 'West Africa Time',
+		offset: 'UTC+01:00',
+	},
+	WEST: {
+		tzName: 'Western European Summer Time',
+		offset: 'UTC+01:00',
+	},
+	WET: {
+		tzName: 'Western European Time',
+		offset: 'UTC+00:00',
+	},
+	WIB: {
+		tzName: 'Western Indonesian Time',
+		offset: 'UTC+07:00',
+	},
+	WIT: {
+		tzName: 'Eastern Indonesian Time',
+		offset: 'UTC+09:00',
+	},
+	WITA: {
+		tzName: 'Central Indonesia Time',
+		offset: 'UTC+08:00',
+	},
+	WGST: {
+		tzName: 'West Greenland Summer Time',
+		offset: 'UTC-02:00',
+	},
+	WGT: {
+		tzName: 'West Greenland Time',
+		offset: 'UTC-03:00',
+	},
+	WST: {
+		tzName: 'Western Standard Time',
+		offset: 'UTC+08:00',
+	},
+	YAKT: {
+		tzName: 'Yakutsk Time',
+		offset: 'UTC+09:00',
+	},
+	YEKT: {
+		tzName: 'Yekaterinburg Time',
+		offset: 'UTC+05:00',
+	},
 } as const);
 
-/** Record of time-zone labels/names against their corresponding UTC offsets as object (`{UTCOffset: timeZoneName}`) */
+/** Record of unique standard time-zone labels/names for their corresponding UTC offsets as (`{ UTCOffset: timeZoneName }`). */
 export const TIME_ZONE_LABELS = /* @__PURE__ */ Object.freeze({
-	'UTC-12:00': 'Baker Island Time', // and Howland Island
-	// 'UTC-11:30': 'Niue Time',
-	// 'UTC-11:00': 'Niue Time',
+	'UTC-12:00': 'Baker Island Time',
 	'UTC-11:00': 'Samoa Standard Time',
-	// 'UTC-10:30': 'Marquesas Time',
 	'UTC-10:00': 'Hawaii-Aleutian Standard Time',
 	'UTC-09:30': 'Marquesas Islands Time',
 	'UTC-09:00': 'Alaskan Standard Time',
-	// 'UTC-08:30': 'Pitcairn Standard Time',
 	'UTC-08:00': 'Pacific Standard Time',
-	'UTC-07:30': 'Mountain Standard Time (Unofficial)',
 	'UTC-07:00': 'Mountain Standard Time',
-	'UTC-06:30': 'Central America Time (Unofficial)',
 	'UTC-06:00': 'Central Standard Time',
-	// 'UTC-05:30': 'Venezuelan Standard Time (Historical)',
 	'UTC-05:00': 'Eastern Standard Time',
-	// 'UTC-04:30': 'Venezuelan Standard Time',
+	'UTC-04:30': 'Venezuelan Standard Time (Historical)',
 	'UTC-04:00': 'Atlantic Standard Time',
 	'UTC-03:30': 'Newfoundland Standard Time',
 	'UTC-03:00': 'SA Eastern Standard Time',
-	'UTC-02:30': 'Mid-Atlantic Time (Unofficial)',
+	'UTC-02:30': 'Mid-Atlantic Time (Fictional)',
 	'UTC-02:00': 'Mid-Atlantic Standard Time',
-	'UTC-01:30': 'Azores Time (Unofficial)',
 	'UTC-01:00': 'Cape Verde Time',
 	'UTC+00:00': 'Greenwich Mean Time',
-	'UTC+00:30': 'British Summer Time (Historical)',
 	'UTC+01:00': 'Central European Standard Time',
 	'UTC+01:30': 'Central Africa Time (Unofficial)',
 	'UTC+02:00': 'Eastern European Standard Time',
-	'UTC+02:30': 'Israel Standard Time (Historical)',
 	'UTC+03:00': 'Arab Standard Time',
 	'UTC+03:30': 'Iran Standard Time',
 	'UTC+04:00': 'Gulf Standard Time',
@@ -342,612 +893,2404 @@ export const TIME_ZONE_LABELS = /* @__PURE__ */ Object.freeze({
 	'UTC+10:00': 'Eastern Australia Standard Time',
 	'UTC+10:30': 'Lord Howe Standard Time',
 	'UTC+11:00': 'Central Pacific Standard Time',
-	// 'UTC+11:30': 'Norfolk Island Time',
 	'UTC+12:00': 'New Zealand Standard Time',
 	'UTC+12:45': 'Chatham Islands Time',
 	'UTC+13:00': 'Phoenix Island Time',
-	'UTC+13:45': 'Tokelau Time (Unofficial)',
 	'UTC+14:00': 'Line Islands Time',
 } as Record<UTCOffSet, string>);
 
-/** Record of timezone identifiers (from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database}) against their corresponding UTC offsets as object (`{TimeZoneIdentifier: UTCOffset}`) */
+/** Record of timezone identifiers (from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia}) against their corresponding UTC offsets and full timezone names. */
 export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
-	'Africa/Abidjan': 'UTC+00:00',
-	'Africa/Accra': 'UTC+00:00',
-	'Africa/Addis_Ababa': 'UTC+03:00',
-	'Africa/Algiers': 'UTC+01:00',
-	'Africa/Asmara': 'UTC+03:00',
-	'Africa/Asmera': 'UTC+03:00',
-	'Africa/Bamako': 'UTC+00:00',
-	'Africa/Bangui': 'UTC+01:00',
-	'Africa/Banjul': 'UTC+00:00',
-	'Africa/Bissau': 'UTC+00:00',
-	'Africa/Blantyre': 'UTC+02:00',
-	'Africa/Brazzaville': 'UTC+01:00',
-	'Africa/Bujumbura': 'UTC+02:00',
-	'Africa/Cairo': 'UTC+02:00',
-	'Africa/Casablanca': 'UTC+01:00',
-	'Africa/Ceuta': 'UTC+01:00',
-	'Africa/Conakry': 'UTC+00:00',
-	'Africa/Dakar': 'UTC+00:00',
-	'Africa/Dar_es_Salaam': 'UTC+03:00',
-	'Africa/Djibouti': 'UTC+03:00',
-	'Africa/Douala': 'UTC+01:00',
-	'Africa/El_Aaiun': 'UTC+01:00',
-	'Africa/Freetown': 'UTC+00:00',
-	'Africa/Gaborone': 'UTC+02:00',
-	'Africa/Harare': 'UTC+02:00',
-	'Africa/Johannesburg': 'UTC+02:00',
-	'Africa/Juba': 'UTC+02:00',
-	'Africa/Kampala': 'UTC+03:00',
-	'Africa/Khartoum': 'UTC+02:00',
-	'Africa/Kigali': 'UTC+02:00',
-	'Africa/Kinshasa': 'UTC+01:00',
-	'Africa/Lagos': 'UTC+01:00',
-	'Africa/Libreville': 'UTC+01:00',
-	'Africa/Lome': 'UTC+00:00',
-	'Africa/Luanda': 'UTC+01:00',
-	'Africa/Lubumbashi': 'UTC+02:00',
-	'Africa/Lusaka': 'UTC+02:00',
-	'Africa/Malabo': 'UTC+01:00',
-	'Africa/Maputo': 'UTC+02:00',
-	'Africa/Maseru': 'UTC+02:00',
-	'Africa/Mbabane': 'UTC+02:00',
-	'Africa/Mogadishu': 'UTC+03:00',
-	'Africa/Monrovia': 'UTC+00:00',
-	'Africa/Nairobi': 'UTC+03:00',
-	'Africa/Ndjamena': 'UTC+01:00',
-	'Africa/Niamey': 'UTC+01:00',
-	'Africa/Nouakchott': 'UTC+00:00',
-	'Africa/Ouagadougou': 'UTC+00:00',
-	'Africa/Porto-Novo': 'UTC+01:00',
-	'Africa/Sao_Tome': 'UTC+00:00',
-	'Africa/Timbuktu': 'UTC+00:00',
-	'Africa/Tripoli': 'UTC+02:00',
-	'Africa/Tunis': 'UTC+01:00',
-	'Africa/Windhoek': 'UTC+02:00',
-	'America/Adak': 'UTC-10:00',
-	'America/Anchorage': 'UTC-09:00',
-	'America/Anguilla': 'UTC-04:00',
-	'America/Antigua': 'UTC-04:00',
-	'America/Araguaina': 'UTC-03:00',
-	'America/Argentina/Buenos_Aires': 'UTC-03:00',
-	'America/Argentina/Catamarca': 'UTC-03:00',
-	'America/Argentina/ComodRivadavia': 'UTC-03:00',
-	'America/Argentina/Cordoba': 'UTC-03:00',
-	'America/Argentina/Jujuy': 'UTC-03:00',
-	'America/Argentina/La_Rioja': 'UTC-03:00',
-	'America/Argentina/Mendoza': 'UTC-03:00',
-	'America/Argentina/Rio_Gallegos': 'UTC-03:00',
-	'America/Argentina/Salta': 'UTC-03:00',
-	'America/Argentina/San_Juan': 'UTC-03:00',
-	'America/Argentina/San_Luis': 'UTC-03:00',
-	'America/Argentina/Tucuman': 'UTC-03:00',
-	'America/Argentina/Ushuaia': 'UTC-03:00',
-	'America/Aruba': 'UTC-04:00',
-	'America/Asuncion': 'UTC-03:00',
-	'America/Atikokan': 'UTC-05:00',
-	'America/Atka': 'UTC-10:00',
-	'America/Bahia': 'UTC-03:00',
-	'America/Bahia_Banderas': 'UTC-06:00',
-	'America/Barbados': 'UTC-04:00',
-	'America/Belem': 'UTC-03:00',
-	'America/Belize': 'UTC-06:00',
-	'America/Blanc-Sablon': 'UTC-04:00',
-	'America/Boa_Vista': 'UTC-04:00',
-	'America/Bogota': 'UTC-05:00',
-	'America/Boise': 'UTC-07:00',
-	'America/Buenos_Aires': 'UTC-03:00',
-	'America/Cambridge_Bay': 'UTC-07:00',
-	'America/Campo_Grande': 'UTC-04:00',
-	'America/Cancun': 'UTC-05:00',
-	'America/Caracas': 'UTC-04:00',
-	'America/Catamarca': 'UTC-03:00',
-	'America/Cayenne': 'UTC-03:00',
-	'America/Cayman': 'UTC-05:00',
-	'America/Chicago': 'UTC-06:00',
-	'America/Chihuahua': 'UTC-06:00',
-	'America/Ciudad_Juarez': 'UTC-07:00',
-	'America/Coral_Harbour': 'UTC-05:00',
-	'America/Cordoba': 'UTC-03:00',
-	'America/Costa_Rica': 'UTC-06:00',
-	'America/Coyhaique': 'UTC-03:00',
-	'America/Creston': 'UTC-07:00',
-	'America/Cuiaba': 'UTC-04:00',
-	'America/Curacao': 'UTC-04:00',
-	'America/Danmarkshavn': 'UTC+00:00',
-	'America/Dawson': 'UTC-07:00',
-	'America/Dawson_Creek': 'UTC-07:00',
-	'America/Denver': 'UTC-07:00',
-	'America/Detroit': 'UTC-05:00',
-	'America/Dominica': 'UTC-04:00',
-	'America/Edmonton': 'UTC-07:00',
-	'America/Eirunepe': 'UTC-05:00',
-	'America/El_Salvador': 'UTC-06:00',
-	'America/Ensenada': 'UTC-08:00',
-	'America/Fort_Nelson': 'UTC-07:00',
-	'America/Fort_Wayne': 'UTC-05:00',
-	'America/Fortaleza': 'UTC-03:00',
-	'America/Glace_Bay': 'UTC-04:00',
-	'America/Godthab': 'UTC-02:00',
-	'America/Goose_Bay': 'UTC-04:00',
-	'America/Grand_Turk': 'UTC-05:00',
-	'America/Grenada': 'UTC-04:00',
-	'America/Guadeloupe': 'UTC-04:00',
-	'America/Guatemala': 'UTC-06:00',
-	'America/Guayaquil': 'UTC-05:00',
-	'America/Guyana': 'UTC-04:00',
-	'America/Halifax': 'UTC-04:00',
-	'America/Havana': 'UTC-05:00',
-	'America/Hermosillo': 'UTC-07:00',
-	'America/Indiana/Indianapolis': 'UTC-05:00',
-	'America/Indiana/Knox': 'UTC-06:00',
-	'America/Indiana/Marengo': 'UTC-05:00',
-	'America/Indiana/Petersburg': 'UTC-05:00',
-	'America/Indiana/Tell_City': 'UTC-06:00',
-	'America/Indiana/Vevay': 'UTC-05:00',
-	'America/Indiana/Vincennes': 'UTC-05:00',
-	'America/Indiana/Winamac': 'UTC-05:00',
-	'America/Indianapolis': 'UTC-05:00',
-	'America/Inuvik': 'UTC-07:00',
-	'America/Iqaluit': 'UTC-05:00',
-	'America/Jamaica': 'UTC-05:00',
-	'America/Jujuy': 'UTC-03:00',
-	'America/Juneau': 'UTC-09:00',
-	'America/Kentucky/Louisville': 'UTC-05:00',
-	'America/Kentucky/Monticello': 'UTC-05:00',
-	'America/Knox_IN': 'UTC-06:00',
-	'America/Kralendijk': 'UTC-04:00',
-	'America/La_Paz': 'UTC-04:00',
-	'America/Lima': 'UTC-05:00',
-	'America/Los_Angeles': 'UTC-08:00',
-	'America/Louisville': 'UTC-05:00',
-	'America/Lower_Princes': 'UTC-04:00',
-	'America/Maceio': 'UTC-03:00',
-	'America/Managua': 'UTC-06:00',
-	'America/Manaus': 'UTC-04:00',
-	'America/Marigot': 'UTC-04:00',
-	'America/Martinique': 'UTC-04:00',
-	'America/Matamoros': 'UTC-06:00',
-	'America/Mazatlan': 'UTC-07:00',
-	'America/Mendoza': 'UTC-03:00',
-	'America/Menominee': 'UTC-06:00',
-	'America/Merida': 'UTC-06:00',
-	'America/Metlakatla': 'UTC-09:00',
-	'America/Mexico_City': 'UTC-06:00',
-	'America/Miquelon': 'UTC-03:00',
-	'America/Moncton': 'UTC-04:00',
-	'America/Monterrey': 'UTC-06:00',
-	'America/Montevideo': 'UTC-03:00',
-	'America/Montreal': 'UTC-05:00',
-	'America/Montserrat': 'UTC-04:00',
-	'America/Nassau': 'UTC-05:00',
-	'America/New_York': 'UTC-05:00',
-	'America/Nipigon': 'UTC-05:00',
-	'America/Nome': 'UTC-09:00',
-	'America/Noronha': 'UTC-02:00',
-	'America/North_Dakota/Beulah': 'UTC-06:00',
-	'America/North_Dakota/Center': 'UTC-06:00',
-	'America/North_Dakota/New_Salem': 'UTC-06:00',
-	'America/Nuuk': 'UTC-02:00',
-	'America/Ojinaga': 'UTC-06:00',
-	'America/Panama': 'UTC-05:00',
-	'America/Pangnirtung': 'UTC-05:00',
-	'America/Paramaribo': 'UTC-03:00',
-	'America/Phoenix': 'UTC-07:00',
-	'America/Port-au-Prince': 'UTC-05:00',
-	'America/Port_of_Spain': 'UTC-04:00',
-	'America/Porto_Acre': 'UTC-05:00',
-	'America/Porto_Velho': 'UTC-04:00',
-	'America/Puerto_Rico': 'UTC-04:00',
-	'America/Punta_Arenas': 'UTC-03:00',
-	'America/Rainy_River': 'UTC-06:00',
-	'America/Rankin_Inlet': 'UTC-06:00',
-	'America/Recife': 'UTC-03:00',
-	'America/Regina': 'UTC-06:00',
-	'America/Resolute': 'UTC-06:00',
-	'America/Rio_Branco': 'UTC-05:00',
-	'America/Rosario': 'UTC-03:00',
-	'America/Santa_Isabel': 'UTC-08:00',
-	'America/Santarem': 'UTC-03:00',
-	'America/Santiago': 'UTC-04:00',
-	'America/Santo_Domingo': 'UTC-04:00',
-	'America/Sao_Paulo': 'UTC-03:00',
-	'America/Scoresbysund': 'UTC-02:00',
-	'America/Shiprock': 'UTC-07:00',
-	'America/Sitka': 'UTC-09:00',
-	'America/St_Barthelemy': 'UTC-04:00',
-	'America/St_Johns': 'UTC-03:30',
-	'America/St_Kitts': 'UTC-04:00',
-	'America/St_Lucia': 'UTC-04:00',
-	'America/St_Thomas': 'UTC-04:00',
-	'America/St_Vincent': 'UTC-04:00',
-	'America/Swift_Current': 'UTC-06:00',
-	'America/Tegucigalpa': 'UTC-06:00',
-	'America/Thule': 'UTC-04:00',
-	'America/Thunder_Bay': 'UTC-05:00',
-	'America/Tijuana': 'UTC-08:00',
-	'America/Toronto': 'UTC-05:00',
-	'America/Tortola': 'UTC-04:00',
-	'America/Vancouver': 'UTC-08:00',
-	'America/Virgin': 'UTC-04:00',
-	'America/Whitehorse': 'UTC-07:00',
-	'America/Winnipeg': 'UTC-06:00',
-	'America/Yakutat': 'UTC-09:00',
-	'America/Yellowknife': 'UTC-07:00',
-	'Antarctica/Casey': 'UTC+08:00',
-	'Antarctica/Davis': 'UTC+07:00',
-	'Antarctica/DumontDUrville': 'UTC+10:00',
-	'Antarctica/Macquarie': 'UTC+10:00',
-	'Antarctica/Mawson': 'UTC+05:00',
-	'Antarctica/McMurdo': 'UTC+12:00',
-	'Antarctica/Palmer': 'UTC-03:00',
-	'Antarctica/Rothera': 'UTC-03:00',
-	'Antarctica/South_Pole': 'UTC+12:00',
-	'Antarctica/Syowa': 'UTC+03:00',
-	'Antarctica/Troll': 'UTC+00:00',
-	'Antarctica/Vostok': 'UTC+05:00',
-	'Arctic/Longyearbyen': 'UTC+01:00',
-	'Asia/Aden': 'UTC+03:00',
-	'Asia/Almaty': 'UTC+05:00',
-	'Asia/Amman': 'UTC+03:00',
-	'Asia/Anadyr': 'UTC+12:00',
-	'Asia/Aqtau': 'UTC+05:00',
-	'Asia/Aqtobe': 'UTC+05:00',
-	'Asia/Ashgabat': 'UTC+05:00',
-	'Asia/Ashkhabad': 'UTC+05:00',
-	'Asia/Atyrau': 'UTC+05:00',
-	'Asia/Baghdad': 'UTC+03:00',
-	'Asia/Bahrain': 'UTC+03:00',
-	'Asia/Baku': 'UTC+04:00',
-	'Asia/Bangkok': 'UTC+07:00',
-	'Asia/Barnaul': 'UTC+07:00',
-	'Asia/Beirut': 'UTC+02:00',
-	'Asia/Bishkek': 'UTC+06:00',
-	'Asia/Brunei': 'UTC+08:00',
-	'Asia/Calcutta': 'UTC+05:30',
-	'Asia/Chita': 'UTC+09:00',
-	'Asia/Choibalsan': 'UTC+08:00',
-	'Asia/Chongqing': 'UTC+08:00',
-	'Asia/Chungking': 'UTC+08:00',
-	'Asia/Colombo': 'UTC+05:30',
-	'Asia/Dacca': 'UTC+06:00',
-	'Asia/Damascus': 'UTC+03:00',
-	'Asia/Dhaka': 'UTC+06:00',
-	'Asia/Dili': 'UTC+09:00',
-	'Asia/Dubai': 'UTC+04:00',
-	'Asia/Dushanbe': 'UTC+05:00',
-	'Asia/Famagusta': 'UTC+02:00',
-	'Asia/Gaza': 'UTC+02:00',
-	'Asia/Harbin': 'UTC+08:00',
-	'Asia/Hebron': 'UTC+02:00',
-	'Asia/Ho_Chi_Minh': 'UTC+07:00',
-	'Asia/Hong_Kong': 'UTC+08:00',
-	'Asia/Hovd': 'UTC+07:00',
-	'Asia/Irkutsk': 'UTC+08:00',
-	'Asia/Istanbul': 'UTC+03:00',
-	'Asia/Jakarta': 'UTC+07:00',
-	'Asia/Jayapura': 'UTC+09:00',
-	'Asia/Jerusalem': 'UTC+02:00',
-	'Asia/Kabul': 'UTC+04:30',
-	'Asia/Kamchatka': 'UTC+12:00',
-	'Asia/Karachi': 'UTC+05:00',
-	'Asia/Kashgar': 'UTC+06:00',
-	'Asia/Kathmandu': 'UTC+05:45',
-	'Asia/Katmandu': 'UTC+05:45',
-	'Asia/Khandyga': 'UTC+09:00',
-	'Asia/Kolkata': 'UTC+05:30',
-	'Asia/Krasnoyarsk': 'UTC+07:00',
-	'Asia/Kuala_Lumpur': 'UTC+08:00',
-	'Asia/Kuching': 'UTC+08:00',
-	'Asia/Kuwait': 'UTC+03:00',
-	'Asia/Macao': 'UTC+08:00',
-	'Asia/Macau': 'UTC+08:00',
-	'Asia/Magadan': 'UTC+11:00',
-	'Asia/Makassar': 'UTC+08:00',
-	'Asia/Manila': 'UTC+08:00',
-	'Asia/Muscat': 'UTC+04:00',
-	'Asia/Nicosia': 'UTC+02:00',
-	'Asia/Novokuznetsk': 'UTC+07:00',
-	'Asia/Novosibirsk': 'UTC+07:00',
-	'Asia/Omsk': 'UTC+06:00',
-	'Asia/Oral': 'UTC+05:00',
-	'Asia/Phnom_Penh': 'UTC+07:00',
-	'Asia/Pontianak': 'UTC+07:00',
-	'Asia/Pyongyang': 'UTC+09:00',
-	'Asia/Qatar': 'UTC+03:00',
-	'Asia/Qostanay': 'UTC+05:00',
-	'Asia/Qyzylorda': 'UTC+05:00',
-	'Asia/Rangoon': 'UTC+06:30',
-	'Asia/Riyadh': 'UTC+03:00',
-	'Asia/Saigon': 'UTC+07:00',
-	'Asia/Sakhalin': 'UTC+11:00',
-	'Asia/Samarkand': 'UTC+05:00',
-	'Asia/Seoul': 'UTC+09:00',
-	'Asia/Shanghai': 'UTC+08:00',
-	'Asia/Singapore': 'UTC+08:00',
-	'Asia/Srednekolymsk': 'UTC+11:00',
-	'Asia/Taipei': 'UTC+08:00',
-	'Asia/Tashkent': 'UTC+05:00',
-	'Asia/Tbilisi': 'UTC+04:00',
-	'Asia/Tehran': 'UTC+03:30',
-	'Asia/Tel_Aviv': 'UTC+02:00',
-	'Asia/Thimbu': 'UTC+06:00',
-	'Asia/Thimphu': 'UTC+06:00',
-	'Asia/Tokyo': 'UTC+09:00',
-	'Asia/Tomsk': 'UTC+07:00',
-	'Asia/Ujung_Pandang': 'UTC+08:00',
-	'Asia/Ulaanbaatar': 'UTC+08:00',
-	'Asia/Ulan_Bator': 'UTC+08:00',
-	'Asia/Urumqi': 'UTC+06:00',
-	'Asia/Ust-Nera': 'UTC+10:00',
-	'Asia/Vientiane': 'UTC+07:00',
-	'Asia/Vladivostok': 'UTC+10:00',
-	'Asia/Yakutsk': 'UTC+09:00',
-	'Asia/Yangon': 'UTC+06:30',
-	'Asia/Yekaterinburg': 'UTC+05:00',
-	'Asia/Yerevan': 'UTC+04:00',
-	'Atlantic/Azores': 'UTC-01:00',
-	'Atlantic/Bermuda': 'UTC-04:00',
-	'Atlantic/Canary': 'UTC+00:00',
-	'Atlantic/Cape_Verde': 'UTC-01:00',
-	'Atlantic/Faeroe': 'UTC+00:00',
-	'Atlantic/Faroe': 'UTC+00:00',
-	'Atlantic/Jan_Mayen': 'UTC+01:00',
-	'Atlantic/Madeira': 'UTC+00:00',
-	'Atlantic/Reykjavik': 'UTC+00:00',
-	'Atlantic/South_Georgia': 'UTC-02:00',
-	'Atlantic/St_Helena': 'UTC+00:00',
-	'Atlantic/Stanley': 'UTC-03:00',
-	'Australia/ACT': 'UTC+10:00',
-	'Australia/Adelaide': 'UTC+09:30',
-	'Australia/Brisbane': 'UTC+10:00',
-	'Australia/Broken_Hill': 'UTC+09:30',
-	'Australia/Canberra': 'UTC+10:00',
-	'Australia/Currie': 'UTC+10:00',
-	'Australia/Darwin': 'UTC+09:30',
-	'Australia/Eucla': 'UTC+08:45',
-	'Australia/Hobart': 'UTC+10:00',
-	'Australia/LHI': 'UTC+10:30',
-	'Australia/Lindeman': 'UTC+10:00',
-	'Australia/Lord_Howe': 'UTC+10:30',
-	'Australia/Melbourne': 'UTC+10:00',
-	'Australia/North': 'UTC+09:30',
-	'Australia/NSW': 'UTC+10:00',
-	'Australia/Perth': 'UTC+08:00',
-	'Australia/Queensland': 'UTC+10:00',
-	'Australia/South': 'UTC+09:30',
-	'Australia/Sydney': 'UTC+10:00',
-	'Australia/Tasmania': 'UTC+10:00',
-	'Australia/Victoria': 'UTC+10:00',
-	'Australia/West': 'UTC+08:00',
-	'Australia/Yancowinna': 'UTC+09:30',
-	'Brazil/Acre': 'UTC-05:00',
-	'Brazil/DeNoronha': 'UTC-02:00',
-	'Brazil/East': 'UTC-03:00',
-	'Brazil/West': 'UTC-04:00',
-	'Canada/Atlantic': 'UTC-04:00',
-	'Canada/Central': 'UTC-06:00',
-	'Canada/Eastern': 'UTC-05:00',
-	'Canada/Mountain': 'UTC-07:00',
-	'Canada/Newfoundland': 'UTC-03:30',
-	'Canada/Pacific': 'UTC-08:00',
-	'Canada/Saskatchewan': 'UTC-06:00',
-	'Canada/Yukon': 'UTC-07:00',
-	CET: 'UTC+01:00',
-	'Chile/Continental': 'UTC-04:00',
-	'Chile/EasterIsland': 'UTC-06:00',
-	CST6CDT: 'UTC-06:00',
-	Cuba: 'UTC-05:00',
-	EET: 'UTC+02:00',
-	Egypt: 'UTC+02:00',
-	Eire: 'UTC+00:00',
-	EST: 'UTC-05:00',
-	EST5EDT: 'UTC-05:00',
-	'Etc/GMT': 'UTC+00:00',
-	'Etc/GMT+0': 'UTC+00:00',
-	'Etc/GMT+1': 'UTC-01:00',
-	'Etc/GMT+10': 'UTC-10:00',
-	'Etc/GMT+11': 'UTC-11:00',
-	'Etc/GMT+12': 'UTC-12:00',
-	'Etc/GMT+2': 'UTC-02:00',
-	'Etc/GMT+3': 'UTC-03:00',
-	'Etc/GMT+4': 'UTC-04:00',
-	'Etc/GMT+5': 'UTC-05:00',
-	'Etc/GMT+6': 'UTC-06:00',
-	'Etc/GMT+7': 'UTC-07:00',
-	'Etc/GMT+8': 'UTC-08:00',
-	'Etc/GMT+9': 'UTC-09:00',
-	'Etc/GMT-0': 'UTC+00:00',
-	'Etc/GMT-1': 'UTC+01:00',
-	'Etc/GMT-10': 'UTC+10:00',
-	'Etc/GMT-11': 'UTC+11:00',
-	'Etc/GMT-12': 'UTC+12:00',
-	'Etc/GMT-13': 'UTC+13:00',
-	'Etc/GMT-14': 'UTC+14:00',
-	'Etc/GMT-2': 'UTC+02:00',
-	'Etc/GMT-3': 'UTC+03:00',
-	'Etc/GMT-4': 'UTC+04:00',
-	'Etc/GMT-5': 'UTC+05:00',
-	'Etc/GMT-6': 'UTC+06:00',
-	'Etc/GMT-7': 'UTC+07:00',
-	'Etc/GMT-8': 'UTC+08:00',
-	'Etc/GMT-9': 'UTC+09:00',
-	'Etc/GMT0': 'UTC+00:00',
-	'Etc/Greenwich': 'UTC+00:00',
-	'Etc/UCT': 'UTC+00:00',
-	'Etc/Universal': 'UTC+00:00',
-	'Etc/UTC': 'UTC+00:00',
-	'Etc/Zulu': 'UTC+00:00',
-	'Europe/Amsterdam': 'UTC+01:00',
-	'Europe/Andorra': 'UTC+01:00',
-	'Europe/Astrakhan': 'UTC+04:00',
-	'Europe/Athens': 'UTC+02:00',
-	'Europe/Belfast': 'UTC+00:00',
-	'Europe/Belgrade': 'UTC+01:00',
-	'Europe/Berlin': 'UTC+01:00',
-	'Europe/Bratislava': 'UTC+01:00',
-	'Europe/Brussels': 'UTC+01:00',
-	'Europe/Bucharest': 'UTC+02:00',
-	'Europe/Budapest': 'UTC+01:00',
-	'Europe/Busingen': 'UTC+01:00',
-	'Europe/Chisinau': 'UTC+02:00',
-	'Europe/Copenhagen': 'UTC+01:00',
-	'Europe/Dublin': 'UTC+00:00',
-	'Europe/Gibraltar': 'UTC+01:00',
-	'Europe/Guernsey': 'UTC+00:00',
-	'Europe/Helsinki': 'UTC+02:00',
-	'Europe/Isle_of_Man': 'UTC+00:00',
-	'Europe/Istanbul': 'UTC+03:00',
-	'Europe/Jersey': 'UTC+00:00',
-	'Europe/Kaliningrad': 'UTC+02:00',
-	'Europe/Kiev': 'UTC+02:00',
-	'Europe/Kirov': 'UTC+03:00',
-	'Europe/Kyiv': 'UTC+02:00',
-	'Europe/Lisbon': 'UTC+00:00',
-	'Europe/Ljubljana': 'UTC+01:00',
-	'Europe/London': 'UTC+00:00',
-	'Europe/Luxembourg': 'UTC+01:00',
-	'Europe/Madrid': 'UTC+01:00',
-	'Europe/Malta': 'UTC+01:00',
-	'Europe/Mariehamn': 'UTC+02:00',
-	'Europe/Minsk': 'UTC+03:00',
-	'Europe/Monaco': 'UTC+01:00',
-	'Europe/Moscow': 'UTC+03:00',
-	'Europe/Nicosia': 'UTC+02:00',
-	'Europe/Oslo': 'UTC+01:00',
-	'Europe/Paris': 'UTC+01:00',
-	'Europe/Podgorica': 'UTC+01:00',
-	'Europe/Prague': 'UTC+01:00',
-	'Europe/Riga': 'UTC+02:00',
-	'Europe/Rome': 'UTC+01:00',
-	'Europe/Samara': 'UTC+04:00',
-	'Europe/San_Marino': 'UTC+01:00',
-	'Europe/Sarajevo': 'UTC+01:00',
-	'Europe/Saratov': 'UTC+04:00',
-	'Europe/Simferopol': 'UTC+03:00',
-	'Europe/Skopje': 'UTC+01:00',
-	'Europe/Sofia': 'UTC+02:00',
-	'Europe/Stockholm': 'UTC+01:00',
-	'Europe/Tallinn': 'UTC+02:00',
-	'Europe/Tirane': 'UTC+01:00',
-	'Europe/Tiraspol': 'UTC+02:00',
-	'Europe/Ulyanovsk': 'UTC+04:00',
-	'Europe/Uzhgorod': 'UTC+02:00',
-	'Europe/Vaduz': 'UTC+01:00',
-	'Europe/Vatican': 'UTC+01:00',
-	'Europe/Vienna': 'UTC+01:00',
-	'Europe/Vilnius': 'UTC+02:00',
-	'Europe/Volgograd': 'UTC+03:00',
-	'Europe/Warsaw': 'UTC+01:00',
-	'Europe/Zagreb': 'UTC+01:00',
-	'Europe/Zaporozhye': 'UTC+02:00',
-	'Europe/Zurich': 'UTC+01:00',
-	Factory: 'UTC+00:00',
-	GB: 'UTC+00:00',
-	'GB-Eire': 'UTC+00:00',
-	GMT: 'UTC+00:00',
-	'GMT+0': 'UTC+00:00',
-	'GMT-0': 'UTC+00:00',
-	GMT0: 'UTC+00:00',
-	Greenwich: 'UTC+00:00',
-	Hongkong: 'UTC+08:00',
-	HST: 'UTC-10:00',
-	Iceland: 'UTC+00:00',
-	'Indian/Antananarivo': 'UTC+03:00',
-	'Indian/Chagos': 'UTC+06:00',
-	'Indian/Christmas': 'UTC+07:00',
-	'Indian/Cocos': 'UTC+06:30',
-	'Indian/Comoro': 'UTC+03:00',
-	'Indian/Kerguelen': 'UTC+05:00',
-	'Indian/Mahe': 'UTC+04:00',
-	'Indian/Maldives': 'UTC+05:00',
-	'Indian/Mauritius': 'UTC+04:00',
-	'Indian/Mayotte': 'UTC+03:00',
-	'Indian/Reunion': 'UTC+04:00',
-	Iran: 'UTC+03:30',
-	Israel: 'UTC+02:00',
-	Jamaica: 'UTC-05:00',
-	Japan: 'UTC+09:00',
-	Kwajalein: 'UTC+12:00',
-	Libya: 'UTC+02:00',
-	MET: 'UTC+01:00',
-	'Mexico/BajaNorte': 'UTC-08:00',
-	'Mexico/BajaSur': 'UTC-07:00',
-	'Mexico/General': 'UTC-06:00',
-	MST: 'UTC-07:00',
-	MST7MDT: 'UTC-07:00',
-	Navajo: 'UTC-07:00',
-	NZ: 'UTC+12:00',
-	'NZ-CHAT': 'UTC+12:45',
-	'Pacific/Apia': 'UTC+13:00',
-	'Pacific/Auckland': 'UTC+12:00',
-	'Pacific/Bougainville': 'UTC+11:00',
-	'Pacific/Chatham': 'UTC+12:45',
-	'Pacific/Chuuk': 'UTC+10:00',
-	'Pacific/Easter': 'UTC-06:00',
-	'Pacific/Efate': 'UTC+11:00',
-	'Pacific/Enderbury': 'UTC+13:00',
-	'Pacific/Fakaofo': 'UTC+13:00',
-	'Pacific/Fiji': 'UTC+12:00',
-	'Pacific/Funafuti': 'UTC+12:00',
-	'Pacific/Galapagos': 'UTC-06:00',
-	'Pacific/Gambier': 'UTC-09:00',
-	'Pacific/Guadalcanal': 'UTC+11:00',
-	'Pacific/Guam': 'UTC+10:00',
-	'Pacific/Honolulu': 'UTC-10:00',
-	'Pacific/Johnston': 'UTC-10:00',
-	'Pacific/Kanton': 'UTC+13:00',
-	'Pacific/Kiritimati': 'UTC+14:00',
-	'Pacific/Kosrae': 'UTC+11:00',
-	'Pacific/Kwajalein': 'UTC+12:00',
-	'Pacific/Majuro': 'UTC+12:00',
-	'Pacific/Marquesas': 'UTC-09:30',
-	'Pacific/Midway': 'UTC-11:00',
-	'Pacific/Nauru': 'UTC+12:00',
-	'Pacific/Niue': 'UTC-11:00',
-	'Pacific/Norfolk': 'UTC+11:00',
-	'Pacific/Noumea': 'UTC+11:00',
-	'Pacific/Pago_Pago': 'UTC-11:00',
-	'Pacific/Palau': 'UTC+09:00',
-	'Pacific/Pitcairn': 'UTC-08:00',
-	'Pacific/Pohnpei': 'UTC+11:00',
-	'Pacific/Ponape': 'UTC+11:00',
-	'Pacific/Port_Moresby': 'UTC+10:00',
-	'Pacific/Rarotonga': 'UTC-10:00',
-	'Pacific/Saipan': 'UTC+10:00',
-	'Pacific/Samoa': 'UTC-11:00',
-	'Pacific/Tahiti': 'UTC-10:00',
-	'Pacific/Tarawa': 'UTC+12:00',
-	'Pacific/Tongatapu': 'UTC+13:00',
-	'Pacific/Truk': 'UTC+10:00',
-	'Pacific/Wake': 'UTC+12:00',
-	'Pacific/Wallis': 'UTC+12:00',
-	'Pacific/Yap': 'UTC+10:00',
-	Poland: 'UTC+01:00',
-	Portugal: 'UTC+00:00',
-	PRC: 'UTC+08:00',
-	PST8PDT: 'UTC-08:00',
-	ROC: 'UTC+08:00',
-	ROK: 'UTC+09:00',
-	Singapore: 'UTC+08:00',
-	Turkey: 'UTC+03:00',
-	UCT: 'UTC+00:00',
-	Universal: 'UTC+00:00',
-	'US/Alaska': 'UTC-09:00',
-	'US/Aleutian': 'UTC-10:00',
-	'US/Arizona': 'UTC-07:00',
-	'US/Central': 'UTC-06:00',
-	'US/East-Indiana': 'UTC-05:00',
-	'US/Eastern': 'UTC-05:00',
-	'US/Hawaii': 'UTC-10:00',
-	'US/Indiana-Starke': 'UTC-06:00',
-	'US/Michigan': 'UTC-05:00',
-	'US/Mountain': 'UTC-07:00',
-	'US/Pacific': 'UTC-08:00',
-	'US/Samoa': 'UTC-11:00',
-	UTC: 'UTC+00:00',
-	'W-SU': 'UTC+03:00',
-	WET: 'UTC+00:00',
-	Zulu: 'UTC+00:00',
+	'Africa/Abidjan': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Africa/Accra': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Africa/Addis_Ababa': {
+		tzName: 'East Africa Time',
+		offset: 'UTC+03:00',
+	},
+	'Africa/Algiers': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Africa/Asmara': {
+		tzName: 'East Africa Time',
+		offset: 'UTC+03:00',
+	},
+	'Africa/Asmera': {
+		tzName: 'East Africa Time',
+		offset: 'UTC+03:00',
+	},
+	'Africa/Bamako': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Africa/Bangui': {
+		tzName: 'West Africa Time',
+		offset: 'UTC+01:00',
+	},
+	'Africa/Banjul': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Africa/Bissau': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Africa/Blantyre': {
+		tzName: 'Central Africa Time',
+		offset: 'UTC+02:00',
+	},
+	'Africa/Brazzaville': {
+		tzName: 'West Africa Time',
+		offset: 'UTC+01:00',
+	},
+	'Africa/Bujumbura': {
+		tzName: 'Central Africa Time',
+		offset: 'UTC+02:00',
+	},
+	'Africa/Cairo': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Africa/Casablanca': {
+		tzName: '',
+		offset: 'UTC+01:00',
+	},
+	'Africa/Ceuta': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Africa/Conakry': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Africa/Dakar': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Africa/Dar_es_Salaam': {
+		tzName: 'East Africa Time',
+		offset: 'UTC+03:00',
+	},
+	'Africa/Djibouti': {
+		tzName: 'East Africa Time',
+		offset: 'UTC+03:00',
+	},
+	'Africa/Douala': {
+		tzName: 'West Africa Time',
+		offset: 'UTC+01:00',
+	},
+	'Africa/El_Aaiun': {
+		tzName: '',
+		offset: 'UTC+01:00',
+	},
+	'Africa/Freetown': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Africa/Gaborone': {
+		tzName: 'Central Africa Time',
+		offset: 'UTC+02:00',
+	},
+	'Africa/Harare': {
+		tzName: 'Central Africa Time',
+		offset: 'UTC+02:00',
+	},
+	'Africa/Johannesburg': {
+		tzName: 'South African Standard Time',
+		offset: 'UTC+02:00',
+	},
+	'Africa/Juba': {
+		tzName: 'Central Africa Time',
+		offset: 'UTC+02:00',
+	},
+	'Africa/Kampala': {
+		tzName: 'East Africa Time',
+		offset: 'UTC+03:00',
+	},
+	'Africa/Khartoum': {
+		tzName: 'Central Africa Time',
+		offset: 'UTC+02:00',
+	},
+	'Africa/Kigali': {
+		tzName: 'Central Africa Time',
+		offset: 'UTC+02:00',
+	},
+	'Africa/Kinshasa': {
+		tzName: 'West Africa Time',
+		offset: 'UTC+01:00',
+	},
+	'Africa/Lagos': {
+		tzName: 'West Africa Time',
+		offset: 'UTC+01:00',
+	},
+	'Africa/Libreville': {
+		tzName: 'West Africa Time',
+		offset: 'UTC+01:00',
+	},
+	'Africa/Lome': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Africa/Luanda': {
+		tzName: 'West Africa Time',
+		offset: 'UTC+01:00',
+	},
+	'Africa/Lubumbashi': {
+		tzName: 'Central Africa Time',
+		offset: 'UTC+02:00',
+	},
+	'Africa/Lusaka': {
+		tzName: 'Central Africa Time',
+		offset: 'UTC+02:00',
+	},
+	'Africa/Malabo': {
+		tzName: 'West Africa Time',
+		offset: 'UTC+01:00',
+	},
+	'Africa/Maputo': {
+		tzName: 'Central Africa Time',
+		offset: 'UTC+02:00',
+	},
+	'Africa/Maseru': {
+		tzName: 'South African Standard Time',
+		offset: 'UTC+02:00',
+	},
+	'Africa/Mbabane': {
+		tzName: 'South African Standard Time',
+		offset: 'UTC+02:00',
+	},
+	'Africa/Mogadishu': {
+		tzName: 'East Africa Time',
+		offset: 'UTC+03:00',
+	},
+	'Africa/Monrovia': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Africa/Nairobi': {
+		tzName: 'East Africa Time',
+		offset: 'UTC+03:00',
+	},
+	'Africa/Ndjamena': {
+		tzName: 'West Africa Time',
+		offset: 'UTC+01:00',
+	},
+	'Africa/Niamey': {
+		tzName: 'West Africa Time',
+		offset: 'UTC+01:00',
+	},
+	'Africa/Nouakchott': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Africa/Ouagadougou': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Africa/Porto-Novo': {
+		tzName: 'West Africa Time',
+		offset: 'UTC+01:00',
+	},
+	'Africa/Sao_Tome': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Africa/Timbuktu': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Africa/Tripoli': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Africa/Tunis': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Africa/Windhoek': {
+		tzName: 'Central Africa Time',
+		offset: 'UTC+02:00',
+	},
+	'America/Adak': {
+		tzName: 'Hawaiian Standard Time',
+		offset: 'UTC-10:00',
+	},
+	'America/Anchorage': {
+		tzName: 'Alaskan Standard Time',
+		offset: 'UTC-09:00',
+	},
+	'America/Anguilla': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Antigua': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Araguaina': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Argentina/Buenos_Aires': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Argentina/Catamarca': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Argentina/ComodRivadavia': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Argentina/Cordoba': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Argentina/Jujuy': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Argentina/La_Rioja': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Argentina/Mendoza': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Argentina/Rio_Gallegos': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Argentina/Salta': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Argentina/San_Juan': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Argentina/San_Luis': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Argentina/Tucuman': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Argentina/Ushuaia': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Aruba': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Asuncion': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Atikokan': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Atka': {
+		tzName: 'Hawaiian Standard Time',
+		offset: 'UTC-10:00',
+	},
+	'America/Bahia': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Bahia_Banderas': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Barbados': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Belem': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Belize': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Blanc-Sablon': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Boa_Vista': {
+		tzName: '',
+		offset: 'UTC-04:00',
+	},
+	'America/Bogota': {
+		tzName: '',
+		offset: 'UTC-05:00',
+	},
+	'America/Boise': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'America/Buenos_Aires': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Cambridge_Bay': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'America/Campo_Grande': {
+		tzName: '',
+		offset: 'UTC-04:00',
+	},
+	'America/Cancun': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Caracas': {
+		tzName: '',
+		offset: 'UTC-04:00',
+	},
+	'America/Catamarca': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Cayenne': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Cayman': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Chicago': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Chihuahua': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Ciudad_Juarez': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'America/Coral_Harbour': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Cordoba': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Costa_Rica': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Coyhaique': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Creston': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'America/Cuiaba': {
+		tzName: '',
+		offset: 'UTC-04:00',
+	},
+	'America/Curacao': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Danmarkshavn': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'America/Dawson': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'America/Dawson_Creek': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'America/Denver': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'America/Detroit': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Dominica': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Edmonton': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'America/Eirunepe': {
+		tzName: '',
+		offset: 'UTC-05:00',
+	},
+	'America/El_Salvador': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Ensenada': {
+		tzName: 'Pacific Standard Time',
+		offset: 'UTC-08:00',
+	},
+	'America/Fort_Nelson': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'America/Fort_Wayne': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Fortaleza': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Glace_Bay': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Godthab': {
+		tzName: '',
+		offset: 'UTC-02:00',
+	},
+	'America/Goose_Bay': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Grand_Turk': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Grenada': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Guadeloupe': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Guatemala': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Guayaquil': {
+		tzName: '',
+		offset: 'UTC-05:00',
+	},
+	'America/Guyana': {
+		tzName: '',
+		offset: 'UTC-04:00',
+	},
+	'America/Halifax': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Havana': {
+		tzName: 'Cuba Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Hermosillo': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'America/Indiana/Indianapolis': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Indiana/Knox': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Indiana/Marengo': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Indiana/Petersburg': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Indiana/Tell_City': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Indiana/Vevay': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Indiana/Vincennes': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Indiana/Winamac': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Indianapolis': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Inuvik': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'America/Iqaluit': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Jamaica': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Jujuy': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Juneau': {
+		tzName: 'Alaskan Standard Time',
+		offset: 'UTC-09:00',
+	},
+	'America/Kentucky/Louisville': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Kentucky/Monticello': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Knox_IN': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Kralendijk': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/La_Paz': {
+		tzName: '',
+		offset: 'UTC-04:00',
+	},
+	'America/Lima': {
+		tzName: '',
+		offset: 'UTC-05:00',
+	},
+	'America/Los_Angeles': {
+		tzName: 'Pacific Standard Time',
+		offset: 'UTC-08:00',
+	},
+	'America/Louisville': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Lower_Princes': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Maceio': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Managua': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Manaus': {
+		tzName: '',
+		offset: 'UTC-04:00',
+	},
+	'America/Marigot': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Martinique': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Matamoros': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Mazatlan': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'America/Mendoza': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Menominee': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Merida': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Metlakatla': {
+		tzName: 'Alaskan Standard Time',
+		offset: 'UTC-09:00',
+	},
+	'America/Mexico_City': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Miquelon': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Moncton': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Monterrey': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Montevideo': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Montreal': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Montserrat': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Nassau': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/New_York': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Nipigon': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Nome': {
+		tzName: 'Alaskan Standard Time',
+		offset: 'UTC-09:00',
+	},
+	'America/Noronha': {
+		tzName: '',
+		offset: 'UTC-02:00',
+	},
+	'America/North_Dakota/Beulah': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/North_Dakota/Center': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/North_Dakota/New_Salem': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Nuuk': {
+		tzName: '',
+		offset: 'UTC-02:00',
+	},
+	'America/Ojinaga': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Panama': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Pangnirtung': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Paramaribo': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Phoenix': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'America/Port-au-Prince': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Port_of_Spain': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Porto_Acre': {
+		tzName: '',
+		offset: 'UTC-05:00',
+	},
+	'America/Porto_Velho': {
+		tzName: '',
+		offset: 'UTC-04:00',
+	},
+	'America/Puerto_Rico': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Punta_Arenas': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Rainy_River': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Rankin_Inlet': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Recife': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Regina': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Resolute': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Rio_Branco': {
+		tzName: '',
+		offset: 'UTC-05:00',
+	},
+	'America/Rosario': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Santa_Isabel': {
+		tzName: 'Pacific Standard Time',
+		offset: 'UTC-08:00',
+	},
+	'America/Santarem': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Santiago': {
+		tzName: '',
+		offset: 'UTC-04:00',
+	},
+	'America/Santo_Domingo': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Sao_Paulo': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'America/Scoresbysund': {
+		tzName: '',
+		offset: 'UTC-02:00',
+	},
+	'America/Shiprock': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'America/Sitka': {
+		tzName: 'Alaskan Standard Time',
+		offset: 'UTC-09:00',
+	},
+	'America/St_Barthelemy': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/St_Johns': {
+		tzName: 'Newfoundland Standard Time',
+		offset: 'UTC-03:30',
+	},
+	'America/St_Kitts': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/St_Lucia': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/St_Thomas': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/St_Vincent': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Swift_Current': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Tegucigalpa': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Thule': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Thunder_Bay': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Tijuana': {
+		tzName: 'Pacific Standard Time',
+		offset: 'UTC-08:00',
+	},
+	'America/Toronto': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'America/Tortola': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Vancouver': {
+		tzName: 'Pacific Standard Time',
+		offset: 'UTC-08:00',
+	},
+	'America/Virgin': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'America/Whitehorse': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'America/Winnipeg': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'America/Yakutat': {
+		tzName: 'Alaskan Standard Time',
+		offset: 'UTC-09:00',
+	},
+	'America/Yellowknife': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'Antarctica/Casey': {
+		tzName: '',
+		offset: 'UTC+08:00',
+	},
+	'Antarctica/Davis': {
+		tzName: '',
+		offset: 'UTC+07:00',
+	},
+	'Antarctica/DumontDUrville': {
+		tzName: '',
+		offset: 'UTC+10:00',
+	},
+	'Antarctica/Macquarie': {
+		tzName: 'Australian Eastern Standard Time',
+		offset: 'UTC+10:00',
+	},
+	'Antarctica/Mawson': {
+		tzName: '',
+		offset: 'UTC+05:00',
+	},
+	'Antarctica/McMurdo': {
+		tzName: 'New Zealand Standard Time',
+		offset: 'UTC+12:00',
+	},
+	'Antarctica/Palmer': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'Antarctica/Rothera': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'Antarctica/South_Pole': {
+		tzName: 'New Zealand Standard Time',
+		offset: 'UTC+12:00',
+	},
+	'Antarctica/Syowa': {
+		tzName: '',
+		offset: 'UTC+03:00',
+	},
+	'Antarctica/Troll': {
+		tzName: '',
+		offset: 'UTC+00:00',
+	},
+	'Antarctica/Vostok': {
+		tzName: '',
+		offset: 'UTC+05:00',
+	},
+	'Arctic/Longyearbyen': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Asia/Aden': {
+		tzName: '',
+		offset: 'UTC+03:00',
+	},
+	'Asia/Almaty': {
+		tzName: '',
+		offset: 'UTC+05:00',
+	},
+	'Asia/Amman': {
+		tzName: '',
+		offset: 'UTC+03:00',
+	},
+	'Asia/Anadyr': {
+		tzName: '',
+		offset: 'UTC+12:00',
+	},
+	'Asia/Aqtau': {
+		tzName: '',
+		offset: 'UTC+05:00',
+	},
+	'Asia/Aqtobe': {
+		tzName: '',
+		offset: 'UTC+05:00',
+	},
+	'Asia/Ashgabat': {
+		tzName: '',
+		offset: 'UTC+05:00',
+	},
+	'Asia/Ashkhabad': {
+		tzName: '',
+		offset: 'UTC+05:00',
+	},
+	'Asia/Atyrau': {
+		tzName: '',
+		offset: 'UTC+05:00',
+	},
+	'Asia/Baghdad': {
+		tzName: '',
+		offset: 'UTC+03:00',
+	},
+	'Asia/Bahrain': {
+		tzName: '',
+		offset: 'UTC+03:00',
+	},
+	'Asia/Baku': {
+		tzName: '',
+		offset: 'UTC+04:00',
+	},
+	'Asia/Bangkok': {
+		tzName: '',
+		offset: 'UTC+07:00',
+	},
+	'Asia/Barnaul': {
+		tzName: '',
+		offset: 'UTC+07:00',
+	},
+	'Asia/Beirut': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Asia/Bishkek': {
+		tzName: '',
+		offset: 'UTC+06:00',
+	},
+	'Asia/Brunei': {
+		tzName: '',
+		offset: 'UTC+08:00',
+	},
+	'Asia/Calcutta': {
+		tzName: 'Indian Standard Time',
+		offset: 'UTC+05:30',
+	},
+	'Asia/Chita': {
+		tzName: '',
+		offset: 'UTC+09:00',
+	},
+	'Asia/Choibalsan': {
+		tzName: '',
+		offset: 'UTC+08:00',
+	},
+	'Asia/Chongqing': {
+		tzName: 'China Standard Time',
+		offset: 'UTC+08:00',
+	},
+	'Asia/Chungking': {
+		tzName: 'China Standard Time',
+		offset: 'UTC+08:00',
+	},
+	'Asia/Colombo': {
+		tzName: '',
+		offset: 'UTC+05:30',
+	},
+	'Asia/Dacca': {
+		tzName: '',
+		offset: 'UTC+06:00',
+	},
+	'Asia/Damascus': {
+		tzName: '',
+		offset: 'UTC+03:00',
+	},
+	'Asia/Dhaka': {
+		tzName: '',
+		offset: 'UTC+06:00',
+	},
+	'Asia/Dili': {
+		tzName: '',
+		offset: 'UTC+09:00',
+	},
+	'Asia/Dubai': {
+		tzName: '',
+		offset: 'UTC+04:00',
+	},
+	'Asia/Dushanbe': {
+		tzName: '',
+		offset: 'UTC+05:00',
+	},
+	'Asia/Famagusta': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Asia/Gaza': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Asia/Harbin': {
+		tzName: 'China Standard Time',
+		offset: 'UTC+08:00',
+	},
+	'Asia/Hebron': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Asia/Ho_Chi_Minh': {
+		tzName: '',
+		offset: 'UTC+07:00',
+	},
+	'Asia/Hong_Kong': {
+		tzName: 'Hong Kong Time',
+		offset: 'UTC+08:00',
+	},
+	'Asia/Hovd': {
+		tzName: '',
+		offset: 'UTC+07:00',
+	},
+	'Asia/Irkutsk': {
+		tzName: '',
+		offset: 'UTC+08:00',
+	},
+	'Asia/Istanbul': {
+		tzName: '',
+		offset: 'UTC+03:00',
+	},
+	'Asia/Jakarta': {
+		tzName: 'Western Indonesia Time',
+		offset: 'UTC+07:00',
+	},
+	'Asia/Jayapura': {
+		tzName: 'Eastern Indonesia Time',
+		offset: 'UTC+09:00',
+	},
+	'Asia/Jerusalem': {
+		tzName: 'Israel Standard Time',
+		offset: 'UTC+02:00',
+	},
+	'Asia/Kabul': {
+		tzName: '',
+		offset: 'UTC+04:30',
+	},
+	'Asia/Kamchatka': {
+		tzName: '',
+		offset: 'UTC+12:00',
+	},
+	'Asia/Karachi': {
+		tzName: 'Pakistan Standard Time',
+		offset: 'UTC+05:00',
+	},
+	'Asia/Kashgar': {
+		tzName: '',
+		offset: 'UTC+06:00',
+	},
+	'Asia/Kathmandu': {
+		tzName: '',
+		offset: 'UTC+05:45',
+	},
+	'Asia/Katmandu': {
+		tzName: '',
+		offset: 'UTC+05:45',
+	},
+	'Asia/Khandyga': {
+		tzName: '',
+		offset: 'UTC+09:00',
+	},
+	'Asia/Kolkata': {
+		tzName: 'Indian Standard Time',
+		offset: 'UTC+05:30',
+	},
+	'Asia/Krasnoyarsk': {
+		tzName: '',
+		offset: 'UTC+07:00',
+	},
+	'Asia/Kuala_Lumpur': {
+		tzName: '',
+		offset: 'UTC+08:00',
+	},
+	'Asia/Kuching': {
+		tzName: '',
+		offset: 'UTC+08:00',
+	},
+	'Asia/Kuwait': {
+		tzName: '',
+		offset: 'UTC+03:00',
+	},
+	'Asia/Macao': {
+		tzName: 'China Standard Time',
+		offset: 'UTC+08:00',
+	},
+	'Asia/Macau': {
+		tzName: 'China Standard Time',
+		offset: 'UTC+08:00',
+	},
+	'Asia/Magadan': {
+		tzName: '',
+		offset: 'UTC+11:00',
+	},
+	'Asia/Makassar': {
+		tzName: 'Central Indonesia Time',
+		offset: 'UTC+08:00',
+	},
+	'Asia/Manila': {
+		tzName: 'Philippine Standard Time',
+		offset: 'UTC+08:00',
+	},
+	'Asia/Muscat': {
+		tzName: '',
+		offset: 'UTC+04:00',
+	},
+	'Asia/Nicosia': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Asia/Novokuznetsk': {
+		tzName: '',
+		offset: 'UTC+07:00',
+	},
+	'Asia/Novosibirsk': {
+		tzName: '',
+		offset: 'UTC+07:00',
+	},
+	'Asia/Omsk': {
+		tzName: '',
+		offset: 'UTC+06:00',
+	},
+	'Asia/Oral': {
+		tzName: '',
+		offset: 'UTC+05:00',
+	},
+	'Asia/Phnom_Penh': {
+		tzName: '',
+		offset: 'UTC+07:00',
+	},
+	'Asia/Pontianak': {
+		tzName: 'Western Indonesia Time',
+		offset: 'UTC+07:00',
+	},
+	'Asia/Pyongyang': {
+		tzName: 'Korean Standard Time',
+		offset: 'UTC+09:00',
+	},
+	'Asia/Qatar': {
+		tzName: '',
+		offset: 'UTC+03:00',
+	},
+	'Asia/Qostanay': {
+		tzName: '',
+		offset: 'UTC+05:00',
+	},
+	'Asia/Qyzylorda': {
+		tzName: '',
+		offset: 'UTC+05:00',
+	},
+	'Asia/Rangoon': {
+		tzName: '',
+		offset: 'UTC+06:30',
+	},
+	'Asia/Riyadh': {
+		tzName: '',
+		offset: 'UTC+03:00',
+	},
+	'Asia/Saigon': {
+		tzName: '',
+		offset: 'UTC+07:00',
+	},
+	'Asia/Sakhalin': {
+		tzName: '',
+		offset: 'UTC+11:00',
+	},
+	'Asia/Samarkand': {
+		tzName: '',
+		offset: 'UTC+05:00',
+	},
+	'Asia/Seoul': {
+		tzName: 'Korean Standard Time',
+		offset: 'UTC+09:00',
+	},
+	'Asia/Shanghai': {
+		tzName: 'China Standard Time',
+		offset: 'UTC+08:00',
+	},
+	'Asia/Singapore': {
+		tzName: '',
+		offset: 'UTC+08:00',
+	},
+	'Asia/Srednekolymsk': {
+		tzName: '',
+		offset: 'UTC+11:00',
+	},
+	'Asia/Taipei': {
+		tzName: 'China Standard Time',
+		offset: 'UTC+08:00',
+	},
+	'Asia/Tashkent': {
+		tzName: '',
+		offset: 'UTC+05:00',
+	},
+	'Asia/Tbilisi': {
+		tzName: '',
+		offset: 'UTC+04:00',
+	},
+	'Asia/Tehran': {
+		tzName: '',
+		offset: 'UTC+03:30',
+	},
+	'Asia/Tel_Aviv': {
+		tzName: 'Israel Standard Time',
+		offset: 'UTC+02:00',
+	},
+	'Asia/Thimbu': {
+		tzName: '',
+		offset: 'UTC+06:00',
+	},
+	'Asia/Thimphu': {
+		tzName: '',
+		offset: 'UTC+06:00',
+	},
+	'Asia/Tokyo': {
+		tzName: 'Japanese Standard Time',
+		offset: 'UTC+09:00',
+	},
+	'Asia/Tomsk': {
+		tzName: '',
+		offset: 'UTC+07:00',
+	},
+	'Asia/Ujung_Pandang': {
+		tzName: 'Central Indonesia Time',
+		offset: 'UTC+08:00',
+	},
+	'Asia/Ulaanbaatar': {
+		tzName: '',
+		offset: 'UTC+08:00',
+	},
+	'Asia/Ulan_Bator': {
+		tzName: '',
+		offset: 'UTC+08:00',
+	},
+	'Asia/Urumqi': {
+		tzName: '',
+		offset: 'UTC+06:00',
+	},
+	'Asia/Ust-Nera': {
+		tzName: '',
+		offset: 'UTC+10:00',
+	},
+	'Asia/Vientiane': {
+		tzName: '',
+		offset: 'UTC+07:00',
+	},
+	'Asia/Vladivostok': {
+		tzName: '',
+		offset: 'UTC+10:00',
+	},
+	'Asia/Yakutsk': {
+		tzName: '',
+		offset: 'UTC+09:00',
+	},
+	'Asia/Yangon': {
+		tzName: '',
+		offset: 'UTC+06:30',
+	},
+	'Asia/Yekaterinburg': {
+		tzName: '',
+		offset: 'UTC+05:00',
+	},
+	'Asia/Yerevan': {
+		tzName: '',
+		offset: 'UTC+04:00',
+	},
+	'Atlantic/Azores': {
+		tzName: '',
+		offset: 'UTC-01:00',
+	},
+	'Atlantic/Bermuda': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'Atlantic/Canary': {
+		tzName: 'Western European Time',
+		offset: 'UTC+00:00',
+	},
+	'Atlantic/Cape_Verde': {
+		tzName: '',
+		offset: 'UTC-01:00',
+	},
+	'Atlantic/Faeroe': {
+		tzName: 'Western European Time',
+		offset: 'UTC+00:00',
+	},
+	'Atlantic/Faroe': {
+		tzName: 'Western European Time',
+		offset: 'UTC+00:00',
+	},
+	'Atlantic/Jan_Mayen': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Atlantic/Madeira': {
+		tzName: 'Western European Time',
+		offset: 'UTC+00:00',
+	},
+	'Atlantic/Reykjavik': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Atlantic/South_Georgia': {
+		tzName: '',
+		offset: 'UTC-02:00',
+	},
+	'Atlantic/St_Helena': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Atlantic/Stanley': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'Australia/ACT': {
+		tzName: 'Australian Eastern Standard Time',
+		offset: 'UTC+10:00',
+	},
+	'Australia/Adelaide': {
+		tzName: 'Australian Central Standard Time',
+		offset: 'UTC+09:30',
+	},
+	'Australia/Brisbane': {
+		tzName: 'Australian Eastern Standard Time',
+		offset: 'UTC+10:00',
+	},
+	'Australia/Broken_Hill': {
+		tzName: 'Australian Central Standard Time',
+		offset: 'UTC+09:30',
+	},
+	'Australia/Canberra': {
+		tzName: 'Australian Eastern Standard Time',
+		offset: 'UTC+10:00',
+	},
+	'Australia/Currie': {
+		tzName: 'Australian Eastern Standard Time',
+		offset: 'UTC+10:00',
+	},
+	'Australia/Darwin': {
+		tzName: 'Australian Central Standard Time',
+		offset: 'UTC+09:30',
+	},
+	'Australia/Eucla': {
+		tzName: '',
+		offset: 'UTC+08:45',
+	},
+	'Australia/Hobart': {
+		tzName: 'Australian Eastern Standard Time',
+		offset: 'UTC+10:00',
+	},
+	'Australia/LHI': {
+		tzName: '',
+		offset: 'UTC+10:30',
+	},
+	'Australia/Lindeman': {
+		tzName: 'Australian Eastern Standard Time',
+		offset: 'UTC+10:00',
+	},
+	'Australia/Lord_Howe': {
+		tzName: '',
+		offset: 'UTC+10:30',
+	},
+	'Australia/Melbourne': {
+		tzName: 'Australian Eastern Standard Time',
+		offset: 'UTC+10:00',
+	},
+	'Australia/North': {
+		tzName: 'Australian Central Standard Time',
+		offset: 'UTC+09:30',
+	},
+	'Australia/NSW': {
+		tzName: 'Australian Eastern Standard Time',
+		offset: 'UTC+10:00',
+	},
+	'Australia/Perth': {
+		tzName: 'Australian Western Standard Time',
+		offset: 'UTC+08:00',
+	},
+	'Australia/Queensland': {
+		tzName: 'Australian Eastern Standard Time',
+		offset: 'UTC+10:00',
+	},
+	'Australia/South': {
+		tzName: 'Australian Central Standard Time',
+		offset: 'UTC+09:30',
+	},
+	'Australia/Sydney': {
+		tzName: 'Australian Eastern Standard Time',
+		offset: 'UTC+10:00',
+	},
+	'Australia/Tasmania': {
+		tzName: 'Australian Eastern Standard Time',
+		offset: 'UTC+10:00',
+	},
+	'Australia/Victoria': {
+		tzName: 'Australian Eastern Standard Time',
+		offset: 'UTC+10:00',
+	},
+	'Australia/West': {
+		tzName: 'Australian Western Standard Time',
+		offset: 'UTC+08:00',
+	},
+	'Australia/Yancowinna': {
+		tzName: 'Australian Central Standard Time',
+		offset: 'UTC+09:30',
+	},
+	'Brazil/Acre': {
+		tzName: '',
+		offset: 'UTC-05:00',
+	},
+	'Brazil/DeNoronha': {
+		tzName: '',
+		offset: 'UTC-02:00',
+	},
+	'Brazil/East': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'Brazil/West': {
+		tzName: '',
+		offset: 'UTC-04:00',
+	},
+	'Canada/Atlantic': {
+		tzName: 'Atlantic Standard Time',
+		offset: 'UTC-04:00',
+	},
+	'Canada/Central': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'Canada/Eastern': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'Canada/Mountain': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'Canada/Newfoundland': {
+		tzName: 'Newfoundland Standard Time',
+		offset: 'UTC-03:30',
+	},
+	'Canada/Pacific': {
+		tzName: 'Pacific Standard Time',
+		offset: 'UTC-08:00',
+	},
+	'Canada/Saskatchewan': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'Canada/Yukon': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	CET: {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Chile/Continental': {
+		tzName: '',
+		offset: 'UTC-04:00',
+	},
+	'Chile/EasterIsland': {
+		tzName: '',
+		offset: 'UTC-06:00',
+	},
+	CST6CDT: {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	Cuba: {
+		tzName: 'Cuba Standard Time',
+		offset: 'UTC-05:00',
+	},
+	EET: {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	Egypt: {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	Eire: {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	EST: {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	EDT: {
+		tzName: 'Eastern Daylight Time',
+		offset: 'UTC-04:00',
+	},
+	'Etc/GMT': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Etc/GMT+0': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Etc/GMT+1': {
+		tzName: '',
+		offset: 'UTC-01:00',
+	},
+	'Etc/GMT+10': {
+		tzName: '',
+		offset: 'UTC-10:00',
+	},
+	'Etc/GMT+11': {
+		tzName: '',
+		offset: 'UTC-11:00',
+	},
+	'Etc/GMT+12': {
+		tzName: '',
+		offset: 'UTC-12:00',
+	},
+	'Etc/GMT+2': {
+		tzName: '',
+		offset: 'UTC-02:00',
+	},
+	'Etc/GMT+3': {
+		tzName: '',
+		offset: 'UTC-03:00',
+	},
+	'Etc/GMT+4': {
+		tzName: '',
+		offset: 'UTC-04:00',
+	},
+	'Etc/GMT+5': {
+		tzName: '',
+		offset: 'UTC-05:00',
+	},
+	'Etc/GMT+6': {
+		tzName: '',
+		offset: 'UTC-06:00',
+	},
+	'Etc/GMT+7': {
+		tzName: '',
+		offset: 'UTC-07:00',
+	},
+	'Etc/GMT+8': {
+		tzName: '',
+		offset: 'UTC-08:00',
+	},
+	'Etc/GMT+9': {
+		tzName: '',
+		offset: 'UTC-09:00',
+	},
+	'Etc/GMT-0': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Etc/GMT-1': {
+		tzName: '',
+		offset: 'UTC+01:00',
+	},
+	'Etc/GMT-10': {
+		tzName: '',
+		offset: 'UTC+10:00',
+	},
+	'Etc/GMT-11': {
+		tzName: '',
+		offset: 'UTC+11:00',
+	},
+	'Etc/GMT-12': {
+		tzName: '',
+		offset: 'UTC+12:00',
+	},
+	'Etc/GMT-13': {
+		tzName: '',
+		offset: 'UTC+13:00',
+	},
+	'Etc/GMT-14': {
+		tzName: '',
+		offset: 'UTC+14:00',
+	},
+	'Etc/GMT-2': {
+		tzName: '',
+		offset: 'UTC+02:00',
+	},
+	'Etc/GMT-3': {
+		tzName: '',
+		offset: 'UTC+03:00',
+	},
+	'Etc/GMT-4': {
+		tzName: '',
+		offset: 'UTC+04:00',
+	},
+	'Etc/GMT-5': {
+		tzName: '',
+		offset: 'UTC+05:00',
+	},
+	'Etc/GMT-6': {
+		tzName: '',
+		offset: 'UTC+06:00',
+	},
+	'Etc/GMT-7': {
+		tzName: '',
+		offset: 'UTC+07:00',
+	},
+	'Etc/GMT-8': {
+		tzName: '',
+		offset: 'UTC+08:00',
+	},
+	'Etc/GMT-9': {
+		tzName: '',
+		offset: 'UTC+09:00',
+	},
+	'Etc/GMT0': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Etc/Greenwich': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Etc/UCT': {
+		tzName: 'Coordinated Universal Time',
+		offset: 'UTC+00:00',
+	},
+	'Etc/Universal': {
+		tzName: 'Coordinated Universal Time',
+		offset: 'UTC+00:00',
+	},
+	'Etc/UTC': {
+		tzName: 'Coordinated Universal Time',
+		offset: 'UTC+00:00',
+	},
+	'Etc/Zulu': {
+		tzName: 'Coordinated Universal Time',
+		offset: 'UTC+00:00',
+	},
+	'Europe/Amsterdam': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Andorra': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Astrakhan': {
+		tzName: '',
+		offset: 'UTC+04:00',
+	},
+	'Europe/Athens': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Europe/Belfast': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Europe/Belgrade': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Berlin': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Bratislava': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Brussels': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Bucharest': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Europe/Budapest': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Busingen': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Chisinau': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Europe/Copenhagen': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Dublin': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Europe/Gibraltar': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Guernsey': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Europe/Helsinki': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Europe/Isle_of_Man': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Europe/Istanbul': {
+		tzName: '',
+		offset: 'UTC+03:00',
+	},
+	'Europe/Jersey': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Europe/Kaliningrad': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Europe/Kiev': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Europe/Kirov': {
+		tzName: 'Moscow Time',
+		offset: 'UTC+03:00',
+	},
+	'Europe/Kyiv': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Europe/Lisbon': {
+		tzName: 'Western European Time',
+		offset: 'UTC+00:00',
+	},
+	'Europe/Ljubljana': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/London': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Europe/Luxembourg': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Madrid': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Malta': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Mariehamn': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Europe/Minsk': {
+		tzName: '',
+		offset: 'UTC+03:00',
+	},
+	'Europe/Monaco': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Moscow': {
+		tzName: 'Moscow Time',
+		offset: 'UTC+03:00',
+	},
+	'Europe/Nicosia': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Europe/Oslo': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Paris': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Podgorica': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Prague': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Riga': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Europe/Rome': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Samara': {
+		tzName: '',
+		offset: 'UTC+04:00',
+	},
+	'Europe/San_Marino': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Sarajevo': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Saratov': {
+		tzName: '',
+		offset: 'UTC+04:00',
+	},
+	'Europe/Simferopol': {
+		tzName: 'Moscow Time',
+		offset: 'UTC+03:00',
+	},
+	'Europe/Skopje': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Sofia': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Europe/Stockholm': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Tallinn': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Europe/Tirane': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Tiraspol': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Europe/Ulyanovsk': {
+		tzName: '',
+		offset: 'UTC+04:00',
+	},
+	'Europe/Uzhgorod': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Europe/Vaduz': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Vatican': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Vienna': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Vilnius': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Europe/Volgograd': {
+		tzName: 'Moscow Time',
+		offset: 'UTC+03:00',
+	},
+	'Europe/Warsaw': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Zagreb': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Europe/Zaporozhye': {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	'Europe/Zurich': {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	Factory: {
+		tzName: '',
+		offset: 'UTC+00:00',
+	},
+	GB: {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'GB-Eire': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	GMT: {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'GMT+0': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'GMT-0': {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	GMT0: {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	Greenwich: {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	Hongkong: {
+		tzName: 'Hong Kong Time',
+		offset: 'UTC+08:00',
+	},
+	HST: {
+		tzName: 'Hawaiian Standard Time',
+		offset: 'UTC-10:00',
+	},
+	Iceland: {
+		tzName: 'Greenwich Mean Time',
+		offset: 'UTC+00:00',
+	},
+	'Indian/Antananarivo': {
+		tzName: 'East Africa Time',
+		offset: 'UTC+03:00',
+	},
+	'Indian/Chagos': {
+		tzName: '',
+		offset: 'UTC+06:00',
+	},
+	'Indian/Christmas': {
+		tzName: '',
+		offset: 'UTC+07:00',
+	},
+	'Indian/Cocos': {
+		tzName: '',
+		offset: 'UTC+06:30',
+	},
+	'Indian/Comoro': {
+		tzName: 'East Africa Time',
+		offset: 'UTC+03:00',
+	},
+	'Indian/Kerguelen': {
+		tzName: '',
+		offset: 'UTC+05:00',
+	},
+	'Indian/Mahe': {
+		tzName: '',
+		offset: 'UTC+04:00',
+	},
+	'Indian/Maldives': {
+		tzName: '',
+		offset: 'UTC+05:00',
+	},
+	'Indian/Mauritius': {
+		tzName: '',
+		offset: 'UTC+04:00',
+	},
+	'Indian/Mayotte': {
+		tzName: 'East Africa Time',
+		offset: 'UTC+03:00',
+	},
+	'Indian/Reunion': {
+		tzName: '',
+		offset: 'UTC+04:00',
+	},
+	Iran: {
+		tzName: '',
+		offset: 'UTC+03:30',
+	},
+	Israel: {
+		tzName: 'Israel Standard Time',
+		offset: 'UTC+02:00',
+	},
+	Jamaica: {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	Japan: {
+		tzName: 'Japanese Standard Time',
+		offset: 'UTC+09:00',
+	},
+	Kwajalein: {
+		tzName: '',
+		offset: 'UTC+12:00',
+	},
+	Libya: {
+		tzName: 'Eastern European Time',
+		offset: 'UTC+02:00',
+	},
+	MET: {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	'Mexico/BajaNorte': {
+		tzName: 'Pacific Standard Time',
+		offset: 'UTC-08:00',
+	},
+	'Mexico/BajaSur': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'Mexico/General': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	MST: {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	MST7MDT: {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	Navajo: {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	NZ: {
+		tzName: 'New Zealand Standard Time',
+		offset: 'UTC+12:00',
+	},
+	'NZ-CHAT': {
+		tzName: '',
+		offset: 'UTC+12:45',
+	},
+	'Pacific/Apia': {
+		tzName: '',
+		offset: 'UTC+13:00',
+	},
+	'Pacific/Auckland': {
+		tzName: 'New Zealand Standard Time',
+		offset: 'UTC+12:00',
+	},
+	'Pacific/Bougainville': {
+		tzName: '',
+		offset: 'UTC+11:00',
+	},
+	'Pacific/Chatham': {
+		tzName: '',
+		offset: 'UTC+12:45',
+	},
+	'Pacific/Chuuk': {
+		tzName: '',
+		offset: 'UTC+10:00',
+	},
+	'Pacific/Easter': {
+		tzName: '',
+		offset: 'UTC-06:00',
+	},
+	'Pacific/Efate': {
+		tzName: '',
+		offset: 'UTC+11:00',
+	},
+	'Pacific/Enderbury': {
+		tzName: '',
+		offset: 'UTC+13:00',
+	},
+	'Pacific/Fakaofo': {
+		tzName: '',
+		offset: 'UTC+13:00',
+	},
+	'Pacific/Fiji': {
+		tzName: '',
+		offset: 'UTC+12:00',
+	},
+	'Pacific/Funafuti': {
+		tzName: '',
+		offset: 'UTC+12:00',
+	},
+	'Pacific/Galapagos': {
+		tzName: '',
+		offset: 'UTC-06:00',
+	},
+	'Pacific/Gambier': {
+		tzName: '',
+		offset: 'UTC-09:00',
+	},
+	'Pacific/Guadalcanal': {
+		tzName: '',
+		offset: 'UTC+11:00',
+	},
+	'Pacific/Guam': {
+		tzName: 'Chamorro Time Zone',
+		offset: 'UTC+10:00',
+	},
+	'Pacific/Honolulu': {
+		tzName: 'Hawaiian Standard Time',
+		offset: 'UTC-10:00',
+	},
+	'Pacific/Johnston': {
+		tzName: 'Hawaiian Standard Time',
+		offset: 'UTC-10:00',
+	},
+	'Pacific/Kanton': {
+		tzName: '',
+		offset: 'UTC+13:00',
+	},
+	'Pacific/Kiritimati': {
+		tzName: '',
+		offset: 'UTC+14:00',
+	},
+	'Pacific/Kosrae': {
+		tzName: '',
+		offset: 'UTC+11:00',
+	},
+	'Pacific/Kwajalein': {
+		tzName: '',
+		offset: 'UTC+12:00',
+	},
+	'Pacific/Majuro': {
+		tzName: '',
+		offset: 'UTC+12:00',
+	},
+	'Pacific/Marquesas': {
+		tzName: '',
+		offset: 'UTC-09:30',
+	},
+	'Pacific/Midway': {
+		tzName: 'Samoa Standard Time',
+		offset: 'UTC-11:00',
+	},
+	'Pacific/Nauru': {
+		tzName: '',
+		offset: 'UTC+12:00',
+	},
+	'Pacific/Niue': {
+		tzName: '',
+		offset: 'UTC-11:00',
+	},
+	'Pacific/Norfolk': {
+		tzName: '',
+		offset: 'UTC+11:00',
+	},
+	'Pacific/Noumea': {
+		tzName: '',
+		offset: 'UTC+11:00',
+	},
+	'Pacific/Pago_Pago': {
+		tzName: 'Samoa Standard Time',
+		offset: 'UTC-11:00',
+	},
+	'Pacific/Palau': {
+		tzName: '',
+		offset: 'UTC+09:00',
+	},
+	'Pacific/Pitcairn': {
+		tzName: '',
+		offset: 'UTC-08:00',
+	},
+	'Pacific/Pohnpei': {
+		tzName: '',
+		offset: 'UTC+11:00',
+	},
+	'Pacific/Ponape': {
+		tzName: '',
+		offset: 'UTC+11:00',
+	},
+	'Pacific/Port_Moresby': {
+		tzName: '',
+		offset: 'UTC+10:00',
+	},
+	'Pacific/Rarotonga': {
+		tzName: '',
+		offset: 'UTC-10:00',
+	},
+	'Pacific/Saipan': {
+		tzName: 'Chamorro Time Zone',
+		offset: 'UTC+10:00',
+	},
+	'Pacific/Samoa': {
+		tzName: 'Samoa Standard Time',
+		offset: 'UTC-11:00',
+	},
+	'Pacific/Tahiti': {
+		tzName: '',
+		offset: 'UTC-10:00',
+	},
+	'Pacific/Tarawa': {
+		tzName: '',
+		offset: 'UTC+12:00',
+	},
+	'Pacific/Tongatapu': {
+		tzName: '',
+		offset: 'UTC+13:00',
+	},
+	'Pacific/Truk': {
+		tzName: '',
+		offset: 'UTC+10:00',
+	},
+	'Pacific/Wake': {
+		tzName: '',
+		offset: 'UTC+12:00',
+	},
+	'Pacific/Wallis': {
+		tzName: '',
+		offset: 'UTC+12:00',
+	},
+	'Pacific/Yap': {
+		tzName: '',
+		offset: 'UTC+10:00',
+	},
+	Poland: {
+		tzName: 'Central European Time',
+		offset: 'UTC+01:00',
+	},
+	Portugal: {
+		tzName: 'Western European Time',
+		offset: 'UTC+00:00',
+	},
+	PRC: {
+		tzName: 'China Standard Time',
+		offset: 'UTC+08:00',
+	},
+	PST8PDT: {
+		tzName: 'Pacific Standard Time',
+		offset: 'UTC-08:00',
+	},
+	ROC: {
+		tzName: 'China Standard Time',
+		offset: 'UTC+08:00',
+	},
+	ROK: {
+		tzName: 'Korean Standard Time',
+		offset: 'UTC+09:00',
+	},
+	Singapore: {
+		tzName: '',
+		offset: 'UTC+08:00',
+	},
+	Turkey: {
+		tzName: '',
+		offset: 'UTC+03:00',
+	},
+	UCT: {
+		tzName: 'Coordinated Universal Time',
+		offset: 'UTC+00:00',
+	},
+	Universal: {
+		tzName: 'Coordinated Universal Time',
+		offset: 'UTC+00:00',
+	},
+	'US/Alaska': {
+		tzName: 'Alaskan Standard Time',
+		offset: 'UTC-09:00',
+	},
+	'US/Aleutian': {
+		tzName: 'Hawaiian Standard Time',
+		offset: 'UTC-10:00',
+	},
+	'US/Arizona': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'US/Central': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'US/East-Indiana': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'US/Eastern': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'US/Hawaii': {
+		tzName: 'Hawaiian Standard Time',
+		offset: 'UTC-10:00',
+	},
+	'US/Indiana-Starke': {
+		tzName: 'Central Standard Time',
+		offset: 'UTC-06:00',
+	},
+	'US/Michigan': {
+		tzName: 'Eastern Standard Time',
+		offset: 'UTC-05:00',
+	},
+	'US/Mountain': {
+		tzName: 'Mountain Standard Time',
+		offset: 'UTC-07:00',
+	},
+	'US/Pacific': {
+		tzName: 'Pacific Standard Time',
+		offset: 'UTC-08:00',
+	},
+	'US/Samoa': {
+		tzName: 'Samoa Standard Time',
+		offset: 'UTC-11:00',
+	},
+	UTC: {
+		tzName: 'Coordinated Universal Time',
+		offset: 'UTC+00:00',
+	},
+	'W-SU': {
+		tzName: 'Moscow Time',
+		offset: 'UTC+03:00',
+	},
+	WET: {
+		tzName: 'Western European Time',
+		offset: 'UTC+00:00',
+	},
+	Zulu: {
+		tzName: 'Coordinated Universal Time',
+		offset: 'UTC+00:00',
+	},
 } as const);
