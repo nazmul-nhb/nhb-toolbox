@@ -1,5 +1,6 @@
 import { isString } from '../guards/primitives';
 import { isNumericString } from '../guards/specials';
+import { normalizeNumber } from '../number/utilities';
 import type { Numeric } from '../types/index';
 import { TIME_ZONE_IDS } from './timezone';
 import type { ClockTime, TimeZoneIdentifier, UTCOffSet } from './types';
@@ -51,7 +52,9 @@ export function isValidTimeZoneId(value: unknown): value is TimeZoneIdentifier {
  * @returns `true` if the year is a leap year, `false` otherwise.
  */
 export function isLeapYear(year: Numeric): boolean {
-	return (Number(year) % 4 === 0 && Number(year) % 100 !== 0) || Number(year) % 400 === 0;
+	const $year = normalizeNumber(year);
+
+	return $year ? ($year % 4 === 0 && $year % 100 !== 0) || $year % 400 === 0 : false;
 }
 
 /**

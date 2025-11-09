@@ -3,7 +3,7 @@ import { isString } from '../guards/primitives';
 import type { Enumerate, NumberRange } from '../number/types';
 import { getOrdinal } from '../number/utilities';
 import type { $Record } from '../object/types';
-import type { TupleOf } from '../utils/types';
+import type { LooseLiteral, TupleOf } from '../utils/types';
 import { DAYS, INTERNALS, MONTHS, SORTED_TIME_FORMATS } from './constants';
 import { isLeapYear } from './guards';
 import type {
@@ -33,8 +33,10 @@ import type {
 	TimeDuration,
 	TimeParts,
 	TimeUnit,
+	TimeZone,
 	TimeZoneId,
 	TimeZoneIdentifier,
+	TimeZoneName,
 	UTCOffSet,
 	WeekDay,
 	WeekdayOptions,
@@ -62,10 +64,10 @@ type $DateParts = {
  * and convert it to the **equivalent local time** using the current environment's UTC offset.*
  *
  * @param value - A date value (`number`, `string`, `Date`, or `Chronos` object).
- * - If a string is provided, it should be in a format that can be parsed by the Date constructor.
+ * - If a string is provided, it should be in a format that can be parsed by the `Date` constructor.
  * - If a number is provided, it should be a timestamp (milliseconds since the Unix epoch).
- * - If a Date object is provided, it will be used as is.
- * - If a `Chronos` object is provided, it will be converted to a Date object.
+ * - If a `Date` object is provided, it will be used as is.
+ * - If a `Chronos` object is provided, it will be converted to a `Date` object.
  *
  * **It also accepts number values as following:**
  * - **`year, month, date, hours, minutes, seconds, milliseconds`**: Individual components of a date-time to construct a `Chronos` instance.
@@ -96,8 +98,14 @@ export class Chronos {
 			return instance.#offset;
 		},
 
-		withOrigin(instance, method, offset, tzName, tzId) {
-			return instance.#withOrigin(method as $PluginMethods, offset, tzName, tzId);
+		withOrigin(instance, method, offset, tzName, tzId, tzTracker) {
+			return instance.#withOrigin(
+				method as $PluginMethods,
+				offset,
+				tzName,
+				tzId,
+				tzTracker
+			);
 		},
 
 		toNewDate(instance, value) {
@@ -129,7 +137,7 @@ export class Chronos {
 	 * - Invoking the {@link timeZone} method sets the timezone name that corresponds to the specified UTC offset, or the UTC offset itself if no name exists. For more details on this behavior, see {@link getTimeZoneName}.
 	 * - To retrieve the local system's native timezone name (or its identifier if the name is unavailable), use the {@link $getNativeTimeZone} instance method.
 	 */
-	timeZoneName: string;
+	timeZoneName: LooseLiteral<TimeZoneName>;
 
 	/**
 	 * Represents the current timezone context, which can be a single identifier, an array of equivalent identifiers, or a UTC offset.
@@ -144,6 +152,9 @@ export class Chronos {
 	 * - To retrieve the local system's native timezone identifier, use the {@link $getNativeTimeZoneId} instance method.
 	 */
 	timeZoneId: TimeZoneId;
+
+	/** Tracker to identify the instance created by {@link timeZone} method */
+	protected $tzTracker?: TimeZoneIdentifier | TimeZone | UTCOffSet;
 
 	/**
 	 * * Creates a new immutable `Chronos` instance.
@@ -284,6 +295,8 @@ export class Chronos {
 		this.timeZoneId = this.$getNativeTimeZoneId();
 	}
 
+	// ! ======= Symbol Methods ======= //
+
 	*[Symbol.iterator](): IterableIterator<[string, number]> {
 		yield ['year', this.year];
 		yield ['month', this.month];
@@ -299,11 +312,6 @@ export class Chronos {
 		yield ['unix', this.unix];
 	}
 
-	/**
-	 * * Enables primitive coercion like `+chronos`, `Number(chronos)`, `String(chronos)`, `${chronos}`, etc.
-	 * @param hint - The type hint provided by the JS engine.
-	 * @returns The primitive value based on the hint.
-	 */
 	[Symbol.toPrimitive](hint: string): string | number {
 		if (hint === 'number') return this.valueOf();
 		switch (this.#ORIGIN) {
@@ -322,15 +330,9 @@ export class Chronos {
 			case 'timeZone':
 			case 'toUTC':
 			case 'utc':
-				return string.replace(
-					this.toISOString().replace(/\.\d+(Z|[+-]\d{2}:\d{2})?$/, ''),
-					replacement
-				);
+				return string.replace(this.#isoTzRemoved(), replacement);
 			default:
-				return string.replace(
-					this.toLocalISOString().replace(/\.\d+(Z|[+-]\d{2}:\d{2})?$/, ''),
-					replacement
-				);
+				return string.replace(this.#isoTzRemoved(true), replacement);
 		}
 	}
 
@@ -339,13 +341,9 @@ export class Chronos {
 			case 'timeZone':
 			case 'toUTC':
 			case 'utc':
-				return string.indexOf(
-					this.toISOString().replace(/\.\d+(Z|[+-]\d{2}:\d{2})?$/, '')
-				);
+				return string.indexOf(this.#isoTzRemoved());
 			default:
-				return string.indexOf(
-					this.toLocalISOString().replace(/\.\d+(Z|[+-]\d{2}:\d{2})?$/, '')
-				);
+				return string.indexOf(this.#isoTzRemoved(true));
 		}
 	}
 
@@ -354,13 +352,9 @@ export class Chronos {
 			case 'timeZone':
 			case 'toUTC':
 			case 'utc':
-				return string.split(
-					this.toISOString().replace(/\.\d+(Z|[+-]\d{2}:\d{2})?$/, '')
-				);
+				return string.split(this.#isoTzRemoved());
 			default:
-				return string.split(
-					this.toLocalISOString().replace(/\.\d+(Z|[+-]\d{2}:\d{2})?$/, '')
-				);
+				return string.split(this.#isoTzRemoved(true));
 		}
 	}
 
@@ -391,6 +385,8 @@ export class Chronos {
 		return true;
 	}
 
+	// ! ======= Special Public Methods ======= //
+
 	/**
 	 * @instance Retrieves the local system's current timezone name (e.g., `"Bangladesh Standard Time"`), or falls back to its corresponding IANA timezone identifier (e.g., `"Asia/Dhaka"`) if the name cannot be determined.
 	 *
@@ -400,7 +396,7 @@ export class Chronos {
 	 *
 	 * @returns The resolved timezone name or its IANA identifier as a fallback.
 	 */
-	$getNativeTimeZone() {
+	$getNativeTimeZone(): LooseLiteral<TimeZoneName | TimeZoneIdentifier> {
 		const details = new Intl.DateTimeFormat(undefined, {
 			timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
 			timeZoneName: 'long',
@@ -423,10 +419,12 @@ export class Chronos {
 		return Intl.DateTimeFormat().resolvedOptions().timeZone as TimeZoneIdentifier;
 	}
 
+	// ! ======= Private Methods ======= //
+
 	/**
 	 * @private Method to create native `Date` instance from date-like data types.
 	 * @param value The value to convert into `Date`.
-	 * @returns Instance of native Date object.
+	 * @returns Instance of native `Date` object.
 	 */
 	#toNewDate(value?: ChronosInput): Date {
 		const date = value instanceof Chronos ? value.toDate() : new Date(value ?? Date.now());
@@ -440,17 +438,21 @@ export class Chronos {
 	}
 
 	/**
-	 * @private Method to tag origin of the `Chronos` instance.
+	 * @private Method to tag origin and other properties to the `Chronos` instance.
 	 *
 	 * @param origin Origin of the instance, the method name from where it was created.
 	 * @param offset Optional UTC offset in `UTC±HH:mm` format.
-	 * @returns The `Chronos` instance with the specified origin.
+	 * @param tzName Optional time zone name to set.
+	 * @param tzId Optional time zone identifier(s) to set.
+	 * @param tzTracker Optional tracker to identify the instance created by {@link timeZone} method.
+	 * @returns The `Chronos` instance with the specified origin and other properties.
 	 */
 	#withOrigin(
 		origin: ChronosMethods,
 		offset?: UTCOffSet,
 		tzName?: string,
-		tzId?: TimeZoneId
+		tzId?: TimeZoneId,
+		tzTracker?: TimeZoneIdentifier | TimeZone | UTCOffSet
 	): Chronos {
 		const instance = new Chronos(this.#date);
 		instance.#ORIGIN = origin;
@@ -461,13 +463,9 @@ export class Chronos {
 			instance.utcOffset = offset;
 		}
 
-		if (tzName) {
-			instance.timeZoneName = tzName;
-		}
-
-		if (tzId) {
-			instance.timeZoneId = tzId;
-		}
+		if (tzName) instance.timeZoneName = tzName;
+		if (tzId) instance.timeZoneId = tzId;
+		if (tzTracker) instance.$tzTracker = tzTracker;
 
 		instance.native = instance.toDate();
 
@@ -562,6 +560,17 @@ export class Chronos {
 	}
 
 	/**
+	 * @private Returns ISO string for the current date with removed timezone/utc part.
+	 * @param local Whether to use `this.toLocalISOString()` method or not. Defaults to `false`.
+	 * @returns Modified ISO string for the current date with removed timezone/utc part.
+	 */
+	#isoTzRemoved(local = false): string {
+		return local ?
+				this.toLocalISOString().replace(/\.\d+(Z|[+-]\d{2}:\d{2})?$/, '')
+			:	this.toISOString().replace(/\.\d+(Z|[+-]\d{2}:\d{2})?$/, '');
+	}
+
+	/**
 	 * @private Normalizes duration values based on sign and `absolute` flag.
 	 * @param result The raw time breakdown to normalize.
 	 * @param absolute If true, ensures all values are positive.
@@ -591,6 +600,8 @@ export class Chronos {
 
 		return updated;
 	}
+
+	// ! ======= Getter Methods ======= //
 
 	/** Gets the full year of the date. */
 	get year(): number {
@@ -659,6 +670,8 @@ export class Chronos {
 		return this.lastDayOfMonth().#date.getDate() as NumberRange<28, 31>;
 	}
 
+	// ! ======= Protocol Methods ======= //
+
 	/** @instance Returns a debug-friendly string for `console.log` or `util.inspect`. */
 	inspect(): string {
 		return `[Chronos ${this.toLocalISOString()}]`;
@@ -673,6 +686,8 @@ export class Chronos {
 	valueOf(): number {
 		return this.getTimeStamp();
 	}
+
+	// ! ======= Instance Methods ======= //
 
 	/** @instance Clones and returns a new `Chronos` instance with the same date. */
 	clone(): Chronos {
@@ -1481,7 +1496,7 @@ export class Chronos {
 	/**
 	 * @instance Returns the timezone offset of this `Chronos` instance in `±HH:mm` format maintaining current timezone.
 	 *
-	 * - *Unlike JavaScript's {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset Date.prototype.getTimezoneOffset()}, which returns the offset in minutes **behind** UTC (positive for locations west of UTC and negative for east), this method returns the more intuitive sign format used in timezone representations (e.g., `+06:00` means 6 hours **ahead** of UTC).*
+	 * - *Unlike JavaScript's {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset `Date.prototype.getTimezoneOffset()`}, which returns the offset in minutes **behind** UTC (positive for locations west of UTC and negative for east), this method returns the more intuitive sign format used in timezone representations (e.g., `+06:00` means 6 hours **ahead** of UTC).*
 	 *
 	 * @returns The timezone offset string in `±HH:mm` format maintaining the current timezone regardless of system having different one.
 	 */
@@ -1492,7 +1507,7 @@ export class Chronos {
 	/**
 	 * @instance Gets the difference in minutes between Universal Coordinated Time (UTC) and the time on the local computer.
 	 *
-	 * - *Unlike JavaScript's {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset Date.prototype.getTimezoneOffset()}, this method returns a positive value if the local time is ahead of UTC, and negative if behind UTC.*
+	 * - *Unlike JavaScript's {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset `Date.prototype.getTimezoneOffset()`}, this method returns a positive value if the local time is ahead of UTC, and negative if behind UTC.*
 	 *
 	 * For example, for `UTC+06:00`, this returns `360`; for `UTC-05:30`, this returns `-330`.
 	 *
@@ -1794,6 +1809,8 @@ export class Chronos {
 
 		return datesInRange;
 	}
+
+	// ! ======= Static Methods ======= //
 
 	/**
 	 * @static Parses a date string with a given format (limited support only).
@@ -2195,7 +2212,7 @@ export class Chronos {
 	 * - A value is considered valid if it is an instance of the built-in `Date` class.
 	 * - This does not check whether the date itself is valid (e.g., `new Date('invalid')`).
 	 * @param value - The value to test.
-	 * @returns `true` if the value is a valid Date object, otherwise `false`.
+	 * @returns `true` if the value is a valid `Date` object, otherwise `false`.
 	 */
 	static isValidDate(value: unknown): value is Date {
 		return value instanceof Date;

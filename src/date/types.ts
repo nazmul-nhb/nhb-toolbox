@@ -18,7 +18,7 @@ import type {
 	ZODIAC_PRESETS,
 } from './constants';
 import type { SEASON_PRESETS } from './seasons';
-import type { TIME_ZONE_IDS, TIME_ZONES } from './timezone';
+import type { TIME_ZONE_IDS, TIME_ZONE_LABELS, TIME_ZONES } from './timezone';
 
 // ! Re-export `ChronosStatics`
 export type { ChronosStatics };
@@ -244,25 +244,26 @@ export interface DurationOptions {
 	showZero?: boolean;
 }
 
-/** Timezone identifier, array of timezone identifiers or UTC offset. */
-export type TimeZoneId = TimeZoneIdentifier | TimeZoneIdentifier[] | UTCOffSet;
-
 /** Interface for accessing internal private properties in extended `Chronos` class */
 export interface ChronosInternals {
 	/**
-	 * * Access to `#withOrigin` private method
-	 * * Creates a new Chronos instance with origin tracking
-	 * @param instance - Chronos instance to operate on
-	 * @param method - Name of the method creating this instance
-	 * @param offset - Optional UTC offset label
-	 * @returns A new Chronos instance
+	 * * Access to `#withOrigin` private method.
+	 * * Creates a new Chronos instance with origin and other properties.
+	 *
+	 * @param origin Origin of the instance, the method name from where it was created.
+	 * @param offset Optional UTC offset in `UTC±HH:mm` format.
+	 * @param tzName Optional time zone name to set.
+	 * @param tzId Optional time zone identifier(s) to set.
+	 * @param tzTracker Optional tracker to identify the instance created by {@link timeZone} method.
+	 * @returns The `Chronos` instance with the specified origin and other properties.
 	 */
 	withOrigin(
 		instance: Chronos,
 		method: PluginMethods,
 		offset?: UTCOffSet,
 		tzName?: string,
-		tzId?: TimeZoneId
+		tzId?: TimeZoneId,
+		tzTracker?: TimeZoneIdentifier | TimeZone | UTCOffSet
 	): Chronos;
 
 	/**
@@ -333,11 +334,23 @@ export type ChronosInput = number | string | Date | Chronos;
 /** Represents key of `ChronosStatics` (each static method and property) */
 export type ChronosStaticKey = keyof ChronosStatics;
 
-/** Names of time-zones (short) */
+export type $TZLabelKey = keyof typeof TIME_ZONE_LABELS;
+
+/** Abbreviated time-zone names (from {@link https://en.wikipedia.org/wiki/List_of_time_zone_abbreviations time zone abbreviations on Wikipedia}) */
 export type TimeZone = keyof typeof TIME_ZONES;
 
-/** Timezone identifier from IANA TZ Database */
+/** Full time zone names from Wikipedia and IANA time zone database. */
+export type TimeZoneName = NonNullable<
+	| (typeof TIME_ZONE_LABELS)[$TZLabelKey]
+	| (typeof TIME_ZONES)[TimeZone]['tzName']
+	| (typeof TIME_ZONE_IDS)[TimeZoneIdentifier]['tzName']
+>;
+
+/** Timezone identifier (from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia}) */
 export type TimeZoneIdentifier = keyof typeof TIME_ZONE_IDS;
+
+/** Timezone identifier, array of timezone identifiers or UTC offset. */
+export type TimeZoneId = TimeZoneIdentifier | TimeZoneIdentifier[] | UTCOffSet;
 
 /** Positive UTC hours */
 export type PositiveUTCHour = `+0${Enumerate<10>}` | `+${NumberRange<10, 14>}`;

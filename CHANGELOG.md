@@ -9,7 +9,9 @@ All notable changes to the package will be documented here.
 ## [4.26.1] - 2025-11-08
 
 - **Fixed** timezone conversion issues by updating `TIME_ZONE_IDS` constant: **normalized** all negative signs (replaced `'−'` with `'-'`) from UTC offset.
-- **Redesigned** *time zone determiners* with updated *timezone constants*. **Added** *3 overload signatures* for `timeZone(utc?)` method.
+- **Redesigned** *time zone determiners* with updated *timezone constants*.
+- **Added** *3 overload signatures* and *internal caching mechanism* for `timeZone(utc?)` method.
+- **Updated** *tsdoc* for some `Chronos` methods. **Created** new type `TimeZoneName`.
  -->
 
 ## [4.26.1] - 2025-11-08

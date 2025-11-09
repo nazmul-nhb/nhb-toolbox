@@ -1,5 +1,3 @@
-import type { UTCOffSet } from './types';
-
 /** Record of time-zones (abbreviation of timezone names from {@link https://en.wikipedia.org/wiki/List_of_time_zone_abbreviations time zone abbreviations on Wikipedia}) with respective time-zone offsets and full timezone names. */
 export const TIME_ZONES = /* @__PURE__ */ Object.freeze({
 	ACDT: {
@@ -897,7 +895,7 @@ export const TIME_ZONE_LABELS = /* @__PURE__ */ Object.freeze({
 	'UTC+12:45': 'Chatham Islands Time',
 	'UTC+13:00': 'Phoenix Island Time',
 	'UTC+14:00': 'Line Islands Time',
-} as Record<UTCOffSet, string>);
+} as const);
 
 /** Record of timezone identifiers (from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia}) against their corresponding UTC offsets and full timezone names. */
 export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
@@ -958,7 +956,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+02:00',
 	},
 	'Africa/Casablanca': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+01:00',
 	},
 	'Africa/Ceuta': {
@@ -986,7 +984,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+01:00',
 	},
 	'Africa/El_Aaiun': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+01:00',
 	},
 	'Africa/Freetown': {
@@ -1134,59 +1132,59 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-04:00',
 	},
 	'America/Araguaina': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Argentina/Buenos_Aires': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Argentina/Catamarca': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Argentina/ComodRivadavia': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Argentina/Cordoba': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Argentina/Jujuy': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Argentina/La_Rioja': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Argentina/Mendoza': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Argentina/Rio_Gallegos': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Argentina/Salta': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Argentina/San_Juan': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Argentina/San_Luis': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Argentina/Tucuman': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Argentina/Ushuaia': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Aruba': {
@@ -1194,7 +1192,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-04:00',
 	},
 	'America/Asuncion': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Atikokan': {
@@ -1206,7 +1204,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-10:00',
 	},
 	'America/Bahia': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Bahia_Banderas': {
@@ -1218,7 +1216,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-04:00',
 	},
 	'America/Belem': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Belize': {
@@ -1230,11 +1228,11 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-04:00',
 	},
 	'America/Boa_Vista': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-04:00',
 	},
 	'America/Bogota': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-05:00',
 	},
 	'America/Boise': {
@@ -1242,7 +1240,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-07:00',
 	},
 	'America/Buenos_Aires': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Cambridge_Bay': {
@@ -1250,7 +1248,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-07:00',
 	},
 	'America/Campo_Grande': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-04:00',
 	},
 	'America/Cancun': {
@@ -1258,15 +1256,15 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-05:00',
 	},
 	'America/Caracas': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-04:00',
 	},
 	'America/Catamarca': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Cayenne': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Cayman': {
@@ -1290,7 +1288,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-05:00',
 	},
 	'America/Cordoba': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Costa_Rica': {
@@ -1298,7 +1296,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-06:00',
 	},
 	'America/Coyhaique': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Creston': {
@@ -1306,7 +1304,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-07:00',
 	},
 	'America/Cuiaba': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-04:00',
 	},
 	'America/Curacao': {
@@ -1342,7 +1340,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-07:00',
 	},
 	'America/Eirunepe': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-05:00',
 	},
 	'America/El_Salvador': {
@@ -1362,7 +1360,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-05:00',
 	},
 	'America/Fortaleza': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Glace_Bay': {
@@ -1370,7 +1368,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-04:00',
 	},
 	'America/Godthab': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-02:00',
 	},
 	'America/Goose_Bay': {
@@ -1394,11 +1392,11 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-06:00',
 	},
 	'America/Guayaquil': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-05:00',
 	},
 	'America/Guyana': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-04:00',
 	},
 	'America/Halifax': {
@@ -1462,7 +1460,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-05:00',
 	},
 	'America/Jujuy': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Juneau': {
@@ -1486,11 +1484,11 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-04:00',
 	},
 	'America/La_Paz': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-04:00',
 	},
 	'America/Lima': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-05:00',
 	},
 	'America/Los_Angeles': {
@@ -1506,7 +1504,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-04:00',
 	},
 	'America/Maceio': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Managua': {
@@ -1514,7 +1512,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-06:00',
 	},
 	'America/Manaus': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-04:00',
 	},
 	'America/Marigot': {
@@ -1534,7 +1532,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-07:00',
 	},
 	'America/Mendoza': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Menominee': {
@@ -1554,7 +1552,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-06:00',
 	},
 	'America/Miquelon': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Moncton': {
@@ -1566,7 +1564,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-06:00',
 	},
 	'America/Montevideo': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Montreal': {
@@ -1594,7 +1592,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-09:00',
 	},
 	'America/Noronha': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-02:00',
 	},
 	'America/North_Dakota/Beulah': {
@@ -1610,7 +1608,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-06:00',
 	},
 	'America/Nuuk': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-02:00',
 	},
 	'America/Ojinaga': {
@@ -1626,7 +1624,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-05:00',
 	},
 	'America/Paramaribo': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Phoenix': {
@@ -1642,11 +1640,11 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-04:00',
 	},
 	'America/Porto_Acre': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-05:00',
 	},
 	'America/Porto_Velho': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-04:00',
 	},
 	'America/Puerto_Rico': {
@@ -1654,7 +1652,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-04:00',
 	},
 	'America/Punta_Arenas': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Rainy_River': {
@@ -1666,7 +1664,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-06:00',
 	},
 	'America/Recife': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Regina': {
@@ -1678,11 +1676,11 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-06:00',
 	},
 	'America/Rio_Branco': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-05:00',
 	},
 	'America/Rosario': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Santa_Isabel': {
@@ -1690,11 +1688,11 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-08:00',
 	},
 	'America/Santarem': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Santiago': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-04:00',
 	},
 	'America/Santo_Domingo': {
@@ -1702,11 +1700,11 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-04:00',
 	},
 	'America/Sao_Paulo': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'America/Scoresbysund': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-02:00',
 	},
 	'America/Shiprock': {
@@ -1794,15 +1792,15 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-07:00',
 	},
 	'Antarctica/Casey': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+08:00',
 	},
 	'Antarctica/Davis': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+07:00',
 	},
 	'Antarctica/DumontDUrville': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+10:00',
 	},
 	'Antarctica/Macquarie': {
@@ -1810,7 +1808,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+10:00',
 	},
 	'Antarctica/Mawson': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:00',
 	},
 	'Antarctica/McMurdo': {
@@ -1818,11 +1816,11 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+12:00',
 	},
 	'Antarctica/Palmer': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'Antarctica/Rothera': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'Antarctica/South_Pole': {
@@ -1830,15 +1828,15 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+12:00',
 	},
 	'Antarctica/Syowa': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+03:00',
 	},
 	'Antarctica/Troll': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+00:00',
 	},
 	'Antarctica/Vostok': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:00',
 	},
 	'Arctic/Longyearbyen': {
@@ -1846,59 +1844,59 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+01:00',
 	},
 	'Asia/Aden': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+03:00',
 	},
 	'Asia/Almaty': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:00',
 	},
 	'Asia/Amman': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+03:00',
 	},
 	'Asia/Anadyr': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+12:00',
 	},
 	'Asia/Aqtau': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:00',
 	},
 	'Asia/Aqtobe': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:00',
 	},
 	'Asia/Ashgabat': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:00',
 	},
 	'Asia/Ashkhabad': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:00',
 	},
 	'Asia/Atyrau': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:00',
 	},
 	'Asia/Baghdad': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+03:00',
 	},
 	'Asia/Bahrain': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+03:00',
 	},
 	'Asia/Baku': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+04:00',
 	},
 	'Asia/Bangkok': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+07:00',
 	},
 	'Asia/Barnaul': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+07:00',
 	},
 	'Asia/Beirut': {
@@ -1906,11 +1904,11 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+02:00',
 	},
 	'Asia/Bishkek': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+06:00',
 	},
 	'Asia/Brunei': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+08:00',
 	},
 	'Asia/Calcutta': {
@@ -1918,11 +1916,11 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+05:30',
 	},
 	'Asia/Chita': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+09:00',
 	},
 	'Asia/Choibalsan': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+08:00',
 	},
 	'Asia/Chongqing': {
@@ -1934,31 +1932,31 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+08:00',
 	},
 	'Asia/Colombo': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:30',
 	},
 	'Asia/Dacca': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+06:00',
 	},
 	'Asia/Damascus': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+03:00',
 	},
 	'Asia/Dhaka': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+06:00',
 	},
 	'Asia/Dili': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+09:00',
 	},
 	'Asia/Dubai': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+04:00',
 	},
 	'Asia/Dushanbe': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:00',
 	},
 	'Asia/Famagusta': {
@@ -1978,7 +1976,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+02:00',
 	},
 	'Asia/Ho_Chi_Minh': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+07:00',
 	},
 	'Asia/Hong_Kong': {
@@ -1986,15 +1984,15 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+08:00',
 	},
 	'Asia/Hovd': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+07:00',
 	},
 	'Asia/Irkutsk': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+08:00',
 	},
 	'Asia/Istanbul': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+03:00',
 	},
 	'Asia/Jakarta': {
@@ -2010,11 +2008,11 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+02:00',
 	},
 	'Asia/Kabul': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+04:30',
 	},
 	'Asia/Kamchatka': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+12:00',
 	},
 	'Asia/Karachi': {
@@ -2022,19 +2020,19 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+05:00',
 	},
 	'Asia/Kashgar': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+06:00',
 	},
 	'Asia/Kathmandu': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:45',
 	},
 	'Asia/Katmandu': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:45',
 	},
 	'Asia/Khandyga': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+09:00',
 	},
 	'Asia/Kolkata': {
@@ -2042,19 +2040,19 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+05:30',
 	},
 	'Asia/Krasnoyarsk': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+07:00',
 	},
 	'Asia/Kuala_Lumpur': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+08:00',
 	},
 	'Asia/Kuching': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+08:00',
 	},
 	'Asia/Kuwait': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+03:00',
 	},
 	'Asia/Macao': {
@@ -2066,7 +2064,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+08:00',
 	},
 	'Asia/Magadan': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+11:00',
 	},
 	'Asia/Makassar': {
@@ -2078,7 +2076,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+08:00',
 	},
 	'Asia/Muscat': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+04:00',
 	},
 	'Asia/Nicosia': {
@@ -2086,23 +2084,23 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+02:00',
 	},
 	'Asia/Novokuznetsk': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+07:00',
 	},
 	'Asia/Novosibirsk': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+07:00',
 	},
 	'Asia/Omsk': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+06:00',
 	},
 	'Asia/Oral': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:00',
 	},
 	'Asia/Phnom_Penh': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+07:00',
 	},
 	'Asia/Pontianak': {
@@ -2114,35 +2112,35 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+09:00',
 	},
 	'Asia/Qatar': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+03:00',
 	},
 	'Asia/Qostanay': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:00',
 	},
 	'Asia/Qyzylorda': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:00',
 	},
 	'Asia/Rangoon': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+06:30',
 	},
 	'Asia/Riyadh': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+03:00',
 	},
 	'Asia/Saigon': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+07:00',
 	},
 	'Asia/Sakhalin': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+11:00',
 	},
 	'Asia/Samarkand': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:00',
 	},
 	'Asia/Seoul': {
@@ -2154,11 +2152,11 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+08:00',
 	},
 	'Asia/Singapore': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+08:00',
 	},
 	'Asia/Srednekolymsk': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+11:00',
 	},
 	'Asia/Taipei': {
@@ -2166,15 +2164,15 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+08:00',
 	},
 	'Asia/Tashkent': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:00',
 	},
 	'Asia/Tbilisi': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+04:00',
 	},
 	'Asia/Tehran': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+03:30',
 	},
 	'Asia/Tel_Aviv': {
@@ -2182,11 +2180,11 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+02:00',
 	},
 	'Asia/Thimbu': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+06:00',
 	},
 	'Asia/Thimphu': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+06:00',
 	},
 	'Asia/Tokyo': {
@@ -2194,7 +2192,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+09:00',
 	},
 	'Asia/Tomsk': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+07:00',
 	},
 	'Asia/Ujung_Pandang': {
@@ -2202,47 +2200,47 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+08:00',
 	},
 	'Asia/Ulaanbaatar': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+08:00',
 	},
 	'Asia/Ulan_Bator': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+08:00',
 	},
 	'Asia/Urumqi': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+06:00',
 	},
 	'Asia/Ust-Nera': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+10:00',
 	},
 	'Asia/Vientiane': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+07:00',
 	},
 	'Asia/Vladivostok': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+10:00',
 	},
 	'Asia/Yakutsk': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+09:00',
 	},
 	'Asia/Yangon': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+06:30',
 	},
 	'Asia/Yekaterinburg': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:00',
 	},
 	'Asia/Yerevan': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+04:00',
 	},
 	'Atlantic/Azores': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-01:00',
 	},
 	'Atlantic/Bermuda': {
@@ -2254,7 +2252,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+00:00',
 	},
 	'Atlantic/Cape_Verde': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-01:00',
 	},
 	'Atlantic/Faeroe': {
@@ -2278,7 +2276,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+00:00',
 	},
 	'Atlantic/South_Georgia': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-02:00',
 	},
 	'Atlantic/St_Helena': {
@@ -2286,7 +2284,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+00:00',
 	},
 	'Atlantic/Stanley': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'Australia/ACT': {
@@ -2318,7 +2316,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+09:30',
 	},
 	'Australia/Eucla': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+08:45',
 	},
 	'Australia/Hobart': {
@@ -2326,7 +2324,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+10:00',
 	},
 	'Australia/LHI': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+10:30',
 	},
 	'Australia/Lindeman': {
@@ -2334,7 +2332,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+10:00',
 	},
 	'Australia/Lord_Howe': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+10:30',
 	},
 	'Australia/Melbourne': {
@@ -2382,19 +2380,19 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+09:30',
 	},
 	'Brazil/Acre': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-05:00',
 	},
 	'Brazil/DeNoronha': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-02:00',
 	},
 	'Brazil/East': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'Brazil/West': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-04:00',
 	},
 	'Canada/Atlantic': {
@@ -2434,11 +2432,11 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+01:00',
 	},
 	'Chile/Continental': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-04:00',
 	},
 	'Chile/EasterIsland': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-06:00',
 	},
 	CST6CDT: {
@@ -2478,51 +2476,51 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+00:00',
 	},
 	'Etc/GMT+1': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-01:00',
 	},
 	'Etc/GMT+10': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-10:00',
 	},
 	'Etc/GMT+11': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-11:00',
 	},
 	'Etc/GMT+12': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-12:00',
 	},
 	'Etc/GMT+2': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-02:00',
 	},
 	'Etc/GMT+3': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-03:00',
 	},
 	'Etc/GMT+4': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-04:00',
 	},
 	'Etc/GMT+5': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-05:00',
 	},
 	'Etc/GMT+6': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-06:00',
 	},
 	'Etc/GMT+7': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-07:00',
 	},
 	'Etc/GMT+8': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-08:00',
 	},
 	'Etc/GMT+9': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-09:00',
 	},
 	'Etc/GMT-0': {
@@ -2530,59 +2528,59 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+00:00',
 	},
 	'Etc/GMT-1': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+01:00',
 	},
 	'Etc/GMT-10': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+10:00',
 	},
 	'Etc/GMT-11': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+11:00',
 	},
 	'Etc/GMT-12': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+12:00',
 	},
 	'Etc/GMT-13': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+13:00',
 	},
 	'Etc/GMT-14': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+14:00',
 	},
 	'Etc/GMT-2': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+02:00',
 	},
 	'Etc/GMT-3': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+03:00',
 	},
 	'Etc/GMT-4': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+04:00',
 	},
 	'Etc/GMT-5': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:00',
 	},
 	'Etc/GMT-6': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+06:00',
 	},
 	'Etc/GMT-7': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+07:00',
 	},
 	'Etc/GMT-8': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+08:00',
 	},
 	'Etc/GMT-9': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+09:00',
 	},
 	'Etc/GMT0': {
@@ -2618,7 +2616,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+01:00',
 	},
 	'Europe/Astrakhan': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+04:00',
 	},
 	'Europe/Athens': {
@@ -2686,7 +2684,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+00:00',
 	},
 	'Europe/Istanbul': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+03:00',
 	},
 	'Europe/Jersey': {
@@ -2738,7 +2736,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+02:00',
 	},
 	'Europe/Minsk': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+03:00',
 	},
 	'Europe/Monaco': {
@@ -2778,7 +2776,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+01:00',
 	},
 	'Europe/Samara': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+04:00',
 	},
 	'Europe/San_Marino': {
@@ -2790,7 +2788,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+01:00',
 	},
 	'Europe/Saratov': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+04:00',
 	},
 	'Europe/Simferopol': {
@@ -2822,7 +2820,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+02:00',
 	},
 	'Europe/Ulyanovsk': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+04:00',
 	},
 	'Europe/Uzhgorod': {
@@ -2866,7 +2864,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+01:00',
 	},
 	Factory: {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+00:00',
 	},
 	GB: {
@@ -2914,15 +2912,15 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+03:00',
 	},
 	'Indian/Chagos': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+06:00',
 	},
 	'Indian/Christmas': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+07:00',
 	},
 	'Indian/Cocos': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+06:30',
 	},
 	'Indian/Comoro': {
@@ -2930,19 +2928,19 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+03:00',
 	},
 	'Indian/Kerguelen': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:00',
 	},
 	'Indian/Mahe': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+04:00',
 	},
 	'Indian/Maldives': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+05:00',
 	},
 	'Indian/Mauritius': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+04:00',
 	},
 	'Indian/Mayotte': {
@@ -2950,11 +2948,11 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+03:00',
 	},
 	'Indian/Reunion': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+04:00',
 	},
 	Iran: {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+03:30',
 	},
 	Israel: {
@@ -2970,7 +2968,7 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+09:00',
 	},
 	Kwajalein: {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+12:00',
 	},
 	Libya: {
@@ -3010,11 +3008,11 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+12:00',
 	},
 	'NZ-CHAT': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+12:45',
 	},
 	'Pacific/Apia': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+13:00',
 	},
 	'Pacific/Auckland': {
@@ -3022,51 +3020,51 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+12:00',
 	},
 	'Pacific/Bougainville': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+11:00',
 	},
 	'Pacific/Chatham': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+12:45',
 	},
 	'Pacific/Chuuk': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+10:00',
 	},
 	'Pacific/Easter': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-06:00',
 	},
 	'Pacific/Efate': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+11:00',
 	},
 	'Pacific/Enderbury': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+13:00',
 	},
 	'Pacific/Fakaofo': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+13:00',
 	},
 	'Pacific/Fiji': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+12:00',
 	},
 	'Pacific/Funafuti': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+12:00',
 	},
 	'Pacific/Galapagos': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-06:00',
 	},
 	'Pacific/Gambier': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-09:00',
 	},
 	'Pacific/Guadalcanal': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+11:00',
 	},
 	'Pacific/Guam': {
@@ -3082,27 +3080,27 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-10:00',
 	},
 	'Pacific/Kanton': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+13:00',
 	},
 	'Pacific/Kiritimati': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+14:00',
 	},
 	'Pacific/Kosrae': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+11:00',
 	},
 	'Pacific/Kwajalein': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+12:00',
 	},
 	'Pacific/Majuro': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+12:00',
 	},
 	'Pacific/Marquesas': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-09:30',
 	},
 	'Pacific/Midway': {
@@ -3110,19 +3108,19 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-11:00',
 	},
 	'Pacific/Nauru': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+12:00',
 	},
 	'Pacific/Niue': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-11:00',
 	},
 	'Pacific/Norfolk': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+11:00',
 	},
 	'Pacific/Noumea': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+11:00',
 	},
 	'Pacific/Pago_Pago': {
@@ -3130,27 +3128,27 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-11:00',
 	},
 	'Pacific/Palau': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+09:00',
 	},
 	'Pacific/Pitcairn': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-08:00',
 	},
 	'Pacific/Pohnpei': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+11:00',
 	},
 	'Pacific/Ponape': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+11:00',
 	},
 	'Pacific/Port_Moresby': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+10:00',
 	},
 	'Pacific/Rarotonga': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-10:00',
 	},
 	'Pacific/Saipan': {
@@ -3162,31 +3160,31 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC-11:00',
 	},
 	'Pacific/Tahiti': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC-10:00',
 	},
 	'Pacific/Tarawa': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+12:00',
 	},
 	'Pacific/Tongatapu': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+13:00',
 	},
 	'Pacific/Truk': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+10:00',
 	},
 	'Pacific/Wake': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+12:00',
 	},
 	'Pacific/Wallis': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+12:00',
 	},
 	'Pacific/Yap': {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+10:00',
 	},
 	Poland: {
@@ -3214,11 +3212,11 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+09:00',
 	},
 	Singapore: {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+08:00',
 	},
 	Turkey: {
-		tzName: '',
+		tzName: undefined,
 		offset: 'UTC+03:00',
 	},
 	UCT: {
