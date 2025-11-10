@@ -125,14 +125,14 @@ declare module '../Chronos' {
 		isBusinessHour(options?: BusinessOptionsWeekends): boolean;
 
 		/**
-		 * @instance Returns the academic year based on a typical start in July and end in June.
+		 * @instance Returns the academic year based on a typical start in `July` and end in `June`.
 		 * @returns The academic year in format `YYYY-YYYY`.
 		 */
 		toAcademicYear(): AcademicYear;
 
 		/**
 		 * @instance Returns the fiscal quarter based on custom fiscal year start (defaults to July).
-		 * @param startMonth - The fiscal year start month (1-12), default is July (7).
+		 * @param startMonth - The fiscal year start month (1-12), default is July (`7`).
 		 * @returns The fiscal quarter (1-4).
 		 */
 		toFiscalQuarter(startMonth?: NumberRange<1, 12>): Quarter;

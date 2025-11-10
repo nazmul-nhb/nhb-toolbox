@@ -640,12 +640,12 @@ export class Chronos {
 		return `[Chronos ${this.toLocalISOString()}]`;
 	}
 
-	/** @instance Enables JSON.stringify and logging in the console (in Browser environment) to show readable output. */
+	/** @instance Enables `JSON.stringify` to show readable output. Calls {@link toLocalISOString} method. */
 	toJSON(): string {
 		return this.toLocalISOString();
 	}
 
-	/** @instance Enables arithmetic and comparison operations (e.g., +new Chronos()). */
+	/** @instance Enables arithmetic and comparison operations (e.g., `+new Chronos()`). Calls {@link getTimeStamp} method. */
 	valueOf(): number {
 		return this.getTimeStamp();
 	}
@@ -657,7 +657,7 @@ export class Chronos {
 		return new Chronos(this.#date).#withOrigin(this.#ORIGIN as ChronosMethods);
 	}
 
-	/** @instance Gets the native `Date` instance (read-only). */
+	/** @instance Gets the native `Date` instance of the current `Chronos`. */
 	toDate(): Date {
 		switch (this.#ORIGIN) {
 			case 'toUTC':
@@ -765,7 +765,6 @@ export class Chronos {
 	 * @returns Formatted date string using the specified format.
 	 * Uses local time by default unless `useUTC` is set to `true`.
 	 */
-
 	format(format?: string, useUTC = false): string {
 		return this.#format(format ?? 'dd, mmm DD, YYYY HH:mm:ss', useUTC);
 	}
@@ -898,21 +897,21 @@ export class Chronos {
 		return isLeapYear(year ?? this.year);
 	}
 
-	/** @instance Checks if another date is exactly equal to this one */
+	/** @instance Checks if another date is exactly equal to this one. */
 	isEqual(other: ChronosInput): boolean {
 		const time = other instanceof Chronos ? other : new Chronos(other);
 
 		return this.timestamp === time.timestamp;
 	}
 
-	/** @instance Checks if another date is exactly equal to or before this one */
+	/** @instance Checks if another date is exactly equal to or before this one. */
 	isEqualOrBefore(other: ChronosInput): boolean {
 		const time = other instanceof Chronos ? other : new Chronos(other);
 
 		return this.timestamp <= time.timestamp;
 	}
 
-	/** @instance Checks if another date is exactly equal to or after this one */
+	/** @instance Checks if another date is exactly equal to or after this one. */
 	isEqualOrAfter(other: ChronosInput): boolean {
 		const time = other instanceof Chronos ? other : new Chronos(other);
 
@@ -1435,7 +1434,7 @@ export class Chronos {
 	 * - `Q3`: July to September
 	 * - `Q4`: October to December
 	 *
-	 * This method strictly uses the **calendar year**. For fiscal quarters, use `toFiscalQuarter()` instead.
+	 * This method strictly uses the **calendar year**. For fiscal quarters, use {@link toFiscalQuarter} instead.
 	 *
 	 * @example
 	 * new Chronos('2025-02-14').toQuarter(); // 1
@@ -2006,7 +2005,7 @@ export class Chronos {
 	}
 
 	/**
-	 * @static Returns earliest Chronos
+	 * @static Returns earliest Chronos.
 	 * @param dates Date inputs.
 	 */
 	static min(...dates: ChronosInput[]): Chronos {
@@ -2016,7 +2015,7 @@ export class Chronos {
 	}
 
 	/**
-	 * @static Returns latest Chronos
+	 * @static Returns latest Chronos.
 	 * @param dates Date inputs.
 	 */
 	static max(...dates: ChronosInput[]): Chronos {
