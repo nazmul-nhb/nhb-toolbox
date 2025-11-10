@@ -29,6 +29,7 @@ import type {
 	StrictFormat,
 	TimeParts,
 	TimeUnit,
+	TimeUnitValue,
 	TimeZone,
 	TimeZoneId,
 	TimeZoneIdentifier,
@@ -323,9 +324,9 @@ export class Chronos {
 			case 'timeZone':
 			case 'toUTC':
 			case 'utc':
-				return string.replace(this.#isoTzRemoved(), replacement);
+				return string.replace(this.#removeUTCFromISO(), replacement);
 			default:
-				return string.replace(this.#isoTzRemoved(true), replacement);
+				return string.replace(this.#removeUTCFromISO(true), replacement);
 		}
 	}
 
@@ -334,9 +335,9 @@ export class Chronos {
 			case 'timeZone':
 			case 'toUTC':
 			case 'utc':
-				return string.indexOf(this.#isoTzRemoved());
+				return string.indexOf(this.#removeUTCFromISO());
 			default:
-				return string.indexOf(this.#isoTzRemoved(true));
+				return string.indexOf(this.#removeUTCFromISO(true));
 		}
 	}
 
@@ -345,9 +346,9 @@ export class Chronos {
 			case 'timeZone':
 			case 'toUTC':
 			case 'utc':
-				return string.split(this.#isoTzRemoved());
+				return string.split(this.#removeUTCFromISO());
 			default:
-				return string.split(this.#isoTzRemoved(true));
+				return string.split(this.#removeUTCFromISO(true));
 		}
 	}
 
@@ -557,7 +558,7 @@ export class Chronos {
 	 * @param local Whether to use `this.toLocalISOString()` method or not. Defaults to `false`.
 	 * @returns Modified ISO string for the current date with removed timezone/utc part.
 	 */
-	#isoTzRemoved(local = false): string {
+	#removeUTCFromISO(local = false): string {
 		return local ?
 				this.toLocalISOString().replace(/\.\d+(Z|[+-]\d{2}:\d{2})?$/, '')
 			:	this.toISOString().replace(/\.\d+(Z|[+-]\d{2}:\d{2})?$/, '');
@@ -714,7 +715,7 @@ export class Chronos {
 		}
 	}
 
-	/** @instance Returns a date as a string value in ISO format. Respects timezone. */
+	/** @instance Returns a date as a string value in ISO format. Respects timezone UTC. */
 	toISOString(): string {
 		switch (this.#ORIGIN) {
 			case 'timeZone':
@@ -1033,10 +1034,10 @@ export class Chronos {
 
 	/**
 	 * @instance Checks if the date is within daylight saving time (DST).
-	 * @returns Whether the date is in DST.
+	 * @returns Whether the date is in DST (`true` or `false`).
 	 */
 	isDST(): boolean {
-		const year = this.#date.getFullYear();
+		const year = this.year;
 
 		const jan = new Date(year, 0, 1).getTimezoneOffset();
 
@@ -1200,10 +1201,10 @@ export class Chronos {
 
 	/**
 	 * @instance Returns a new `Chronos` instance with the specified unit set to the given value.
-	 * @param unit The unit to modify.
-	 * @param value The value to set for the unit.
+	 * @param unit The unit to modify. Type of `value` is determined by `unit`.
+	 * @param value The value to set for the unit. Type of `value` is determined by `unit`.
 	 */
-	set(unit: TimeUnit, value: number): Chronos {
+	set<Unit extends TimeUnit>(unit: Unit, value: TimeUnitValue<Unit>): Chronos {
 		const d = new Date(this.#date);
 
 		switch (unit) {
@@ -1211,7 +1212,7 @@ export class Chronos {
 				d.setFullYear(value);
 				break;
 			case 'month':
-				d.setMonth(value);
+				d.setMonth(value - 1);
 				break;
 			case 'day':
 				d.setDate(value);
@@ -1236,9 +1237,10 @@ export class Chronos {
 	}
 
 	/**
-	 * @instance Returns the difference between this and another date in the given unit.
+	 * @instance Returns the difference between current and another date in the given unit.
 	 * @param other The other date to compare.
 	 * @param unit The unit in which to return the difference.
+	 * @returns Difference in number (either `integer` or `float`).
 	 */
 	diff(other: ChronosInput, unit: TimeUnit): number {
 		const time = other instanceof Chronos ? other : new Chronos(other);
@@ -1258,13 +1260,20 @@ export class Chronos {
 				return msDiff / 8.64e7;
 			case 'week':
 				return msDiff / 6.048e8;
-			case 'month':
-				return (
-					(this.get('year') - time.get('year')) * 12 +
-					(this.get('month') - time.get('month'))
-				);
+			case 'month': {
+				const yearDiff = this.get('year') - time.get('year');
+				const monthDiff = this.get('month') - time.get('month');
+
+				const totalMonthDiff = yearDiff * 12 + monthDiff;
+				const dayDiff = this.get('day') - time.get('day');
+
+				// Fractional part based on days in the target month
+				const daysInMonth = new Date(this.get('year'), this.get('month'), 0).getDate();
+
+				return totalMonthDiff + dayDiff / daysInMonth;
+			}
 			case 'year':
-				return this.get('year') - time.get('year');
+				return this.diff(time, 'month') / 12;
 		}
 	}
 
@@ -1350,7 +1359,7 @@ export class Chronos {
 	/**
 	 * @instance Calculates the ISO 8601 week number of the year.
 	 *
-	 * ISO weeks start on Monday, and the first week of the year is the one containing January 4th.
+	 * @Remarks ISO weeks start on Monday, and the first week of the year is the one containing January 4th.
 	 *
 	 * @returns Week number (1–53).
 	 */
@@ -1789,7 +1798,7 @@ export class Chronos {
 			return now
 				.startOf('month')
 				.set('year', year ?? now.year)
-				.set('month', month ? month - 1 : now.month).lastDateOfMonth;
+				.set('month', month ?? now.isoMonth).lastDateOfMonth;
 		};
 
 		return new Chronos(

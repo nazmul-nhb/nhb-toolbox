@@ -6,6 +6,13 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.26.21] - 2025-11-10
+
+- **Fixed** issues with `Chronos` timezone methods: `getTimeZoneName()` and `getTimeZoneNameShort()` *not providing name/short* name for *optional UTC*.
+- **Fixed** issues with `Chronos` `diff()` method: now *calculates exact differences for month and year* too.
+- **Changed** the signature of `Chronos` `set()` method to `set<Unit extends TimeUnit>(unit: Unit, value: TimeUnitValue<Unit>): Chronos`. **Created** new type helper `TimeUnitValue<Unit>`.
+- **Renamed** `isValidUTCOffSet` *guard* as `isValidUTCOffset` and also kept `isValidUTCOffSet` as alias.
+
 ## [4.26.20] - 2025-11-10
 
 ### 🕧 Updates in Chronos

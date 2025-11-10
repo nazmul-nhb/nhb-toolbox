@@ -83,7 +83,7 @@ export interface GreetingConfigs {
 	defaultMessage?: string;
 }
 
-/** Name of time unit from year to millisecond */
+/** Name of time unit from `year` to `millisecond` */
 export type TimeUnit =
 	| 'year'
 	| 'month'
@@ -96,6 +96,16 @@ export type TimeUnit =
 
 /** Name of time unit from `year` to `millisecond`, except `week` */
 export type FromNowUnit = Exclude<TimeUnit, 'week'>;
+
+/** Conditional value for {@link TimeUnit} */
+export type TimeUnitValue<Unit extends TimeUnit> =
+	Unit extends 'month' ? NumberRange<1, 12>
+	: Unit extends 'week' ? NumberRange<1, 53>
+	: Unit extends 'day' ? NumberRange<1, 31>
+	: Unit extends 'hour' ? Enumerate<24>
+	: Unit extends 'minute' | 'second' ? Enumerate<60>
+	: Unit extends 'millisecond' ? Milliseconds
+	: number;
 
 /** Year in either 4 or 2 digits format */
 export type Year = (typeof YEAR_FORMATS)[number];
