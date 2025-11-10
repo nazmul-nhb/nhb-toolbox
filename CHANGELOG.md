@@ -5,6 +5,11 @@
 All notable changes to the package will be documented here.
 
 ---
+<!-- 
+## [4.26.10] - 2025-11-09
+
+- **Updated** *tsdoc* for `relativeTimePlugin` methods.
+ -->
 
 ## [4.26.10] - 2025-11-09
 

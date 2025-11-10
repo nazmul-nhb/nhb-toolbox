@@ -8,14 +8,14 @@ declare module '../Chronos' {
 	interface Chronos {
 		/**
 		 * @instance Returns the number of full years between the input date and now.
-		 * @param time Optional time to compare with the `Chronos` date/time.
+		 * @param time Optional time to compare with the `Chronos` date/time. Defaults to current time.
 		 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
 		 */
 		getRelativeYear(time?: ChronosInput): number;
 
 		/**
 		 * @instance Returns the number of full months between the input date and now.
-		 * @param time Optional time to compare with the `Chronos` date/time.
+		 * @param time Optional time to compare with the `Chronos` date/time. Defaults to current time.
 		 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
 		 */
 		getRelativeMonth(time?: ChronosInput): number;
@@ -23,7 +23,7 @@ declare module '../Chronos' {
 		/**
 		 * @instance Determines if the given date is today, tomorrow, yesterday or any relative day.
 		 * @param date - The date to compare (Date object).
-		 * @param time Optional time to compare with the `Chronos` date/time.
+		 * @param time Optional time to compare with the `Chronos` date/time. Defaults to current time.
 		 * @returns
 		 *  - `-1` if the date is yesterday.
 		 *  - `0` if the date is today.
@@ -34,44 +34,48 @@ declare module '../Chronos' {
 
 		/**
 		 * @instance Returns the number of full hours between the input date and now.
-		 * @param time Optional time to compare with the `Chronos` date/time.
+		 * @param time Optional time to compare with the `Chronos` date/time. Defaults to current time.
 		 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
 		 */
 		getRelativeDay(time?: ChronosInput): number;
 
 		/**
 		 * @instance Determines how many full weeks apart the input date is from the `Chronos` instance.
-		 * @param time Optional time to compare with the `Chronos` date/time.
+		 * @param time Optional time to compare with the `Chronos` date/time. Defaults to current time.
 		 * @returns Difference in weeks; negative if past, positive if future.
 		 */
 		getRelativeHour(time?: ChronosInput): number;
 
 		/**
 		 * @instance Returns the number of full minutes between the input date and now.
-		 * @param time Optional time to compare with the `Chronos` date/time.
+		 * @param time Optional time to compare with the `Chronos` date/time. Defaults to current time.
 		 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
 		 */
 		getRelativeMinute(time?: ChronosInput): number;
 
 		/**
 		 * @instance Returns the number of full seconds between the input date and now.
-		 * @param time Optional time to compare with the `Chronos` date/time.
+		 * @param time Optional time to compare with the `Chronos` date/time. Defaults to current time.
 		 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
 		 */
 		getRelativeSecond(time?: ChronosInput): number;
 
 		/**
 		 * @instance Returns the number of milliseconds between the input date and now.
-		 * @param time Optional time to compare with the `Chronos` date/time.
+		 * @param time Optional time to compare with the `Chronos` date/time. Defaults to current time.
 		 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
 		 */
 		getRelativeMilliSecond(time?: ChronosInput): number;
 
 		/**
-		 * @instance Compares the stored date with now, returning the difference in the specified unit.
+		 * @instance Compares the stored date with now, returning the relative difference in the specified unit.
 		 *
-		 * @param unit The time unit to compare by. Defaults to 'minute'.
-		 * @param time Optional time to compare with the `Chronos` date/time.
+		 * @remarks
+		 * - Internally uses {@link getRelativeYear}, {@link getRelativeMonth}, {@link getRelativeWeek}, {@link getRelativeDay}, {@link getRelativeHour}, {@link getRelativeMinute}, {@link getRelativeSecond} and {@link getRelativeMilliSecond} and rounds the result.
+		 * - To calculate accurate difference use {@link diff} method.
+		 *
+		 * @param unit The time unit to compare by. Defaults to `'minute'`.
+		 * @param time Optional time to compare with the `Chronos` date/time. Defaults to current time.
 		 * @returns The difference in number, negative when `Chronos` time is a past time else positive.
 		 */
 		compare(unit?: TimeUnit, time?: ChronosInput): number;
