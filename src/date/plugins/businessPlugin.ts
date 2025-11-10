@@ -141,7 +141,7 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `business` related methods */
 export const businessPlugin = (ChronosClass: MainChronos): void => {
-	const internalDate = ChronosClass[INTERNALS].internalDate;
+	const { internalDate } = ChronosClass[INTERNALS];
 
 	ChronosClass.prototype.isWeekend = function (
 		this: ChronosConstructor,

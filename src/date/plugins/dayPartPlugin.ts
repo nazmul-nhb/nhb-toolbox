@@ -1,4 +1,4 @@
-import { DEFAULT_RANGES } from '../constants';
+import { DATE_PART_RANGES } from '../constants';
 import type { DayPart, DayPartConfig } from '../types';
 
 type ChronosConstructor = import('../Chronos').Chronos;
@@ -52,7 +52,7 @@ export const dayPartPlugin = (ChronosClass: MainChronos): void => {
 		const hour = this.hour;
 
 		const ranges: DayPartConfig = {
-			...DEFAULT_RANGES,
+			...DATE_PART_RANGES,
 			...config,
 		};
 

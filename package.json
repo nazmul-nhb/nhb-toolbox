@@ -1,6 +1,6 @@
 {
   "name": "nhb-toolbox",
-  "version": "4.26.10",
+  "version": "4.26.20",
   "description": "A versatile collection of smart, efficient, and reusable utility functions, classes and types for everyday development needs.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -230,6 +230,11 @@
       "import": "./dist/esm/date/plugins/dayPartPlugin.js",
       "require": "./dist/cjs/date/plugins/dayPartPlugin.js"
     },
+    "./plugins/durationPlugin": {
+      "types": "./dist/dts/date/plugins/durationPlugin.d.ts",
+      "import": "./dist/esm/date/plugins/durationPlugin.js",
+      "require": "./dist/cjs/date/plugins/durationPlugin.js"
+    },
     "./plugins/fromNowPlugin": {
       "types": "./dist/dts/date/plugins/fromNowPlugin.d.ts",
       "import": "./dist/esm/date/plugins/fromNowPlugin.js",
@@ -341,6 +346,9 @@
       ],
       "plugins/dayPartPlugin": [
         "dist/dts/date/plugins/dayPartPlugin.d.ts"
+      ],
+      "plugins/durationPlugin": [
+        "dist/dts/date/plugins/durationPlugin.d.ts"
       ],
       "plugins/fromNowPlugin": [
         "dist/dts/date/plugins/fromNowPlugin.d.ts"

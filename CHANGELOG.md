@@ -5,11 +5,14 @@
 All notable changes to the package will be documented here.
 
 ---
-<!-- 
-## [4.26.10] - 2025-11-09
 
+## [4.26.20] - 2025-11-10
+
+### 🕧 Updates in Chronos
+
+- **Moved** `duration` and `durationString` methods to `Chronos` *plugin system*, usable via `durationPlugin`.
+- **Optimized** related *plugins* where *internal private methods* are used.
 - **Updated** *tsdoc* for `relativeTimePlugin` methods.
- -->
 
 ## [4.26.10] - 2025-11-09
 

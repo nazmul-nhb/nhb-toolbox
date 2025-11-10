@@ -68,7 +68,7 @@ export const SORTED_TIME_FORMATS = /* @__PURE__ */ Object.freeze(
 );
 
 /** Ranges for day parts. */
-export const DEFAULT_RANGES = /* @__PURE__ */ Object.freeze({
+export const DATE_PART_RANGES = /* @__PURE__ */ Object.freeze({
 	night: ['21', '23'],
 	midnight: ['00', '01'],
 	lateNight: ['02', '04'],

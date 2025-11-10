@@ -30,14 +30,14 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `round` method */
 export const roundPlugin = (ChronosClass: MainChronos): void => {
-	const internal = ChronosClass[INTERNALS];
+	const { internalDate, withOrigin } = ChronosClass[INTERNALS];
 
 	ChronosClass.prototype.round = function (
 		this: ChronosConstructor,
 		unit: TimeUnit,
 		nearest = 1
 	): ChronosConstructor {
-		const date = internal.internalDate(this);
+		const date = internalDate(this);
 
 		switch (unit) {
 			case 'millisecond': {
@@ -107,7 +107,7 @@ export const roundPlugin = (ChronosClass: MainChronos): void => {
 
 				const rounded = diffToEnd < diffToStart ? endOfWeek : startOfWeek;
 
-				return internal.withOrigin(new ChronosClass(rounded), 'round');
+				return withOrigin(new ChronosClass(rounded), 'round');
 			}
 
 			case 'month': {
@@ -138,6 +138,6 @@ export const roundPlugin = (ChronosClass: MainChronos): void => {
 				return this;
 		}
 
-		return internal.withOrigin(new ChronosClass(date), 'round');
+		return withOrigin(new ChronosClass(date), 'round');
 	};
 };

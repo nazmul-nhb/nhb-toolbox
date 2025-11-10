@@ -82,14 +82,7 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `timeZone` related methods */
 export const timeZonePlugin = (ChronosClass: MainChronos): void => {
-	const internal = ChronosClass[INTERNALS];
-
-	/**
-	 * * Gets the internal `#date`, a readonly private property (core `Date` object)
-	 * @param instance - Chronos instance to access
-	 * @returns The core internal `Date` object
-	 */
-	const $Date = internal.internalDate;
+	const { internalDate: $Date, withOrigin } = ChronosClass[INTERNALS];
 
 	/** Check if a string is the key of `TIME_ZONE_LABELS` constant */
 	const _isLabelKey = (offset: string): offset is $TZLabelKey => {
@@ -168,7 +161,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		const adjustedTime = new Date($Date(this).getTime() + relativeOffset * 60 * 1000);
 		const instance = new ChronosClass(adjustedTime);
 
-		return internal.withOrigin(instance, `timeZone`, offset, tzName, tzId, zone);
+		return withOrigin(instance, `timeZone`, offset, tzName, tzId, zone);
 	};
 
 	ChronosClass.prototype.getTimeZoneName = function (
