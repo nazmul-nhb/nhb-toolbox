@@ -63,13 +63,13 @@ export {
 export {
 	AreaConverter,
 	Converter,
-	converter,
 	DataConverter,
 	LengthConverter,
 	MassConverter,
 	TemperatureConverter,
 	TimeConverter,
 	VolumeConverter,
+	converter,
 } from './converter/Converter';
 
 // ! Pluralizer Class and Its Default Instance
@@ -149,8 +149,8 @@ export {
 	romanToInteger as convertRomanToInteger,
 	romanToInteger as convertRomanToNumeric,
 	convertToRomanNumerals,
-	wordsToNumber as convertWordsToNumber,
 	wordsToNumber as convertWordToNumber,
+	wordsToNumber as convertWordsToNumber,
 	convertToRomanNumerals as integerToRoman,
 	convertToRomanNumerals as numberToRoman,
 	numberToWords,
@@ -161,8 +161,8 @@ export {
 	romanToInteger as romanToNumeric,
 	convertToRomanNumerals as toRoman,
 	convertToRomanNumerals as toRomanNumeral,
-	wordsToNumber,
 	wordsToNumber as wordToNumber,
+	wordsToNumber,
 } from './number/convert';
 
 export {
@@ -210,22 +210,22 @@ export {
 	convertHex8ToRgba,
 	convertHexToHsl,
 	convertHexToRgb,
-	convertHslaToHex8,
-	convertHslaToRgba,
 	convertHslToHex,
 	convertHslToRgb,
-	convertRgbaToHex8,
-	convertRgbaToHsla,
+	convertHslaToHex8,
+	convertHslaToRgba,
 	convertRgbToHex,
 	convertRgbToHsl,
 	convertRgbToRgba,
+	convertRgbaToHex8,
+	convertRgbaToHsla,
 } from './colors/convert';
 
 export {
-	_isHex6 as isHex6,
-	_isHex8 as isHex8,
 	_isHSL as isHSL,
 	_isHSLA as isHSLA,
+	_isHex6 as isHex6,
+	_isHex8 as isHex8,
 	_isRGB as isRGB,
 	_isRGBA as isRGBA,
 } from './colors/helpers';
@@ -246,9 +246,10 @@ export {
 	isLeapYear,
 	isValidTime,
 	isValidTime as isValidTimeString,
-	isValidUTCOffSet as isValidUTC,
-	isValidUTCOffSet,
 	isValidTimeZoneId,
+	isValidUTCOffset,
+	isValidUTCOffset as isValidUTC,
+	isValidUTCOffset as isValidUTCOffSet,
 } from './date/guards';
 
 // ! Chronos

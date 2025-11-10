@@ -30,7 +30,7 @@ export function isValidTime(value: unknown): value is ClockTime {
  * @param value - The value to check.
  * @returns `true` if the value is a valid utc offset, `false` otherwise.
  */
-export function isValidUTCOffSet(value: unknown): value is UTCOffset {
+export function isValidUTCOffset(value: unknown): value is UTCOffset {
 	return isString(value) ? /^UTC[+-]?\d{1,2}:\d{2}$/.test(value) : false;
 }
 

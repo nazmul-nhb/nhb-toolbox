@@ -1,6 +1,6 @@
 import type { LooseLiteral } from '../../utils/types';
 import { INTERNALS } from '../constants';
-import { isValidTimeZoneId, isValidUTCOffSet } from '../guards';
+import { isValidTimeZoneId, isValidUTCOffset } from '../guards';
 import { TIME_ZONES, TIME_ZONE_IDS, TIME_ZONE_LABELS } from '../timezone';
 import type {
 	$TZLabelKey,
@@ -100,7 +100,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 
 	/** Get time zone name from `TIME_ZONE_LABELS`, `TIME_ZONE_IDS` or `TIME_ZONES` constants using UTC offset, time zone identifier or time zone abbreviation */
 	const _getTimeZoneName = (zone: TimeZoneIdentifier | TimeZone | UTCOffset) => {
-		if (isValidUTCOffSet(zone)) {
+		if (isValidUTCOffset(zone)) {
 			return _resolveTzName(zone);
 		} else if (isValidTimeZoneId(zone)) {
 			const record = TIME_ZONE_IDS[zone];
@@ -141,7 +141,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		let offset: UTCOffset;
 		let tzId: TimeZoneId;
 
-		if (isValidUTCOffSet(zone)) {
+		if (isValidUTCOffset(zone)) {
 			offset = zone;
 			tzId = _getTimeZoneId(offset) || offset;
 		} else if (isValidTimeZoneId(zone)) {
@@ -168,9 +168,9 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		this: ChronosConstructor,
 		utc?: UTCOffset
 	): LooseLiteral<TimeZoneName | UTCOffset> {
-		const UTC = utc ?? this.utcOffset;
+		const UTC = utc || this.utcOffset;
 
-		return _getTimeZoneName(this?.$tzTracker ?? UTC) ?? UTC;
+		return _getTimeZoneName(utc || this?.$tzTracker || this.utcOffset) ?? UTC;
 	};
 
 	/** Cache to store short time zone name against time zone name */
@@ -189,7 +189,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		if (TZ_SHORT_CACHE.has(zone)) return TZ_SHORT_CACHE.get(zone)!;
 
 		const customAbbr =
-			isValidUTCOffSet(zone) || isValidTimeZoneId(zone) ?
+			isValidUTCOffset(zone) || isValidTimeZoneId(zone) ?
 				zone
 			:	zone
 					.split(/\s+/)
