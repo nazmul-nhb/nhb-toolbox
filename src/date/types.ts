@@ -344,6 +344,7 @@ export type ChronosInput = number | string | Date | Chronos;
 /** Represents key of `ChronosStatics` (each static method and property) */
 export type ChronosStaticKey = keyof ChronosStatics;
 
+/** Key of {@link TIME_ZONE_LABELS} ({@link UTCOffset}) */
 export type $TZLabelKey = keyof typeof TIME_ZONE_LABELS;
 
 /** Abbreviated time-zone names (from {@link https://en.wikipedia.org/wiki/List_of_time_zone_abbreviations time zone abbreviations on Wikipedia}) */

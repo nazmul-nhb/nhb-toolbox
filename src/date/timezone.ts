@@ -249,7 +249,7 @@ export const TIME_ZONES = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+07:00',
 	},
 	DDUT: {
-		tzName: "Dumont d'Urville Time (in French Antarctic Station)",
+		tzName: "Dumont d'Urville Time (Antarctic Station in French)",
 		offset: 'UTC+10:00',
 	},
 	DFT: {
@@ -397,7 +397,7 @@ export const TIME_ZONES = /* @__PURE__ */ Object.freeze({
 		offset: 'UTC+07:00',
 	},
 	IDLW: {
-		tzName: 'International Date Line West time zone',
+		tzName: 'International Date Line West',
 		offset: 'UTC-12:00',
 	},
 	IDT: {
@@ -892,7 +892,7 @@ export const TIME_ZONE_LABELS = /* @__PURE__ */ Object.freeze({
 	'UTC+10:30': 'Lord Howe Standard Time',
 	'UTC+11:00': 'Central Pacific Standard Time',
 	'UTC+12:00': 'New Zealand Standard Time',
-	'UTC+12:45': 'Chatham Islands Time',
+	'UTC+12:45': 'Chatham Standard Time',
 	'UTC+13:00': 'Phoenix Island Time',
 	'UTC+14:00': 'Line Islands Time',
 } as const);

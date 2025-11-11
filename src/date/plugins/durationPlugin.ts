@@ -12,6 +12,9 @@ declare module '../Chronos' {
 	interface Chronos {
 		/**
 		 * @instance Returns the full time duration breakdown between current input (start) and another time (to) as {@link TimeDuration} object.
+		 *
+		 * @remarks This method calculates the elapsed time difference (excludes the end day), if you need an inclusive calendar-style difference (counting both start and end days), adjust one day manually before calling `duration()`.
+		 *
 		 * @param toTime The time to compare with. Defaults to `now`.
 		 * @param absolute If true, returns all values as positive numbers. Defaults to `true`.
 		 * @returns An object of time units: `years`, `months`, `days`, `hours`, `minutes`, `seconds`, `milliseconds` ({@link TimeDuration}).
@@ -20,6 +23,9 @@ declare module '../Chronos' {
 
 		/**
 		 * @instance Returns a human-readable formatted duration string between the current instance (start) and another time (to).
+		 *
+		 * @remarks This method calculates the elapsed time difference (excludes the end day), if you need an inclusive calendar-style difference (counting both start and end days), adjust one day manually before calling `durationString()`.
+		 *
 		 * @param options {@link DurationOptions} to format duration string, including the time to compare with.
 		 * @returns A formatted duration string, e.g. `"2 hours, 5 minutes"` or `"2h 5m"`.
 		 */

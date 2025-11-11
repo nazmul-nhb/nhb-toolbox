@@ -652,9 +652,15 @@ export class Chronos {
 
 	// ! ======= Instance Methods ======= //
 
-	/** @instance Clones and returns a new `Chronos` instance with the same date. */
+	/** @instance Clones and returns exactly same `Chronos` instance. */
 	clone(): Chronos {
-		return new Chronos(this.#date).#withOrigin(this.#ORIGIN as ChronosMethods);
+		return new Chronos(this.#date).#withOrigin(
+			this.#ORIGIN as ChronosMethods,
+			this.#offset,
+			this.timeZoneName,
+			this.timeZoneId,
+			this.$tzTracker
+		);
 	}
 
 	/** @instance Gets the native `Date` instance of the current `Chronos`. */
