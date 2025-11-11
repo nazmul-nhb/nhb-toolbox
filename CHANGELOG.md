@@ -8,12 +8,12 @@ All notable changes to the package will be documented here.
 
 ## [4.26.30] - 2025-11-11
 
-<!-- ### 🕧 Updates in Chronos
+### 🕧 Updates in Chronos
 
-- **Fixed** issues in `getTimeZoneName()` and `getTimeZoneNameShort()` where expected outputs were missing.
-- **Updated** *timezone constants*: **Removed** *unnecessary hints*.
-- **Added** overload for `getTimeZoneNameShort()`: `getTimeZoneNameAbbr()`.
-- **Fixed** `clone()` method *not cloning properly*. -->
+- **Fixed** issues in `getTimeZoneName()` and `getTimeZoneNameShort()` where expected outputs were *missing or incorrect*.
+- **Updated** *timezone constants*vby removing *redundant hints* and *improving internal consistency*.
+- **Introduced** a new *method alias* `getTimeZoneNameAbbr()` for `getTimeZoneNameShort()`.
+- **Fixed** an issue where the `clone()` method *did not correctly duplicate the instance state*.
 
 ## [4.26.21] - 2025-11-10
 

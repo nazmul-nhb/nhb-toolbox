@@ -66,7 +66,7 @@ type $DateParts = {
  * **It also accepts number values as following:**
  * - **`year, month, date, hours, minutes, seconds, milliseconds`**: Individual components of a date-time to construct a `Chronos` instance.
  *   - **`year`**: A number representing the year. If the year is between 0 and 99, it will be assumed to be the year 1900 + the provided year.
- *   - **`month`**: A number between 1 and 12 representing the month (1 for January, 12 for December). It is adjusted internally to a 0-based index (0 for January, 11 for December).
+ *   - **`month`**: A number between 1 and 12 representing the month (1 for January, 12 for December).
  *   - **`date`**: A number between 1 and 31 representing the day of the month.
  *   - **`hours`**: A number between 0 and 23 representing the hour of the day.
  *   - **`minutes`**: A number between 0 and 59 representing the minutes past the hour.
@@ -1993,6 +1993,7 @@ export class Chronos {
 		const dayIndex = DAYS.indexOf(day);
 
 		const end = roundDate ? endDate.startOf('day') : endDate;
+
 		let current = roundDate ? startDate.startOf('day') : startDate;
 		while (current.weekDay !== dayIndex) {
 			current = current.add(1, 'day');

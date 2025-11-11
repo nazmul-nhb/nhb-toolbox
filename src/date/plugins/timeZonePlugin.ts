@@ -102,7 +102,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		return factor === 'UTC+00:00' || factor === 'UTC-00:00';
 	};
 
-	/** Cache to store time zone name and abbreviation against UTC offset from {@link TIME_ZONE} */
+	/** Cache to store time zone name and abbreviation against UTC offset from {@link TIME_ZONES} */
 	const TZ_NAME_ABBR_MAP = new Map<UTCOffset, $TZNameAbbr>(
 		Object.entries(TIME_ZONES).map(([tzAbbr, { offset, tzName }]) => [
 			offset,
@@ -186,7 +186,9 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 			tzId = _getTimeZoneId(offset) || offset;
 		}
 
-		const tzName = _getTimeZoneName(zone) ?? offset;
+		// ! in case zone has empty string
+		const $zone = zone || offset;
+		const tzName = _getTimeZoneName($zone) ?? offset;
 
 		const targetOffset = extractMinutesFromUTC(offset);
 		const previousOffset = this.getTimeZoneOffsetMinutes();
@@ -195,7 +197,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		const adjustedTime = new Date($Date(this).getTime() + relativeOffset * 60 * 1000);
 		const instance = new ChronosClass(adjustedTime);
 
-		return withOrigin(instance, `timeZone`, offset, tzName, tzId, zone);
+		return withOrigin(instance, `timeZone`, offset, tzName, tzId, $zone);
 	};
 
 	ChronosClass.prototype.getTimeZoneName = function (
@@ -207,8 +209,8 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		return _getTimeZoneName(utc || this?.$tzTracker || this.utcOffset) ?? UTC;
 	};
 
-	/** Cache to store short time zone name against time zone name */
-	const TZ_SHORT_CACHE = new Map<LooseLiteral<TimeZoneName>, LooseLiteral<TimeZone>>();
+	/** Cache to store abbreviated time zone names */
+	const TZ_ABBR_CACHE = new Map<string, string>();
 
 	/** Abbreviate full time zone name */
 	const _abbreviate = (name: TimeZoneName) => {
@@ -226,29 +228,35 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		const tracker = this?.$tzTracker;
 		const UTC = utc || this.utcOffset;
 
-		if (_isGMT(utc || tracker || this.utcOffset)) return 'GMT';
+		const tzMapKey = utc || tracker || this.utcOffset;
+
+		if (_isGMT(tzMapKey)) return 'GMT';
 
 		if (!utc && tracker && tracker in TIME_ZONES) return tracker as TimeZone;
 
-		const tzMapKey = utc || tracker || this.utcOffset;
-
 		if (isValidUTCOffset(tzMapKey)) {
+			if (TZ_ABBR_CACHE.has(tzMapKey)) return TZ_ABBR_CACHE.get(tzMapKey)!;
+
 			if (TZ_NAME_ABBR_MAP.has(tzMapKey)) {
 				return TZ_NAME_ABBR_MAP.get(tzMapKey)?.tzAbbr as TimeZone;
 			}
 
 			const tzName = _resolveTzName(tzMapKey);
-			if (tzName) return _abbreviate(tzName);
+			if (tzName) {
+				const tzAbbr = _abbreviate(tzName);
+				TZ_ABBR_CACHE.set(tzMapKey, tzAbbr);
+				return tzAbbr;
+			}
 		}
 
 		const zone = _getTimeZoneName(tzMapKey) ?? UTC;
 
-		if (TZ_SHORT_CACHE.has(zone)) return TZ_SHORT_CACHE.get(zone)!;
+		if (TZ_ABBR_CACHE.has(`name-${zone}`)) return TZ_ABBR_CACHE.get(zone)!;
 
 		const customAbbr =
 			isValidUTCOffset(zone) || isValidTimeZoneId(zone) ? zone : _abbreviate(zone);
 
-		TZ_SHORT_CACHE.set(zone, customAbbr);
+		TZ_ABBR_CACHE.set(`name-${zone}`, customAbbr);
 
 		return customAbbr;
 	};
@@ -262,24 +270,20 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 
 	ChronosClass.prototype.toString = function (this: ChronosConstructor): string {
 		const offset = this.utcOffset;
+		const search = /GMT[+-]\d{4}\s+\([^)]+\)/;
 
 		switch (this.origin) {
 			case 'timeZone': {
 				const gmt = offset.replace('UTC', 'GMT').replace(':', '');
 				const label = this.getTimeZoneName();
 
-				return $Date(this)
-					.toString()
-					.replace(/GMT[+-]\d{4}\s+\([^)]+\)/, `${gmt} (${label})`);
+				return $Date(this).toString().replace(search, `${gmt} (${label})`);
 			}
 			case 'toUTC':
 			case 'utc': {
 				return $Date(this)
 					.toString()
-					.replace(
-						/GMT[+-]\d{4}\s+\([^)]+\)/,
-						`GMT+0000 (Coordinated Universal Time)`
-					);
+					.replace(search, `GMT+0000 (Coordinated Universal Time)`);
 			}
 			default:
 				return $Date(this).toString();
