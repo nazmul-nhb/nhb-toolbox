@@ -10,7 +10,7 @@ import type {
 	TimeZoneName,
 	UTCOffset,
 } from '../types';
-import { extractMinutesFromUTC } from '../utils';
+import { _getNativeTzName, extractMinutesFromUTC } from '../utils';
 
 type ChronosConstructor = import('../Chronos').Chronos;
 type MainChronos = typeof import('../Chronos').Chronos;
@@ -124,18 +124,8 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		return undefined;
 	};
 
-	const _getNativeTzName = (zone: TimeZoneIdentifier) => {
-		const details = new Intl.DateTimeFormat('en', {
-			timeZone: zone,
-			timeZoneName: 'long',
-		}).formatToParts();
-
-		const tzName = details.find((p) => p.type === 'timeZoneName')?.value;
-		return tzName as TimeZoneName | undefined;
-	};
-
 	/** Get time zone name from `TIME_ZONE_LABELS`, `TIME_ZONE_IDS` or `TIME_ZONES` constants using UTC offset, time zone identifier or time zone abbreviation */
-	const _getTimeZoneName = (zone: TimeZoneIdentifier | TimeZone | UTCOffset) => {
+	const _getTimeZoneName = (zone: TimeZoneIdentifier | TimeZone | UTCOffset, date: Date) => {
 		if (_isGMT(zone)) return 'Greenwich Mean Time';
 
 		if (isValidUTCOffset(zone)) {
@@ -148,7 +138,9 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 			return tzName;
 		} else if (isValidTimeZoneId(zone)) {
 			const record = TIME_ZONE_IDS[zone];
-			return record?.tzName || _getNativeTzName(zone) || _resolveTzName(record?.offset);
+			return (
+				record?.tzName || _getNativeTzName(zone, date) || _resolveTzName(record?.offset)
+			);
 		} else {
 			return zone in TIME_ZONES ?
 					TIME_ZONES[zone].tzName
@@ -198,7 +190,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 
 		// ! in case zone has empty string
 		const $zone = zone || offset;
-		const tzName = _getTimeZoneName($zone) ?? offset;
+		const tzName = _getTimeZoneName($zone, $Date(this)) ?? offset;
 
 		const targetOffset = extractMinutesFromUTC(offset);
 		const previousOffset = this.getTimeZoneOffsetMinutes();
@@ -216,7 +208,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	): LooseLiteral<TimeZoneName | UTCOffset> {
 		const UTC = utc || this.utcOffset;
 
-		return _getTimeZoneName(utc || this?.$tzTracker || this.utcOffset) ?? UTC;
+		return _getTimeZoneName(utc || this?.$tzTracker || this.utcOffset, $Date(this)) ?? UTC;
 	};
 
 	/** Cache to store abbreviated time zone names */
@@ -259,7 +251,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 			}
 		}
 
-		const zone = _getTimeZoneName(tzMapKey) ?? UTC;
+		const zone = _getTimeZoneName(tzMapKey, $Date(this)) ?? UTC;
 
 		if (TZ_ABBR_CACHE.has(`name-${zone}`)) return TZ_ABBR_CACHE.get(zone)!;
 

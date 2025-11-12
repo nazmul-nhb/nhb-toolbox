@@ -38,7 +38,7 @@ import type {
 	WeekDay,
 	WeekdayOptions,
 } from './types';
-import { extractMinutesFromUTC } from './utils';
+import { _getNativeTzName, extractMinutesFromUTC } from './utils';
 
 /** Date parts for `Chronos` as `Record<part, number>` */
 type $DateParts = {
@@ -397,14 +397,7 @@ export class Chronos {
 	): LooseLiteral<TimeZoneName | TimeZoneIdentifier> {
 		const $tzId = tzId || this.$getNativeTimeZoneId();
 
-		const details = new Intl.DateTimeFormat('en', {
-			timeZone: $tzId,
-			timeZoneName: 'long',
-		}).formatToParts(this.#date);
-
-		const tzPart = details.find((p) => p.type === 'timeZoneName');
-
-		return tzPart?.value ?? $tzId;
+		return _getNativeTzName(tzId, this.#date) ?? $tzId;
 	}
 
 	/**

@@ -1,5 +1,11 @@
 import type { Numeric } from '../types/index';
-import type { ClockTime, HourMinutes, UTCOffset } from './types';
+import type {
+	ClockTime,
+	HourMinutes,
+	TimeZoneIdentifier,
+	TimeZoneName,
+	UTCOffset,
+} from './types';
 
 /**
  * * Extracts the hour and minute from a time string in `HH:MM` or `-HH:MM` format.
@@ -92,4 +98,39 @@ export function formatUTCOffset(minutes: Numeric): UTCOffset {
 	const mins = String(abs % 60).padStart(2, '0');
 
 	return `UTC${sign}${hours}:${mins}` as UTCOffset;
+}
+
+/**
+ * * Resolves the native long timezone name (e.g. `"Bangladesh Standard Time"`, `"Eastern Daylight Time"`) for a given timezone identifier and optional date.
+ *
+ * @remarks
+ * This method internally uses the `Intl.DateTimeFormat` API to derive the human-readable timezone name.
+ * If a `date` is provided, the result reflects the timezone name at that specific moment (respecting daylight saving changes).
+ * If omitted, it defaults to using the current system time.
+ *
+ * @param tzId The IANA timezone identifier (e.g. `"Asia/Dhaka"`, `"America/New_York"`). Defaults to the system timezone if not provided.
+ * @param date The date for which to resolve the timezone name. Defaults to the current date and time.
+ * @returns The resolved native timezone name or `undefined` if unavailable.
+ *
+ * @example
+ * ```ts
+ * _getNativeTzName('Asia/Dhaka');
+ * // → "Bangladesh Standard Time"
+ *
+ * _getNativeTzName('America/New_York', new Date('2025-07-01'));
+ * // → "Eastern Daylight Time"
+ * ```
+ *
+ * @note
+ * Passing a specific date is crucial for accuracy in regions observing Daylight Saving Time (DST).
+ * Without a date, the returned name reflects the timezone name *as of now*.
+ */
+export function _getNativeTzName(tzId?: TimeZoneIdentifier, date?: Date) {
+	const tzDetails = new Intl.DateTimeFormat('en', {
+		timeZone: tzId,
+		timeZoneName: 'long',
+	}).formatToParts(date);
+
+	const tzPart = tzDetails.find((p) => p.type === 'timeZoneName');
+	return tzPart?.value as TimeZoneName | undefined;
 }

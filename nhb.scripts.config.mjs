@@ -82,9 +82,9 @@ export default defineScriptConfig({
 							require: './dist/cjs/http-status/HttpStatus.js',
 						},
 						'./stylog': {
-							types: './dist/dts/utils/stylog.d.ts',
-							import: './dist/esm/utils/stylog.js',
-							require: './dist/cjs/utils/stylog.js',
+							types: './dist/dts/stylog/Stylog.d.ts',
+							import: './dist/esm/stylog/Stylog.js',
+							require: './dist/cjs/stylog/Stylog.js',
 						},
 					},
 				}),

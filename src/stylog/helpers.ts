@@ -3,7 +3,7 @@ import { isNumber, isString } from '../guards/primitives';
 import { CSS_16_COLORS } from './constants';
 
 import type { CSSColor, Hex6 } from '../colors/types';
-import type { Ansi16Color, Ansi16Value, AnsiSequence, BGColor, CSS16Color } from './stylog';
+import type { Ansi16Color, Ansi16Value, AnsiSequence, BGColor, CSS16Color } from './Stylog';
 
 /**
  * * Extract the CSS color name from a background-prefixed style key.

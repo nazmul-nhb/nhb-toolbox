@@ -168,9 +168,9 @@
       "require": "./dist/cjs/http-status/HttpStatus.js"
     },
     "./stylog": {
-      "types": "./dist/dts/utils/stylog.d.ts",
-      "import": "./dist/esm/utils/stylog.js",
-      "require": "./dist/cjs/utils/stylog.js"
+      "types": "./dist/dts/stylog/Stylog.d.ts",
+      "import": "./dist/esm/stylog/Stylog.js",
+      "require": "./dist/cjs/stylog/Stylog.js"
     },
     "./array/types": {
       "types": "./dist/dts/array/types.d.ts",
@@ -303,7 +303,7 @@
         "dist/dts/http-status/HttpStatus.d.ts"
       ],
       "stylog": [
-        "dist/dts/utils/stylog.d.ts"
+        "dist/dts/stylog/Stylog.d.ts"
       ],
       "array/types": [
         "dist/dts/array/types.d.ts"
