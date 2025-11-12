@@ -289,6 +289,7 @@ export {
 	getTotalMinutes as getTotalMinutesFromTime,
 	extractMinutesFromUTC as getTotalMinutesFromUTC,
 	formatUTCOffset as minutesToUTCOffset,
+	getTimeZoneDetails,
 } from './date/utils';
 
 // ! Array Utilities

@@ -83,6 +83,18 @@ export interface GreetingConfigs {
 	defaultMessage?: string;
 }
 
+/** Time zone details */
+export type TimeZoneDetails = {
+	/** Time zone identifier */
+	tzIdentifier: LooseLiteral<TimeZoneIdentifier>;
+	/** Full time zone name */
+	tzNameLong?: LooseLiteral<TimeZoneName>;
+	/** Full time zone name but omits specific location */
+	tzNameLongGeneric?: LooseLiteral<TimeZoneName>;
+	/** Time zone offset from `UTC`, prefixed with `"GMT"` */
+	tzNameLongOffset?: LooseLiteral<`GMT${$UTCOffset}`>;
+};
+
 /** Name of time unit from `year` to `millisecond` */
 export type TimeUnit =
 	| 'year'

@@ -1,7 +1,7 @@
 // @ts-check
 
 import chalk from 'chalk';
-import { defineScriptConfig, fixJsExtensions, fixTypeExports } from 'nhb-scripts';
+import { defineScriptConfig, fixJsExtensions, fixTypeExports, mimicClack } from 'nhb-scripts';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -203,16 +203,5 @@ function restorePureTags(dir) {
 		chalk.green(
 			`✓ Restored /* @__PURE__ */ tags in ${chalk.cyanBright.bold(totalFiles)} files in ${chalk.cyanBright.bold(dir)} directory.`
 		)
-	);
-}
-
-/**
- * * Mimic clack left vertical line before a message
- * @param {string} message message to print
- * @param {boolean} [suffix=false] If true, adds a pipe in new line
- */
-export function mimicClack(message, suffix = false) {
-	console.log(
-		chalk.gray('│\n') + chalk.green('◇  ') + message + (suffix ? chalk.gray('\n│') : '')
 	);
 }

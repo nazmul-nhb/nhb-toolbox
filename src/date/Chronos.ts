@@ -38,7 +38,7 @@ import type {
 	WeekDay,
 	WeekdayOptions,
 } from './types';
-import { _getNativeTzName, extractMinutesFromUTC } from './utils';
+import { extractMinutesFromUTC } from './utils';
 
 /** Date parts for `Chronos` as `Record<part, number>` */
 type $DateParts = {
@@ -397,7 +397,7 @@ export class Chronos {
 	): LooseLiteral<TimeZoneName | TimeZoneIdentifier> {
 		const $tzId = tzId || this.$getNativeTimeZoneId();
 
-		return _getNativeTzName(tzId, this.#date) ?? $tzId;
+		return this.#getNativeTzName(tzId) ?? $tzId;
 	}
 
 	/**
@@ -464,6 +464,22 @@ export class Chronos {
 		instance.native = instance.toDate();
 
 		return instance;
+	}
+
+	/**
+	 * @private Resolves the native long timezone name (e.g. `"Bangladesh Standard Time"`, `"Eastern Daylight Time"`) for a given timezone identifier and optional date.
+	 *
+	 * @param tzId The IANA timezone identifier (e.g. `"Asia/Dhaka"`, `"America/New_York"`). Defaults to the system timezone if not provided.
+	 * @returns The resolved native timezone name or `undefined` if unavailable.
+	 */
+	#getNativeTzName(tzId?: TimeZoneIdentifier) {
+		const tzDetails = new Intl.DateTimeFormat('en', {
+			timeZone: tzId,
+			timeZoneName: 'long',
+		}).formatToParts(this.#date);
+
+		const tzPart = tzDetails.find((p) => p.type === 'timeZoneName');
+		return tzPart?.value as LooseLiteral<TimeZoneName> | undefined;
 	}
 
 	/**

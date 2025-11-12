@@ -10,7 +10,7 @@ import type {
 	TimeZoneName,
 	UTCOffset,
 } from '../types';
-import { _getNativeTzName, extractMinutesFromUTC } from '../utils';
+import { getTimeZoneDetails, extractMinutesFromUTC } from '../utils';
 
 type ChronosConstructor = import('../Chronos').Chronos;
 type MainChronos = typeof import('../Chronos').Chronos;
@@ -137,10 +137,13 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 
 			return tzName;
 		} else if (isValidTimeZoneId(zone)) {
-			const record = TIME_ZONE_IDS[zone];
-			return (
-				record?.tzName || _getNativeTzName(zone, date) || _resolveTzName(record?.offset)
-			);
+			const { offset, tzName } = TIME_ZONE_IDS[zone];
+			const { tzNameLongOffset, tzNameLong } = getTimeZoneDetails(zone, date);
+			const convertedOffset = tzNameLongOffset?.replace(/^GMT/, 'UTC') ?? '';
+			const resolvedName = _resolveTzName(offset);
+			const priorityName = convertedOffset === offset ? tzNameLong : resolvedName;
+
+			return tzName || priorityName || resolvedName || tzNameLong;
 		} else {
 			return zone in TIME_ZONES ?
 					TIME_ZONES[zone].tzName
@@ -215,7 +218,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	const TZ_ABBR_CACHE = new Map<string, string>();
 
 	/** Abbreviate full time zone name */
-	const _abbreviate = (name: TimeZoneName) => {
+	const _abbreviate = (name: string) => {
 		return name
 			.split(/\s+/)
 			.map((w) => w[0])

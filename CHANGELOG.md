@@ -6,13 +6,17 @@ All notable changes to the package will be documented here.
 
 ---
 
-<!-- ## [4.26.40] - 2025-11-12
+## [4.26.40] - 2025-11-12
 
 ### 🕧 Updates in Chronos
 
 - **Fixed** *tree-shaking issue* for *constant imports* from same module(s).
 - **Renamed** `$getNativeTimeZone()` method to `$getNativeTimeZoneName()` and *optional* `tzId` parameter.
-- **Enhanced** `timeZoneName()` and `getTimeZoneNameAbbr()`/`getTimeZoneNameShort()` methods: now look up for *time zone name* using `Intl.DateTimeFormat` when fails to resolve from `TIME_ZONE_IDS`. -->
+- **Enhanced** `timeZoneName()` and `getTimeZoneNameAbbr()`/`getTimeZoneNameShort()` methods: now look up for *time zone name* using `Intl.DateTimeFormat` when fails to resolve from `TIME_ZONE_IDS`.
+
+### 🛠️ Other Updates
+
+- **Added** new *date/time utility* `getTimeZoneDetails` to retrieve *time zone information*.
 
 ## [4.26.30] - 2025-11-11
 

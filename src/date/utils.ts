@@ -2,8 +2,8 @@ import type { Numeric } from '../types/index';
 import type {
 	ClockTime,
 	HourMinutes,
+	TimeZoneDetails,
 	TimeZoneIdentifier,
-	TimeZoneName,
 	UTCOffset,
 } from './types';
 
@@ -101,36 +101,27 @@ export function formatUTCOffset(minutes: Numeric): UTCOffset {
 }
 
 /**
- * * Resolves the native long timezone name (e.g. `"Bangladesh Standard Time"`, `"Eastern Daylight Time"`) for a given timezone identifier and optional date.
- *
- * @remarks
- * This method internally uses the `Intl.DateTimeFormat` API to derive the human-readable timezone name.
- * If a `date` is provided, the result reflects the timezone name at that specific moment (respecting daylight saving changes).
- * If omitted, it defaults to using the current system time.
- *
- * @param tzId The IANA timezone identifier (e.g. `"Asia/Dhaka"`, `"America/New_York"`). Defaults to the system timezone if not provided.
- * @param date The date for which to resolve the timezone name. Defaults to the current date and time.
- * @returns The resolved native timezone name or `undefined` if unavailable.
- *
- * @example
- * ```ts
- * _getNativeTzName('Asia/Dhaka');
- * // → "Bangladesh Standard Time"
- *
- * _getNativeTzName('America/New_York', new Date('2025-07-01'));
- * // → "Eastern Daylight Time"
- * ```
- *
- * @note
- * Passing a specific date is crucial for accuracy in regions observing Daylight Saving Time (DST).
- * Without a date, the returned name reflects the timezone name *as of now*.
+ * * Retrieves comprehensive timezone details using the `Intl` API.
+ * @param tzId Optional timezone identifier; defaults to the system timezone.
+ * @param date Optional date for which to resolve the information.
+ * @returns Object containing identifier, names, and offset.
  */
-export function _getNativeTzName(tzId?: TimeZoneIdentifier, date?: Date) {
-	const tzDetails = new Intl.DateTimeFormat('en', {
-		timeZone: tzId,
-		timeZoneName: 'long',
-	}).formatToParts(date);
+export function getTimeZoneDetails(tzId?: TimeZoneIdentifier, date?: Date) {
+	const TZ_NAME_TYPES = ['long', 'longGeneric', 'longOffset'] as const;
+	type TZNameKey = `tzName${Capitalize<(typeof TZ_NAME_TYPES)[number]>}`;
 
-	const tzPart = tzDetails.find((p) => p.type === 'timeZoneName');
-	return tzPart?.value as TimeZoneName | undefined;
+	const obj = { tzIdentifier: tzId } as TimeZoneDetails;
+
+	for (const type of TZ_NAME_TYPES) {
+		const parts = new Intl.DateTimeFormat('en', {
+			timeZone: tzId,
+			timeZoneName: type,
+		}).formatToParts(date);
+
+		const tzPart = parts.find((p) => p.type === 'timeZoneName');
+		const key = `tzName${type[0].toUpperCase()}${type.slice(1)}` as TZNameKey;
+		obj[key] = tzPart?.value;
+	}
+
+	return obj;
 }
