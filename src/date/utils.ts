@@ -101,7 +101,7 @@ export function formatUTCOffset(minutes: Numeric): UTCOffset {
 }
 
 /**
- * * Retrieves comprehensive timezone details using the `Intl` API.
+ * * Retrieves comprehensive time zone details using the {@link Intl} API.
  * @param tzId Optional timezone identifier; defaults to the system timezone.
  * @param date Optional date for which to resolve the information.
  * @returns Object containing identifier, names, and offset.

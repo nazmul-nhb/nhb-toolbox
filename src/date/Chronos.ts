@@ -382,15 +382,15 @@ export class Chronos {
 	// ! ======= Special Public Methods ======= //
 
 	/**
-	 * @instance Retrieves the local system's current timezone name (e.g., `"Bangladesh Standard Time"`), or falls back to its corresponding IANA timezone identifier (e.g., `"Asia/Dhaka"`) if the name cannot be determined.
+	 * @instance Retrieves the local system's current time zone name (e.g., `"Bangladesh Standard Time"`), or falls back to its corresponding IANA time zone identifier (e.g., `"Asia/Dhaka"`) if the name cannot be determined.
 	 *
 	 * @remarks
-	 * - This method always reflects the local machine's timezone, regardless of whether {@link timeZone}, {@link utc}, or {@link toUTC} methods have been applied.
-	 * - To access the timezone name of a modified or converted instance, use the {@link timeZoneName} public property instead.
+	 * - This method always reflects the local machine's time zone, regardless of whether {@link timeZone}, {@link utc}, or {@link toUTC} methods have been applied.
+	 * - To access the time zone name of a modified or converted instance, use the {@link timeZoneName} public property instead.
 	 *
-	 * @param tzId Optional time zone identifier to get time zone name for that identifier.
+	 * @param tzId Optional time zone identifier to get time zone name for that specific identifier if available.
 	 *
-	 * @returns The resolved timezone name or its IANA identifier as a fallback.
+	 * @returns The resolved time zone name or its IANA identifier as a fallback.
 	 */
 	$getNativeTimeZoneName(
 		tzId?: TimeZoneIdentifier
@@ -467,7 +467,7 @@ export class Chronos {
 	}
 
 	/**
-	 * @private Resolves the native long timezone name (e.g. `"Bangladesh Standard Time"`, `"Eastern Daylight Time"`) for a given timezone identifier and optional date.
+	 * @private Resolves the native long timezone name (e.g. `"Bangladesh Standard Time"`, `"Eastern Daylight Time"`) for a given timezone identifier.
 	 *
 	 * @param tzId The IANA timezone identifier (e.g. `"Asia/Dhaka"`, `"America/New_York"`). Defaults to the system timezone if not provided.
 	 * @returns The resolved native timezone name or `undefined` if unavailable.

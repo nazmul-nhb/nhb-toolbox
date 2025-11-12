@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.26.41] - 2025-11-12
+
+- **Updated** *tsdoc* for some `Chronos` *methods* and `getTimeZoneDetails` utility.
+
 ## [4.26.40] - 2025-11-12
 
 ### 🕧 Updates in Chronos
