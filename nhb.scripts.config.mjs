@@ -1,6 +1,9 @@
 // @ts-check
 
+import chalk from 'chalk';
 import { defineScriptConfig, fixJsExtensions, fixTypeExports } from 'nhb-scripts';
+import fs from 'node:fs';
+import path from 'node:path';
 
 export default defineScriptConfig({
 	format: {
@@ -28,6 +31,10 @@ export default defineScriptConfig({
 		],
 		after: [
 			async () => await fixJsExtensions('dist/esm'),
+			() => {
+				restorePureTags('dist/esm');
+				restorePureTags('dist/cjs');
+			},
 			async () =>
 				await fixTypeExports({
 					distPath: 'dist/dts',
@@ -140,4 +147,72 @@ export const ${pluginName}Plugin = (ChronosClass: MainChronos): void => {
 };`,
 		},
 	];
+}
+
+// ! ============= Post Build Hooks ============= ! //
+
+const TARGET_FILES = [
+	'constants.js',
+	'countries.js',
+	'timezone.js',
+	'seasons.js',
+	'css-colors.js',
+	'rules.js',
+];
+
+/**
+ * Recursively processes target JS files and inserts `@__PURE__` before each Object.freeze(...) expression.
+ * @param {string} dir Directory to traverse and find target files to fix.
+ */
+function restorePureTags(dir) {
+	let totalFiles = 0;
+
+	/** @param {string} folder */
+	const traverse = (folder) => {
+		for (const file of fs.readdirSync(folder)) {
+			const full = path.join(folder, file);
+			const stat = fs.statSync(full);
+
+			if (stat.isDirectory()) {
+				traverse(full);
+				continue;
+			}
+
+			if (!TARGET_FILES.includes(file)) continue;
+			if (!file.endsWith('.js')) continue;
+
+			const code = fs.readFileSync(full, 'utf8');
+
+			// Avoid duplicating the tag if already present
+			const updated = code.replace(/([^/])(?=(Object\.freeze\s*\())/g, (match, p1) => {
+				// If already tagged before, skip
+				if (p1.includes('@__PURE__')) return match;
+				return p1 + '/* @__PURE__ */ ';
+			});
+
+			if (updated !== code) {
+				fs.writeFileSync(full, updated, 'utf8');
+				totalFiles++;
+			}
+		}
+	};
+
+	traverse(dir);
+
+	mimicClack(
+		chalk.green(
+			`✓ Restored /* @__PURE__ */ tags in ${chalk.cyanBright.bold(totalFiles)} files in ${chalk.cyanBright.bold(dir)}`
+		)
+	);
+}
+
+/**
+ * * Mimic clack left vertical line before a message
+ * @param {string} message message to print
+ * @param {boolean} [suffix=false] If true, adds a pipe in new line
+ */
+export function mimicClack(message, suffix = false) {
+	console.log(
+		chalk.gray('│\n') + chalk.green('◇  ') + message + (suffix ? chalk.gray('\n│') : '')
+	);
 }
