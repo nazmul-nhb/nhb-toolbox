@@ -57,7 +57,7 @@ declare module '../Chronos' {
 		 * - This method uses a predefined mapping of UTC offsets to time zone names.
 		 * - If multiple time zones share the same UTC offset, it returns the **first match** from the predefined list.
 		 * - If no match is found (which is rare), it falls back to returning the UTC offset (e.g. `"UTC+06:00"`).
-		 * - To retrieve the local system's native time zone name (or its identifier if the name is unavailable), use the {@link $getNativeTimeZone} instance method.
+		 * - To retrieve the local system's native time zone name (or its identifier if the name is unavailable), use the {@link $getNativeTimeZoneName} instance method.
 		 * - To retrieve the local system's native time zone identifier, use the {@link $getNativeTimeZoneId} instance method.
 		 *
 		 * @param utc Optional UTC offset in `"UTC+06:00"` format. When passed, it bypasses the current time zone offset.
@@ -73,7 +73,7 @@ declare module '../Chronos' {
 		 * - If multiple time zones share the same UTC offset, it returns the **first abbreviation** from the list.
 		 * - If no abbreviation is found it abbreviates full time zone name from {@link TIME_ZONE_LABELS} using UTC offset.
 		 * - If no match is found (for unlisted or fictional utc offset), it returns the UTC offset (e.g. `"UTC+06:00"`).
-		 * - To retrieve the local system's native time zone name (or its identifier if the name is unavailable), use the {@link $getNativeTimeZone} instance method.
+		 * - To retrieve the local system's native time zone name (or its identifier if the name is unavailable), use the {@link $getNativeTimeZoneName} instance method.
 		 * - To retrieve the local system's native time zone identifier, use the {@link $getNativeTimeZoneId} instance method.
 		 *
 		 * @param utc Optional UTC offset in `"UTC+06:00"` format. When passed, it bypasses the current time zone offset.

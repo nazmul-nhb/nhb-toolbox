@@ -129,7 +129,7 @@ export class Chronos {
 	 *
 	 * @remarks
 	 * - Invoking the {@link timeZone} method sets the timezone name that corresponds to the specified UTC offset, or the UTC offset itself if no name exists. For more details on this behavior, see {@link getTimeZoneName}.
-	 * - To retrieve the local system's native timezone name (or its identifier if the name is unavailable), use the {@link $getNativeTimeZone} instance method.
+	 * - To retrieve the local system's native timezone name (or its identifier if the name is unavailable), use the {@link $getNativeTimeZoneName} instance method.
 	 */
 	timeZoneName: LooseLiteral<TimeZoneName>;
 
@@ -285,7 +285,7 @@ export class Chronos {
 		this.origin = this.#ORIGIN;
 		this.#offset = `UTC${this.getUTCOffset()}`;
 		this.utcOffset = this.#offset;
-		this.timeZoneName = this.$getNativeTimeZone();
+		this.timeZoneName = this.$getNativeTimeZoneName();
 		this.timeZoneId = this.$getNativeTimeZoneId();
 	}
 
@@ -388,16 +388,23 @@ export class Chronos {
 	 * - This method always reflects the local machine's timezone, regardless of whether {@link timeZone}, {@link utc}, or {@link toUTC} methods have been applied.
 	 * - To access the timezone name of a modified or converted instance, use the {@link timeZoneName} public property instead.
 	 *
+	 * @param tzId Optional time zone identifier to get time zone name for that identifier.
+	 *
 	 * @returns The resolved timezone name or its IANA identifier as a fallback.
 	 */
-	$getNativeTimeZone(): LooseLiteral<TimeZoneName | TimeZoneIdentifier> {
-		const details = new Intl.DateTimeFormat(undefined, {
-			timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+	$getNativeTimeZoneName(
+		tzId?: TimeZoneIdentifier
+	): LooseLiteral<TimeZoneName | TimeZoneIdentifier> {
+		const $tzId = tzId || this.$getNativeTimeZoneId();
+
+		const details = new Intl.DateTimeFormat('en', {
+			timeZone: $tzId,
 			timeZoneName: 'long',
-		}).formatToParts(this.toDate());
+		}).formatToParts(this.#date);
 
 		const tzPart = details.find((p) => p.type === 'timeZoneName');
-		return tzPart?.value ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+		return tzPart?.value ?? $tzId;
 	}
 
 	/**
@@ -1293,7 +1300,7 @@ export class Chronos {
 		const comparison = base.startOf('day');
 		const diff = input.diff(comparison, 'day');
 
-		const timeStr = this.toDate().toLocaleString(undefined, {
+		const timeStr = this.toDate().toLocaleString('en', {
 			hour: 'numeric',
 			minute: '2-digit',
 		});
@@ -1302,7 +1309,7 @@ export class Chronos {
 		if (diff === 1) return `Tomorrow at ${timeStr}`;
 		if (diff === -1) return `Yesterday at ${timeStr}`;
 
-		return this.toDate().toLocaleString(undefined, {
+		return this.toDate().toLocaleString('en', {
 			month: 'long',
 			day: '2-digit',
 			year: 'numeric',

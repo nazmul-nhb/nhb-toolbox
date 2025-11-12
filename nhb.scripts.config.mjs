@@ -201,7 +201,7 @@ function restorePureTags(dir) {
 
 	mimicClack(
 		chalk.green(
-			`✓ Restored /* @__PURE__ */ tags in ${chalk.cyanBright.bold(totalFiles)} files in ${chalk.cyanBright.bold(dir)}`
+			`✓ Restored /* @__PURE__ */ tags in ${chalk.cyanBright.bold(totalFiles)} files in ${chalk.cyanBright.bold(dir)} directory.`
 		)
 	);
 }
