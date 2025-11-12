@@ -124,6 +124,16 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		return undefined;
 	};
 
+	const _getNativeTzName = (zone: TimeZoneIdentifier) => {
+		const details = new Intl.DateTimeFormat('en', {
+			timeZone: zone,
+			timeZoneName: 'long',
+		}).formatToParts();
+
+		const tzName = details.find((p) => p.type === 'timeZoneName')?.value;
+		return tzName as TimeZoneName | undefined;
+	};
+
 	/** Get time zone name from `TIME_ZONE_LABELS`, `TIME_ZONE_IDS` or `TIME_ZONES` constants using UTC offset, time zone identifier or time zone abbreviation */
 	const _getTimeZoneName = (zone: TimeZoneIdentifier | TimeZone | UTCOffset) => {
 		if (_isGMT(zone)) return 'Greenwich Mean Time';
@@ -138,7 +148,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 			return tzName;
 		} else if (isValidTimeZoneId(zone)) {
 			const record = TIME_ZONE_IDS[zone];
-			return record?.tzName ?? _resolveTzName(record?.offset);
+			return record?.tzName || _getNativeTzName(zone) || _resolveTzName(record?.offset);
 		} else {
 			return zone in TIME_ZONES ?
 					TIME_ZONES[zone].tzName
