@@ -1,0 +1,2987 @@
+[
+  {
+    "tzId": "Africa/Abidjan",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Africa/Accra",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Africa/Addis_Ababa",
+    "tzName": "East Africa Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Africa/Algiers",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Africa/Asmara",
+    "tzName": "East Africa Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Africa/Asmera",
+    "tzName": "East Africa Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Africa/Bamako",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Africa/Bangui",
+    "tzName": "West Africa Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Africa/Banjul",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Africa/Bissau",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Africa/Blantyre",
+    "tzName": "Central Africa Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Africa/Brazzaville",
+    "tzName": "West Africa Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Africa/Bujumbura",
+    "tzName": "Central Africa Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Africa/Cairo",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Africa/Casablanca",
+    "tzName": "GMT+01:00",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Africa/Ceuta",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Africa/Conakry",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Africa/Dakar",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Africa/Dar_es_Salaam",
+    "tzName": "East Africa Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Africa/Djibouti",
+    "tzName": "East Africa Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Africa/Douala",
+    "tzName": "West Africa Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Africa/El_Aaiun",
+    "tzName": "GMT+01:00",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Africa/Freetown",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Africa/Gaborone",
+    "tzName": "Central Africa Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Africa/Harare",
+    "tzName": "Central Africa Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Africa/Johannesburg",
+    "tzName": "South Africa Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Africa/Juba",
+    "tzName": "Central Africa Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Africa/Kampala",
+    "tzName": "East Africa Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Africa/Khartoum",
+    "tzName": "Central Africa Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Africa/Kigali",
+    "tzName": "Central Africa Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Africa/Kinshasa",
+    "tzName": "West Africa Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Africa/Lagos",
+    "tzName": "West Africa Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Africa/Libreville",
+    "tzName": "West Africa Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Africa/Lome",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Africa/Luanda",
+    "tzName": "West Africa Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Africa/Lubumbashi",
+    "tzName": "Central Africa Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Africa/Lusaka",
+    "tzName": "Central Africa Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Africa/Malabo",
+    "tzName": "West Africa Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Africa/Maputo",
+    "tzName": "Central Africa Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Africa/Maseru",
+    "tzName": "South Africa Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Africa/Mbabane",
+    "tzName": "South Africa Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Africa/Mogadishu",
+    "tzName": "East Africa Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Africa/Monrovia",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Africa/Nairobi",
+    "tzName": "East Africa Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Africa/Ndjamena",
+    "tzName": "West Africa Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Africa/Niamey",
+    "tzName": "West Africa Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Africa/Nouakchott",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Africa/Ouagadougou",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Africa/Porto-Novo",
+    "tzName": "West Africa Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Africa/Sao_Tome",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Africa/Timbuktu",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Africa/Tripoli",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Africa/Tunis",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Africa/Windhoek",
+    "tzName": "Central Africa Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "America/Adak",
+    "tzName": "Hawaii-Aleutian Standard Time",
+    "offset": "UTC-10:00"
+  },
+  {
+    "tzId": "America/Anchorage",
+    "tzName": "Alaska Standard Time",
+    "offset": "UTC-09:00"
+  },
+  {
+    "tzId": "America/Anguilla",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Antigua",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Araguaina",
+    "tzName": "Brasilia Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Argentina/Buenos_Aires",
+    "tzName": "Argentina Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Argentina/Catamarca",
+    "tzName": "Argentina Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Argentina/ComodRivadavia",
+    "tzName": "Argentina Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Argentina/Cordoba",
+    "tzName": "Argentina Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Argentina/Jujuy",
+    "tzName": "Argentina Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Argentina/La_Rioja",
+    "tzName": "Argentina Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Argentina/Mendoza",
+    "tzName": "Argentina Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Argentina/Rio_Gallegos",
+    "tzName": "Argentina Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Argentina/Salta",
+    "tzName": "Argentina Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Argentina/San_Juan",
+    "tzName": "Argentina Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Argentina/San_Luis",
+    "tzName": "Argentina Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Argentina/Tucuman",
+    "tzName": "Argentina Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Argentina/Ushuaia",
+    "tzName": "Argentina Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Aruba",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Asuncion",
+    "tzName": "Paraguay Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Atikokan",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Atka",
+    "tzName": "Hawaii-Aleutian Standard Time",
+    "offset": "UTC-10:00"
+  },
+  {
+    "tzId": "America/Bahia",
+    "tzName": "Brasilia Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Bahia_Banderas",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Barbados",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Belem",
+    "tzName": "Brasilia Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Belize",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Blanc-Sablon",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Boa_Vista",
+    "tzName": "Amazon Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Bogota",
+    "tzName": "Colombia Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Boise",
+    "tzName": "Mountain Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "America/Buenos_Aires",
+    "tzName": "Argentina Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Cambridge_Bay",
+    "tzName": "Mountain Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "America/Campo_Grande",
+    "tzName": "Amazon Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Cancun",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Caracas",
+    "tzName": "Venezuela Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Catamarca",
+    "tzName": "Argentina Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Cayenne",
+    "tzName": "French Guiana Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Cayman",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Chicago",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Chihuahua",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Ciudad_Juarez",
+    "tzName": "Mountain Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "America/Coral_Harbour",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Cordoba",
+    "tzName": "Argentina Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Costa_Rica",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Coyhaique",
+    "tzName": "GMT-03:00",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Creston",
+    "tzName": "Mountain Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "America/Cuiaba",
+    "tzName": "Amazon Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Curacao",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Danmarkshavn",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "America/Dawson",
+    "tzName": "Yukon Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "America/Dawson_Creek",
+    "tzName": "Mountain Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "America/Denver",
+    "tzName": "Mountain Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "America/Detroit",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Dominica",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Edmonton",
+    "tzName": "Mountain Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "America/Eirunepe",
+    "tzName": "Acre Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/El_Salvador",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Ensenada",
+    "tzName": "Pacific Standard Time",
+    "offset": "UTC-08:00"
+  },
+  {
+    "tzId": "America/Fort_Nelson",
+    "tzName": "Mountain Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "America/Fort_Wayne",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Fortaleza",
+    "tzName": "Brasilia Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Glace_Bay",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Godthab",
+    "tzName": "Greenland Standard Time",
+    "offset": "UTC-02:00"
+  },
+  {
+    "tzId": "America/Goose_Bay",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Grand_Turk",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Grenada",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Guadeloupe",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Guatemala",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Guayaquil",
+    "tzName": "Ecuador Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Guyana",
+    "tzName": "Guyana Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Halifax",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Havana",
+    "tzName": "Cuba Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Hermosillo",
+    "tzName": "Mexican Pacific Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "America/Indiana/Indianapolis",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Indiana/Knox",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Indiana/Marengo",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Indiana/Petersburg",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Indiana/Tell_City",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Indiana/Vevay",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Indiana/Vincennes",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Indiana/Winamac",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Indianapolis",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Inuvik",
+    "tzName": "Mountain Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "America/Iqaluit",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Jamaica",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Jujuy",
+    "tzName": "Argentina Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Juneau",
+    "tzName": "Alaska Standard Time",
+    "offset": "UTC-09:00"
+  },
+  {
+    "tzId": "America/Kentucky/Louisville",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Kentucky/Monticello",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Knox_IN",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Kralendijk",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/La_Paz",
+    "tzName": "Bolivia Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Lima",
+    "tzName": "Peru Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Los_Angeles",
+    "tzName": "Pacific Standard Time",
+    "offset": "UTC-08:00"
+  },
+  {
+    "tzId": "America/Louisville",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Lower_Princes",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Maceio",
+    "tzName": "Brasilia Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Managua",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Manaus",
+    "tzName": "Amazon Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Marigot",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Martinique",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Matamoros",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Mazatlan",
+    "tzName": "Mexican Pacific Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "America/Mendoza",
+    "tzName": "Argentina Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Menominee",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Merida",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Metlakatla",
+    "tzName": "Alaska Standard Time",
+    "offset": "UTC-09:00"
+  },
+  {
+    "tzId": "America/Mexico_City",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Miquelon",
+    "tzName": "St. Pierre & Miquelon Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Moncton",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Monterrey",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Montevideo",
+    "tzName": "Uruguay Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Montreal",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Montserrat",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Nassau",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/New_York",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Nipigon",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Nome",
+    "tzName": "Alaska Standard Time",
+    "offset": "UTC-09:00"
+  },
+  {
+    "tzId": "America/Noronha",
+    "tzName": "Fernando de Noronha Standard Time",
+    "offset": "UTC-02:00"
+  },
+  {
+    "tzId": "America/North_Dakota/Beulah",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/North_Dakota/Center",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/North_Dakota/New_Salem",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Nuuk",
+    "tzName": "Greenland Standard Time",
+    "offset": "UTC-02:00"
+  },
+  {
+    "tzId": "America/Ojinaga",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Panama",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Pangnirtung",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Paramaribo",
+    "tzName": "Suriname Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Phoenix",
+    "tzName": "Mountain Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "America/Port-au-Prince",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Port_of_Spain",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Porto_Acre",
+    "tzName": "Acre Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Porto_Velho",
+    "tzName": "Amazon Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Puerto_Rico",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Punta_Arenas",
+    "tzName": "GMT-03:00",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Rainy_River",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Rankin_Inlet",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Recife",
+    "tzName": "Brasilia Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Regina",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Resolute",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Rio_Branco",
+    "tzName": "Acre Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Rosario",
+    "tzName": "Argentina Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Santa_Isabel",
+    "tzName": "Pacific Standard Time",
+    "offset": "UTC-08:00"
+  },
+  {
+    "tzId": "America/Santarem",
+    "tzName": "Brasilia Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Santiago",
+    "tzName": "Chile Summer Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Santo_Domingo",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Sao_Paulo",
+    "tzName": "Brasilia Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "America/Scoresbysund",
+    "tzName": "Greenland Standard Time",
+    "offset": "UTC-02:00"
+  },
+  {
+    "tzId": "America/Shiprock",
+    "tzName": "Mountain Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "America/Sitka",
+    "tzName": "Alaska Standard Time",
+    "offset": "UTC-09:00"
+  },
+  {
+    "tzId": "America/St_Barthelemy",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/St_Johns",
+    "tzName": "Newfoundland Standard Time",
+    "offset": "UTC-03:30"
+  },
+  {
+    "tzId": "America/St_Kitts",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/St_Lucia",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/St_Thomas",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/St_Vincent",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Swift_Current",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Tegucigalpa",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Thule",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Thunder_Bay",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Tijuana",
+    "tzName": "Pacific Standard Time",
+    "offset": "UTC-08:00"
+  },
+  {
+    "tzId": "America/Toronto",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "America/Tortola",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Vancouver",
+    "tzName": "Pacific Standard Time",
+    "offset": "UTC-08:00"
+  },
+  {
+    "tzId": "America/Virgin",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "America/Whitehorse",
+    "tzName": "Yukon Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "America/Winnipeg",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "America/Yakutat",
+    "tzName": "Alaska Standard Time",
+    "offset": "UTC-09:00"
+  },
+  {
+    "tzId": "America/Yellowknife",
+    "tzName": "Mountain Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "Antarctica/Casey",
+    "tzName": "Australian Western Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Antarctica/Davis",
+    "tzName": "Davis Time",
+    "offset": "UTC+07:00"
+  },
+  {
+    "tzId": "Antarctica/DumontDUrville",
+    "tzName": "Dumont d’Urville Time",
+    "offset": "UTC+10:00"
+  },
+  {
+    "tzId": "Antarctica/Macquarie",
+    "tzName": "Australian Eastern Daylight Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Antarctica/Mawson",
+    "tzName": "Mawson Time",
+    "offset": "UTC+05:00"
+  },
+  {
+    "tzId": "Antarctica/McMurdo",
+    "tzName": "New Zealand Daylight Time",
+    "offset": "UTC+13:00"
+  },
+  {
+    "tzId": "Antarctica/Palmer",
+    "tzName": "GMT-03:00",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "Antarctica/Rothera",
+    "tzName": "Rothera Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "Antarctica/South_Pole",
+    "tzName": "New Zealand Daylight Time",
+    "offset": "UTC+13:00"
+  },
+  {
+    "tzId": "Antarctica/Syowa",
+    "tzName": "Syowa Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Antarctica/Troll",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Antarctica/Vostok",
+    "tzName": "Vostok Time",
+    "offset": "UTC+05:00"
+  },
+  {
+    "tzId": "Arctic/Longyearbyen",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Asia/Aden",
+    "tzName": "Arabian Standard Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Asia/Almaty",
+    "tzName": "Kazakhstan Time",
+    "offset": "UTC+05:00"
+  },
+  {
+    "tzId": "Asia/Amman",
+    "tzName": "GMT+03:00",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Asia/Anadyr",
+    "tzName": "Anadyr Standard Time",
+    "offset": "UTC+12:00"
+  },
+  {
+    "tzId": "Asia/Aqtau",
+    "tzName": "Kazakhstan Time",
+    "offset": "UTC+05:00"
+  },
+  {
+    "tzId": "Asia/Aqtobe",
+    "tzName": "Kazakhstan Time",
+    "offset": "UTC+05:00"
+  },
+  {
+    "tzId": "Asia/Ashgabat",
+    "tzName": "Turkmenistan Standard Time",
+    "offset": "UTC+05:00"
+  },
+  {
+    "tzId": "Asia/Ashkhabad",
+    "tzName": "Turkmenistan Standard Time",
+    "offset": "UTC+05:00"
+  },
+  {
+    "tzId": "Asia/Atyrau",
+    "tzName": "Kazakhstan Time",
+    "offset": "UTC+05:00"
+  },
+  {
+    "tzId": "Asia/Baghdad",
+    "tzName": "Arabian Standard Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Asia/Bahrain",
+    "tzName": "Arabian Standard Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Asia/Baku",
+    "tzName": "Azerbaijan Standard Time",
+    "offset": "UTC+04:00"
+  },
+  {
+    "tzId": "Asia/Bangkok",
+    "tzName": "Indochina Time",
+    "offset": "UTC+07:00"
+  },
+  {
+    "tzId": "Asia/Barnaul",
+    "tzName": "GMT+07:00",
+    "offset": "UTC+07:00"
+  },
+  {
+    "tzId": "Asia/Beirut",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Asia/Bishkek",
+    "tzName": "Kyrgyzstan Time",
+    "offset": "UTC+06:00"
+  },
+  {
+    "tzId": "Asia/Brunei",
+    "tzName": "Brunei Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Asia/Calcutta",
+    "tzName": "India Standard Time",
+    "offset": "UTC+05:30"
+  },
+  {
+    "tzId": "Asia/Chita",
+    "tzName": "Yakutsk Standard Time",
+    "offset": "UTC+09:00"
+  },
+  {
+    "tzId": "Asia/Choibalsan",
+    "tzName": "Ulaanbaatar Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Asia/Chongqing",
+    "tzName": "China Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Asia/Chungking",
+    "tzName": "China Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Asia/Colombo",
+    "tzName": "India Standard Time",
+    "offset": "UTC+05:30"
+  },
+  {
+    "tzId": "Asia/Dacca",
+    "tzName": "Bangladesh Standard Time",
+    "offset": "UTC+06:00"
+  },
+  {
+    "tzId": "Asia/Damascus",
+    "tzName": "GMT+03:00",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Asia/Dhaka",
+    "tzName": "Bangladesh Standard Time",
+    "offset": "UTC+06:00"
+  },
+  {
+    "tzId": "Asia/Dili",
+    "tzName": "Timor-Leste Time",
+    "offset": "UTC+09:00"
+  },
+  {
+    "tzId": "Asia/Dubai",
+    "tzName": "Gulf Standard Time",
+    "offset": "UTC+04:00"
+  },
+  {
+    "tzId": "Asia/Dushanbe",
+    "tzName": "Tajikistan Time",
+    "offset": "UTC+05:00"
+  },
+  {
+    "tzId": "Asia/Famagusta",
+    "tzName": "GMT+02:00",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Asia/Gaza",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Asia/Harbin",
+    "tzName": "China Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Asia/Hebron",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Asia/Ho_Chi_Minh",
+    "tzName": "Indochina Time",
+    "offset": "UTC+07:00"
+  },
+  {
+    "tzId": "Asia/Hong_Kong",
+    "tzName": "Hong Kong Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Asia/Hovd",
+    "tzName": "Hovd Standard Time",
+    "offset": "UTC+07:00"
+  },
+  {
+    "tzId": "Asia/Irkutsk",
+    "tzName": "Irkutsk Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Asia/Istanbul",
+    "tzName": "GMT+03:00",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Asia/Jakarta",
+    "tzName": "Western Indonesia Time",
+    "offset": "UTC+07:00"
+  },
+  {
+    "tzId": "Asia/Jayapura",
+    "tzName": "Eastern Indonesia Time",
+    "offset": "UTC+09:00"
+  },
+  {
+    "tzId": "Asia/Jerusalem",
+    "tzName": "Israel Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Asia/Kabul",
+    "tzName": "Afghanistan Time",
+    "offset": "UTC+04:30"
+  },
+  {
+    "tzId": "Asia/Kamchatka",
+    "tzName": "Kamchatka Standard Time",
+    "offset": "UTC+12:00"
+  },
+  {
+    "tzId": "Asia/Karachi",
+    "tzName": "Pakistan Standard Time",
+    "offset": "UTC+05:00"
+  },
+  {
+    "tzId": "Asia/Kashgar",
+    "tzName": "GMT+06:00",
+    "offset": "UTC+06:00"
+  },
+  {
+    "tzId": "Asia/Kathmandu",
+    "tzName": "Nepal Time",
+    "offset": "UTC+05:45"
+  },
+  {
+    "tzId": "Asia/Katmandu",
+    "tzName": "Nepal Time",
+    "offset": "UTC+05:45"
+  },
+  {
+    "tzId": "Asia/Khandyga",
+    "tzName": "Yakutsk Standard Time",
+    "offset": "UTC+09:00"
+  },
+  {
+    "tzId": "Asia/Kolkata",
+    "tzName": "India Standard Time",
+    "offset": "UTC+05:30"
+  },
+  {
+    "tzId": "Asia/Krasnoyarsk",
+    "tzName": "Krasnoyarsk Standard Time",
+    "offset": "UTC+07:00"
+  },
+  {
+    "tzId": "Asia/Kuala_Lumpur",
+    "tzName": "Malaysia Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Asia/Kuching",
+    "tzName": "Malaysia Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Asia/Kuwait",
+    "tzName": "Arabian Standard Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Asia/Macao",
+    "tzName": "China Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Asia/Macau",
+    "tzName": "China Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Asia/Magadan",
+    "tzName": "Magadan Standard Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Asia/Makassar",
+    "tzName": "Central Indonesia Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Asia/Manila",
+    "tzName": "Philippine Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Asia/Muscat",
+    "tzName": "Gulf Standard Time",
+    "offset": "UTC+04:00"
+  },
+  {
+    "tzId": "Asia/Nicosia",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Asia/Novokuznetsk",
+    "tzName": "Krasnoyarsk Standard Time",
+    "offset": "UTC+07:00"
+  },
+  {
+    "tzId": "Asia/Novosibirsk",
+    "tzName": "Novosibirsk Standard Time",
+    "offset": "UTC+07:00"
+  },
+  {
+    "tzId": "Asia/Omsk",
+    "tzName": "Omsk Standard Time",
+    "offset": "UTC+06:00"
+  },
+  {
+    "tzId": "Asia/Oral",
+    "tzName": "Kazakhstan Time",
+    "offset": "UTC+05:00"
+  },
+  {
+    "tzId": "Asia/Phnom_Penh",
+    "tzName": "Indochina Time",
+    "offset": "UTC+07:00"
+  },
+  {
+    "tzId": "Asia/Pontianak",
+    "tzName": "Western Indonesia Time",
+    "offset": "UTC+07:00"
+  },
+  {
+    "tzId": "Asia/Pyongyang",
+    "tzName": "Korean Standard Time",
+    "offset": "UTC+09:00"
+  },
+  {
+    "tzId": "Asia/Qatar",
+    "tzName": "Arabian Standard Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Asia/Qostanay",
+    "tzName": "Kazakhstan Time",
+    "offset": "UTC+05:00"
+  },
+  {
+    "tzId": "Asia/Qyzylorda",
+    "tzName": "Kazakhstan Time",
+    "offset": "UTC+05:00"
+  },
+  {
+    "tzId": "Asia/Rangoon",
+    "tzName": "Myanmar Time",
+    "offset": "UTC+06:30"
+  },
+  {
+    "tzId": "Asia/Riyadh",
+    "tzName": "Arabian Standard Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Asia/Saigon",
+    "tzName": "Indochina Time",
+    "offset": "UTC+07:00"
+  },
+  {
+    "tzId": "Asia/Sakhalin",
+    "tzName": "Sakhalin Standard Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Asia/Samarkand",
+    "tzName": "Uzbekistan Standard Time",
+    "offset": "UTC+05:00"
+  },
+  {
+    "tzId": "Asia/Seoul",
+    "tzName": "Korean Standard Time",
+    "offset": "UTC+09:00"
+  },
+  {
+    "tzId": "Asia/Shanghai",
+    "tzName": "China Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Asia/Singapore",
+    "tzName": "Singapore Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Asia/Srednekolymsk",
+    "tzName": "GMT+11:00",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Asia/Taipei",
+    "tzName": "Taiwan Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Asia/Tashkent",
+    "tzName": "Uzbekistan Standard Time",
+    "offset": "UTC+05:00"
+  },
+  {
+    "tzId": "Asia/Tbilisi",
+    "tzName": "Georgia Standard Time",
+    "offset": "UTC+04:00"
+  },
+  {
+    "tzId": "Asia/Tehran",
+    "tzName": "Iran Standard Time",
+    "offset": "UTC+03:30"
+  },
+  {
+    "tzId": "Asia/Tel_Aviv",
+    "tzName": "Israel Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Asia/Thimbu",
+    "tzName": "Bhutan Time",
+    "offset": "UTC+06:00"
+  },
+  {
+    "tzId": "Asia/Thimphu",
+    "tzName": "Bhutan Time",
+    "offset": "UTC+06:00"
+  },
+  {
+    "tzId": "Asia/Tokyo",
+    "tzName": "Japan Standard Time",
+    "offset": "UTC+09:00"
+  },
+  {
+    "tzId": "Asia/Tomsk",
+    "tzName": "GMT+07:00",
+    "offset": "UTC+07:00"
+  },
+  {
+    "tzId": "Asia/Ujung_Pandang",
+    "tzName": "Central Indonesia Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Asia/Ulaanbaatar",
+    "tzName": "Ulaanbaatar Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Asia/Ulan_Bator",
+    "tzName": "Ulaanbaatar Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Asia/Urumqi",
+    "tzName": "GMT+06:00",
+    "offset": "UTC+06:00"
+  },
+  {
+    "tzId": "Asia/Ust-Nera",
+    "tzName": "Vladivostok Standard Time",
+    "offset": "UTC+10:00"
+  },
+  {
+    "tzId": "Asia/Vientiane",
+    "tzName": "Indochina Time",
+    "offset": "UTC+07:00"
+  },
+  {
+    "tzId": "Asia/Vladivostok",
+    "tzName": "Vladivostok Standard Time",
+    "offset": "UTC+10:00"
+  },
+  {
+    "tzId": "Asia/Yakutsk",
+    "tzName": "Yakutsk Standard Time",
+    "offset": "UTC+09:00"
+  },
+  {
+    "tzId": "Asia/Yangon",
+    "tzName": "Myanmar Time",
+    "offset": "UTC+06:30"
+  },
+  {
+    "tzId": "Asia/Yekaterinburg",
+    "tzName": "Yekaterinburg Standard Time",
+    "offset": "UTC+05:00"
+  },
+  {
+    "tzId": "Asia/Yerevan",
+    "tzName": "Armenia Standard Time",
+    "offset": "UTC+04:00"
+  },
+  {
+    "tzId": "Atlantic/Azores",
+    "tzName": "Azores Standard Time",
+    "offset": "UTC-01:00"
+  },
+  {
+    "tzId": "Atlantic/Bermuda",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "Atlantic/Canary",
+    "tzName": "Western European Standard Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Atlantic/Cape_Verde",
+    "tzName": "Cape Verde Standard Time",
+    "offset": "UTC-01:00"
+  },
+  {
+    "tzId": "Atlantic/Faeroe",
+    "tzName": "Western European Standard Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Atlantic/Faroe",
+    "tzName": "Western European Standard Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Atlantic/Jan_Mayen",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Atlantic/Madeira",
+    "tzName": "Western European Standard Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Atlantic/Reykjavik",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Atlantic/South_Georgia",
+    "tzName": "South Georgia Time",
+    "offset": "UTC-02:00"
+  },
+  {
+    "tzId": "Atlantic/St_Helena",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Atlantic/Stanley",
+    "tzName": "Falkland Islands Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "Australia/ACT",
+    "tzName": "Australian Eastern Daylight Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Australia/Adelaide",
+    "tzName": "Australian Central Daylight Time",
+    "offset": "UTC+10:30"
+  },
+  {
+    "tzId": "Australia/Brisbane",
+    "tzName": "Australian Eastern Standard Time",
+    "offset": "UTC+10:00"
+  },
+  {
+    "tzId": "Australia/Broken_Hill",
+    "tzName": "Australian Central Daylight Time",
+    "offset": "UTC+10:30"
+  },
+  {
+    "tzId": "Australia/Canberra",
+    "tzName": "Australian Eastern Daylight Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Australia/Currie",
+    "tzName": "Australian Eastern Daylight Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Australia/Darwin",
+    "tzName": "Australian Central Standard Time",
+    "offset": "UTC+09:30"
+  },
+  {
+    "tzId": "Australia/Eucla",
+    "tzName": "Australian Central Western Standard Time",
+    "offset": "UTC+08:45"
+  },
+  {
+    "tzId": "Australia/Hobart",
+    "tzName": "Australian Eastern Daylight Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Australia/LHI",
+    "tzName": "Lord Howe Daylight Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Australia/Lindeman",
+    "tzName": "Australian Eastern Standard Time",
+    "offset": "UTC+10:00"
+  },
+  {
+    "tzId": "Australia/Lord_Howe",
+    "tzName": "Lord Howe Daylight Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Australia/Melbourne",
+    "tzName": "Australian Eastern Daylight Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Australia/North",
+    "tzName": "Australian Central Standard Time",
+    "offset": "UTC+09:30"
+  },
+  {
+    "tzId": "Australia/NSW",
+    "tzName": "Australian Eastern Daylight Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Australia/Perth",
+    "tzName": "Australian Western Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Australia/Queensland",
+    "tzName": "Australian Eastern Standard Time",
+    "offset": "UTC+10:00"
+  },
+  {
+    "tzId": "Australia/South",
+    "tzName": "Australian Central Daylight Time",
+    "offset": "UTC+10:30"
+  },
+  {
+    "tzId": "Australia/Sydney",
+    "tzName": "Australian Eastern Daylight Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Australia/Tasmania",
+    "tzName": "Australian Eastern Daylight Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Australia/Victoria",
+    "tzName": "Australian Eastern Daylight Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Australia/West",
+    "tzName": "Australian Western Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Australia/Yancowinna",
+    "tzName": "Australian Central Daylight Time",
+    "offset": "UTC+10:30"
+  },
+  {
+    "tzId": "Brazil/Acre",
+    "tzName": "Acre Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "Brazil/DeNoronha",
+    "tzName": "Fernando de Noronha Standard Time",
+    "offset": "UTC-02:00"
+  },
+  {
+    "tzId": "Brazil/East",
+    "tzName": "Brasilia Standard Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "Brazil/West",
+    "tzName": "Amazon Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "Canada/Atlantic",
+    "tzName": "Atlantic Standard Time",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "Canada/Central",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "Canada/Eastern",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "Canada/Mountain",
+    "tzName": "Mountain Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "Canada/Newfoundland",
+    "tzName": "Newfoundland Standard Time",
+    "offset": "UTC-03:30"
+  },
+  {
+    "tzId": "Canada/Pacific",
+    "tzName": "Pacific Standard Time",
+    "offset": "UTC-08:00"
+  },
+  {
+    "tzId": "Canada/Saskatchewan",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "Canada/Yukon",
+    "tzName": "Yukon Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "CET",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Chile/Continental",
+    "tzName": "Chile Summer Time",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "Chile/EasterIsland",
+    "tzName": "Easter Island Summer Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "CST6CDT",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "Cuba",
+    "tzName": "Cuba Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "EET",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Egypt",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Eire",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "EST",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "EST5EDT",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "Etc/GMT",
+    "tzName": "Coordinated Universal Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Etc/GMT+0",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Etc/GMT+1",
+    "tzName": "GMT-01:00",
+    "offset": "UTC-01:00"
+  },
+  {
+    "tzId": "Etc/GMT+10",
+    "tzName": "GMT-10:00",
+    "offset": "UTC-10:00"
+  },
+  {
+    "tzId": "Etc/GMT+11",
+    "tzName": "GMT-11:00",
+    "offset": "UTC-11:00"
+  },
+  {
+    "tzId": "Etc/GMT+12",
+    "tzName": "GMT-12:00",
+    "offset": "UTC-12:00"
+  },
+  {
+    "tzId": "Etc/GMT+2",
+    "tzName": "GMT-02:00",
+    "offset": "UTC-02:00"
+  },
+  {
+    "tzId": "Etc/GMT+3",
+    "tzName": "GMT-03:00",
+    "offset": "UTC-03:00"
+  },
+  {
+    "tzId": "Etc/GMT+4",
+    "tzName": "GMT-04:00",
+    "offset": "UTC-04:00"
+  },
+  {
+    "tzId": "Etc/GMT+5",
+    "tzName": "GMT-05:00",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "Etc/GMT+6",
+    "tzName": "GMT-06:00",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "Etc/GMT+7",
+    "tzName": "GMT-07:00",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "Etc/GMT+8",
+    "tzName": "GMT-08:00",
+    "offset": "UTC-08:00"
+  },
+  {
+    "tzId": "Etc/GMT+9",
+    "tzName": "GMT-09:00",
+    "offset": "UTC-09:00"
+  },
+  {
+    "tzId": "Etc/GMT-0",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Etc/GMT-1",
+    "tzName": "GMT+01:00",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Etc/GMT-10",
+    "tzName": "GMT+10:00",
+    "offset": "UTC+10:00"
+  },
+  {
+    "tzId": "Etc/GMT-11",
+    "tzName": "GMT+11:00",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Etc/GMT-12",
+    "tzName": "GMT+12:00",
+    "offset": "UTC+12:00"
+  },
+  {
+    "tzId": "Etc/GMT-13",
+    "tzName": "GMT+13:00",
+    "offset": "UTC+13:00"
+  },
+  {
+    "tzId": "Etc/GMT-14",
+    "tzName": "GMT+14:00",
+    "offset": "UTC+14:00"
+  },
+  {
+    "tzId": "Etc/GMT-2",
+    "tzName": "GMT+02:00",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Etc/GMT-3",
+    "tzName": "GMT+03:00",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Etc/GMT-4",
+    "tzName": "GMT+04:00",
+    "offset": "UTC+04:00"
+  },
+  {
+    "tzId": "Etc/GMT-5",
+    "tzName": "GMT+05:00",
+    "offset": "UTC+05:00"
+  },
+  {
+    "tzId": "Etc/GMT-6",
+    "tzName": "GMT+06:00",
+    "offset": "UTC+06:00"
+  },
+  {
+    "tzId": "Etc/GMT-7",
+    "tzName": "GMT+07:00",
+    "offset": "UTC+07:00"
+  },
+  {
+    "tzId": "Etc/GMT-8",
+    "tzName": "GMT+08:00",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Etc/GMT-9",
+    "tzName": "GMT+09:00",
+    "offset": "UTC+09:00"
+  },
+  {
+    "tzId": "Etc/GMT0",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Etc/Greenwich",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Etc/UCT",
+    "tzName": "Coordinated Universal Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Etc/Universal",
+    "tzName": "Coordinated Universal Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Etc/UTC",
+    "tzName": "Coordinated Universal Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Etc/Zulu",
+    "tzName": "Coordinated Universal Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Europe/Amsterdam",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Andorra",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Astrakhan",
+    "tzName": "GMT+04:00",
+    "offset": "UTC+04:00"
+  },
+  {
+    "tzId": "Europe/Athens",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Europe/Belfast",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Europe/Belgrade",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Berlin",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Bratislava",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Brussels",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Bucharest",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Europe/Budapest",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Busingen",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Chisinau",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Europe/Copenhagen",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Dublin",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Europe/Gibraltar",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Guernsey",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Europe/Helsinki",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Europe/Isle_of_Man",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Europe/Istanbul",
+    "tzName": "GMT+03:00",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Europe/Jersey",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Europe/Kaliningrad",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Europe/Kiev",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Europe/Kirov",
+    "tzName": "GMT+03:00",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Europe/Kyiv",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Europe/Lisbon",
+    "tzName": "Western European Standard Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Europe/Ljubljana",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/London",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Europe/Luxembourg",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Madrid",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Malta",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Mariehamn",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Europe/Minsk",
+    "tzName": "Moscow Standard Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Europe/Monaco",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Moscow",
+    "tzName": "Moscow Standard Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Europe/Nicosia",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Europe/Oslo",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Paris",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Podgorica",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Prague",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Riga",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Europe/Rome",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Samara",
+    "tzName": "Samara Standard Time",
+    "offset": "UTC+04:00"
+  },
+  {
+    "tzId": "Europe/San_Marino",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Sarajevo",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Saratov",
+    "tzName": "GMT+04:00",
+    "offset": "UTC+04:00"
+  },
+  {
+    "tzId": "Europe/Simferopol",
+    "tzName": "Moscow Standard Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Europe/Skopje",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Sofia",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Europe/Stockholm",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Tallinn",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Europe/Tirane",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Tiraspol",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Europe/Ulyanovsk",
+    "tzName": "GMT+04:00",
+    "offset": "UTC+04:00"
+  },
+  {
+    "tzId": "Europe/Uzhgorod",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Europe/Vaduz",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Vatican",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Vienna",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Vilnius",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Europe/Volgograd",
+    "tzName": "Volgograd Standard Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Europe/Warsaw",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Zagreb",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Europe/Zaporozhye",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Europe/Zurich",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "GB",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "GB-Eire",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "GMT",
+    "tzName": "Coordinated Universal Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "GMT+0",
+    "tzName": "Coordinated Universal Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "GMT-0",
+    "tzName": "Coordinated Universal Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "GMT0",
+    "tzName": "Coordinated Universal Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Greenwich",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Hongkong",
+    "tzName": "Hong Kong Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "HST",
+    "tzName": "Hawaii-Aleutian Standard Time",
+    "offset": "UTC-10:00"
+  },
+  {
+    "tzId": "Iceland",
+    "tzName": "Greenwich Mean Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Indian/Antananarivo",
+    "tzName": "East Africa Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Indian/Chagos",
+    "tzName": "Indian Ocean Time",
+    "offset": "UTC+06:00"
+  },
+  {
+    "tzId": "Indian/Christmas",
+    "tzName": "Christmas Island Time",
+    "offset": "UTC+07:00"
+  },
+  {
+    "tzId": "Indian/Cocos",
+    "tzName": "Cocos Islands Time",
+    "offset": "UTC+06:30"
+  },
+  {
+    "tzId": "Indian/Comoro",
+    "tzName": "East Africa Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Indian/Kerguelen",
+    "tzName": "French Southern & Antarctic Time",
+    "offset": "UTC+05:00"
+  },
+  {
+    "tzId": "Indian/Mahe",
+    "tzName": "Seychelles Time",
+    "offset": "UTC+04:00"
+  },
+  {
+    "tzId": "Indian/Maldives",
+    "tzName": "Maldives Time",
+    "offset": "UTC+05:00"
+  },
+  {
+    "tzId": "Indian/Mauritius",
+    "tzName": "Mauritius Standard Time",
+    "offset": "UTC+04:00"
+  },
+  {
+    "tzId": "Indian/Mayotte",
+    "tzName": "East Africa Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "Indian/Reunion",
+    "tzName": "Réunion Time",
+    "offset": "UTC+04:00"
+  },
+  {
+    "tzId": "Iran",
+    "tzName": "Iran Standard Time",
+    "offset": "UTC+03:30"
+  },
+  {
+    "tzId": "Israel",
+    "tzName": "Israel Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "Jamaica",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "Japan",
+    "tzName": "Japan Standard Time",
+    "offset": "UTC+09:00"
+  },
+  {
+    "tzId": "Kwajalein",
+    "tzName": "Marshall Islands Time",
+    "offset": "UTC+12:00"
+  },
+  {
+    "tzId": "Libya",
+    "tzName": "Eastern European Standard Time",
+    "offset": "UTC+02:00"
+  },
+  {
+    "tzId": "MET",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Mexico/BajaNorte",
+    "tzName": "Pacific Standard Time",
+    "offset": "UTC-08:00"
+  },
+  {
+    "tzId": "Mexico/BajaSur",
+    "tzName": "Mexican Pacific Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "Mexico/General",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "MST",
+    "tzName": "Mountain Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "MST7MDT",
+    "tzName": "Mountain Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "Navajo",
+    "tzName": "Mountain Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "NZ",
+    "tzName": "New Zealand Daylight Time",
+    "offset": "UTC+13:00"
+  },
+  {
+    "tzId": "NZ-CHAT",
+    "tzName": "Chatham Daylight Time",
+    "offset": "UTC+13:45"
+  },
+  {
+    "tzId": "Pacific/Apia",
+    "tzName": "Samoa Standard Time",
+    "offset": "UTC+13:00"
+  },
+  {
+    "tzId": "Pacific/Auckland",
+    "tzName": "New Zealand Daylight Time",
+    "offset": "UTC+13:00"
+  },
+  {
+    "tzId": "Pacific/Bougainville",
+    "tzName": "GMT+11:00",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Pacific/Chatham",
+    "tzName": "Chatham Daylight Time",
+    "offset": "UTC+13:45"
+  },
+  {
+    "tzId": "Pacific/Chuuk",
+    "tzName": "Chuuk Time",
+    "offset": "UTC+10:00"
+  },
+  {
+    "tzId": "Pacific/Easter",
+    "tzName": "Easter Island Summer Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "Pacific/Efate",
+    "tzName": "Vanuatu Standard Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Pacific/Enderbury",
+    "tzName": "Phoenix Islands Time",
+    "offset": "UTC+13:00"
+  },
+  {
+    "tzId": "Pacific/Fakaofo",
+    "tzName": "Tokelau Time",
+    "offset": "UTC+13:00"
+  },
+  {
+    "tzId": "Pacific/Fiji",
+    "tzName": "Fiji Standard Time",
+    "offset": "UTC+12:00"
+  },
+  {
+    "tzId": "Pacific/Funafuti",
+    "tzName": "Tuvalu Time",
+    "offset": "UTC+12:00"
+  },
+  {
+    "tzId": "Pacific/Galapagos",
+    "tzName": "Galapagos Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "Pacific/Gambier",
+    "tzName": "Gambier Time",
+    "offset": "UTC-09:00"
+  },
+  {
+    "tzId": "Pacific/Guadalcanal",
+    "tzName": "Solomon Islands Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Pacific/Guam",
+    "tzName": "Chamorro Standard Time",
+    "offset": "UTC+10:00"
+  },
+  {
+    "tzId": "Pacific/Honolulu",
+    "tzName": "Hawaii-Aleutian Standard Time",
+    "offset": "UTC-10:00"
+  },
+  {
+    "tzId": "Pacific/Johnston",
+    "tzName": "Hawaii-Aleutian Standard Time",
+    "offset": "UTC-10:00"
+  },
+  {
+    "tzId": "Pacific/Kanton",
+    "tzName": "Phoenix Islands Time",
+    "offset": "UTC+13:00"
+  },
+  {
+    "tzId": "Pacific/Kiritimati",
+    "tzName": "Line Islands Time",
+    "offset": "UTC+14:00"
+  },
+  {
+    "tzId": "Pacific/Kosrae",
+    "tzName": "Kosrae Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Pacific/Kwajalein",
+    "tzName": "Marshall Islands Time",
+    "offset": "UTC+12:00"
+  },
+  {
+    "tzId": "Pacific/Majuro",
+    "tzName": "Marshall Islands Time",
+    "offset": "UTC+12:00"
+  },
+  {
+    "tzId": "Pacific/Marquesas",
+    "tzName": "Marquesas Time",
+    "offset": "UTC-09:30"
+  },
+  {
+    "tzId": "Pacific/Midway",
+    "tzName": "American Samoa Standard Time",
+    "offset": "UTC-11:00"
+  },
+  {
+    "tzId": "Pacific/Nauru",
+    "tzName": "Nauru Time",
+    "offset": "UTC+12:00"
+  },
+  {
+    "tzId": "Pacific/Niue",
+    "tzName": "Niue Time",
+    "offset": "UTC-11:00"
+  },
+  {
+    "tzId": "Pacific/Norfolk",
+    "tzName": "Norfolk Island Daylight Time",
+    "offset": "UTC+12:00"
+  },
+  {
+    "tzId": "Pacific/Noumea",
+    "tzName": "New Caledonia Standard Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Pacific/Pago_Pago",
+    "tzName": "American Samoa Standard Time",
+    "offset": "UTC-11:00"
+  },
+  {
+    "tzId": "Pacific/Palau",
+    "tzName": "Palau Time",
+    "offset": "UTC+09:00"
+  },
+  {
+    "tzId": "Pacific/Pitcairn",
+    "tzName": "Pitcairn Time",
+    "offset": "UTC-08:00"
+  },
+  {
+    "tzId": "Pacific/Pohnpei",
+    "tzName": "Pohnpei Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Pacific/Ponape",
+    "tzName": "Pohnpei Time",
+    "offset": "UTC+11:00"
+  },
+  {
+    "tzId": "Pacific/Port_Moresby",
+    "tzName": "Papua New Guinea Time",
+    "offset": "UTC+10:00"
+  },
+  {
+    "tzId": "Pacific/Rarotonga",
+    "tzName": "Cook Islands Standard Time",
+    "offset": "UTC-10:00"
+  },
+  {
+    "tzId": "Pacific/Saipan",
+    "tzName": "Chamorro Standard Time",
+    "offset": "UTC+10:00"
+  },
+  {
+    "tzId": "Pacific/Samoa",
+    "tzName": "American Samoa Standard Time",
+    "offset": "UTC-11:00"
+  },
+  {
+    "tzId": "Pacific/Tahiti",
+    "tzName": "Tahiti Time",
+    "offset": "UTC-10:00"
+  },
+  {
+    "tzId": "Pacific/Tarawa",
+    "tzName": "Gilbert Islands Time",
+    "offset": "UTC+12:00"
+  },
+  {
+    "tzId": "Pacific/Tongatapu",
+    "tzName": "Tonga Standard Time",
+    "offset": "UTC+13:00"
+  },
+  {
+    "tzId": "Pacific/Truk",
+    "tzName": "Chuuk Time",
+    "offset": "UTC+10:00"
+  },
+  {
+    "tzId": "Pacific/Wake",
+    "tzName": "Wake Island Time",
+    "offset": "UTC+12:00"
+  },
+  {
+    "tzId": "Pacific/Wallis",
+    "tzName": "Wallis & Futuna Time",
+    "offset": "UTC+12:00"
+  },
+  {
+    "tzId": "Pacific/Yap",
+    "tzName": "Chuuk Time",
+    "offset": "UTC+10:00"
+  },
+  {
+    "tzId": "Poland",
+    "tzName": "Central European Standard Time",
+    "offset": "UTC+01:00"
+  },
+  {
+    "tzId": "Portugal",
+    "tzName": "Western European Standard Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "PRC",
+    "tzName": "China Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "PST8PDT",
+    "tzName": "Pacific Standard Time",
+    "offset": "UTC-08:00"
+  },
+  {
+    "tzId": "ROC",
+    "tzName": "Taiwan Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "ROK",
+    "tzName": "Korean Standard Time",
+    "offset": "UTC+09:00"
+  },
+  {
+    "tzId": "Singapore",
+    "tzName": "Singapore Standard Time",
+    "offset": "UTC+08:00"
+  },
+  {
+    "tzId": "Turkey",
+    "tzName": "GMT+03:00",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "UCT",
+    "tzName": "Coordinated Universal Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Universal",
+    "tzName": "Coordinated Universal Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "US/Alaska",
+    "tzName": "Alaska Standard Time",
+    "offset": "UTC-09:00"
+  },
+  {
+    "tzId": "US/Aleutian",
+    "tzName": "Hawaii-Aleutian Standard Time",
+    "offset": "UTC-10:00"
+  },
+  {
+    "tzId": "US/Arizona",
+    "tzName": "Mountain Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "US/Central",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "US/East-Indiana",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "US/Eastern",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "US/Hawaii",
+    "tzName": "Hawaii-Aleutian Standard Time",
+    "offset": "UTC-10:00"
+  },
+  {
+    "tzId": "US/Indiana-Starke",
+    "tzName": "Central Standard Time",
+    "offset": "UTC-06:00"
+  },
+  {
+    "tzId": "US/Michigan",
+    "tzName": "Eastern Standard Time",
+    "offset": "UTC-05:00"
+  },
+  {
+    "tzId": "US/Mountain",
+    "tzName": "Mountain Standard Time",
+    "offset": "UTC-07:00"
+  },
+  {
+    "tzId": "US/Pacific",
+    "tzName": "Pacific Standard Time",
+    "offset": "UTC-08:00"
+  },
+  {
+    "tzId": "US/Samoa",
+    "tzName": "American Samoa Standard Time",
+    "offset": "UTC-11:00"
+  },
+  {
+    "tzId": "UTC",
+    "tzName": "Coordinated Universal Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "W-SU",
+    "tzName": "Moscow Standard Time",
+    "offset": "UTC+03:00"
+  },
+  {
+    "tzId": "WET",
+    "tzName": "Western European Standard Time",
+    "offset": "UTC+00:00"
+  },
+  {
+    "tzId": "Zulu",
+    "tzName": "Coordinated Universal Time",
+    "offset": "UTC+00:00"
+  }
+]

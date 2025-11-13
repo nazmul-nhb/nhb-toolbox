@@ -6,9 +6,13 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.26.45] - 2025-11-13
+
+- **Removed** *time zone id* `'Factory'` from `TIME_ZONE_IDS` and **replaced** `'EDT'` with `'EST5EDT'` to fix the *issue with getting time zone details* using `Intl` API.
+
 ## [4.26.44] - 2025-11-13
 
-- **Fixed** issues with passing optional *time zone id* in `Chronos` method `$getNativeTimeZoneName` and `getTimeZoneDetails` utility
+- **Fixed** issues with passing optional *time zone id* in `Chronos` method `$getNativeTimeZoneName` and `getTimeZoneDetails` utility.
 
 ## [4.26.41] - 2025-11-12
 

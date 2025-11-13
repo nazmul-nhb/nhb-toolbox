@@ -850,7 +850,7 @@ export const TIME_ZONES = /* @__PURE__ */ Object.freeze({
 	},
 } as const);
 
-/** Record of unique standard time-zone labels/names for their corresponding UTC offsets as (`{ UTCOffset: timeZoneName }`). */
+/** Record of unique standard time-zone labels/names for their corresponding UTC offsets as (`{ utcOffset: timeZoneName }`). */
 export const TIME_ZONE_LABELS = /* @__PURE__ */ Object.freeze({
 	'UTC-12:00': 'Baker Island Time',
 	'UTC-11:00': 'Samoa Standard Time',
@@ -897,7 +897,7 @@ export const TIME_ZONE_LABELS = /* @__PURE__ */ Object.freeze({
 	'UTC+14:00': 'Line Islands Time',
 } as const);
 
-/** Record of timezone identifiers (from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia}) against their corresponding UTC offsets and full timezone names. */
+/** Record of 597 timezone identifiers (from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia}) against their corresponding UTC offsets and full timezone names. */
 export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 	'Africa/Abidjan': {
 		tzName: 'Greenwich Mean Time',
@@ -2463,9 +2463,9 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		tzName: 'Eastern Standard Time',
 		offset: 'UTC-05:00',
 	},
-	EDT: {
-		tzName: 'Eastern Daylight Time',
-		offset: 'UTC-04:00',
+	EST5EDT: {
+		tzName: 'Eastern Standard Tim',
+		offset: 'UTC-05:00',
 	},
 	'Etc/GMT': {
 		tzName: 'Greenwich Mean Time',
@@ -2863,10 +2863,10 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		tzName: 'Central European Time',
 		offset: 'UTC+01:00',
 	},
-	Factory: {
-		tzName: undefined,
-		offset: 'UTC+00:00',
-	},
+	// Factory: {
+	// 	tzName: undefined,
+	// 	offset: 'UTC+00:00',
+	// },
 	GB: {
 		tzName: 'Greenwich Mean Time',
 		offset: 'UTC+00:00',
