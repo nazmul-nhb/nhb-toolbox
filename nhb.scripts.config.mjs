@@ -1,6 +1,5 @@
 // @ts-check
 
-import chalk from 'chalk';
 import { defineScriptConfig, fixJsExtensions, fixTypeExports, mimicClack } from 'nhb-scripts';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -199,9 +198,5 @@ function restorePureTags(dir) {
 
 	traverse(dir);
 
-	mimicClack(
-		chalk.green(
-			`✓ Restored /* @__PURE__ */ tags in ${chalk.cyanBright.bold(totalFiles)} files in ${chalk.cyanBright.bold(dir)} directory.`
-		)
-	);
+	mimicClack(`✓ Restored /* @__PURE__ */ tags in ${totalFiles} files in ${dir} directory!`);
 }
