@@ -104,17 +104,19 @@ export function formatUTCOffset(minutes: Numeric): UTCOffset {
  * * Retrieves comprehensive time zone details using the {@link Intl} API.
  * @param tzId Optional timezone identifier; defaults to the system timezone.
  * @param date Optional date for which to resolve the information.
- * @returns Object containing identifier, names, and offset.
+ * @returns Object containing time zone identifier, names, and offset.
  */
 export function getTimeZoneDetails(tzId?: TimeZoneIdentifier, date?: Date) {
 	const TZ_NAME_TYPES = ['long', 'longGeneric', 'longOffset'] as const;
 	type TZNameKey = `tzName${Capitalize<(typeof TZ_NAME_TYPES)[number]>}`;
 
-	const obj = { tzIdentifier: tzId } as TimeZoneDetails;
+	const $tzId = tzId || Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+	const obj = { tzIdentifier: $tzId } as TimeZoneDetails;
 
 	for (const type of TZ_NAME_TYPES) {
 		const parts = new Intl.DateTimeFormat('en', {
-			timeZone: tzId,
+			timeZone: $tzId,
 			timeZoneName: type,
 		}).formatToParts(date);
 

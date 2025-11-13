@@ -20,7 +20,7 @@ import type {
 import type { SEASON_PRESETS } from './seasons';
 import type { TIME_ZONE_IDS, TIME_ZONE_LABELS, TIME_ZONES } from './timezone';
 
-// ! Re-export `ChronosStatics`
+// ! Re-export types or alias(es)
 export type { ChronosStatics, UTCOffset as UTCOffSet };
 
 /** - Minute in numeric string from `00` to `23` */
@@ -35,63 +35,50 @@ export type ClockSecond = `0${Enumerate<10>}` | `${NumberRange<10, 59>}`;
 /** - Time in "HH:MM" format. */
 export type ClockTime = `${ClockHour}:${ClockMinute}`;
 
-/** Normal time in `H:m`m format which does not follow the strict limit up to 23 hours, hour can be any number and minute can be numeric string from `00` to `59` */
+/** Normal time in `H:mm` format which does not follow the strict limit up to 23 hours, hour can be any number and minute can be numeric string from `00` to `59` */
 export type HourMinutes = `${number}:${ClockMinute}`;
 
 /** - Configuration options for greeting. */
 export interface GreetingConfigs {
 	/** Time when the morning period ends (HH:MM format). Defaults to `11:59` */
 	morningEnds?: ClockTime;
-
 	/** Time when the noon period ends (HH:MM format). Defaults to `12:59` */
 	noonEnds?: ClockTime;
-
 	/** Time when the afternoon period ends (HH:MM format). Defaults to `17:59` */
 	afternoonEnds?: ClockTime;
-
 	/** Time when the evening period ends (HH:MM format). Defaults to `23:59` */
 	eveningEnds?: ClockTime;
-
 	/** Time when the midnight period ends (HH:MM format). Defaults to `02:59` */
 	midnightEnds?: ClockTime;
-
 	/** Current time in "HH:MM" format for some weird reason. Defaults to current time `new Date()` */
 	currentTime?: ClockTime;
-
 	/** Optional string to append after each message */
 	appendToMsg?: string;
-
 	/** Optional string to prepend before each message */
 	prependToMsg?: string;
-
 	/** Custom greeting message for the morning period. */
 	morningMessage?: string;
-
 	/** Custom greeting message for the noon period. */
 	noonMessage?: string;
-
 	/** Custom greeting message for the afternoon period. */
 	afternoonMessage?: string;
-
 	/** Custom greeting message for the evening period. */
 	eveningMessage?: string;
-
 	/** Custom greeting message for the midnight period. */
 	midnightMessage?: string;
-
 	/** Default greeting message if no period matches. */
 	defaultMessage?: string;
 }
 
-/** Time zone details */
+/** Time zone details object */
 export type TimeZoneDetails = {
-	/** Time zone identifier */
+	/** IANA time zone identifier */
 	tzIdentifier: LooseLiteral<TimeZoneIdentifier>;
-	/** Full time zone name */
+	/** Long localized form (e.g., `'Pacific Standard Time'`, `'Nordamerikanische Westküsten-Normalzeit'`) */
 	tzNameLong?: LooseLiteral<TimeZoneName>;
-	/** Full time zone name but omits specific location */
+	/** Long generic non-location format (e.g.: `'Pacific Time'`, `'Nordamerikanische Westküstenzeit'`) */
 	tzNameLongGeneric?: LooseLiteral<TimeZoneName>;
-	/** Time zone offset from `UTC`, prefixed with `"GMT"` */
+	/** Long localized GMT format, prefixed with `"GMT"` (e.g., `"GMT-08:00"`) */
 	tzNameLongOffset?: LooseLiteral<`GMT${$UTCOffset}`>;
 };
 
@@ -106,7 +93,7 @@ export type TimeUnit =
 	| 'second'
 	| 'millisecond';
 
-/** Name of time unit from `year` to `millisecond`, except `week` */
+/** Name of time unit from `year` to `millisecond`, excluding `week` */
 export type FromNowUnit = Exclude<TimeUnit, 'week'>;
 
 /** Conditional value for {@link TimeUnit} */

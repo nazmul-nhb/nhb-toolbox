@@ -1,8 +1,8 @@
 // @ts-check
 
 import { defineScriptConfig, fixJsExtensions, fixTypeExports, mimicClack } from 'nhb-scripts';
-import fs from 'node:fs';
-import path from 'node:path';
+import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { join as joinPath } from 'node:path';
 
 export default defineScriptConfig({
 	format: {
@@ -150,15 +150,6 @@ export const ${pluginName}Plugin = (ChronosClass: MainChronos): void => {
 
 // ! ============= Post Build Hooks ============= ! //
 
-const TARGET_FILES = [
-	'constants.js',
-	'countries.js',
-	'timezone.js',
-	'seasons.js',
-	'css-colors.js',
-	'rules.js',
-];
-
 /**
  * Recursively processes target JS files and inserts `@__PURE__` before each Object.freeze(...) expression.
  * @param {string} dir Directory to traverse and find target files to fix.
@@ -168,19 +159,28 @@ function restorePureTags(dir) {
 
 	/** @param {string} folder */
 	const traverse = (folder) => {
-		for (const file of fs.readdirSync(folder)) {
-			const full = path.join(folder, file);
-			const stat = fs.statSync(full);
+		for (const file of readdirSync(folder)) {
+			const full = joinPath(folder, file);
+			const stat = statSync(full);
 
 			if (stat.isDirectory()) {
 				traverse(full);
 				continue;
 			}
 
+			const TARGET_FILES = [
+				'constants.js',
+				'countries.js',
+				'timezone.js',
+				'seasons.js',
+				'css-colors.js',
+				'rules.js',
+			];
+
 			if (!TARGET_FILES.includes(file)) continue;
 			if (!file.endsWith('.js')) continue;
 
-			const code = fs.readFileSync(full, 'utf8');
+			const code = readFileSync(full, 'utf8');
 
 			// Avoid duplicating the tag if already present
 			const updated = code.replace(/([^/])(?=(Object\.freeze\s*\())/g, (match, p1) => {
@@ -190,7 +190,7 @@ function restorePureTags(dir) {
 			});
 
 			if (updated !== code) {
-				fs.writeFileSync(full, updated, 'utf8');
+				writeFileSync(full, updated, 'utf8');
 				totalFiles++;
 			}
 		}

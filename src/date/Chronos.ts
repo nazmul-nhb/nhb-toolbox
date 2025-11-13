@@ -397,7 +397,7 @@ export class Chronos {
 	): LooseLiteral<TimeZoneName | TimeZoneIdentifier> {
 		const $tzId = tzId || this.$getNativeTimeZoneId();
 
-		return this.#getNativeTzName(tzId) ?? $tzId;
+		return this.#getNativeTzName($tzId) ?? $tzId;
 	}
 
 	/**
