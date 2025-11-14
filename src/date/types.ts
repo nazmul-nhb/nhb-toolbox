@@ -257,13 +257,14 @@ export interface DurationOptions {
 export interface ChronosInternals {
 	/**
 	 * * Access to `#withOrigin` private method.
-	 * * Creates a new Chronos instance with origin and other properties.
+	 * * Creates a new `Chronos` instance with `origin` and other properties.
 	 *
+	 * @param instance The `Chronos` instance to which attach the `origin` and other properties.
 	 * @param origin Origin of the instance, the method name from where it was created.
 	 * @param offset Optional UTC offset in `UTC±HH:mm` format.
 	 * @param tzName Optional time zone name to set.
 	 * @param tzId Optional time zone identifier(s) to set.
-	 * @param tzTracker Optional tracker to identify the instance created by {@link timeZone} method.
+	 * @param tzTracker Optional tracker to identify the instance created by {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/conversion#timezone timeZone} method.
 	 * @returns The `Chronos` instance with the specified origin and other properties.
 	 */
 	withOrigin(
@@ -330,7 +331,7 @@ export type $PluginMethods = `timeZone` | 'round';
 export type PluginMethods = LooseLiteral<$PluginMethods>;
 
 /** Methods (both instance and static) in `Chronos` class that return `Chronos` instance. */
-export type ChronosMethods = $InstanceMethods | $StaticMethods | $PluginMethods;
+export type ChronosMethods = $InstanceMethods | $StaticMethods | PluginMethods;
 
 /**
  * * Accepted Input type for `Chronos`

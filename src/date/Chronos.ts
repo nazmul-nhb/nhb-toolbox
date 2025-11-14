@@ -128,7 +128,7 @@ export class Chronos {
 	 * Represents the current timezone name (e.g., `"Bangladesh Standard Time"`), or falls back to the corresponding timezone identifier (e.g., `"Asia/Dhaka"`) if no name can be resolved.
 	 *
 	 * @remarks
-	 * - Invoking the {@link timeZone} method sets the timezone name that corresponds to the specified UTC offset, or the UTC offset itself if no name exists. For more details on this behavior, see {@link getTimeZoneName}.
+	 * - Invoking the {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/conversion#timezone timeZone} method sets the timezone name that corresponds to the specified UTC offset, or the UTC offset itself if no name exists. For more details on this behavior, see {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/names#gettimezonename getTimeZoneName}.
 	 * - To retrieve the local system's native timezone name (or its identifier if the name is unavailable), use the {@link $getNativeTimeZoneName} instance method.
 	 */
 	timeZoneName: LooseLiteral<TimeZoneName>;
@@ -136,18 +136,18 @@ export class Chronos {
 	/**
 	 * Represents the current timezone context, which can be a single identifier, an array of equivalent identifiers, or a UTC offset.
 	 *
-	 * - **{@link $TimeZoneIdentifier}** — e.g., `"Asia/Dhaka"`. Returned when the {@link timeZone} method has not been invoked. It is default behaviour.
-	 * - **Array of {@link $TimeZoneIdentifier}** — e.g., `['Asia/Kathmandu', 'Asia/Katmandu']`, used when multiple timezones share the same UTC offset such as `"UTC+05:45"`.
+	 * - **{@link $TimeZoneIdentifier}** — e.g., `"Asia/Dhaka"`. Returned when the {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/conversion#timezone timeZone} method has not been invoked. It is default behaviour.
+	 * - **Array of {@link $TimeZoneIdentifier}** — e.g., `[ 'Asia/Calcutta', 'Asia/Colombo' ]`, used when multiple timezones share the same UTC offset such as `"UTC+05:30"`.
 	 * - **{@link UTCOffset}** — e.g., `"UTC+06:45"` or `"UTC+02:15"`, returned when no named timezone corresponds to a given offset.
 	 *
 	 * @remarks
-	 * - By default, when {@link timeZone} is not applied, a single {@link $TimeZoneIdentifier} string is provided.
+	 * - By default, when {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/conversion#timezone timeZone} is not applied, a single {@link $TimeZoneIdentifier} string is provided.
 	 * - When applied, it may instead return a single identifier string, an array of equivalent identifiers or a UTC offset string.
 	 * - To retrieve the local system's native timezone identifier, use the {@link $getNativeTimeZoneId} instance method.
 	 */
 	timeZoneId: TimeZoneId;
 
-	/** Tracker to identify the instance created by {@link timeZone} method */
+	/** Tracker to identify the instance created by {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/conversion#timezone timeZone} method */
 	protected $tzTracker?: $TimeZoneIdentifier | TimeZone | UTCOffset;
 
 	/**
@@ -385,7 +385,8 @@ export class Chronos {
 	 * @instance Retrieves the local system's current time zone name (e.g., `"Bangladesh Standard Time"`), or falls back to its corresponding IANA time zone identifier (e.g., `"Asia/Dhaka"`) if the name cannot be determined.
 	 *
 	 * @remarks
-	 * - This method always reflects the local machine's time zone, regardless of whether {@link timeZone}, {@link utc}, or {@link toUTC} methods have been applied.
+	 * - This method always reflects the local machine's time zone if `tzId` is parameter is omitted.
+	 * - {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/conversion#timezone timeZone}, {@link utc}, or {@link toUTC} methods have no effects on this method.
 	 * - To access the time zone name of a modified or converted instance, use the {@link timeZoneName} public property instead.
 	 *
 	 * @param tzId Optional time zone identifier to get time zone name for that specific identifier if available.
@@ -404,7 +405,8 @@ export class Chronos {
 	 * @instance Retrieves the IANA time zone identifier (e.g., `"Asia/Dhaka"`, `"Africa/Harare"`) for the local system's current time zone.
 	 *
 	 * @remarks
-	 * - This method always returns the identifier of the local machine's time zone, regardless of whether {@link timeZone}, {@link utc}, or {@link toUTC} methods have been applied.
+	 * - This method always returns the identifier of the local machine's time zone.
+	 * - {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/conversion#timezone timeZone}, {@link utc}, or {@link toUTC} methods have no effects on this method.
 	 * - To obtain the identifier(s) of a modified or converted instance, use the {@link timeZoneId} public property instead.
 	 *
 	 * @returns The local system's IANA time zone identifier.
@@ -438,7 +440,7 @@ export class Chronos {
 	 * @param offset Optional UTC offset in `UTC±HH:mm` format.
 	 * @param tzName Optional time zone name to set.
 	 * @param tzId Optional time zone identifier(s) to set.
-	 * @param tzTracker Optional tracker to identify the instance created by {@link timeZone} method.
+	 * @param tzTracker Optional tracker to identify the instance created by {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/conversion#timezone timeZone} method.
 	 * @returns The `Chronos` instance with the specified origin and other properties.
 	 */
 	#withOrigin(
