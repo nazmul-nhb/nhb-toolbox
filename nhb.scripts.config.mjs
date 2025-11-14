@@ -14,6 +14,7 @@ export default defineScriptConfig({
 	fix: { folders: ['src'], patterns: ['**/*.ts'] },
 	build: {
 		distFolder: 'dist',
+		waitingMessage: ' 📦 Building Package: nhb-toolbox...',
 		commands: [
 			{
 				cmd: 'tsc',
