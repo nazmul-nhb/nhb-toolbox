@@ -73,13 +73,13 @@ export interface GreetingConfigs {
 /** Time zone details object */
 export type TimeZoneDetails = {
 	/** IANA time zone identifier */
-	tzIdentifier: LooseLiteral<$TimeZoneIdentifier>;
+	tzIdentifier: $TimeZoneIdentifier;
 	/** Long localized form (e.g., `'Pacific Standard Time'`, `'Nordamerikanische Westküsten-Normalzeit'`) */
-	tzNameLong?: LooseLiteral<TimeZoneName>;
+	tzNameLong: LooseLiteral<TimeZoneName> | undefined;
 	/** Long generic non-location format (e.g.: `'Pacific Time'`, `'Nordamerikanische Westküstenzeit'`) */
-	tzNameLongGeneric?: LooseLiteral<TimeZoneName>;
+	tzNameLongGeneric: LooseLiteral<TimeZoneName> | undefined;
 	/** Long localized GMT format, prefixed with `"GMT"` (e.g., `"GMT-08:00"`) */
-	tzNameLongOffset?: LooseLiteral<`GMT${$UTCOffset}`>;
+	tzNameLongOffset: LooseLiteral<`GMT${$UTCOffset}`> | undefined;
 };
 
 /** Name of time unit from `year` to `millisecond` */
@@ -346,7 +346,7 @@ export type ChronosStaticKey = keyof ChronosStatics;
 /** Key of {@link TIME_ZONE_LABELS} ({@link UTCOffset}) */
 export type $TZLabelKey = keyof typeof TIME_ZONE_LABELS;
 
-/** Abbreviated time zone names (from {@link https://en.wikipedia.org/wiki/List_of_time_zone_abbreviations time zone abbreviations on Wikipedia}) */
+/** Abbreviated time zone names (from {@link https://en.wikipedia.org/wiki/List_of_time_zone_abbreviations time zone abbreviations on Wikipedia}). */
 export type TimeZone = keyof typeof TIME_ZONES;
 
 /** Full time zone names from Wikipedia and IANA time zone database. */
@@ -356,10 +356,10 @@ export type TimeZoneName = NonNullable<
 	| (typeof TIME_ZONE_IDS)[$TimeZoneIdentifier]['tzName']
 >;
 
-/** Time zone identifier (from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia}) excluding `'Factory'` */
+/** Time zone identifier (from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia}) excluding `'Factory'`. */
 export type $TimeZoneIdentifier = Exclude<keyof typeof TIME_ZONE_IDS, 'Factory'>;
 
-/** Time zone identifier (from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia}) excluding `'Factory'` & abbreviations present in {@link TimeZone} */
+/** Time zone identifier (from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia}) excluding `'Factory'` & abbreviations present in {@link TimeZone}. */
 export type TimeZoneIdentifier = Exclude<$TimeZoneIdentifier, TimeZone>;
 
 /** Time zone identifier, array of timezone identifiers or UTC offset. */

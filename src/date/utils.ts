@@ -101,8 +101,8 @@ export function formatUTCOffset(minutes: Numeric): UTCOffset {
 }
 
 /**
- * * Retrieves comprehensive time zone details using the {@link Intl} API.
- * @param tzId Optional timezone identifier; defaults to the system timezone.
+ * * Retrieves comprehensive time zone details using the {@link Intl.DateTimeFormat} API.
+ * @param tzId Optional timezone identifier. Defaults to the system timezone.
  * @param date Optional date for which to resolve the information.
  * @returns Object containing time zone identifier, names, and offset.
  */
@@ -110,19 +110,26 @@ export function getTimeZoneDetails(tzId?: $TimeZoneIdentifier, date?: Date) {
 	const TZ_NAME_TYPES = ['long', 'longGeneric', 'longOffset'] as const;
 	type TZNameKey = `tzName${Capitalize<(typeof TZ_NAME_TYPES)[number]>}`;
 
-	const $tzId = tzId || Intl.DateTimeFormat().resolvedOptions().timeZone;
+	const $tzId =
+		tzId || (Intl.DateTimeFormat().resolvedOptions().timeZone as $TimeZoneIdentifier);
 
 	const obj = { tzIdentifier: $tzId } as TimeZoneDetails;
 
 	for (const type of TZ_NAME_TYPES) {
-		const parts = new Intl.DateTimeFormat('en', {
-			timeZone: $tzId,
-			timeZoneName: type,
-		}).formatToParts(date);
-
-		const tzPart = parts.find((p) => p.type === 'timeZoneName');
 		const key = `tzName${type[0].toUpperCase()}${type.slice(1)}` as TZNameKey;
-		obj[key] = tzPart?.value;
+
+		try {
+			const parts = new Intl.DateTimeFormat('en', {
+				timeZone: $tzId,
+				timeZoneName: type,
+			}).formatToParts(date);
+
+			const tzPart = parts.find((p) => p.type === 'timeZoneName');
+
+			obj[key] = tzPart?.value;
+		} catch {
+			obj[key] = undefined;
+		}
 	}
 
 	return obj;

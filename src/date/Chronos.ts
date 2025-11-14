@@ -136,12 +136,12 @@ export class Chronos {
 	/**
 	 * Represents the current timezone context, which can be a single identifier, an array of equivalent identifiers, or a UTC offset.
 	 *
-	 * - **`TimeZoneIdentifier`** — e.g., `"Asia/Dhaka"`. Returned when the {@link timeZone} method has not been invoked. It is default behaviour.
-	 * - **Array of `TimeZoneIdentifier`** — e.g., `['Asia/Kathmandu', 'Asia/Katmandu']`, used when multiple timezones share the same UTC offset such as `"UTC+05:45"`.
-	 * - **`UTCOffset`** — e.g., `"UTC+06:45"` or `"UTC+02:15"`, returned when no named timezone corresponds to a given offset.
+	 * - **{@link $TimeZoneIdentifier}** — e.g., `"Asia/Dhaka"`. Returned when the {@link timeZone} method has not been invoked. It is default behaviour.
+	 * - **Array of {@link $TimeZoneIdentifier}** — e.g., `['Asia/Kathmandu', 'Asia/Katmandu']`, used when multiple timezones share the same UTC offset such as `"UTC+05:45"`.
+	 * - **{@link UTCOffset}** — e.g., `"UTC+06:45"` or `"UTC+02:15"`, returned when no named timezone corresponds to a given offset.
 	 *
 	 * @remarks
-	 * - By default, when {@link timeZone} is not applied, a single `TimeZoneIdentifier` string is provided.
+	 * - By default, when {@link timeZone} is not applied, a single {@link $TimeZoneIdentifier} string is provided.
 	 * - When applied, it may instead return a single identifier string, an array of equivalent identifiers or a UTC offset string.
 	 * - To retrieve the local system's native timezone identifier, use the {@link $getNativeTimeZoneId} instance method.
 	 */
@@ -473,13 +473,18 @@ export class Chronos {
 	 * @returns The resolved native timezone name or `undefined` if unavailable.
 	 */
 	#getNativeTzName(tzId?: $TimeZoneIdentifier) {
-		const tzDetails = new Intl.DateTimeFormat('en', {
-			timeZone: tzId,
-			timeZoneName: 'long',
-		}).formatToParts(this.#date);
+		try {
+			const tzDetails = new Intl.DateTimeFormat('en', {
+				timeZone: tzId,
+				timeZoneName: 'long',
+			}).formatToParts(this.#date);
 
-		const tzPart = tzDetails.find((p) => p.type === 'timeZoneName');
-		return tzPart?.value as LooseLiteral<TimeZoneName> | undefined;
+			const tzPart = tzDetails.find((p) => p.type === 'timeZoneName');
+
+			return tzPart?.value as LooseLiteral<TimeZoneName>;
+		} catch {
+			return undefined;
+		}
 	}
 
 	/**

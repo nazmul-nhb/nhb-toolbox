@@ -35,7 +35,7 @@ declare module '../Chronos' {
 		/**
 		 * @instance Creates a new instance of `Chronos` for the specified abbreviated time zone name.
 		 *
-		 * @remarks Use abbreviated time zone name to create time zone instance only when you can't figure out the time zone identifier.
+		 * @remarks Use abbreviated time zone name to create time zone instance only when you can't figure out the time zone identifier {@link TimeZoneIdentifier}.
 		 *
 		 * @param zone - Standard time zone abbreviation (e.g., `'IST'`, `'UTC'`, `'EST'` etc.). See: {@link https://en.wikipedia.org/wiki/List_of_time_zone_abbreviations Time zone abbreviations on Wikipedia}.
 		 * @returns A new instance of `Chronos` with time in the given time zone abbreviation. Invalid input sets time-zone to `UTC`.
@@ -99,14 +99,36 @@ declare module '../Chronos' {
 export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	const { internalDate: $Date, withOrigin } = ChronosClass[INTERNALS];
 
+	/** Array of time zone ids extracted from {@link Intl.supportedValuesOf} */
+	const TZ_IDS = Intl.supportedValuesOf('timeZone') as Array<$TimeZoneIdentifier>;
+
 	/** Check if a time zone factor represents GMT */
 	const _isGMT = (factor: LooseLiteral<UTCOffset>) => {
 		return factor === 'UTC+00:00' || factor === 'UTC-00:00';
 	};
 
+	/** Check if a string is the key of `TIME_ZONE_LABELS` constant */
+	const _isLabelKey = (offset: string | undefined): offset is $TZLabelKey => {
+		return offset ? offset in TIME_ZONE_LABELS : false;
+	};
+
+	/** Check if a string is time zone abbreviation */
+	const _isValidTzAbbr = (tz: string): tz is TimeZone => {
+		return tz in TIME_ZONES;
+	};
+
+	/** Resolve time zone name from `TIME_ZONE_LABELS` constant using UTC offset or get undefined */
+	const _resolveTzName = (offset: UTCOffset | undefined) => {
+		if (_isLabelKey(offset)) {
+			return TIME_ZONE_LABELS[offset];
+		}
+
+		return undefined;
+	};
+
 	/**
-	 * * Retrieves comprehensive time zone details using the {@link Intl} API.
-	 * @param tzId Time zone identifier; defaults to the system timezone.
+	 * * Retrieves comprehensive time zone details using the {@link Intl.supportedValuesOf} API.
+	 * @param tzId Time zone identifier. Defaults to the system timezone.
 	 * @param date Date for which to resolve the information.
 	 * @returns Object containing time zone identifier, name, and offset.
 	 */
@@ -116,29 +138,51 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		const obj = { tzId } as {
 			tzId: $TimeZoneIdentifier;
 			tzName: LooseLiteral<TimeZoneName> | undefined;
-			offset: UTCOffset;
+			offset: UTCOffset | undefined;
 		};
 
 		for (const type of TZ_NAME_TYPES) {
-			const parts = new Intl.DateTimeFormat('en', {
-				timeZone: tzId,
-				timeZoneName: type,
-			}).formatToParts(date);
-
-			const tzPart = parts.find((p) => p.type === 'timeZoneName');
 			const key = type === 'long' ? 'tzName' : 'offset';
-			const value =
-				type === 'longOffset' ?
-					tzPart?.value === 'GMT' ?
-						'UTC+00:00'
-					:	tzPart?.value?.replace(/^GMT/, 'UTC')
-				:	tzPart?.value;
 
-			obj[key] = value as Any;
+			try {
+				const parts = new Intl.DateTimeFormat('en', {
+					timeZone: tzId,
+					timeZoneName: type,
+				}).formatToParts(date);
+
+				const tzPart = parts.find((p) => p.type === 'timeZoneName');
+
+				const value =
+					type === 'longOffset' ?
+						tzPart?.value === 'GMT' ?
+							'UTC+00:00'
+						:	tzPart?.value?.replace(/^GMT/, 'UTC')
+					:	tzPart?.value;
+
+				obj[key] = value as Any;
+			} catch {
+				obj[key] = undefined;
+			}
 		}
 
 		return obj;
 	};
+
+	/** Cache to store time zone id (from {@link Intl.supportedValuesOf}) against UTC offset  */
+	const TZ_ID_MAP = new Map<UTCOffset, $TimeZoneIdentifier[]>(
+		TZ_IDS.reduce((tzIds, id) => {
+			const { offset } = _getTimeZoneDetails(id);
+
+			if (offset) {
+				const arr = tzIds.get(offset) ?? [];
+
+				arr.push(id);
+				tzIds.set(offset, arr);
+			}
+
+			return tzIds;
+		}, new Map<UTCOffset, $TimeZoneIdentifier[]>())
+	);
 
 	/** Cache to store time zone name and abbreviation against UTC offset from {@link TIME_ZONES} */
 	const TZ_NAME_ABBR_MAP = new Map<UTCOffset, $TZNameAbbr>(
@@ -148,22 +192,14 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		])
 	);
 
-	/** Check if a string is the key of `TIME_ZONE_LABELS` constant */
-	const _isLabelKey = (offset: string): offset is $TZLabelKey => {
-		return offset in TIME_ZONE_LABELS;
-	};
+	/** Get time zone identifier from {@link TZ_ID_MAP} using UTC offset */
+	const _getTimeZoneId = (utc: UTCOffset) => {
+		const tzIds = TZ_ID_MAP.get(utc);
 
-	const _isValidTzAbbr = (tz: string): tz is TimeZone => {
-		return tz in TIME_ZONES;
-	};
+		if (!tzIds || tzIds?.length === 0) return undefined;
+		if (tzIds?.length === 1) return tzIds[0];
 
-	/** Resolve time zone name from `TIME_ZONE_LABELS` constant using UTC offset or get undefined */
-	const _resolveTzName = (offset: UTCOffset) => {
-		if (_isLabelKey(offset)) {
-			return TIME_ZONE_LABELS[offset];
-		}
-
-		return undefined;
+		return tzIds;
 	};
 
 	/** Get time zone name from `Intl.supportedValuesOf('timeZone')`, `TIME_ZONE_LABELS` or `TIME_ZONES` constants using UTC offset, time zone identifier or time zone abbreviation */
@@ -187,30 +223,6 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		}
 	};
 
-	/** Cache to store time zone id against UTC offset from {@link Intl.supportedValuesOf} */
-	const TZ_ID_MAP = new Map<UTCOffset, $TimeZoneIdentifier[]>(
-		Intl.supportedValuesOf('timeZone').reduce((acc, id) => {
-			const { offset } = _getTimeZoneDetails(id as $TimeZoneIdentifier);
-
-			const arr = acc.get(offset) ?? [];
-
-			arr.push(id as $TimeZoneIdentifier);
-			acc.set(offset, arr);
-
-			return acc;
-		}, new Map<UTCOffset, $TimeZoneIdentifier[]>())
-	);
-
-	/** Get time zone identifier from {@link Intl.supportedValuesOf} using UTC offset */
-	const _getTimeZoneId = (utc: UTCOffset) => {
-		const tzIds = TZ_ID_MAP.get(utc);
-
-		if (!tzIds || tzIds?.length === 0) return undefined;
-		if (tzIds?.length === 1) return tzIds[0];
-
-		return tzIds;
-	};
-
 	ChronosClass.prototype.timeZone = function (
 		this: ChronosConstructor,
 		zone: TimeZoneIdentifier | TimeZone | UTCOffset
@@ -225,7 +237,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 			offset = TIME_ZONES[zone].offset;
 			tzId = _getTimeZoneId(offset) || offset;
 		} else {
-			offset = _getTimeZoneDetails(zone, $Date(this)).offset;
+			offset = _getTimeZoneDetails(zone, $Date(this)).offset || TIME_ZONES['UTC'].offset;
 			tzId = zone;
 		}
 

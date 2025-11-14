@@ -35,12 +35,12 @@ export function isValidUTCOffset(value: unknown): value is UTCOffset {
 }
 
 /**
- * * Checks if the provided value is a valid timezone identifier from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database} (e.g. `"Africa/Harare"`).
+ * * Checks if the provided value is a valid timezone identifier (excluding `'Factory'`) from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database} (e.g. `"Africa/Harare"`).
  * @param value Timezone id to check.
  * @returns `true` if the value is a valid timezone id, `false` otherwise.
  */
 export function isValidTimeZoneId(value: unknown): value is $TimeZoneIdentifier {
-	return isString(value) ? value in TIME_ZONE_IDS : false;
+	return isString(value) ? value !== 'Factory' && value in TIME_ZONE_IDS : false;
 }
 
 /**
