@@ -73,7 +73,7 @@ export interface GreetingConfigs {
 /** Time zone details object */
 export type TimeZoneDetails = {
 	/** IANA time zone identifier */
-	tzIdentifier: LooseLiteral<TimeZoneIdentifier>;
+	tzIdentifier: LooseLiteral<$TimeZoneIdentifier>;
 	/** Long localized form (e.g., `'Pacific Standard Time'`, `'Nordamerikanische Westküsten-Normalzeit'`) */
 	tzNameLong?: LooseLiteral<TimeZoneName>;
 	/** Long generic non-location format (e.g.: `'Pacific Time'`, `'Nordamerikanische Westküstenzeit'`) */
@@ -185,7 +185,7 @@ export type LocalesArguments = LocaleCode | Intl.Locale | Array<LocaleCode | Int
 
 /** Format options for `toLocaleString` method. Extends `Intl.DateTimeFormatOptions `to update `timeZone` option. */
 export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
-	timeZone?: TimeZoneIdentifier;
+	timeZone?: $TimeZoneIdentifier;
 }
 
 /** Iterable `Chronos` object properties */
@@ -272,7 +272,7 @@ export interface ChronosInternals {
 		offset?: UTCOffset,
 		tzName?: string,
 		tzId?: TimeZoneId,
-		tzTracker?: TimeZoneIdentifier | TimeZone | UTCOffset
+		tzTracker?: $TimeZoneIdentifier | TimeZone | UTCOffset
 	): Chronos;
 
 	/**
@@ -346,21 +346,24 @@ export type ChronosStaticKey = keyof ChronosStatics;
 /** Key of {@link TIME_ZONE_LABELS} ({@link UTCOffset}) */
 export type $TZLabelKey = keyof typeof TIME_ZONE_LABELS;
 
-/** Abbreviated time-zone names (from {@link https://en.wikipedia.org/wiki/List_of_time_zone_abbreviations time zone abbreviations on Wikipedia}) */
+/** Abbreviated time zone names (from {@link https://en.wikipedia.org/wiki/List_of_time_zone_abbreviations time zone abbreviations on Wikipedia}) */
 export type TimeZone = keyof typeof TIME_ZONES;
 
 /** Full time zone names from Wikipedia and IANA time zone database. */
 export type TimeZoneName = NonNullable<
 	| (typeof TIME_ZONE_LABELS)[$TZLabelKey]
 	| (typeof TIME_ZONES)[TimeZone]['tzName']
-	| (typeof TIME_ZONE_IDS)[TimeZoneIdentifier]['tzName']
+	| (typeof TIME_ZONE_IDS)[$TimeZoneIdentifier]['tzName']
 >;
 
-/** Timezone identifier (from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia}) */
-export type TimeZoneIdentifier = keyof typeof TIME_ZONE_IDS;
+/** Time zone identifier (from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia}) excluding `'Factory'` */
+export type $TimeZoneIdentifier = Exclude<keyof typeof TIME_ZONE_IDS, 'Factory'>;
 
-/** Timezone identifier, array of timezone identifiers or UTC offset. */
-export type TimeZoneId = TimeZoneIdentifier | TimeZoneIdentifier[] | UTCOffset;
+/** Time zone identifier (from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia}) excluding `'Factory'` & abbreviations present in {@link TimeZone} */
+export type TimeZoneIdentifier = Exclude<$TimeZoneIdentifier, TimeZone>;
+
+/** Time zone identifier, array of timezone identifiers or UTC offset. */
+export type TimeZoneId = $TimeZoneIdentifier | $TimeZoneIdentifier[] | UTCOffset;
 
 /** Positive UTC hours */
 export type PositiveUTCHour = `+0${Enumerate<10>}` | `+${NumberRange<10, 14>}`;

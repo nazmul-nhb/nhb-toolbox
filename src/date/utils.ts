@@ -1,9 +1,9 @@
 import type { Numeric } from '../types/index';
 import type {
+	$TimeZoneIdentifier,
 	ClockTime,
 	HourMinutes,
 	TimeZoneDetails,
-	TimeZoneIdentifier,
 	UTCOffset,
 } from './types';
 
@@ -106,7 +106,7 @@ export function formatUTCOffset(minutes: Numeric): UTCOffset {
  * @param date Optional date for which to resolve the information.
  * @returns Object containing time zone identifier, names, and offset.
  */
-export function getTimeZoneDetails(tzId?: TimeZoneIdentifier, date?: Date) {
+export function getTimeZoneDetails(tzId?: $TimeZoneIdentifier, date?: Date) {
 	const TZ_NAME_TYPES = ['long', 'longGeneric', 'longOffset'] as const;
 	type TZNameKey = `tzName${Capitalize<(typeof TZ_NAME_TYPES)[number]>}`;
 

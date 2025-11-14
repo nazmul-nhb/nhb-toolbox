@@ -2863,10 +2863,10 @@ export const TIME_ZONE_IDS = /* @__PURE__ */ Object.freeze({
 		tzName: 'Central European Time',
 		offset: 'UTC+01:00',
 	},
-	// Factory: {
-	// 	tzName: undefined,
-	// 	offset: 'UTC+00:00',
-	// },
+	Factory: {
+		tzName: undefined,
+		offset: 'UTC+00:00',
+	},
 	GB: {
 		tzName: 'Greenwich Mean Time',
 		offset: 'UTC+00:00',

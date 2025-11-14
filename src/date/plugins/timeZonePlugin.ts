@@ -5,6 +5,7 @@ import { isValidUTCOffset } from '../guards';
 import { TIME_ZONES, TIME_ZONE_LABELS } from '../timezone';
 import type {
 	$TZLabelKey,
+	$TimeZoneIdentifier,
 	TimeZone,
 	TimeZoneId,
 	TimeZoneIdentifier,
@@ -109,11 +110,11 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	 * @param date Date for which to resolve the information.
 	 * @returns Object containing time zone identifier, name, and offset.
 	 */
-	const _getTimeZoneDetails = (tzId: TimeZoneIdentifier, date?: Date) => {
+	const _getTimeZoneDetails = (tzId: $TimeZoneIdentifier, date?: Date) => {
 		const TZ_NAME_TYPES = ['long', 'longOffset'] as const;
 
 		const obj = { tzId } as {
-			tzId: TimeZoneIdentifier;
+			tzId: $TimeZoneIdentifier;
 			tzName: LooseLiteral<TimeZoneName> | undefined;
 			offset: UTCOffset;
 		};
@@ -166,7 +167,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	};
 
 	/** Get time zone name from `Intl.supportedValuesOf('timeZone')`, `TIME_ZONE_LABELS` or `TIME_ZONES` constants using UTC offset, time zone identifier or time zone abbreviation */
-	const _getTimeZoneName = (zone: TimeZoneIdentifier | TimeZone | UTCOffset, date: Date) => {
+	const _getTimeZoneName = (zone: $TimeZoneIdentifier | TimeZone | UTCOffset, date: Date) => {
 		if (_isGMT(zone)) return 'Greenwich Mean Time';
 
 		if (isValidUTCOffset(zone)) {
@@ -187,17 +188,17 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	};
 
 	/** Cache to store time zone id against UTC offset from {@link Intl.supportedValuesOf} */
-	const TZ_ID_MAP = new Map<UTCOffset, TimeZoneIdentifier[]>(
+	const TZ_ID_MAP = new Map<UTCOffset, $TimeZoneIdentifier[]>(
 		Intl.supportedValuesOf('timeZone').reduce((acc, id) => {
-			const { offset } = _getTimeZoneDetails(id as TimeZoneIdentifier);
+			const { offset } = _getTimeZoneDetails(id as $TimeZoneIdentifier);
 
 			const arr = acc.get(offset) ?? [];
 
-			arr.push(id as TimeZoneIdentifier);
+			arr.push(id as $TimeZoneIdentifier);
 			acc.set(offset, arr);
 
 			return acc;
-		}, new Map<UTCOffset, TimeZoneIdentifier[]>())
+		}, new Map<UTCOffset, $TimeZoneIdentifier[]>())
 	);
 
 	/** Get time zone identifier from {@link Intl.supportedValuesOf} using UTC offset */

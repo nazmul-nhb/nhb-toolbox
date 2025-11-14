@@ -3,7 +3,7 @@ import { isNumericString } from '../guards/specials';
 import { normalizeNumber } from '../number/utilities';
 import type { Numeric } from '../types/index';
 import { TIME_ZONE_IDS } from './timezone';
-import type { ClockTime, TimeZoneIdentifier, UTCOffset } from './types';
+import type { $TimeZoneIdentifier, ClockTime, UTCOffset } from './types';
 
 /**
  * * Checks if the provided value is a valid time string in "HH:MM" format.
@@ -39,7 +39,7 @@ export function isValidUTCOffset(value: unknown): value is UTCOffset {
  * @param value Timezone id to check.
  * @returns `true` if the value is a valid timezone id, `false` otherwise.
  */
-export function isValidTimeZoneId(value: unknown): value is TimeZoneIdentifier {
+export function isValidTimeZoneId(value: unknown): value is $TimeZoneIdentifier {
 	return isString(value) ? value in TIME_ZONE_IDS : false;
 }
 

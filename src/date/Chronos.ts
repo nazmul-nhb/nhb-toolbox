@@ -7,6 +7,7 @@ import { DAYS, INTERNALS, MONTHS, SORTED_TIME_FORMATS } from './constants';
 import { isLeapYear } from './guards';
 import type {
 	$PluginMethods,
+	$TimeZoneIdentifier,
 	$UTCOffset,
 	ChronosFormat,
 	ChronosInput,
@@ -32,7 +33,6 @@ import type {
 	TimeUnitValue,
 	TimeZone,
 	TimeZoneId,
-	TimeZoneIdentifier,
 	TimeZoneName,
 	UTCOffset,
 	WeekDay,
@@ -148,7 +148,7 @@ export class Chronos {
 	timeZoneId: TimeZoneId;
 
 	/** Tracker to identify the instance created by {@link timeZone} method */
-	protected $tzTracker?: TimeZoneIdentifier | TimeZone | UTCOffset;
+	protected $tzTracker?: $TimeZoneIdentifier | TimeZone | UTCOffset;
 
 	/**
 	 * * Creates a new immutable `Chronos` instance.
@@ -393,8 +393,8 @@ export class Chronos {
 	 * @returns The resolved time zone name or its IANA identifier as a fallback.
 	 */
 	$getNativeTimeZoneName(
-		tzId?: TimeZoneIdentifier
-	): LooseLiteral<TimeZoneName | TimeZoneIdentifier> {
+		tzId?: $TimeZoneIdentifier
+	): LooseLiteral<TimeZoneName | $TimeZoneIdentifier> {
 		const $tzId = tzId || this.$getNativeTimeZoneId();
 
 		return this.#getNativeTzName($tzId) ?? $tzId;
@@ -409,8 +409,8 @@ export class Chronos {
 	 *
 	 * @returns The local system's IANA time zone identifier.
 	 */
-	$getNativeTimeZoneId(): TimeZoneIdentifier {
-		return Intl.DateTimeFormat().resolvedOptions().timeZone as TimeZoneIdentifier;
+	$getNativeTimeZoneId(): $TimeZoneIdentifier {
+		return Intl.DateTimeFormat().resolvedOptions().timeZone as $TimeZoneIdentifier;
 	}
 
 	// ! ======= Private Methods ======= //
@@ -446,7 +446,7 @@ export class Chronos {
 		offset?: UTCOffset,
 		tzName?: string,
 		tzId?: TimeZoneId,
-		tzTracker?: TimeZoneIdentifier | TimeZone | UTCOffset
+		tzTracker?: $TimeZoneIdentifier | TimeZone | UTCOffset
 	): Chronos {
 		const instance = new Chronos(this.#date);
 		instance.#ORIGIN = origin;
@@ -472,7 +472,7 @@ export class Chronos {
 	 * @param tzId The IANA timezone identifier (e.g. `"Asia/Dhaka"`, `"America/New_York"`). Defaults to the system timezone if not provided.
 	 * @returns The resolved native timezone name or `undefined` if unavailable.
 	 */
-	#getNativeTzName(tzId?: TimeZoneIdentifier) {
+	#getNativeTzName(tzId?: $TimeZoneIdentifier) {
 		const tzDetails = new Intl.DateTimeFormat('en', {
 			timeZone: tzId,
 			timeZoneName: 'long',

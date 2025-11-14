@@ -6,6 +6,12 @@ All notable changes to the package will be documented here.
 
 ---
 
+<!-- ## [4.26.50] - 2025-11-14
+
+- **Updated** `TimeZoneIdentifier` type: now **excludes** `Factory` and *time zone abbreviations* already present in `TimeZone` type. **Created** new `$TimeZoneIdentifier` type for replacement.
+- 
+-->
+
 ## [4.26.45] - 2025-11-13
 
 - **Removed** *time zone id* `'Factory'` from `TIME_ZONE_IDS` and **replaced** `'EDT'` with `'EST5EDT'` to fix the *issue with getting time zone details* using `Intl` API.
