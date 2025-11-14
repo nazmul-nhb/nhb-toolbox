@@ -18,7 +18,12 @@ import type {
 	ZODIAC_PRESETS,
 } from './constants';
 import type { SEASON_PRESETS } from './seasons';
-import type { TIME_ZONE_IDS, TIME_ZONE_LABELS, TIME_ZONES } from './timezone';
+import type {
+	TIME_ZONE_IDS,
+	TIME_ZONE_LABELS,
+	TIME_ZONES,
+	TIME_ZONES_NATIVE,
+} from './timezone';
 
 // ! Re-export types or alias(es)
 export type { ChronosStatics, UTCOffset as UTCOffSet };
@@ -350,13 +355,6 @@ export type $TZLabelKey = keyof typeof TIME_ZONE_LABELS;
 /** Abbreviated time zone names (from {@link https://en.wikipedia.org/wiki/List_of_time_zone_abbreviations time zone abbreviations on Wikipedia}). */
 export type TimeZone = keyof typeof TIME_ZONES;
 
-/** Full time zone names from Wikipedia and IANA time zone database. */
-export type TimeZoneName = NonNullable<
-	| (typeof TIME_ZONE_LABELS)[$TZLabelKey]
-	| (typeof TIME_ZONES)[TimeZone]['tzName']
-	| (typeof TIME_ZONE_IDS)[$TimeZoneIdentifier]['tzName']
->;
-
 /** Time zone identifier (from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia}) excluding `'Factory'`. */
 export type $TimeZoneIdentifier = Exclude<keyof typeof TIME_ZONE_IDS, 'Factory'>;
 
@@ -365,6 +363,17 @@ export type TimeZoneIdentifier = Exclude<$TimeZoneIdentifier, TimeZone>;
 
 /** Time zone identifier, array of timezone identifiers or UTC offset. */
 export type TimeZoneId = $TimeZoneIdentifier | $TimeZoneIdentifier[] | UTCOffset;
+
+/** JavaScript native time zone identifier (from {@link Intl.supportedValuesOf} API) */
+export type TimeZoneIdNative = keyof typeof TIME_ZONES_NATIVE;
+
+/** Full time zone names from {@link https://en.wikipedia.org/wiki/List_of_time_zone_abbreviations Wikipedia}, {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia} and JavaScript native API ({@link Intl.supportedValuesOf}). */
+export type TimeZoneName = NonNullable<
+	| (typeof TIME_ZONE_LABELS)[$TZLabelKey]
+	| (typeof TIME_ZONES)[TimeZone]['tzName']
+	| (typeof TIME_ZONE_IDS)[$TimeZoneIdentifier]['tzName']
+	| (typeof TIME_ZONES_NATIVE)[TimeZoneIdNative]['tzName']
+>;
 
 /** Positive UTC hours */
 export type PositiveUTCHour = `+0${Enumerate<10>}` | `+${NumberRange<10, 14>}`;

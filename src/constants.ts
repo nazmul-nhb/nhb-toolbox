@@ -5,7 +5,13 @@ export {
 	WESTERN_ZODIAC_SIGNS,
 } from './date/constants';
 
-export { TIME_ZONE_IDS, TIME_ZONE_LABELS, TIME_ZONES } from './date/timezone';
+export {
+	TIME_ZONE_IDS,
+	TIME_ZONE_LABELS,
+	TIME_ZONES_NATIVE,
+	TIME_ZONES,
+	TIME_ZONES as TZ_ABBREVIATIONS,
+} from './date/timezone';
 
 export {
 	AUSTRALIA_SEASONS,

@@ -3,7 +3,7 @@ import { isNumericString } from '../guards/specials';
 import { normalizeNumber } from '../number/utilities';
 import type { Numeric } from '../types/index';
 import { TIME_ZONE_IDS } from './timezone';
-import type { $TimeZoneIdentifier, ClockTime, UTCOffset } from './types';
+import type { $TimeZoneIdentifier, ClockTime, TimeZoneIdNative, UTCOffset } from './types';
 
 /**
  * * Checks if the provided value is a valid time string in "HH:MM" format.
@@ -35,12 +35,32 @@ export function isValidUTCOffset(value: unknown): value is UTCOffset {
 }
 
 /**
- * * Checks if the provided value is a valid timezone identifier (excluding `'Factory'`) from {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database} (e.g. `"Africa/Harare"`).
- * @param value Timezone id to check.
- * @returns `true` if the value is a valid timezone id, `false` otherwise.
+ * * Validates whether the provided value is a recognized IANA time zone identifier (excluding `"Factory"`), based on the {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database}.
+ *
+ * @remarks
+ * - Relies on a large constant map of time zone identifiers, which can increase bundle size in browser environments.
+ * - Prefer {@link isNativeTimeZoneId} when you want a lightweight, native-only validation approach.
+ *
+ * @param value Time zone identifier to validate.
+ * @returns `true` if the value is a valid IANA time zone identifier, otherwise `false`.
  */
 export function isValidTimeZoneId(value: unknown): value is $TimeZoneIdentifier {
 	return isString(value) ? value !== 'Factory' && value in TIME_ZONE_IDS : false;
+}
+
+/**
+ * * Validates whether the provided value is a supported time zone identifier using the native JavaScript API (`Intl.supportedValuesOf('timeZone')`).
+ *
+ * @remarks
+ * - Uses only native {@link Intl} capabilities—minimal code footprint, highly performant.
+ * - Prefer {@link isValidTimeZoneId} when validation must align strictly with the full
+ *   {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database}.
+ *
+ * @param value Time zone identifier to validate.
+ * @returns `true` if the value is a valid native JS-supported time zone identifier, otherwise `false`.
+ */
+export function isNativeTimeZoneId(value: unknown): value is TimeZoneIdNative {
+	return isString(value) ? Intl.supportedValuesOf('timeZone').includes(value) : false;
 }
 
 /**
