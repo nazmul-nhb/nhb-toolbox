@@ -60,7 +60,7 @@ declare module '../Chronos' {
 		 * - Use abbreviated time zone name to create time zone instance only when you can't figure out the time zone identifier.
 		 * - Use UTC offset only to create a fictional/unlisted time zone instance.
 		 *
-		 * @param tz - A time zone identifier ({@link TimeZoneIdentifier}), time zone abbreviation {@link TimeZone}, or UTC offset {@link UTCOffset}.
+		 * @param tz - A time zone identifier ({@link TimeZoneIdentifier}), time zone abbreviation ({@link TimeZone}), or UTC offset ({@link UTCOffset}).
 		 * @returns A new instance of `Chronos` with time in the given parameter. Invalid input sets time zone to `UTC`.
 		 */
 		timeZone(tz: TimeZoneIdentifier | TimeZone | UTCOffset): ChronosConstructor;
