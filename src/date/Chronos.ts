@@ -444,7 +444,7 @@ export class Chronos {
 	#withOrigin(
 		origin: ChronosMethods,
 		offset?: UTCOffset,
-		tzName?: string,
+		tzName?: LooseLiteral<TimeZoneName>,
 		tzId?: TimeZoneId,
 		tzTracker?: $TimeZoneIdentifier | TimeZone | UTCOffset
 	): Chronos {
@@ -799,7 +799,7 @@ export class Chronos {
 	/**
 	 * @instance Formats the date into a predefined strict string format using local time or UTC.
 	 *
-	 * @remarks Offers `over 26,500` predefined formats with full IntelliSense support.
+	 * @remarks Offers `over 21,300` predefined formats with full IntelliSense support.
 	 *
 	 * @param format - The desired format string. Defaults to `'dd, mmm DD, YYYY HH:mm:ss'`
 	 *                 (e.g., `'Sun, Apr 06, 2025 16:11:55'`).

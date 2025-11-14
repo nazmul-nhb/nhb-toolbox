@@ -25,7 +25,7 @@ declare module '../Chronos' {
 		/**
 		 * @instance Creates a new instance of `Chronos` for the specified time zone identifier.
 		 *
-		 * @remarks Using time zone identifier to create time zone instance is the best option.
+		 * @remarks Using time zone identifier to create time zone instance is the best option as it extract info from {@link Intl} API.
 		 *
 		 * @param tzId - Time zone identifier (e.g., `'Africa/Harare'`). See: {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia}.
 		 * @returns A new instance of `Chronos` with time in the given time zone identifier. Invalid input sets time-zone to `UTC`.
@@ -43,7 +43,7 @@ declare module '../Chronos' {
 		timeZone(zone: TimeZone): ChronosConstructor;
 
 		/**
-		 * @instance Creates a new instance of `Chronos` for the specified utc offset.
+		 * @instance Creates a new instance of `Chronos` for the specified UTC offset.
 		 *
 		 * @remarks Use UTC offset only to create a fictional/unlisted time zone instance.
 		 *
@@ -51,6 +51,19 @@ declare module '../Chronos' {
 		 * @returns A new instance of `Chronos` with time in the given utc offset. Invalid input sets time-zone to `UTC`.
 		 */
 		timeZone(utc: UTCOffset): ChronosConstructor;
+
+		/**
+		 * @instance Creates a new instance of `Chronos` for the specified time zone id, abbreviation or UTC offset.
+		 *
+		 * @remarks
+		 * - Using time zone identifier to create time zone instance is the best option as it extract info from {@link Intl} API.
+		 * - Use abbreviated time zone name to create time zone instance only when you can't figure out the time zone identifier.
+		 * - Use UTC offset only to create a fictional/unlisted time zone instance.
+		 *
+		 * @param tz - A time zone identifier ({@link TimeZoneIdentifier}), time zone abbreviation {@link TimeZone}, or UTC offset {@link UTCOffset}.
+		 * @returns A new instance of `Chronos` with time in the given parameter. Invalid input sets time zone to `UTC`.
+		 */
+		timeZone(tz: TimeZoneIdentifier | TimeZone | UTCOffset): ChronosConstructor;
 
 		/**
 		 * @instance Returns the current time zone name as a full descriptive string (e.g. `"Bangladesh Standard Time"`).

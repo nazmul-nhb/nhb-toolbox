@@ -6,12 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
-<!-- ## [4.26.50] - 2025-11-14
+## [4.26.50] - 2025-11-14
 
-- **Updated** `TimeZoneIdentifier` type: now **excludes** `Factory` and *time zone abbreviations* already present in `TimeZone` type. **Created** new `$TimeZoneIdentifier` type for replacement.
-- **Replaced** `TIME_ZONE_IDS` with `Intl.supportedValuesOf('timeZone')` API to get *time zone identifier* to reduce the `timeZonePlugin` size.
-- 
--->
+- **Updated** `TimeZoneIdentifier` type: now **excludes** `Factory` and *time zone abbreviations* already present in `TimeZone` literal type. **Created** new `$TimeZoneIdentifier` type as *replacement*.
+- **Replaced** `TIME_ZONE_IDS` with `Intl.supportedValuesOf('timeZone')` API to get *time zone identifier* to reduce the `timeZonePlugin` size. `TIME_ZONE_IDS` is still in the codebase to generate *types*.
 
 ## [4.26.45] - 2025-11-13
 

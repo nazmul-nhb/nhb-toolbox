@@ -173,7 +173,7 @@ export type TimeParts =
 	| `${Exclude<Hour, 'H' | 'HH' | 'h'>}:${Exclude<Minute, 'm'>}:${Exclude<Second, 's'>}:${Exclude<Millisecond, 'ms'>} ${TimeFormats}`;
 
 type DateTimeISO = 'YYYY-MM-DDTHH:mm:ss.mssZZ';
-type DateTimeConnector = ' ' | ', ' | '; ' | ' - ' | 'T';
+type DateTimeConnector = ' ' | ', ' | '; ' | ' - ';
 
 /** Pre-defined literal types for formatting date and time. Optionally can pass any string. */
 export type StrictFormat = LooseLiteral<
@@ -270,7 +270,7 @@ export interface ChronosInternals {
 		instance: Chronos,
 		method: PluginMethods,
 		offset?: UTCOffset,
-		tzName?: string,
+		tzName?: LooseLiteral<TimeZoneName>,
 		tzId?: TimeZoneId,
 		tzTracker?: $TimeZoneIdentifier | TimeZone | UTCOffset
 	): Chronos;
