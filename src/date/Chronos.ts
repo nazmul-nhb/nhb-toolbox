@@ -1626,7 +1626,10 @@ export class Chronos {
 		return extractMinutesFromUTC(this.#offset);
 	}
 
-	/** @instance Returns new `Chronos` instance in UTC time */
+	/**
+	 * @instance Returns new `Chronos` instance in UTC time
+	 * @remarks For best accuracy, apply this method **after** performing all calculation or manipulation operations, as switching the time zone beforehand may lead to unintended offsets in intermediate results.
+	 */
 	toUTC(): Chronos {
 		if (this.#offset === 'UTC+00:00') {
 			return this.#withOrigin('toUTC', 'UTC+00:00', 'Greenwich Mean Time', 'UTC');
@@ -1639,7 +1642,10 @@ export class Chronos {
 		return new Chronos(utc).#withOrigin('toUTC', 'UTC+00:00', 'Greenwich Mean Time', 'UTC');
 	}
 
-	/** @instance Returns new `Chronos` instance in local time */
+	/**
+	 * @instance Returns new `Chronos` instance in local time
+	 * @remarks For best accuracy, apply this method **after** performing all calculation or manipulation operations, as switching the time zone beforehand may lead to unintended offsets in intermediate results.
+	 */
 	toLocal(): Chronos {
 		const offset = this.getTimeZoneOffsetMinutes() - this.getUTCOffsetMinutes();
 
