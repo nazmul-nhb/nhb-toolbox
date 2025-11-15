@@ -6,10 +6,11 @@ export {
 } from './date/constants';
 
 export {
+	IANA_TZ_IDS,
 	TIME_ZONE_IDS,
 	TIME_ZONE_LABELS,
-	TIME_ZONES_NATIVE,
 	TIME_ZONES,
+	TIME_ZONES_NATIVE,
 	TIME_ZONES as TZ_ABBREVIATIONS,
 } from './date/timezone';
 

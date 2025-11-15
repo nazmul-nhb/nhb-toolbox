@@ -33,7 +33,9 @@ import type {
 	TimeUnitValue,
 	TimeZone,
 	TimeZoneId,
+	TimeZoneIdNative,
 	TimeZoneName,
+	TimeZoneNameNative,
 	UTCOffset,
 	WeekDay,
 	WeekdayOptions,
@@ -395,7 +397,7 @@ export class Chronos {
 	 */
 	$getNativeTimeZoneName(
 		tzId?: $TimeZoneIdentifier
-	): LooseLiteral<TimeZoneName | $TimeZoneIdentifier> {
+	): LooseLiteral<TimeZoneNameNative | $TimeZoneIdentifier> {
 		const $tzId = tzId || this.$getNativeTimeZoneId();
 
 		return this.#getNativeTzName($tzId) ?? $tzId;
@@ -411,8 +413,8 @@ export class Chronos {
 	 *
 	 * @returns The local system's IANA time zone identifier.
 	 */
-	$getNativeTimeZoneId(): $TimeZoneIdentifier {
-		return Intl.DateTimeFormat().resolvedOptions().timeZone as $TimeZoneIdentifier;
+	$getNativeTimeZoneId(): TimeZoneIdNative {
+		return Intl.DateTimeFormat().resolvedOptions().timeZone as TimeZoneIdNative;
 	}
 
 	// ! ======= Private Methods ======= //
@@ -483,7 +485,7 @@ export class Chronos {
 
 			const tzPart = tzDetails.find((p) => p.type === 'timeZoneName');
 
-			return tzPart?.value as LooseLiteral<TimeZoneName>;
+			return tzPart?.value as LooseLiteral<TimeZoneNameNative>;
 		} catch {
 			return undefined;
 		}

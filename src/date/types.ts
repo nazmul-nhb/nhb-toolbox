@@ -367,12 +367,15 @@ export type TimeZoneId = $TimeZoneIdentifier | $TimeZoneIdentifier[] | UTCOffset
 /** JavaScript native time zone identifier (from {@link Intl.supportedValuesOf} API) */
 export type TimeZoneIdNative = keyof typeof TIME_ZONES_NATIVE;
 
+/** JavaScript native time zone name (from {@link Intl.supportedValuesOf} API) */
+export type TimeZoneNameNative = (typeof TIME_ZONES_NATIVE)[TimeZoneIdNative]['tzName'];
+
 /** Full time zone names from {@link https://en.wikipedia.org/wiki/List_of_time_zone_abbreviations Wikipedia}, {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia} and JavaScript native API ({@link Intl.supportedValuesOf}). */
 export type TimeZoneName = NonNullable<
 	| (typeof TIME_ZONE_LABELS)[$TZLabelKey]
 	| (typeof TIME_ZONES)[TimeZone]['tzName']
 	| (typeof TIME_ZONE_IDS)[$TimeZoneIdentifier]['tzName']
-	| (typeof TIME_ZONES_NATIVE)[TimeZoneIdNative]['tzName']
+	| TimeZoneNameNative
 >;
 
 /** Positive UTC hours */

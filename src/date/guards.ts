@@ -2,7 +2,7 @@ import { isString } from '../guards/primitives';
 import { isNumericString } from '../guards/specials';
 import { normalizeNumber } from '../number/utilities';
 import type { Numeric } from '../types/index';
-import { TIME_ZONE_IDS } from './timezone';
+import { IANA_TZ_IDS } from './timezone';
 import type { $TimeZoneIdentifier, ClockTime, TimeZoneIdNative, UTCOffset } from './types';
 
 /**
@@ -38,23 +38,23 @@ export function isValidUTCOffset(value: unknown): value is UTCOffset {
  * * Validates whether the provided value is a recognized IANA time zone identifier (excluding `"Factory"`), based on the {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database}.
  *
  * @remarks
- * - Relies on a large constant map of time zone identifiers, which can increase bundle size in browser environments.
- * - Prefer {@link isNativeTimeZoneId} when you want a lightweight, native-only validation approach.
+ * - Relies on a large constant map of time zone identifiers, which can increase bundle size in browser environments. Matches against `597` identifiers.
+ * - Prefer {@link isNativeTimeZoneId} when you want a lightweight, native-only validation approach. Matches against `418` identifiers.
  *
  * @param value Time zone identifier to validate.
  * @returns `true` if the value is a valid IANA time zone identifier, otherwise `false`.
  */
 export function isValidTimeZoneId(value: unknown): value is $TimeZoneIdentifier {
-	return isString(value) ? value !== 'Factory' && value in TIME_ZONE_IDS : false;
+	return isString(value) ? ([...IANA_TZ_IDS] as string[]).includes(value) : false;
 }
 
 /**
  * * Validates whether the provided value is a supported time zone identifier using the native JavaScript API (`Intl.supportedValuesOf('timeZone')`).
  *
  * @remarks
- * - Uses only native {@link Intl} capabilities—minimal code footprint, highly performant.
+ * - Uses only native {@link Intl} capabilities—minimal code footprint, highly performant. Matches against `418` identifiers.
  * - Prefer {@link isValidTimeZoneId} when validation must align strictly with the full
- *   {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database}.
+ *   {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database}. Matches against `597` identifiers.
  *
  * @param value Time zone identifier to validate.
  * @returns `true` if the value is a valid native JS-supported time zone identifier, otherwise `false`.
