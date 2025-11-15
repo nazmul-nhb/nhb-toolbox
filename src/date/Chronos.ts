@@ -373,7 +373,7 @@ export class Chronos {
 			case 'utc':
 				return this.#toLocalISOString().replace(this.getUTCOffset(), 'Z');
 			default:
-				return this.#toLocalISOString();
+				return this.#toLocalISOString(this.#offset);
 		}
 	}
 
@@ -572,10 +572,10 @@ export class Chronos {
 	}
 
 	/** @private Returns ISO string with local timezone offset */
-	#toLocalISOString(): string {
+	#toLocalISOString(offset?: UTCOffset): string {
 		const pad = (n: number, p = 2) => String(n).padStart(p, '0');
 
-		return `${this.year}-${pad(this.month + 1)}-${pad(this.date)}T${pad(this.hour)}:${pad(this.minute)}:${pad(this.second)}.${pad(this.millisecond, 3)}${this.getUTCOffset()}`;
+		return `${this.year}-${pad(this.month + 1)}-${pad(this.date)}T${pad(this.hour)}:${pad(this.minute)}:${pad(this.second)}.${pad(this.millisecond, 3)}${offset ? offset.slice(3) : this.getUTCOffset()}`;
 	}
 
 	/**
@@ -709,8 +709,17 @@ export class Chronos {
 
 				return new Date(chronos.#date);
 			}
-			default:
-				return new Date(this.#date);
+			default: {
+				const offset =
+					-extractMinutesFromUTC(this.#offset) - this.#date.getTimezoneOffset();
+
+				const newDate = new Date(this.#date);
+
+				newDate.setMinutes(newDate.getMinutes() + offset);
+
+				return new Date(newDate);
+				// return new Date(this.#date);
+			}
 		}
 	}
 
@@ -750,10 +759,7 @@ export class Chronos {
 	toISOString(): string {
 		switch (this.#ORIGIN) {
 			case 'timeZone':
-				return this.#toLocalISOString().replace(
-					this.getUTCOffset(),
-					this.#offset.slice(3)
-				);
+				return this.#toLocalISOString(this.#offset);
 			case 'toUTC':
 			case 'utc':
 				return this.#toLocalISOString().replace(this.getUTCOffset(), 'Z');
@@ -848,7 +854,13 @@ export class Chronos {
 	addSeconds(seconds: number): Chronos {
 		const newDate = new Date(this.#date);
 		newDate.setSeconds(newDate.getSeconds() + seconds);
-		return new Chronos(newDate).#withOrigin('addSeconds');
+		return new Chronos(newDate).#withOrigin(
+			'addSeconds',
+			this.#offset,
+			this.timeZoneName,
+			this.timeZoneId,
+			this.$tzTracker
+		);
 	}
 
 	/**
@@ -859,7 +871,13 @@ export class Chronos {
 	addMinutes(minutes: number): Chronos {
 		const newDate = new Date(this.#date);
 		newDate.setMinutes(newDate.getMinutes() + minutes);
-		return new Chronos(newDate).#withOrigin('addMinutes');
+		return new Chronos(newDate).#withOrigin(
+			'addMinutes',
+			this.#offset,
+			this.timeZoneName,
+			this.timeZoneId,
+			this.$tzTracker
+		);
 	}
 
 	/**
@@ -870,7 +888,13 @@ export class Chronos {
 	addHours(hours: number): Chronos {
 		const newDate = new Date(this.#date);
 		newDate.setHours(newDate.getHours() + hours);
-		return new Chronos(newDate).#withOrigin('addHours');
+		return new Chronos(newDate).#withOrigin(
+			'addHours',
+			this.#offset,
+			this.timeZoneName,
+			this.timeZoneId,
+			this.$tzTracker
+		);
 	}
 
 	/**
@@ -881,7 +905,13 @@ export class Chronos {
 	addDays(days: number): Chronos {
 		const newDate = new Date(this.#date);
 		newDate.setDate(newDate.getDate() + days);
-		return new Chronos(newDate).#withOrigin('addDays');
+		return new Chronos(newDate).#withOrigin(
+			'addDays',
+			this.#offset,
+			this.timeZoneName,
+			this.timeZoneId,
+			this.$tzTracker
+		);
 	}
 
 	/**
@@ -892,7 +922,13 @@ export class Chronos {
 	addWeeks(weeks: number): Chronos {
 		const newDate = new Date(this.#date);
 		newDate.setDate(newDate.getDate() + weeks * 7);
-		return new Chronos(newDate).#withOrigin('addWeeks');
+		return new Chronos(newDate).#withOrigin(
+			'addWeeks',
+			this.#offset,
+			this.timeZoneName,
+			this.timeZoneId,
+			this.$tzTracker
+		);
 	}
 
 	/**
@@ -903,7 +939,13 @@ export class Chronos {
 	addMonths(months: number): Chronos {
 		const newDate = new Date(this.#date);
 		newDate.setMonth(newDate.getMonth() + months);
-		return new Chronos(newDate).#withOrigin('addMonths');
+		return new Chronos(newDate).#withOrigin(
+			'addMonths',
+			this.#offset,
+			this.timeZoneName,
+			this.timeZoneId,
+			this.$tzTracker
+		);
 	}
 
 	/**
@@ -914,7 +956,13 @@ export class Chronos {
 	addYears(years: number): Chronos {
 		const newDate = new Date(this.#date);
 		newDate.setFullYear(newDate.getFullYear() + years);
-		return new Chronos(newDate).#withOrigin('addYears');
+		return new Chronos(newDate).#withOrigin(
+			'addYears',
+			this.#offset,
+			this.timeZoneName,
+			this.timeZoneId,
+			this.$tzTracker
+		);
 	}
 
 	/**
@@ -1091,7 +1139,13 @@ export class Chronos {
 		const year = this.#date.getFullYear();
 		const month = this.#date.getMonth();
 		const lastDate = new Date(year, month, 1);
-		return new Chronos(lastDate).#withOrigin('firstDayOfMonth');
+		return new Chronos(lastDate).#withOrigin(
+			'firstDayOfMonth',
+			this.#offset,
+			this.timeZoneName,
+			this.timeZoneId,
+			this.$tzTracker
+		);
 	}
 
 	/** @instance Returns a new `Chronos` instance set to the last day of the current month. */
@@ -1099,7 +1153,13 @@ export class Chronos {
 		const year = this.#date.getFullYear();
 		const month = this.#date.getMonth() + 1;
 		const lastDate = new Date(year, month, 0);
-		return new Chronos(lastDate).#withOrigin('lastDayOfMonth');
+		return new Chronos(lastDate).#withOrigin(
+			'lastDayOfMonth',
+			this.#offset,
+			this.timeZoneName,
+			this.timeZoneId,
+			this.$tzTracker
+		);
 	}
 
 	/**
@@ -1142,7 +1202,13 @@ export class Chronos {
 				break;
 		}
 
-		return new Chronos(d).#withOrigin('startOf');
+		return new Chronos(d).#withOrigin(
+			'startOf',
+			this.#offset,
+			this.timeZoneName,
+			this.timeZoneId,
+			this.$tzTracker
+		);
 	}
 
 	/**
@@ -1154,7 +1220,13 @@ export class Chronos {
 		return this.startOf(unit, weekStartsOn)
 			.add(1, unit)
 			.add(-1, 'millisecond')
-			.#withOrigin('endOf');
+			.#withOrigin(
+				'endOf',
+				this.#offset,
+				this.timeZoneName,
+				this.timeZoneId,
+				this.$tzTracker
+			);
 	}
 
 	/**
@@ -1192,7 +1264,13 @@ export class Chronos {
 				break;
 		}
 
-		return new Chronos(d).#withOrigin('add');
+		return new Chronos(d).#withOrigin(
+			'add',
+			this.#offset,
+			this.timeZoneName,
+			this.timeZoneId,
+			this.$tzTracker
+		);
 	}
 
 	/**
@@ -1201,7 +1279,13 @@ export class Chronos {
 	 * @param unit The time unit to add.
 	 */
 	subtract(number: number, unit: TimeUnit): Chronos {
-		return this.add(-number, unit).#withOrigin('subtract');
+		return this.add(-number, unit).#withOrigin(
+			'subtract',
+			this.#offset,
+			this.timeZoneName,
+			this.timeZoneId,
+			this.$tzTracker
+		);
 	}
 
 	/**
@@ -1263,7 +1347,13 @@ export class Chronos {
 				break;
 		}
 
-		return new Chronos(d).#withOrigin('set');
+		return new Chronos(d).#withOrigin(
+			'set',
+			this.#offset,
+			this.timeZoneName,
+			this.timeZoneId,
+			this.$tzTracker
+		);
 	}
 
 	/**
@@ -1383,7 +1473,13 @@ export class Chronos {
 		d.setMonth(weekStart.getMonth());
 		d.setDate(weekStart.getDate());
 
-		return new Chronos(d).#withOrigin('setWeek');
+		return new Chronos(d).#withOrigin(
+			'setWeek',
+			this.#offset,
+			this.timeZoneName,
+			this.timeZoneId,
+			this.$tzTracker
+		);
 	}
 
 	/**
@@ -1884,7 +1980,7 @@ export class Chronos {
 
 	/**
 	 * @static Returns the number of milliseconds elapsed since midnight, January 1, 1970 Universal Coordinated Time (UTC).
-	 * * It basically calls `Date.now()`.
+	 * * It basically calls {@link Date.now()}.
 	 * @returns The number of milliseconds elapsed since the Unix epoch.
 	 */
 	static now(): number {
@@ -1905,14 +2001,14 @@ export class Chronos {
 		const chronos = new Chronos(dateLike);
 
 		if (chronos.#offset === 'UTC+00:00') {
-			return chronos.#withOrigin('utc', 'UTC+00:00', 'Greenwich Mean Time');
+			return chronos.#withOrigin('utc', 'UTC+00:00', 'Greenwich Mean Time', 'UTC');
 		}
 
 		const offset = chronos.getTimeZoneOffsetMinutes();
 
 		const utc = new Date(chronos.#date.getTime() - offset * 60 * 1000);
 
-		return new Chronos(utc).#withOrigin('utc', 'UTC+00:00', 'Greenwich Mean Time');
+		return new Chronos(utc).#withOrigin('utc', 'UTC+00:00', 'Greenwich Mean Time', 'UTC');
 	}
 
 	/**

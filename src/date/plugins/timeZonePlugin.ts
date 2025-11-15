@@ -25,7 +25,9 @@ declare module '../Chronos' {
 		/**
 		 * @instance Creates a new instance of `Chronos` for the specified time zone identifier.
 		 *
-		 * @remarks Using time zone identifier to create time zone instance is the best option as it extracts info from {@link Intl.supportedValuesOf} API.
+		 * @remarks
+		 * - Using time zone identifier to create time zone instance is the best option as it extracts info from {@link Intl.supportedValuesOf} API.
+		 * - Apply this method at the end if multiple chaining is required!
 		 *
 		 * @param tzId - Time zone identifier (e.g., `'Africa/Harare'`). See: {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia}.
 		 * @returns A new instance of `Chronos` with time in the given time zone identifier. Invalid input sets time-zone to `UTC`.
@@ -258,9 +260,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		const $zone = zone || offset;
 		const tzName = _getTimeZoneName($zone, $Date(this)) ?? offset;
 
-		const targetOffset = extractMinutesFromUTC(offset);
-		const previousOffset = this.getTimeZoneOffsetMinutes();
-		const relativeOffset = targetOffset - previousOffset;
+		const relativeOffset = extractMinutesFromUTC(offset) - this.getTimeZoneOffsetMinutes();
 
 		const adjustedTime = new Date($Date(this).getTime() + relativeOffset * 60 * 1000);
 		const instance = new ChronosClass(adjustedTime);
@@ -300,7 +300,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 
 		if (_isGMT(tzMapKey)) return 'GMT';
 
-		if (!utc && tracker && tracker in TIME_ZONES) return tracker as TimeZone;
+		if (!utc && tracker && _isValidTzAbbr(tracker)) return tracker;
 
 		if (isValidUTCOffset(tzMapKey)) {
 			if (TZ_ABBR_CACHE.has(tzMapKey)) return TZ_ABBR_CACHE.get(tzMapKey)!;

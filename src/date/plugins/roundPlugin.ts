@@ -138,6 +138,13 @@ export const roundPlugin = (ChronosClass: MainChronos): void => {
 				return this;
 		}
 
-		return withOrigin(new ChronosClass(date), 'round');
+		return withOrigin(
+			new ChronosClass(date),
+			'round',
+			this.utcOffset,
+			this.timeZoneName,
+			this.timeZoneId,
+			this.$tzTracker
+		);
 	};
 };
