@@ -283,8 +283,8 @@ export interface ChronosInternals {
 
 	/**
 	 * * Access to `#toNewDate` private method
-	 * * Creates a new `Date` object from a Chronos input
-	 * @param instance - Chronos instance to operate on
+	 * * Creates a new `Date` object from a `Chronos` input
+	 * @param instance - `Chronos` instance to operate on
 	 * @param value - Input value to convert (optional, uses current date if omitted)
 	 * @returns A new JavaScript `Date` object
 	 */
@@ -292,20 +292,20 @@ export interface ChronosInternals {
 
 	/**
 	 * * Gets the internal `#date`, a readonly private property (core `Date` object)
-	 * @param instance - Chronos instance to access
+	 * @param instance - `Chronos` instance to access
 	 * @returns The core internal `Date` object
 	 */
 	internalDate(instance: Chronos): Date;
 
 	/**
 	 * * Gets current UTC Offset internally stored as `#offset` private property
-	 * @param instance - Chronos instance to access
+	 * @param instance - `Chronos` instance to access
 	 * @returns The stored formatted UTC offset
 	 */
 	offset(instance: Chronos): UTCOffset;
 }
 
-/** @internal Helper type to assign instance origin when creating new Chronos instance. */
+/** @internal Helper type to assign instance origin when creating new `Chronos` instance. */
 export type WithoutOrigin = Omit<Chronos, '#ORIGIN' | 'origin'>;
 
 /** Alias for `typeof Chronos` */
@@ -335,8 +335,8 @@ export type $PluginMethods = `timeZone` | 'round';
 /** * Plugin methods that return `Chronos` instance + any custom name */
 export type PluginMethods = LooseLiteral<$PluginMethods>;
 
-/** Methods (both instance and static) in `Chronos` class that return `Chronos` instance. */
-export type ChronosMethods = $InstanceMethods | $StaticMethods | PluginMethods;
+/** Both instance and static methods (including built-in plugin methods) in `Chronos` class that return `Chronos` instance. */
+export type ChronosMethods = $InstanceMethods | $StaticMethods | $PluginMethods;
 
 /**
  * * Accepted Input type for `Chronos`

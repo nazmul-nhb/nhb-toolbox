@@ -434,6 +434,22 @@ export class Chronos {
 	}
 
 	/**
+	 * @private Method to pass all the current states to the provided `Chronos` instance.
+	 * @param instance States to pass to the `Chronos` instance.
+	 * @param origin Origin of the instates (which method created the instance).
+	 * @returns The provided instance with all the current states.
+	 */
+	#cloneStates(instance: Chronos, origin: ChronosMethods): Chronos {
+		return instance.#withOrigin(
+			origin,
+			this.#offset,
+			this.timeZoneName,
+			this.timeZoneId,
+			this.$tzTracker
+		);
+	}
+
+	/**
 	 * @private Resolves the native long timezone name (e.g. `"Bangladesh Standard Time"`, `"Eastern Daylight Time"`) for a given timezone identifier.
 	 *
 	 * @param tzId The IANA timezone identifier (e.g. `"Asia/Dhaka"`, `"America/New_York"`). Defaults to the system timezone if not provided.
@@ -643,7 +659,7 @@ export class Chronos {
 	/** @instance Clones and returns exactly same `Chronos` instance. */
 	clone(): Chronos {
 		return new Chronos(this.#date).#withOrigin(
-			this.#ORIGIN,
+			this.#ORIGIN as ChronosMethods,
 			this.#offset,
 			this.timeZoneName,
 			this.timeZoneId,
@@ -653,40 +669,9 @@ export class Chronos {
 
 	/** @instance Gets the native `Date` instance of the current `Chronos`. */
 	toDate(): Date {
-		// switch (this.#ORIGIN) {
-		// 	case 'toUTC':
-		// 	case 'utc': {
-		// 		const offset = this.getUTCOffsetMinutes();
-
-		// 		const chronos = this.addMinutes(offset);
-
-		// 		return new Date(chronos.#date);
-		// 	}
-		// 	case 'timeZone': {
-		// 		const offset =
-		// 			this.#offset === 'UTC+00:00' ?
-		// 				this.getUTCOffsetMinutes()
-		// 			:	-this.getTimeZoneOffsetMinutes() + this.getUTCOffsetMinutes();
-
-		// 		const chronos = this.addMinutes(offset);
-
-		// 		return new Date(chronos.#date);
-		// 	}
-		// 	default: {
-		// 		const offset =
-		// 			-extractMinutesFromUTC(this.#offset) - this.#date.getTimezoneOffset();
-
-		// 		const newDate = new Date(this.#date);
-
-		// 		newDate.setMinutes(newDate.getMinutes() + offset);
-
-		// 		return new Date(newDate);
-		// 		// return new Date(this.#date);
-		// 	}
-		// }
 		const targetOffset = extractMinutesFromUTC(this.#offset); // e.g. +120 for Helsinki
-		const systemOffset = this.getUTCOffsetMinutes(); // e.g. +360 for BD
-		const adjustmentMs = (targetOffset - systemOffset) * 60_000; // how many ms we added before
+		const systemOffset = this.getUTCOffsetMinutes(); // e.g. +360 for Dhaka
+		const adjustmentMs = (targetOffset - systemOffset) * 60_000; // how many ms added before
 		return new Date(this.#date.getTime() - adjustmentMs);
 	}
 
@@ -791,15 +776,7 @@ export class Chronos {
 	 * @returns A new `Chronos` instance with the updated date.
 	 */
 	addSeconds(seconds: number): Chronos {
-		const newDate = new Date(this.toDate());
-		newDate.setSeconds(newDate.getSeconds() + seconds);
-		return new Chronos(newDate).#withOrigin(
-			'addSeconds',
-			this.#offset,
-			this.timeZoneName,
-			this.timeZoneId,
-			this.$tzTracker
-		);
+		return this.#cloneStates(this.add(seconds, 'second'), 'addSeconds');
 	}
 
 	/**
@@ -808,15 +785,7 @@ export class Chronos {
 	 * @returns A new `Chronos` instance with the updated date.
 	 */
 	addMinutes(minutes: number): Chronos {
-		const newDate = new Date(this.toDate());
-		newDate.setMinutes(newDate.getMinutes() + minutes);
-		return new Chronos(newDate).#withOrigin(
-			'addMinutes',
-			this.#offset,
-			this.timeZoneName,
-			this.timeZoneId,
-			this.$tzTracker
-		);
+		return this.#cloneStates(this.add(minutes, 'minute'), 'addMinutes');
 	}
 
 	/**
@@ -825,15 +794,7 @@ export class Chronos {
 	 * @returns A new `Chronos` instance with the updated date.
 	 */
 	addHours(hours: number): Chronos {
-		const newDate = new Date(this.toDate());
-		newDate.setHours(newDate.getHours() + hours);
-		return new Chronos(newDate).#withOrigin(
-			'addHours',
-			this.#offset,
-			this.timeZoneName,
-			this.timeZoneId,
-			this.$tzTracker
-		);
+		return this.#cloneStates(this.add(hours, 'hour'), 'addHours');
 	}
 
 	/**
@@ -842,15 +803,7 @@ export class Chronos {
 	 * @returns A new `Chronos` instance with the updated date.
 	 */
 	addDays(days: number): Chronos {
-		const newDate = new Date(this.toDate());
-		newDate.setDate(newDate.getDate() + days);
-		return new Chronos(newDate).#withOrigin(
-			'addDays',
-			this.#offset,
-			this.timeZoneName,
-			this.timeZoneId,
-			this.$tzTracker
-		);
+		return this.#cloneStates(this.add(days, 'day'), 'addDays');
 	}
 
 	/**
@@ -859,15 +812,7 @@ export class Chronos {
 	 * @returns A new `Chronos` instance with the updated date.
 	 */
 	addWeeks(weeks: number): Chronos {
-		const newDate = new Date(this.toDate());
-		newDate.setDate(newDate.getDate() + weeks * 7);
-		return new Chronos(newDate).#withOrigin(
-			'addWeeks',
-			this.#offset,
-			this.timeZoneName,
-			this.timeZoneId,
-			this.$tzTracker
-		);
+		return this.#cloneStates(this.add(weeks, 'week'), 'addWeeks');
 	}
 
 	/**
@@ -876,15 +821,7 @@ export class Chronos {
 	 * @returns A new `Chronos` instance with the updated date.
 	 */
 	addMonths(months: number): Chronos {
-		const newDate = new Date(this.toDate());
-		newDate.setMonth(newDate.getMonth() + months);
-		return new Chronos(newDate).#withOrigin(
-			'addMonths',
-			this.#offset,
-			this.timeZoneName,
-			this.timeZoneId,
-			this.$tzTracker
-		);
+		return this.#cloneStates(this.add(months, 'month'), 'addMonths');
 	}
 
 	/**
@@ -893,15 +830,7 @@ export class Chronos {
 	 * @returns A new `Chronos` instance with the updated date.
 	 */
 	addYears(years: number): Chronos {
-		const newDate = new Date(this.toDate());
-		newDate.setFullYear(newDate.getFullYear() + years);
-		return new Chronos(newDate).#withOrigin(
-			'addYears',
-			this.#offset,
-			this.timeZoneName,
-			this.timeZoneId,
-			this.$tzTracker
-		);
+		return this.#cloneStates(this.add(years, 'year'), 'addYears');
 	}
 
 	/**
@@ -1076,25 +1005,13 @@ export class Chronos {
 	/** @instance Returns a new `Chronos` instance set to the first day of the current month. */
 	firstDayOfMonth(): Chronos {
 		const firstDate = new Date(this.year, this.month, 1);
-		return new Chronos(firstDate).#withOrigin(
-			'firstDayOfMonth',
-			this.#offset,
-			this.timeZoneName,
-			this.timeZoneId,
-			this.$tzTracker
-		);
+		return this.#cloneStates(new Chronos(firstDate), 'firstDayOfMonth');
 	}
 
 	/** @instance Returns a new `Chronos` instance set to the last day of the current month. */
 	lastDayOfMonth(): Chronos {
 		const lastDate = new Date(this.year, this.month + 1, 0);
-		return new Chronos(lastDate).#withOrigin(
-			'lastDayOfMonth',
-			this.#offset,
-			this.timeZoneName,
-			this.timeZoneId,
-			this.$tzTracker
-		);
+		return this.#cloneStates(new Chronos(lastDate), 'lastDayOfMonth');
 	}
 
 	/**
@@ -1103,7 +1020,7 @@ export class Chronos {
 	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
 	startOf(unit: TimeUnit, weekStartsOn: Enumerate<7> = 0): Chronos {
-		const d = new Date(this.toDate());
+		const d = new Date(this.#date);
 
 		switch (unit) {
 			case 'year':
@@ -1137,13 +1054,7 @@ export class Chronos {
 				break;
 		}
 
-		return new Chronos(d).#withOrigin(
-			'startOf',
-			this.#offset,
-			this.timeZoneName,
-			this.timeZoneId,
-			this.$tzTracker
-		);
+		return this.#cloneStates(new Chronos(d), 'startOf');
 	}
 
 	/**
@@ -1152,16 +1063,9 @@ export class Chronos {
 	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
 	endOf(unit: TimeUnit, weekStartsOn: Enumerate<7> = 0): Chronos {
-		return this.startOf(unit, weekStartsOn)
-			.add(1, unit)
-			.add(-1, 'millisecond')
-			.#withOrigin(
-				'endOf',
-				this.#offset,
-				this.timeZoneName,
-				this.timeZoneId,
-				this.$tzTracker
-			);
+		const instance = this.startOf(unit, weekStartsOn).add(1, unit).add(-1, 'millisecond');
+
+		return this.#cloneStates(instance, 'endOf');
 	}
 
 	/**
@@ -1170,7 +1074,7 @@ export class Chronos {
 	 * @param unit The time unit to add.
 	 */
 	add(number: number, unit: TimeUnit): Chronos {
-		const d = new Date(this.toDate());
+		const d = new Date(this.#date);
 
 		switch (unit) {
 			case 'millisecond':
@@ -1199,13 +1103,7 @@ export class Chronos {
 				break;
 		}
 
-		return new Chronos(d).#withOrigin(
-			'add',
-			this.#offset,
-			this.timeZoneName,
-			this.timeZoneId,
-			this.$tzTracker
-		);
+		return this.#cloneStates(new Chronos(d), 'add');
 	}
 
 	/**
@@ -1214,13 +1112,7 @@ export class Chronos {
 	 * @param unit The time unit to add.
 	 */
 	subtract(number: number, unit: TimeUnit): Chronos {
-		return this.add(-number, unit).#withOrigin(
-			'subtract',
-			this.#offset,
-			this.timeZoneName,
-			this.timeZoneId,
-			this.$tzTracker
-		);
+		return this.#cloneStates(this.add(-number, unit), 'subtract');
 	}
 
 	/**
@@ -1254,7 +1146,7 @@ export class Chronos {
 	 * @param value The value to set for the unit. Type of `value` is determined by `unit`.
 	 */
 	set<Unit extends TimeUnit>(unit: Unit, value: TimeUnitValue<Unit>): Chronos {
-		const d = new Date(this.toDate());
+		const d = new Date(this.#date);
 
 		switch (unit) {
 			case 'year':
@@ -1282,13 +1174,7 @@ export class Chronos {
 				break;
 		}
 
-		return new Chronos(d).#withOrigin(
-			'set',
-			this.#offset,
-			this.timeZoneName,
-			this.timeZoneId,
-			this.$tzTracker
-		);
+		return this.#cloneStates(new Chronos(d), 'set');
 	}
 
 	/**
@@ -1392,7 +1278,7 @@ export class Chronos {
 	 * @returns A new `Chronos` instance set to the start (Monday) of the specified week.
 	 */
 	setWeek(week: NumberRange<1, 53>): Chronos {
-		const d = new Date(this.toDate());
+		const d = new Date(this.#date);
 
 		const year = d.getFullYear();
 		const jan4 = new Date(year, 0, 4);
@@ -1405,13 +1291,7 @@ export class Chronos {
 		d.setMonth(weekStart.getMonth());
 		d.setDate(weekStart.getDate());
 
-		return new Chronos(d).#withOrigin(
-			'setWeek',
-			this.#offset,
-			this.timeZoneName,
-			this.timeZoneId,
-			this.$tzTracker
-		);
+		return this.#cloneStates(new Chronos(d), 'setWeek');
 	}
 
 	/**
