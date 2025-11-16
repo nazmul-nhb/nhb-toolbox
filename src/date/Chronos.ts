@@ -6,6 +6,7 @@ import type { LooseLiteral, TupleOf } from '../utils/types';
 import { DAYS, INTERNALS, MONTHS, SORTED_TIME_FORMATS } from './constants';
 import { isLeapYear } from './guards';
 import type {
+	$DateUnit,
 	$PluginMethods,
 	$TimeZoneIdentifier,
 	$UTCOffset,
@@ -54,7 +55,7 @@ type $DateParts = {
 };
 
 /**
- * * Creates a new immutable `Chronos` instance.
+ * * Creates a new immutable local-aware `Chronos` instance.
  *
  * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
  * and convert it to the **equivalent local time** using the current environment's UTC offset.*
@@ -120,9 +121,9 @@ export class Chronos {
 	native: Date;
 
 	/**
-	 * * Current UTC offset in `UTC±HH:mm` format.
+	 * * Current (time zone) UTC offset in `UTC±HH:mm` format.
 	 *
-	 * - Also accessible via {@link getUTCOffset} instance method without `UTC` prefix (in `±HH:mm` format).
+	 * - Also accessible via {@link getTimeZoneOffset} instance method without `UTC` prefix (returns in `±HH:mm` format).
 	 */
 	utcOffset: UTCOffset;
 
@@ -153,7 +154,7 @@ export class Chronos {
 	protected $tzTracker?: $TimeZoneIdentifier | TimeZone | UTCOffset;
 
 	/**
-	 * * Creates a new immutable `Chronos` instance.
+	 * * Creates a new immutable local-aware `Chronos` instance.
 	 *
 	 * Accepts no arguments (defaults to now).
 	 *
@@ -162,7 +163,7 @@ export class Chronos {
 	constructor();
 
 	/**
-	 * * Creates a new immutable `Chronos` instance.
+	 * * Creates a new immutable local-aware `Chronos` instance.
 	 *
 	 * @param value - A date value in `number`, it should be a timestamp (milliseconds since the Unix epoch).
 	 *
@@ -171,7 +172,7 @@ export class Chronos {
 	constructor(value: number);
 
 	/**
-	 * * Creates a new immutable `Chronos` instance.
+	 * * Creates a new immutable local-aware `Chronos` instance.
 	 *
 	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
 	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
@@ -183,7 +184,7 @@ export class Chronos {
 	constructor(value: string);
 
 	/**
-	 * * Creates a new immutable `Chronos` instance.
+	 * * Creates a new immutable local-aware `Chronos` instance.
 	 *
 	 * @param value - A date value as `Date` object, it will be used as is.
 	 *
@@ -192,7 +193,7 @@ export class Chronos {
 	constructor(value: Date);
 
 	/**
-	 * * Creates a new immutable `Chronos` instance.
+	 * * Creates a new immutable local-aware `Chronos` instance.
 	 *
 	 * @param value - A date value as `Chronos` object.
 	 *
@@ -201,7 +202,7 @@ export class Chronos {
 	constructor(value: Chronos);
 
 	/**
-	 * * Creates a new immutable `Chronos` instance.
+	 * * Creates a new immutable local-aware `Chronos` instance.
 	 *
 	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
 	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
@@ -227,7 +228,7 @@ export class Chronos {
 	);
 
 	/**
-	 * * Creates a new immutable `Chronos` instance.
+	 * * Creates a new immutable local-aware `Chronos` instance.
 	 *
 	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
 	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
@@ -243,7 +244,7 @@ export class Chronos {
 	constructor(value?: ChronosInput);
 
 	/**
-	 * * Creates a new immutable `Chronos` instance.
+	 * * Creates a new immutable local-aware `Chronos` instance.
 	 *
 	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
 	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
@@ -479,14 +480,21 @@ export class Chronos {
 	 */
 	#format(format: string, useUTC = false): string {
 		const $date = this.#date;
-		const year = useUTC ? $date.getUTCFullYear() : $date.getFullYear();
-		const month = useUTC ? $date.getUTCMonth() : $date.getMonth();
-		const day = useUTC ? $date.getUTCDay() : $date.getDay();
-		const date = useUTC ? $date.getUTCDate() : $date.getDate();
-		const hours = useUTC ? $date.getUTCHours() : $date.getHours();
-		const minutes = useUTC ? $date.getUTCMinutes() : $date.getMinutes();
-		const seconds = useUTC ? $date.getUTCSeconds() : $date.getSeconds();
-		const milliseconds = useUTC ? $date.getUTCMilliseconds() : $date.getMilliseconds();
+		const $utcDate = this.toDate();
+
+		/** Get unit value for {@link $date} or {@link $utcDate} for specific unit */
+		const _getUnitValue = (suffix: $DateUnit): number => {
+			return useUTC ? $utcDate[`getUTC${suffix}`]() : $date[`get${suffix}`]();
+		};
+
+		const year = _getUnitValue('FullYear');
+		const month = _getUnitValue('Month');
+		const day = _getUnitValue('Day');
+		const date = _getUnitValue('Date');
+		const hours = _getUnitValue('Hours');
+		const minutes = _getUnitValue('Minutes');
+		const seconds = _getUnitValue('Seconds');
+		const milliseconds = _getUnitValue('Milliseconds');
 		const timeZone = useUTC ? 'Z' : this.getTimeZoneOffset();
 
 		const dateComponents: Record<ChronosFormat, string> = {
@@ -548,13 +556,6 @@ export class Chronos {
 		}
 
 		return result;
-	}
-
-	/** @private Returns ISO time string in appropriate time zone with offset. */
-	#toLocalISOString(): string {
-		const pad = (n: number, p = 2) => String(n).padStart(p, '0');
-
-		return `${this.year}-${pad(this.month + 1)}-${pad(this.date)}T${pad(this.hour)}:${pad(this.minute)}:${pad(this.second)}.${pad(this.millisecond, 3)}${this.#offset.slice(3)}`;
 	}
 
 	/**
@@ -684,7 +685,7 @@ export class Chronos {
 
 	/** @instance Returns ISO time string in appropriate time zone with offset. */
 	toLocalISOString(): string {
-		return this.#toLocalISOString();
+		return this.#format('YYYY-MM-DDTHH:mm:ss.mssZZ');
 	}
 
 	/** @instance Returns a date as a string value in ISO format (UTC). */
@@ -762,12 +763,7 @@ export class Chronos {
 	 * @returns Formatted date string in desired format (UTC time).
 	 */
 	formatUTC(format: string = 'dd, mmm DD, YYYY HH:mm:ss:mss'): string {
-		switch (this.#offset) {
-			case 'UTC+00:00':
-				return this.#format(format, false);
-			default:
-				return this.#format(format, true);
-		}
+		return this.#format(format, true);
 	}
 
 	/**
@@ -1438,10 +1434,6 @@ export class Chronos {
 
 	/** @instance Returns new `Chronos` instance in UTC time */
 	toUTC(): Chronos {
-		if (this.#offset === 'UTC+00:00') {
-			return this.#withOrigin('toUTC', 'UTC+00:00', 'Greenwich Mean Time', 'UTC');
-		}
-
 		const offset = this.getTimeZoneOffsetMinutes();
 
 		const utc = new Date(this.#date.getTime() - offset * 60 * 1000);
@@ -1809,10 +1801,6 @@ export class Chronos {
 	 */
 	static utc(dateLike?: ChronosInput): Chronos {
 		const chronos = new Chronos(dateLike);
-
-		if (chronos.#offset === 'UTC+00:00') {
-			return chronos.#withOrigin('utc', 'UTC+00:00', 'Greenwich Mean Time', 'UTC');
-		}
 
 		const offset = chronos.getTimeZoneOffsetMinutes();
 

@@ -130,6 +130,17 @@ export type Millisecond = (typeof MILLISECOND_FORMATS)[number];
 /** Time formats in either capital or lowercase `am/pm` format */
 export type TimeFormats = (typeof TIME_FORMATS)[number];
 
+/** Represents a valid unit suffix for {@link Date} getter methods (e.g., 'getFullYear', 'getMonth' etc.). */
+export type $DateUnit =
+	| 'FullYear'
+	| 'Month'
+	| 'Day'
+	| 'Date'
+	| 'Hours'
+	| 'Minutes'
+	| 'Seconds'
+	| 'Milliseconds';
+
 /** Standard union formats for `Chronos`. */
 export type ChronosFormat =
 	| Year

@@ -1,12 +1,15 @@
 import type { $Record } from '../../object/types';
 import { INTERNALS } from '../constants';
-import type { ChronosInput, DurationKey, DurationOptions, TimeDuration } from '../types';
+import type {
+	$DateUnit,
+	ChronosInput,
+	DurationKey,
+	DurationOptions,
+	TimeDuration,
+} from '../types';
 
 type ChronosConstructor = import('../Chronos').Chronos;
 type MainChronos = typeof import('../Chronos').Chronos;
-
-/** Suffix for `new Date().getUnit()` methods. Replaces `Unit`. */
-type $Suffix = 'FullYear' | 'Month' | 'Date' | 'Hours' | 'Minutes' | 'Seconds' | 'Milliseconds';
 
 declare module '../Chronos' {
 	interface Chronos {
@@ -81,10 +84,8 @@ export const durationPlugin = (ChronosClass: MainChronos): void => {
 		const to = isFuture ? target : now;
 
 		/** Get difference between `to` and `from` for specific unit */
-		const _getDiff = (suffix: $Suffix): number => {
-			const method = ('get' + suffix) as `get${$Suffix}`;
-
-			return to[method]() - from[method]();
+		const _getDiff = (suffix: Exclude<$DateUnit, 'Day'>): number => {
+			return to[`get${suffix}`]() - from[`get${suffix}`]();
 		};
 
 		let years = _getDiff('FullYear');
