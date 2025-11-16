@@ -340,25 +340,25 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		return this.getTimeZoneNameShort(utc);
 	};
 
-	ChronosClass.prototype.toString = function (this: ChronosConstructor): string {
-		const offset = this.utcOffset;
-		const search = /GMT[+-]\d{4}\s+\([^)]+\)/;
+	// ChronosClass.prototype.toString = function (this: ChronosConstructor): string {
+	// 	const offset = this.utcOffset;
+	// 	const search = /GMT[+-]\d{4}\s+\([^)]+\)/;
 
-		switch (this.origin) {
-			case 'timeZone': {
-				const gmt = offset.replace('UTC', 'GMT').replace(':', '');
-				const label = this.getTimeZoneName();
+	// 	switch (this.origin) {
+	// 		case 'timeZone': {
+	// 			const gmt = offset.replace('UTC', 'GMT').replace(':', '');
+	// 			const label = this.getTimeZoneName();
 
-				return $Date(this).toString().replace(search, `${gmt} (${label})`);
-			}
-			case 'toUTC':
-			case 'utc': {
-				return $Date(this)
-					.toString()
-					.replace(search, `GMT+0000 (Coordinated Universal Time)`);
-			}
-			default:
-				return $Date(this).toString();
-		}
-	};
+	// 			return $Date(this).toString().replace(search, `${gmt} (${label})`);
+	// 		}
+	// 		case 'toUTC':
+	// 		case 'utc': {
+	// 			return $Date(this)
+	// 				.toString()
+	// 				.replace(search, `GMT+0000 (Coordinated Universal Time)`);
+	// 		}
+	// 		default:
+	// 			return $Date(this).toString();
+	// 	}
+	// };
 };
