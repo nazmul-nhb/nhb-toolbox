@@ -93,21 +93,20 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `relative time` related methods */
 export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
-	const { internalDate, toNewDate } = ChronosClass[INTERNALS];
+	const { internalDate: $Date, toNewDate } = ChronosClass[INTERNALS];
 
 	ChronosClass.prototype.getRelativeYear = function (
 		this: ChronosConstructor,
 		time?: ChronosInput
 	): number {
-		const inputDate = internalDate(this);
-
+		const $date = $Date(this);
 		const now = toNewDate(this, time);
 
-		let years = inputDate.getFullYear() - now.getFullYear();
+		let years = $date.getFullYear() - now.getFullYear();
 
 		const noYearMonthDay =
-			now.getMonth() < inputDate.getMonth() ||
-			(now.getMonth() === inputDate.getMonth() && now.getDate() < inputDate.getDate());
+			now.getMonth() < $date.getMonth() ||
+			(now.getMonth() === $date.getMonth() && now.getDate() < $date.getDate());
 
 		if (noYearMonthDay) {
 			years--;
@@ -120,14 +119,14 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		this: ChronosConstructor,
 		time?: ChronosInput
 	): number {
+		const $date = $Date(this);
 		const now = toNewDate(this, time);
-		const inputDate = internalDate(this);
 
 		let months =
-			(inputDate.getFullYear() - now.getFullYear()) * 12 +
-			(inputDate.getMonth() - now.getMonth());
+			($date.getFullYear() - now.getFullYear()) * 12 +
+			($date.getMonth() - now.getMonth());
 
-		const hasNotHadMonthDay = now.getDate() < inputDate.getDate();
+		const hasNotHadMonthDay = now.getDate() < $date.getDate();
 
 		if (hasNotHadMonthDay) {
 			months--;
@@ -148,15 +147,15 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		this: ChronosConstructor,
 		time?: ChronosInput
 	): number {
-		const today = toNewDate(this, time);
+		const now = toNewDate(this, time);
 		// Set the time of today to 00:00:00 for comparison purposes
-		today.setHours(0, 0, 0, 0);
+		now.setHours(0, 0, 0, 0);
 
 		// Normalize the input date to 00:00:00
-		const inputDate = internalDate(this);
-		inputDate.setHours(0, 0, 0, 0);
+		const $date = $Date(this);
+		$date.setHours(0, 0, 0, 0);
 
-		const diffTime = inputDate.getTime() - today.getTime();
+		const diffTime = $date.getTime() - now.getTime();
 		const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
 		return diffDays;
@@ -166,7 +165,7 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		this: ChronosConstructor,
 		time?: ChronosInput
 	): number {
-		const diff = internalDate(this).getTime() - toNewDate(this, time).getTime();
+		const diff = $Date(this).getTime() - toNewDate(this, time).getTime();
 
 		return Math.floor(diff / (1000 * 60 * 60));
 	};
@@ -175,7 +174,7 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		this: ChronosConstructor,
 		time?: ChronosInput
 	): number {
-		const diff = internalDate(this).getTime() - toNewDate(this, time).getTime();
+		const diff = $Date(this).getTime() - toNewDate(this, time).getTime();
 
 		return Math.floor(diff / (1000 * 60));
 	};
@@ -184,7 +183,7 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		this: ChronosConstructor,
 		time?: ChronosInput
 	): number {
-		const diff = internalDate(this).getTime() - toNewDate(this, time).getTime();
+		const diff = $Date(this).getTime() - toNewDate(this, time).getTime();
 		return Math.floor(diff / 1000);
 	};
 
@@ -192,7 +191,7 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		this: ChronosConstructor,
 		time?: ChronosInput
 	): number {
-		return internalDate(this).getTime() - toNewDate(this, time).getTime();
+		return $Date(this).getTime() - toNewDate(this, time).getTime();
 	};
 
 	ChronosClass.prototype.compare = function (
@@ -218,7 +217,7 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 			case 'millisecond':
 				return this.getRelativeMilliSecond(time);
 			default:
-				throw new Error(`Unsupported time unit: ${unit}`);
+				throw new RangeError(`Unsupported time unit: ${unit}`);
 		}
 	};
 
