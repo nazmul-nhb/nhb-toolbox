@@ -25,9 +25,7 @@ declare module '../Chronos' {
 		/**
 		 * @instance Creates a new instance of `Chronos` for the specified time zone identifier.
 		 *
-		 * @remarks
-		 * - Using time zone identifier to create time zone instance is the best option as it extracts info from {@link Intl.supportedValuesOf} API.
-		 * - For best accuracy, apply this method **after** performing all calculation or manipulation operations, as switching the time zone beforehand may lead to unintended offsets in intermediate results.
+		 * @remarks Using time zone identifier to create time zone instance is the best option as it extracts info from {@link Intl.supportedValuesOf} API.
 		 *
 		 * @param tzId - Time zone identifier (e.g., `'Africa/Harare'`). See: {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia}.
 		 * @returns A new instance of `Chronos` with time in the given time zone identifier. Invalid input sets time-zone to `UTC`.
@@ -37,9 +35,7 @@ declare module '../Chronos' {
 		/**
 		 * @instance Creates a new instance of `Chronos` for the specified abbreviated time zone name.
 		 *
-		 * @remarks
-		 * - Use abbreviated time zone name to create time zone instance only when you can't figure out the time zone identifier {@link TimeZoneIdentifier}.
-		 * - For best accuracy, apply this method **after** performing all calculation or manipulation operations, as switching the time zone beforehand may lead to unintended offsets in intermediate results.
+		 * @remarks Use abbreviated time zone name to create time zone instance only when you can't figure out the time zone identifier {@link TimeZoneIdentifier}.
 		 *
 		 * @param zone - Standard time zone abbreviation (e.g., `'IST'`, `'UTC'`, `'EST'` etc.). See: {@link https://en.wikipedia.org/wiki/List_of_time_zone_abbreviations Time zone abbreviations on Wikipedia}.
 		 * @returns A new instance of `Chronos` with time in the given time zone abbreviation. Invalid input sets time-zone to `UTC`.
@@ -49,9 +45,7 @@ declare module '../Chronos' {
 		/**
 		 * @instance Creates a new instance of `Chronos` for the specified UTC offset.
 		 *
-		 * @remarks
-		 * - Use UTC offset only to create a fictional/unlisted time zone instance.
-		 * - For best accuracy, apply this method **after** performing all calculation or manipulation operations, as switching the time zone beforehand may lead to unintended offsets in intermediate results.
+		 * @remarks Use UTC offset only to create a fictional/unlisted time zone instance.
 		 *
 		 * @param utc - UTC Offset in `UTC±HH:mm` format for fictional or unlisted time zone (e.g., `'UTC+06:15'`).
 		 * @returns A new instance of `Chronos` with time in the given utc offset. Invalid input sets time-zone to `UTC`.
@@ -62,7 +56,6 @@ declare module '../Chronos' {
 		 * @instance Creates a new instance of `Chronos` for the specified time zone id, abbreviation or UTC offset.
 		 *
 		 * @remarks
-		 * - For best accuracy, apply this method **after** performing all calculation or manipulation operations, as switching the time zone beforehand may lead to unintended offsets in intermediate results.
 		 * - Using time zone identifier to create time zone instance is the best option as it extracts info from {@link Intl.supportedValuesOf} API.
 		 * - Use abbreviated time zone name to create time zone instance only when you can't figure out the time zone identifier.
 		 * - Use UTC offset only to create a fictional/unlisted time zone instance.

@@ -141,14 +141,14 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `business` related methods */
 export const businessPlugin = (ChronosClass: MainChronos): void => {
-	const { internalDate } = ChronosClass[INTERNALS];
+	const { internalDate: $Date } = ChronosClass[INTERNALS];
 
 	ChronosClass.prototype.isWeekend = function (
 		this: ChronosConstructor,
 		determiner: Enumerate<7> | RangeTuple<Enumerate<7>, 1, 4> = 0,
 		weekendLength: NumberRange<1, 4> = 2
 	): boolean {
-		const day = internalDate(this).getDay() as Enumerate<7>;
+		const day = $Date(this).getDay() as Enumerate<7>;
 
 		// Use custom weekend days if provided
 		if (isValidArray<Enumerate<7>>(determiner)) {
@@ -189,7 +189,7 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 				return false;
 			}
 
-			const hour = internalDate(this).getHours();
+			const hour = $Date(this).getHours();
 
 			if (businessStartHour < businessEndHour) {
 				// Normal range, e.g. 9 → 17
@@ -213,15 +213,15 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 		this: ChronosConstructor,
 		startMonth: NumberRange<1, 12> = 7
 	): Quarter {
-		const month = internalDate(this).getMonth() + 1;
+		const month = $Date(this).getMonth() + 1;
 		const adjusted = (month - startMonth + 12) % 12;
 
 		return (Math.floor(adjusted / 3) + 1) as Quarter;
 	};
 
 	ChronosClass.prototype.toAcademicYear = function (this: ChronosConstructor): AcademicYear {
-		const year = internalDate(this).getFullYear();
-		const month = internalDate(this).getMonth();
+		const year = $Date(this).getFullYear();
+		const month = $Date(this).getMonth();
 
 		if (month >= 6) {
 			return `${year}-${year + 1}`;

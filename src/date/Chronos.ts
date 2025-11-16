@@ -550,7 +550,7 @@ export class Chronos {
 		return result;
 	}
 
-	/** @private Returns ISO string with local timezone offset */
+	/** @private Returns ISO time string in appropriate time zone with offset. */
 	#toLocalISOString(): string {
 		const pad = (n: number, p = 2) => String(n).padStart(p, '0');
 
@@ -559,7 +559,7 @@ export class Chronos {
 
 	/**
 	 * @private Returns ISO string for the current date with removed timezone/utc part.
-	 * @param local Whether to use `this.toLocalISOString()` method or not. Defaults to `false`.
+	 * @param local Whether to use {@link toLocalISOString()} method or not. Defaults to `false`.
 	 * @returns Modified ISO string for the current date with removed timezone/utc part.
 	 */
 	#removeUTCFromISO(local = false): string {
@@ -682,7 +682,7 @@ export class Chronos {
 			.concat(` (${this.timeZoneName})`);
 	}
 
-	/** @instance Returns ISO string with timezone offset. */
+	/** @instance Returns ISO time string in appropriate time zone with offset. */
 	toLocalISOString(): string {
 		return this.#toLocalISOString();
 	}
@@ -1436,10 +1436,7 @@ export class Chronos {
 		return extractMinutesFromUTC(this.#offset);
 	}
 
-	/**
-	 * @instance Returns new `Chronos` instance in UTC time
-	 * @remarks For best accuracy, apply this method **after** performing all calculation or manipulation operations, as switching the time zone beforehand may lead to unintended offsets in intermediate results.
-	 */
+	/** @instance Returns new `Chronos` instance in UTC time */
 	toUTC(): Chronos {
 		if (this.#offset === 'UTC+00:00') {
 			return this.#withOrigin('toUTC', 'UTC+00:00', 'Greenwich Mean Time', 'UTC');
@@ -1452,10 +1449,7 @@ export class Chronos {
 		return new Chronos(utc).#withOrigin('toUTC', 'UTC+00:00', 'Greenwich Mean Time', 'UTC');
 	}
 
-	/**
-	 * @instance Returns new `Chronos` instance in local time
-	 * @remarks For best accuracy, apply this method **after** performing all calculation or manipulation operations, as switching the time zone beforehand may lead to unintended offsets in intermediate results.
-	 */
+	/** @instance Returns new `Chronos` instance in local time */
 	toLocal(): Chronos {
 		const offset = this.getTimeZoneOffsetMinutes() - this.getUTCOffsetMinutes();
 

@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.26.60] - 2025-11-16
+
+- **Fixed** an *issue* in the `Chronos` class where chaining *calculation methods* after `timeZone`, `toLocal`, `toUTC`, or other *offset-adjusting methods* resulted in *incorrect* time values.
+
 ## [4.26.54] - 2025-11-15
 
 - **Added** new *guard* utility: `isNativeTimeZoneId` with new constant for type interfaces using `Intl` API.
