@@ -109,6 +109,15 @@ export class Chronos {
 		},
 	};
 
+	/** Return the *real* UTC moment (undoes the timezone/UTC shift) in {@link Date} */
+	$getTrueDate(): Date {
+		const targetMin = -extractMinutesFromUTC(this.#offset); // e.g. +120 for Helsinki
+		const systemMin = this.getTimeZoneOffsetMinutes(); // e.g. +360 for BD
+		const adjustmentMs = (targetMin - systemMin) * 60_000; // how many ms we added before
+		const timestamp = this.#date.getTime() - adjustmentMs; // real UTC timestamp
+		return new Date(timestamp);
+	}
+
 	/** Origin of the `Chronos` instance (Method that created `new Chronos`), useful for tracking instance. */
 	origin: ChronosMethods | 'root';
 
@@ -1505,8 +1514,7 @@ export class Chronos {
 	 * @returns Week number (1-53).
 	 */
 	getWeekOfYear(weekStartsOn: Enumerate<7> = 0): NumberRange<1, 53> {
-		const startOfYear = new Chronos(this.year, 1, 1);
-		const startOfFirstWeek = startOfYear.startOf('week', weekStartsOn);
+		const startOfFirstWeek = this.startOf('year').startOf('week', weekStartsOn);
 
 		const week = this.startOf('week', weekStartsOn).diff(startOfFirstWeek, 'week');
 
@@ -1520,7 +1528,7 @@ export class Chronos {
 	 * For example, January 1st may fall in the last ISO week of the previous year.
 	 *
 	 * @param weekStartsOn Optional: Defines the start day of the week (0 = Sunday, 1 = Monday).
-	 *                     Defaults to 0 (Sunday). Use 1 for strict ISO 8601.
+	 *                     Defaults to `0` (Sunday). Use 1 for strict ISO 8601.
 	 * @returns The ISO week-numbering year.
 	 */
 	getWeekYear(weekStartsOn: Enumerate<7> = 0): number {
@@ -1530,9 +1538,8 @@ export class Chronos {
 
 	/** @instance Returns day of year (1 - 366) */
 	getDayOfYear(): NumberRange<1, 366> {
-		const start = new Date(this.year, 0, 1);
-		const diff = this.#date.getTime() - start.getTime();
-		return (Math.floor(diff / 86400000) + 1) as NumberRange<1, 366>;
+		const diff = this.startOf('day').diff(this.startOf('year'), 'day');
+		return (diff + 1) as NumberRange<1, 366>;
 	}
 
 	/** @instance Returns number of days in current month */
