@@ -109,15 +109,6 @@ export class Chronos {
 		},
 	};
 
-	/** Return the *real* UTC moment (undoes the timezone/UTC shift) in {@link Date} */
-	$getTrueDate(): Date {
-		const targetMin = -extractMinutesFromUTC(this.#offset); // e.g. +120 for Helsinki
-		const systemMin = this.getTimeZoneOffsetMinutes(); // e.g. +360 for BD
-		const adjustmentMs = (targetMin - systemMin) * 60_000; // how many ms we added before
-		const timestamp = this.#date.getTime() - adjustmentMs; // real UTC timestamp
-		return new Date(timestamp);
-	}
-
 	/** Origin of the `Chronos` instance (Method that created `new Chronos`), useful for tracking instance. */
 	origin: ChronosMethods | 'root';
 
