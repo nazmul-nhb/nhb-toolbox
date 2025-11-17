@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.26.66] - 2025-11-17
+
+- **Changed** the signature of `Chronos` `get()` method to `get<Unit extends TimeUnit>(unit: Unit): TimeUnitValue<Unit>` to align with `set()` method.
+
 ## [4.26.64] - 2025-11-17
 
 ### 🕧 Fixes in Chronos
