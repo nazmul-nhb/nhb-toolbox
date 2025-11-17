@@ -130,7 +130,7 @@ export type Millisecond = (typeof MILLISECOND_FORMATS)[number];
 /** Time formats in either capital or lowercase `am/pm` format */
 export type TimeFormats = (typeof TIME_FORMATS)[number];
 
-/** Represents a valid unit suffix for {@link Date} getter methods (e.g., 'getFullYear', 'getMonth' etc.). */
+/** Represents a unit suffix for {@link Date} getter methods (e.g., `'FullYear'` in `'getFullYear'`, `'Month'` in `'getMonth'` etc.). */
 export type $DateUnit =
 	| 'FullYear'
 	| 'Month'
@@ -481,7 +481,7 @@ export interface RelativeRangeOptions {
 	/** - Unit of time to advance the date range. Defaults to `'week'`.  Controlled by the `span` option. */
 	unit?: 'year' | 'month' | 'week' | 'day';
 
-	/** - Output format — return as local ISO string or UTC ISO string. Defaults to `'local'`. */
+	/** - Output format: return as local ISO string or UTC ISO string. Defaults to `'local'`. */
 	format?: 'local' | 'utc';
 
 	/** Whether to round the dates in the range to the start of the day. Default is `false`. */
@@ -536,7 +536,7 @@ export interface RelativeDateRange {
 	/** - Unit of time to advance the date range. Defaults to `'week'`.  Controlled by the `span` option. */
 	unit?: 'year' | 'month' | 'week' | 'day';
 
-	/** - Output format — return as local ISO string or UTC ISO string. Defaults to `'local'`. */
+	/** - Output format: return as local ISO string or UTC ISO string. Defaults to `'local'`. */
 	format?: 'local' | 'utc';
 
 	/**

@@ -305,25 +305,25 @@ export class Chronos {
 		yield ['minute', this.minute];
 		yield ['second', this.second];
 		yield ['millisecond', this.millisecond];
-		yield ['timestamp', this.timestamp];
+		yield ['timestamp', this.getTimeStamp()];
 		yield ['unix', this.unix];
 	}
 
 	[Symbol.toPrimitive](hint: string): string | number {
-		if (hint === 'number') return this.valueOf();
+		if (hint === 'number') return this.getTimeStamp();
 		return this.toLocalISOString();
 	}
 
 	[Symbol.replace](string: string, replacement: string): string {
-		return string.replace(this.#removeUTCFromISO(true), replacement);
+		return string.replace(this.#removeUTCFromISO(), replacement);
 	}
 
 	[Symbol.search](string: string): number {
-		return string.indexOf(this.#removeUTCFromISO(true));
+		return string.indexOf(this.#removeUTCFromISO());
 	}
 
 	[Symbol.split](string: string): string[] {
-		return string.split(this.#removeUTCFromISO(true));
+		return string.split(this.#removeUTCFromISO());
 	}
 
 	[Symbol.match](string: string): RegExpMatchArray | null {
@@ -500,7 +500,6 @@ export class Chronos {
 		const minutes = _getUnitValue('Minutes');
 		const seconds = _getUnitValue('Seconds');
 		const milliseconds = _getUnitValue('Milliseconds');
-		const timeZone = useUTC ? 'Z' : this.getTimeZoneOffset();
 
 		const dateComponents: Record<ChronosFormat, string> = {
 			YYYY: String(year),
@@ -529,7 +528,7 @@ export class Chronos {
 			mss: String(milliseconds).padStart(3, '0'),
 			a: hours < 12 ? 'am' : 'pm',
 			A: hours < 12 ? 'AM' : 'PM',
-			ZZ: timeZone,
+			ZZ: useUTC ? 'Z' : this.getTimeZoneOffset(),
 		};
 
 		const tokenRegex = new RegExp(`^(${SORTED_TIME_FORMATS.join('|')})`);
@@ -565,13 +564,15 @@ export class Chronos {
 
 	/**
 	 * @private Returns ISO string for the current date with removed timezone/utc part.
-	 * @param local Whether to use {@link toLocalISOString()} method or not. Defaults to `false`.
+	 * @param local Whether to use {@link toLocalISOString()} method or not. Defaults to `true`.
 	 * @returns Modified ISO string for the current date with removed timezone/utc part.
 	 */
-	#removeUTCFromISO(local = false): string {
+	#removeUTCFromISO(local = true): string {
+		const search = /\.\d+(Z|[+-]\d{2}:\d{2})?$/;
+
 		return local ?
-				this.toLocalISOString().replace(/\.\d+(Z|[+-]\d{2}:\d{2})?$/, '')
-			:	this.toISOString().replace(/\.\d+(Z|[+-]\d{2}:\d{2})?$/, '');
+				this.toLocalISOString().replace(search, '')
+			:	this.toISOString().replace(search, '');
 	}
 
 	// ! ======= Getter Methods ======= //
@@ -678,7 +679,7 @@ export class Chronos {
 		const targetOffset = extractMinutesFromUTC(this.#offset); // e.g. +120 for Helsinki
 		const systemOffset = this.getUTCOffsetMinutes(); // e.g. +360 for Dhaka
 		const adjustmentMs = (targetOffset - systemOffset) * 60_000; // how many ms added before
-		return new Date(this.#date.getTime() - adjustmentMs);
+		return new Date(this.#timestamp - adjustmentMs);
 	}
 
 	/** @instance Returns a string representation of a date. */
@@ -847,23 +848,17 @@ export class Chronos {
 
 	/** @instance Checks if another date is exactly equal to this one. */
 	isEqual(other: ChronosInput): boolean {
-		const time = Chronos.#cast(other);
-
-		return this.#timestamp === time.#timestamp;
+		return this.#timestamp === Chronos.#cast(other).#timestamp;
 	}
 
 	/** @instance Checks if another date is exactly equal to or before this one. */
 	isEqualOrBefore(other: ChronosInput): boolean {
-		const time = Chronos.#cast(other);
-
-		return this.#timestamp <= time.#timestamp;
+		return this.#timestamp <= Chronos.#cast(other).#timestamp;
 	}
 
 	/** @instance Checks if another date is exactly equal to or after this one. */
 	isEqualOrAfter(other: ChronosInput): boolean {
-		const time = Chronos.#cast(other);
-
-		return this.#timestamp >= time.#timestamp;
+		return this.#timestamp >= Chronos.#cast(other).#timestamp;
 	}
 
 	/**
@@ -873,11 +868,9 @@ export class Chronos {
 	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
 	isSame(other: ChronosInput, unit: TimeUnit, weekStartsOn: Enumerate<7> = 0): boolean {
-		const time = Chronos.#cast(other);
-
 		return (
 			this.startOf(unit, weekStartsOn).#timestamp ===
-			time.startOf(unit, weekStartsOn).#timestamp
+			Chronos.#cast(other).startOf(unit, weekStartsOn).#timestamp
 		);
 	}
 
@@ -888,11 +881,9 @@ export class Chronos {
 	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
 	isBefore(other: ChronosInput, unit: TimeUnit, weekStartsOn: Enumerate<7> = 0): boolean {
-		const time = Chronos.#cast(other);
-
 		return (
 			this.startOf(unit, weekStartsOn).#timestamp <
-			time.startOf(unit, weekStartsOn).#timestamp
+			Chronos.#cast(other).startOf(unit, weekStartsOn).#timestamp
 		);
 	}
 
@@ -903,11 +894,9 @@ export class Chronos {
 	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
 	isAfter(other: ChronosInput, unit: TimeUnit, weekStartsOn: Enumerate<7> = 0): boolean {
-		const time = Chronos.#cast(other);
-
 		return (
 			this.startOf(unit, weekStartsOn).#timestamp >
-			time.startOf(unit, weekStartsOn).#timestamp
+			Chronos.#cast(other).startOf(unit, weekStartsOn).#timestamp
 		);
 	}
 
@@ -961,9 +950,9 @@ export class Chronos {
 		end: ChronosInput,
 		inclusive: '[]' | '[)' | '(]' | '()' = '()'
 	): boolean {
-		const s = new Chronos(start).valueOf();
-		const e = new Chronos(end).valueOf();
-		const t = this.valueOf();
+		const s = Chronos.#cast(start).getTimeStamp();
+		const e = Chronos.#cast(end).getTimeStamp();
+		const t = this.getTimeStamp();
 
 		switch (inclusive) {
 			case '[]':
@@ -1118,26 +1107,26 @@ export class Chronos {
 
 	/**
 	 * @instance Gets the value of a specific time unit from the date.
-	 * @param unit The unit to retrieve.
+	 * @param unit The unit to retrieve. Type of return value is determined by `unit`.
 	 */
-	get(unit: TimeUnit): number {
+	get<Unit extends TimeUnit>(unit: Unit): TimeUnitValue<Unit> {
 		switch (unit) {
 			case 'year':
-				return this.#date.getFullYear();
+				return this.year as TimeUnitValue<Unit>;
 			case 'month':
-				return this.#date.getMonth();
+				return this.isoMonth as TimeUnitValue<Unit>;
 			case 'day':
-				return this.#date.getDate();
+				return this.date as TimeUnitValue<Unit>;
 			case 'week':
-				return this.getWeek();
+				return this.getWeek() as TimeUnitValue<Unit>;
 			case 'hour':
-				return this.#date.getHours();
+				return this.hour as TimeUnitValue<Unit>;
 			case 'minute':
-				return this.#date.getMinutes();
+				return this.minute as TimeUnitValue<Unit>;
 			case 'second':
-				return this.#date.getSeconds();
+				return this.second as TimeUnitValue<Unit>;
 			case 'millisecond':
-				return this.#date.getMilliseconds();
+				return this.millisecond as TimeUnitValue<Unit>;
 		}
 	}
 
@@ -1187,7 +1176,7 @@ export class Chronos {
 	diff(other: ChronosInput, unit: TimeUnit): number {
 		const time = Chronos.#cast(other);
 
-		const msDiff = this.#date.getTime() - time.#date.getTime();
+		const msDiff = this.#timestamp - time.#timestamp;
 
 		switch (unit) {
 			case 'millisecond':
@@ -1221,7 +1210,7 @@ export class Chronos {
 	 * @param baseDate Optional base date to compare with.
 	 */
 	calendar(baseDate?: ChronosInput): string {
-		const base = baseDate ? new Chronos(baseDate) : new Chronos();
+		const base = baseDate ? Chronos.#cast(baseDate) : new Chronos();
 		const input = this.startOf('day');
 
 		const comparison = base.startOf('day');
@@ -1441,7 +1430,7 @@ export class Chronos {
 	toUTC(): Chronos {
 		const offset = this.getTimeZoneOffsetMinutes();
 
-		const utc = new Date(this.#date.getTime() - offset * 60 * 1000);
+		const utc = new Date(this.#timestamp - offset * 60 * 1000);
 
 		return new Chronos(utc).#withOrigin('toUTC', 'UTC+00:00', 'Greenwich Mean Time', 'UTC');
 	}
@@ -1450,7 +1439,7 @@ export class Chronos {
 	toLocal(): Chronos {
 		const offset = this.getTimeZoneOffsetMinutes() - this.getUTCOffsetMinutes();
 
-		const localTime = new Date(this.#date.getTime() - offset * 60 * 1000);
+		const localTime = new Date(this.#timestamp - offset * 60 * 1000);
 
 		return new Chronos(localTime).#withOrigin('toLocal');
 	}
@@ -1551,10 +1540,10 @@ export class Chronos {
 		if (options) {
 			if ('from' in options || 'to' in options) {
 				if (options?.from) {
-					startDate = new Chronos(options?.from);
+					startDate = Chronos.#cast(options?.from);
 				}
 				if (options?.to) {
-					endDate = new Chronos(options?.to);
+					endDate = Chronos.#cast(options?.to);
 				}
 			} else if ('span' in options || 'unit' in options) {
 				const { span = 4, unit = 'week' } = options ?? {};
@@ -1755,8 +1744,7 @@ export class Chronos {
 	 */
 	static today(options?: FormatOptions): string {
 		const { format = 'dd, mmm DD, YYYY HH:mm:ss', useUTC = false } = options || {};
-		const today = new Date();
-		return new Chronos(today).#format(format, useUTC);
+		return new Chronos().#format(format, useUTC);
 	}
 
 	/**
@@ -1809,7 +1797,7 @@ export class Chronos {
 
 		const offset = chronos.getTimeZoneOffsetMinutes();
 
-		const utc = new Date(chronos.#date.getTime() - offset * 60 * 1000);
+		const utc = new Date(chronos.#timestamp - offset * 60 * 1000);
 
 		return new Chronos(utc).#withOrigin('utc', 'UTC+00:00', 'Greenwich Mean Time', 'UTC');
 	}
@@ -1903,10 +1891,10 @@ export class Chronos {
 		if (options) {
 			if ('from' in options || 'to' in options) {
 				if (options?.from) {
-					startDate = new Chronos(options?.from);
+					startDate = Chronos.#cast(options?.from);
 				}
 				if (options?.to) {
-					endDate = new Chronos(options?.to);
+					endDate = Chronos.#cast(options?.to);
 				}
 			} else if ('span' in options || 'unit' in options) {
 				const { span = 4, unit = 'week' } = options ?? {};
@@ -1953,7 +1941,7 @@ export class Chronos {
 		for (const d of dates) {
 			const c = Chronos.#cast(d);
 
-			if (c.timestamp < winner.timestamp) {
+			if (c.getTimeStamp() < winner.getTimeStamp()) {
 				winner = c;
 			}
 		}
@@ -1979,7 +1967,7 @@ export class Chronos {
 		for (const d of dates) {
 			const c = Chronos.#cast(d);
 
-			if (c.timestamp > winner.timestamp) {
+			if (c.getTimeStamp() > winner.getTimeStamp()) {
 				winner = c;
 			}
 		}
@@ -2012,7 +2000,7 @@ export class Chronos {
 				year = new Chronos(date).year;
 			}
 		} else {
-			year = date instanceof Chronos ? date.year : new Chronos(date).year;
+			year = Chronos.#cast(date).year;
 		}
 
 		return isLeapYear(year);
