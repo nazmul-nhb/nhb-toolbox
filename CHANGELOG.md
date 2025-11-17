@@ -6,6 +6,13 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.26.64] - 2025-11-17
+
+### 🕧 Fixes in Chronos
+
+- **Fixed** *timestamp handling*: `timestamp`, `unix`, `valueOf()`, and `getTimeStamp()` now consistently use/return the correct **universal timestamp**.
+- **Improved** `min(...)` and `max(...)` methods to return a new *immutable* `Chronos` instance while preserving the *internal state* of the **winning instance** (timezone info, offset, and origin).
+
 ## [4.26.61] - 2025-11-17
 
 - **Fixed** issue with `Chronos` *format methods* not formatting correctly when `useUTC` is `true`.

@@ -131,6 +131,7 @@ const chronos = (
  * chronos.formatTimePart(time: string, format?: TimeParts): string;
  * chronos.getDatesForDay(day: WeekDay, options?: WeekdayOptions): string[];
  * chronos.use(plugin: ChronosPlugin): void;
+ * chronos.register(plugin: ChronosPlugin): void;
  * ```
  */
 const chronosStatics = new Proxy(chronos, {

@@ -847,21 +847,21 @@ export class Chronos {
 
 	/** @instance Checks if another date is exactly equal to this one. */
 	isEqual(other: ChronosInput): boolean {
-		const time = other instanceof Chronos ? other : new Chronos(other);
+		const time = Chronos.#cast(other);
 
 		return this.#timestamp === time.#timestamp;
 	}
 
 	/** @instance Checks if another date is exactly equal to or before this one. */
 	isEqualOrBefore(other: ChronosInput): boolean {
-		const time = other instanceof Chronos ? other : new Chronos(other);
+		const time = Chronos.#cast(other);
 
 		return this.#timestamp <= time.#timestamp;
 	}
 
 	/** @instance Checks if another date is exactly equal to or after this one. */
 	isEqualOrAfter(other: ChronosInput): boolean {
-		const time = other instanceof Chronos ? other : new Chronos(other);
+		const time = Chronos.#cast(other);
 
 		return this.#timestamp >= time.#timestamp;
 	}
@@ -873,7 +873,7 @@ export class Chronos {
 	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
 	isSame(other: ChronosInput, unit: TimeUnit, weekStartsOn: Enumerate<7> = 0): boolean {
-		const time = other instanceof Chronos ? other : new Chronos(other);
+		const time = Chronos.#cast(other);
 
 		return (
 			this.startOf(unit, weekStartsOn).#timestamp ===
@@ -888,7 +888,7 @@ export class Chronos {
 	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
 	isBefore(other: ChronosInput, unit: TimeUnit, weekStartsOn: Enumerate<7> = 0): boolean {
-		const time = other instanceof Chronos ? other : new Chronos(other);
+		const time = Chronos.#cast(other);
 
 		return (
 			this.startOf(unit, weekStartsOn).#timestamp <
@@ -903,7 +903,7 @@ export class Chronos {
 	 * @param weekStartsOn Optional: Day the week starts on (0 = Sunday, 1 = Monday). Applicable if week day is required. Default is `0`.
 	 */
 	isAfter(other: ChronosInput, unit: TimeUnit, weekStartsOn: Enumerate<7> = 0): boolean {
-		const time = other instanceof Chronos ? other : new Chronos(other);
+		const time = Chronos.#cast(other);
 
 		return (
 			this.startOf(unit, weekStartsOn).#timestamp >
@@ -1185,7 +1185,7 @@ export class Chronos {
 	 * @returns Difference in number (either `integer` or `float`).
 	 */
 	diff(other: ChronosInput, unit: TimeUnit): number {
-		const time = other instanceof Chronos ? other : new Chronos(other);
+		const time = Chronos.#cast(other);
 
 		const msDiff = this.#date.getTime() - time.#date.getTime();
 
@@ -1936,23 +1936,55 @@ export class Chronos {
 	}
 
 	/**
-	 * @static Returns earliest Chronos.
-	 * @param dates Date inputs.
+	 * @static Returns the earliest `Chronos` instance based on the underlying universal {@link timestamp}.
+	 *
+	 * @remarks
+	 * - All inputs are normalized to `Chronos` instances before comparison.
+	 * - Comparison is always performed using each instance's **UTC timestamp**, ensuring a consistent and timezone-agnostic result.
+	 * - When exactly two values are provided, the first value becomes the initial candidate; if the second value represents an earlier moment in time, it replaces the candidate.
+	 * - The returned value is **not** one of the input objects. A new immutable `Chronos` instance is always created. Its internal timezone, offset, name, and tracking information are cloned from the winning input instance.
+	 *
+	 * @param dates A list of Chronos-compatible inputs (`string`, `number`, `Date` or `Chronos`).
+	 * @returns A new `Chronos` instance representing the earliest moment.
 	 */
 	static min(...dates: ChronosInput[]): Chronos {
-		return new Chronos(Math.min(...dates.map((d) => new Chronos(d).valueOf()))).#withOrigin(
-			'min'
-		);
+		let winner = Chronos.#cast(dates[0]);
+
+		for (const d of dates) {
+			const c = Chronos.#cast(d);
+
+			if (c.timestamp < winner.timestamp) {
+				winner = c;
+			}
+		}
+
+		return winner.#cloneStates(winner, winner.#ORIGIN !== 'root' ? winner.#ORIGIN : 'min');
 	}
 
 	/**
-	 * @static Returns latest Chronos.
-	 * @param dates Date inputs.
+	 * @static Returns the latest `Chronos` instance based on the underlying universal {@link timestamp}.
+	 *
+	 * @remarks
+	 * - All inputs are normalized to `Chronos` instances before comparison.
+	 * - Comparison is always performed using each instance's **UTC timestamp**, ensuring a consistent and timezone-agnostic result.
+	 * - When exactly two values are provided, the first value becomes the initial candidate; if the second value represents a later moment in time, it replaces the candidate.
+	 * - The returned value is **not** one of the input objects. A new immutable `Chronos` instance is always created. Its internal timezone, offset, name, and tracking information are cloned from the winning input instance.
+	 *
+	 * @param dates A list of Chronos-compatible inputs (`string`, `number`, `Date` or `Chronos`).
+	 * @returns A new `Chronos` instance representing the latest moment.
 	 */
 	static max(...dates: ChronosInput[]): Chronos {
-		return new Chronos(Math.max(...dates.map((d) => new Chronos(d).valueOf()))).#withOrigin(
-			'max'
-		);
+		let winner = Chronos.#cast(dates[0]);
+
+		for (const d of dates) {
+			const c = Chronos.#cast(d);
+
+			if (c.timestamp > winner.timestamp) {
+				winner = c;
+			}
+		}
+
+		return winner.#cloneStates(winner, winner.#ORIGIN !== 'root' ? winner.#ORIGIN : 'max');
 	}
 
 	/**
@@ -2050,6 +2082,11 @@ export class Chronos {
 	 */
 	static register(plugin: ChronosPlugin): void {
 		Chronos.use(plugin);
+	}
+
+	/** @static Ensures the input is a `Chronos` instance, creating one if necessary. */
+	static #cast(date: ChronosInput): Chronos {
+		return date instanceof Chronos ? date : new Chronos(date);
 	}
 }
 
