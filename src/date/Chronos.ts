@@ -383,6 +383,11 @@ export class Chronos {
 
 	// ! ======= Private Methods ======= //
 
+	/** Get timestamp (milliseconds since midnight, January 1, 1970 UTC) of the current instance, not the true `Date`. */
+	get #timestamp(): number {
+		return this.#date.getTime();
+	}
+
 	/**
 	 * @private Method to create native `Date` instance from date-like data types.
 	 * @param value The value to convert into `Date`.
@@ -625,12 +630,12 @@ export class Chronos {
 
 	/** Returns the Unix timestamp (seconds since the Unix epoch: January 1, 1970, UTC). */
 	get unix(): number {
-		return Math.floor(this.#date.getTime() / 1000);
+		return Math.floor(this.getTimeStamp() / 1000);
 	}
 
 	/** Gets the time value in milliseconds since midnight, January 1, 1970 UTC. */
 	get timestamp(): number {
-		return this.#date.getTime();
+		return this.getTimeStamp();
 	}
 
 	/** * Gets the last date (number) of the current month `(28, 29, 30 or 31)`. */
@@ -706,7 +711,7 @@ export class Chronos {
 
 	/** @instance Returns the time value in milliseconds since midnight, January 1, 1970 UTC. */
 	getTimeStamp(): number {
-		return this.#date.getTime();
+		return this.toDate().getTime();
 	}
 
 	/**
@@ -844,21 +849,21 @@ export class Chronos {
 	isEqual(other: ChronosInput): boolean {
 		const time = other instanceof Chronos ? other : new Chronos(other);
 
-		return this.timestamp === time.timestamp;
+		return this.#timestamp === time.#timestamp;
 	}
 
 	/** @instance Checks if another date is exactly equal to or before this one. */
 	isEqualOrBefore(other: ChronosInput): boolean {
 		const time = other instanceof Chronos ? other : new Chronos(other);
 
-		return this.timestamp <= time.timestamp;
+		return this.#timestamp <= time.#timestamp;
 	}
 
 	/** @instance Checks if another date is exactly equal to or after this one. */
 	isEqualOrAfter(other: ChronosInput): boolean {
 		const time = other instanceof Chronos ? other : new Chronos(other);
 
-		return this.timestamp >= time.timestamp;
+		return this.#timestamp >= time.#timestamp;
 	}
 
 	/**
@@ -871,8 +876,8 @@ export class Chronos {
 		const time = other instanceof Chronos ? other : new Chronos(other);
 
 		return (
-			this.startOf(unit, weekStartsOn).timestamp ===
-			time.startOf(unit, weekStartsOn).timestamp
+			this.startOf(unit, weekStartsOn).#timestamp ===
+			time.startOf(unit, weekStartsOn).#timestamp
 		);
 	}
 
@@ -886,8 +891,8 @@ export class Chronos {
 		const time = other instanceof Chronos ? other : new Chronos(other);
 
 		return (
-			this.startOf(unit, weekStartsOn).timestamp <
-			time.startOf(unit, weekStartsOn).timestamp
+			this.startOf(unit, weekStartsOn).#timestamp <
+			time.startOf(unit, weekStartsOn).#timestamp
 		);
 	}
 
@@ -901,8 +906,8 @@ export class Chronos {
 		const time = other instanceof Chronos ? other : new Chronos(other);
 
 		return (
-			this.startOf(unit, weekStartsOn).timestamp >
-			time.startOf(unit, weekStartsOn).timestamp
+			this.startOf(unit, weekStartsOn).#timestamp >
+			time.startOf(unit, weekStartsOn).#timestamp
 		);
 	}
 
