@@ -1,5 +1,10 @@
-import type { AdvancedTypes, NormalPrimitive, ValidArray } from '../types/index';
-import type { $UnionToIntersection, Prettify, Split, Tuple } from '../utils/types';
+import type {
+	AdvancedTypes,
+	NormalPrimitive,
+	PartialOrRequired,
+	ValidArray,
+} from '../types/index';
+import type { $UnionToIntersection, DeepPartial, Prettify, Split, Tuple } from '../utils/types';
 import type { COUNTRIES } from './countries';
 
 /** - Generic object with `unknown` value */
@@ -216,13 +221,13 @@ export type DeepKeys<T extends GenericObject> =
 export type DeepKeysTuple<T extends GenericObject> = Tuple<DeepKeys<T>>;
 
 /** - Options for `sanitizeData` utility. */
-export interface SanitizeOptions<T> {
+export interface SanitizeOptions<T, Ignored extends DotNotationKey<T>> {
 	/**
 	 * An array of dot-notation keys to exclude from the sanitized output.
 	 * This is only applicable when sanitizing plain objects or arrays of objects.
 	 * When applied to nested or irregular array structures, behavior may be inconsistent or partially ignored.
 	 */
-	keysToIgnore?: DotNotationKey<T>[];
+	keysToIgnore?: Ignored[];
 
 	/** Whether to trim string values. Defaults to `true`. */
 	trimStrings?: boolean;
@@ -243,6 +248,36 @@ export interface SanitizeOptions<T> {
 	 */
 	requiredKeys?: '*' | DotNotationKey<T>[];
 }
+
+export type SanitizedData<
+	Data extends GenericObject,
+	PoR extends PartialOrRequired,
+	Ignored extends DotNotationKey<Data>,
+> = PoR extends 'partial' ? DeepPartial<Excluded<Data, Ignored>> : Excluded<Data, Ignored>;
+
+type Excluded<T extends GenericObject, Ignored extends DotNotationKey<T>> = OmitPath<
+	T,
+	Ignored
+>;
+
+export type StringKey<T> = Extract<keyof T, string>;
+
+type $JoinKey<Parent extends string, Key extends string> =
+	Parent extends '' ? Key : `${Parent}.${Key}`;
+
+type $PathStartsWith<Path extends string, Prefix extends string> =
+	Path extends Prefix | `${Prefix}.${string}` ? true : false;
+
+type $OmitPath<
+	T extends GenericObject,
+	Ignored extends string,
+	P extends string = '',
+> = Prettify<{
+	[K in StringKey<T> as $PathStartsWith<$JoinKey<P, K>, Ignored> extends true ? never
+	:	K]: T[K] extends GenericObject ? $OmitPath<T[K], Ignored, $JoinKey<P, K>> : T[K];
+}>;
+
+export type OmitPath<T extends GenericObject, Ignored extends string> = $OmitPath<T, Ignored>;
 
 /** Options for `convertObjectValues` utility */
 export interface ConvertObjectOptions<

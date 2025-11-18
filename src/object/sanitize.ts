@@ -3,8 +3,8 @@ import { isCustomFile, isFileList, isFileOrBlob, isFileUpload } from '../form/gu
 import { isArrayOfType, isNotEmptyObject, isObject } from '../guards/non-primitives';
 import { isString } from '../guards/primitives';
 import { trimString } from '../string/basics';
-import type { Any, FlattenPartial, PartialOrRequired } from '../types/index';
-import type { DotNotationKey, GenericObject, SanitizeOptions } from './types';
+import type { Any, PartialOrRequired } from '../types/index';
+import type { DotNotationKey, GenericObject, SanitizedData, SanitizeOptions } from './types';
 
 /**
  * * Trims all the words in a string.
@@ -31,11 +31,15 @@ export function sanitizeData(input: string[]): string[];
  * @param _return - By default return type is as it is, passing this parameter `true` makes the return type `Partial<T>`.
  * @returns A new object with the specified modifications.
  */
-export function sanitizeData<T extends GenericObject, B extends PartialOrRequired = 'required'>(
+export function sanitizeData<
+	T extends GenericObject,
+	Ignored extends DotNotationKey<T> = never,
+	PoR extends PartialOrRequired = 'required',
+>(
 	object: T,
-	options?: SanitizeOptions<T>,
-	_return?: B
-): B extends 'partial' ? FlattenPartial<T> : T;
+	options?: SanitizeOptions<T, Ignored>,
+	_return?: PoR
+): SanitizedData<T, PoR, Ignored>;
 
 /**
  * * Sanitizes a deeply nested array that may contain arrays, objects or other (mixed) data types.
@@ -46,11 +50,15 @@ export function sanitizeData<T extends GenericObject, B extends PartialOrRequire
  * @param _return - By default return type is as it is, passing this parameter `partial` makes the return type `Partial<T>`.
  * @returns A new sanitized array with the specified modifications.
  */
-export function sanitizeData<T extends GenericObject, B extends PartialOrRequired = 'required'>(
+export function sanitizeData<
+	T extends GenericObject,
+	Ignored extends DotNotationKey<T> = never,
+	PoR extends PartialOrRequired = 'required',
+>(
 	array: T[],
-	options?: SanitizeOptions<T>,
-	_return?: B
-): B extends 'partial' ? FlattenPartial<T>[] : T[];
+	options?: SanitizeOptions<T, Ignored>,
+	_return?: PoR
+): Array<SanitizedData<T, PoR, Ignored>>;
 
 /**
  * * Sanitizes a string, array of strings, an object or array of objects by ignoring specified keys and trimming string values.
@@ -61,15 +69,15 @@ export function sanitizeData<T extends GenericObject, B extends PartialOrRequire
  * @param _return - By default return type is as it is, passing this parameter `partial` makes the return type `Partial<T>`.
  * @returns A new string, object or array of strings or objects with the specified modifications.
  */
-export function sanitizeData<T extends GenericObject, B extends PartialOrRequired = 'required'>(
+export function sanitizeData<
+	T extends GenericObject,
+	Ignored extends DotNotationKey<T> = never,
+	PoR extends PartialOrRequired = 'required',
+>(
 	input: string | string[] | T | T[],
-	options?: SanitizeOptions<T>,
-	_return?: B
-):
-	| string
-	| string[]
-	| (B extends 'partial' ? FlattenPartial<T> : T)
-	| (B extends 'partial' ? FlattenPartial<T>[] : T[]) {
+	options?: SanitizeOptions<T, Ignored>,
+	_return?: PoR
+): string | string[] | SanitizedData<T, PoR, Ignored> | Array<SanitizedData<T, PoR, Ignored>> {
 	const {
 		keysToIgnore = [],
 		requiredKeys = [],
@@ -157,7 +165,7 @@ export function sanitizeData<T extends GenericObject, B extends PartialOrRequire
 			const fullKeyPath = parentPath ? `${parentPath}.${key}` : key;
 
 			// Skip ignored keys
-			if (ignoreKeySet.has(fullKeyPath as DotNotationKey<T>)) {
+			if (ignoreKeySet.has(fullKeyPath as Ignored)) {
 				return acc;
 			}
 
@@ -226,12 +234,12 @@ export function sanitizeData<T extends GenericObject, B extends PartialOrRequire
 				if (_skipObject(val)) return false;
 
 				return true;
-			}) as B extends 'partial' ? FlattenPartial<T>[] : T[];
+			}) as Array<SanitizedData<T, PoR, Ignored>>;
 	}
 
 	// Process object
 	if (isObject(input)) {
-		return _processObject(input) as B extends 'partial' ? FlattenPartial<T> : T;
+		return _processObject(input) as SanitizedData<T, PoR, Ignored>;
 	}
 
 	return input;

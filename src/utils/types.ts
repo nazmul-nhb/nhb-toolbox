@@ -100,11 +100,11 @@ export type KeysOfUnion<T> = T extends T ? keyof T : never;
  * type PartialConfig = DeepPartial<Config>;
  * // { a?: string; nested?: { b?: number } }
  */
-export type DeepPartial<T> = {
+export type DeepPartial<T> = Prettify<{
 	[K in keyof T]?: T[K] extends AdvancedTypes ? T[K]
 	: T[K] extends object ? DeepPartial<T[K]>
 	: T[K];
-};
+}>;
 
 /**
  * * Recursively makes all properties in any object or array type optional.
@@ -116,9 +116,9 @@ export type DeepPartial<T> = {
  */
 export type DeepPartialAll<T> =
 	T extends Array<infer El> ? Array<DeepPartialAll<El>>
-	:	{
+	:	Prettify<{
 			[K in keyof T]?: DeepPartialAll<T[K]>;
-		};
+		}>;
 
 /**
  * * Removes `readonly` modifiers from all properties of an object type.
