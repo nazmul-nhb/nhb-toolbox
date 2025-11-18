@@ -4,7 +4,13 @@ import type {
 	PartialOrRequired,
 	ValidArray,
 } from '../types/index';
-import type { $UnionToIntersection, DeepPartial, Prettify, Split, Tuple } from '../utils/types';
+import type {
+	$DeepPartial,
+	$UnionToIntersection,
+	Prettify,
+	Split,
+	Tuple,
+} from '../utils/types';
 import type { COUNTRIES } from './countries';
 
 /** - Generic object with `unknown` value */
@@ -249,35 +255,104 @@ export interface SanitizeOptions<T, Ignored extends DotNotationKey<T>> {
 	requiredKeys?: '*' | DotNotationKey<T>[];
 }
 
+/**
+ * * Produces sanitized output data by omitting keys in `keysToIgnore` from {@link SanitizeOptions} and optionally applying partial deep nesting based on `_return` parameter.
+ *
+ * @remarks
+ * - When `PoR` is `'partial'`, all nested properties become optional after path omission.
+ * - When `PoR` is `'required'`, the resulting type keeps full property requirements.
+ * - Intended for return type of `sanitizeData` utility.
+ */
 export type SanitizedData<
 	Data extends GenericObject,
-	PoR extends PartialOrRequired,
 	Ignored extends DotNotationKey<Data>,
-> = PoR extends 'partial' ? DeepPartial<Excluded<Data, Ignored>> : Excluded<Data, Ignored>;
+	PoR extends PartialOrRequired,
+> = PoR extends 'partial' ? $DeepPartial<OmitPath<Data, Ignored>> : OmitPath<Data, Ignored>;
 
-type Excluded<T extends GenericObject, Ignored extends DotNotationKey<T>> = OmitPath<
-	T,
-	Ignored
->;
+/**
+ * * Extracts only the string keys from an object type.
+ *
+ * @remarks
+ * - Useful when iterating over object keys inside template-literal-based utility types,
+ * because TypeScript may include `symbol` keys in `keyof T`, which cannot be used in
+ * template literal types.
+ * - By filtering to `string`, all keys become safe for path operations.
+ *
+ * @example
+ * type A = { a: number; b: string; 1: boolean; [Symbol.iterator]: () => void };
+ * type Keys = ExtractStringKey<A>;
+ * // Result: "a" | "b"
+ */
+export type ExtractStringKey<T> = Extract<keyof T, string>;
 
-export type StringKey<T> = Extract<keyof T, string>;
-
-type $JoinKey<Parent extends string, Key extends string> =
+/**
+ * * Joins a parent key and a child key into a dot-notation path.
+ *
+ * @remarks
+ * - If the parent path is an empty string, the child key is returned as-is.
+ * - Otherwise, the function produces `"parent.child"` formatting.
+ *
+ * @example
+ * type A = $JoinDotKey<'', 'user'>;          // "user"
+ * type B = $JoinDotKey<'settings', 'theme'>; // "settings.theme"
+ */
+export type $JoinDotKey<Parent extends string, Key extends string> =
 	Parent extends '' ? Key : `${Parent}.${Key}`;
 
-type $PathStartsWith<Path extends string, Prefix extends string> =
+/**
+ * * Checks whether a dot-notation path starts with the specified prefix.
+ *
+ * @remarks
+ * A path is considered a match if it is **exactly equal** to the prefix, or begins with `"prefix."`.
+ *
+ * @example
+ * type A = $DoesPathStartsWith<'settings.timeout', 'settings'>; // true
+ * type B = $DoesPathStartsWith<'settings', 'settings'>;         // true
+ * type C = $DoesPathStartsWith<'user.name', 'settings'>;        // false
+ */
+export type $DoesPathStartsWith<Path extends string, Prefix extends string> =
 	Path extends Prefix | `${Prefix}.${string}` ? true : false;
 
-type $OmitPath<
-	T extends GenericObject,
-	Ignored extends string,
-	P extends string = '',
-> = Prettify<{
-	[K in StringKey<T> as $PathStartsWith<$JoinKey<P, K>, Ignored> extends true ? never
-	:	K]: T[K] extends GenericObject ? $OmitPath<T[K], Ignored, $JoinKey<P, K>> : T[K];
+/** Recursive utility that removes a specific dot-notation path from an object. */
+type $OmitPath<T extends GenericObject, I extends string, P extends string = ''> = Prettify<{
+	[K in ExtractStringKey<T> as $DoesPathStartsWith<$JoinDotKey<P, K>, I> extends true ? never
+	:	K]: T[K] extends GenericObject ?
+		T[K] extends AdvancedTypes ?
+			T[K]
+		:	$OmitPath<T[K], I, $JoinDotKey<P, K>>
+	:	T[K];
 }>;
 
-export type OmitPath<T extends GenericObject, Ignored extends string> = $OmitPath<T, Ignored>;
+/**
+ * * Removes a dot-notation path from an object type while preserving its original shape.
+ *
+ * @remarks
+ * - It excludes the specified dot path, but **retains the full structure** of the parent object.
+ * - Only the targeted property is removed.
+ *
+ * @example
+ * type Input = {
+ *   settings: {
+ *     timeout: number;
+ *     theme: string;
+ *   };
+ *   version: string;
+ * };
+ *
+ * type Clean = OmitPath<Input, "settings.timeout">;
+ *
+ * // Result:
+ * // {
+ * //   settings: {
+ * //     theme: string;
+ * //   };
+ * //   version: string;
+ * // }
+ */
+export type OmitPath<
+	Object extends GenericObject,
+	Ignored extends DotNotationKey<Object>,
+> = $OmitPath<Object, Ignored>;
 
 /** Options for `convertObjectValues` utility */
 export interface ConvertObjectOptions<

@@ -92,8 +92,9 @@ export type KeysOfUnion<T> = T extends T ? keyof T : never;
  * * Recursively makes all potential standard js object properties optional.
  *
  * @remarks
- * - It excludes complex types like `Array`, `Map`, `File`, `Date`, `Chronos` etc. from being recursively partial.
- * - Please, refer to {@link AdvancedTypes} to learn more about these complex types.
+ * - It excludes keys of complex types like `Array`, `Map`, `File`, `Date`, `Chronos` etc. from being recursively partial.
+ * - Please, refer to {@link AdvancedTypes} to allow these complex types.
+ * - Also refer to {@link $DeepPartial} for less strict version.
  *
  * @example
  * type Config = { a: string; nested: { b: number } };
@@ -107,18 +108,35 @@ export type DeepPartial<T> = Prettify<{
 }>;
 
 /**
+ * * Recursively makes all potential standard js object (also object in array) properties optional.
+ *
+ * @remarks
+ * - It excludes keys of complex types like `Map`, `File`, `Date`, `Chronos` etc. from being recursively partial.
+ * - Please, refer to {@link AdvancedTypes} to allow these complex types.
+ * - Also refer to {@link DeepPartial} for more strict version.
+ *
+ * @example
+ * type Config = { a: string; nested: { b: number }[] };
+ * type PartialConfig = $DeepPartial<Config>;
+ * // { a?: string; nested?: { b?: number; }[]; }
+ */
+export type $DeepPartial<T> = Prettify<{
+	[K in keyof T]?: T[K] extends Array<infer El> ? Array<$DeepPartial<El>>
+	: T[K] extends AdvancedTypes ? T[K]
+	: $DeepPartial<T[K]>;
+}>;
+
+/**
  * * Recursively makes all properties in any object or array type optional.
  *
  * @example
  * type Config = { a: string; nested: { b: number } };
- * type PartialConfig = DeepPartial<Config>;
+ * type PartialConfig = DeepPartialAll<Config>;
  * // { a?: string; nested?: { b?: number } }
  */
 export type DeepPartialAll<T> =
 	T extends Array<infer El> ? Array<DeepPartialAll<El>>
-	:	Prettify<{
-			[K in keyof T]?: DeepPartialAll<T[K]>;
-		}>;
+	:	Prettify<{ [K in keyof T]?: DeepPartialAll<T[K]> }>;
 
 /**
  * * Removes `readonly` modifiers from all properties of an object type.

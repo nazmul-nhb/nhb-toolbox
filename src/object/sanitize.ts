@@ -32,14 +32,14 @@ export function sanitizeData(input: string[]): string[];
  * @returns A new object with the specified modifications.
  */
 export function sanitizeData<
-	T extends GenericObject,
-	Ignored extends DotNotationKey<T> = never,
+	Data extends GenericObject,
+	Ignored extends DotNotationKey<Data> = never,
 	PoR extends PartialOrRequired = 'required',
 >(
-	object: T,
-	options?: SanitizeOptions<T, Ignored>,
+	object: Data,
+	options?: SanitizeOptions<Data, Ignored>,
 	_return?: PoR
-): SanitizedData<T, PoR, Ignored>;
+): SanitizedData<Data, Ignored, PoR>;
 
 /**
  * * Sanitizes a deeply nested array that may contain arrays, objects or other (mixed) data types.
@@ -51,14 +51,14 @@ export function sanitizeData<
  * @returns A new sanitized array with the specified modifications.
  */
 export function sanitizeData<
-	T extends GenericObject,
-	Ignored extends DotNotationKey<T> = never,
+	Data extends GenericObject,
+	Ignored extends DotNotationKey<Data> = never,
 	PoR extends PartialOrRequired = 'required',
 >(
-	array: T[],
-	options?: SanitizeOptions<T, Ignored>,
+	array: Data[],
+	options?: SanitizeOptions<Data, Ignored>,
 	_return?: PoR
-): Array<SanitizedData<T, PoR, Ignored>>;
+): Array<SanitizedData<Data, Ignored, PoR>>;
 
 /**
  * * Sanitizes a string, array of strings, an object or array of objects by ignoring specified keys and trimming string values.
@@ -71,13 +71,13 @@ export function sanitizeData<
  */
 export function sanitizeData<
 	T extends GenericObject,
-	Ignored extends DotNotationKey<T> = never,
-	PoR extends PartialOrRequired = 'required',
+	I extends DotNotationKey<T> = never,
+	P extends PartialOrRequired = 'required',
 >(
 	input: string | string[] | T | T[],
-	options?: SanitizeOptions<T, Ignored>,
-	_return?: PoR
-): string | string[] | SanitizedData<T, PoR, Ignored> | Array<SanitizedData<T, PoR, Ignored>> {
+	options?: SanitizeOptions<T, I>,
+	_return?: P
+): string | string[] | SanitizedData<T, I, P> | Array<SanitizedData<T, I, P>> {
 	const {
 		keysToIgnore = [],
 		requiredKeys = [],
@@ -165,7 +165,7 @@ export function sanitizeData<
 			const fullKeyPath = parentPath ? `${parentPath}.${key}` : key;
 
 			// Skip ignored keys
-			if (ignoreKeySet.has(fullKeyPath as Ignored)) {
+			if (ignoreKeySet.has(fullKeyPath as I)) {
 				return acc;
 			}
 
@@ -234,12 +234,12 @@ export function sanitizeData<
 				if (_skipObject(val)) return false;
 
 				return true;
-			}) as Array<SanitizedData<T, PoR, Ignored>>;
+			}) as Array<SanitizedData<T, I, P>>;
 	}
 
 	// Process object
 	if (isObject(input)) {
-		return _processObject(input) as SanitizedData<T, PoR, Ignored>;
+		return _processObject(input) as SanitizedData<T, I, P>;
 	}
 
 	return input;
