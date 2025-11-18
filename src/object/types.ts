@@ -306,16 +306,16 @@ export type $JoinDotKey<Parent extends string, Key extends string> =
  * A path is considered a match if it is **exactly equal** to the prefix, or begins with `"prefix."`.
  *
  * @example
- * type A = $DoesPathStartsWith<'settings.timeout', 'settings'>; // true
- * type B = $DoesPathStartsWith<'settings', 'settings'>;         // true
- * type C = $DoesPathStartsWith<'user.name', 'settings'>;        // false
+ * type A = $DoesPathStartWith<'settings.timeout', 'settings'>; // true
+ * type B = $DoesPathStartWith<'settings', 'settings'>;         // true
+ * type C = $DoesPathStartWith<'user.name', 'settings'>;        // false
  */
-export type $DoesPathStartsWith<Path extends string, Prefix extends string> =
+export type $DoesPathStartWith<Path extends string, Prefix extends string> =
 	Path extends Prefix | `${Prefix}.${string}` ? true : false;
 
 /** Recursive utility that removes a specific dot-notation path from an object. */
 type $OmitPath<T extends GenericObject, I extends string, P extends string = ''> = Prettify<{
-	[K in ExtractStringKey<T> as $DoesPathStartsWith<$JoinDotKey<P, K>, I> extends true ? never
+	[K in ExtractStringKey<T> as $DoesPathStartWith<$JoinDotKey<P, K>, I> extends true ? never
 	:	K]: T[K] extends GenericObject ?
 		T[K] extends AdvancedTypes ?
 			T[K]
