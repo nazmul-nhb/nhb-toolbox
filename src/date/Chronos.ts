@@ -1,16 +1,14 @@
 import { isValidArray } from '../guards/non-primitives';
 import { isString } from '../guards/primitives';
 import type { Enumerate, NumberRange } from '../number/types';
-import { getOrdinal } from '../number/utilities';
 import type { LooseLiteral, TupleOf } from '../utils/types';
-import { DAYS, INTERNALS, MONTHS, SORTED_TIME_FORMATS } from './constants';
+import { DAYS, INTERNALS, MONTHS } from './constants';
 import { isLeapYear } from './guards';
 import type {
 	$DateUnit,
 	$PluginMethods,
 	$TimeZoneIdentifier,
 	$UTCOffset,
-	ChronosFormat,
 	ChronosInput,
 	ChronosInternals,
 	ChronosMethods,
@@ -41,7 +39,7 @@ import type {
 	WeekDay,
 	WeekdayOptions,
 } from './types';
-import { extractMinutesFromUTC } from './utils';
+import { _formatDateCore, extractMinutesFromUTC } from './utils';
 
 /** Date parts for `Chronos` as `Record<part, number>` */
 type $DateParts = {
@@ -492,74 +490,18 @@ export class Chronos {
 			return useUTC ? $utcDate[`getUTC${suffix}`]() : $date[`get${suffix}`]();
 		};
 
-		const year = _getUnitValue('FullYear');
-		const month = _getUnitValue('Month');
-		const day = _getUnitValue('Day');
-		const date = _getUnitValue('Date');
-		const hours = _getUnitValue('Hours');
-		const minutes = _getUnitValue('Minutes');
-		const seconds = _getUnitValue('Seconds');
-		const milliseconds = _getUnitValue('Milliseconds');
+		const y = _getUnitValue('FullYear');
+		const mo = _getUnitValue('Month');
+		const d = _getUnitValue('Day');
+		const dt = _getUnitValue('Date');
+		const h = _getUnitValue('Hours');
+		const m = _getUnitValue('Minutes');
+		const s = _getUnitValue('Seconds');
+		const ms = _getUnitValue('Milliseconds');
 
-		const dateComponents: Record<ChronosFormat, string> = {
-			YYYY: String(year),
-			YY: String(year).slice(-2),
-			yyyy: String(year),
-			yy: String(year).slice(-2),
-			M: String(month + 1),
-			MM: String(month + 1).padStart(2, '0'),
-			mmm: MONTHS[month].slice(0, 3),
-			mmmm: MONTHS[month],
-			d: DAYS[day].slice(0, 2),
-			dd: DAYS[day].slice(0, 3),
-			ddd: DAYS[day],
-			D: String(date),
-			DD: String(date).padStart(2, '0'),
-			Do: getOrdinal(date),
-			H: String(hours),
-			HH: String(hours).padStart(2, '0'),
-			h: String(hours % 12 || 12),
-			hh: String(hours % 12 || 12).padStart(2, '0'),
-			m: String(minutes),
-			mm: String(minutes).padStart(2, '0'),
-			s: String(seconds),
-			ss: String(seconds).padStart(2, '0'),
-			ms: String(milliseconds),
-			mss: String(milliseconds).padStart(3, '0'),
-			a: hours < 12 ? 'am' : 'pm',
-			A: hours < 12 ? 'AM' : 'PM',
-			ZZ: useUTC ? 'Z' : this.getTimeZoneOffset(),
-		};
+		const offset = useUTC ? 'Z' : this.getTimeZoneOffset();
 
-		const tokenRegex = new RegExp(`^(${SORTED_TIME_FORMATS.join('|')})`);
-
-		let result = '';
-		let i = 0;
-
-		while (i < format.length) {
-			// Handle [escaped literal]
-			if (format[i] === '[') {
-				const end = format.indexOf(']', i);
-				if (end !== -1) {
-					result += format.slice(i + 1, end);
-					i = end + 1;
-					continue;
-				}
-			}
-
-			// Try to match a format token
-			const match = tokenRegex.exec(format.slice(i));
-
-			if (match) {
-				result += dateComponents[match[0] as ChronosFormat];
-				i += match[0].length;
-			} else {
-				result += format[i];
-				i++;
-			}
-		}
-
-		return result;
+		return _formatDateCore(format, y, mo, d, dt, h, m, s, ms, offset);
 	}
 
 	/**

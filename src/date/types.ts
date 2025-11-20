@@ -87,6 +87,13 @@ export type TimeZoneDetails = {
 	tzNameLongOffset: LooseLiteral<`GMT${$UTCOffset}`> | undefined;
 };
 
+/** Options for `formatDate` utility */
+export interface DateFormatOptions extends FormatOptions {
+	/** Date to format, must be parsable by {@link Date} constructor. Can be string, number or `Date`. Defaults to current time. */
+	date?: string | number | Date;
+	format?: StrictFormat;
+}
+
 /** Name of time unit from `year` to `millisecond` */
 export type TimeUnit =
 	| 'year'
@@ -407,7 +414,7 @@ export type UTCOffset = `UTC${$UTCOffset}`;
 /** `Chronos` Date Format options */
 export interface FormatOptions {
 	/**
-	 * * The desired format (Default format is `'dd, MMM DD, YYYY HH:mm:ss'` = `'Sun, Apr 06, 2025 16:11:55'`).
+	 * * The desired format (Default format is `'dd, mmm DD, YYYY HH:mm:ss'` = `'Sun, Apr 06, 2025 16:11:55'`).
 	 *
 	 * - To output raw text (i.e., not interpreted as a date token), wrap it in square brackets.
 	 * - For example, `[Today is] ddd` results in `Today is Sunday`, and `YYYY[ year]` results in `2025 year`.

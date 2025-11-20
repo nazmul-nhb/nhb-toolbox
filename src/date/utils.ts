@@ -1,7 +1,12 @@
+import { getOrdinal } from '../number/utilities';
 import type { Numeric } from '../types/index';
+import { DAYS, MONTHS, SORTED_TIME_FORMATS } from './constants';
 import type {
+	$DateUnit,
 	$TimeZoneIdentifier,
+	ChronosFormat,
 	ClockTime,
+	DateFormatOptions,
 	HourMinutes,
 	TimeZoneDetails,
 	UTCOffset,
@@ -133,4 +138,126 @@ export function getTimeZoneDetails(tzId?: $TimeZoneIdentifier, date?: Date) {
 	}
 
 	return obj;
+}
+
+/** Core formatting logic shared by {@link formatDate} and `Chronos` class */
+export function _formatDateCore(
+	format: string,
+	year: number,
+	month: number,
+	day: number,
+	date: number,
+	hours: number,
+	minutes: number,
+	seconds: number,
+	milliseconds: number,
+	offset: string
+) {
+	const dateComponents: Record<ChronosFormat, string> = {
+		YYYY: String(year),
+		YY: String(year).slice(-2),
+		yyyy: String(year),
+		yy: String(year).slice(-2),
+		M: String(month + 1),
+		MM: String(month + 1).padStart(2, '0'),
+		mmm: MONTHS[month].slice(0, 3),
+		mmmm: MONTHS[month],
+		d: DAYS[day].slice(0, 2),
+		dd: DAYS[day].slice(0, 3),
+		ddd: DAYS[day],
+		D: String(date),
+		DD: String(date).padStart(2, '0'),
+		Do: getOrdinal(date),
+		H: String(hours),
+		HH: String(hours).padStart(2, '0'),
+		h: String(hours % 12 || 12),
+		hh: String(hours % 12 || 12).padStart(2, '0'),
+		m: String(minutes),
+		mm: String(minutes).padStart(2, '0'),
+		s: String(seconds),
+		ss: String(seconds).padStart(2, '0'),
+		ms: String(milliseconds),
+		mss: String(milliseconds).padStart(3, '0'),
+		a: hours < 12 ? 'am' : 'pm',
+		A: hours < 12 ? 'AM' : 'PM',
+		ZZ: offset,
+	};
+
+	const tokenRegex = new RegExp(`^(${SORTED_TIME_FORMATS.join('|')})`);
+
+	let result = '';
+	let i = 0;
+
+	while (i < format.length) {
+		// Handle [escaped literal]
+		if (format[i] === '[') {
+			const end = format.indexOf(']', i);
+			if (end !== -1) {
+				result += format.slice(i + 1, end);
+				i = end + 1;
+				continue;
+			}
+		}
+
+		// Try to match a format token
+		const match = tokenRegex.exec(format.slice(i));
+
+		if (match) {
+			result += dateComponents[match[0] as ChronosFormat];
+			i += match[0].length;
+		} else {
+			result += format[i];
+			i++;
+		}
+	}
+
+	return result;
+}
+
+/**
+ * * Formats a date into a specified string format.
+ *
+ * @param options Options to control date and time formatting.
+ *
+ * @remarks
+ * - If no date is provided, the current date and time will be used.
+ * - If the provided date is invalid, the function will return `"Invalid Date!"`.
+ * - The default format is `'dd, mmm DD, YYYY HH:mm:ss'` (e.g., `'Sun, Apr 06, 2025 16:11:55'`).
+ * - By default, local time is used; set `useUTC` to `true` to format in UTC.
+ * - The format string supports various tokens for date and time components, as well as literal text enclosed in square brackets.
+ * - See {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/format#format-tokens format tokens} for details on supported tokens.
+ * - For more complex date/time manipulations, consider using the {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos Chronos} class.
+ *
+ * @returns Formatted date/time string.
+ */
+export function formatDate(options?: DateFormatOptions): string {
+	const {
+		date = new Date(),
+		format = 'dd, mmm DD, YYYY HH:mm:ss',
+		useUTC = false,
+	} = options ?? {};
+
+	const $date = date instanceof Date ? date : new Date(date);
+
+	if (isNaN($date.getTime())) {
+		return 'Invalid Date!';
+	}
+
+	/** Get unit value for {@link $date} for specific unit for local and UTC time */
+	const _getUnitValue = (suffix: $DateUnit): number => {
+		return useUTC ? $date[`getUTC${suffix}`]() : $date[`get${suffix}`]();
+	};
+
+	const y = _getUnitValue('FullYear');
+	const mo = _getUnitValue('Month');
+	const d = _getUnitValue('Day');
+	const dt = _getUnitValue('Date');
+	const h = _getUnitValue('Hours');
+	const m = _getUnitValue('Minutes');
+	const s = _getUnitValue('Seconds');
+	const ms = _getUnitValue('Milliseconds');
+
+	const offset = useUTC ? 'Z' : formatUTCOffset(-$date.getTimezoneOffset()).slice(3);
+
+	return _formatDateCore(format, y, mo, d, dt, h, m, s, ms, offset);
 }

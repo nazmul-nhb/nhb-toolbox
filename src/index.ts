@@ -279,6 +279,7 @@ export {
 	extractTimeFromUTC,
 	extractTimeFromUTC as extractTimeStringFromUTC,
 	getTotalMinutes as extractTotalMinutesFromTime,
+	formatDate,
 	formatUTCOffset,
 	getCurrentDateTime,
 	getCurrentDateTime as getCurrentTime,
