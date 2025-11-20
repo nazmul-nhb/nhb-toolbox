@@ -6,7 +6,7 @@ import type {
 } from './types';
 
 /**
- * * Converts the values of specified keys in an object to numbers.
+ * * Converts the values of specified keys in an object to `"string"` or `"number"`.
  * * Supports nested objects using dot-notation keys.
  *
  * @param data The object to convert.
@@ -22,7 +22,7 @@ export function convertObjectValues<
 >(data: T, options: ConvertObjectOptions<T, Key, C>): ConvertedObject<T, Key, C>;
 
 /**
- * * Converts the values of specified keys in an array of objects to numbers or strings.
+ * * Converts the values of specified keys in an array of objects to `"string"` or `"number"`.
  * * Supports nested objects using dot-notation keys.
  *
  * @param data The array of objects to convert.
