@@ -45,9 +45,9 @@ export function sanitizeData<
  * * Sanitizes a deeply nested array that may contain arrays, objects or other (mixed) data types.
  * * Preserves structure while removing empty values and trimming strings and other operations.
  *
- * @param array - A mixed array that may contain arrays, objects or other data types.
- * @param options - Options to trim and filter values.
- * @param _return - By default return type is as it is, passing this parameter `partial` makes the return type `Partial<T>`.
+ * @param array - An array of objects that may contain arrays, objects or other data types.
+ * @param options - Options that define which keys to ignore, whether to trim string values, and whether to exclude nullish, falsy or empty values.
+ * @param _return - By default return type is as it is, passing this parameter `partial` makes the return type `$DeepPartial<T>`.
  * @returns A new sanitized array with the specified modifications.
  */
 export function sanitizeData<
@@ -65,8 +65,8 @@ export function sanitizeData<
  * * Also excludes nullish values (null, undefined) if specified. Always ignores empty nested object(s).
  *
  * @param input - The string, object or array of strings or objects to sanitize.
- * @param options - Options for processing.
- * @param _return - By default return type is as it is, passing this parameter `partial` makes the return type `Partial<T>`.
+ * @param options - Options for processing data.
+ * @param _return - By default return type is as it is, passing this parameter `partial` makes the return type `$DeepPartial<T>`.
  * @returns A new string, object or array of strings or objects with the specified modifications.
  */
 export function sanitizeData<

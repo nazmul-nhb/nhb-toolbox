@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+<!-- ## [4.26.70] - 2025-11-21
+
+- **Added** new `formatDate` utility and a core (private) date formatter to be shared with `Chronos` class and `formatDate`. -->
+
 ## [4.26.69] - 2025-11-18
 
 - **Updated** *return type* of `sanitizeData` utility:

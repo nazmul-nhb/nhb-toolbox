@@ -228,7 +228,7 @@ export function _formatDateCore(
  * - See {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/format#format-tokens format tokens} for details on supported tokens.
  * - For more complex date/time manipulations, consider using the {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos Chronos} class.
  *
- * @returns Formatted date/time string.
+ * @returns Date/time string in specified format.
  */
 export function formatDate(options?: DateFormatOptions): string {
 	const {
@@ -243,7 +243,7 @@ export function formatDate(options?: DateFormatOptions): string {
 		return 'Invalid Date!';
 	}
 
-	/** Get unit value for {@link $date} for specific unit for local and UTC time */
+	/** Get unit value for {@link $date} for specific unit in local or UTC time */
 	const _getUnitValue = (suffix: $DateUnit): number => {
 		return useUTC ? $date[`getUTC${suffix}`]() : $date[`get${suffix}`]();
 	};
