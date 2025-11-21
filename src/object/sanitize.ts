@@ -23,25 +23,6 @@ export function sanitizeData(input: string): string;
 export function sanitizeData(input: string[]): string[];
 
 /**
- * * Sanitizes an object by ignoring specified keys and trimming string values based on options provided.
- * * Also excludes nullish values (`null`, `undefined`), falsy (`nullish` + `0` & `""`) or empty values (`object`, `array`) if specified.
- *
- * @param object - The object to sanitize.
- * @param options - Options that define which keys to ignore, whether to trim string values, and whether to exclude nullish, falsy or empty values.
- * @param _return - By default return type is as it is, passing this parameter `true` makes the return type `Partial<T>`.
- * @returns A new object with the specified modifications.
- */
-export function sanitizeData<
-	Data extends GenericObject,
-	Ignored extends DotNotationKey<Data> = never,
-	PoR extends PartialOrRequired = 'required',
->(
-	object: Data,
-	options?: SanitizeOptions<Data, Ignored>,
-	_return?: PoR
-): SanitizedData<Data, Ignored, PoR>;
-
-/**
  * * Sanitizes a deeply nested array that may contain arrays, objects or other (mixed) data types.
  * * Preserves structure while removing empty values and trimming strings and other operations.
  *
@@ -61,6 +42,25 @@ export function sanitizeData<
 ): Array<SanitizedData<Data, Ignored, PoR>>;
 
 /**
+ * * Sanitizes an object by ignoring specified keys and trimming string values based on options provided.
+ * * Also excludes nullish values (`null`, `undefined`), falsy (`nullish` + `0` & `""`) or empty values (`object`, `array`) if specified.
+ *
+ * @param object - The object to sanitize.
+ * @param options - Options that define which keys to ignore, whether to trim string values, and whether to exclude nullish, falsy or empty values.
+ * @param _return - By default return type is as it is, passing this parameter `true` makes the return type `Partial<T>`.
+ * @returns A new object with the specified modifications.
+ */
+export function sanitizeData<
+	Data extends GenericObject,
+	Ignored extends DotNotationKey<Data> = never,
+	PoR extends PartialOrRequired = 'required',
+>(
+	object: Data,
+	options?: SanitizeOptions<Data, Ignored>,
+	_return?: PoR
+): SanitizedData<Data, Ignored, PoR>;
+
+/**
  * * Sanitizes a string, array of strings, an object or array of objects by ignoring specified keys and trimming string values.
  * * Also excludes nullish values (null, undefined) if specified. Always ignores empty nested object(s).
  *
@@ -70,14 +70,14 @@ export function sanitizeData<
  * @returns A new string, object or array of strings or objects with the specified modifications.
  */
 export function sanitizeData<
-	T extends GenericObject,
-	I extends DotNotationKey<T> = never,
+	D extends GenericObject,
+	I extends DotNotationKey<D> = never,
 	P extends PartialOrRequired = 'required',
 >(
-	input: string | string[] | T | T[],
-	options?: SanitizeOptions<T, I>,
+	input: string | string[] | D | D[],
+	options?: SanitizeOptions<D, I>,
 	_return?: P
-): string | string[] | SanitizedData<T, I, P> | Array<SanitizedData<T, I, P>> {
+): string | string[] | SanitizedData<D, I, P> | Array<SanitizedData<D, I, P>> {
 	const {
 		keysToIgnore = [],
 		requiredKeys = [],
@@ -140,7 +140,7 @@ export function sanitizeData<
 				}
 
 				if (isObject(item)) {
-					return _processObject(item as T, path);
+					return _processObject(item as D, path);
 				}
 
 				return item;
@@ -159,7 +159,7 @@ export function sanitizeData<
 	 * @param object The object to process.
 	 * @param parentPath The parent path of a key.
 	 *  */
-	const _processObject = (object: T, parentPath = '') =>
+	const _processObject = (object: D, parentPath = '') =>
 		Object.entries(object).reduce((acc, [key, value]) => {
 			// Compute the full key path
 			const fullKeyPath = parentPath ? `${parentPath}.${key}` : key;
@@ -181,37 +181,37 @@ export function sanitizeData<
 
 			if (isString(value) && trimStrings) {
 				// Trim string values if enabled
-				acc[key as keyof T] = trimString(value) as T[keyof T];
+				acc[key as keyof D] = trimString(value) as D[keyof D];
 			} else if (_shouldNotProcess(value)) {
-				acc[key as keyof T] = value as T[keyof T];
+				acc[key as keyof D] = value as D[keyof D];
 			} else if (value && isObject(value)) {
 				if (_shouldNotProcess(value)) {
-					acc[key as keyof T] = value as T[keyof T];
+					acc[key as keyof D] = value as D[keyof D];
 				} else {
 					// Recursively process nested objects
-					const processedValue = _processObject(value as T, fullKeyPath);
+					const processedValue = _processObject(value as D, fullKeyPath);
 					// Add the property conditionally if it's not an empty object
 					if (
 						!ignoreEmpty ||
 						_isRequiredKey(fullKeyPath) ||
 						isNotEmptyObject(processedValue)
 					) {
-						acc[key as keyof T] = processedValue as T[keyof T];
+						acc[key as keyof D] = processedValue as D[keyof D];
 					}
 				}
 			} else if (value && Array.isArray(value)) {
 				const processedArray = _processArray(value, fullKeyPath);
 
 				if (!ignoreEmpty || _isRequiredKey(fullKeyPath) || processedArray?.length > 0) {
-					acc[key as keyof T] = processedArray as T[keyof T];
+					acc[key as keyof D] = processedArray as D[keyof D];
 				}
 			} else {
 				// Add other values untouched
-				acc[key as keyof T] = value as T[keyof T];
+				acc[key as keyof D] = value as D[keyof D];
 			}
 
 			return acc;
-		}, {} as T);
+		}, {} as D);
 
 	// Process strings
 	if (isString(input)) {
@@ -234,12 +234,12 @@ export function sanitizeData<
 				if (_skipObject(val)) return false;
 
 				return true;
-			}) as Array<SanitizedData<T, I, P>>;
+			}) as Array<SanitizedData<D, I, P>>;
 	}
 
 	// Process object
 	if (isObject(input)) {
-		return _processObject(input) as SanitizedData<T, I, P>;
+		return _processObject(input) as SanitizedData<D, I, P>;
 	}
 
 	return input;
