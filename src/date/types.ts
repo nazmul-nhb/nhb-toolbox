@@ -89,7 +89,7 @@ export type TimeZoneDetails = {
 
 /** Options for `formatDate` utility */
 export interface DateFormatOptions extends FormatOptions {
-	/** Date to format, must be parsable by {@link Date} constructor. Can be string, number or `Date`. Defaults to current time. */
+	/** - Date to format, must be parsable by {@link Date} constructor. Can be string, number or `Date`. Defaults to current time. */
 	date?: string | number | Date;
 	format?: StrictFormat;
 }
@@ -416,12 +416,12 @@ export interface FormatOptions {
 	/**
 	 * * The desired format (Default format is `'dd, mmm DD, YYYY HH:mm:ss'` = `'Sun, Apr 06, 2025 16:11:55'`).
 	 *
-	 * - To output raw text (i.e., not interpreted as a date token), wrap it in square brackets.
-	 * - For example, `[Today is] ddd` results in `Today is Sunday`, and `YYYY[ year]` results in `2025 year`.
+	 *   - To output raw text (i.e., not interpreted as a date token), wrap it in square brackets.
+	 *   - For example, `[Today is] ddd` results in `Today is Sunday`, and `YYYY[ year]` results in `2025 year`.
 	 *
-	 * - Supported format tokens include: `YYYY`, `YY`, `mmmm`, `mmm`, `MM`, `M`, `DD`, `D`, `dd`, `ddd`, `Do`, `HH`, `H`, `hh`, `h`, `mm`, `m`, `ss`, `s`, `ms`, `mss`, `a`, `A`, and `ZZ`.
-	 * - *Any token not wrapped in brackets will be parsed and replaced with its corresponding date component.*
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/format#format-tokens format tokens} for details.
+	 *   - Supported format tokens include: `YYYY`, `YY`, `mmmm`, `mmm`, `MM`, `M`, `DD`, `D`, `dd`, `ddd`, `Do`, `HH`, `H`, `hh`, `h`, `mm`, `m`, `ss`, `s`, `ms`, `mss`, `a`, `A`, and `ZZ`.
+	 *   - *Any token not wrapped in brackets will be parsed and replaced with its corresponding date component.*
+	 *   - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/format#format-tokens format tokens} for details.
 	 */
 	format?: string;
 	/** - Whether to use UTC time. Defaults to `false`. */

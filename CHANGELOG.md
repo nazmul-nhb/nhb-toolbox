@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.26.71] - 2025-11-21
+
+- **Fixed** type issues regarding *array inputs* for `sanitizeData` by swapping the *overload signatures*.
+
 ## [4.26.70] - 2025-11-21
 
 - **Added** new `formatDate` utility with alias `formatDateTime` and *core date formatter (private)* to be shared with both `Chronos` class and `formatDate` utility.
