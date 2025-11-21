@@ -225,7 +225,7 @@ export function _formatDateCore(
  * - The default format is `'dd, mmm DD, YYYY HH:mm:ss'` (e.g., `'Sun, Apr 06, 2025 16:11:55'`).
  * - By default, local time is used; set `useUTC` to `true` to format in UTC.
  * - The format string supports various tokens for date and time components, as well as literal text enclosed in square brackets.
- * - See {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/format#format-tokens format tokens} for details on supported tokens.
+ * - See {@link https://toolbox.nazmul-nhb.dev/docs/utilities/date/formatDate#format-tokens format tokens} for details on supported tokens.
  * - For more complex date/time manipulations, consider using the {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos Chronos} class.
  *
  * @returns Date/time string in specified format.

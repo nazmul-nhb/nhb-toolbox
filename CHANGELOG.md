@@ -6,9 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
-<!-- ## [4.26.70] - 2025-11-21
+## [4.26.70] - 2025-11-21
 
-- **Added** new `formatDate` utility and a core (private) date formatter to be shared with `Chronos` class and `formatDate`. -->
+- **Added** new `formatDate` utility with alias `formatDateTime` and *core date formatter (private)* to be shared with both `Chronos` class and `formatDate` utility.
+- **Fixed** issues raised from misplacement of *internal* `#date` in `Chronos` class.
 
 ## [4.26.69] - 2025-11-18
 
