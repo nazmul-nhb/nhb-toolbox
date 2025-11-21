@@ -2,7 +2,6 @@ import { roundToNearest } from '../../number/utilities';
 import { INTERNALS } from '../constants';
 import type { TimeUnit } from '../types';
 
-type ChronosConstructor = import('../Chronos').Chronos;
 type MainChronos = typeof import('../Chronos').Chronos;
 
 declare module '../Chronos' {
@@ -24,20 +23,16 @@ declare module '../Chronos' {
 		 * - For `'week'` unit, rounding is performed by comparing proximity to the start and end of the ISO week (Monday to Sunday).
 		 *   - If the date is closer to the next Monday, it rounds forward; otherwise, it rounds back to the previous Monday.
 		 */
-		round(unit: TimeUnit, nearest?: number): ChronosConstructor;
+		round(unit: TimeUnit, nearest?: number): Chronos;
 	}
 }
 
 /** * Plugin to inject `round` method */
 export const roundPlugin = (ChronosClass: MainChronos): void => {
-	const { withOrigin } = ChronosClass[INTERNALS];
+	const { internalDate, withOrigin } = ChronosClass[INTERNALS];
 
-	ChronosClass.prototype.round = function (
-		this: ChronosConstructor,
-		unit: TimeUnit,
-		nearest = 1
-	): ChronosConstructor {
-		const date = new Date(this.toDate());
+	ChronosClass.prototype.round = function (this, unit, nearest = 1) {
+		const date = new Date(internalDate(this));
 
 		switch (unit) {
 			case 'millisecond': {

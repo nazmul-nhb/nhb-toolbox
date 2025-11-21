@@ -2,7 +2,6 @@ import type { NumberRange } from '../../number/types';
 import { ZODIAC_PRESETS } from '../constants';
 import type { ZodiacOptions, ZodiacSign } from '../types';
 
-type ChronosConstructor = import('../Chronos').Chronos;
 type MainChronos = typeof import('../Chronos').Chronos;
 
 declare module '../Chronos' {
@@ -27,10 +26,7 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `getZodiacSign`/`zodiac` method */
 export const zodiacPlugin = (ChronosClass: MainChronos): void => {
-	ChronosClass.prototype.getZodiacSign = function (
-		this: ChronosConstructor,
-		options?: ZodiacOptions
-	): ZodiacSign {
+	ChronosClass.prototype.getZodiacSign = function (this, options) {
 		const { birthDate, preset = 'western', custom } = options ?? {};
 
 		let month: NumberRange<1, 12>;
@@ -60,10 +56,7 @@ export const zodiacPlugin = (ChronosClass: MainChronos): void => {
 		return signs[0][0];
 	};
 
-	ChronosClass.prototype.zodiac = function (
-		this: ChronosConstructor,
-		options?: ZodiacOptions
-	): ZodiacSign {
+	ChronosClass.prototype.zodiac = function (this, options) {
 		return this.getZodiacSign(options);
 	};
 };

@@ -1,6 +1,5 @@
 import { isPalindrome } from '../../string/guards';
 
-type ChronosConstructor = import('../Chronos').Chronos;
 type MainChronos = typeof import('../Chronos').Chronos;
 
 declare module '../Chronos' {
@@ -37,10 +36,7 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `isPalindromeDate` method */
 export const palindromePlugin = (ChronosClass: MainChronos): void => {
-	ChronosClass.prototype.isPalindromeDate = function (
-		this: ChronosConstructor,
-		shortYear = false
-	): boolean {
+	ChronosClass.prototype.isPalindromeDate = function (this, shortYear = false) {
 		const padded = this.formatStrict(shortYear ? 'YY-MM-DD' : 'YYYY-MM-DD');
 		const normal = this.formatStrict(shortYear ? 'YY-M-D' : 'YYYY-M-D');
 		return isPalindrome(padded) || isPalindrome(normal);

@@ -8,7 +8,6 @@ import type {
 	TimeDuration,
 } from '../types';
 
-type ChronosConstructor = import('../Chronos').Chronos;
 type MainChronos = typeof import('../Chronos').Chronos;
 
 declare module '../Chronos' {
@@ -38,7 +37,7 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `duration` related methods */
 export const durationPlugin = (ChronosClass: MainChronos): void => {
-	const { internalDate, toNewDate } = ChronosClass[INTERNALS];
+	const { toNewDate } = ChronosClass[INTERNALS];
 
 	/**
 	 * @private Normalizes duration values based on sign and `absolute` flag.
@@ -71,12 +70,8 @@ export const durationPlugin = (ChronosClass: MainChronos): void => {
 		return updated;
 	};
 
-	ChronosClass.prototype.duration = function (
-		this: ChronosConstructor,
-		toTime?: ChronosInput,
-		absolute = true
-	): TimeDuration {
-		const now = internalDate(this);
+	ChronosClass.prototype.duration = function (this, toTime, absolute = true) {
+		const now = this.toDate();
 		const target = toNewDate(this, toTime);
 
 		const isFuture = target > now;
@@ -88,62 +83,59 @@ export const durationPlugin = (ChronosClass: MainChronos): void => {
 			return to[`get${suffix}`]() - from[`get${suffix}`]();
 		};
 
-		let years = _getDiff('FullYear');
-		let months = _getDiff('Month');
-		let days = _getDiff('Date');
-		let hours = _getDiff('Hours');
-		let minutes = _getDiff('Minutes');
-		let seconds = _getDiff('Seconds');
-		let milliseconds = _getDiff('Milliseconds');
+		let y = _getDiff('FullYear'),
+			mo = _getDiff('Month'),
+			d = _getDiff('Date'),
+			h = _getDiff('Hours'),
+			m = _getDiff('Minutes'),
+			s = _getDiff('Seconds'),
+			ms = _getDiff('Milliseconds');
 
-		if (milliseconds < 0) {
-			milliseconds += 1000;
-			seconds--;
+		if (ms < 0) {
+			ms += 1000;
+			s--;
 		}
 
-		if (seconds < 0) {
-			seconds += 60;
-			minutes--;
+		if (s < 0) {
+			s += 60;
+			m--;
 		}
 
-		if (minutes < 0) {
-			minutes += 60;
-			hours--;
+		if (m < 0) {
+			m += 60;
+			h--;
 		}
 
-		if (hours < 0) {
-			hours += 24;
-			days--;
+		if (h < 0) {
+			h += 24;
+			d--;
 		}
 
-		if (days < 0) {
+		if (d < 0) {
 			const prevMonth = new Date(to.getFullYear(), to.getMonth(), 0);
-			days += prevMonth.getDate();
-			months--;
+			d += prevMonth.getDate();
+			mo--;
 		}
 
-		if (months < 0) {
-			months += 12;
-			years--;
+		if (mo < 0) {
+			mo += 12;
+			y--;
 		}
 
 		const result: TimeDuration = {
-			years,
-			months,
-			days,
-			hours,
-			minutes,
-			seconds,
-			milliseconds,
+			years: y,
+			months: mo,
+			days: d,
+			hours: h,
+			minutes: m,
+			seconds: s,
+			milliseconds: ms,
 		};
 
 		return _normalizeDuration(result, absolute, isFuture);
 	};
 
-	ChronosClass.prototype.durationString = function (
-		this: ChronosConstructor,
-		options?: DurationOptions
-	): string {
+	ChronosClass.prototype.durationString = function (this, options) {
 		const {
 			toTime,
 			absolute = true,

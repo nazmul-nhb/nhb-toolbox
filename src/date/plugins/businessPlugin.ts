@@ -4,14 +4,12 @@ import type { Enumerate, NumberRange } from '../../number/types';
 import type { RangeTuple } from '../../utils/types';
 import { INTERNALS } from '../constants';
 import type {
-	$BusinessHourOptions,
 	AcademicYear,
 	BusinessOptionsBasic,
 	BusinessOptionsWeekends,
 	Quarter,
 } from '../types';
 
-type ChronosConstructor = import('../Chronos').Chronos;
 type MainChronos = typeof import('../Chronos').Chronos;
 
 declare module '../Chronos' {
@@ -143,45 +141,34 @@ declare module '../Chronos' {
 export const businessPlugin = (ChronosClass: MainChronos): void => {
 	const { internalDate: $Date } = ChronosClass[INTERNALS];
 
-	ChronosClass.prototype.isWeekend = function (
-		this: ChronosConstructor,
-		determiner: Enumerate<7> | RangeTuple<Enumerate<7>, 1, 4> = 0,
-		weekendLength: NumberRange<1, 4> = 2
-	): boolean {
+	ChronosClass.prototype.isWeekend = function (this, wDef = 0, wLen: NumberRange<1, 4> = 2) {
 		const day = $Date(this).getDay() as Enumerate<7>;
 
 		// Use custom weekend days if provided
-		if (isValidArray<Enumerate<7>>(determiner)) {
-			return determiner.includes(day);
+		if (isValidArray<Enumerate<7>>(wDef)) {
+			return wDef.includes(day);
 		}
 
 		// Auto-calculate weekend days from start & length
-		const lastDayOfWeek = (determiner + 6) % 7;
+		const lastDayOfWeek = (wDef + 6) % 7;
 
 		const computedWeekendDays = Array.from(
-			{ length: weekendLength },
+			{ length: wLen },
 			(_, i) => (lastDayOfWeek - i + 7) % 7
 		);
 
 		return computedWeekendDays.includes(day);
 	};
 
-	ChronosClass.prototype.isWorkday = function (
-		this: ChronosConstructor,
-		determiner: Enumerate<7> | RangeTuple<Enumerate<7>, 1, 4> = 0,
-		weekendLength: NumberRange<1, 4> = 2
-	): boolean {
-		if (isValidArray<Enumerate<7>>(determiner)) {
-			return !this.isWeekend(determiner);
+	ChronosClass.prototype.isWorkday = function (this, wDef = 0, wLen: NumberRange<1, 4> = 2) {
+		if (isValidArray<Enumerate<7>>(wDef)) {
+			return !this.isWeekend(wDef);
 		}
 
-		return !this.isWeekend(determiner, weekendLength);
+		return !this.isWeekend(wDef, wLen);
 	};
 
-	ChronosClass.prototype.isBusinessHour = function (
-		this: ChronosConstructor,
-		options?: $BusinessHourOptions
-	): boolean {
+	ChronosClass.prototype.isBusinessHour = function (this, options) {
 		const _isBusinessHour = (): boolean => {
 			const { businessStartHour = 9, businessEndHour = 17 } = options ?? {};
 
@@ -209,17 +196,14 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 		return this.isWorkday(weekStartsOn, weekendLength) && _isBusinessHour();
 	};
 
-	ChronosClass.prototype.toFiscalQuarter = function (
-		this: ChronosConstructor,
-		startMonth: NumberRange<1, 12> = 7
-	): Quarter {
+	ChronosClass.prototype.toFiscalQuarter = function (this, startMonth = 7) {
 		const month = $Date(this).getMonth() + 1;
 		const adjusted = (month - startMonth + 12) % 12;
 
 		return (Math.floor(adjusted / 3) + 1) as Quarter;
 	};
 
-	ChronosClass.prototype.toAcademicYear = function (this: ChronosConstructor): AcademicYear {
+	ChronosClass.prototype.toAcademicYear = function (this) {
 		const year = $Date(this).getFullYear();
 		const month = $Date(this).getMonth();
 

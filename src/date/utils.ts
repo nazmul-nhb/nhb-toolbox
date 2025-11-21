@@ -248,14 +248,14 @@ export function formatDate(options?: DateFormatOptions): string {
 		return useUTC ? $date[`getUTC${suffix}`]() : $date[`get${suffix}`]();
 	};
 
-	const y = _getUnitValue('FullYear');
-	const mo = _getUnitValue('Month');
-	const d = _getUnitValue('Day');
-	const dt = _getUnitValue('Date');
-	const h = _getUnitValue('Hours');
-	const m = _getUnitValue('Minutes');
-	const s = _getUnitValue('Seconds');
-	const ms = _getUnitValue('Milliseconds');
+	const y = _getUnitValue('FullYear'),
+		mo = _getUnitValue('Month'),
+		d = _getUnitValue('Day'),
+		dt = _getUnitValue('Date'),
+		h = _getUnitValue('Hours'),
+		m = _getUnitValue('Minutes'),
+		s = _getUnitValue('Seconds'),
+		ms = _getUnitValue('Milliseconds');
 
 	const offset = useUTC ? 'Z' : formatUTCOffset(-$date.getTimezoneOffset()).slice(3);
 

@@ -1,7 +1,6 @@
 import { getGreeting } from '../greet';
 import type { ClockTime, GreetingConfigs } from '../types';
 
-type ChronosConstructor = import('../Chronos').Chronos;
 type MainChronos = typeof import('../Chronos').Chronos;
 
 declare module '../Chronos' {
@@ -30,19 +29,13 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `getGreeting`/`greet` method */
 export const greetingPlugin = (ChronosClass: MainChronos): void => {
-	ChronosClass.prototype.getGreeting = function (
-		this: ChronosConstructor,
-		configs?: GreetingConfigs
-	): string {
+	ChronosClass.prototype.getGreeting = function (this, configs) {
 		const currentTime = this.formatStrict('HH:mm') as ClockTime;
 
 		return getGreeting({ currentTime, ...configs });
 	};
 
-	ChronosClass.prototype.greet = function (
-		this: ChronosConstructor,
-		configs?: GreetingConfigs
-	): string {
+	ChronosClass.prototype.greet = function (this, configs) {
 		return this.getGreeting(configs);
 	};
 };

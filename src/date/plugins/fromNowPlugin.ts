@@ -1,8 +1,7 @@
 import { formatUnitWithPlural } from '../../string/convert';
 import { INTERNALS } from '../constants';
-import type { ChronosInput, FromNowUnit } from '../types';
+import type { $DateUnit, ChronosInput, FromNowUnit } from '../types';
 
-type ChronosConstructor = import('../Chronos').Chronos;
 type MainChronos = typeof import('../Chronos').Chronos;
 
 declare module '../Chronos' {
@@ -25,61 +24,61 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `fromNow` method */
 export const fromNowPlugin = (ChronosClass: MainChronos): void => {
-	const { internalDate, toNewDate } = ChronosClass[INTERNALS];
+	const { toNewDate } = ChronosClass[INTERNALS];
 
-	ChronosClass.prototype.fromNow = function (
-		this: ChronosConstructor,
-		level: FromNowUnit = 'second',
-		withSuffixPrefix: boolean = true,
-		time?: ChronosInput
-	): string {
+	ChronosClass.prototype.fromNow = function (this, level = 'second', wSP = true, time) {
 		const now = toNewDate(this, time);
-		const target = internalDate(this);
+		const target = this.toDate();
 
 		const isFuture = target > now;
 
 		const from = isFuture ? now : target;
 		const to = isFuture ? target : now;
 
-		let years = to.getFullYear() - from.getFullYear();
-		let months = to.getMonth() - from.getMonth();
-		let days = to.getDate() - from.getDate();
-		let hours = to.getHours() - from.getHours();
-		let minutes = to.getMinutes() - from.getMinutes();
-		let seconds = to.getSeconds() - from.getSeconds();
-		let milliseconds = to.getMilliseconds() - from.getMilliseconds();
+		/** Get difference between `to` and `from` for specific unit */
+		const _getDiff = (suffix: Exclude<$DateUnit, 'Day'>): number => {
+			return to[`get${suffix}`]() - from[`get${suffix}`]();
+		};
+
+		let y = _getDiff('FullYear'),
+			mo = _getDiff('Month'),
+			d = _getDiff('Date'),
+			h = _getDiff('Hours'),
+			m = _getDiff('Minutes'),
+			s = _getDiff('Seconds'),
+			ms = _getDiff('Milliseconds');
 
 		// Adjust negative values
-		if (milliseconds < 0) {
-			milliseconds += 1000;
-			seconds--;
+		if (ms < 0) {
+			ms += 1000;
+			s--;
 		}
 
-		if (seconds < 0) {
-			seconds += 60;
-			minutes--;
+		if (s < 0) {
+			s += 60;
+			m--;
 		}
 
-		if (minutes < 0) {
-			minutes += 60;
-			hours--;
+		if (m < 0) {
+			m += 60;
+			h--;
 		}
 
-		if (hours < 0) {
-			hours += 24;
-			days--;
+		if (h < 0) {
+			h += 24;
+			d--;
 		}
 
-		if (days < 0) {
+		if (d < 0) {
 			const prevMonth = new Date(to.getFullYear(), to.getMonth(), 0);
 
-			days += prevMonth.getDate();
-			months--;
+			d += prevMonth.getDate();
+			mo--;
 		}
 
-		if (months < 0) {
-			months += 12;
-			years--;
+		if (mo < 0) {
+			mo += 12;
+			y--;
 		}
 
 		const unitOrder: Array<FromNowUnit> = [
@@ -106,32 +105,32 @@ export const fromNowPlugin = (ChronosClass: MainChronos): void => {
 			return lvlIdx >= unitOrder.indexOf(unit);
 		};
 
-		if (years > 0) {
-			_pushToParts(years, 'year');
+		if (y > 0) {
+			_pushToParts(y, 'year');
 		}
-		if (_isLevelRequired('month') && months > 0) {
-			_pushToParts(months, 'month');
+		if (_isLevelRequired('month') && mo > 0) {
+			_pushToParts(mo, 'month');
 		}
-		if (_isLevelRequired('day') && days > 0) {
-			_pushToParts(days, 'day');
+		if (_isLevelRequired('day') && d > 0) {
+			_pushToParts(d, 'day');
 		}
-		if (_isLevelRequired('hour') && hours > 0) {
-			_pushToParts(hours, 'hour');
+		if (_isLevelRequired('hour') && h > 0) {
+			_pushToParts(h, 'hour');
 		}
-		if (_isLevelRequired('minute') && minutes > 0) {
-			_pushToParts(minutes, 'minute');
+		if (_isLevelRequired('minute') && m > 0) {
+			_pushToParts(m, 'minute');
 		}
-		if (_isLevelRequired('second') && seconds > 0) {
-			_pushToParts(seconds, 'second');
+		if (_isLevelRequired('second') && s > 0) {
+			_pushToParts(s, 'second');
 		}
-		if (_isLevelRequired('millisecond') && (milliseconds > 0 || parts?.length === 0)) {
-			_pushToParts(milliseconds, 'millisecond');
+		if (_isLevelRequired('millisecond') && (ms > 0 || parts?.length === 0)) {
+			_pushToParts(ms, 'millisecond');
 		}
 
 		let prefix = '';
 		let suffix = '';
 
-		if (withSuffixPrefix) {
+		if (wSP) {
 			if (isFuture) {
 				prefix = 'in ';
 			} else {

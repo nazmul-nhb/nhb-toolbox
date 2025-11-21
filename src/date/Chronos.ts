@@ -490,14 +490,14 @@ export class Chronos {
 			return useUTC ? $utcDate[`getUTC${suffix}`]() : $date[`get${suffix}`]();
 		};
 
-		const y = _getUnitValue('FullYear');
-		const mo = _getUnitValue('Month');
-		const d = _getUnitValue('Day');
-		const dt = _getUnitValue('Date');
-		const h = _getUnitValue('Hours');
-		const m = _getUnitValue('Minutes');
-		const s = _getUnitValue('Seconds');
-		const ms = _getUnitValue('Milliseconds');
+		const y = _getUnitValue('FullYear'),
+			mo = _getUnitValue('Month'),
+			d = _getUnitValue('Day'),
+			dt = _getUnitValue('Date'),
+			h = _getUnitValue('Hours'),
+			m = _getUnitValue('Minutes'),
+			s = _getUnitValue('Seconds'),
+			ms = _getUnitValue('Milliseconds');
 
 		const offset = useUTC ? 'Z' : this.getTimeZoneOffset();
 
@@ -1184,21 +1184,21 @@ export class Chronos {
 
 		const abs = Math.abs(diffInSeconds);
 
-		const suffix = diffInSeconds >= 0 ? 'in ' : '';
-		const postfix = diffInSeconds < 0 ? ' ago' : '';
+		const prefix = diffInSeconds >= 0 ? 'in ' : '';
+		const suffix = diffInSeconds < 0 ? ' ago' : '';
 
 		if (abs < 60) {
-			return `${suffix}${Math.floor(abs)}s${postfix}`;
+			return `${prefix}${Math.floor(abs)}s${suffix}`;
 		} else if (abs < 3600) {
-			return `${suffix}${Math.floor(abs / 60)}m${postfix}`;
+			return `${prefix}${Math.floor(abs / 60)}m${suffix}`;
 		} else if (abs < 86400) {
-			return `${suffix}${Math.floor(abs / 3600)}h${postfix}`;
+			return `${prefix}${Math.floor(abs / 3600)}h${suffix}`;
 		} else if (abs < 2592000) {
-			return `${suffix}${Math.floor(abs / 86400)}d${postfix}`;
+			return `${prefix}${Math.floor(abs / 86400)}d${suffix}`;
 		} else if (abs < 31536000) {
-			return `${suffix}${Math.floor(abs / 2592000)}mo${postfix}`;
+			return `${prefix}${Math.floor(abs / 2592000)}mo${suffix}`;
 		} else {
-			return `${suffix}${Math.floor(abs / 31536000)}y${postfix}`;
+			return `${prefix}${Math.floor(abs / 31536000)}y${suffix}`;
 		}
 	}
 
