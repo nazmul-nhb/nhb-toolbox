@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.26.73] - 2025-11-22
+
+- **Added** the **missing** *closing parenthesis* in `INDIA_VEDIC_SEASONS` *constant* within the `seasons` module.
+
 ## [4.26.71] - 2025-11-21
 
 - **Fixed** type issues regarding *array inputs* for `sanitizeData` by swapping the *overload signatures*.

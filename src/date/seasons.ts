@@ -66,7 +66,7 @@ export const INDIA_VEDIC_SEASONS = /* @__PURE__ */ Object.freeze([
 		boundary: { startDate: '08-15', endDate: '10-14' },
 	}, // Mid-Aug to Mid-Oct
 	{
-		name: 'Hemant (Late-Autumn',
+		name: 'Hemant (Late-Autumn)',
 		boundary: { startDate: '10-15', endDate: '12-14' },
 	}, // Mid-Oct to Mid-Dec
 ]);
