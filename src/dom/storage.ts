@@ -1,37 +1,55 @@
+import type { Deserializer, Serializer } from '../types/index';
+
 // * ****************** Local Storage ****************** * //
 
 /**
  * * Get item(s) from local storage.
  *
  * @param key - Key to get item(s) from local storage.
+ * @param deserialize - Optional deserializer function to convert the stored value back to type `T`. Defaults to `JSON.parse`.
  * @returns Returns saved item(s) from local storage if it exists with that key.
  */
-export const getFromLocalStorage = <T>(key: string): T | null => {
-	const item = localStorage.getItem(key);
+export function getFromLocalStorage<T>(key: string, deserialize?: Deserializer<T>): T | null {
+	const deserializer: Deserializer<T> = deserialize ?? JSON.parse;
 
-	if (!item) return null;
+	try {
+		const item = localStorage.getItem(key);
 
-	return JSON.parse(item) as T;
-};
+		return item ? deserializer(item) : null;
+	} catch {
+		return null;
+	}
+}
 
 /**
  * * Save item(s) in local storage.
  *
  * @param key - Key to save an item(s).
  * @param value - The item(s)/value to save.
+ * @param serialize - Optional serializer function to convert the value of type `T` to a string. Defaults to `JSON.stringify`.
  */
-export const saveToLocalStorage = <T>(key: string, value: T): void => {
-	localStorage.setItem(key, JSON.stringify(value));
-};
+export function saveToLocalStorage<T>(key: string, value: T, serialize?: Serializer<T>) {
+	const serializer: Serializer<T> = serialize ?? JSON.stringify;
+
+	try {
+		localStorage.setItem(key, serializer(value));
+	} catch (error) {
+		console.error(`Error saving item with key "${key}" from local storage:`, error);
+	}
+}
 
 /**
  * * Remove item(s) from local storage.
  *
  * @param key - Key to delete item(s) from local storage.
  */
-export const removeFromLocalStorage = (key: string): void => {
-	localStorage.removeItem(key);
-};
+export function removeFromLocalStorage(key: string): void {
+	try {
+		localStorage.removeItem(key);
+	} catch (error) {
+		console.error(`Error removing item with key "${key}" from local storage:`, error);
+	}
+}
 
 // * ****************** Session Storage ****************** * //
 
@@ -39,31 +57,47 @@ export const removeFromLocalStorage = (key: string): void => {
  * * Get item(s) from session storage.
  *
  * @param key - Key to get item(s) from session storage.
+ * @param deserialize - Optional deserializer function to convert the stored value back to type `T`. Defaults to `JSON.parse`.
  * @returns Returns saved item(s) from session storage if it exists with that key.
  */
-export const getFromSessionStorage = <T>(key: string): T | null => {
-	const item = sessionStorage.getItem(key);
+export function getFromSessionStorage<T>(key: string, deserialize?: Deserializer<T>): T | null {
+	const deserializer: Deserializer<T> = deserialize ?? JSON.parse;
 
-	if (!item) return null;
+	try {
+		const item = sessionStorage.getItem(key);
 
-	return JSON.parse(item) as T;
-};
+		return item ? deserializer(item) : null;
+	} catch {
+		return null;
+	}
+}
 
 /**
  * * Save item(s) in session storage.
  *
  * @param key - Key to save an item(s).
  * @param value - The item(s)/value to save.
+ * @param serialize - Optional serializer function to convert the value of type `T` to a string. Defaults to `JSON.stringify`.
  */
-export const saveToSessionStorage = <T>(key: string, value: T): void => {
-	sessionStorage.setItem(key, JSON.stringify(value));
-};
+export function saveToSessionStorage<T>(key: string, value: T, serialize?: Serializer<T>) {
+	const serializer: Serializer<T> = serialize ?? JSON.stringify;
+
+	try {
+		sessionStorage.setItem(key, serializer(value));
+	} catch (error) {
+		console.error(`Error saving item with key "${key}" from session storage:`, error);
+	}
+}
 
 /**
  * * Remove item(s) from session storage.
  *
  * @param key - Key to delete item(s) from session storage.
  */
-export const removeFromSessionStorage = (key: string): void => {
-	sessionStorage.removeItem(key);
-};
+export function removeFromSessionStorage(key: string): void {
+	try {
+		sessionStorage.removeItem(key);
+	} catch (error) {
+		console.error(`Error removing item with key "${key}" from session storage:`, error);
+	}
+}

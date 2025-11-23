@@ -191,3 +191,9 @@ export type ValidArray<T> = [T, ...Array<T>];
  * arr.push(4);                   	// ❌ Error (readonly)
  */
 export type List<T = any> = ReadonlyArray<T>;
+
+/** Function type for serializing a value of type `T` to a string. */
+export type Serializer<T> = (value: T) => string;
+
+/** Function type for deserializing a string to a value of type `T`. */
+export type Deserializer<T> = (value: string) => T;
