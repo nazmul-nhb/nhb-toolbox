@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.26.74] - 2025-11-23
+
+- **Added** optional `serializer` and `deserializer` for *local and session storage* utilities with *improved error handling*.
+
 ## [4.26.73] - 2025-11-22
 
 - **Added** the **missing** *closing parenthesis* in `INDIA_VEDIC_SEASONS` *constant* within the `seasons` module.
