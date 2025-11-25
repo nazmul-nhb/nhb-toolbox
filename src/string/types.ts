@@ -1,5 +1,6 @@
 import type { $Countries } from '../object/types';
 import type { Join, LooseLiteral, Split } from '../utils/types';
+import type { LOWERCASE } from './constants';
 
 /** - Options for `capitalizeString` function. */
 export interface CapitalizeOptions {
@@ -94,10 +95,13 @@ export type CountryShortISO = $Countries['iso_code_short'];
 /** ISO 2 character country code or any string */
 export type Country = LooseLiteral<CountryShortISO>;
 
+/** Lowercase prepositions, articles, conjunctions, and auxiliary verbs ({@link LOWERCASE}) */
+export type $LowerCaseWord = (typeof LOWERCASE)[number];
+
 // ! ======= Utility Types ======= ! //
 
-/** Utility: ensure early inference and string constraint. */
-export type EnsureString<Str> = Str extends string ? Str : never;
+/** Ensure early inference and string constraint. */
+export type $EnsureString<Str> = Str extends string ? Str : never;
 
 /** Check if a string literal `Str` contains a substring `SubStr` */
 export type Includes<Str extends string, SubStr extends string> =
@@ -176,6 +180,15 @@ export type $UppercaseWords<T extends readonly string[]> =
 export type $CapitalizeWords<T extends readonly string[]> =
 	T extends [infer H extends string, ...infer R extends string[]] ?
 		[Capitalize<Lowercase<H>>, ...$CapitalizeWords<R>]
+	:	[];
+
+/** Capitalize (first letter capital) all the words in a tuple */
+export type $TitleCaseWords<T extends readonly string[]> =
+	T extends [infer H extends string, ...infer R extends string[]] ?
+		[
+			H extends $LowerCaseWord ? Lowercase<H> : Capitalize<Lowercase<H>>,
+			...$TitleCaseWords<R>,
+		]
 	:	[];
 
 /**
@@ -260,3 +273,27 @@ export type PathCase<Str extends string, Del extends string = ''> = Join<
 	$LowercaseWords<Split<$NormalizeString<Str, Del>, ' '>>,
 	'/'
 >;
+
+/**
+ * - Converts a string literal `Str` into `Title Case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}.
+ * @remarks
+ * - TypeScript supports up to ~45 characters for reliable literal inference.
+ * - Lowercase auxiliaries, prepositions, articles and conjunctions unless they are at the beginning.
+ */
+export type TitleCase<Str extends string, Del extends string = ''> =
+	Split<$NormalizeString<Str, Del>, ' '> extends (
+		[infer F extends string, ...infer R extends string[]]
+	) ?
+		`${Capitalize<Lowercase<F>>} ${Join<$TitleCaseWords<R>, ' '>}`
+	:	' ';
+
+/**
+ * - Converts a string literal `Str` into `Sentence case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}.
+ * @remarks It will lowercase: auxiliaries, prepositions, articles and conjunctions unless they are at the beginning.
+ */
+export type SentenceCase<Str extends string, Del extends string = ''> =
+	Split<$NormalizeString<Str, Del>, ' '> extends (
+		[infer F extends string, ...infer R extends string[]]
+	) ?
+		`${Capitalize<Lowercase<F>>} ${Join<$LowercaseWords<R>, ' '>}`
+	:	' ';

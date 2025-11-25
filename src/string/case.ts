@@ -1,6 +1,7 @@
 import { isNonEmptyString } from '../guards/primitives';
 import { LOWERCASE } from './constants';
 import type {
+	$LowerCaseWord,
 	CamelCase,
 	CaseFormat,
 	ConstantCase,
@@ -9,10 +10,15 @@ import type {
 	PascalCase,
 	PascalSnakeCase,
 	PathCase,
+	SentenceCase,
 	SnakeCase,
 	StringCaseOptions,
+	TitleCase,
 	TrainCase,
 } from './types';
+
+/** Lowercase words set for fast lookup */
+const smallSet = /* @__PURE__ */ new Set(LOWERCASE);
 
 /**
  * * Converts a string to a specified case format with advanced handling for word boundaries, punctuation, acronyms, and Unicode characters.
@@ -92,9 +98,6 @@ export function convertStringCase(
 	format: CaseFormat,
 	options?: StringCaseOptions
 ): string {
-	/** Lowercase prepositions, articles, conjunctions, and auxiliary verbs */
-	type Lower = (typeof LOWERCASE)[number];
-
 	if (!value || typeof value !== 'string') return '';
 
 	const { preserveAcronyms = false } = options ?? {};
@@ -114,8 +117,7 @@ export function convertStringCase(
 
 	const lowerCase = (s: string) => s.toLowerCase();
 	const isAcronym = (s: string) => s.length >= 2 && /^[\p{Lu}]+$/u.test(s);
-	const capitalize = (s: string) =>
-		s.length === 0 ? '' : s.charAt(0).toUpperCase().concat(s.slice(1).toLowerCase());
+	const capitalize = (s: string) => (s.length === 0 ? '' : _capitalize(s));
 
 	// Tokenize into logical words:
 	// 1) split on explicit separators (space, underscore, dash, punctuation)
@@ -137,9 +139,6 @@ export function convertStringCase(
 		// nothing meaningful to do — return only punctuation (if any)
 		return start.concat(end);
 	}
-
-	// Title-case small words set for fast lookup
-	const smallSet = new Set(LOWERCASE);
 
 	switch (format) {
 		case 'camelCase': {
@@ -178,7 +177,7 @@ export function convertStringCase(
 		case 'Title Case': {
 			const title = tokens
 				.map((token, idx, self) => {
-					const tokenLower = token.toLowerCase() as Lower;
+					const tokenLower = token.toLowerCase() as $LowerCaseWord;
 					// keep small words lowercase unless first or last
 					if (idx !== 0 && idx !== self.length - 1 && smallSet.has(tokenLower)) {
 						return tokenLower;
@@ -371,4 +370,34 @@ export function toPascalSnakeCase<Str extends string, Del extends string = ''>(
 		isNonEmptyString(str) ?
 			_normalizeDelimiters(str, del).map(_capitalize).join('_')
 		:	'') as PascalSnakeCase<Str, Del>;
+}
+
+/** Converts a string into `Title Case` using optional custom delimiters. */
+export function toTitleCase<Str extends string, Del extends string = ''>(
+	str: Str,
+	...del: Del[]
+): TitleCase<Str, Del> {
+	return (
+		isNonEmptyString(str) ?
+			_normalizeDelimiters(str, del)
+				.map((w, i) =>
+					i !== 0 && smallSet.has(w as $LowerCaseWord) ?
+						w.toLowerCase()
+					:	_capitalize(w)
+				)
+				.join(' ')
+		:	'') as TitleCase<Str, Del>;
+}
+
+/** Converts a string into `Sentence Case` using optional custom delimiters. */
+export function toSentenceCase<Str extends string, Del extends string = ''>(
+	str: Str,
+	...del: Del[]
+): SentenceCase<Str, Del> {
+	return (
+		isNonEmptyString(str) ?
+			_normalizeDelimiters(str, del)
+				.map((w, i) => (i === 0 ? _capitalize(w) : w.toLowerCase()))
+				.join(' ')
+		:	'') as SentenceCase<Str, Del>;
 }
