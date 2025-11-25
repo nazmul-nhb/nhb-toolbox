@@ -48,6 +48,7 @@ export type CaseFormat =
 	| 'kebab-case'
 	| 'PascalCase'
 	| 'Title Case'
+	| 'Sentence case'
 	| 'UPPERCASE'
 	| 'lowercase';
 

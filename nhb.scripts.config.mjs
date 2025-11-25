@@ -51,6 +51,11 @@ export default defineScriptConfig({
 							import: './dist/esm/constants.js',
 							require: './dist/cjs/constants.js',
 						},
+						'./change-case': {
+							types: './dist/dts/string/case.d.ts',
+							import: './dist/esm/string/case.js',
+							require: './dist/cjs/string/case.js',
+						},
 						'./chronos': {
 							types: './dist/dts/date/Chronos.d.ts',
 							import: './dist/esm/date/Chronos.js',

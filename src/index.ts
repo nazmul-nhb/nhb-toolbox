@@ -15,12 +15,7 @@
  */
 
 // ! String Utilities
-export {
-	capitalizeString,
-	generateRandomID,
-	trimString,
-	truncateString,
-} from './string/basics';
+export { generateRandomID, trimString, truncateString } from './string/basics';
 
 export { generateAnagrams } from './string/anagram';
 
@@ -33,7 +28,7 @@ export {
 	isSnakeCase,
 } from './string/guards';
 
-export { convertStringCase } from './string/case';
+export { capitalizeString, convertStringCase } from './string/case';
 
 export {
 	extractEmails,

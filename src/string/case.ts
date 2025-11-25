@@ -3,6 +3,7 @@ import { LOWERCASE } from './constants';
 import type {
 	$LowerCaseWord,
 	CamelCase,
+	CapitalizeOptions,
 	CaseFormat,
 	ConstantCase,
 	DotCase,
@@ -36,6 +37,7 @@ const smallSet = /* @__PURE__ */ new Set(LOWERCASE);
  *   - `'snake_case'` → snake_case (e.g., `my_variable_name`)
  *   - `'kebab-case'` → kebab-case (e.g., `my-variable-name`)
  *   - `'Title Case'` → Title Case (e.g., `My Variable Name`)
+ *   - `'Sentence case'` → Sentence case (e.g., `My variable name`)
  *   - `'lowercase'` → all lowercase [ It is recommended to use built-in string method `string.toLowerCase()` ]
  *   - `'UPPERCASE'` → all uppercase [ It is recommended to use built-in string method `string.toUpperCase()` ]
  * @param options - Optional configuration options for more control.
@@ -55,6 +57,9 @@ const smallSet = /* @__PURE__ */ new Set(LOWERCASE);
  *
  * convertStringCase('my example string', 'Title Case');
  * // Returns: 'My Example String'
+ *
+ * convertStringCase('my example string', 'Sentence case');
+ * // Returns: 'My example string'
  *
  * convertStringCase('My example String', 'lowercase');
  * // Returns: 'my example string'
@@ -196,7 +201,33 @@ export function convertStringCase(
 					return capitalize(token);
 				})
 				.join(' ');
+
 			return start.concat(title, end);
+		}
+
+		case 'Sentence case': {
+			const word = tokens
+				.map((token, idx) => {
+					if (preserveAcronyms && token.includes('-')) {
+						return token
+							.split('-')
+							.map((sub) =>
+								isAcronym(sub) ? sub
+								: idx === 0 ? capitalize(sub)
+								: sub.toLowerCase()
+							)
+							.join('-');
+					}
+
+					if (preserveAcronyms && isAcronym(token)) {
+						return token.split('-');
+					}
+
+					return idx === 0 ? capitalize(token) : token.toLowerCase();
+				})
+				.join(' ');
+
+			return start.concat(word, end);
 		}
 
 		case 'lowercase': {
@@ -211,6 +242,51 @@ export function convertStringCase(
 			return start.concat(core, end);
 		}
 	}
+}
+/**
+ * * Utility to convert the first letter of any string to uppercase and the rest lowercase (unless specified).
+ * * Handles surrounding symbols like quotes or parentheses.
+ *
+ * @param string String to be capitalized.
+ * @param options Options to customize the capitalization.
+ * @returns Capitalized string or fully uppercased string depending on `capitalizeAll` option.
+ */
+export function capitalizeString(string: string, options?: CapitalizeOptions): string {
+	if (typeof string !== 'string' || !string) return '';
+
+	const trimmedString = string.trim();
+	if (!trimmedString) return '';
+
+	const {
+		capitalizeAll = false,
+		capitalizeEachFirst = false,
+		lowerCaseRest = true,
+	} = options || {};
+
+	if (capitalizeAll) {
+		return trimmedString.toUpperCase();
+	}
+
+	if (capitalizeEachFirst) {
+		return trimmedString
+			?.split(/\s+/)
+			?.map((word) => capitalizeString(word, { lowerCaseRest }))
+			?.join(' ');
+	}
+
+	const matchArray = trimmedString.match(/^(\W*)(\w)(.*)$/);
+
+	if (matchArray && matchArray?.length === 4) {
+		const [_, leadingSymbols, firstLetter, rest] = matchArray;
+		return leadingSymbols
+			.concat(firstLetter.toUpperCase())
+			.concat(lowerCaseRest ? rest.toLowerCase() : rest);
+	}
+
+	return trimmedString
+		.charAt(0)
+		.toUpperCase()
+		.concat(lowerCaseRest ? trimmedString.slice(1).toLowerCase() : trimmedString.slice(1));
 }
 
 /** Cache to store regex for delimiters */
@@ -232,7 +308,7 @@ function _normalizeDelimiters(str: string, delims: string[]): string[] {
 	const delRegExp = _getDelimiterRegex(delims);
 
 	return str
-		.replace(/(\w+)(\p{Lu})/gu, '$1 $2')
+		.replace(/(\p{Ll}?\d+|(?<=\p{Lu}))(\p{Lu})/gu, '$1 $2')
 		.replace(delRegExp, ' ')
 		.replace(/\s+/g, ' ')
 		.trim()
@@ -320,8 +396,8 @@ export function toTrainCase<Str extends string, Del extends string = ''>(
 ): TrainCase<Str, Del> {
 	return (
 		isNonEmptyString(str) ?
-			_normalizeDelimiters(str, del).map(_capitalize).join('')
-		:	'-') as TrainCase<Str, Del>;
+			_normalizeDelimiters(str, del).map(_capitalize).join('-')
+		:	'') as TrainCase<Str, Del>;
 }
 
 /** Converts a string into `dot.case` using optional custom delimiters. */
