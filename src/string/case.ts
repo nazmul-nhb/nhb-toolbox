@@ -321,7 +321,26 @@ function _capitalize(str: string): string {
 	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
-/** Converts a string into `camelCase` using optional custom delimiters. */
+/**
+ * * Converts a string into `camelCase`, using the optional custom delimiters in addition to the default delimiters.
+ *
+ * @remarks
+ * - This utility returns appropriate type IntelliSense with string literal. For general purpose use {@link convertStringCase}.
+ * - At the type level, TypeScript supports `up to 45 characters` for reliable literal inference.
+ *   - This limitation does not affect runtime behavior but shows TypeScript compiler error.
+ * - Use it for short literal strings (`up to 45 characters`) for best performance.
+ * - It does not handle ACRONYMS properly, so be cautious when the string has ACRONYMS or use {@link convertStringCase}.
+ * - Custom delimiters are merged with the default set: `space`, `.`, `-`, `_`, `/`.
+ *
+ * @example
+ * toCamelCase("hello world")            // "helloWorld"
+ * toCamelCase("my-awesome_string")      // "myAwesomeString"
+ * toCamelCase("value*with+custom", "*+") // "valueWithCustom"
+ *
+ * @param str The input string to convert.
+ * @param del Additional delimiter characters to recognize.
+ * @returns The `camelCase` formatted string.
+ */
 export function toCamelCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
@@ -337,11 +356,14 @@ export function toCamelCase<Str extends string, Del extends string = ''>(
 }
 
 /**
- * * Converts a string into `PascalCase`, using the provided custom delimiters in addition to the default delimiters.
+ * * Converts a string into `PascalCase`, using the optional custom delimiters in addition to the default delimiters.
  *
  * @remarks
- * - At the type level, TypeScript supports up to ~45 characters for reliable literal inference.
- *   - This limitation does not affect runtime behavior.
+ * - This utility returns appropriate type IntelliSense with string literal. For general purpose use {@link convertStringCase}.
+ * - At the type level, TypeScript supports `up to 45 characters` for reliable literal inference.
+ *   - This limitation does not affect runtime behavior but shows TypeScript compiler error.
+ * - Use it for short literal strings (`up to 45 characters`) for best performance.
+ * - It does not handle ACRONYMS properly, so be cautious when the string has ACRONYMS or use {@link convertStringCase}.
  * - Custom delimiters are merged with the default set: `space`, `.`, `-`, `_`, `/`.
  *
  * @example
@@ -363,7 +385,25 @@ export function toPascalCase<Str extends string, Del extends string = ''>(
 		:	'') as PascalCase<Str>;
 }
 
-/** Converts a string into `snake_case` using optional custom delimiters. */
+/**
+ * * Converts a string into `snake_case`, using the optional custom delimiters in addition to the default delimiters.
+ *
+ * @remarks
+ * - This utility returns appropriate type IntelliSense with string literal. For general purpose use {@link convertStringCase}.
+ * - At the type level, TypeScript supports `up to 45 characters` for reliable literal inference.
+ *   - This limitation does not affect runtime behavior but shows TypeScript compiler error.
+ * - Use it for short literal strings (`up to 45 characters`) for best performance.
+ * - Custom delimiters are merged with the default set: `space`, `.`, `-`, `_`, `/`.
+ *
+ * @example
+ * toSnakeCase("hello world")            // "hello_world"
+ * toSnakeCase("my-awesome_string")      // "my_awesome_string"
+ * toSnakeCase("value*with+custom", "*+") // "value_with_custom"
+ *
+ * @param str The input string to convert.
+ * @param del Additional delimiter characters to recognize.
+ * @returns The `snake_case` formatted string.
+ */
 export function toSnakeCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
@@ -376,7 +416,25 @@ export function toSnakeCase<Str extends string, Del extends string = ''>(
 		:	'') as SnakeCase<Str, Del>;
 }
 
-/** Converts a string into `kebab-case` using optional custom delimiters. */
+/**
+ * * Converts a string into `kebab-case`, using the optional custom delimiters in addition to the default delimiters.
+ *
+ * @remarks
+ * - This utility returns appropriate type IntelliSense with string literal. For general purpose use {@link convertStringCase}.
+ * - At the type level, TypeScript supports `up to 45 characters` for reliable literal inference.
+ *   - This limitation does not affect runtime behavior but shows TypeScript compiler error.
+ * - Use it for short literal strings (`up to 45 characters`) for best performance.
+ * - Custom delimiters are merged with the default set: `space`, `.`, `-`, `_`, `/`.
+ *
+ * @example
+ * toKebabCase("hello world")            // "hello-world"
+ * toKebabCase("my-awesome_string")      // "my-awesome-string"
+ * toKebabCase("value*with+custom", "*+") // "value-with-custom"
+ *
+ * @param str The input string to convert.
+ * @param del Additional delimiter characters to recognize.
+ * @returns The `kebab-case` formatted string.
+ */
 export function toKebabCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
@@ -389,7 +447,24 @@ export function toKebabCase<Str extends string, Del extends string = ''>(
 		:	'') as KebabCase<Str, Del>;
 }
 
-/** Converts a string into `Train-Case` using optional custom delimiters. */
+/**
+ * * Converts a string into `Train-Case`, using the optional custom delimiters in addition to the default delimiters.
+ *
+ * @remarks
+ * - At the type level, TypeScript supports `up to 45 characters` for reliable literal inference.
+ *   - This limitation does not affect runtime behavior but shows TypeScript compiler error.
+ * - Use it for short literal strings (`up to 45 characters`) for best performance.
+ * - Custom delimiters are merged with the default set: `space`, `.`, `-`, `_`, `/`.
+ *
+ * @example
+ * toTrainCase("hello world")            // "Hello-World"
+ * toTrainCase("my-awesome_string")      // "My-Awesome-String"
+ * toTrainCase("value*with+custom", "*+") // "Value-With-Custom"
+ *
+ * @param str The input string to convert.
+ * @param del Additional delimiter characters to recognize.
+ * @returns The `Train-Case` formatted string.
+ */
 export function toTrainCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
@@ -400,7 +475,24 @@ export function toTrainCase<Str extends string, Del extends string = ''>(
 		:	'') as TrainCase<Str, Del>;
 }
 
-/** Converts a string into `dot.case` using optional custom delimiters. */
+/**
+ * * Converts a string into `dot.case`, using the optional custom delimiters in addition to the default delimiters.
+ *
+ * @remarks
+ * - At the type level, TypeScript supports `up to 45 characters` for reliable literal inference.
+ *   - This limitation does not affect runtime behavior but shows TypeScript compiler error.
+ * - Use it for short literal strings (`up to 45 characters`) for best performance.
+ * - Custom delimiters are merged with the default set: `space`, `.`, `-`, `_`, `/`.
+ *
+ * @example
+ * toDotCase("hello world")            // "hello.world"
+ * toDotCase("my-awesome_string")      // "my.awesome.string"
+ * toDotCase("value*with+custom", "*+") // "value.with.custom"
+ *
+ * @param str The input string to convert.
+ * @param del Additional delimiter characters to recognize.
+ * @returns The `dot.case` formatted string.
+ */
 export function toDotCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
@@ -411,7 +503,24 @@ export function toDotCase<Str extends string, Del extends string = ''>(
 	>;
 }
 
-/** Converts a string into `path/case` using optional custom delimiters. */
+/**
+ * * Converts a string into `path/case`, using the optional custom delimiters in addition to the default delimiters.
+ *
+ * @remarks
+ * - At the type level, TypeScript supports `up to 45 characters` for reliable literal inference.
+ *   - This limitation does not affect runtime behavior but shows TypeScript compiler error.
+ * - Use it for short literal strings (`up to 45 characters`) for best performance.
+ * - Custom delimiters are merged with the default set: `space`, `.`, `-`, `_`, `/`.
+ *
+ * @example
+ * toPathCase("hello world")            // "hello/world"
+ * toPathCase("my-awesome_string")      // "my/awesome/string"
+ * toPathCase("value*with+custom", "*+") // "value/with/custom"
+ *
+ * @param str The input string to convert.
+ * @param del Additional delimiter characters to recognize.
+ * @returns The `path/case` formatted string.
+ */
 export function toPathCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
@@ -424,7 +533,24 @@ export function toPathCase<Str extends string, Del extends string = ''>(
 		:	'') as PathCase<Str, Del>;
 }
 
-/** Converts a string into `CONSTANT_CASE` using optional custom delimiters. */
+/**
+ * * Converts a string into `CONSTANT_CASE`, using the optional custom delimiters in addition to the default delimiters.
+ *
+ * @remarks
+ * - At the type level, TypeScript supports `up to 45 characters` for reliable literal inference.
+ *   - This limitation does not affect runtime behavior but shows TypeScript compiler error.
+ * - Use it for short literal strings (`up to 45 characters`) for best performance.
+ * - Custom delimiters are merged with the default set: `space`, `.`, `-`, `_`, `/`.
+ *
+ * @example
+ * toConstantCase("hello world")            // "HELLO_WORLD"
+ * toConstantCase("my-awesome_string")      // "MY_AWESOME_STRING"
+ * toConstantCase("value*with+custom", "*+") // "VALUE_WITH_CUSTOM"
+ *
+ * @param str The input string to convert.
+ * @param del Additional delimiter characters to recognize.
+ * @returns The `CONSTANT_CASE` formatted string.
+ */
 export function toConstantCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
@@ -437,7 +563,24 @@ export function toConstantCase<Str extends string, Del extends string = ''>(
 		:	'') as ConstantCase<Str, Del>;
 }
 
-/** Converts a string into `Pascal_Snake_Case` using optional custom delimiters. */
+/**
+ * * Converts a string into `Pascal_Snake_Case`, using the optional custom delimiters in addition to the default delimiters.
+ *
+ * @remarks
+ * - At the type level, TypeScript supports `up to 45 characters` for reliable literal inference.
+ *   - This limitation does not affect runtime behavior but shows TypeScript compiler error.
+ * - Use it for short literal strings (`up to 45 characters`) for best performance.
+ * - Custom delimiters are merged with the default set: `space`, `.`, `-`, `_`, `/`.
+ *
+ * @example
+ * toPascalSnakeCase("hello world")            // "Hello_World"
+ * toPascalSnakeCase("my-awesome_string")      // "My_Awesome_String"
+ * toPascalSnakeCase("value*with+custom", "*+") // "Value_With_Custom"
+ *
+ * @param str The input string to convert.
+ * @param del Additional delimiter characters to recognize.
+ * @returns The `Pascal_Snake_Case` formatted string.
+ */
 export function toPascalSnakeCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
@@ -448,7 +591,26 @@ export function toPascalSnakeCase<Str extends string, Del extends string = ''>(
 		:	'') as PascalSnakeCase<Str, Del>;
 }
 
-/** Converts a string into `Title Case` using optional custom delimiters. */
+/**
+ * * Converts a string into `Title Case`, using the optional custom delimiters in addition to the default delimiters.
+ *
+ * @remarks
+ * - This utility returns appropriate type IntelliSense with string literal. For general purpose use {@link convertStringCase}.
+ * - At the type level, TypeScript supports `up to 45 characters` for reliable literal inference.
+ *   - This limitation does not affect runtime behavior but shows TypeScript compiler error.
+ * - Use it for short literal strings (`up to 45 characters`) for best performance.
+ * - It does not handle ACRONYMS properly, so be cautious when the string has ACRONYMS or use {@link convertStringCase}.
+ * - Custom delimiters are merged with the default set: `space`, `.`, `-`, `_`, `/`.
+ *
+ * @example
+ * toTitleCase("hello world")            // "Hello World"
+ * toTitleCase("my-awesome_string")      // "My Awesome String"
+ * toTitleCase("value*with+custom", "*+") // "Value with Custom"
+ *
+ * @param str The input string to convert.
+ * @param del Additional delimiter characters to recognize.
+ * @returns The `Title Case` formatted string.
+ */
 export function toTitleCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
@@ -465,7 +627,26 @@ export function toTitleCase<Str extends string, Del extends string = ''>(
 		:	'') as TitleCase<Str, Del>;
 }
 
-/** Converts a string into `Sentence Case` using optional custom delimiters. */
+/**
+ * * Converts a string into `Sentence case`, using the optional custom delimiters in addition to the default delimiters.
+ *
+ * @remarks
+ * - This utility returns appropriate type IntelliSense with string literal. For general purpose use {@link convertStringCase}.
+ * - At the type level, TypeScript supports `up to 45 characters` for reliable literal inference.
+ *   - This limitation does not affect runtime behavior but shows TypeScript compiler error.
+ * - Use it for short literal strings (`up to 45 characters`) for best performance.
+ * - It does not handle ACRONYMS properly, so be cautious when the string has ACRONYMS or use {@link convertStringCase}.
+ * - Custom delimiters are merged with the default set: `space`, `.`, `-`, `_`, `/`.
+ *
+ * @example
+ * toSentenceCase("hello world")            // "Hello world"
+ * toSentenceCase("my-awesome_string")      // "My awesome string"
+ * toSentenceCase("value*with+custom", "*+") // "Value with custom"
+ *
+ * @param str The input string to convert.
+ * @param del Additional delimiter characters to recognize.
+ * @returns The `Sentence case` formatted string.
+ */
 export function toSentenceCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
