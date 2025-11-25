@@ -66,6 +66,34 @@ export type ArrayToStringOptions<T> =
 	| ArrayOfPrimitivesToStringOptions
 	| ArrayOfObjectsToStringOptions<T>;
 
+/** Options that control how a method is defined on a prototype using `definePrototypeMethod` utility. */
+export interface PrototypeMethodOptions {
+	/**
+	 * - Whether an existing method with the same name should be replaced.
+	 * - Defaults to `false`.
+	 */
+	overwrite?: boolean;
+
+	/**
+	 * - Whether the method should appear during property enumeration (e.g., in `for...in` or `Object.keys`).
+	 * - Defaults to `false`, matching native prototype method behavior.
+	 */
+	enumerable?: boolean;
+
+	/**
+	 * - Whether the method's property descriptor can be modified or deleted.
+	 * - Defaults to `false`.
+	 * - When `false`, the method cannot be removed or reconfigured, but its value may still be changed if `writable` is `true`.
+	 */
+	configurable?: boolean;
+
+	/**
+	 * - Whether the method's value may be reassigned after definition.
+	 * - Defaults to `true` to allow replacement of the function body unless explicitly locked down.
+	 */
+	writable?: boolean;
+}
+
 // ! UTILITY TYPES FOR GENERAL PURPOSE
 
 /**

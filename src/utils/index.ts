@@ -23,6 +23,7 @@ import type {
 	ArrayOfObjectsToStringOptions,
 	ArrayOfPrimitivesToStringOptions,
 	ArrayToStringOptions,
+	PrototypeMethodOptions,
 } from './types';
 
 /**
@@ -368,4 +369,64 @@ export function deepParsePrimitives<T = unknown>(input: unknown): T {
 	}
 
 	return input as T;
+}
+
+/**
+ * * Defines a method on any prototype — including built-in prototypes — in a safe, idempotent manner.
+ * 	 - The method is non-enumerable by default and will not overwrite an existing method unless explicitly allowed.
+ *
+ * @param proto   The target prototype object (e.g., String.prototype).
+ * @param name    The method name to define on the prototype.
+ * @param impl    The function implementation for the method.
+ * @param options Optional property-descriptor settings and overwrite rules.
+ *
+ * @example
+ * // Safely augment prototype methods by extending the global interface:
+ * declare global {
+ * 	interface String {
+ * 		toBang(): string;
+ * 	}
+ * }
+ *
+ * // Define a custom method on String.prototype
+ * definePrototypeMethod(String.prototype, 'toBang', function (this: String) {
+ * 	return this.toString().concat('!');
+ * 	// or
+ * 	// return this.concat('!');
+ * });
+ *
+ * "Hi".toBang(); // "Hi!"
+ *
+ * // Attempting to redefine without overwrite option is ignored
+ * definePrototypeMethod(String.prototype, 'toBang', () => 'x'); // ignored
+ *
+ * // Overwrite intentionally using the overwrite option
+ * definePrototypeMethod(
+ *   String.prototype,
+ *   'toBang',
+ *   function (this: String) { return this.concat('!!!'); },
+ *   { overwrite: true }
+ * );
+ *
+ * "Hi".toBang(); // "Hi!!!"
+ */
+export function definePrototypeMethod<
+	Proto extends object,
+	Name extends keyof Proto,
+	Args extends unknown[],
+	Return,
+>(proto: Proto, name: Name, impl: (...args: Args) => Return, options?: PrototypeMethodOptions) {
+	const alreadyExists = Object.prototype.hasOwnProperty.call(proto, name);
+
+	if (alreadyExists && !options?.overwrite) return;
+
+	Object.defineProperty(proto, name, {
+		value: function (this: Proto, ...args: Args) {
+			return impl.apply(this, args);
+		},
+
+		enumerable: options?.enumerable ?? false,
+		configurable: options?.configurable ?? false,
+		writable: options?.writable ?? true,
+	});
 }
