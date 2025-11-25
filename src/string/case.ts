@@ -1,6 +1,18 @@
 import { isNonEmptyString } from '../guards/primitives';
 import { LOWERCASE } from './constants';
-import type { CamelCase, CaseFormat, PascalCase, StringCaseOptions } from './types';
+import type {
+	CamelCase,
+	CaseFormat,
+	ConstantCase,
+	DotCase,
+	KebabCase,
+	PascalCase,
+	PascalSnakeCase,
+	PathCase,
+	SnakeCase,
+	StringCaseOptions,
+	TrainCase,
+} from './types';
 
 /**
  * * Converts a string to a specified case format with advanced handling for word boundaries, punctuation, acronyms, and Unicode characters.
@@ -202,13 +214,27 @@ export function convertStringCase(
 	}
 }
 
+/** Cache to store regex for delimiters */
+const REGEX_CACHE = /* @__PURE__ */ new Map<string, RegExp>();
+
+/** Get delimiter regex from cache if already built the regex in previous call */
+function _getDelimiterRegex(delims: string[]) {
+	const key = delims.sort().join('');
+
+	if (!REGEX_CACHE.has(key)) {
+		REGEX_CACHE.set(key, new RegExp(`[-_./${delims.join('')}]`, 'g'));
+	}
+
+	return REGEX_CACHE.get(key)!;
+}
+
 /** Normalizes delimiters + splits the string */
 function _normalizeDelimiters(str: string, delims: string[]): string[] {
-	const del = new RegExp(`[-_./${delims.join('')}]`, 'g');
+	const delRegExp = _getDelimiterRegex(delims);
 
 	return str
-		.replace(/([a-z])([A-Z])/g, '$1 $2')
-		.replace(del, ' ')
+		.replace(/(\w+)(\p{Lu})/gu, '$1 $2')
+		.replace(delRegExp, ' ')
 		.replace(/\s+/g, ' ')
 		.trim()
 		.split(' ')
@@ -218,6 +244,21 @@ function _normalizeDelimiters(str: string, delims: string[]): string[] {
 /** Capitalize a string (first letter capital, rest lowercase) */
 function _capitalize(str: string): string {
 	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+/** Converts a string into `camelCase` using optional custom delimiters. */
+export function toCamelCase<Str extends string, Del extends string = ''>(
+	str: Str,
+	...del: Del[]
+): CamelCase<Str, Del> {
+	if (!isNonEmptyString(str)) return '' as CamelCase<Str, Del>;
+
+	const parts = _normalizeDelimiters(str, del);
+
+	return (parts[0].toLowerCase() + parts.slice(1).map(_capitalize).join('')) as CamelCase<
+		Str,
+		Del
+	>;
 }
 
 /**
@@ -247,16 +288,87 @@ export function toPascalCase<Str extends string, Del extends string = ''>(
 		:	'') as PascalCase<Str>;
 }
 
-/** Converts a string into `camelCase` using optional custom delimiters. */
-export function toCamelCase<Str extends string, Del extends string = ''>(
+/** Converts a string into `snake_case` using optional custom delimiters. */
+export function toSnakeCase<Str extends string, Del extends string = ''>(
 	str: Str,
-	...delimiters: Del[]
-): CamelCase<Str, Del> {
-	const parts = _normalizeDelimiters(str, delimiters);
-	if (!isNonEmptyString(str)) return '' as CamelCase<Str, Del>;
+	...del: Del[]
+): SnakeCase<Str, Del> {
+	return (
+		isNonEmptyString(str) ?
+			_normalizeDelimiters(str, del)
+				.map((w) => w.toLowerCase())
+				.join('_')
+		:	'') as SnakeCase<Str, Del>;
+}
 
-	return (parts[0].toLowerCase() + parts.slice(1).map(_capitalize).join('')) as CamelCase<
+/** Converts a string into `kebab-case` using optional custom delimiters. */
+export function toKebabCase<Str extends string, Del extends string = ''>(
+	str: Str,
+	...del: Del[]
+): KebabCase<Str, Del> {
+	return (
+		isNonEmptyString(str) ?
+			_normalizeDelimiters(str, del)
+				.map((w) => w.toLowerCase())
+				.join('-')
+		:	'') as KebabCase<Str, Del>;
+}
+
+/** Converts a string into `Train-Case` using optional custom delimiters. */
+export function toTrainCase<Str extends string, Del extends string = ''>(
+	str: Str,
+	...del: Del[]
+): TrainCase<Str, Del> {
+	return (
+		isNonEmptyString(str) ?
+			_normalizeDelimiters(str, del).map(_capitalize).join('')
+		:	'-') as TrainCase<Str, Del>;
+}
+
+/** Converts a string into `dot.case` using optional custom delimiters. */
+export function toDotCase<Str extends string, Del extends string = ''>(
+	str: Str,
+	...del: Del[]
+): DotCase<Str, Del> {
+	return (isNonEmptyString(str) ? _normalizeDelimiters(str, del).join('.') : '') as DotCase<
 		Str,
 		Del
 	>;
+}
+
+/** Converts a string into `path/case` using optional custom delimiters. */
+export function toPathCase<Str extends string, Del extends string = ''>(
+	str: Str,
+	...del: Del[]
+): PathCase<Str, Del> {
+	return (
+		isNonEmptyString(str) ?
+			_normalizeDelimiters(str, del)
+				.map((w) => w.toLowerCase())
+				.join('/')
+		:	'') as PathCase<Str, Del>;
+}
+
+/** Converts a string into `CONSTANT_CASE` using optional custom delimiters. */
+export function toConstantCase<Str extends string, Del extends string = ''>(
+	str: Str,
+	...del: Del[]
+): ConstantCase<Str, Del> {
+	return (
+		isNonEmptyString(str) ?
+			_normalizeDelimiters(str, del)
+				.map((w) => w.toUpperCase())
+				.join('_')
+		:	'') as ConstantCase<Str, Del>;
+}
+
+/** Converts a string into `Pascal_Snake_Case` using optional custom delimiters. */
+export function toPascalSnakeCase<Str extends string, Del extends string = ''>(
+	str: Str,
+	...del: Del[]
+): PascalSnakeCase<Str, Del> {
+	return (
+		isNonEmptyString(str) ?
+			_normalizeDelimiters(str, del).map(_capitalize).join('_')
+		:	'') as PascalSnakeCase<Str, Del>;
 }

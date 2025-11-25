@@ -178,7 +178,10 @@ export type $CapitalizeWords<T extends readonly string[]> =
 		[Capitalize<Lowercase<H>>, ...$CapitalizeWords<R>]
 	:	[];
 
-/** * Converts a string literal `Str` into `camelCase`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}. */
+/**
+ * - Converts a string literal `Str` into `camelCase`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}.
+ * @remarks TypeScript supports up to ~45 characters for reliable literal inference.
+ */
 export type CamelCase<Str extends string, Del extends string = ''> =
 	Split<$NormalizeString<Str, Del>, ' '> extends (
 		[infer F extends string, ...infer R extends string[]]
@@ -186,49 +189,73 @@ export type CamelCase<Str extends string, Del extends string = ''> =
 		`${Lowercase<F>}${Join<$CapitalizeWords<R>, ''>}`
 	:	'';
 
-/** * Converts a string literal `Str` into `snake_case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}. */
+/**
+ * - Converts a string literal `Str` into `snake_case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}.
+ * @remarks TypeScript supports up to ~45 characters for reliable literal inference.
+ */
 export type SnakeCase<Str extends string, Del extends string = ''> = Join<
 	$LowercaseWords<Split<$NormalizeString<Str, Del>, ' '>>,
 	'_'
 >;
 
-/** * Converts a string literal `Str` into `kebab-case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}. */
+/**
+ * - Converts a string literal `Str` into `kebab-case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}.
+ * @remarks TypeScript supports up to ~45 characters for reliable literal inference.
+ */
 export type KebabCase<Str extends string, Del extends string = ''> = Join<
 	$LowercaseWords<Split<$NormalizeString<Str, Del>, ' '>>,
 	'-'
 >;
 
-/** * Converts a string literal `Str` into `PascalCase`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}. */
+/**
+ * - Converts a string literal `Str` into `PascalCase`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}.
+ * @remarks TypeScript supports up to ~45 characters for reliable literal inference.
+ */
 export type PascalCase<Str extends string, Del extends string = ''> = Join<
 	$CapitalizeWords<Split<$NormalizeString<Str, Del>, ' '>>,
 	''
 >;
 
-/** * Converts a string literal `Str` into `Pascal_Snake_Case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}. */
+/**
+ * - Converts a string literal `Str` into `Pascal_Snake_Case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}.
+ * @remarks TypeScript supports up to ~45 characters for reliable literal inference.
+ */
 export type PascalSnakeCase<Str extends string, Del extends string = ''> = Join<
 	$CapitalizeWords<Split<$NormalizeString<Str, Del>, ' '>>,
 	'_'
 >;
 
-/** * Converts a string literal `Str` into `CONSTANT_CASE`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}. */
+/**
+ * - Converts a string literal `Str` into `CONSTANT_CASE`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}.
+ * @remarks TypeScript supports up to ~45 characters for reliable literal inference.
+ */
 export type ConstantCase<Str extends string, Del extends string = ''> = Join<
 	$UppercaseWords<Split<$NormalizeString<Str, Del>, ' '>>,
 	'_'
 >;
 
-/** * Converts a string literal `Str` into `Train-Case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}. */
+/**
+ * - Converts a string literal `Str` into `Train-Case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}.
+ * @remarks TypeScript supports up to ~45 characters for reliable literal inference.
+ */
 export type TrainCase<Str extends string, Del extends string = ''> = Join<
 	$CapitalizeWords<Split<$NormalizeString<Str, Del>, ' '>>,
 	'-'
 >;
 
-/** * Converts a string literal `Str` into `Dot.Case`/`dot.case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}. */
+/**
+ * - Converts a string literal `Str` into `Dot.Case`/`dot.case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}.
+ * @remarks TypeScript supports up to ~45 characters for reliable literal inference.
+ */
 export type DotCase<Str extends string, Del extends string = ''> = Join<
 	Split<$NormalizeString<Str, Del>, ' '>,
 	'.'
 >;
 
-/** * Converts a string literal `Str` into `path/case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}. */
+/**
+ * - Converts a string literal `Str` into `path/case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}.
+ * @remarks TypeScript supports up to ~45 characters for reliable literal inference.
+ */
 export type PathCase<Str extends string, Del extends string = ''> = Join<
 	$LowercaseWords<Split<$NormalizeString<Str, Del>, ' '>>,
 	'/'
