@@ -1,5 +1,5 @@
 import type { $Countries } from '../object/types';
-import type { LooseLiteral } from '../utils/types';
+import type { Join, LooseLiteral, Split } from '../utils/types';
 
 /** - Options for `capitalizeString` function. */
 export interface CapitalizeOptions {
@@ -93,3 +93,165 @@ export type CountryShortISO = $Countries['iso_code_short'];
 
 /** ISO 2 character country code or any string */
 export type Country = LooseLiteral<CountryShortISO>;
+
+// ! ======= Utility Types ======= ! //
+
+/** Utility: ensure early inference and string constraint. */
+export type EnsureString<Str> = Str extends string ? Str : never;
+
+/** Check if a string literal `Str` contains a substring `SubStr` */
+export type Includes<Str extends string, SubStr extends string> =
+	Str extends `${string}${SubStr}${string}` ? true : false;
+
+/** Trim leading space from a string literal */
+export type $TrimLeft<Str extends string> = Str extends ` ${infer R}` ? $TrimLeft<R> : Str;
+
+/** Trim trailing space from a string literal */
+export type $TrimRight<Str extends string> = Str extends `${infer L} ` ? $TrimRight<L> : Str;
+
+/** Trim leading and trailing spaces from a string literal */
+export type Trim<Str extends string> = $TrimRight<$TrimLeft<Str>>;
+
+/** Default delimiter characters */
+type $DefaultDelimiters = ' ' | '-' | '_' | '.' | '/';
+
+/** Turn user delim string like "*+," into '*, +, ,' union */
+type $UserDelimiters<Del extends string> =
+	Del extends '' ? never
+	: Del extends `${infer C}${infer R}` ? C | $UserDelimiters<R>
+	: never;
+
+/** Is char `C` a delimiter (either default or user-provided)? */
+type $IsDelimiter<C extends string, Del extends string> =
+	C extends $DefaultDelimiters ? true
+	: C extends $UserDelimiters<Del> ? true
+	: false;
+
+/** Insert space before capital letters: "helloWorld" -> "hello World" */
+type $SpaceBeforeCaps<Str extends string> =
+	Str extends `${infer F}${infer R}` ?
+		R extends Uncapitalize<R> ?
+			`${F}${$SpaceBeforeCaps<R>}`
+		:	`${F} ${$SpaceBeforeCaps<R>}`
+	:	Str;
+
+/** Replace delimiter(s) with space(s) */
+type $ReplaceDelimiters<
+	Str extends string,
+	Del extends string,
+	Acc extends string = '',
+	LastWasSpace extends boolean = false,
+> =
+	Str extends `${infer F}${infer R}` ?
+		$IsDelimiter<F, Del> extends true ?
+			$ReplaceDelimiters<
+				R,
+				Del,
+				Acc extends '' ? ' '
+				: LastWasSpace extends true ? Acc
+				: `${Acc} `,
+				true
+			>
+		:	$ReplaceDelimiters<R, Del, `${Acc}${F}`, false>
+	:	Acc;
+
+/** Normalize {@link $DefaultDelimiters} or {@link $UserDelimiters} `Del` in a string literal `Str` with space(s) */
+export type $NormalizeString<Str extends string, Del extends string = ''> = Trim<
+	$ReplaceDelimiters<$SpaceBeforeCaps<Str>, Del, '', false>
+>;
+
+/** Lowercase all the words in a tuple */
+export type $LowercaseWords<T extends readonly string[]> =
+	T extends [infer H extends string, ...infer R extends string[]] ?
+		[Lowercase<H>, ...$LowercaseWords<R>]
+	:	[];
+
+/** Uppercase all the words in a tuple */
+export type $UppercaseWords<T extends readonly string[]> =
+	T extends [infer H extends string, ...infer R extends string[]] ?
+		[Uppercase<Lowercase<H>>, ...$UppercaseWords<R>]
+	:	[];
+
+/** Capitalize (first letter capital) all the words in a tuple */
+export type $CapitalizeWords<T extends readonly string[]> =
+	T extends [infer H extends string, ...infer R extends string[]] ?
+		[Capitalize<Lowercase<H>>, ...$CapitalizeWords<R>]
+	:	[];
+
+/** * Converts a string literal `Str` into `camelCase`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}. */
+export type CamelCase<Str extends string, Del extends string = ''> =
+	Split<$NormalizeString<Str, Del>, ' '> extends (
+		[infer F extends string, ...infer R extends string[]]
+	) ?
+		`${Lowercase<F>}${Join<$CapitalizeWords<R>, ''>}`
+	:	'';
+
+/** * Converts a string literal `Str` into `snake_case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}. */
+export type SnakeCase<Str extends string, Del extends string = ''> = Join<
+	$LowercaseWords<Split<$NormalizeString<Str, Del>, ' '>>,
+	'_'
+>;
+
+/** * Converts a string literal `Str` into `kebab-case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}. */
+export type KebabCase<Str extends string, Del extends string = ''> = Join<
+	$LowercaseWords<Split<$NormalizeString<Str, Del>, ' '>>,
+	'-'
+>;
+
+/** * Converts a string literal `Str` into `PascalCase`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}. */
+export type PascalCase<Str extends string, Del extends string = ''> = Join<
+	$CapitalizeWords<Split<$NormalizeString<Str, Del>, ' '>>,
+	''
+>;
+
+/** * Converts a string literal `Str` into `Pascal_Snake_Case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}. */
+export type PascalSnakeCase<Str extends string, Del extends string = ''> = Join<
+	$CapitalizeWords<Split<$NormalizeString<Str, Del>, ' '>>,
+	'_'
+>;
+
+/** * Converts a string literal `Str` into `CONSTANT_CASE`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}. */
+export type ConstantCase<Str extends string, Del extends string = ''> = Join<
+	$UppercaseWords<Split<$NormalizeString<Str, Del>, ' '>>,
+	'_'
+>;
+
+/** * Converts a string literal `Str` into `Train-Case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}. */
+export type TrainCase<Str extends string, Del extends string = ''> = Join<
+	$CapitalizeWords<Split<$NormalizeString<Str, Del>, ' '>>,
+	'-'
+>;
+
+/** * Converts a string literal `Str` into `Dot.Case`/`dot.case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}. */
+export type DotCase<Str extends string, Del extends string = ''> = Join<
+	Split<$NormalizeString<Str, Del>, ' '>,
+	'.'
+>;
+
+/** * Converts a string literal `Str` into `path/case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}. */
+export type PathCase<Str extends string, Del extends string = ''> = Join<
+	$LowercaseWords<Split<$NormalizeString<Str, Del>, ' '>>,
+	'/'
+>;
+
+/* =========================
+   Examples / quick tests
+   ========================= */
+
+// /** dot replaced + default delims included */
+// type T1 = TrainCase<'my bad.luck hello_boy'>; // "My-Bad-Luck-Hello-Boy"
+
+// /** long input should remain single literal (bump MaxDepth if you hit guard) */
+// type T2 = TrainCase<'my bad.luck hello_boy _how-are.you? hey come', '?'>; // "My-Bad-Luck-Hello-Boy-How-Are-You"
+
+// /** custom delimiters ADDED to defaults (',' added) */
+// type T3 = SnakeCase<'hello,World-again', ','>; // "hello_world-again"
+
+// /** PascalCase with custom delimiters (comma included plus defaults) */
+// type P = PascalCase<'my__weird--mixed,string my dil goes hmm hola', ','>; // "MyWeirdMixedString"
+
+// /** CamelCase */
+// type C = CamelCase<'Hello_World-again.now'>; // "helloWorldAgainNow"
+
+// /** Non-ASCII letters */
+// type U = DotCase<'MyNameIs'>; // "mañana-será-otro-día"

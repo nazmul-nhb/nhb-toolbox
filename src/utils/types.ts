@@ -609,11 +609,11 @@ export type Cast<A1, A2> = A1 extends A2 ? A1 : A2;
 export type Pop<L extends List> =
 	L extends readonly [...infer El, any] | readonly [...infer El, any?] ? El : L;
 
-type $$Split<S extends string, D extends string, T extends string[] = []> =
-	S extends `${infer BS}${D}${infer AS}` ? $$Split<AS, D, [...T, BS]> : [...T, S];
+type _Split<S extends string, D extends string, T extends string[] = []> =
+	S extends `${infer BS}${D}${infer AS}` ? _Split<AS, D, [...T, BS]> : [...T, S];
 
 type $Split<S extends string, D extends string = ''> =
-	D extends '' ? Pop<$$Split<S, D>> : $$Split<S, D>;
+	D extends '' ? Pop<_Split<S, D>> : _Split<S, D>;
 
 /**
  * ✂️ Split a string literal by a given delimiter into a list of strings.
