@@ -1,5 +1,6 @@
+import { isNonEmptyString } from '../guards/primitives';
 import { LOWERCASE } from './constants';
-import type { CaseFormat, StringCaseOptions } from './types';
+import type { CamelCase, CaseFormat, PascalCase, StringCaseOptions } from './types';
 
 /**
  * * Converts a string to a specified case format with advanced handling for word boundaries, punctuation, acronyms, and Unicode characters.
@@ -199,4 +200,63 @@ export function convertStringCase(
 			return start.concat(core, end);
 		}
 	}
+}
+
+/** Normalizes delimiters + splits the string */
+function _normalizeDelimiters(str: string, delims: string[]): string[] {
+	const del = new RegExp(`[-_./${delims.join('')}]`, 'g');
+
+	return str
+		.replace(/([a-z])([A-Z])/g, '$1 $2')
+		.replace(del, ' ')
+		.replace(/\s+/g, ' ')
+		.trim()
+		.split(' ')
+		.filter(Boolean);
+}
+
+/** Capitalize a string (first letter capital, rest lowercase) */
+function _capitalize(str: string): string {
+	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+/**
+ * * Converts a string into `PascalCase`, using the provided custom delimiters in addition to the default delimiters.
+ *
+ * @remarks
+ * - At the type level, TypeScript supports up to ~45 characters for reliable literal inference.
+ *   - This limitation does not affect runtime behavior.
+ * - Custom delimiters are merged with the default set: `space`, `.`, `-`, `_`, `/`.
+ *
+ * @example
+ * toPascalCase("hello world")            // "HelloWorld"
+ * toPascalCase("my-awesome_string")      // "MyAwesomeString"
+ * toPascalCase("value*with+custom", "*+") // "ValueWithCustom"
+ *
+ * @param str The input string to convert.
+ * @param del Additional delimiter characters to recognize.
+ * @returns The `PascalCase` formatted string.
+ */
+export function toPascalCase<Str extends string, Del extends string = ''>(
+	str: Str,
+	...del: Del[]
+): PascalCase<Str, Del> {
+	return (
+		isNonEmptyString(str) ?
+			_normalizeDelimiters(str, del).map(_capitalize).join('')
+		:	'') as PascalCase<Str>;
+}
+
+/** Converts a string into `camelCase` using optional custom delimiters. */
+export function toCamelCase<Str extends string, Del extends string = ''>(
+	str: Str,
+	...delimiters: Del[]
+): CamelCase<Str, Del> {
+	const parts = _normalizeDelimiters(str, delimiters);
+	if (!isNonEmptyString(str)) return '' as CamelCase<Str, Del>;
+
+	return (parts[0].toLowerCase() + parts.slice(1).map(_capitalize).join('')) as CamelCase<
+		Str,
+		Del
+	>;
 }

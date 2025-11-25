@@ -233,25 +233,3 @@ export type PathCase<Str extends string, Del extends string = ''> = Join<
 	$LowercaseWords<Split<$NormalizeString<Str, Del>, ' '>>,
 	'/'
 >;
-
-/* =========================
-   Examples / quick tests
-   ========================= */
-
-// /** dot replaced + default delims included */
-// type T1 = TrainCase<'my bad.luck hello_boy'>; // "My-Bad-Luck-Hello-Boy"
-
-// /** long input should remain single literal (bump MaxDepth if you hit guard) */
-// type T2 = TrainCase<'my bad.luck hello_boy _how-are.you? hey come', '?'>; // "My-Bad-Luck-Hello-Boy-How-Are-You"
-
-// /** custom delimiters ADDED to defaults (',' added) */
-// type T3 = SnakeCase<'hello,World-again', ','>; // "hello_world-again"
-
-// /** PascalCase with custom delimiters (comma included plus defaults) */
-// type P = PascalCase<'my__weird--mixed,string my dil goes hmm hola', ','>; // "MyWeirdMixedString"
-
-// /** CamelCase */
-// type C = CamelCase<'Hello_World-again.now'>; // "helloWorldAgainNow"
-
-// /** Non-ASCII letters */
-// type U = DotCase<'MyNameIs'>; // "mañana-será-otro-día"
