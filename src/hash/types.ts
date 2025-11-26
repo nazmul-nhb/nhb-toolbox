@@ -18,3 +18,13 @@ export interface $UUIDOptions<V extends UUIDVersion = 'v4'> {
 /** * Options for generating UUID */
 export type UUIDOptions<V extends UUIDVersion = 'v4'> =
 	V extends 'v3' | 'v5' ? $UUIDOptionsV3V5<V> : $UUIDOptions<V>;
+
+/** Type representing decoded UUID info */
+export interface DecodedUUID {
+	version: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+	variant: 'NCS' | 'RFC4122' | 'Microsoft' | 'Future';
+	timestamp?: number; // for v1 & v6 (in ms since epoch)
+	node?: string; // v1 node (MAC)
+	clockSeq?: number; // v1/v2 clock sequence
+	raw: string; // original UUID
+}

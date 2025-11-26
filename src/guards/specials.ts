@@ -34,10 +34,12 @@ export function isDateString(value: unknown): value is string {
  * @returns `true` if the value is a valid UUID, otherwise `false`.
  */
 export function isUUID(value: unknown): value is string {
-	return (
-		isString(value) &&
-		/^[0-9a-f]{8}-[0-9a-f]{4}-[1-7][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(value)
+	const hex = '[0-9a-f]';
+	const exp = new RegExp(
+		`^${hex}{8}-${hex}{4}-[1-7]${hex}{3}-[89ab]${hex}{3}-${hex}{12}$`,
+		'i'
 	);
+	return isString(value) && exp.test(value);
 }
 
 /**

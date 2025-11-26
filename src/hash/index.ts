@@ -1,5 +1,6 @@
+import { isUUID } from '../guards/specials';
 import { _formatUUID, _isV3OrV5, _runMd5Rounds } from './helpers';
-import type { UUIDOptions, UUIDVersion } from './types';
+import type { DecodedUUID, UUIDOptions, UUIDVersion } from './types';
 
 /** Generate a random string of given length (hex) */
 export function randomHexString(length: number): string {
@@ -154,4 +155,38 @@ export function uuid<V extends UUIDVersion = 'v4'>(options?: UUIDOptions<V>): st
 		default:
 			throw new RangeError('Unsupported UUID version!');
 	}
+}
+
+/**
+ * Decode a UUID string into its components (v1–v7)
+ * @param uuid - UUID string to decode
+ */
+export function decodeUUID(uuid: string): DecodedUUID | null {
+	if (!isUUID(uuid)) return null;
+
+	const parts = uuid.split('-');
+	const version = parseInt(parts[2][0], 16) as DecodedUUID['version'];
+	const variantNibble = parseInt(parts[3][0], 16);
+
+	let variant: DecodedUUID['variant'] = 'RFC4122';
+
+	if ((variantNibble & 0b1000) === 0) variant = 'NCS';
+	else if ((variantNibble & 0b1100) === 0b1000) variant = 'RFC4122';
+	else if ((variantNibble & 0b1110) === 0b1100) variant = 'Microsoft';
+	else variant = 'Future';
+
+	const decoded: DecodedUUID = { version, variant, raw: uuid };
+
+	if (version === 1 || version === 6) {
+		// Timestamp
+		const timeHex = parts[0] + parts[1] + parts[2].slice(1); // 60-bit timestamp
+		const timeInt = parseInt(timeHex, 16);
+		decoded.timestamp = timeInt; // raw value; can convert to ms with proper UUID epoch
+		if (version === 1) {
+			decoded.clockSeq = parseInt(parts[3].slice(1), 16);
+			decoded.node = parts[4];
+		}
+	}
+
+	return decoded;
 }
