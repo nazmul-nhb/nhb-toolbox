@@ -23,7 +23,7 @@ import type {
 	ArrayOfObjectsToStringOptions,
 	ArrayOfPrimitivesToStringOptions,
 	ArrayToStringOptions,
-	PrototypeMethodOptions,
+	ProtoMethodOptions,
 } from './types';
 
 /**
@@ -410,18 +410,18 @@ export function deepParsePrimitives<T = unknown>(input: unknown): T {
  *
  * "Hi".toBang(); // "Hi!!!"
  */
-export function definePrototypeMethod<
-	Proto extends object,
-	Name extends keyof Proto,
-	Args extends unknown[],
-	Return,
->(proto: Proto, name: Name, impl: (...args: Args) => Return, options?: PrototypeMethodOptions) {
+export function definePrototypeMethod<Proto extends object, Name extends keyof Proto>(
+	proto: Proto,
+	name: Name,
+	impl: (...args: unknown[]) => unknown,
+	options?: ProtoMethodOptions
+): void {
 	const alreadyExists = Object.prototype.hasOwnProperty.call(proto, name);
 
 	if (alreadyExists && !options?.overwrite) return;
 
 	Object.defineProperty(proto, name, {
-		value: function (this: Proto, ...args: Args) {
+		value: function (this: Proto, ...args: unknown[]) {
 			return impl.apply(this, args);
 		},
 

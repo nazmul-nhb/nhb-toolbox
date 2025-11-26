@@ -67,7 +67,7 @@ export type ArrayToStringOptions<T> =
 	| ArrayOfObjectsToStringOptions<T>;
 
 /** Options that control how a method is defined on a prototype using `definePrototypeMethod` utility. */
-export interface PrototypeMethodOptions {
+export interface ProtoMethodOptions {
 	/**
 	 * - Whether an existing method with the same name should be replaced.
 	 * - Defaults to `false`.

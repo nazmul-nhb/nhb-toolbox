@@ -1,3 +1,5 @@
+import { isObjectWithKeys, isString } from '../src/index';
+
 /** Simple pure JS MD5 implementation (for v3 UUID) */
 function md5(str: string): string {
 	// Using a simple lightweight MD5 from https://github.com/blueimp/JavaScript-MD5 (simplified)
@@ -55,7 +57,7 @@ function md5(str: string): string {
 	return h.map((n) => (n >>> 0).toString(16).padStart(8, '0')).join('');
 }
 
-/** Pure JS SHA1 implementation (for v5 UUID) */
+/** Pure JS SHA-1 implementation (for v5 UUID) */
 function sha1(msg: string): string {
 	const utf8 = new TextEncoder().encode(msg);
 	const K = [0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6];
@@ -115,31 +117,36 @@ function sha1(msg: string): string {
 
 	return [h0, h1, h2, h3, h4].map(toHex).join('');
 }
+
 /** Supported UUID versions */
 export type UUIDVersion = 'v1' | 'v3' | 'v4' | 'v5' | 'v6' | 'v7';
 
-export type NameNameSpace = {
-	/** Namespace for v3/v5 UUID (required for v3/v5) */
+export interface $UUIDOptionsV3V5<V extends UUIDVersion = 'v4'> extends $UUIDOptions<V> {
+	/** Namespace for `v3`/`v5` UUID */
 	namespace: string;
-	/** Name for v3/v5 UUID (required for v3/v5) */
+	/** Name for `v3`/`v5` UUID */
 	name: string;
-};
-/** * Options for generating UUID */
-export type UUIDOptions<Version extends UUIDVersion = 'v4'> = {
-	/** UUID version, default 4 */
-	version?: Version;
-	/** Whether to use uppercase characters (default false) */
-	uppercase?: boolean;
-} & (Version extends 'v3' | 'v5' ? NameNameSpace : Partial<NameNameSpace>);
-
-/** Generate a random hex digit (0-f) */
-function _randomHex(): string {
-	return Math.floor(Math.random() * 16).toString(16);
 }
+
+export interface $UUIDOptions<V extends UUIDVersion = 'v4'> {
+	/** UUID version, default `'v4'` */
+	version?: V | UUIDVersion;
+	/** Whether to use uppercase characters (default `false`) */
+	uppercase?: boolean;
+}
+
+/** * Options for generating UUID */
+export type UUIDOptions<V extends UUIDVersion = 'v4'> =
+	V extends 'v3' | 'v5' ? $UUIDOptionsV3V5<V> : $UUIDOptions<V>;
+
+// /** Generate a random hex digit (0-f) */
+// function _randomHex(): string {
+// 	return Math.floor(Math.random() * 16).toString(16);
+// }
 
 /** Generate a random string of given length (hex) */
 function _randomHexString(length: number): string {
-	return Array.from({ length }, (_) => _randomHex()).join('');
+	return Array.from({ length }, () => Math.floor(Math.random() * 16).toString(16)).join('');
 }
 
 // /** Simple MD5 (for v3) */
@@ -149,15 +156,26 @@ function _randomHexString(length: number): string {
 //   return _randomHexString(32); // placeholder for simplicity
 // }
 
-// /** Simple SHA1 (for v5) */
+// /** Simple SHA-1 (for v5) */
 // function sha1(str: string): string {
 //   // Lightweight implementation omitted for brevity
 //   return _randomHexString(40); // placeholder for simplicity
 // }
 
 /** Convert a hex string to UUID format */
-function _formatUUID(hex: string, version: number): string {
-	return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${version}${hex.slice(13, 16)}-${_hexVariant(hex.slice(16, 18))}-${hex.slice(18, 32)}`;
+function _formatUUID(hex: string, version: number, uppercase: boolean): string {
+	const v = String(version);
+	const part1 = hex.slice(0, 8);
+	const part2 = hex.slice(8, 12);
+	// replace the first nibble of the 3rd group with the version digit
+	const part3 = v + hex.slice(13, 16); // positions 12 replaced by version; keep 13..15
+	const variantByte = _hexVariant(hex.slice(16, 18)); // adjust byte at positions 16..17 (2 hex chars)
+	const part4 = variantByte + hex.slice(18, 20); // combine with positions 18..19
+	const part5 = hex.slice(20, 32);
+
+	const formatted = [part1, part2, part3, part4, part5].join('-');
+
+	return uppercase ? formatted.toUpperCase() : formatted;
 }
 
 /** Ensure UUID variant is RFC4122 compliant */
@@ -166,54 +184,61 @@ function _hexVariant(hex: string): string {
 	return ((v & 0x3f) | 0x80).toString(16).padStart(2, '0');
 }
 
+/** Check if the uuid `options` is compatible for `v3` and `v5` */
+function _isV3OrV5(opt: unknown): opt is Record<'name' | 'namespace', string> {
+	if (isObjectWithKeys(opt, ['name', 'namespace'])) {
+		return isString(opt?.namespace) && isString(opt?.name);
+	}
+
+	return false;
+}
+
 /**
- * Generate UUID (v1, v3, v4, v5, v6, v7)
- * - v1: timestamp-based (with randomness)
- * - v3: MD5 namespace-based
- * - v4: pure random
- * - v5: SHA1 namespace-based
- * - v6, v7: timestamp-first versions
+ * * Generate UUID (`v1`, `v3`, `v4`, `v5`, `v6` and `v7`). Default generated UUID is `v4`.
+ *   - `v1`: Timestamp-based (with randomness)
+ *   - `v3`: MD5 namespace-based
+ *   - `v4`: Pure random
+ *   - `v5`: SHA-1 namespace-based
+ *   - `v6`, v7: timestamp-first versions
  *
- * @param version Version number: 1 | 3 | 4 | 5 | 6 | 7
- * @param options Optional config for v3/v5 and formatting
-// version: UUIDVersion = 4,
+ * @param options Optional config for `v3`/`v5` and formatting
  */
-export function generateUUID<Version extends UUIDVersion>(
-	options?: UUIDOptions<Version>
-): string {
-	const { version = 4 } = options || {};
+export function uuid<V extends UUIDVersion = 'v4'>(options?: UUIDOptions<V>): string {
+	const { version = 'v4', uppercase = false } = options || {};
 
 	switch (version) {
 		case 'v1': {
 			const ts = Date.now().toString(16).padStart(12, '0');
 			const rand = _randomHexString(20);
-			return _formatUUID(ts + rand, 1);
+			return _formatUUID(ts + rand, 1, uppercase);
 		}
 		case 'v3': {
-			if (!options?.namespace || !options?.name)
-				throw new Error('v3 requires namespace and name');
-			const hash = md5(options.namespace + options.name);
-			return _formatUUID(hash, 3);
+			if (_isV3OrV5(options)) {
+				const hash = md5(options.namespace + options.name);
+				return _formatUUID(hash, 3, uppercase);
+			}
+			throw new Error('v3 requires namespace and name');
 		}
 		case 'v4': {
 			const rand = _randomHexString(32);
-			return _formatUUID(rand, 4);
+			return _formatUUID(rand, 4, uppercase);
 		}
 		case 'v5': {
-			if (!options?.namespace || !options?.name)
-				throw new Error('v5 requires namespace and name');
-			const hash = sha1(options.namespace + options.name).slice(0, 32);
-			return _formatUUID(hash, 5);
+			if (_isV3OrV5(options)) {
+				const hash = sha1(options.namespace + options.name).slice(0, 32);
+				return _formatUUID(hash, 5, uppercase);
+			}
+			throw new Error('v5 requires namespace and name');
 		}
 		case 'v6': {
 			const ts = Date.now().toString(16).padStart(12, '0');
 			const rand = _randomHexString(20);
-			return _formatUUID(ts + rand, 6);
+			return _formatUUID(ts + rand, 6, uppercase);
 		}
 		case 'v7': {
 			const ts = Date.now().toString(16).padStart(12, '0');
 			const rand = _randomHexString(20);
-			return _formatUUID(ts + rand, 7);
+			return _formatUUID(ts + rand, 7, uppercase);
 		}
 		default:
 			throw new RangeError('Unsupported UUID version!');
