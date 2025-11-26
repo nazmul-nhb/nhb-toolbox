@@ -3,8 +3,11 @@ import { _formatUUID, _isV3OrV5, _runMd5Rounds } from './helpers';
 import type { DecodedUUID, UUIDOptions, UUIDVersion } from './types';
 
 /** Generate a random string of given length (hex) */
-export function randomHexString(length: number): string {
-	return Array.from({ length }, () => Math.floor(Math.random() * 16).toString(16)).join('');
+export function randomHex(length: number, uppercase = false): string {
+	const genHex = () => Math.floor(Math.random() * 16).toString(16);
+	const hex = Array.from({ length }, genHex).join('');
+
+	return uppercase ? hex.toUpperCase() : hex;
 }
 
 /** Simple pure JS MD5 implementation (for v3 UUID) */
@@ -121,7 +124,7 @@ export function uuid<V extends UUIDVersion = 'v4'>(options?: UUIDOptions<V>): st
 	switch (version) {
 		case 'v1': {
 			const ts = Date.now().toString(16).padStart(12, '0');
-			const rand = randomHexString(20);
+			const rand = randomHex(20);
 			return _formatUUID(ts + rand, 1, uppercase);
 		}
 		case 'v3': {
@@ -132,7 +135,7 @@ export function uuid<V extends UUIDVersion = 'v4'>(options?: UUIDOptions<V>): st
 			throw new Error('v3 requires namespace and name');
 		}
 		case 'v4': {
-			const rand = randomHexString(32);
+			const rand = randomHex(32);
 			return _formatUUID(rand, 4, uppercase);
 		}
 		case 'v5': {
@@ -144,12 +147,12 @@ export function uuid<V extends UUIDVersion = 'v4'>(options?: UUIDOptions<V>): st
 		}
 		case 'v6': {
 			const ts = Date.now().toString(16).padStart(12, '0');
-			const rand = randomHexString(20);
+			const rand = randomHex(20);
 			return _formatUUID(ts + rand, 6, uppercase);
 		}
 		case 'v7': {
 			const ts = Date.now().toString(16).padStart(12, '0');
-			const rand = randomHexString(20);
+			const rand = randomHex(20);
 			return _formatUUID(ts + rand, 7, uppercase);
 		}
 		default:
