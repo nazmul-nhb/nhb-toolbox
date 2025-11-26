@@ -156,6 +156,11 @@
       "import": "./dist/esm/converter/Converter.js",
       "require": "./dist/cjs/converter/Converter.js"
     },
+    "./hash": {
+      "types": "./dist/dts/hash/index.d.ts",
+      "import": "./dist/esm/hash/index.js",
+      "require": "./dist/cjs/hash/index.js"
+    },
     "./pluralizer": {
       "types": "./dist/dts/pluralizer/Pluralizer.d.ts",
       "import": "./dist/esm/pluralizer/Pluralizer.js",
@@ -195,6 +200,10 @@
     "./form/types": {
       "types": "./dist/dts/form/types.d.ts",
       "default": "./dist/dts/form/types.d.ts"
+    },
+    "./hash/types": {
+      "types": "./dist/dts/hash/types.d.ts",
+      "default": "./dist/dts/hash/types.d.ts"
     },
     "./http-status/types": {
       "types": "./dist/dts/http-status/types.d.ts",
@@ -300,6 +309,9 @@
       "converter": [
         "dist/dts/converter/Converter.d.ts"
       ],
+      "hash": [
+        "dist/dts/hash/index.d.ts"
+      ],
       "pluralizer": [
         "dist/dts/pluralizer/Pluralizer.d.ts"
       ],
@@ -326,6 +338,9 @@
       ],
       "form/types": [
         "dist/dts/form/types.d.ts"
+      ],
+      "hash/types": [
+        "dist/dts/hash/types.d.ts"
       ],
       "http-status/types": [
         "dist/dts/http-status/types.d.ts"

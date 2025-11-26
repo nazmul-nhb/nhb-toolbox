@@ -71,6 +71,11 @@ export default defineScriptConfig({
 							import: './dist/esm/converter/Converter.js',
 							require: './dist/cjs/converter/Converter.js',
 						},
+						'./hash': {
+							types: './dist/dts/hash/index.d.ts',
+							import: './dist/esm/hash/index.js',
+							require: './dist/cjs/hash/index.js',
+						},
 						'./pluralizer': {
 							types: './dist/dts/pluralizer/Pluralizer.d.ts',
 							import: './dist/esm/pluralizer/Pluralizer.js',
