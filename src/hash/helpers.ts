@@ -1,7 +1,8 @@
 import { isObjectWithKeys } from '../guards/non-primitives';
-import { isString } from '../guards/primitives';
+import { isNonEmptyString } from '../guards/primitives';
+import { isUUID } from '../guards/specials';
 import { randomHex } from './index';
-import type { UUID, UUIDVersion } from './types';
+import type { $UUIDOptionsV3V5, UUID, UUIDVersion } from './types';
 
 /** Executes all 64 MD5 operations in a DRY way */
 export function _runMd5Rounds(words: number[], h: number[]): void {
@@ -9,35 +10,35 @@ export function _runMd5Rounds(words: number[], h: number[]): void {
 
 	/** Round operation functions */
 	const funcs = [
-		(b: number, c: number, d: number) => (b & c) | (~b & d), // ff
-		(b: number, c: number, d: number) => (b & d) | (c & ~d), // gg
-		(b: number, c: number, d: number) => b ^ c ^ d, // hh
-		(b: number, c: number, d: number) => c ^ (b | ~d), // ii
+		(x: number, y: number, z: number) => (x & y) | (~x & z), // ff
+		(x: number, y: number, z: number) => (x & z) | (y & ~z), // gg
+		(x: number, y: number, z: number) => x ^ y ^ z, // hh
+		(x: number, y: number, z: number) => y ^ (x | ~z), // ii
 	] as const;
 
-	const r1 = [7, 12, 17, 22];
-	const r2 = [5, 9, 14, 20];
-	const r3 = [4, 11, 16, 23];
-	const r4 = [6, 10, 15, 21];
+	const r1 = [7, 12, 17, 22]; // Round 1
+	const r2 = [5, 9, 14, 20]; // Round 2
+	const r3 = [4, 11, 16, 23]; // Round 3
+	const r4 = [6, 10, 15, 21]; // Round 4
 
 	/** Shift amounts (official MD5 spec) */
 	const shifts = [
-		...r1, // Round 1
-		...r1, // Round 1
-		...r1, // Round 1
-		...r1, // Round 1
-		...r2, // Round 2
-		...r2, // Round 2
-		...r2, // Round 2
-		...r2, // Round 2
-		...r3, // Round 3
-		...r3, // Round 3
-		...r3, // Round 3
-		...r3, // Round 3
-		...r4, // Round 4
-		...r4, // Round 4
-		...r4, // Round 4
-		...r4, // Round 4
+		...r1,
+		...r1,
+		...r1,
+		...r1,
+		...r2,
+		...r2,
+		...r2,
+		...r2,
+		...r3,
+		...r3,
+		...r3,
+		...r3,
+		...r4,
+		...r4,
+		...r4,
+		...r4,
 	];
 
 	/** Constants (from RFC 1321) */
@@ -45,10 +46,11 @@ export function _runMd5Rounds(words: number[], h: number[]): void {
 		Math.floor(Math.abs(Math.sin(i + 1)) * 2 ** 32)
 	);
 
-	function rotl(x: number, c: number) {
+	function _rotl(x: number, c: number) {
 		return (x << c) | (x >>> (32 - c));
 	}
-	function add(x: number, y: number) {
+
+	function _add(x: number, y: number) {
 		return (x + y) | 0;
 	}
 
@@ -66,14 +68,14 @@ export function _runMd5Rounds(words: number[], h: number[]): void {
 		const temp = d;
 		d = c;
 		c = b;
-		b = add(b, rotl(add(add(a, f), add(words[g], K[i])), shifts[i]));
+		b = _add(b, _rotl(_add(_add(a, f), _add(words[g], K[i])), shifts[i]));
 		a = temp;
 	}
 
-	h[0] = add(h[0], a);
-	h[1] = add(h[1], b);
-	h[2] = add(h[2], c);
-	h[3] = add(h[3], d);
+	h[0] = _add(h[0], a);
+	h[1] = _add(h[1], b);
+	h[2] = _add(h[2], c);
+	h[3] = _add(h[3], d);
 }
 
 /**
@@ -110,23 +112,15 @@ export function _clockSeq14(): string {
 }
 
 /** Convert a hex string to UUID format */
-export function _formatUUID<V extends UUIDVersion>(
-	hex: string,
-	version: number,
-	uppercase: boolean
-): UUID<V> {
-	const v = String(version);
-	const part1 = hex.slice(0, 8);
-	const part2 = hex.slice(8, 12);
+export function _formatUUID<V extends UUIDVersion>(h: string, v: number, up: boolean): UUID<V> {
 	// replace the first nibble of the 3rd group with the version digit
-	const part3 = v + hex.slice(13, 16); // positions 12 replaced by version; keep 13..15
-	const variantByte = _hexVariant(hex.slice(16, 18)); // adjust byte at positions 16..17 (2 hex chars)
-	const part4 = variantByte + hex.slice(18, 20); // combine with positions 18..19
-	const part5 = hex.slice(20, 32);
+	const part3 = String(v) + h.slice(13, 16); // positions 12 replaced by version; keep 13..15
+	// adjust byte at positions 16..17 (2 hex chars) and combine with positions 18..19
+	const part4 = _hexVariant(h.slice(16, 18)) + h.slice(18, 20);
 
-	const formatted = [part1, part2, part3, part4, part5].join('-');
+	const formatted = [h.slice(0, 8), h.slice(8, 12), part3, part4, h.slice(20, 32)].join('-');
 
-	return (uppercase ? formatted.toUpperCase() : formatted) as UUID<V>;
+	return (up ? formatted.toUpperCase() : formatted) as UUID<V>;
 }
 
 /** Ensure UUID variant is RFC4122 compliant */
@@ -136,9 +130,9 @@ function _hexVariant(hex: string): string {
 }
 
 /** Check if the uuid `options` is compatible for `v3` and `v5` */
-export function _isV3OrV5(opt: unknown): opt is Record<'name' | 'namespace', string> {
+export function _isOptionV3V5(opt: unknown): opt is $UUIDOptionsV3V5<'v3' | 'v5'> {
 	if (isObjectWithKeys(opt, ['name', 'namespace'])) {
-		return isString(opt?.namespace) && isString(opt?.name);
+		return isUUID(opt?.namespace) && isNonEmptyString(opt?.name);
 	}
 
 	return false;

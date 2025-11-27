@@ -2,14 +2,29 @@ import { isUUID } from '../guards/specials';
 import {
 	_clockSeq14,
 	_formatUUID,
-	_isV3OrV5,
+	_isOptionV3V5,
 	_randomNode48,
 	_runMd5Rounds,
 	_uuidTimestamp,
 } from './helpers';
 import type { DecodedUUID, UUID, UUIDOptions, UUIDVersion } from './types';
 
-/** Generate a random string of given length (hex) */
+/**
+ * * Generates a random hexadecimal string of the specified length.
+ *
+ * @param length - Number of hex characters to generate.
+ * @param uppercase - Whether to return uppercase `A–F` characters.
+ *
+ * @returns A randomly generated hexadecimal string.
+ *
+ * @example
+ * // 16-character lowercase hex
+ * const id = randomHex(16);
+ *
+ * @example
+ * // 8-character uppercase hex
+ * const token = randomHex(8, true);
+ */
 export function randomHex(length: number, uppercase = false): string {
 	const genHex = () => Math.floor(Math.random() * 16).toString(16);
 	const hex = Array.from({ length }, genHex).join('');
@@ -17,7 +32,22 @@ export function randomHex(length: number, uppercase = false): string {
 	return uppercase ? hex.toUpperCase() : hex;
 }
 
-/** Simple pure JS MD5 implementation (for v3 UUID) */
+/**
+ * * Computes an `MD5` digest of the given string using a pure JavaScript implementation.
+ *
+ * @remarks
+ * - Pure JavaScript implementation — runs on any JS engine.
+ * - Output is deterministic but may differ from other MD5 implementations due to algorithmic or encoding variations.
+ *
+ * @param str - Input text to hash.
+ *
+ * @returns The `MD5` hash as a 32-character hex string.
+ *
+ * @example
+ * const hash = md5("hello");
+ * // → "2a40415d762a4bbc919d71b992c51710"
+ */
+
 export function md5(str: string): string {
 	// Initial hash values
 	const h = [1732584193, -271733879, -1732584194, 271733878];
@@ -45,7 +75,25 @@ export function md5(str: string): string {
 	return h.map((n) => (n >>> 0).toString(16).padStart(8, '0')).join('');
 }
 
-/** Pure JS SHA-1 implementation — correct 80-word message schedule */
+/**
+ * * Computes a `SHA-1` digest of the given string using a pure JavaScript implementation.
+ *
+ * @remarks
+ * - Pure JavaScript implementation — runs on any JS engine.
+ * - Output is deterministic but may differ from other MD5 implementations due to algorithmic or encoding variations.
+ *
+ * @param msg - Input text to hash.
+ *
+ * @returns The `SHA-1` hash as a 40-character hex string.
+ *
+ * @example
+ * const hash = sha1("hello");
+ * // → "aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d"
+ *
+ * @example
+ * // Used inside UUID v5
+ * const digest = sha1(namespace + name);
+ */
 export function sha1(msg: string): string {
 	const utf8 = new TextEncoder().encode(msg);
 
@@ -187,11 +235,11 @@ export function uuid<V extends UUIDVersion = 'v4'>(options?: UUIDOptions<V>): UU
 			return _formatUUID(raw, 1, uppercase);
 		}
 		case 'v3': {
-			if (_isV3OrV5(options)) {
+			if (_isOptionV3V5(options)) {
 				const hash = md5(options.namespace + options.name);
 				return _formatUUID(hash, 3, uppercase);
 			}
-			throw new Error('v3 requires namespace and name!');
+			throw new Error('v3 requires valid namespace (uuid) and name!');
 		}
 		case 'v4': {
 			const bytes = new Uint8Array(16);
@@ -206,15 +254,14 @@ export function uuid<V extends UUIDVersion = 'v4'>(options?: UUIDOptions<V>): UU
 				hex += bytes[i].toString(16).padStart(2, '0');
 			}
 
-			// Let your formatter insert version+variant
 			return _formatUUID(hex, 4, uppercase);
 		}
 		case 'v5': {
-			if (_isV3OrV5(options)) {
+			if (_isOptionV3V5(options)) {
 				const hash = sha1(options.namespace + options.name).slice(0, 32);
 				return _formatUUID(hash, 5, uppercase);
 			}
-			throw new Error('v5 requires namespace and name!');
+			throw new Error('v5 requires valid namespace (uuid) and name!');
 		}
 		case 'v6': {
 			const timestamp = _uuidTimestamp().toString(16).padStart(15, '0');
@@ -301,6 +348,7 @@ export function uuid<V extends UUIDVersion = 'v4'>(options?: UUIDOptions<V>): UU
 export function decodeUUID(uuid: string): DecodedUUID | null {
 	if (!isUUID(uuid)) return null;
 
+	const plain = uuid.replace(/-/g, '');
 	const parts = uuid.toLowerCase().split('-');
 	const version = parseInt(parts[2][0], 16) as DecodedUUID['version'];
 	const variantNibble = parseInt(parts[3][0], 16);
@@ -312,74 +360,43 @@ export function decodeUUID(uuid: string): DecodedUUID | null {
 	else if ((variantNibble & 0b1110) === 0b1100) variant = 'Microsoft';
 	else variant = 'Future';
 
-	const decoded: DecodedUUID = { version, variant, raw: uuid };
+	const decoded: DecodedUUID = {
+		version,
+		variant,
+		raw: uuid,
+		plain,
+		singleInt: BigInt('0x' + plain),
+	};
 
 	// UUID epoch offset (from Gregorian: 1582-10-15 → Unix epoch)
 	const UUID_EPOCH_DIFF = 122192928000000000n; // 100ns units
 
-	// ---------------------------
-	// v1 — Timestamp + ClockSeq + Node
-	// ---------------------------
-	if (version === 1) {
-		const timeLow = parts[0];
-		const timeMid = parts[1];
-		const timeHi = parts[2].slice(1); // remove version nibble
-
-		const tsHex = timeHi + timeMid + timeLow;
-		const raw100ns = BigInt('0x' + tsHex);
+	if (version === 1 || version === 6) {
+		// remove version nibble with parts[2].slice(1)
+		let tsHex = parts[2].slice(1) + parts[1] + parts[0];
+		if (version === 6) tsHex = parts[0] + parts[1] + parts[2].slice(1);
 
 		// Convert 100ns → Unix ms
-		const unixMs = Number((raw100ns - UUID_EPOCH_DIFF) / 10000n);
+		const unixMs = Number((BigInt('0x' + tsHex) - UUID_EPOCH_DIFF) / 10000n);
 		decoded.timestamp = unixMs;
 
-		decoded.clockSeq = parseInt(parts[3].slice(1), 16);
 		decoded.node = parts[4];
 		return decoded;
 	}
 
-	// ---------------------------
-	// v6 — Reordered timestamp format (RFC 9562)
-	// ---------------------------
-	if (version === 6) {
-		const timeHi = parts[0];
-		const timeMid = parts[1];
-		const timeLow = parts[2].slice(1); // strip version nibble
-
-		const tsHex = timeHi + timeMid + timeLow;
-		const raw100ns = BigInt('0x' + tsHex);
-		const unixMs = Number((raw100ns - UUID_EPOCH_DIFF) / 10000n);
-
-		decoded.timestamp = unixMs;
-
-		decoded.clockSeq = parseInt(parts[3].slice(1), 16);
-		decoded.node = parts[4];
-		return decoded;
-	}
-
-	// ---------------------------
-	// v7 — Unix-time UUID
-	// ---------------------------
 	if (version === 7) {
-		const tsHex = parts[0]; // 48-bit timestamp
-		decoded.timestamp = parseInt(tsHex, 16);
+		decoded.timestamp = parseInt(parts[0], 16); // 48-bit timestamp
 		return decoded;
 	}
 
-	// ---------------------------
-	// v8 — User-defined layout (attempt partial decode)
-	// ---------------------------
 	if (version === 8) {
-		// Your v8 layout: first 6 bytes = timestamp
-		const hex = parts.join('');
-		const tsHex = hex.slice(0, 12); // 48 bits
+		// first 6 bytes = timestamp
+		const tsHex = parts.join('').slice(0, 12); // 48 bits
 
 		decoded.variant = 'Future';
 		decoded.timestamp = parseInt(tsHex, 16);
 		return decoded;
 	}
 
-	// ---------------------------
-	// v3, v4, v5 — Hash or random UUIDs (no timestamp data)
-	// ---------------------------
 	return decoded;
 }
