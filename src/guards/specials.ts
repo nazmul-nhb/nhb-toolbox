@@ -1,3 +1,4 @@
+import type { UUID, UUIDVersion } from '../hash/types';
 import { isArray } from './non-primitives';
 import { isString } from './primitives';
 
@@ -29,17 +30,14 @@ export function isDateString(value: unknown): value is string {
 }
 
 /**
- * * Type guard to check if a value is a valid UUID (v1-7).
+ * * Type guard to check if a value is a valid UUID (v1-8).
  * @param value - The value to check.
  * @returns `true` if the value is a valid UUID, otherwise `false`.
  */
-export function isUUID(value: unknown): value is string {
-	const hex = '[0-9a-f]';
-	const exp = new RegExp(
-		`^${hex}{8}-${hex}{4}-[1-7]${hex}{3}-[89ab]${hex}{3}-${hex}{12}$`,
-		'i'
-	);
-	return isString(value) && exp.test(value);
+export function isUUID(value: unknown): value is UUID<UUIDVersion> {
+	const h = '[0-9a-f]';
+	const expr = new RegExp(`^${h}{8}-${h}{4}-[1-8]${h}{3}-[89ab]${h}{3}-${h}{12}$`, 'i');
+	return isString(value) && expr.test(value);
 }
 
 /**

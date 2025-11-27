@@ -1,7 +1,13 @@
-/** Supported UUID versions */
-export type UUIDVersion = 'v1' | 'v3' | 'v4' | 'v5' | 'v6' | 'v7';
+import type { Branded } from '../types/index';
 
-export interface $UUIDOptionsV3V5<V extends UUIDVersion = 'v4'> extends $UUIDOptions<V> {
+/** Supported UUID versions */
+export type UUIDVersion = 'v1' | 'v3' | 'v4' | 'v5' | 'v6' | 'v7' | 'v8';
+
+export type $UUID = `${string}-${string}-${string}-${string}-${string}`;
+
+export type UUID<V extends UUIDVersion> = Branded<$UUID, V>;
+
+export interface $UUIDOptionsV3V5<V extends 'v3' | 'v5'> extends $UUIDOptions<V> {
 	/** Namespace for `v3`/`v5` UUID */
 	namespace: string;
 	/** Name for `v3`/`v5` UUID */
@@ -21,7 +27,7 @@ export type UUIDOptions<V extends UUIDVersion = 'v4'> =
 
 /** Type representing decoded UUID info */
 export interface DecodedUUID {
-	version: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+	version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 	variant: 'NCS' | 'RFC4122' | 'Microsoft' | 'Future';
 	timestamp?: number; // for v1 & v6 (in ms since epoch)
 	node?: string; // v1 node (MAC)

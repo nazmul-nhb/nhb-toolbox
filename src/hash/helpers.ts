@@ -1,5 +1,7 @@
 import { isObjectWithKeys } from '../guards/non-primitives';
 import { isString } from '../guards/primitives';
+import { randomHex } from './index';
+import type { UUID, UUIDVersion } from './types';
 
 /** Executes all 64 MD5 operations in a DRY way */
 export function _runMd5Rounds(words: number[], h: number[]): void {
@@ -74,8 +76,45 @@ export function _runMd5Rounds(words: number[], h: number[]): void {
 	h[3] = add(h[3], d);
 }
 
+/**
+ * Computes UUID timestamp in 100-nanosecond intervals since
+ * 00:00:00.00 15 October 1582 (Gregorian epoch).
+ */
+export function _uuidTimestamp(): bigint {
+	const UUID_EPOCH_DIFF = 12219292800000n; // milliseconds
+	const unixMs = BigInt(Date.now());
+	const uuidMs = unixMs + UUID_EPOCH_DIFF;
+	return uuidMs * 10000n; // convert ms → 100ns intervals
+}
+
+/**
+ * Generates a random 48-bit node ID.
+ * LSB of first byte must be 1 to indicate a randomly generated node.
+ */
+export function _randomNode48(): string {
+	const node = randomHex(12).split('');
+
+	// Set multicast bit (LSB of first octet)
+	const firstByte = parseInt(node.slice(0, 2).join(''), 16);
+	const modified = (firstByte | 0b00000001).toString(16).padStart(2, '0');
+
+	return modified + node.slice(2).join('');
+}
+
+/**
+ * Generates a 14-bit clock sequence (2 bytes, but only 14 bits used).
+ */
+export function _clockSeq14(): string {
+	const seq = parseInt(randomHex(4), 16) & 0x3fff; // mask to 14 bits
+	return seq.toString(16).padStart(4, '0');
+}
+
 /** Convert a hex string to UUID format */
-export function _formatUUID(hex: string, version: number, uppercase: boolean): string {
+export function _formatUUID<V extends UUIDVersion>(
+	hex: string,
+	version: number,
+	uppercase: boolean
+): UUID<V> {
 	const v = String(version);
 	const part1 = hex.slice(0, 8);
 	const part2 = hex.slice(8, 12);
@@ -87,7 +126,7 @@ export function _formatUUID(hex: string, version: number, uppercase: boolean): s
 
 	const formatted = [part1, part2, part3, part4, part5].join('-');
 
-	return uppercase ? formatted.toUpperCase() : formatted;
+	return (uppercase ? formatted.toUpperCase() : formatted) as UUID<V>;
 }
 
 /** Ensure UUID variant is RFC4122 compliant */
