@@ -2,6 +2,17 @@ import type { $Countries } from '../object/types';
 import type { Join, LooseLiteral, Split } from '../utils/types';
 import type { LOWERCASE } from './constants';
 
+/** - Options for generating anagrams. */
+export interface AnagramOptions {
+	/** Limit the anagrams output. Default is `100`. */
+	limit?: number | 'all';
+	/**
+	 * - Dictionary data (array of strings). Default is `false`.
+	 * 	 - If an array of strings is passed only the anagrams found in that dictionary will be returned.
+	 */
+	dictionary?: false | string[];
+}
+
 /** - Options for `capitalizeString` function. */
 export interface CapitalizeOptions {
 	/** If true, capitalizes the first letter of each word (space separated). Defaults to `false`. */
@@ -31,14 +42,6 @@ export interface RandomIdOptions {
 
 	/** Specifies the case for the random alphanumeric string. Default is `null`. */
 	caseOption?: 'upper' | 'lower' | null;
-}
-
-/** - Options for generating anagrams. */
-export interface AnagramOptions {
-	/** Limit the anagrams output. Default is `100`. */
-	limit?: number | 'all';
-	/** Whether to lookup in the dictionary. Default is `false`. */
-	validWords?: boolean;
 }
 
 /** - Case formats for converting a string */
