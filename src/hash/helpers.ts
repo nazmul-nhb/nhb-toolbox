@@ -2,7 +2,7 @@ import { isObjectWithKeys } from '../guards/non-primitives';
 import { isNonEmptyString } from '../guards/primitives';
 import { isUUID } from '../guards/specials';
 import { randomHex } from './index';
-import type { $UUIDOptionsV3V5, UUID, UUIDVersion } from './types';
+import type { $UUIDOptionsV3V5, $UUIDVersion, UUID, UUIDVersion } from './types';
 
 /** Executes all 64 MD5 operations in a DRY way */
 export function _runMd5Rounds(words: number[], h: number[]): void {
@@ -136,4 +136,9 @@ export function _isOptionV3V5(opt: unknown): opt is $UUIDOptionsV3V5<'v3' | 'v5'
 	}
 
 	return false;
+}
+
+/** Check UUID version after checking for valid UUID from `v1-v8` */
+export function _checkUUIDVersion(value: unknown, v: `${$UUIDVersion}`) {
+	return isUUID(value) && value[14] === v;
 }

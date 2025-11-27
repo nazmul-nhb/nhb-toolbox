@@ -1,5 +1,6 @@
 import { isUUID } from '../guards/specials';
 import {
+	_checkUUIDVersion,
 	_clockSeq14,
 	_formatUUID,
 	_isOptionV3V5,
@@ -7,7 +8,7 @@ import {
 	_runMd5Rounds,
 	_uuidTimestamp,
 } from './helpers';
-import type { DecodedUUID, UUID, UUIDOptions, UUIDVersion } from './types';
+import type { $UUIDVersion, DecodedUUID, SupportedVersion, UUID, UUIDOptions } from './types';
 
 /**
  * * Generates a random hexadecimal string of the specified length.
@@ -164,7 +165,7 @@ export function sha1(msg: string): string {
 }
 
 /**
- * * Generates UUIDs across all major RFC-compliant versions (1, 3, 4, 5, 6, 7, 8), following standards from both RFC 4122 and RFC 9562.
+ * * Generates UUIDs across all major RFC-compliant versions (1, 3, 4, 5, 6, 7, 8), following standards from both `RFC4122` and `RFC9562`. Default version is `v4`.
  *
  * - **Version behavior:**
  *   - `v1` → Timestamp & node-identifier–based
@@ -175,8 +176,8 @@ export function sha1(msg: string): string {
  *   - `v7` → Unix-time–based, monotonic-friendly
  *   - `v8` → `RFC-9562` custom layout (timestamp + randomness)
  *
- * @param options Controls version, formatting, and required fields for v3/v5.
- * @returns A UUID string formatted using `_formatUUID`, with correct version/variant bits.
+ * @param options Controls version, formatting, and required fields for `v3` and `v5`.
+ * @returns A 5-parts UUID string formatted with correct version/variant bits.
  *
  * @example
  * // Generate a random UUID v4
@@ -207,7 +208,7 @@ export function sha1(msg: string): string {
  *   - `v7`: Millisecond precision; extremely high throughput may still cause rare collisions.
  *   - `v8`: Uses a simple timestamp + randomness layout; custom layouts are not supported here.
  */
-export function uuid<V extends UUIDVersion = 'v4'>(options?: UUIDOptions<V>): UUID<V> {
+export function uuid<V extends SupportedVersion = 'v4'>(options?: UUIDOptions<V>): UUID<V> {
 	const { version = 'v4', uppercase = false } = options || {};
 
 	switch (version) {
@@ -350,7 +351,7 @@ export function decodeUUID(uuid: string): DecodedUUID | null {
 
 	const plain = uuid.replace(/-/g, '');
 	const parts = uuid.toLowerCase().split('-');
-	const version = parseInt(parts[2][0], 16) as DecodedUUID['version'];
+	const version = parseInt(parts[2][0], 16) as $UUIDVersion;
 	const variantNibble = parseInt(parts[3][0], 16);
 
 	// Variant detection (RFC4122 rules)
@@ -400,3 +401,45 @@ export function decodeUUID(uuid: string): DecodedUUID | null {
 
 	return decoded;
 }
+
+/** Check if a value is UUID version 1 */
+export function isUUIDv1(value: unknown): value is UUID<'v1'> {
+	return _checkUUIDVersion(value, '1');
+}
+
+/** Check if a value is UUID version 2 */
+export function isUUIDv2(value: unknown): value is UUID<'v2'> {
+	return _checkUUIDVersion(value, '2');
+}
+
+/** Check if a value is UUID version 3 */
+export function isUUIDv3(value: unknown): value is UUID<'v3'> {
+	return _checkUUIDVersion(value, '3');
+}
+
+/** Check if a value is UUID version 4 */
+export function isUUIDv4(value: unknown): value is UUID<'v4'> {
+	return _checkUUIDVersion(value, '4');
+}
+
+/** Check if a value is UUID version 5 */
+export function isUUIDv5(value: unknown): value is UUID<'v5'> {
+	return _checkUUIDVersion(value, '5');
+}
+
+/** Check if a value is UUID version 6 */
+export function isUUIDv6(value: unknown): value is UUID<'v6'> {
+	return _checkUUIDVersion(value, '6');
+}
+
+/** Check if a value is UUID version 7 */
+export function isUUIDv7(value: unknown): value is UUID<'v7'> {
+	return _checkUUIDVersion(value, '7');
+}
+
+/** Check if a value is UUID version 8 */
+export function isUUIDv8(value: unknown): value is UUID<'v8'> {
+	return _checkUUIDVersion(value, '8');
+}
+
+export { isUUID };
