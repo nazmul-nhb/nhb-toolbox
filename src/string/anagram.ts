@@ -4,7 +4,7 @@ import type { AnagramOptions } from './types';
 /**
  * * Utility to generate unique anagrams of a word.
  * @param word The word for generating anagrams.
- * @param limit The maximum number of anagrams to return ('all' for unlimited). Default is `100`.
+ * @param options The options to control the behavior: limit the output, whether to lookup in the dictionary.
  * @returns An array of generated anagrams. The first element is always the given word. Generated anagrams are always in lowercase.
  */
 export function generateAnagrams(word: string, options?: AnagramOptions): Lowercase<string>[] {
@@ -15,7 +15,7 @@ export function generateAnagrams(word: string, options?: AnagramOptions): Lowerc
 	const { limit = 100, dictionary: dict = false } = options || {};
 
 	const uniqueAnagrams = new Set<string>();
-	const dictionarySet = dict && isValidArray(dict) ? new Set(dict) : undefined;
+	const dictionarySet = isValidArray<string>(dict) ? new Set(dict) : undefined;
 
 	/** * Helper function to generate permutations. */
 	const _permute = (current: string, remaining: string) => {

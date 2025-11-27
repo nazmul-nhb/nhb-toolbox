@@ -7,8 +7,8 @@ export interface AnagramOptions {
 	/** Limit the anagrams output. Default is `100`. */
 	limit?: number | 'all';
 	/**
-	 * - Dictionary data (array of strings). Default is `false`.
-	 * 	 - If an array of strings is passed only the anagrams found in that dictionary will be returned.
+	 * - Whether to lookup in the dictionary (or array of strings). Default is `false`.
+	 * 	 - If an array of strings is passed only the anagrams found in that array will be returned.
 	 */
 	dictionary?: false | string[];
 }
