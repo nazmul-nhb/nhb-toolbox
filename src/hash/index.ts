@@ -200,13 +200,15 @@ export function sha1(msg: string): string {
  * - **Notes**
  *   - `v1` and `v6` use a generated pseudo-node identifier.
  *   - `v4`, `v7`, `v8` **do not rely on crypto APIs**, preserving engine-agnostic behavior.
- *   - `v3` and `v5` use internal MD5/SHA-1 implementations and remain fully deterministic.
+ *   - `v3` and `v5` use internal `MD5`/`SHA-1` implementations and remain fully deterministic.
  *
  * - **Limitations**
  *   - `v1`/`v6`: Node identifier is pseudo-random, not derived from real MAC addresses (for privacy).
- *   - `v3`/`v5`: Hash algorithms (MD5/SHA-1) follow RFC specs but are not cryptographically secure.
+ *   - `v3`/`v5`: Hash algorithms (`MD5`/`SHA-1`) follow RFC specs but are not cryptographically secure.
  *   - `v7`: Millisecond precision; extremely high throughput may still cause rare collisions.
  *   - `v8`: Uses a simple timestamp + randomness layout; custom layouts are not supported here.
+ *
+ * - Use {@link https://toolbox.nazmul-nhb.dev/docs/utilities/string/generateRandomID generateRandomID} for customized id generation or {@link randomHex} for hex-only string with custom length.
  */
 export function uuid<V extends SupportedVersion = 'v4'>(options?: UUIDOptions<V>): UUID<V> {
 	const { version = 'v4', uppercase = false } = options || {};
@@ -438,3 +440,4 @@ export function isUUIDv8(value: unknown): value is UUID<'v8'> {
 }
 
 export { isUUID };
+export { generateRandomID } from '../string/basics';

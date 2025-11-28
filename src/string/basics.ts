@@ -36,14 +36,14 @@ export const generateRandomID = (options?: RandomIdOptions): string => {
 	} = options || {};
 
 	// generate timestamp
-	const date: number | string = timeStamp ? Date.now() : '';
+	const date = timeStamp ? Date.now() : '';
 
 	// Generate a random string of alphanumeric characters
 	const randomString: string = Array.from({ length }, () =>
 		Math.random().toString(36).slice(2, 3)
 	).join('');
 
-	const ID: string = [prefix && prefix.trim(), date, randomString, suffix && suffix.trim()]
+	const ID = [prefix && prefix.trim(), date, randomString, suffix && suffix.trim()]
 		?.filter(Boolean)
 		?.join(separator);
 
