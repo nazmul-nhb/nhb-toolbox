@@ -12,6 +12,7 @@ function _getDictSet(dict: string[]) {
 	const dictSet = new Set(dict.map((w) => w.toLowerCase()));
 
 	DICT_CACHE.set(dict, dictSet);
+
 	return dictSet;
 }
 

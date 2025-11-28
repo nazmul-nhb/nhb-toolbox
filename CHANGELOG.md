@@ -6,14 +6,14 @@ All notable changes to the package will be documented here.
 
 ---
 
-## [4.27.00] - 2025-11-28
+## [4.27.0] - 2025-11-28
 
 ### New
 
 - **Added** *typed* **string case converters** which can only be imported via the *subpath* `'nhb-toolbox/change-case'`.
   - **Also added** *new* utility types for formatting case(s) in type level.
 - **Added** *new* hash utilities: `randomHex`, `md5`, `sha1`, `uuid`. `decodeUUID` and *uuid version checkers* derived from `isUUID`.
-  - **Hash** utilities can only be imported via the *subpath* `'nhb-toolbox/hash'`
+  - **Hash utilities** can only be imported via the *subpath* `'nhb-toolbox/hash'`
 - **Added** *new* `definePrototypeMethod` utility to inject *prototype* methods in a safe (also *type-safe*) manner.
 
 ### Updates

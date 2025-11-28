@@ -32,7 +32,7 @@ export function isDateString(value: unknown): value is string {
 /**
  * * Type guard to check if a value is a valid UUID (`RFC4122` `v1`-`v8`).
  * @param value - The value to check.
- * @returns `true` if the value is a valid UUID, otherwise `false`.
+ * @returns `true` if the value matches standard UUID pattern, otherwise `false`.
  */
 export function isUUID(value: unknown): value is UUID<UUIDVersion> {
 	const h = '[0-9a-f]';
