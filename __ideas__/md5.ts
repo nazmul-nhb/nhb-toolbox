@@ -20,27 +20,25 @@ function _numArrayToHex(x: number[]): string {
 
 /** Converts a 64-character string block to an array of 16 numbers */
 function _stringToNumbers(s: string): number[] {
-	const md5blocks: number[] = [];
+	return Array.from({ length: 16 }, (_, i) => {
+		const x = i << 2;
 
-	for (let i = 0; i < 64; i += 4) {
-		md5blocks[i >> 2] =
-			s.charCodeAt(i) +
-			(s.charCodeAt(i + 1) << 8) +
-			(s.charCodeAt(i + 2) << 16) +
-			(s.charCodeAt(i + 3) << 24);
-	}
-
-	return md5blocks;
+		return (
+			s.charCodeAt(x) |
+			(s.charCodeAt(x + 1) << 8) |
+			(s.charCodeAt(x + 2) << 16) |
+			(s.charCodeAt(x + 3) << 24)
+		);
+	});
 }
 
-// Common and core MD5 transformation functions
+/** Common MD5 transformation function */
 function _transform(q: number, a: number, b: number, x: number, s: number, t: number): number {
 	const a1 = _add32(_add32(a, q), _add32(x, t));
 	return _add32((a1 << s) | (a1 >>> (32 - s)), b);
 }
 
-/** Round 1 operation */
-function ff(
+type MD5Round = (
 	a: number,
 	b: number,
 	c: number,
@@ -48,50 +46,29 @@ function ff(
 	x: number,
 	s: number,
 	t: number
-): number {
+) => number;
+
+/** Round 1 operation */
+const ff: MD5Round = (a, b, c, d, x, s, t) => {
 	return _transform((b & c) | (~b & d), a, b, x, s, t);
-}
+};
 
 /** Round 2 operation */
-function gg(
-	a: number,
-	b: number,
-	c: number,
-	d: number,
-	x: number,
-	s: number,
-	t: number
-): number {
+const gg: MD5Round = (a, b, c, d, x, s, t) => {
 	return _transform((b & d) | (c & ~d), a, b, x, s, t);
-}
+};
 
 /** Round 3 operation */
-function hh(
-	a: number,
-	b: number,
-	c: number,
-	d: number,
-	x: number,
-	s: number,
-	t: number
-): number {
+const hh: MD5Round = (a, b, c, d, x, s, t) => {
 	return _transform(b ^ c ^ d, a, b, x, s, t);
-}
+};
 
 /** Round 4 operation */
-function ii(
-	a: number,
-	b: number,
-	c: number,
-	d: number,
-	x: number,
-	s: number,
-	t: number
-): number {
+const ii: MD5Round = (a, b, c, d, x, s, t) => {
 	return _transform(c ^ (b | ~d), a, b, x, s, t);
-}
+};
 
-// Main MD5 cycle
+/** Performs one MD5 cycle on a 4-element state with 16-word block */
 function _md5cycle(x: number[], k: number[]): void {
 	let a = x[0];
 	let b = x[1];
@@ -176,7 +153,7 @@ function _md5cycle(x: number[], k: number[]): void {
 	x[3] = _add32(d, x[3]);
 }
 
-// MD5 core function
+/** Processes a string into MD5 state and then hex to string */
 export function md51(s: string): string {
 	const n = s.length;
 	const state = [1732584193, -271733879, -1732584194, 271733878];
