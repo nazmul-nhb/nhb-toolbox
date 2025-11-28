@@ -2,11 +2,13 @@ import type { $Countries } from '../object/types';
 import type { Join, LooseLiteral, Split } from '../utils/types';
 import type { LOWERCASE } from './constants';
 
-/** Set proper type interface for `String` methods */
+// ! Augment proper return type for `String` methods (type level only, implementation remains intact)
 declare global {
 	interface String {
-		toLowerCase<C extends 'T' | '' = ''>(): C extends 'T' ? Lowercase<string> : string;
-		toUpperCase<C extends 'T' | '' = ''>(): C extends 'T' ? Uppercase<string> : string;
+		toLowerCase(): string;
+		toLowerCase<C extends 'T'>(): C extends 'T' ? Lowercase<string> : string;
+		toUpperCase(): string;
+		toUpperCase<C extends 'T'>(): C extends 'T' ? Uppercase<string> : string;
 	}
 }
 
