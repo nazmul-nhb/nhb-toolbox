@@ -76,9 +76,9 @@ export type RandomHexRGB = {
 export type $ColorType = 'hex' | 'rgb' | 'hsl';
 
 /** Options for random color generation. */
-export interface RandomColorOptions<C extends $ColorType | undefined> {
+export interface RandomColorOptions<C extends $ColorType> {
 	/** The type of expected return type of color: `hex`, `rgb` or `hsl`. Default is `'hex'`. */
-	colorType?: C;
+	colorType?: C | $ColorType;
 	/** The maximum number of recent colors to store in memory. Default is `16`. */
 	maxColors?: number;
 }

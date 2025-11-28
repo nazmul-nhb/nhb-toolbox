@@ -72,7 +72,7 @@ export const generateRandomColorInHexRGB = (maxColors = 16): RandomHexRGB => {
  * const hsl = generateRandomColor({ colorType: 'hsl', maxColors: 32 });
  * // hsl value with inferred type: HSL, with a larger unique color memory pool
  */
-export function generateRandomColor<C extends $ColorType | undefined = undefined>(
+export function generateRandomColor<C extends $ColorType = 'hex'>(
 	options?: RandomColorOptions<C>
 ): RandomColor<C> {
 	const { colorType = 'hex', maxColors = 16 } = options ?? {};

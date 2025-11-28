@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.27.1] - 2025-11-28
+
+- **Updated** default *type parameter* for `generateRandomColor` by replacing `undefined` with `'hex'`.
+
 ## [4.27.0] - 2025-11-28
 
 ### New
