@@ -19,6 +19,7 @@ All notable changes to the package will be documented here.
 ### Updates
 
 - **Updated** `convertStringCase` utility to accept new format: `'Sentence case'`.
+- **Updated** `generateAnagram` utility to accept an *optional dictionary array* for generating **valid anagrams**.
 - **Updated** `isUUID` to verify versions 1-8 (not just `v4`). It now *narrows down* the value to **branded type** `UUID<UUIDVersion>`.
 
 ## [4.26.74] - 2025-11-23
