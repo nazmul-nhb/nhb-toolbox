@@ -1,14 +1,18 @@
 import { isValidArray } from '../guards/non-primitives';
+import { isNonEmptyString } from '../guards/primitives';
 import type { AnagramOptions } from './types';
 
-const _dictCache = /* @__PURE__ */ new WeakMap<object, Set<string>>();
+/** `WeakMap` to cache user provided dictionary array */
+const DICT_CACHE = /* @__PURE__ */ new WeakMap<object, Set<string>>();
 
+/** Get cached dictionary `Set` */
 function _getDictSet(dict: string[]) {
-	if (_dictCache.has(dict)) return _dictCache.get(dict)!;
+	if (DICT_CACHE.has(dict)) return DICT_CACHE.get(dict)!;
 
-	const set = new Set(dict.map((w) => w.toLowerCase()));
-	_dictCache.set(dict, set);
-	return set;
+	const dictSet = new Set(dict.map((w) => w.toLowerCase()));
+
+	DICT_CACHE.set(dict, dictSet);
+	return dictSet;
 }
 
 /**
@@ -35,9 +39,8 @@ function _getDictSet(dict: string[]) {
  * });
  */
 export function generateAnagrams(word: string, options?: AnagramOptions): Lowercase<string>[] {
-	if (word?.length <= 1) {
-		return [word?.toLowerCase() as Lowercase<string>];
-	}
+	if (!isNonEmptyString(word)) return [];
+	if (word?.length === 1) return [word?.toLowerCase()];
 
 	const { limit = 100, dictionary = false } = options || {};
 

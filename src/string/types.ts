@@ -2,6 +2,14 @@ import type { $Countries } from '../object/types';
 import type { Join, LooseLiteral, Split } from '../utils/types';
 import type { LOWERCASE } from './constants';
 
+/** Set proper type interface for `String` methods */
+declare global {
+	interface String {
+		toLowerCase(): Lowercase<string>;
+		toUpperCase(): Uppercase<string>;
+	}
+}
+
 /** - Options for generating anagrams. */
 export interface AnagramOptions {
 	/**

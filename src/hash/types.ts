@@ -47,7 +47,7 @@ export interface DecodedUUID {
 	variant: 'NCS' | 'RFC4122' | 'Microsoft' | 'Future';
 	/** Single integer value of the UUID in bigint */
 	singleInt: bigint;
-	/** Timestamp for v1, v6-8 (in ms since epoch) */
+	/** Timestamp for `v1`, `v6`, `v7` and `v8` (in ms since epoch) */
 	timestamp?: number;
 	/** v1 node (MAC) */
 	node?: string;

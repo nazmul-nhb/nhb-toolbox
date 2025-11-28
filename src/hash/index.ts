@@ -165,7 +165,7 @@ export function sha1(msg: string): string {
 }
 
 /**
- * * Generates UUIDs across all major RFC-compliant versions (1, 3, 4, 5, 6, 7, 8), following standards from both `RFC4122` and `RFC9562`. Default version is `v4`.
+ * * Generates UUIDs across all major RFC-compliant versions (1, 3, 4, 5, 6, 7, 8), following standards from `RFC4122`. Default version is `v4`.
  *
  * - **Version behavior:**
  *   - `v1` → Timestamp & node-identifier–based
@@ -174,7 +174,7 @@ export function sha1(msg: string): string {
  *   - `v5` → SHA-1(namespace + name)
  *   - `v6` → Re-ordered timestamp variant of `v1` (lexicographically sortable)
  *   - `v7` → Unix-time–based, monotonic-friendly
- *   - `v8` → `RFC-9562` custom layout (timestamp + randomness)
+ *   - `v8` → Custom layout, '“Future'` variant (timestamp + randomness)
  *
  * @param options Controls version, formatting, and required fields for `v3` and `v5`.
  * @returns A 5-parts UUID string formatted with correct version/variant bits.
@@ -322,7 +322,7 @@ export function uuid<V extends SupportedVersion = 'v4'>(options?: UUIDOptions<V>
 
 /**
  * * Decodes a UUID into its internal components, including version, variant, timestamps for time-based UUIDs, clock sequence, and node identifiers.
- *   - Supports `RFC4122` and `RFC9562` UUID versions: 1, 3, 4, 5, 6, 7, 8.
+ *   - Supports `RFC4122` UUID versions: 1, 3, 4, 5, 6, 7, 8.
  *
  * @param uuid The UUID string to decode.
  * @returns A structured `DecodedUUID` object, or `null` for invalid UUIDs.
@@ -385,16 +385,11 @@ export function decodeUUID(uuid: string): DecodedUUID | null {
 		return decoded;
 	}
 
-	if (version === 7) {
-		decoded.timestamp = parseInt(parts[0], 16); // 48-bit timestamp
-		return decoded;
-	}
-
-	if (version === 8) {
+	if (version === 7 || version === 8) {
 		// first 6 bytes = timestamp
 		const tsHex = parts.join('').slice(0, 12); // 48 bits
 
-		decoded.variant = 'Future';
+		decoded.variant = version === 7 ? 'RFC4122' : 'Future';
 		decoded.timestamp = parseInt(tsHex, 16);
 		return decoded;
 	}
