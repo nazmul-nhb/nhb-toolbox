@@ -4,11 +4,18 @@ import type { LOWERCASE } from './constants';
 
 /** - Options for generating anagrams. */
 export interface AnagramOptions {
-	/** Limit the anagrams output. Default is `100`. */
-	limit?: number | 'all';
 	/**
-	 * - Whether to lookup in the dictionary (or array of strings). Default is `false`.
-	 * 	 - If an array of strings is passed only the anagrams found in that array will be returned.
+	 * Maximum number of anagrams to generate.
+	 * Defaults to `100`. Pass `"all"` to return all possible anagrams.
+	 */
+	limit?: number | 'all';
+
+	/**
+	 * Optional dictionary array of strings for validating anagrams.
+	 * - Pass `false` (default) to skip dictionary lookup.
+	 * - Pass an array of strings to include only anagrams present in that array.
+	 * - Dictionary lookup is case-insensitive; internally, a cached lowercase `Set` is used for performance.
+	 * - Duplicate entries in the dictionary are ignored.
 	 */
 	dictionary?: false | string[];
 }
