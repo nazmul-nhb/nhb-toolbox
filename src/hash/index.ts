@@ -323,8 +323,8 @@ export function uuid<V extends SupportedVersion = 'v4'>(options?: UUIDOptions<V>
 }
 
 /**
- * * Decodes a UUID into its internal components, including version, variant, timestamps for time-based UUIDs, clock sequence, and node identifiers.
- *   - Supports `RFC4122` UUID versions: 1, 3, 4, 5, 6, 7, 8.
+ * * Decodes a UUID into its internal components, including version, variant, timestamps for time-based UUIDs and other metadata.
+ *   - Supports `RFC4122` UUID versions: 1-8.
  *
  * @param uuid The UUID string to decode.
  * @returns A structured `DecodedUUID` object, or `null` for invalid UUIDs.
@@ -439,5 +439,5 @@ export function isUUIDv8(value: unknown): value is UUID<'v8'> {
 	return _checkUUIDVersion(value, '8');
 }
 
-export { isUUID };
 export { generateRandomID } from '../string/basics';
+export { isUUID };

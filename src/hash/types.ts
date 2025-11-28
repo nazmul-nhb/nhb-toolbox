@@ -39,7 +39,7 @@ export type UUIDOptions<V extends SupportedVersion = 'v4'> =
 export interface DecodedUUID {
 	/** Original UUID */
 	raw: UUID<UUIDVersion>;
-	/** Plain version of the UUID without `-` */
+	/** Plain version of the UUID without hyphens (`-`) */
 	plain: string;
 	/** Version of the UUID as number */
 	version: $UUIDVersion;

@@ -103,7 +103,7 @@ export function convertStringCase(
 	format: CaseFormat,
 	options?: StringCaseOptions
 ): string {
-	if (!value || typeof value !== 'string') return '';
+	if (!isNonEmptyString(value)) return '';
 
 	const { preserveAcronyms = false } = options ?? {};
 
@@ -252,7 +252,7 @@ export function convertStringCase(
  * @returns Capitalized string or fully uppercased string depending on `capitalizeAll` option.
  */
 export function capitalizeString(string: string, options?: CapitalizeOptions): string {
-	if (typeof string !== 'string' || !string) return '';
+	if (!isNonEmptyString(string)) return '';
 
 	const trimmedString = string.trim();
 	if (!trimmedString) return '';

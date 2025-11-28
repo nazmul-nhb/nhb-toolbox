@@ -210,7 +210,7 @@ export function numberToWordsOrdinal(number: Numeric | string) {
  * **NOTE** - *For very large numbers (e.g. more than quintillion) results may not always be correct.*
  */
 export function wordsToNumber(word: string): number {
-	if (!word || typeof word !== 'string') return NaN;
+	if (!isNonEmptyString(word)) return NaN;
 
 	const trimmed = word.trim();
 
@@ -222,7 +222,7 @@ export function wordsToNumber(word: string): number {
 	// Handle simple numeric strings
 	if (/^[+-]?\d+(\.\d+)?$/.test(trimmed)) return Number(trimmed);
 
-	let input = trimmed.toLowerCase();
+	let input: string = trimmed.toLowerCase();
 
 	// Handle negative prefix words
 	let negative = false;

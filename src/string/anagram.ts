@@ -40,7 +40,7 @@ function _getDictSet(dict: string[]) {
  */
 export function generateAnagrams(word: string, options?: AnagramOptions): Lowercase<string>[] {
 	if (!isNonEmptyString(word)) return [];
-	if (word?.length === 1) return [word?.toLowerCase()];
+	if (word?.length === 1) return [word?.toLowerCase<'T'>()];
 
 	const { limit = 100, dictionary = false } = options || {};
 
