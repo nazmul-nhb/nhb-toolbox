@@ -241,14 +241,13 @@ export function uuid<V extends SupportedVersion = 'v4'>(options?: UUIDOptions<V>
 			const clockSeqHi = ((parseInt(clockSeq.slice(0, 2), 16) & 0x3f) | 0x80) // variant
 				.toString(16)
 				.padStart(2, '0');
-			const clockSeqLow = clockSeq.slice(2);
 
 			const raw =
 				timestamp.slice(-8) +
 				timestamp.slice(-12, -8) +
 				vTimeHigh +
 				clockSeqHi +
-				clockSeqLow +
+				clockSeq.slice(2) +
 				_randomNode48();
 
 			return _formatUUID(raw, 1, uppercase);
@@ -293,14 +292,13 @@ export function uuid<V extends SupportedVersion = 'v4'>(options?: UUIDOptions<V>
 			const clockSeqHi = ((parseInt(clockSeq.slice(0, 2), 16) & 0x3f) | 0x80) // variant
 				.toString(16)
 				.padStart(2, '0');
-			const clockSeqLow = clockSeq.slice(2);
 
 			const raw =
 				timestamp.slice(0, 8) +
 				timestamp.slice(8, 12) +
 				vTimeLow +
 				clockSeqHi +
-				clockSeqLow +
+				clockSeq.slice(2) +
 				_randomNode48();
 
 			return _formatUUID(raw, 6, uppercase);
@@ -331,7 +329,7 @@ export function uuid<V extends SupportedVersion = 'v4'>(options?: UUIDOptions<V>
 				hex += bytes[i].toString(16).padStart(2, '0');
 			}
 
-			return _formatUUID<V>(hex, 8, uppercase);
+			return _formatUUID(hex, 8, uppercase);
 		}
 		default:
 			throw new RangeError('Unsupported UUID version!');
@@ -352,7 +350,7 @@ export function uuid<V extends SupportedVersion = 'v4'>(options?: UUIDOptions<V>
  * const info = decodeUUID(uuid({ version: "v1" }));
  *
  * @remarks
- * - Provides a cross-runtime, spec-accurate UUID decoder covering essential metadata and timestamp interpretation for time-ordered UUID versions.
+ * - Provides a cross-runtime UUID decoder covering essential metadata and timestamp interpretation for time-ordered UUID versions.
  * - **Notes**
  *   - `v1/v6` timestamps are converted from the UUID epoch (1582-10-15) to standard Unix milliseconds.
  *   - `v6` timestamps are lexicographically sortable and decoded accordingly.
@@ -360,7 +358,7 @@ export function uuid<V extends SupportedVersion = 'v4'>(options?: UUIDOptions<V>
  *   - `v8` decoding is minimal because layouts are intentionally user-defined.
  *
  * - **Limitations**
- *   - `v2` UUID decoding is not implemented.
+ *   - `v2` decoding is not implemented specifically.
  *   - `v8` decoding only returns timestamp if it matches a known layout.
  *   - `v3/v5` hash UUIDs contain no timestamp information.
  */
