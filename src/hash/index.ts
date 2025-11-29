@@ -4,8 +4,10 @@ import {
 	_clockSeq14,
 	_formatUUID,
 	_isOptionV3V5,
+	_md5cycle,
+	_numToHex,
 	_randomNode48,
-	_runMd5Rounds,
+	_stringToNumbers,
 	_uuidTimestamp,
 } from './helpers';
 import type { $UUIDVersion, DecodedUUID, SupportedVersion, UUID, UUIDOptions } from './types';
@@ -38,7 +40,7 @@ export function randomHex(length: number, uppercase = false): string {
  *
  * @remarks
  * - Pure JavaScript implementation — runs on any JS engine.
- * - Output is deterministic but may differ from other MD5 implementations due to algorithmic or encoding variations.
+ * - Highly inspired by the algorithm used in {@link https://github.com/eustatos/pure-md5.git pure-md5} package.
  *
  * @param str - Input text to hash.
  *
@@ -50,30 +52,38 @@ export function randomHex(length: number, uppercase = false): string {
  */
 
 export function md5(str: string): string {
-	// Initial hash values
-	const h = [1732584193, -271733879, -1732584194, 271733878];
+	const state = [1732584193, -271733879, -1732584194, 271733878];
 
-	// Text → bytes
-	const bytes = Array.from(new TextEncoder().encode(str));
+	const len = str.length;
 
-	// Padding (MD5 spec)
-	const n = ((bytes.length + 8) >> 6) + 1;
-	const words = new Array(n * 16).fill(0);
+	let i: number;
 
-	bytes.forEach((b, i) => {
-		words[i >> 2] |= b << ((i % 4) * 8);
-	});
-
-	words[bytes.length >> 2] |= 0x80 << ((bytes.length % 4) * 8);
-	words[n * 16 - 2] = bytes.length * 8;
-
-	// Process 512-bit blocks
-	for (let i = 0; i < words.length; i += 16) {
-		_runMd5Rounds(words.slice(i, i + 16), h);
+	for (i = 64; i <= len; i += 64) {
+		_md5cycle(state, _stringToNumbers(str.substring(i - 64, i)));
 	}
 
-	// Final: convert to hex
-	return h.map((n) => (n >>> 0).toString(16).padStart(8, '0')).join('');
+	const $str = str.substring(i - 64);
+
+	const tail = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+	for (i = 0; i < $str.length; i++) {
+		tail[i >> 2] |= $str.charCodeAt(i) << (i % 4 << 3);
+	}
+
+	tail[i >> 2] |= 0x80 << (i % 4 << 3);
+
+	if (i > 55) {
+		_md5cycle(state, tail);
+		for (let j = 0; j < 16; j++) {
+			tail[j] = 0;
+		}
+	}
+
+	tail[14] = len * 8;
+
+	_md5cycle(state, tail);
+
+	return state.map(_numToHex).join('');
 }
 
 /**
