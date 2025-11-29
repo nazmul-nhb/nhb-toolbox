@@ -48,7 +48,11 @@ export function randomHex(length: number, uppercase = false): string {
  *
  * @example
  * const hash = md5("hello");
- * // → "2a40415d762a4bbc919d71b992c51710"
+ * // → "5d41402abc4b2a76b9719d911017c592" *
+ *
+ * @example
+ * // Used inside UUID v3
+ * const digest = md5(namespace + name);
  */
 
 export function md5(str: string): string {
@@ -89,9 +93,7 @@ export function md5(str: string): string {
 /**
  * * Computes a `SHA-1` digest of the given string using a pure JavaScript implementation.
  *
- * @remarks
- * - Pure JavaScript implementation — runs on any JS engine.
- * - Output is deterministic but may differ from other MD5 implementations due to algorithmic or encoding variations.
+ * @remarks Pure JavaScript implementation — runs on any JS engine.
  *
  * @param msg - Input text to hash.
  *
@@ -106,15 +108,19 @@ export function md5(str: string): string {
  * const digest = sha1(namespace + name);
  */
 export function sha1(msg: string): string {
-	const utf8 = new TextEncoder().encode(msg);
-
 	const K = [0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6];
+
+	const utf8 = new TextEncoder().encode(msg);
 
 	const rotl = (n: number, bits: number) => (n << bits) | (n >>> (32 - bits));
 	const toHex = (n: number) => (n >>> 0).toString(16).padStart(8, '0');
 
 	// Pre-processing
-	const words = new Uint32Array(((utf8.length + 8) >> 2) + 2);
+	const len = utf8.length;
+	const padBytes = (len + 9) % 64 ? 64 - ((len + 9) % 64) : 0;
+	const total = len + 1 + padBytes + 8; // message + 0x80 + zeros + 64-bit length
+	const words = new Uint32Array(total >>> 2);
+
 	for (let i = 0; i < utf8.length; i++) {
 		words[i >> 2] |= utf8[i] << (24 - (i % 4) * 8);
 	}
