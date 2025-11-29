@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.27.11] - 2025-11-29
+
+- **Updated** *core algorithms* of `md5` and `sha1` utilities to fix *incorrect hash digest generation*.
+
 ## [4.27.10] - 2025-11-28
 
 - **Updated** type augmentation for `String` methods: `toLowerCase` and `toUpperCase` (type level only, implementation remains intact).
