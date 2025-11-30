@@ -83,9 +83,9 @@ export function bytesToUtf8(bytes: Uint8Array): string {
 	return out;
 }
 
-const _b64chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-
 export function bytesToBase64(bytes: Uint8Array): string {
+	const _b64chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+
 	let out = '';
 	let i = 0;
 	while (i < bytes.length) {
@@ -106,6 +106,8 @@ export function bytesToBase64(bytes: Uint8Array): string {
 }
 
 export function base64ToBytes(str: string): Uint8Array {
+	const _b64chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+
 	const out: number[] = [];
 	let i = 0;
 	while (i < str.length) {

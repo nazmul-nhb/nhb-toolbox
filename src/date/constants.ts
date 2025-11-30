@@ -1,4 +1,4 @@
-import type { $UnitLower, ClockHour, DayPart } from './types';
+import type { $TimeUnitVar, ClockHour, DayPart } from './types';
 
 /** @internal Symbol for accessing Chronos internals (plugin author use only) */
 export const INTERNALS = Symbol('Internals');
@@ -122,7 +122,8 @@ export const ZODIAC_PRESETS = /* @__PURE__ */ Object.freeze({
 	sidereal: VEDIC_ZODIAC_SIGNS,
 } as const);
 
-export const UNIT_VARIANTS = /* @__PURE__ */ Object.freeze({
+/** Variants of different time units */
+export const TIME_UNIT_VARIANTS = /* @__PURE__ */ Object.freeze({
 	year: ['y', 'yr', 'yrs', 'year', 'years'],
 	month: ['mo', 'month', 'months'],
 	week: ['w', 'week', 'weeks'],
@@ -133,19 +134,22 @@ export const UNIT_VARIANTS = /* @__PURE__ */ Object.freeze({
 	millisecond: ['ms', 'msec', 'msecs', 'millisecond', 'milliseconds'],
 } as const);
 
-const UNIT_REGEX = /* @__PURE__ */ Object.freeze(
-	Object.values(UNIT_VARIANTS)
+/** Regex for time unit variants */
+const TU_REGEX = /* @__PURE__ */ Object.freeze(
+	Object.values(TIME_UNIT_VARIANTS)
 		.flat()
 		.sort((a, b) => b.length - a.length)
 		.join('|')
 );
 
-export const TIME_REGEX = /* @__PURE__ */ Object.freeze(
-	new RegExp(`^(?<value>-?\\d*\\.?\\d+) *(?<unit>${UNIT_REGEX})?$`, 'i')
+/** `RegExp` for time unit variants */
+export const TIME_UNIT_REGEX = /* @__PURE__ */ Object.freeze(
+	new RegExp(`^(?<value>-?\\d*\\.?\\d+) *(?<unit>${TU_REGEX})?$`, 'i')
 );
 
-export const MS_MAP: Record<$UnitLower, number> = /* @__PURE__ */ Object.freeze(
-	(() => {
+/** Map to different time units to milliseconds */
+export const MS_MAP = /* @__PURE__ */ Object.freeze(
+	((): Record<$TimeUnitVar, number> => {
 		const s = 1000;
 		const m = s * 60;
 		const h = m * 60;

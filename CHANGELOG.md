@@ -6,11 +6,14 @@ All notable changes to the package will be documented here.
 
 ---
 
-<!-- ## [4.27.xx] - 2025-12-xx [Future]
+<!--
+## [4.27.xx] - 2025-12-xx [Future]
 
-- **Added** *new* utility `parseMs` to convert any time value to *milliseconds*.
+- **Added** *new* utility `parseMs` to convert any time value to *milliseconds* with new type guard `isTimeWithUnit`.
 - **Added** `new` class `Cipher` to *encrypt/decrypt* string with *secret*.
-- **Added** `new` class `SimpleToken` to *generate, decode and verify* token like `JWT`. -->
+- **Added** `new` class `SimpleToken` to *generate, decode* and *verify* token like `JWT`.
+- **Updated** `sha1` *encoding algorithm*. Now it avoids depending on `TextEncoder`.
+-->
 
 ## [4.27.11] - 2025-11-29
 

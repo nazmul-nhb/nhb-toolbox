@@ -10,6 +10,7 @@ export {
 	concatBytes,
 	hmacSha256,
 	intTo4BytesBE,
+	unit8To32ArrayBE,
 	sha256Bytes,
 } from './utils';
 export { Cipher } from './Cipher';

@@ -2,7 +2,7 @@ import { isNonEmptyString, isString } from '../guards/primitives';
 import { isNumericString } from '../guards/specials';
 import { normalizeNumber } from '../number/utilities';
 import type { Numeric } from '../types/index';
-import { TIME_REGEX } from './constants';
+import { TIME_UNIT_REGEX } from './constants';
 import { IANA_TZ_IDS } from './timezone';
 import type {
 	$TimeZoneIdentifier,
@@ -140,5 +140,5 @@ export function isDateLike(value: unknown): boolean {
 
 /** Checks if a value represents time value (number) with different forms of {@link TimeWithUnit units} */
 export function isTimeWithUnit(value: unknown): value is TimeWithUnit {
-	return isNonEmptyString(value) && TIME_REGEX.test(value);
+	return isNonEmptyString(value) && TIME_UNIT_REGEX.test(value);
 }

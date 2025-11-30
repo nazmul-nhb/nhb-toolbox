@@ -67,7 +67,7 @@ export type TokenOptions = {
 
 export type TokenPayload<T extends GenericObject = GenericObject> = {
 	iat: number;
-	exp?: number;
+	exp: number | null;
 } & T;
 
 export type DecodedToken<T extends GenericObject = GenericObject> = {

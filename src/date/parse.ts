@@ -1,9 +1,9 @@
 import { isNonEmptyString, isNumber } from '../guards/primitives';
 import { isNumericString } from '../guards/specials';
 import type { Numeric } from '../types/index';
-import { MS_MAP, TIME_REGEX } from './constants';
+import { MS_MAP, TIME_UNIT_REGEX } from './constants';
 import { isTimeWithUnit } from './guards';
-import type { $UnitLower, TimeWithUnit } from './types';
+import type { $TimeUnitVar, TimeWithUnit } from './types';
 
 /**
  * * Parse the given value to milliseconds.
@@ -34,11 +34,11 @@ function _parse(str: TimeWithUnit): number {
 		throw new RangeError(`Value must be a string with length between 1 and 99!`);
 	}
 
-	const match = TIME_REGEX.exec(str);
+	const match = TIME_UNIT_REGEX.exec(str);
 
 	if (!match?.groups) return NaN;
 
-	const unit = (match.groups.unit ?? 'ms').toLowerCase<$UnitLower>();
+	const unit = (match.groups.unit ?? 'ms').toLowerCase<$TimeUnitVar>();
 
 	const multiplier = MS_MAP[unit];
 

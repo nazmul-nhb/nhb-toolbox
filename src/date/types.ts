@@ -13,7 +13,7 @@ import type {
 	MONTHS,
 	SECOND_FORMATS,
 	TIME_FORMATS,
-	UNIT_VARIANTS,
+	TIME_UNIT_VARIANTS,
 	WESTERN_ZODIAC_SIGNS,
 	YEAR_FORMATS,
 	ZODIAC_PRESETS,
@@ -702,8 +702,11 @@ export type ChronosWithOptions = Partial<{
 	millisecond: Milliseconds;
 }>;
 
-export type $UnitLower = (typeof UNIT_VARIANTS)[keyof typeof UNIT_VARIANTS][number];
+/** Variants of different time units in lowercase */
+export type $TimeUnitVar = (typeof TIME_UNIT_VARIANTS)[keyof typeof TIME_UNIT_VARIANTS][number];
 
-export type $UnitAnyCase = Capitalize<$UnitLower> | Uppercase<$UnitLower> | $UnitLower;
+/** Variants of different time units in lowercase, uppercase  and capitalized */
+export type $UnitAnyCase = Capitalize<$TimeUnitVar> | Uppercase<$TimeUnitVar> | $TimeUnitVar;
 
+/** Number (time value) with variants of different time units */
 export type TimeWithUnit = `${number}${$UnitAnyCase}` | `${number} ${$UnitAnyCase}`;

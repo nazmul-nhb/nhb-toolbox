@@ -301,6 +301,47 @@ export function getClassDetails(cls: Constructor): ClassDetails {
 }
 
 /**
+ * * Create a deterministic JSON string representation of any value.
+ * - The output format matches standard JSON but with guaranteed sorted keys.
+ *
+ *
+ * @remarks
+ * - This function guarantees **stable, repeatable output** by:
+ * 	 - Sorting all object keys alphabetically.
+ * 	 - Recursively stabilizing nested objects and arrays.
+ * 	 - Automatically converting all `undefined` values into `null` so the output remains valid JSON.
+ * 	 - Falling back to native JSON serialization for primitives.
+ * - Useful for:
+ *   - Hash generation (e.g., signatures, cache keys)
+ *   - Deep equality checks
+ *   - Producing predictable output across environments
+ *
+ * @param obj - The value to stringify into a deterministic JSON-like string.
+ * @returns A stable, deterministic string representation of the input.
+ */
+export function stableStringify(obj: unknown): string {
+	const _replacer = (_: unknown, v: unknown) => (v === undefined ? null : v);
+
+	if (isNotEmptyObject(obj)) {
+		const keys = Object.keys(obj).sort();
+
+		return (
+			'{' +
+			keys
+				.map((k) => JSON.stringify(k, _replacer) + ':' + stableStringify(obj[k]))
+				.join(',') +
+			'}'
+		);
+	}
+
+	if (isValidArray(obj)) {
+		return '[' + obj.map((v) => stableStringify(v)).join(',') + ']';
+	}
+
+	return JSON.stringify(obj, _replacer);
+}
+
+/**
  * * Parses any valid JSON string, optionally converting stringified primitives inside (nested) arrays or objects.
  *
  * @template T - Expected return type (default is unknown).

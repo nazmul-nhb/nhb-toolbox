@@ -2,7 +2,8 @@ import { parseMs } from '../date/parse';
 import { isNotEmptyObject } from '../guards/non-primitives';
 import { isNonEmptyString } from '../guards/primitives';
 import type { GenericObject } from '../object/types';
-import { _constantTimeEquals, _stableStringify } from './helpers';
+import { stableStringify } from '../utils/index';
+import { _constantTimeEquals } from './helpers';
 import type { DecodedToken, TokenOptions, TokenPayload, VerifiedResult } from './types';
 import { base64ToBytes, bytesToBase64, bytesToUtf8, hmacSha256, utf8ToBytes } from './utils';
 
@@ -25,13 +26,13 @@ export class SimpleToken {
 		const now = Date.now();
 		const updatedPayload: TokenPayload = {
 			iat: now,
-			exp: expiresIn ? now + parseMs(expiresIn) : Infinity,
+			exp: expiresIn ? now + parseMs(expiresIn) : null,
 			...payload,
 		};
 
 		const hdr: TokenOptions = { alg: 'HS256', typ: 'JWT', ...options };
-		const headerJson = _stableStringify(hdr);
-		const payloadJson = _stableStringify(updatedPayload);
+		const headerJson = stableStringify(hdr);
+		const payloadJson = stableStringify(updatedPayload);
 		const headerB = utf8ToBytes(headerJson);
 		const payloadB = utf8ToBytes(payloadJson);
 		const signingInput = bytesToBase64(headerB) + '.' + bytesToBase64(payloadB);

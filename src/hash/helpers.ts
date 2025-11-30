@@ -1,7 +1,6 @@
-import { isNotEmptyObject, isObjectWithKeys } from '../guards/non-primitives';
+import { isObjectWithKeys } from '../guards/non-primitives';
 import { isNonEmptyString, isString } from '../guards/primitives';
 import { isUUID } from '../guards/specials';
-import type { GenericObject } from '../object/types';
 import type { $UUIDOptionsV3V5, $UUIDVersion, UUID, UUIDVersion } from './types';
 import { randomHex } from './utils';
 
@@ -232,24 +231,4 @@ export function _constantTimeEquals(a: string | Uint8Array, b: string | Uint8Arr
 	}
 
 	return res === 0;
-}
-
-export function _stableStringify(obj: unknown): string {
-	if (isNotEmptyObject(obj)) {
-		return JSON.stringify(obj);
-	}
-
-	if (Array.isArray(obj)) {
-		return '[' + obj.map((v) => _stableStringify(v)).join(',') + ']';
-	}
-
-	const keys = Object.keys(obj as GenericObject).sort();
-
-	return (
-		'{' +
-		keys
-			.map((k) => JSON.stringify(k) + ':' + _stableStringify((obj as GenericObject)[k]))
-			.join(',') +
-		'}'
-	);
 }

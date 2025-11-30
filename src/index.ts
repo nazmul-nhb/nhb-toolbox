@@ -242,6 +242,7 @@ export {
 	isDateLike,
 	isLeapYear,
 	isNativeTimeZoneId,
+	isTimeWithUnit,
 	isValidTime,
 	isValidTime as isValidTimeString,
 	isValidTimeZoneId,
@@ -450,6 +451,7 @@ export {
 	parseJSON,
 	parseJSON as parseJsonDeep,
 	deepParsePrimitives as parsePrimitivesDeep,
+	stableStringify,
 	throttleAction,
 } from './utils/index';
 
