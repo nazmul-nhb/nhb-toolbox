@@ -9,6 +9,7 @@ import {
 	_randomNode48,
 	_stringToNumbers,
 	_uuidTimestamp,
+	utf8ToBytes,
 } from './helpers';
 import type { $UUIDVersion, DecodedUUID, SupportedVersion, UUID, UUIDOptions } from './types';
 
@@ -110,7 +111,7 @@ export function md5(str: string): string {
 export function sha1(msg: string): string {
 	const K = [0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6];
 
-	const utf8 = new TextEncoder().encode(msg);
+	const utf8 = utf8ToBytes(msg);
 
 	const rotl = (n: number, bits: number) => (n << bits) | (n >>> (32 - bits));
 	const toHex = (n: number) => (n >>> 0).toString(16).padStart(8, '0');

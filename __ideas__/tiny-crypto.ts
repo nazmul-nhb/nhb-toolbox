@@ -8,6 +8,9 @@
  * This file is TypeScript and uses native TS types. JSDoc comments contain descriptions only.
  */
 
+import { bytesToUtf8, utf8ToBytes } from '../src/hash/helpers';
+import { base64Decode, base64Encode } from './cipher';
+
 type JSONObject = Record<string, unknown>;
 
 function isObject(v: unknown): v is JSONObject {
@@ -70,106 +73,44 @@ export function btoaShim(text: string): string {
    base64url helpers
    ============================ */
 
-/**
- * Convert Uint8Array to base64url string (no padding)
- * @param bytes Bytes to convert.
- */
-function base64UrlEncode(bytes: Uint8Array): string {
-	// standard base64 from bytes
-	let binary = '';
-	const chunkSize = 0x8000;
-	for (let i = 0; i < bytes.length; i += chunkSize) {
-		binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
-	}
-	const b64 = btoaShim(binary);
-	// base64url: replace +/, remove =
-	return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
+// /**
+//  * Convert Uint8Array to base64url string (no padding)
+//  * @param bytes Bytes to convert.
+//  */
+// export function base64UrlEncode(bytes: Uint8Array): string {
+// 	// standard base64 from bytes
+// 	let binary = '';
+// 	const chunkSize = 0x8000;
+// 	for (let i = 0; i < bytes.length; i += chunkSize) {
+// 		binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+// 	}
+// 	const b64 = btoaShim(binary);
+// 	// base64url: replace +/, remove =
+// 	return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+// }
 
-/**
- * Decode base64url to Uint8Array
- * @param b64url base64url string
- */
-function base64UrlDecode(b64url: string): Uint8Array {
-	// convert to standard base64
-	const b64 = b64url.replace(/-/g, '+').replace(/_/g, '/');
-	// add padding
-	const pad = b64.length % 4 === 0 ? 0 : 4 - (b64.length % 4);
-	const b64p = b64 + '='.repeat(pad);
-	// decode
-	const binary = atobShim(b64p);
-	const bytes = new Uint8Array(binary.length);
-	for (let i = 0; i < binary.length; i++) {
-		bytes[i] = binary.charCodeAt(i);
-	}
-	return bytes;
-}
+// /**
+//  * Decode base64url to Uint8Array
+//  * @param b64url base64url string
+//  */
+// export function base64UrlDecode(b64url: string): Uint8Array {
+// 	// convert to standard base64
+// 	const b64 = b64url.replace(/-/g, '+').replace(/_/g, '/');
+// 	// add padding
+// 	const pad = b64.length % 4 === 0 ? 0 : 4 - (b64.length % 4);
+// 	const b64p = b64 + '='.repeat(pad);
+// 	// decode
+// 	const binary = atobShim(b64p);
+// 	const bytes = new Uint8Array(binary.length);
+// 	for (let i = 0; i < binary.length; i++) {
+// 		bytes[i] = binary.charCodeAt(i);
+// 	}
+// 	return bytes;
+// }
 
 /* ============================
    UTF-8 helpers
    ============================ */
-
-/** Convert string to UTF-8 bytes */
-export function utf8ToBytes(str: string): Uint8Array {
-	// TextEncoder is a Web API; avoid relying on it per requirement.
-	const out: number[] = [];
-	for (let i = 0; i < str.length; i++) {
-		const code = str.charCodeAt(i);
-
-		if (code < 0x80) out.push(code);
-		else if (code < 0x800) {
-			out.push(0xc0 | (code >> 6), 0x80 | (code & 0x3f));
-		} else if (code >= 0xd800 && code <= 0xdfff) {
-			// surrogate pair
-			if (code < 0xdc00 && i + 1 < str.length) {
-				const hi = code;
-				const lo = str.charCodeAt(++i);
-				const codePoint = 0x10000 + ((hi - 0xd800) << 10) + (lo - 0xdc00);
-				out.push(
-					0xf0 | (codePoint >> 18),
-					0x80 | ((codePoint >> 12) & 0x3f),
-					0x80 | ((codePoint >> 6) & 0x3f),
-					0x80 | (codePoint & 0x3f)
-				);
-			}
-		} else {
-			out.push(0xe0 | (code >> 12), 0x80 | ((code >> 6) & 0x3f), 0x80 | (code & 0x3f));
-		}
-	}
-	return new Uint8Array(out);
-}
-
-/** Convert UTF-8 bytes to string */
-export function bytesToUtf8(bytes: Uint8Array): string {
-	let out = '';
-	let i = 0;
-	while (i < bytes.length) {
-		const b1 = bytes[i++];
-		if (b1 < 0x80) out += String.fromCharCode(b1);
-		else if (b1 >= 0xc0 && b1 < 0xe0) {
-			const b2 = bytes[i++];
-			out += String.fromCharCode(((b1 & 0x1f) << 6) | (b2 & 0x3f));
-		} else if (b1 >= 0xe0 && b1 < 0xf0) {
-			const b2 = bytes[i++];
-			const b3 = bytes[i++];
-			out += String.fromCharCode(((b1 & 0x0f) << 12) | ((b2 & 0x3f) << 6) | (b3 & 0x3f));
-		} else {
-			// 4-byte sequence -> surrogate pair
-			const b2 = bytes[i++];
-			const b3 = bytes[i++];
-			const b4 = bytes[i++];
-			let codePoint =
-				((b1 & 0x07) << 18) | ((b2 & 0x3f) << 12) | ((b3 & 0x3f) << 6) | (b4 & 0x3f);
-			codePoint -= 0x10000;
-			out += String.fromCharCode(
-				0xd800 + ((codePoint >> 10) & 0x3ff),
-				0xdc00 + (codePoint & 0x3ff)
-			);
-		}
-	}
-
-	return out;
-}
 
 /* ============================
    Little/Big-endian helpers for words
@@ -314,7 +255,7 @@ export function sha256Bytes(message: Uint8Array): Uint8Array {
    HMAC-SHA256
    ============================ */
 
-function hmacSha256(key: Uint8Array, message: Uint8Array): Uint8Array {
+export function hmacSha256(key: Uint8Array, message: Uint8Array): Uint8Array {
 	const blockSize = 64; // bytes
 	let k = key;
 	if (k.length > blockSize) {
@@ -413,10 +354,10 @@ export class TinyCrypto {
 		const payloadJson = stableStringify(payload);
 		const headerB = utf8ToBytes(headerJson);
 		const payloadB = utf8ToBytes(payloadJson);
-		const signingInput = base64UrlEncode(headerB) + '.' + base64UrlEncode(payloadB);
+		const signingInput = base64Encode(headerB) + '.' + base64Encode(payloadB);
 
 		const mac = hmacSha256(this.#secretBytes, utf8ToBytes(signingInput));
-		const signature = base64UrlEncode(mac);
+		const signature = base64Encode(mac);
 		return signingInput + '.' + signature;
 	}
 
@@ -445,8 +386,8 @@ export class TinyCrypto {
 		const parts = token.split('.');
 		if (parts.length !== 3) throw new Error('token must have three parts');
 		const [a, b, c] = parts;
-		const headerBytes = base64UrlDecode(a);
-		const payloadBytes = base64UrlDecode(b);
+		const headerBytes = base64Decode(a);
+		const payloadBytes = base64Decode(b);
 		const headerStr = bytesToUtf8(headerBytes);
 		const payloadStr = bytesToUtf8(payloadBytes);
 
@@ -489,13 +430,13 @@ export class TinyCrypto {
 			const [a, b, sig] = parts;
 			const signingInput = a + '.' + b;
 			const expectedMac = hmacSha256(this.#secretBytes, utf8ToBytes(signingInput));
-			const expectedSig = base64UrlEncode(expectedMac);
+			const expectedSig = base64Encode(expectedMac);
 
 			// constant-time string compare
 			const ok = constantTimeEquals(sig, expectedSig);
 			if (!ok) return { valid: false, error: 'invalid signature' };
 			// parse payload
-			const payloadBytes = base64UrlDecode(b);
+			const payloadBytes = base64Decode(b);
 			const payloadStr = bytesToUtf8(payloadBytes);
 			let payload: unknown;
 			try {
@@ -548,7 +489,7 @@ export class TinyCrypto {
 		try {
 			const parts = token.split('.');
 			if (parts.length !== 3) return null;
-			const payload = base64UrlDecode(parts[1]);
+			const payload = base64Decode(parts[1]);
 			const s = bytesToUtf8(payload);
 			try {
 				return JSON.parse(s);
@@ -565,7 +506,7 @@ export class TinyCrypto {
    small helpers
    ============================ */
 
-function constantTimeEquals(a: string, b: string): boolean {
+export function constantTimeEquals(a: string, b: string): boolean {
 	if (a.length !== b.length) return false;
 	let res = 0;
 	for (let i = 0; i < a.length; i++) {
