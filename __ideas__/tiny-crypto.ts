@@ -1,3 +1,4 @@
+/* eslint-disable no-control-regex */
 /**
  * TinyCrypto - pure-TS JWT helper (HS256) with builtin SHA-256 & HMAC (no Web/Crypto APIs)
  *
@@ -11,6 +12,58 @@ type JSONObject = Record<string, unknown>;
 
 function isObject(v: unknown): v is JSONObject {
 	return typeof v === 'object' && v !== null && !Array.isArray(v);
+}
+
+// ---------- Pure JS atob ----------
+export function atobShim(base64: string): string {
+	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+	let str = '';
+	let i = 0;
+
+	base64 = base64.replace(/=+$/, '');
+
+	while (i < base64.length) {
+		const h1 = chars.indexOf(base64.charAt(i++));
+		const h2 = chars.indexOf(base64.charAt(i++));
+		const h3 = chars.indexOf(base64.charAt(i++));
+		const h4 = chars.indexOf(base64.charAt(i++));
+
+		const o1 = (h1 << 2) | (h2 >> 4);
+		const o2 = ((h2 & 15) << 4) | (h3 >> 2);
+		const o3 = ((h3 & 3) << 6) | h4;
+
+		str += String.fromCharCode(o1);
+		if (h3 !== 64) str += String.fromCharCode(o2);
+		if (h4 !== 64) str += String.fromCharCode(o3);
+	}
+
+	return str.replace(/\x00+$/, '');
+}
+
+// ---------- Pure JS btoa ----------
+export function btoaShim(text: string): string {
+	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+	let output = '';
+	let i = 0;
+
+	while (i < text.length) {
+		const o1 = text.charCodeAt(i++);
+		const o2 = text.charCodeAt(i++);
+		const o3 = text.charCodeAt(i++);
+
+		const h1 = o1 >> 2;
+		const h2 = ((o1 & 3) << 4) | (o2 >> 4);
+		const h3 = ((o2 & 15) << 2) | (o3 >> 6);
+		const h4 = o3 & 63;
+
+		output +=
+			chars.charAt(h1) +
+			chars.charAt(h2) +
+			chars.charAt(isNaN(o2) ? 64 : h3) +
+			chars.charAt(isNaN(o3) ? 64 : h4);
+	}
+
+	return output.replace(/\x00+$/, '');
 }
 
 /* ============================
@@ -28,7 +81,7 @@ function base64UrlEncode(bytes: Uint8Array): string {
 	for (let i = 0; i < bytes.length; i += chunkSize) {
 		binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
 	}
-	const b64 = btoa(binary);
+	const b64 = btoaShim(binary);
 	// base64url: replace +/, remove =
 	return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
@@ -44,7 +97,7 @@ function base64UrlDecode(b64url: string): Uint8Array {
 	const pad = b64.length % 4 === 0 ? 0 : 4 - (b64.length % 4);
 	const b64p = b64 + '='.repeat(pad);
 	// decode
-	const binary = atob(b64p);
+	const binary = atobShim(b64p);
 	const bytes = new Uint8Array(binary.length);
 	for (let i = 0; i < binary.length; i++) {
 		bytes[i] = binary.charCodeAt(i);
@@ -57,7 +110,7 @@ function base64UrlDecode(b64url: string): Uint8Array {
    ============================ */
 
 /** Convert string to UTF-8 bytes */
-function utf8ToBytes(str: string): Uint8Array {
+export function utf8ToBytes(str: string): Uint8Array {
 	// TextEncoder is a Web API; avoid relying on it per requirement.
 	const out: number[] = [];
 	for (let i = 0; i < str.length; i++) {
@@ -87,7 +140,7 @@ function utf8ToBytes(str: string): Uint8Array {
 }
 
 /** Convert UTF-8 bytes to string */
-function bytesToUtf8(bytes: Uint8Array): string {
+export function bytesToUtf8(bytes: Uint8Array): string {
 	let out = '';
 	let i = 0;
 	while (i < bytes.length) {
@@ -114,6 +167,7 @@ function bytesToUtf8(bytes: Uint8Array): string {
 			);
 		}
 	}
+
 	return out;
 }
 
@@ -141,7 +195,7 @@ function bytesToUtf8(bytes: Uint8Array): string {
    Based on the standard algorithm; returns a 32-byte Uint8Array.
    ============================ */
 
-function sha256Bytes(message: Uint8Array): Uint8Array {
+export function sha256Bytes(message: Uint8Array): Uint8Array {
 	// Initialize hash values:
 	const H = new Uint32Array([
 		0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab,
@@ -395,8 +449,10 @@ export class TinyCrypto {
 		const payloadBytes = base64UrlDecode(b);
 		const headerStr = bytesToUtf8(headerBytes);
 		const payloadStr = bytesToUtf8(payloadBytes);
+
 		let header: unknown;
 		let payload: unknown;
+
 		try {
 			header = JSON.parse(headerStr);
 		} catch {
