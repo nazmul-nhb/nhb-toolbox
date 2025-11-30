@@ -1,4 +1,6 @@
-import type { Branded } from '../types/index';
+import type { TimeWithUnit } from '../date/types';
+import type { GenericObject } from '../object/types';
+import type { Branded, Numeric } from '../types/index';
 
 /** UUID versions as number from `1-8` */
 export type $UUIDVersion = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
@@ -53,25 +55,24 @@ export interface DecodedUUID {
 	node?: string;
 }
 
-type $Years = 'years' | 'year' | 'yrs' | 'yr' | 'y';
-type $Months = 'months' | 'month' | 'mo';
-type $Weeks = 'weeks' | 'week' | 'w';
-type $Days = 'days' | 'day' | 'd';
-type $Hours = 'hours' | 'hour' | 'hrs' | 'hr' | 'h';
-type $Minutes = 'minutes' | 'minute' | 'mins' | 'min' | 'm';
-type $Seconds = 'seconds' | 'second' | 'secs' | 'sec' | 's';
-type $Milliseconds = 'milliseconds' | 'millisecond' | 'msecs' | 'msec' | 'ms';
+export type VerifiedResult<T extends GenericObject = GenericObject> =
+	| { isValid: true; payload: TokenPayload<T> }
+	| { isValid: false; error: string };
 
-export type $Unit =
-	| $Years
-	| $Months
-	| $Weeks
-	| $Days
-	| $Hours
-	| $Minutes
-	| $Seconds
-	| $Milliseconds;
+export type TokenOptions = {
+	alg?: 'HS256';
+	typ?: 'JWT';
+	expiresIn?: TimeWithUnit | Numeric;
+};
 
-type UnitAnyCase = Capitalize<$Unit> | Uppercase<$Unit> | $Unit;
+export type TokenPayload<T extends GenericObject = GenericObject> = {
+	iat: number;
+	exp?: number;
+} & T;
 
-export type TimeWithUnit = `${number}` | `${number}${UnitAnyCase}` | `${number} ${UnitAnyCase}`;
+export type DecodedToken<T extends GenericObject = GenericObject> = {
+	header: TokenOptions;
+	payload: TokenPayload<T>;
+	signature: string;
+	signingInput: string;
+};

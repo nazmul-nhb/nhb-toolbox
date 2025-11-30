@@ -1,4 +1,7 @@
-import type { ClockHour, DayPart } from './types';
+import type { $UnitLower, ClockHour, DayPart } from './types';
+
+/** @internal Symbol for accessing Chronos internals (plugin author use only) */
+export const INTERNALS = Symbol('Internals');
 
 /** Array of strings containing all the seven week-day names, starting with `Sunday` */
 export const DAYS = /* @__PURE__ */ Object.freeze([
@@ -119,5 +122,73 @@ export const ZODIAC_PRESETS = /* @__PURE__ */ Object.freeze({
 	sidereal: VEDIC_ZODIAC_SIGNS,
 } as const);
 
-/** @internal Symbol for accessing Chronos internals (plugin author use only) */
-export const INTERNALS = Symbol('Internals');
+export const UNIT_VARIANTS = /* @__PURE__ */ Object.freeze({
+	year: ['y', 'yr', 'yrs', 'year', 'years'],
+	month: ['mo', 'month', 'months'],
+	week: ['w', 'week', 'weeks'],
+	day: ['d', 'day', 'days'],
+	hour: ['h', 'hr', 'hrs', 'hour', 'hours'],
+	minute: ['m', 'min', 'mins', 'minute', 'minutes'],
+	second: ['s', 'sec', 'secs', 'second', 'seconds'],
+	millisecond: ['ms', 'msec', 'msecs', 'millisecond', 'milliseconds'],
+} as const);
+
+const UNIT_REGEX = /* @__PURE__ */ Object.freeze(
+	Object.values(UNIT_VARIANTS)
+		.flat()
+		.sort((a, b) => b.length - a.length)
+		.join('|')
+);
+
+export const TIME_REGEX = /* @__PURE__ */ Object.freeze(
+	new RegExp(`^(?<value>-?\\d*\\.?\\d+) *(?<unit>${UNIT_REGEX})?$`, 'i')
+);
+
+export const MS_MAP: Record<$UnitLower, number> = /* @__PURE__ */ Object.freeze(
+	(() => {
+		const s = 1000;
+		const m = s * 60;
+		const h = m * 60;
+		const d = h * 24;
+		const w = d * 7;
+		const y = d * 365.25;
+		const mo = y / 12;
+
+		return {
+			y,
+			yr: y,
+			yrs: y,
+			year: y,
+			years: y,
+			mo,
+			month: mo,
+			months: mo,
+			w,
+			week: w,
+			weeks: w,
+			d,
+			day: d,
+			days: d,
+			h,
+			hr: h,
+			hrs: h,
+			hour: h,
+			hours: h,
+			m,
+			min: m,
+			mins: m,
+			minute: m,
+			minutes: m,
+			s,
+			sec: s,
+			secs: s,
+			second: s,
+			seconds: s,
+			ms: 1,
+			msec: 1,
+			msecs: 1,
+			millisecond: 1,
+			milliseconds: 1,
+		};
+	})()
+);

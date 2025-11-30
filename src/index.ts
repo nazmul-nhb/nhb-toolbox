@@ -236,6 +236,8 @@ export {
 	getGreeting as greet,
 } from './date/greet';
 
+export { parseMs } from './date/parse';
+
 export {
 	isDateLike,
 	isLeapYear,

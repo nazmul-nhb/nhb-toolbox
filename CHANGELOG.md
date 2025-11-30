@@ -6,6 +6,12 @@ All notable changes to the package will be documented here.
 
 ---
 
+<!-- ## [4.27.xx] - 2025-12-xx [Future]
+
+- **Added** *new* utility `parseMs` to convert any time value to *milliseconds*.
+- **Added** `new` class `Cipher` to *encrypt/decrypt* string with *secret*.
+- **Added** `new` class `SimpleToken` to *generate, decode and verify* token like `JWT`. -->
+
 ## [4.27.11] - 2025-11-29
 
 - **Updated** *core algorithms* of `md5` and `sha1` utilities to fix *incorrect hash digest generation*.

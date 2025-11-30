@@ -1,9 +1,16 @@
-import { isString } from '../guards/primitives';
+import { isNonEmptyString, isString } from '../guards/primitives';
 import { isNumericString } from '../guards/specials';
 import { normalizeNumber } from '../number/utilities';
 import type { Numeric } from '../types/index';
+import { TIME_REGEX } from './constants';
 import { IANA_TZ_IDS } from './timezone';
-import type { $TimeZoneIdentifier, ClockTime, TimeZoneIdNative, UTCOffset } from './types';
+import type {
+	$TimeZoneIdentifier,
+	ClockTime,
+	TimeWithUnit,
+	TimeZoneIdNative,
+	UTCOffset,
+} from './types';
 
 /**
  * * Checks if the provided value is a valid time string in "HH:MM" format.
@@ -12,7 +19,7 @@ import type { $TimeZoneIdentifier, ClockTime, TimeZoneIdNative, UTCOffset } from
  * @returns `true` if the value is a valid time string, `false` otherwise.
  */
 export function isValidTime(value: unknown): value is ClockTime {
-	if (!isString(value)) return false;
+	if (!isNonEmptyString(value)) return false;
 
 	const [hourStr, minuteStr] = value.split(':');
 
@@ -45,7 +52,7 @@ export function isValidUTCOffset(value: unknown): value is UTCOffset {
  * @returns `true` if the value is a valid IANA time zone identifier, otherwise `false`.
  */
 export function isValidTimeZoneId(value: unknown): value is $TimeZoneIdentifier {
-	return isString(value) ? ([...IANA_TZ_IDS] as string[]).includes(value) : false;
+	return isNonEmptyString(value) ? new Set([...IANA_TZ_IDS] as string[]).has(value) : false;
 }
 
 /**
@@ -60,7 +67,9 @@ export function isValidTimeZoneId(value: unknown): value is $TimeZoneIdentifier 
  * @returns `true` if the value is a valid native JS-supported time zone identifier, otherwise `false`.
  */
 export function isNativeTimeZoneId(value: unknown): value is TimeZoneIdNative {
-	return isString(value) ? Intl.supportedValuesOf('timeZone').includes(value) : false;
+	return isNonEmptyString(value) ?
+			new Set(Intl.supportedValuesOf('timeZone')).has(value)
+		:	false;
 }
 
 /**
@@ -127,4 +136,9 @@ export function isDateLike(value: unknown): boolean {
 	}
 
 	return false;
+}
+
+/** Checks if a value represents time value (number) with different forms of {@link TimeWithUnit units} */
+export function isTimeWithUnit(value: unknown): value is TimeWithUnit {
+	return isNonEmptyString(value) && TIME_REGEX.test(value);
 }

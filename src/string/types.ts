@@ -6,9 +6,9 @@ import type { LOWERCASE } from './constants';
 declare global {
 	interface String {
 		toLowerCase(): string;
-		toLowerCase<C extends 'T'>(): C extends 'T' ? Lowercase<string> : string;
+		toLowerCase<C extends 'T' | string>(): C extends 'T' ? Lowercase<string> : Lowercase<C>;
 		toUpperCase(): string;
-		toUpperCase<C extends 'T'>(): C extends 'T' ? Uppercase<string> : string;
+		toUpperCase<C extends 'T' | string>(): C extends 'T' ? Uppercase<string> : Uppercase<C>;
 	}
 }
 

@@ -1,32 +1,10 @@
+import { parseMs } from '../date/parse';
 import { isNotEmptyObject } from '../guards/non-primitives';
 import { isNonEmptyString } from '../guards/primitives';
 import type { GenericObject } from '../object/types';
 import { _constantTimeEquals, _stableStringify } from './helpers';
-import { toMilliseconds } from './ms';
-import type { TimeWithUnit } from './types';
+import type { DecodedToken, TokenOptions, TokenPayload, VerifiedResult } from './types';
 import { base64ToBytes, bytesToBase64, bytesToUtf8, hmacSha256, utf8ToBytes } from './utils';
-
-type VerifiedResult<T extends GenericObject = GenericObject> =
-	| { isValid: true; payload: TokenPayload<T> }
-	| { isValid: false; error: string };
-
-type TokenOptions = {
-	alg?: 'HS256';
-	typ?: 'JWT';
-	expiresIn?: TimeWithUnit | number;
-};
-
-type TokenPayload<T extends GenericObject = GenericObject> = {
-	iat: number;
-	exp: number | undefined;
-} & { [K in keyof T]: T[K] };
-
-type DecodedToken<T extends GenericObject = GenericObject> = {
-	header: TokenOptions;
-	payload: TokenPayload<T>;
-	signature: string;
-	signingInput: string;
-};
 
 export class SimpleToken {
 	#secretBytes: Uint8Array;
@@ -42,10 +20,12 @@ export class SimpleToken {
 	sign(payload: GenericObject, options?: TokenOptions): string {
 		if (!isNotEmptyObject(payload)) throw new Error('Payload must be a valid object!');
 
+		const { expiresIn } = options || {};
+
 		const now = Date.now();
 		const updatedPayload: TokenPayload = {
 			iat: now,
-			exp: options?.expiresIn ? now + toMilliseconds(options?.expiresIn) : undefined,
+			exp: expiresIn ? now + parseMs(expiresIn) : Infinity,
 			...payload,
 		};
 
@@ -92,7 +72,7 @@ export class SimpleToken {
 			header,
 			payload,
 			signature: c,
-			signingInput: a + '.' + b,
+			signingInput: a.concat('.', b),
 		};
 	}
 
