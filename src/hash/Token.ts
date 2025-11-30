@@ -4,7 +4,13 @@ import { isNonEmptyString } from '../guards/primitives';
 import type { GenericObject } from '../object/types';
 import { stableStringify } from '../utils/index';
 import { _constantTimeEquals } from './helpers';
-import type { DecodedToken, TokenOptions, TokenPayload, VerifiedResult } from './types';
+import type {
+	DecodedToken,
+	TokenOptions,
+	TokenPayload,
+	TokenString,
+	VerifiedToken,
+} from './types';
 import { base64ToBytes, bytesToBase64, bytesToUtf8, hmacSha256, utf8ToBytes } from './utils';
 
 export class SimpleToken {
@@ -18,7 +24,7 @@ export class SimpleToken {
 		this.#secretBytes = utf8ToBytes(secret);
 	}
 
-	sign(payload: GenericObject, options?: TokenOptions): string {
+	sign(payload: GenericObject, options?: TokenOptions): TokenString {
 		if (!isNotEmptyObject(payload)) throw new Error('Payload must be a valid object!');
 
 		const { expiresIn } = options || {};
@@ -35,11 +41,11 @@ export class SimpleToken {
 		const payloadJson = stableStringify(updatedPayload);
 		const headerB = utf8ToBytes(headerJson);
 		const payloadB = utf8ToBytes(payloadJson);
-		const signingInput = bytesToBase64(headerB) + '.' + bytesToBase64(payloadB);
-
+		const signingInput = `${bytesToBase64(headerB)}.${bytesToBase64(payloadB)}` as const;
 		const mac = hmacSha256(this.#secretBytes, utf8ToBytes(signingInput));
 		const signature = bytesToBase64(mac);
-		return signingInput + '.' + signature;
+
+		return `${signingInput}.${signature}`;
 	}
 
 	decode<T extends GenericObject = GenericObject>(token: string): DecodedToken<T> {
@@ -48,9 +54,9 @@ export class SimpleToken {
 		const parts = token.split('.');
 		if (parts.length !== 3) throw new Error('Token is tampered or malformed!');
 
-		const [a, b, c] = parts;
-		const headerBytes = base64ToBytes(a);
-		const payloadBytes = base64ToBytes(b);
+		const [hdr, pld, signature] = parts;
+		const headerBytes = base64ToBytes(hdr);
+		const payloadBytes = base64ToBytes(pld);
 		const headerStr = bytesToUtf8(headerBytes);
 		const payloadStr = bytesToUtf8(payloadBytes);
 
@@ -72,38 +78,32 @@ export class SimpleToken {
 		return {
 			header,
 			payload,
-			signature: c,
-			signingInput: a.concat('.', b),
+			signature,
+			signingInput: `${hdr}.${pld}`,
 		};
 	}
 
-	verify<T extends GenericObject = GenericObject>(token: string): VerifiedResult<T> {
+	verify<T extends GenericObject = GenericObject>(token: string): VerifiedToken<T> {
 		if (!isNonEmptyString(token)) {
-			return {
-				isValid: false,
-				error: 'Token must be a non-empty string!',
-			};
+			throw new Error('Token must be a non-empty string!');
 		}
 
 		try {
 			const parts = token.split('.');
 			if (parts.length !== 3) {
-				return {
-					isValid: false,
-					error: 'Token is tampered or malformed!',
-				};
+				throw new Error('Token is tampered or malformed!');
 			}
 
-			const [a, b, sig] = parts;
-			const signingInput = a + '.' + b;
+			const [hdr, pld, sig] = parts;
+			const signingInput = hdr + '.' + pld;
 			const expectedMac = hmacSha256(this.#secretBytes, utf8ToBytes(signingInput));
 			const expectedSig = bytesToBase64(expectedMac);
 
-			// constant-time string compare
-			const ok = _constantTimeEquals(sig, expectedSig);
-			if (!ok) return { isValid: false, error: 'Invalid signature!' };
-			// parse payload
-			const payloadBytes = base64ToBytes(b);
+			if (!_constantTimeEquals(sig, expectedSig)) {
+				throw new Error('Invalid or tampered signature!');
+			}
+
+			const payloadBytes = base64ToBytes(pld);
 			const payloadStr = bytesToUtf8(payloadBytes);
 
 			let payload: TokenPayload<T>;
@@ -111,6 +111,10 @@ export class SimpleToken {
 				payload = JSON.parse(payloadStr);
 			} catch {
 				throw new Error('Cannot parse payload!');
+			}
+
+			if (payload.exp && Date.now() > payload.exp) {
+				throw new Error('Token has expired!');
 			}
 
 			return { isValid: true, payload };
@@ -122,14 +126,14 @@ export class SimpleToken {
 		}
 	}
 
-	verifyOrThrow(token: string): unknown {
-		const res = this.verify(token);
+	verifyOrThrow<T extends GenericObject = GenericObject>(token: string): VerifiedToken<T> {
+		const res = this.verify<T>(token);
 
 		if (!res.isValid) {
-			throw new Error(res.error || 'Invalid token!');
+			throw new Error(res.error || 'Invalid, malformed or expired token!');
 		}
 
-		return res.payload;
+		return res;
 	}
 
 	decodePayload<T extends GenericObject = GenericObject>(token: string): TokenPayload<T> {

@@ -55,7 +55,7 @@ export interface DecodedUUID {
 	node?: string;
 }
 
-export type VerifiedResult<T extends GenericObject = GenericObject> =
+export type VerifiedToken<T extends GenericObject = GenericObject> =
 	| { isValid: true; payload: TokenPayload<T> }
 	| { isValid: false; error: string };
 
@@ -74,5 +74,7 @@ export type DecodedToken<T extends GenericObject = GenericObject> = {
 	header: TokenOptions;
 	payload: TokenPayload<T>;
 	signature: string;
-	signingInput: string;
+	signingInput: `${string}.${string}`;
 };
+
+export type TokenString = `${string}.${string}.${string}`;
