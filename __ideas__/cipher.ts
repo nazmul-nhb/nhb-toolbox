@@ -9,7 +9,7 @@
  * For production, use platform crypto RNG for IV.
  */
 
-import { bytesToUtf8, utf8ToBytes } from '../src/hash/helpers';
+import { bytesToUtf8, utf8ToBytes } from '../src/hash/utils';
 import { hmacSha256, sha256Bytes } from './tiny-crypto';
 
 /* ------------------ Base64 (pure JS) ------------------ */

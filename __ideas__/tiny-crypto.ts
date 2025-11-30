@@ -8,7 +8,7 @@
  * This file is TypeScript and uses native TS types. JSDoc comments contain descriptions only.
  */
 
-import { bytesToUtf8, utf8ToBytes } from '../src/hash/helpers';
+import { bytesToUtf8, utf8ToBytes } from '../src/hash/utils';
 import { base64Decode, base64Encode } from './cipher';
 
 type JSONObject = Record<string, unknown>;

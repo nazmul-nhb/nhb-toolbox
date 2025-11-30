@@ -1,23 +1,24 @@
+import { isNonEmptyString } from '../guards/primitives';
 import type { RandomIdOptions } from './types';
 
 /**
  * * Utility to truncate a string to a specified length.
  *
- * @param string The string to truncate.
+ * @param str The string to truncate.
  * @param maxLength The maximum length of the truncated string.
  * @returns Truncated string with ellipsis (`...`) (only if it has more length than `maxLength`).
  */
-export const truncateString = (string: string, maxLength: number): string => {
-	if (typeof string !== 'string' || !string) return '';
+export function truncateString(str: string, maxLength: number): string {
+	if (!isNonEmptyString(str)) return '';
 
-	const trimmedString = string?.trim();
+	const trimmedString = str.trim();
 
 	if (!trimmedString) return '';
 
-	if (trimmedString?.length <= maxLength) return trimmedString;
+	if (trimmedString.length <= maxLength) return trimmedString;
 
-	return trimmedString?.slice(0, maxLength)?.concat('...');
-};
+	return trimmedString.slice(0, maxLength)?.concat('...');
+}
 
 /**
  * * Generates a random alphanumeric (16 characters long, this length is customizable in the options) ID string composed of an optional `prefix`, `suffix`, a `timestamp`, `caseOption` and a customizable `separator`.
@@ -25,7 +26,7 @@ export const truncateString = (string: string, maxLength: number): string => {
  * @param options Configuration options for random ID generation.
  * @returns The generated ID string composed of the random alphanumeric string of specified length with optional `timeStamp`, `prefix`, and `suffix`, `caseOption` and `separator`.
  */
-export const generateRandomID = (options?: RandomIdOptions): string => {
+export function generateRandomID(options?: RandomIdOptions): string {
 	const {
 		prefix = '',
 		suffix = '',
@@ -55,7 +56,7 @@ export const generateRandomID = (options?: RandomIdOptions): string => {
 		default:
 			return ID;
 	}
-};
+}
 
 /**
  * * Trims all the words in a string.
@@ -83,14 +84,14 @@ export function trimString(input: string | string[]): string | string[] {
 	if (!input) return '';
 
 	// If the input is a string, trim each word
-	if (typeof input === 'string') {
-		return input?.trim()?.replace(/\s+/g, ' ');
+	if (isNonEmptyString(input)) {
+		return input.trim().replace(/\s+/g, ' ');
 	}
 
 	// If the input is an array of strings, trim each string in the array
 	if (Array.isArray(input)) {
-		return input?.map((str) =>
-			typeof str === 'string' ? str?.trim()?.replace(/\s+/g, ' ') : str
+		return input.map((str) =>
+			isNonEmptyString(str) ? str.trim().replace(/\s+/g, ' ') : str
 		);
 	}
 
