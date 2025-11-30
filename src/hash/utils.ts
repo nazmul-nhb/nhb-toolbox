@@ -149,6 +149,22 @@ export function intTo4BytesBE(n: number): Uint8Array {
 	return b;
 }
 
+export function unit8To32ArrayBE(bytes: Uint8Array): Uint32Array {
+	const len = Math.ceil(bytes.length / 4);
+	const out = new Uint32Array(len);
+
+	for (let i = 0; i < len; i++) {
+		const base = i * 4;
+		out[i] =
+			((bytes[base] || 0) << 24) |
+			((bytes[base + 1] || 0) << 16) |
+			((bytes[base + 2] || 0) << 8) |
+			((bytes[base + 3] || 0) << 0);
+	}
+
+	return out;
+}
+
 export function sha256Bytes(message: Uint8Array): Uint8Array {
 	// Initialize hash values:
 	const H = new Uint32Array([

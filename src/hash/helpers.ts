@@ -1,6 +1,7 @@
-import { isObjectWithKeys } from '../guards/non-primitives';
-import { isNonEmptyString } from '../guards/primitives';
+import { isNotEmptyObject, isObjectWithKeys } from '../guards/non-primitives';
+import { isNonEmptyString, isString } from '../guards/primitives';
 import { isUUID } from '../guards/specials';
+import type { GenericObject } from '../object/types';
 import type { $UUIDOptionsV3V5, $UUIDVersion, UUID, UUIDVersion } from './types';
 import { randomHex } from './utils';
 
@@ -217,9 +218,38 @@ export function _checkUUIDVersion(value: unknown, v: `${$UUIDVersion}`) {
 	return isUUID(value) && value[14] === v;
 }
 
-export function _constantTimeEquals(a: Uint8Array, b: Uint8Array): boolean {
+export function _constantTimeEquals(a: string | Uint8Array, b: string | Uint8Array): boolean {
 	if (a.length !== b.length) return false;
+
+	const _getRes = (x: string | Uint8Array, idx: number) => {
+		return isString(x) ? x.charCodeAt(idx) : x[idx];
+	};
+
 	let res = 0;
-	for (let i = 0; i < a.length; i++) res |= a[i] ^ b[i];
+
+	for (let i = 0; i < a.length; i++) {
+		res |= _getRes(a, i) ^ _getRes(b, i);
+	}
+
 	return res === 0;
+}
+
+export function _stableStringify(obj: unknown): string {
+	if (isNotEmptyObject(obj)) {
+		return JSON.stringify(obj);
+	}
+
+	if (Array.isArray(obj)) {
+		return '[' + obj.map((v) => _stableStringify(v)).join(',') + ']';
+	}
+
+	const keys = Object.keys(obj as GenericObject).sort();
+
+	return (
+		'{' +
+		keys
+			.map((k) => JSON.stringify(k) + ':' + _stableStringify((obj as GenericObject)[k]))
+			.join(',') +
+		'}'
+	);
 }
