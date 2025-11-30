@@ -216,3 +216,10 @@ export function _isOptionV3V5(opt: unknown): opt is $UUIDOptionsV3V5<'v3' | 'v5'
 export function _checkUUIDVersion(value: unknown, v: `${$UUIDVersion}`) {
 	return isUUID(value) && value[14] === v;
 }
+
+export function _constantTimeEquals(a: Uint8Array, b: Uint8Array): boolean {
+	if (a.length !== b.length) return false;
+	let res = 0;
+	for (let i = 0; i < a.length; i++) res |= a[i] ^ b[i];
+	return res === 0;
+}

@@ -2,6 +2,7 @@ export { isUUID } from '../guards/specials';
 export { generateRandomID, generateRandomID as randomID } from '../string/basics';
 export { md5, sha1 } from './core';
 export { bytesToUtf8, randomHex, utf8ToBytes } from './utils';
+export { Cipher } from './Cipher';
 export {
 	decodeUUID,
 	isUUIDv1,

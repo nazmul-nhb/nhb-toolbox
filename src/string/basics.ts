@@ -17,7 +17,7 @@ export function truncateString(str: string, maxLength: number): string {
 
 	if (trimmedString.length <= maxLength) return trimmedString;
 
-	return trimmedString.slice(0, maxLength)?.concat('...');
+	return trimmedString.slice(0, maxLength).concat('...');
 }
 
 /**
@@ -40,13 +40,13 @@ export function generateRandomID(options?: RandomIdOptions): string {
 	const date = timeStamp ? Date.now() : '';
 
 	// Generate a random string of alphanumeric characters
-	const randomString: string = Array.from({ length }, () =>
+	const randomString = Array.from({ length }, () =>
 		Math.random().toString(36).slice(2, 3)
 	).join('');
 
 	const ID = [prefix && prefix.trim(), date, randomString, suffix && suffix.trim()]
-		?.filter(Boolean)
-		?.join(separator);
+		.filter(Boolean)
+		.join(separator);
 
 	switch (caseOption) {
 		case 'upper':
