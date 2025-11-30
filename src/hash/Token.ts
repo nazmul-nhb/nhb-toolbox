@@ -2,13 +2,28 @@ import { isNotEmptyObject } from '../guards/non-primitives';
 import { isNonEmptyString } from '../guards/primitives';
 import type { GenericObject } from '../object/types';
 import { _constantTimeEquals, _stableStringify } from './helpers';
+import { toMilliseconds } from './ms';
+import type { TimeWithUnit } from './types';
 import { base64ToBytes, bytesToBase64, bytesToUtf8, hmacSha256, utf8ToBytes } from './utils';
 
-type VerifiedResult = { isValid: true; payload: unknown } | { isValid: false; error: string };
+type VerifiedResult<T extends GenericObject = GenericObject> =
+	| { isValid: true; payload: TokenPayload<T> }
+	| { isValid: false; error: string };
 
-type DecodedToken = {
-	header: unknown;
-	payload: unknown;
+type TokenOptions = {
+	alg?: 'HS256';
+	typ?: 'JWT';
+	expiresIn?: TimeWithUnit | number;
+};
+
+type TokenPayload<T extends GenericObject = GenericObject> = {
+	iat: number;
+	exp: number | undefined;
+} & { [K in keyof T]: T[K] };
+
+type DecodedToken<T extends GenericObject = GenericObject> = {
+	header: TokenOptions;
+	payload: TokenPayload<T>;
 	signature: string;
 	signingInput: string;
 };
@@ -24,12 +39,19 @@ export class SimpleToken {
 		this.#secretBytes = utf8ToBytes(secret);
 	}
 
-	sign(payload: GenericObject, header?: GenericObject): string {
+	sign(payload: GenericObject, options?: TokenOptions): string {
 		if (!isNotEmptyObject(payload)) throw new Error('Payload must be a valid object!');
 
-		const hdr: GenericObject = Object.assign({ alg: 'HS256', typ: 'JWT' }, header || {});
+		const now = Date.now();
+		const updatedPayload: TokenPayload = {
+			iat: now,
+			exp: options?.expiresIn ? now + toMilliseconds(options?.expiresIn) : undefined,
+			...payload,
+		};
+
+		const hdr: TokenOptions = { alg: 'HS256', typ: 'JWT', ...options };
 		const headerJson = _stableStringify(hdr);
-		const payloadJson = _stableStringify(payload);
+		const payloadJson = _stableStringify(updatedPayload);
 		const headerB = utf8ToBytes(headerJson);
 		const payloadB = utf8ToBytes(payloadJson);
 		const signingInput = bytesToBase64(headerB) + '.' + bytesToBase64(payloadB);
@@ -39,7 +61,7 @@ export class SimpleToken {
 		return signingInput + '.' + signature;
 	}
 
-	decode(token: string): DecodedToken {
+	decode<T extends GenericObject = GenericObject>(token: string): DecodedToken<T> {
 		if (!isNonEmptyString(token)) throw new Error('Token must be a non-empty string!');
 
 		const parts = token.split('.');
@@ -51,19 +73,19 @@ export class SimpleToken {
 		const headerStr = bytesToUtf8(headerBytes);
 		const payloadStr = bytesToUtf8(payloadBytes);
 
-		let header: unknown;
-		let payload: unknown;
+		let header: TokenOptions;
+		let payload: TokenPayload<T>;
 
 		try {
 			header = JSON.parse(headerStr);
 		} catch {
-			header = headerStr;
+			throw new Error('Cannot parse header!');
 		}
 
 		try {
 			payload = JSON.parse(payloadStr);
 		} catch {
-			payload = payloadStr;
+			throw new Error('Cannot parse payload!');
 		}
 
 		return {
@@ -74,7 +96,7 @@ export class SimpleToken {
 		};
 	}
 
-	verify(token: string): VerifiedResult {
+	verify<T extends GenericObject = GenericObject>(token: string): VerifiedResult<T> {
 		if (!isNonEmptyString(token)) {
 			return {
 				isValid: false,
@@ -103,11 +125,11 @@ export class SimpleToken {
 			const payloadBytes = base64ToBytes(b);
 			const payloadStr = bytesToUtf8(payloadBytes);
 
-			let payload: unknown;
+			let payload: TokenPayload<T>;
 			try {
 				payload = JSON.parse(payloadStr);
 			} catch {
-				payload = payloadStr;
+				throw new Error('Cannot parse payload!');
 			}
 
 			return { isValid: true, payload };
@@ -129,11 +151,7 @@ export class SimpleToken {
 		return res.payload;
 	}
 
-	decodePayload(token: string): unknown | null {
-		try {
-			return this.decode(token).payload;
-		} catch {
-			return null;
-		}
+	decodePayload<T extends GenericObject = GenericObject>(token: string): TokenPayload<T> {
+		return this.decode<T>(token).payload;
 	}
 }
