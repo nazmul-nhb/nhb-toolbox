@@ -234,3 +234,5 @@ export function _constantTimeEquals(a: string | Uint8Array, b: string | Uint8Arr
 }
 
 export const _toSeconds = (ms: number) => Math.floor(ms / 1000);
+
+export const _secToDate = (sec: number) => new Date(sec * 1000);

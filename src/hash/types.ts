@@ -61,7 +61,7 @@ export type VerifiedToken<T extends GenericObject = GenericObject> =
 
 export type TokenHeader = {
 	alg?: 'HS256';
-	typ?: 'Custom';
+	typ?: 'jwt-like';
 };
 
 export type VerifyOptions = {
@@ -77,8 +77,11 @@ export interface SignOptions extends VerifyOptions {
 
 export type TokenPayload<T extends GenericObject = GenericObject> = {
 	iat: number;
+	iatDate: Date;
 	exp?: number;
+	expDate?: Date;
 	nbf?: number;
+	nbfDate?: Date;
 	aud?: string | string[];
 	sub?: string;
 	iss?: string;

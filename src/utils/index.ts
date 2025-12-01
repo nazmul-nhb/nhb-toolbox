@@ -8,7 +8,7 @@ import {
 	isObject,
 	isValidArray,
 } from '../guards/non-primitives';
-import { isPrimitive, isString } from '../guards/primitives';
+import { isNonEmptyString, isPrimitive, isString } from '../guards/primitives';
 import { isNumericString } from '../guards/specials';
 import type { GenericObject } from '../object/types';
 import type {
@@ -339,6 +339,25 @@ export function stableStringify(obj: unknown): string {
 	}
 
 	return JSON.stringify(obj, _replacer);
+}
+
+/**
+ * * Remove trailing or leading garbage characters **after/before JSON object or array**.
+ * @param str String to sanitize/strip.
+ * @returns Sanitized/stripped JSON string.
+ */
+export function stripJsonEdgeGarbage(str: string): string {
+	if (!isNonEmptyString(str)) return '';
+
+	const lastIdx = Math.max(str.lastIndexOf('}'), str.lastIndexOf(']'));
+
+	const _idxOf = (sym: '{' | '[') => (str.indexOf(sym) !== -1 ? str.indexOf(sym) : Infinity);
+
+	const firstIdx = Math.min(_idxOf('{'), _idxOf('['));
+
+	if (lastIdx === -1 || firstIdx === Infinity) return str;
+
+	return str.slice(firstIdx, lastIdx + 1);
 }
 
 /**

@@ -102,6 +102,7 @@ export function bytesToBase64(bytes: Uint8Array): string {
 			_b64chars[isNaN(o2) ? 64 : h3] +
 			_b64chars[isNaN(o3) ? 64 : h4];
 	}
+
 	return out;
 }
 

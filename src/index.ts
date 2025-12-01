@@ -236,7 +236,7 @@ export {
 	getGreeting as greet,
 } from './date/greet';
 
-export { parseMs } from './date/parse';
+export { parseMSec as parseMs, parseMSec } from './date/parse';
 
 export {
 	isDateLike,
@@ -247,8 +247,8 @@ export {
 	isValidTime as isValidTimeString,
 	isValidTimeZoneId,
 	isValidUTCOffset as isValidUTC,
-	isValidUTCOffset,
 	isValidUTCOffset as isValidUTCOffSet,
+	isValidUTCOffset,
 } from './date/guards';
 
 // ! Chronos
@@ -452,6 +452,7 @@ export {
 	parseJSON as parseJsonDeep,
 	deepParsePrimitives as parsePrimitivesDeep,
 	stableStringify,
+	stripJsonEdgeGarbage,
 	throttleAction,
 } from './utils/index';
 

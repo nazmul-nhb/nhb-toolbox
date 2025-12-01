@@ -1,9 +1,9 @@
-import { parseMs } from '../date/parse';
+import { parseMSec } from '../date/parse';
 import { isNotEmptyObject } from '../guards/non-primitives';
 import { isNonEmptyString } from '../guards/primitives';
 import type { GenericObject } from '../object/types';
-import { stableStringify } from '../utils/index';
-import { _constantTimeEquals, _toSeconds } from './helpers';
+import { stableStringify, stripJsonEdgeGarbage } from '../utils/index';
+import { _constantTimeEquals, _secToDate, _toSeconds } from './helpers';
 import type {
 	DecodedToken,
 	SignOptions,
@@ -41,8 +41,8 @@ export class SimpleToken {
 
 		const headerBytes = base64ToBytes(hdr);
 		const payloadBytes = base64ToBytes(pld);
-		const headerStr = bytesToUtf8(headerBytes);
-		const payloadStr = bytesToUtf8(payloadBytes);
+		const headerStr = stripJsonEdgeGarbage(bytesToUtf8(headerBytes));
+		const payloadStr = stripJsonEdgeGarbage(bytesToUtf8(payloadBytes));
 
 		let header: TokenHeader;
 
@@ -55,12 +55,16 @@ export class SimpleToken {
 		let payload: TokenPayload<T>;
 
 		try {
-			const { iat, exp, nbf, aud, sub, iss, ...rest } = JSON.parse(payloadStr);
+			const { iat, iatDate, exp, expDate, nbf, nbfDate, aud, sub, iss, ...rest } =
+				JSON.parse(payloadStr);
 
 			payload = {
 				iat,
+				iatDate: iatDate ? new Date(iatDate) : _secToDate(iat),
 				...(exp && { exp }),
+				...(exp && { expDate: expDate ? new Date(expDate) : _secToDate(exp) }),
 				...(nbf && { nbf }),
+				...(nbf && { nbfDate: nbfDate ? new Date(nbfDate) : _secToDate(nbf) }),
 				...(aud && { aud }),
 				...(sub && { sub }),
 				...(iss && { iss }),
@@ -87,15 +91,18 @@ export class SimpleToken {
 
 		const $payload: TokenPayload = {
 			iat,
-			...(expiresIn && { exp: iat + _toSeconds(parseMs(expiresIn)) }),
-			...(notBefore && { nbf: iat + _toSeconds(parseMs(notBefore)) }),
+			iatDate: _secToDate(iat),
+			...(expiresIn && { exp: iat + parseMSec(expiresIn, true) }),
+			...(expiresIn && { expDate: _secToDate(iat + parseMSec(expiresIn, true)) }),
+			...(notBefore && { nbf: iat + parseMSec(notBefore, true) }),
+			...(notBefore && { nbfDate: _secToDate(iat + parseMSec(notBefore, true)) }),
 			...(audience && { aud: audience }),
 			...(subject && { sub: subject }),
 			...(issuer && { iss: issuer }),
 			...payload,
 		};
 
-		const header: TokenHeader = { alg: 'HS256', typ: 'Custom' };
+		const header: TokenHeader = { alg: 'HS256', typ: 'jwt-like' };
 		const headerJson = stableStringify(header);
 		const payloadJson = stableStringify($payload);
 		const headerB = utf8ToBytes(headerJson);
