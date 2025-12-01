@@ -23,7 +23,44 @@ export function randomHex(length: number, uppercase = false): string {
 
 // ! UTF-8 Utilities
 
-/** Convert string to UTF-8 bytes */
+/**
+ * * Converts a UTF-8 string to a byte array (`Uint8Array`).
+ *
+ * This function encodes a JavaScript string into UTF-8 bytes, handling all Unicode code points including supplementary characters (surrogate pairs).
+ *
+ * @example
+ * ```typescript
+ * // Basic ASCII
+ * const asciiBytes = utf8ToBytes('hello');
+ * // Returns:
+ * Uint8Array(5) [104, 101, 108, 108, 111]
+ *
+ * // Unicode characters
+ * const unicodeBytes = utf8ToBytes('Hello পৃথিবী!');
+ * // Returns:
+ * Uint8Array(25) [
+ *  72, 101, 108, 108, 111,  32,
+ * 224, 166, 170, 224, 167, 131,
+ * 224, 166, 165, 224, 166, 191,
+ * 224, 166, 172, 224, 167, 128,
+ *  33
+ * ]
+ * ```
+ *
+ * @param str - The input string to encode as UTF-8 bytes.
+ * @returns A `Uint8Array` containing the UTF-8 encoded bytes.
+ *
+ * @remarks
+ * - The encoding follows the UTF-8 specification:
+ *   - 1-byte sequence for code points U+0000 to U+007F (ASCII)
+ *   - 2-byte sequence for code points U+0080 to U+07FF
+ *   - 3-byte sequence for code points U+0800 to U+FFFF
+ *   - 4-byte sequence for code points U+10000 to U+10FFFF (surrogate pairs)
+ *
+ * **Note:** Invalid surrogate pairs in the input string are silently ignored.
+ *
+ * @see {@link bytesToUtf8} for the inverse operation
+ */
 export function utf8ToBytes(str: string): Uint8Array {
 	const out: number[] = [];
 	for (let i = 0; i < str.length; i++) {
@@ -53,7 +90,37 @@ export function utf8ToBytes(str: string): Uint8Array {
 	return new Uint8Array(out);
 }
 
-/** Convert UTF-8 bytes to string */
+/**
+ * * Converts `UTF-8` encoded bytes back to a string.
+ *
+ * This function decodes a `Uint8Array` containing `UTF-8` bytes into a JavaScript string.
+ *
+ * @example
+ * ```typescript
+ * // Decode UTF-8 bytes
+ * const bytes = new Uint8Array([104, 101, 108, 108, 111]);
+ * const str = bytesToUtf8(bytes);
+ * // Returns: 'hello'
+ *
+ * // Round-trip conversion
+ * const original = 'Hello 🌍';
+ * const bytes = utf8ToBytes(original);
+ * const decoded = bytesToUtf8(bytes);
+ * console.log(original === decoded); // true
+ * ```
+ *
+ * @param bytes - A `Uint8Array` containing `UTF-8` encoded bytes.
+ * @returns The decoded string.
+ *
+ * @remarks
+ * - The function handles all valid `UTF-8` sequences:
+ *   - 1-byte sequences (0xxxxxxx) → ASCII characters
+ *   - 2-byte sequences (110xxxxx 10xxxxxx)
+ *   - 3-byte sequences (1110xxxx 10xxxxxx 10xxxxxx)
+ *   - 4-byte sequences (11110xxx 10xxxxxx 10xxxxxx 10xxxxxx) → surrogate pairs
+ *
+ * @see {@link utf8ToBytes} for the inverse operation
+ */
 export function bytesToUtf8(bytes: Uint8Array): string {
 	let out = '';
 	let i = 0;
@@ -85,8 +152,35 @@ export function bytesToUtf8(bytes: Uint8Array): string {
 	return out;
 }
 
-// ! base64 Utilities
+// ! Base64 Utilities
 
+/**
+ * * Decodes a `Base64` string to bytes.
+ *   - This function converts a `Base64`-encoded string back to its original byte representation.
+ *   - It handles standard `Base64` encoding with '=', '+', '/' characters.
+ *
+ * @example
+ * ```typescript
+ * // Decode Base64 string
+ * const bytes = base64ToBytes('aGVsbG8gd29ybGQ=');
+ * // Returns: Uint8Array(11) [104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100]
+ *
+ * // Empty string
+ * const empty = base64ToBytes('');
+ * // Returns: Uint8Array(0) []
+ * ```
+ *
+ * @param str - The `Base64`-encoded string to decode.
+ * @returns A `Uint8Array` containing the decoded bytes.
+ *
+ * @remarks
+ * - The function supports:
+ *   - Standard `Base64` alphabet (A-Z, a-z, 0-9, +, /)
+ *   - Padding with '=' characters
+ *   - Ignores whitespace (though not explicitly trimmed in this implementation)
+ *
+ * @see {@link bytesToBase64} for the inverse operation
+ */
 export function base64ToBytes(str: string): Uint8Array {
 	const _b64chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
@@ -107,6 +201,35 @@ export function base64ToBytes(str: string): Uint8Array {
 	return new Uint8Array(out);
 }
 
+/**
+ * * Encodes bytes to a `Base64` string.
+ *   - This function converts a `Uint8Array` to a `Base64`-encoded string using the standard `Base64` alphabet with padding.
+ *
+ * @example
+ * ```typescript
+ * // Encode bytes to Base64
+ * const bytes = new Uint8Array([104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100]);
+ * const b64 = bytesToBase64(bytes);
+ * // Returns: 'aGVsbG8gd29ybGQ='
+ *
+ * // Empty array
+ * const empty = bytesToBase64(new Uint8Array(0));
+ * // Returns: ''
+ * ```
+ *
+ * @param bytes - The bytes to encode as `Base64`.
+ * @returns The `Base64`-encoded string.
+ *
+ * @remarks
+ * The encoding uses:
+ * - Standard `Base64` alphabet (A-Z, a-z, 0-9, +, /)
+ * - '=' padding for incomplete groups
+ * - No line breaks or whitespace
+ *
+ * This is a pure JavaScript implementation that doesn't rely on `btoa()`.
+ *
+ * @see {@link base64ToBytes} for the inverse operation
+ */
 export function bytesToBase64(bytes: Uint8Array): string {
 	const _b64chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
@@ -132,6 +255,33 @@ export function bytesToBase64(bytes: Uint8Array): string {
 
 // ! Bytes (Uint8Array) utilities
 
+/**
+ * * Concatenates multiple `Uint8Array`s into a single `Uint8Array`.
+ *   - This function efficiently combines multiple byte arrays without creating intermediate strings or arrays.
+ *
+ * @example
+ * ```typescript
+ * // Concatenate multiple arrays
+ * const a = new Uint8Array([1, 2, 3]);
+ * const b = new Uint8Array([4, 5]);
+ * const c = new Uint8Array([6, 7, 8, 9]);
+ * const result = concatBytes(a, b, c);
+ * // Returns: Uint8Array(9) [1, 2, 3, 4, 5, 6, 7, 8, 9]
+ *
+ * // Single array
+ * const single = concatBytes(new Uint8Array([1, 2, 3]));
+ * // Returns: Uint8Array(3) [1, 2, 3]
+ *
+ * // No arrays
+ * const empty = concatBytes();
+ * // Returns: Uint8Array(0) []
+ * ```
+ *
+ * @param parts - One or more `Uint8Array`s to concatenate.
+ * @returns A new `Uint8Array` containing all the bytes from the input arrays in the order they were provided.
+ *
+ * @remarks The function allocates a single `Uint8Array` of the total combined length and copies all bytes into it using `set()` for optimal performance.
+ */
 export function concatBytes(...parts: Uint8Array[]): Uint8Array {
 	const len = parts.reduce((s, p) => s + p.length, 0);
 	const out = new Uint8Array(len);
@@ -143,24 +293,39 @@ export function concatBytes(...parts: Uint8Array[]): Uint8Array {
 	return out;
 }
 
-export function unit8To32ArrayBE(bytes: Uint8Array): Uint32Array {
-	const len = Math.ceil(bytes.length / 4);
-	const out = new Uint32Array(len);
-
-	for (let i = 0; i < len; i++) {
-		const base = i * 4;
-		out[i] =
-			((bytes[base] || 0) << 24) |
-			((bytes[base + 1] || 0) << 16) |
-			((bytes[base + 2] || 0) << 8) |
-			((bytes[base + 3] || 0) << 0);
-	}
-
-	return out;
-}
-
 // ! Bytes Hashing Utilities
 
+/**
+ * * Computes the `SHA-256` hash of raw bytes.
+ *   - This is a pure JavaScript implementation of the `SHA-256` cryptographic hash function that operates directly on byte arrays (`Uint8Array`).
+ *
+ * @example
+ * ```typescript
+ * // Hash raw bytes
+ * const bytes = new Uint8Array([104, 101, 108, 108, 111]); // "hello"
+ * const hash = sha256Bytes(bytes);
+ * // Returns: Uint8Array(32) with SHA-256 hash
+ *
+ * // Verify with string hash
+ * const strHash = sha256('hello');
+ * const bytesHash = bytesToHex(sha256Bytes(utf8ToBytes('hello')));
+ * console.log(strHash === bytesHash); // true
+ * ```
+ *
+ * @param message - The bytes to hash as a `Uint8Array`.
+ * @returns A `Uint8Array` of 32 bytes (256 bits) containing the `SHA-256` hash.
+ *
+ * @remarks
+ * - Implementation details:
+ *   - Follows the `SHA-256` specification (FIPS 180-4)
+ *   - Uses big-endian byte order throughout
+ *   - Processes messages in 512-bit (64-byte) blocks
+ *   - Applies proper padding with message length
+ *   - Uses all required `SHA-256` round constants
+ *   - Returns hash as 32-byte array
+ *
+ * @see {@link hmacSha256} for `HMAC-SHA256` computation
+ */
 export function sha256Bytes(message: Uint8Array): Uint8Array {
 	// Initialize hash values
 	const H = new Uint32Array([
@@ -272,6 +437,45 @@ export function sha256Bytes(message: Uint8Array): Uint8Array {
 	return out;
 }
 
+/**
+ * * Computes `HMAC-SHA256` (Hash-based Message Authentication Code using `SHA-256`).
+ *  - This function implements the `HMAC` algorithm with `SHA-256` as the underlying hash function, providing message authentication and integrity verification.
+ *
+ * @example
+ * ```typescript
+ * // Basic HMAC calculation
+ * const key = new TextEncoder().encode('secret-key');
+ * const message = new TextEncoder().encode('Hello, world!');
+ * const hmac = hmacSha256(key, message);
+ *
+ * // Using with string inputs
+ * const keyBytes = new TextEncoder().encode('my-key');
+ * const msgBytes = new TextEncoder().encode('data to authenticate');
+ * const hmacResult = hmacSha256(keyBytes, msgBytes);
+ * const hexResult = bytesToHex(hmacResult);
+ * ```
+ *
+ * @param key - The secret key as a `Uint8Array`.
+ * @param message - The message to authenticate as a `Uint8Array`.
+ * @returns A `Uint8Array` of 32 bytes containing the `HMAC-SHA256` tag.
+ *
+ * @remarks
+ * - Algorithm steps:
+ *   - 1. Keys longer than 64 bytes are hashed with `SHA-256`
+ *   - 2. Keys shorter than 64 bytes are padded with zeros
+ *   - 3. Inner hash: `SHA-256((key ⊕ ipad) || message)` where ipad = 0x36 repeated
+ *   - 4. Outer hash: `SHA-256((key ⊕ opad) || inner_hash)` where opad = 0x5C repeated
+ *
+ * - The implementation follows RFC 2104 and RFC 4231 specifications.
+ * - Block size for `SHA-256` HMAC is 64 bytes (512 bits).
+ *
+ * **Common use cases:**
+ * - API authentication tokens
+ * - Message integrity verification
+ * - Key derivation (as part of `HKDF`)
+ *
+ * @see {@link sha256Bytes} for the underlying hash function
+ */
 export function hmacSha256(key: Uint8Array, message: Uint8Array): Uint8Array {
 	const blockSize = 64; // bytes
 	let k = key;
@@ -300,10 +504,81 @@ export function hmacSha256(key: Uint8Array, message: Uint8Array): Uint8Array {
 }
 
 /**
- * * Converts a 32-bit integer into a 4-byte `Uint8Array` in `Big-Endian` order.
+ * * Converts a `Uint8Array` to a `Uint32Array` with big-endian byte order.
+ *   - This function groups bytes into 32-bit integers, reading them in big-endian (most significant byte first) order. Missing bytes are treated as zero.
  *
- * @param n - The integer to convert.
- * @returns A 4-byte `Uint8Array` representing the value in `Big-Endian` format.
+ * @example
+ * ```typescript
+ * // Convert bytes to 32-bit integers
+ * const bytes = new Uint8Array([0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC]);
+ * const words = uint8To32ArrayBE(bytes);
+ * // Returns: Uint32Array(2) [0x12345678, 0x9ABC0000] or equivalent: Uint32Array(2) [ 305419896, 2596012032 ]
+ *
+ * // Partial final word
+ * const partial = new Uint8Array([0xFF, 0xEE, 0xDD]);
+ * const words2 = uint8To32ArrayBE(partial);
+ * // Returns: Uint32Array(1) [0xFFEEDD00] or equivalent: Uint32Array(1) [ 4293844224 ]
+ * ```
+ *
+ * @param bytes - The bytes to convert to 32-bit words.
+ * @returns A `Uint32Array` containing the 32-bit big-endian words.
+ *
+ * @remarks
+ * - Input length doesn't need to be a multiple of 4
+ * - Missing bytes in the final word are padded with zeros
+ * - Byte order: `bytes[0]` is the most significant byte of `out[0]`
+ * - This is useful for cryptographic operations that work with 32-bit words
+ */
+export function uint8To32ArrayBE(bytes: Uint8Array): Uint32Array {
+	const len = Math.ceil(bytes.length / 4);
+	const out = new Uint32Array(len);
+
+	for (let i = 0; i < len; i++) {
+		const base = i * 4;
+		out[i] =
+			((bytes[base] || 0) << 24) |
+			((bytes[base + 1] || 0) << 16) |
+			((bytes[base + 2] || 0) << 8) |
+			((bytes[base + 3] || 0) << 0);
+	}
+
+	return out;
+}
+
+/**
+ * * Converts a 32-bit integer into a 4-byte `Uint8Array` in big-endian (network) byte order.
+ *   - This function takes a 32-bit integer and encodes it as 4 bytes with the most significant byte first (big-endian order), which is the standard for network protocols and many cryptographic operations.
+ *
+ * @example
+ * ```typescript
+ * // Convert integer to bytes
+ * const bytes = intTo4BytesBE(0x12345678);
+ * // Returns: Uint8Array(4) [0x12, 0x34, 0x56, 0x78] or equivalent: Uint8Array(4) [ 18, 52, 86, 120 ]
+ *
+ * // Maximum 32-bit value
+ * const maxBytes = intTo4BytesBE(0xFFFFFFFF);
+ * // Returns: Uint8Array(4) [0xFF, 0xFF, 0xFF, 0xFF]
+ *
+ * // Zero
+ * const zeroBytes = intTo4BytesBE(0);
+ * // Returns: Uint8Array(4) [0x00, 0x00, 0x00, 0x00]
+ * ```
+ *
+ * @param n - The 32-bit integer to convert. Values beyond 32 bits will be truncated.
+ * @returns A 4-byte `Uint8Array` representing the value in big-endian format.
+ *
+ * @remarks
+ * - The function uses unsigned 32-bit arithmetic (`>>>` operator)
+ * - Only the lower 32 bits of the input are used (truncation)
+ * - Output is always exactly 4 bytes
+ * - Big-endian order: byte[0] = most significant, byte[3] = least significant
+ *
+ * **Common use cases:**
+ * - Encoding message lengths in network protocols
+ * - Preparing data for cryptographic operations
+ * - Converting integers for storage or transmission
+ *
+ * @see {@link uint8To32ArrayBE} for bytes to 32-bit integers conversion
  */
 export function intTo4BytesBE(n: number): Uint8Array {
 	const b = new Uint8Array(4);
@@ -314,7 +589,44 @@ export function intTo4BytesBE(n: number): Uint8Array {
 	return b;
 }
 
-/** Convert Uint8Array digest to lowercase hex string */
+/**
+ * * Converts a `Uint8Array` to a lowercase hexadecimal string.
+ *   - This function encodes binary data (bytes) as a hexadecimal string, with each byte represented as two lowercase hexadecimal digits (0-9, a-f).
+ *
+ * @example
+ * ```typescript
+ * // Convert bytes to hex
+ * const bytes = new Uint8Array([0x12, 0xAB, 0xFF, 0x00]);
+ * const hex = bytesToHex(bytes);
+ * // Returns: '12abff00'
+ *
+ * // Empty array
+ * const emptyHex = bytesToHex(new Uint8Array(0));
+ * // Returns: ''
+ *
+ * // SHA-256 hash to hex
+ * const hashBytes = sha256Bytes(utf8ToBytes('hello'));
+ * const hashHex = bytesToHex(hashBytes);
+ * // Returns: '2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824'
+ * ```
+ *
+ * @param bytes - The bytes to convert to hexadecimal representation.
+ * @returns A lowercase hexadecimal string where each byte is represented by two characters (00-ff).
+ *
+ * @remarks
+ * - Always returns lowercase letters (a-f)
+ * - Zero pads single-digit hex values (e.g., 0x0F → "0f", not "f")
+ * - Efficient O(n) implementation using string concatenation
+ * - No prefix (e.g., no "0x" at the beginning)
+ *
+ * **Common use cases:**
+ * - Displaying cryptographic hashes and signatures
+ * - Debugging binary data
+ * - Converting binary data for JSON serialization
+ * - Creating hex-encoded strings for APIs and protocols
+ *
+ * @see {@link sha256Bytes} for raw byte hash results
+ */
 export function bytesToHex(bytes: Uint8Array): string {
 	let hex = '';
 	for (let i = 0; i < bytes.length; i++) {

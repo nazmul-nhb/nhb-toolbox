@@ -13,7 +13,7 @@ export {
 	intTo4BytesBE,
 	randomHex,
 	sha256Bytes,
-	unit8To32ArrayBE,
+	uint8To32ArrayBE,
 	utf8ToBytes,
 } from './utils';
 export {

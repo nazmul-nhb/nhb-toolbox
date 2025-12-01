@@ -177,9 +177,7 @@ export function _randomNode48(): string {
 	return modified + node.slice(2).join('');
 }
 
-/**
- * Generates a 14-bit clock sequence (2 bytes, but only 14 bits used).
- */
+/** * Generates a 14-bit clock sequence (2 bytes, but only 14 bits used). */
 export function _clockSeq14(): string {
 	const seq = parseInt(randomHex(4), 16) & 0x3fff; // mask to 14 bits
 	return seq.toString(16).padStart(4, '0');
@@ -217,6 +215,10 @@ export function _checkUUIDVersion(value: unknown, v: `${$UUIDVersion}`) {
 	return isUUID(value) && value[14] === v;
 }
 
+/**
+ * Compares two encrypted strings or byte arrays in constant time.
+ * Prevents timing attacks by ensuring equal-time checks regardless of data differences.
+ */
 export function _constantTimeEquals(a: string | Uint8Array, b: string | Uint8Array): boolean {
 	if (a.length !== b.length) return false;
 
@@ -233,6 +235,8 @@ export function _constantTimeEquals(a: string | Uint8Array, b: string | Uint8Arr
 	return res === 0;
 }
 
+/** Converts milliseconds to seconds */
 export const _toSeconds = (ms: number) => Math.floor(ms / 1000);
 
+/** Converts timestamp seconds to JS `Date` */
 export const _secToDate = (sec: number) => new Date(sec * 1000);
