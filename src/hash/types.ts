@@ -55,12 +55,12 @@ export interface DecodedUUID {
 	node?: string;
 }
 
-/** Header for `SimpleToken` */
+/** Header for `Signet` */
 export type TokenHeader = {
 	/** Algorithm used. Currently supports `'HS256'` only */
 	alg: 'HS256';
-	/** Type of token. Fixed `'JWT-LIKE'` */
-	typ: 'JWT-LIKE';
+	/** Type of token. Fixed `'SIGNET+JWT'` */
+	typ: 'SIGNET+JWT';
 };
 
 /** Options for token verification */
@@ -144,8 +144,11 @@ export type DecodedToken<T extends GenericObject = GenericObject> = {
 	header: TokenHeader;
 	/** Decoded payload after with common {@link TokenPayload} properties */
 	payload: TokenPayload<T>;
-	/** Encrypted signature in base64 */
+	/**
+	 * The Base64-encoded signature from the token.
+	 * This is the third part of the token string.
+	 */
 	signature: string;
-	/** Encrypted inputs (header.payload) */
+	/** The header and payload in encrypted Base64 format.*/
 	signingInput: `${string}.${string}`;
 };

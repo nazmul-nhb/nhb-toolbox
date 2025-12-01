@@ -2,7 +2,7 @@ export { isUUID } from '../guards/specials';
 export { generateRandomID, generateRandomID as randomID } from '../string/basics';
 export { Cipher } from './Cipher';
 export { md5, sha1, sha256 } from './core';
-export { SimpleToken } from './Token';
+export { Signet } from './Signet';
 export {
 	base64ToBytes,
 	bytesToBase64,
