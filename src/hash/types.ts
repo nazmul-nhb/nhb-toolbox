@@ -145,10 +145,10 @@ export type DecodedToken<T extends GenericObject = GenericObject> = {
 	/** Decoded payload after with common {@link TokenPayload} properties */
 	payload: TokenPayload<T>;
 	/**
-	 * The Base64-encoded signature from the token.
+	 * The `Base64`-encoded signature from the token.
 	 * This is the third part of the token string.
 	 */
 	signature: string;
-	/** The header and payload in encrypted Base64 format.*/
+	/** The header and payload in encrypted `Base64` format.*/
 	signingInput: `${string}.${string}`;
 };

@@ -17,10 +17,10 @@ import {
  *   - The class derives separate encryption and MAC keys from the provided secret.
  *
  * @remarks
- * - The encryption scheme is:
- *   - keystream = HMAC(encKey, iv || counter)
- *   - ciphertext = plaintext XOR keystream
- *   - tag = HMAC(macKey, iv || ciphertext)
+ * - **The encryption scheme is:**
+ *   - keystream = `HMAC(encKey, iv || counter)`
+ *   - ciphertext = `plaintext XOR keystream`
+ *   - tag = `HMAC(macKey, iv || ciphertext)`
  * - This is a custom construction and should not be used for production-grade cryptographic security.
  * - `Cipher` class is a pure JS implementation. It does not rely on `crypto` or Web APIs.
  */
@@ -33,7 +33,7 @@ export class Cipher {
 	 * * Creates a new `Cipher` instance using the provided secret.
 	 *
 	 * @param secret - The secret string used to derive encryption and MAC keys.
-	 * Must be a non-empty string.
+	 * 				   Must be a non-empty string.
 	 */
 	constructor(secret: string) {
 		if (!isNonEmptyString(secret)) {
@@ -47,11 +47,11 @@ export class Cipher {
 	}
 
 	/**
-	 * Generates a keystream of the same length as the provided data using a HMAC-based counter mode.
+	 * Generates a keystream of the same length as the provided data using a `HMAC`-based counter mode.
 	 * The keystream is deterministic from the encryption key and IV.
 	 *
 	 * @param target - The byte array whose length determines the keystream size.
-	 * @param iv - The initialization vector used as input to the HMAC.
+	 * @param iv - The initialization vector used as input to the `HMAC`.
 	 * @returns A byte array representing the generated keystream.
 	 */
 	#genKeystream(target: Uint8Array, iv: Uint8Array): Uint8Array {
@@ -69,7 +69,7 @@ export class Cipher {
 
 	/**
 	 * * Encrypts a UTF-8 string.
-	 *   - The output format is: base64( iv || ciphertext || tag )
+	 *   - The output format is: `base64( iv || ciphertext || tag )`
 	 *
 	 * @param text - The plaintext string to encrypt.
 	 * @returns A base64-encoded encrypted token.
@@ -127,7 +127,7 @@ export class Cipher {
 
 		const blob = base64ToBytes(token);
 
-		if (blob.length < 48) throw new Error('Malformed Token!');
+		if (blob.length < 48) throw new Error('Malformed or tampered token!');
 
 		const iv = blob.subarray(0, 16);
 		const tag = blob.subarray(blob.length - 32);
@@ -135,7 +135,7 @@ export class Cipher {
 
 		const expectedTag = hmacSha256(this.#macKey, concatBytes(iv, ct));
 		if (!_constantTimeEquals(expectedTag, tag)) {
-			throw new Error('Key in the token is tampered or wrong!)');
+			throw new Error('Key in the token is tampered or invalid!)');
 		}
 
 		// regenerate keystream
