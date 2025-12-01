@@ -59,19 +59,30 @@ export type VerifiedToken<T extends GenericObject = GenericObject> =
 	| { isValid: true; payload: TokenPayload<T> }
 	| { isValid: false; error: string };
 
-export type TokenOptions = {
+export type TokenHeader = {
 	alg?: 'HS256';
-	typ?: 'JWT';
+	typ?: 'Custom';
+};
+
+export type SignOptions = {
 	expiresIn?: TimeWithUnit | Numeric;
+	notBefore?: TimeWithUnit | Numeric;
+	audience?: string | string[];
+	subject?: string;
+	issuer?: string;
 };
 
 export type TokenPayload<T extends GenericObject = GenericObject> = {
 	iat: number;
 	exp: number | null;
+	nbf: number | null;
+	aud: string | string[] | null;
+	sub: string | null;
+	iss: string | null;
 } & T;
 
 export type DecodedToken<T extends GenericObject = GenericObject> = {
-	header: TokenOptions;
+	header: TokenHeader;
 	payload: TokenPayload<T>;
 	signature: string;
 	signingInput: `${string}.${string}`;

@@ -6,7 +6,8 @@ import { stableStringify } from '../utils/index';
 import { _constantTimeEquals } from './helpers';
 import type {
 	DecodedToken,
-	TokenOptions,
+	SignOptions,
+	TokenHeader,
 	TokenPayload,
 	TokenString,
 	VerifiedToken,
@@ -24,44 +25,25 @@ export class SimpleToken {
 		this.#secretBytes = utf8ToBytes(secret);
 	}
 
-	sign(payload: GenericObject, options?: TokenOptions): TokenString {
-		if (!isNotEmptyObject(payload)) throw new Error('Payload must be a valid object!');
-
-		const { expiresIn } = options || {};
-
-		const now = Date.now();
-		const updatedPayload: TokenPayload = {
-			iat: now,
-			exp: expiresIn ? now + parseMs(expiresIn) : null,
-			...payload,
-		};
-
-		const hdr: TokenOptions = { alg: 'HS256', typ: 'JWT', ...options };
-		const headerJson = stableStringify(hdr);
-		const payloadJson = stableStringify(updatedPayload);
-		const headerB = utf8ToBytes(headerJson);
-		const payloadB = utf8ToBytes(payloadJson);
-		const signingInput = `${bytesToBase64(headerB)}.${bytesToBase64(payloadB)}` as const;
-		const mac = hmacSha256(this.#secretBytes, utf8ToBytes(signingInput));
-		const signature = bytesToBase64(mac);
-
-		return `${signingInput}.${signature}`;
-	}
-
-	decode<T extends GenericObject = GenericObject>(token: string): DecodedToken<T> {
-		if (!isNonEmptyString(token)) throw new Error('Token must be a non-empty string!');
+	#decode<T extends GenericObject = GenericObject>(token: string): DecodedToken<T> {
+		if (!isNonEmptyString(token)) {
+			throw new Error('Token must be a non-empty string!');
+		}
 
 		const parts = token.split('.');
-		if (parts.length !== 3) throw new Error('Token is tampered or malformed!');
+
+		if (parts.length !== 3) {
+			throw new Error('Token is tampered or malformed!');
+		}
 
 		const [hdr, pld, signature] = parts;
+
 		const headerBytes = base64ToBytes(hdr);
 		const payloadBytes = base64ToBytes(pld);
 		const headerStr = bytesToUtf8(headerBytes);
 		const payloadStr = bytesToUtf8(payloadBytes);
 
-		let header: TokenOptions;
-		let payload: TokenPayload<T>;
+		let header: TokenHeader;
 
 		try {
 			header = JSON.parse(headerStr);
@@ -69,8 +51,20 @@ export class SimpleToken {
 			throw new Error('Cannot parse header!');
 		}
 
+		let payload: TokenPayload<T>;
+
 		try {
-			payload = JSON.parse(payloadStr);
+			const { iat, exp, nbf, aud, sub, iss, ...rest } = JSON.parse(payloadStr);
+
+			payload = {
+				iat,
+				exp,
+				nbf,
+				aud,
+				sub,
+				iss,
+				...rest,
+			};
 		} catch {
 			throw new Error('Cannot parse payload!');
 		}
@@ -83,34 +77,52 @@ export class SimpleToken {
 		};
 	}
 
+	sign(payload: GenericObject, options?: SignOptions): TokenString {
+		if (!isNotEmptyObject(payload)) throw new Error('Payload must be a valid object!');
+
+		const { expiresIn, notBefore, audience, issuer, subject } = options || {};
+
+		const _toSeconds = (ms: number) => Math.floor(ms / 1000);
+
+		const iat = _toSeconds(Date.now());
+		const exp = expiresIn ? iat + _toSeconds(parseMs(expiresIn)) : null;
+		const nbf = notBefore ? iat + _toSeconds(parseMs(notBefore)) : null;
+
+		const pld: TokenPayload = {
+			iat,
+			exp,
+			nbf,
+			aud: audience ?? null,
+			sub: subject ?? null,
+			iss: issuer ?? null,
+			...payload,
+		};
+
+		const hdr: TokenHeader = { alg: 'HS256', typ: 'Custom' };
+		const headerJson = stableStringify(hdr);
+		const payloadJson = stableStringify(pld);
+		const headerB = utf8ToBytes(headerJson);
+		const payloadB = utf8ToBytes(payloadJson);
+		const signingInput = `${bytesToBase64(headerB)}.${bytesToBase64(payloadB)}` as const;
+		const mac = hmacSha256(this.#secretBytes, utf8ToBytes(signingInput));
+		const signature = bytesToBase64(mac);
+
+		return `${signingInput}.${signature}`;
+	}
+
+	decode<T extends GenericObject = GenericObject>(token: string): DecodedToken<T> {
+		return this.#decode<T>(token);
+	}
+
 	verify<T extends GenericObject = GenericObject>(token: string): VerifiedToken<T> {
-		if (!isNonEmptyString(token)) {
-			throw new Error('Token must be a non-empty string!');
-		}
-
 		try {
-			const parts = token.split('.');
-			if (parts.length !== 3) {
-				throw new Error('Token is tampered or malformed!');
-			}
+			const { signature, signingInput, payload } = this.#decode<T>(token);
 
-			const [hdr, pld, sig] = parts;
-			const signingInput = hdr + '.' + pld;
 			const expectedMac = hmacSha256(this.#secretBytes, utf8ToBytes(signingInput));
 			const expectedSig = bytesToBase64(expectedMac);
 
-			if (!_constantTimeEquals(sig, expectedSig)) {
+			if (!_constantTimeEquals(signature, expectedSig)) {
 				throw new Error('Invalid or tampered signature!');
-			}
-
-			const payloadBytes = base64ToBytes(pld);
-			const payloadStr = bytesToUtf8(payloadBytes);
-
-			let payload: TokenPayload<T>;
-			try {
-				payload = JSON.parse(payloadStr);
-			} catch {
-				throw new Error('Cannot parse payload!');
 			}
 
 			if (payload.exp && Date.now() > payload.exp) {
@@ -137,6 +149,6 @@ export class SimpleToken {
 	}
 
 	decodePayload<T extends GenericObject = GenericObject>(token: string): TokenPayload<T> {
-		return this.decode<T>(token).payload;
+		return this.#decode<T>(token).payload;
 	}
 }
