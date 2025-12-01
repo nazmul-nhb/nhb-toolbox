@@ -102,7 +102,7 @@ export class SimpleToken {
 			...payload,
 		};
 
-		const header: TokenHeader = { alg: 'HS256', typ: 'jwt-like' };
+		const header: TokenHeader = { alg: 'HS256', typ: 'JWT-LIKE' };
 		const headerJson = stableStringify(header);
 		const payloadJson = stableStringify($payload);
 		const headerB = utf8ToBytes(headerJson);

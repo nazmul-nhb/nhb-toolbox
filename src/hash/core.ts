@@ -1,11 +1,11 @@
 import { _md5cycle, _numToHex, _stringToNumbers } from './helpers';
-import { utf8ToBytes } from './utils';
+import { bytesToHex, sha256Bytes, utf8ToBytes } from './utils';
 
 /**
- * * Computes an `MD5` digest of the given string using a pure JavaScript implementation.
+ * * Computes the `MD5` digest of the given string using a pure JavaScript implementation.
  *
  * @remarks
- * - Pure JavaScript implementation — runs on any JS engine.
+ * - Pure JavaScript implementation — runs on any JS engine. Does not rely on `crypto` or **Web APIs** or other external libraries.
  * - Highly inspired by the algorithm used in {@link https://github.com/eustatos/pure-md5.git pure-md5} package.
  *
  * @param str - Input text to hash.
@@ -57,9 +57,9 @@ export function md5(str: string): string {
 }
 
 /**
- * * Computes a `SHA-1` digest of the given string using a pure JavaScript implementation.
+ * * Computes the `SHA-1` digest of the given string using a pure JavaScript implementation.
  *
- * @remarks Pure JavaScript implementation — runs on any JS engine.
+ * @remarks Pure JavaScript implementation — runs on any JS engine. Does not rely on `crypto` or **Web APIs** or other external libraries.
  *
  * @param msg - Input text to hash.
  *
@@ -144,4 +144,35 @@ export function sha1(msg: string): string {
 	}
 
 	return h.map(toHex).join('');
+}
+
+/**
+ * * Computes the `SHA-256` hash of a UTF-8 string and returns it as a lowercase hexadecimal string.
+ *
+ * @param msg - The input string to hash. Can contain any UTF-8 characters.
+ * @returns A 64-character lowercase hexadecimal string representing the `SHA-256` hash.
+ *
+ * @remarks Pure JavaScript implementation — runs on any JS engine. Does not rely on `crypto` or **Web APIs** or other external libraries.
+ *
+ * @example
+ * ```typescript
+ * // Basic usage
+ * const hash = sha256('hello');
+ * // Returns: '2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824'
+ *
+ * // Empty string
+ * const emptyHash = sha256('');
+ * // Returns: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
+ *
+ * // Unicode string
+ * const unicodeHash = sha256('Hello পৃথিবী!');
+ * // Returns: '7037e204b825b83553ba336a6ec35b796d505599286ae864729ed6cb33ae9fe1'
+ * ```
+ *
+ * @see {@link sha256Bytes} for hashing raw bytes
+ * @see {@link utf8ToBytes} for converting string to UTF-8 bytes
+ * @see {@link bytesToHex} for converting bytes to a hexadecimal string
+ */
+export function sha256(msg: string): string {
+	return bytesToHex(sha256Bytes(utf8ToBytes(msg)));
 }

@@ -21,6 +21,8 @@ export function randomHex(length: number, uppercase = false): string {
 	return uppercase ? hex.toUpperCase() : hex;
 }
 
+// ! UTF-8 Utilities
+
 /** Convert string to UTF-8 bytes */
 export function utf8ToBytes(str: string): Uint8Array {
 	const out: number[] = [];
@@ -83,6 +85,28 @@ export function bytesToUtf8(bytes: Uint8Array): string {
 	return out;
 }
 
+// ! base64 Utilities
+
+export function base64ToBytes(str: string): Uint8Array {
+	const _b64chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+
+	const out: number[] = [];
+	let i = 0;
+	while (i < str.length) {
+		const h1 = _b64chars.indexOf(str[i++]);
+		const h2 = _b64chars.indexOf(str[i++]);
+		const h3 = _b64chars.indexOf(str[i++]);
+		const h4 = _b64chars.indexOf(str[i++]);
+		const o1 = (h1 << 2) | (h2 >> 4);
+		const o2 = ((h2 & 15) << 4) | (h3 >> 2);
+		const o3 = ((h3 & 3) << 6) | h4;
+		out.push(o1);
+		if (h3 !== 64) out.push(o2);
+		if (h4 !== 64) out.push(o3);
+	}
+	return new Uint8Array(out);
+}
+
 export function bytesToBase64(bytes: Uint8Array): string {
 	const _b64chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
@@ -106,25 +130,7 @@ export function bytesToBase64(bytes: Uint8Array): string {
 	return out;
 }
 
-export function base64ToBytes(str: string): Uint8Array {
-	const _b64chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-
-	const out: number[] = [];
-	let i = 0;
-	while (i < str.length) {
-		const h1 = _b64chars.indexOf(str[i++]);
-		const h2 = _b64chars.indexOf(str[i++]);
-		const h3 = _b64chars.indexOf(str[i++]);
-		const h4 = _b64chars.indexOf(str[i++]);
-		const o1 = (h1 << 2) | (h2 >> 4);
-		const o2 = ((h2 & 15) << 4) | (h3 >> 2);
-		const o3 = ((h3 & 3) << 6) | h4;
-		out.push(o1);
-		if (h3 !== 64) out.push(o2);
-		if (h4 !== 64) out.push(o3);
-	}
-	return new Uint8Array(out);
-}
+// ! Bytes (Uint8Array) utilities
 
 export function concatBytes(...parts: Uint8Array[]): Uint8Array {
 	const len = parts.reduce((s, p) => s + p.length, 0);
@@ -135,21 +141,6 @@ export function concatBytes(...parts: Uint8Array[]): Uint8Array {
 		offset += p.length;
 	}
 	return out;
-}
-
-/**
- * * Converts a 32-bit integer into a 4-byte `Uint8Array` in Big-Endian order.
- *
- * @param n - The integer to convert.
- * @returns A 4-byte `Uint8Array` representing the value in Big-Endian format.
- */
-export function intTo4BytesBE(n: number): Uint8Array {
-	const b = new Uint8Array(4);
-	b[0] = (n >>> 24) & 0xff;
-	b[1] = (n >>> 16) & 0xff;
-	b[2] = (n >>> 8) & 0xff;
-	b[3] = n & 0xff;
-	return b;
 }
 
 export function unit8To32ArrayBE(bytes: Uint8Array): Uint32Array {
@@ -168,8 +159,10 @@ export function unit8To32ArrayBE(bytes: Uint8Array): Uint32Array {
 	return out;
 }
 
+// ! Bytes Hashing Utilities
+
 export function sha256Bytes(message: Uint8Array): Uint8Array {
-	// Initialize hash values:
+	// Initialize hash values
 	const H = new Uint32Array([
 		0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab,
 		0x5be0cd19,
@@ -191,64 +184,59 @@ export function sha256Bytes(message: Uint8Array): Uint8Array {
 
 	// Pre-processing (padding)
 	const ml = message.length * 8;
-	const withOne = new Uint8Array(message.length + 1);
-	withOne.set(message, 0);
-	withOne[message.length] = 0x80;
 
-	// length of padding: append zeros until last 64 bits for message length
-	const padLen = ((64 - ((withOne.length + 8) % 64)) % 64) + withOne.length + 8;
-	const padded = new Uint8Array(padLen);
-	padded.set(withOne, 0);
-	// append 64-bit big-endian length
-	for (let i = 0; i < 8; i++) {
-		padded[padded.length - 1 - i] = (ml >>> (i * 8)) & 0xff;
-	}
+	// Create padding - simpler approach
+	const padding = new Uint8Array((message.length + 8 + 64) & ~63 || 64);
+	padding.set(message, 0);
+	padding[message.length] = 0x80;
+
+	// Append 64-bit big-endian length at the end
+	const lenView = new DataView(padding.buffer);
+	lenView.setUint32(padding.length - 8, Math.floor(ml / 0x100000000), false); // high 32 bits
+	lenView.setUint32(padding.length - 4, ml & 0xffffffff, false); // low 32 bits
 
 	// Process the message in successive 512-bit chunks:
 	const w = new Uint32Array(64);
-	for (let offset = 0; offset < padded.length; offset += 64) {
-		// prepare message schedule
+	const chunkView = new DataView(padding.buffer);
+
+	for (let offset = 0; offset < padding.length; offset += 64) {
+		// prepare message schedule (convert bytes to 32-bit big-endian words)
 		for (let t = 0; t < 16; t++) {
-			const i = offset + t * 4;
-			w[t] =
-				(padded[i] << 24) |
-				(padded[i + 1] << 16) |
-				(padded[i + 2] << 8) |
-				(padded[i + 3] << 0);
+			w[t] = chunkView.getUint32(offset + t * 4, false); // big-endian read
 		}
+
+		// Extend the first 16 words into the remaining 48 words
 		for (let t = 16; t < 64; t++) {
 			const s0 =
-				((w[t - 15] >>> 7) | (w[t - 15] << (32 - 7))) ^
-				((w[t - 15] >>> 18) | (w[t - 15] << (32 - 18))) ^
+				((w[t - 15] >>> 7) | (w[t - 15] << 25)) ^
+				((w[t - 15] >>> 18) | (w[t - 15] << 14)) ^
 				(w[t - 15] >>> 3);
 			const s1 =
-				((w[t - 2] >>> 17) | (w[t - 2] << (32 - 17))) ^
-				((w[t - 2] >>> 19) | (w[t - 2] << (32 - 19))) ^
+				((w[t - 2] >>> 17) | (w[t - 2] << 15)) ^
+				((w[t - 2] >>> 19) | (w[t - 2] << 13)) ^
 				(w[t - 2] >>> 10);
+
 			w[t] = (w[t - 16] + s0 + w[t - 7] + s1) >>> 0;
 		}
 
-		// initialize working variables
-		let a = H[0] | 0;
-		let b = H[1] | 0;
-		let c = H[2] | 0;
-		let d = H[3] | 0;
-		let e = H[4] | 0;
-		let f = H[5] | 0;
-		let g = H[6] | 0;
-		let h = H[7] | 0;
+		// Initialize working variables
+		let a = H[0];
+		let b = H[1];
+		let c = H[2];
+		let d = H[3];
+		let e = H[4];
+		let f = H[5];
+		let g = H[6];
+		let h = H[7];
 
+		// Main compression loop
 		for (let t = 0; t < 64; t++) {
 			const S1 =
-				((e >>> 6) | (e << (32 - 6))) ^
-				((e >>> 11) | (e << (32 - 11))) ^
-				((e >>> 25) | (e << (32 - 25)));
+				((e >>> 6) | (e << 26)) ^ ((e >>> 11) | (e << 21)) ^ ((e >>> 25) | (e << 7));
 			const ch = (e & f) ^ (~e & g);
 			const temp1 = (h + S1 + ch + K[t] + w[t]) >>> 0;
 			const S0 =
-				((a >>> 2) | (a << (32 - 2))) ^
-				((a >>> 13) | (a << (32 - 13))) ^
-				((a >>> 22) | (a << (32 - 22)));
+				((a >>> 2) | (a << 30)) ^ ((a >>> 13) | (a << 19)) ^ ((a >>> 22) | (a << 10));
 			const maj = (a & b) ^ (a & c) ^ (b & c);
 			const temp2 = (S0 + maj) >>> 0;
 
@@ -262,6 +250,7 @@ export function sha256Bytes(message: Uint8Array): Uint8Array {
 			a = (temp1 + temp2) >>> 0;
 		}
 
+		// Add the compressed chunk to the current hash value
 		H[0] = (H[0] + a) >>> 0;
 		H[1] = (H[1] + b) >>> 0;
 		H[2] = (H[2] + c) >>> 0;
@@ -272,14 +261,14 @@ export function sha256Bytes(message: Uint8Array): Uint8Array {
 		H[7] = (H[7] + h) >>> 0;
 	}
 
-	// produce the final hash value (big-endian)
+	// Produce the final hash value (big-endian)
 	const out = new Uint8Array(32);
+	const outView = new DataView(out.buffer);
+
 	for (let i = 0; i < 8; i++) {
-		out[i * 4 + 0] = (H[i] >>> 24) & 0xff;
-		out[i * 4 + 1] = (H[i] >>> 16) & 0xff;
-		out[i * 4 + 2] = (H[i] >>> 8) & 0xff;
-		out[i * 4 + 3] = (H[i] >>> 0) & 0xff;
+		outView.setUint32(i * 4, H[i], false); // big-endian write
 	}
+
 	return out;
 }
 
@@ -308,4 +297,29 @@ export function hmacSha256(key: Uint8Array, message: Uint8Array): Uint8Array {
 	outer.set(oKeyPad, 0);
 	outer.set(innerHash, oKeyPad.length);
 	return sha256Bytes(outer);
+}
+
+/**
+ * * Converts a 32-bit integer into a 4-byte `Uint8Array` in `Big-Endian` order.
+ *
+ * @param n - The integer to convert.
+ * @returns A 4-byte `Uint8Array` representing the value in `Big-Endian` format.
+ */
+export function intTo4BytesBE(n: number): Uint8Array {
+	const b = new Uint8Array(4);
+	b[0] = (n >>> 24) & 0xff;
+	b[1] = (n >>> 16) & 0xff;
+	b[2] = (n >>> 8) & 0xff;
+	b[3] = n & 0xff;
+	return b;
+}
+
+/** Convert Uint8Array digest to lowercase hex string */
+export function bytesToHex(bytes: Uint8Array): string {
+	let hex = '';
+	for (let i = 0; i < bytes.length; i++) {
+		const byte = bytes[i].toString(16).padStart(2, '0');
+		hex += byte;
+	}
+	return hex;
 }

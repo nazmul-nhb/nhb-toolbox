@@ -9,7 +9,6 @@
  */
 
 import { bytesToUtf8, utf8ToBytes } from '../src/hash/utils';
-import { base64Decode, base64Encode } from './cipher';
 
 type JSONObject = Record<string, unknown>;
 
@@ -18,7 +17,7 @@ function isObject(v: unknown): v is JSONObject {
 }
 
 // ---------- Pure JS atob ----------
-export function atobShim(base64: string): string {
+function atobShim(base64: string): string {
 	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 	let str = '';
 	let i = 0;
@@ -44,7 +43,7 @@ export function atobShim(base64: string): string {
 }
 
 // ---------- Pure JS btoa ----------
-export function btoaShim(text: string): string {
+function btoaShim(text: string): string {
 	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 	let output = '';
 	let i = 0;
@@ -136,7 +135,7 @@ export function btoaShim(text: string): string {
    Based on the standard algorithm; returns a 32-byte Uint8Array.
    ============================ */
 
-export function sha256Bytes(message: Uint8Array): Uint8Array {
+function sha256Bytes(message: Uint8Array): Uint8Array {
 	// Initialize hash values:
 	const H = new Uint32Array([
 		0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab,
@@ -255,7 +254,7 @@ export function sha256Bytes(message: Uint8Array): Uint8Array {
    HMAC-SHA256
    ============================ */
 
-export function hmacSha256(key: Uint8Array, message: Uint8Array): Uint8Array {
+function hmacSha256(key: Uint8Array, message: Uint8Array): Uint8Array {
 	const blockSize = 64; // bytes
 	let k = key;
 	if (k.length > blockSize) {
@@ -354,10 +353,10 @@ export class TinyCrypto {
 		const payloadJson = stableStringify(payload);
 		const headerB = utf8ToBytes(headerJson);
 		const payloadB = utf8ToBytes(payloadJson);
-		const signingInput = base64Encode(headerB) + '.' + base64Encode(payloadB);
+		const signingInput = bytesToUtf8(headerB) + '.' + bytesToUtf8(payloadB);
 
 		const mac = hmacSha256(this.#secretBytes, utf8ToBytes(signingInput));
-		const signature = base64Encode(mac);
+		const signature = bytesToUtf8(mac);
 		return signingInput + '.' + signature;
 	}
 
@@ -386,8 +385,8 @@ export class TinyCrypto {
 		const parts = token.split('.');
 		if (parts.length !== 3) throw new Error('token must have three parts');
 		const [a, b, c] = parts;
-		const headerBytes = base64Decode(a);
-		const payloadBytes = base64Decode(b);
+		const headerBytes = utf8ToBytes(a);
+		const payloadBytes = utf8ToBytes(b);
 		const headerStr = bytesToUtf8(headerBytes);
 		const payloadStr = bytesToUtf8(payloadBytes);
 
@@ -430,13 +429,13 @@ export class TinyCrypto {
 			const [a, b, sig] = parts;
 			const signingInput = a + '.' + b;
 			const expectedMac = hmacSha256(this.#secretBytes, utf8ToBytes(signingInput));
-			const expectedSig = base64Encode(expectedMac);
+			const expectedSig = bytesToUtf8(expectedMac);
 
 			// constant-time string compare
 			const ok = constantTimeEquals(sig, expectedSig);
 			if (!ok) return { valid: false, error: 'invalid signature' };
 			// parse payload
-			const payloadBytes = base64Decode(b);
+			const payloadBytes = utf8ToBytes(b);
 			const payloadStr = bytesToUtf8(payloadBytes);
 			let payload: unknown;
 			try {
@@ -489,7 +488,7 @@ export class TinyCrypto {
 		try {
 			const parts = token.split('.');
 			if (parts.length !== 3) return null;
-			const payload = base64Decode(parts[1]);
+			const payload = utf8ToBytes(parts[1]);
 			const s = bytesToUtf8(payload);
 			try {
 				return JSON.parse(s);

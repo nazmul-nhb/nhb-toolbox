@@ -1,20 +1,21 @@
 export { isUUID } from '../guards/specials';
 export { generateRandomID, generateRandomID as randomID } from '../string/basics';
-export { md5, sha1 } from './core';
+export { Cipher } from './Cipher';
+export { md5, sha1, sha256 } from './core';
+export { SimpleToken } from './Token';
 export {
-	bytesToUtf8,
-	randomHex,
-	utf8ToBytes,
 	base64ToBytes,
 	bytesToBase64,
+	bytesToHex,
+	bytesToUtf8,
 	concatBytes,
 	hmacSha256,
 	intTo4BytesBE,
-	unit8To32ArrayBE,
+	randomHex,
 	sha256Bytes,
+	unit8To32ArrayBE,
+	utf8ToBytes,
 } from './utils';
-export { Cipher } from './Cipher';
-export { SimpleToken } from './Token';
 export {
 	decodeUUID,
 	isUUIDv1,

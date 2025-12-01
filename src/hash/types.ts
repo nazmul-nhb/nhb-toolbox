@@ -61,7 +61,7 @@ export type VerifiedToken<T extends GenericObject = GenericObject> =
 
 export type TokenHeader = {
 	alg?: 'HS256';
-	typ?: 'jwt-like';
+	typ?: 'JWT-LIKE';
 };
 
 export type VerifyOptions = {

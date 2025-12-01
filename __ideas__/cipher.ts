@@ -9,14 +9,13 @@
  * For production, use platform crypto RNG for IV.
  */
 
-import { bytesToUtf8, utf8ToBytes } from '../src/hash/utils';
-import { hmacSha256, sha256Bytes } from './tiny-crypto';
+import { bytesToUtf8, hmacSha256, sha256Bytes, utf8ToBytes } from '../src/hash/utils';
 
 /* ------------------ Base64 (pure JS) ------------------ */
 
 const _b64chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
-export function base64Encode(bytes: Uint8Array): string {
+function base64Encode(bytes: Uint8Array): string {
 	let out = '';
 	let i = 0;
 	while (i < bytes.length) {
@@ -36,7 +35,7 @@ export function base64Encode(bytes: Uint8Array): string {
 	return out;
 }
 
-export function base64Decode(str: string): Uint8Array {
+function base64Decode(str: string): Uint8Array {
 	const out: number[] = [];
 	let i = 0;
 	while (i < str.length) {
@@ -85,7 +84,7 @@ function constantTimeEquals(a: Uint8Array, b: Uint8Array): boolean {
 
 /* ------------------ Cipher Class ------------------ */
 
-export class Cipher {
+export class CipherExperiment {
 	#secretBytes: Uint8Array;
 	#encKey: Uint8Array; // 32 bytes
 	#macKey: Uint8Array; // 32 bytes
