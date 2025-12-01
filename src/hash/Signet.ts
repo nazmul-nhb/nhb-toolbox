@@ -6,9 +6,9 @@ import { stableStringify, stripJsonEdgeGarbage } from '../utils/index';
 import { _constantTimeEquals, _secToDate, _toSeconds } from './helpers';
 import type {
 	DecodedToken,
+	SignetHeader,
+	SignetPayload,
 	SignOptions,
-	TokenHeader,
-	TokenPayload,
 	TokenString,
 	VerifiedToken,
 	VerifyOptions,
@@ -118,7 +118,7 @@ export class Signet {
 		const headerStr = stripJsonEdgeGarbage(bytesToUtf8(headerBytes));
 		const payloadStr = stripJsonEdgeGarbage(bytesToUtf8(payloadBytes));
 
-		let header: TokenHeader;
+		let header: SignetHeader;
 
 		try {
 			header = JSON.parse(headerStr);
@@ -126,7 +126,7 @@ export class Signet {
 			throw new Error('Cannot parse header!');
 		}
 
-		let payload: TokenPayload<T>;
+		let payload: SignetPayload<T>;
 
 		try {
 			const { iat, iatDate, exp, expDate, nbf, nbfDate, aud, sub, iss, ...rest } =
@@ -210,7 +210,7 @@ export class Signet {
 
 		const iat = _toSeconds(Date.now());
 
-		const $payload: TokenPayload = {
+		const $payload: SignetPayload = {
 			iat,
 			iatDate: _secToDate(iat),
 			...(expiresIn && { exp: iat + _toSeconds(parseMSec(expiresIn)) }),
@@ -223,7 +223,7 @@ export class Signet {
 			...payload,
 		};
 
-		const header: TokenHeader = { alg: 'HS256', typ: 'SIGNET+JWT' };
+		const header: SignetHeader = { alg: 'HS256', typ: 'SIGNET+JWT' };
 		const headerJson = stableStringify(header);
 		const payloadJson = stableStringify($payload);
 		const headerB = utf8ToBytes(headerJson);
@@ -280,7 +280,7 @@ export class Signet {
 	 *
 	 * @remarks
 	 * - Tokens without `exp` claim are considered non-expiring (returns `false`)
-	 * - Uses current system time for comparison
+	 * - Uses current system time for comparison ({@link Date.now()})
 	 * - Does not verify the signature (use only with trusted tokens or after verification)
 	 *
 	 * @example
@@ -311,7 +311,10 @@ export class Signet {
 	 *
 	 * @throws If the token is malformed or cannot be decoded.
 	 *
-	 * @remarks Useful for implementing time-based access control, like activation links that shouldn't be used until a certain time.
+	 * @remarks
+	 * - Useful for implementing time-based access control, like activation links that shouldn't be used until a certain time.
+	 * - Uses current system time for comparison ({@link Date.now()})
+	 * - Does not verify the signature (use only with trusted tokens or after verification)
 	 *
 	 * @example
 	 * ```typescript
@@ -461,7 +464,7 @@ export class Signet {
 	 * @param options - Optional validation criteria for token claims.
 	 *
 	 * @returns A {@link VerifiedToken} object indicating success or failure.
-	 *          - If valid: `{ isValid: true, payload: TokenPayload<T> }`
+	 *          - If valid: `{ isValid: true, payload: SignetPayload<T> }`
 	 *          - If invalid: `{ isValid: false, error: string }`
 	 *
 	 * @remarks
@@ -646,7 +649,7 @@ export class Signet {
 	 * const canDelete = payload.permissions.includes('delete');
 	 * ```
 	 */
-	decodePayload<T extends GenericObject = GenericObject>(token: string): TokenPayload<T> {
+	decodePayload<T extends GenericObject = GenericObject>(token: string): SignetPayload<T> {
 		return this.#decode<T>(token).payload;
 	}
 }

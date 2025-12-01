@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.28.1] - 2025-12-02
+
+- **Updated** *type* names `TokenHeader` to `SignetHeader` and `TokenPayload` to `SignetPayload` and both are available to import.
+
 ## [4.28.0] - 2025-12-01
 
 - **Added** *new* class `Cipher` to *encrypt/decrypt* string with *secret key*.

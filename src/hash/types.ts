@@ -56,7 +56,7 @@ export interface DecodedUUID {
 }
 
 /** Header for `Signet` */
-export type TokenHeader = {
+export type SignetHeader = {
 	/** Algorithm used. Currently supports `'HS256'` only */
 	alg: 'HS256';
 	/** Type of token. Fixed `'SIGNET+JWT'` */
@@ -93,15 +93,15 @@ export interface SignOptions extends VerifyOptions {
 	notBefore?: TimeWithUnit | Numeric;
 }
 
-/** Pattern of a valid 3-parts token */
+/** 3-parts dot separated token string */
 export type TokenString = `${string}.${string}.${string}`;
 
 /** Interface of token verification result if token is valid */
 export type $ValidToken<T extends GenericObject = GenericObject> = {
 	/** Whether the token is valid */
 	isValid: true;
-	/** Decoded payload after successful verification with common {@link TokenPayload} properties */
-	payload: TokenPayload<T>;
+	/** Decoded payload after successful verification with common {@link SignetPayload} properties */
+	payload: SignetPayload<T>;
 };
 
 /** Interface of token verification result if token is invalid */
@@ -117,7 +117,7 @@ export type VerifiedToken<T extends GenericObject = GenericObject> =
 	| $ValidToken<T>
 	| $InvalidToken;
 
-export type TokenPayload<T extends GenericObject = GenericObject> = {
+export type SignetPayload<T extends GenericObject = GenericObject> = {
 	/** When the token was created (unix timestamp in seconds) */
 	iat: number;
 	/** When the token was created (as JavaScript {@link Date}) */
@@ -141,9 +141,9 @@ export type TokenPayload<T extends GenericObject = GenericObject> = {
 /** Interface of a decoded token */
 export type DecodedToken<T extends GenericObject = GenericObject> = {
 	/** Token header info, algorithm, type etc. */
-	header: TokenHeader;
-	/** Decoded payload after with common {@link TokenPayload} properties */
-	payload: TokenPayload<T>;
+	header: SignetHeader;
+	/** Decoded payload after with common {@link SignetPayload} properties */
+	payload: SignetPayload<T>;
 	/**
 	 * The `Base64`-encoded signature from the token.
 	 * This is the third part of the token string.
@@ -152,3 +152,5 @@ export type DecodedToken<T extends GenericObject = GenericObject> = {
 	/** The header and payload in encrypted `Base64` format.*/
 	signingInput: `${string}.${string}`;
 };
+
+export type { SignetPayload as TokenPayload, SignetHeader as TokenHeader };
