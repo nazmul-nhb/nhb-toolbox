@@ -25,6 +25,51 @@ export function truncateString(str: string, maxLength: number): string {
  *
  * @param options Configuration options for random ID generation.
  * @returns The generated ID string composed of the random alphanumeric string of specified length with optional `timeStamp`, `prefix`, and `suffix`, `caseOption` and `separator`.
+ *
+ * @see {@link https://toolbox.nazmul-nhb.dev/docs/utilities/hash/uuid uuid} for `uuid` generation
+ * @see {@link https://toolbox.nazmul-nhb.dev/docs/utilities/hash/randomHex randomHex} for random hexadecimal string generation
+ *
+ * @example
+ * // Generate an ID with all default options
+ * const id = generateRandomID();
+ * // Example output: "swo8ckxwsc13w7xw"
+ *
+ * @example
+ * // Generate an ID with a custom prefix and separator
+ * const id = generateRandomID({ prefix: 'ID', separator: '-' });
+ * // Example output: "ID-eh1ymwfxzwas9jte"
+ *
+ * @example
+ * // Generate an ID with a timestamp
+ * const id = generateRandomID({ timeStamp: false });
+ * // Example output: "1764610287501pd3r4w85qwkuulgf"
+ *
+ * @example
+ * // Generate an ID with a custom length for the random string
+ * const id = generateRandomID({ length: 8 });
+ * // Example output: "i623uiev"
+ *
+ * @example
+ * // Generate an ID with a custom suffix
+ * const id = generateRandomID({ suffix: 'END' });
+ * // Example output: "3csf27a4800rbli9END"
+ *
+ * @example
+ * // Generate an ID with a uppercase random string
+ * const id = generateRandomID({ caseOption: "upper" });
+ * // Example output: "H0VNU6O8XV1Y30HG"
+ *
+ * @example
+ * // Generate an ID with all options customized
+ * const id = generateRandomID({
+ *   prefix: 'ID',
+ *   suffix: 'END',
+ *   timeStamp: true,
+ *   length: 10,
+ *   separator: '-',
+ *   caseOption: "upper"
+ * });
+ * // Example output: "ID-1764610471474-4KSL51IB91-END"
  */
 export function generateRandomID(options?: RandomIdOptions): string {
 	const {
