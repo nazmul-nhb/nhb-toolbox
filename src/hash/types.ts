@@ -64,21 +64,24 @@ export type TokenHeader = {
 	typ?: 'Custom';
 };
 
-export type SignOptions = {
-	expiresIn?: TimeWithUnit | Numeric;
-	notBefore?: TimeWithUnit | Numeric;
+export type VerifyOptions = {
 	audience?: string | string[];
 	subject?: string;
 	issuer?: string;
 };
 
+export interface SignOptions extends VerifyOptions {
+	expiresIn?: TimeWithUnit | Numeric;
+	notBefore?: TimeWithUnit | Numeric;
+}
+
 export type TokenPayload<T extends GenericObject = GenericObject> = {
 	iat: number;
-	exp: number | null;
-	nbf: number | null;
-	aud: string | string[] | null;
-	sub: string | null;
-	iss: string | null;
+	exp?: number;
+	nbf?: number;
+	aud?: string | string[];
+	sub?: string;
+	iss?: string;
 } & T;
 
 export type DecodedToken<T extends GenericObject = GenericObject> = {

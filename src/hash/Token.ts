@@ -3,7 +3,7 @@ import { isNotEmptyObject } from '../guards/non-primitives';
 import { isNonEmptyString } from '../guards/primitives';
 import type { GenericObject } from '../object/types';
 import { stableStringify } from '../utils/index';
-import { _constantTimeEquals } from './helpers';
+import { _constantTimeEquals, _toSeconds } from './helpers';
 import type {
 	DecodedToken,
 	SignOptions,
@@ -11,6 +11,7 @@ import type {
 	TokenPayload,
 	TokenString,
 	VerifiedToken,
+	VerifyOptions,
 } from './types';
 import { base64ToBytes, bytesToBase64, bytesToUtf8, hmacSha256, utf8ToBytes } from './utils';
 
@@ -58,11 +59,11 @@ export class SimpleToken {
 
 			payload = {
 				iat,
-				exp,
-				nbf,
-				aud,
-				sub,
-				iss,
+				...(exp && { exp }),
+				...(nbf && { nbf }),
+				...(aud && { aud }),
+				...(sub && { sub }),
+				...(iss && { iss }),
 				...rest,
 			};
 		} catch {
@@ -82,25 +83,21 @@ export class SimpleToken {
 
 		const { expiresIn, notBefore, audience, issuer, subject } = options || {};
 
-		const _toSeconds = (ms: number) => Math.floor(ms / 1000);
-
 		const iat = _toSeconds(Date.now());
-		const exp = expiresIn ? iat + _toSeconds(parseMs(expiresIn)) : null;
-		const nbf = notBefore ? iat + _toSeconds(parseMs(notBefore)) : null;
 
-		const pld: TokenPayload = {
+		const $payload: TokenPayload = {
 			iat,
-			exp,
-			nbf,
-			aud: audience ?? null,
-			sub: subject ?? null,
-			iss: issuer ?? null,
+			...(expiresIn && { exp: iat + _toSeconds(parseMs(expiresIn)) }),
+			...(notBefore && { nbf: iat + _toSeconds(parseMs(notBefore)) }),
+			...(audience && { aud: audience }),
+			...(subject && { sub: subject }),
+			...(issuer && { iss: issuer }),
 			...payload,
 		};
 
-		const hdr: TokenHeader = { alg: 'HS256', typ: 'Custom' };
-		const headerJson = stableStringify(hdr);
-		const payloadJson = stableStringify(pld);
+		const header: TokenHeader = { alg: 'HS256', typ: 'Custom' };
+		const headerJson = stableStringify(header);
+		const payloadJson = stableStringify($payload);
 		const headerB = utf8ToBytes(headerJson);
 		const payloadB = utf8ToBytes(payloadJson);
 		const signingInput = `${bytesToBase64(headerB)}.${bytesToBase64(payloadB)}` as const;
@@ -114,9 +111,55 @@ export class SimpleToken {
 		return this.#decode<T>(token);
 	}
 
-	verify<T extends GenericObject = GenericObject>(token: string): VerifiedToken<T> {
+	hasExpired(token: string): boolean {
+		const { exp } = this.#decode(token).payload;
+
+		return exp ? _toSeconds(Date.now()) > exp : false;
+	}
+
+	isTooEarly(token: string): boolean {
+		const { nbf } = this.#decode(token).payload;
+
+		return nbf ? _toSeconds(Date.now()) < nbf : false;
+	}
+
+	isInvalidIssuer(token: string, issuer: string | undefined): boolean {
+		if (!issuer) return false;
+
+		const { iss } = this.#decode(token).payload;
+
+		return iss ? iss !== issuer : false;
+	}
+
+	isInvalidAudience(token: string, audience: string | string[] | undefined): boolean {
+		if (!audience) return false;
+
+		const { aud } = this.#decode(token).payload;
+
+		if (!aud) return false;
+
+		const payloadAud = Array.isArray(aud) ? aud : [aud];
+
+		const expectedAud = Array.isArray(audience) ? audience : [audience];
+
+		return payloadAud.some((tokenAud) => expectedAud.includes(tokenAud));
+	}
+
+	isInvalidSubject(token: string, subject: string | undefined): boolean {
+		if (!subject) return false;
+
+		const { sub } = this.#decode(token).payload;
+
+		return sub ? sub !== subject : false;
+	}
+
+	verify<T extends GenericObject = GenericObject>(
+		token: string,
+		options?: VerifyOptions
+	): VerifiedToken<T> {
 		try {
 			const { signature, signingInput, payload } = this.#decode<T>(token);
+			const { audience, issuer, subject } = options || {};
 
 			const expectedMac = hmacSha256(this.#secretBytes, utf8ToBytes(signingInput));
 			const expectedSig = bytesToBase64(expectedMac);
@@ -125,8 +168,24 @@ export class SimpleToken {
 				throw new Error('Invalid or tampered signature!');
 			}
 
-			if (payload.exp && Date.now() > payload.exp) {
+			if (this.hasExpired(token)) {
 				throw new Error('Token has expired!');
+			}
+
+			if (this.isTooEarly(token)) {
+				throw new Error('Token is not active yet!');
+			}
+
+			if (this.isInvalidIssuer(token, issuer)) {
+				throw new Error('Invalid token issuer!');
+			}
+
+			if (this.isInvalidAudience(token, audience)) {
+				throw new Error('Invalid token audience(s!');
+			}
+
+			if (this.isInvalidSubject(token, subject)) {
+				throw new Error('Invalid token subject!');
 			}
 
 			return { isValid: true, payload };
@@ -138,8 +197,11 @@ export class SimpleToken {
 		}
 	}
 
-	verifyOrThrow<T extends GenericObject = GenericObject>(token: string): VerifiedToken<T> {
-		const res = this.verify<T>(token);
+	verifyOrThrow<T extends GenericObject = GenericObject>(
+		token: string,
+		options?: VerifyOptions
+	): VerifiedToken<T> {
+		const res = this.verify<T>(token, options);
 
 		if (!res.isValid) {
 			throw new Error(res.error || 'Invalid, malformed or expired token!');

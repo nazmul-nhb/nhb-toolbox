@@ -232,3 +232,5 @@ export function _constantTimeEquals(a: string | Uint8Array, b: string | Uint8Arr
 
 	return res === 0;
 }
+
+export const _toSeconds = (ms: number) => Math.floor(ms / 1000);
