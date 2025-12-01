@@ -147,9 +147,9 @@ export function sha1(msg: string): string {
 }
 
 /**
- * * Computes the `SHA-256` hash of a UTF-8 string and returns it as a lowercase hexadecimal string.
+ * * Computes the `SHA-256` hash of a `UTF-8` string and returns it as a lowercase hexadecimal string.
  *
- * @param msg - The input string to hash. Can contain any UTF-8 characters.
+ * @param msg - The input string to hash. Can contain any `UTF-8` characters.
  * @returns A 64-character lowercase hexadecimal string representing the `SHA-256` hash.
  *
  * @remarks Pure JavaScript implementation — runs on any JS engine. Does not rely on `crypto` or **Web APIs** or other external libraries.
@@ -170,7 +170,7 @@ export function sha1(msg: string): string {
  * ```
  *
  * @see {@link sha256Bytes} for hashing raw bytes
- * @see {@link utf8ToBytes} for converting string to UTF-8 bytes
+ * @see {@link utf8ToBytes} for converting string to `UTF-8` bytes
  * @see {@link bytesToHex} for converting bytes to a hexadecimal string
  */
 export function sha256(msg: string): string {

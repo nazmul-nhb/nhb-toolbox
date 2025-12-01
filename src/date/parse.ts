@@ -6,11 +6,15 @@ import { isTimeWithUnit } from './guards';
 import type { $TimeUnitVar, TimeWithUnit } from './types';
 
 /**
- * * Parse the given value to milliseconds or seconds.
+ * * Parse the given value to milliseconds or optionally to seconds.
  *
  * @param value - The string (with unit) or number (or numeric string) to convert.
  * @param sec - Whether to return the value in seconds. Defaults to `false`.
  * @returns The given value parsed in milliseconds (or seconds if specified).
+ *
+ * @remarks
+ * - A numeric value (number or numeric string ({@link Numeric})) is interpreted as seconds count, e.g., `120` or `'120'` will be treated as `'120 seconds'`.
+ * - If you use time value with unit ({@link TimeWithUnit}) be sure you provide the time units (days, hours, etc.), otherwise it will return `NaN`, e.g., `'120 unknown'` will return `NaN`.
  */
 export function parseMSec(value: TimeWithUnit | Numeric, sec = false): number {
 	if (isNumericString(value)) {
@@ -18,7 +22,7 @@ export function parseMSec(value: TimeWithUnit | Numeric, sec = false): number {
 	} else if (isTimeWithUnit(value)) {
 		return _parse(value, sec);
 	} else if (isNumber(value)) {
-		return _parse(`${value}ms`, sec);
+		return _parse(`${value}s`, sec);
 	}
 
 	return NaN;
@@ -48,5 +52,5 @@ function _parse(str: TimeWithUnit, sec = false): number {
 
 	const ms = parseFloat(match.groups.value) * multiplier;
 
-	return !sec ? ms : ms / 1000;
+	return sec ? ms / 1000 : ms;
 }

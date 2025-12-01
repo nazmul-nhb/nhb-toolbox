@@ -55,43 +55,97 @@ export interface DecodedUUID {
 	node?: string;
 }
 
-export type VerifiedToken<T extends GenericObject = GenericObject> =
-	| { isValid: true; payload: TokenPayload<T> }
-	| { isValid: false; error: string };
-
+/** Header for `SimpleToken` */
 export type TokenHeader = {
-	alg?: 'HS256';
-	typ?: 'JWT-LIKE';
+	/** Algorithm used. Currently supports `'HS256'` only */
+	alg: 'HS256';
+	/** Type of token. Fixed `'JWT-LIKE'` */
+	typ: 'JWT-LIKE';
 };
 
+/** Options for token verification */
 export type VerifyOptions = {
+	/** Where the token is allowed to be used */
 	audience?: string | string[];
+	/** Who the token is about */
 	subject?: string;
+	/** From where/who the token is issued */
 	issuer?: string;
 };
 
+/** Token signing options */
 export interface SignOptions extends VerifyOptions {
+	/**
+	 * * Specifies when the token expires after issuing it.
+	 *
+	 * @remarks
+	 * - A numeric value (number or numeric string ({@link Numeric})) is interpreted as seconds count, e.g., `120` or `'120'` will be treated as `'120 seconds'`.
+	 * - If you use time value with unit ({@link TimeWithUnit}) be sure you provide the time units (days, hours, etc.), otherwise it will return `NaN`, e.g., `'120 unknown'` will return `NaN`.
+	 */
 	expiresIn?: TimeWithUnit | Numeric;
+	/**
+	 * * Specifies when the token becomes active/valid in the future.
+	 *
+	 * @remarks
+	 * - A numeric value (number or numeric string ({@link Numeric})) is interpreted as seconds count, e.g., `120` or `'120'` will be treated as `'120 seconds'`.
+	 * - If you use time value with unit ({@link TimeWithUnit}) be sure you provide the time units (days, hours, etc.), otherwise it will return `NaN`, e.g., `'120 unknown'` will return `NaN`.
+	 */
 	notBefore?: TimeWithUnit | Numeric;
 }
 
+/** Pattern of a valid 3-parts token */
+export type TokenString = `${string}.${string}.${string}`;
+
+/** Interface of token verification result if token is valid */
+export type $ValidToken<T extends GenericObject = GenericObject> = {
+	/** Whether the token is valid */
+	isValid: true;
+	/** Decoded payload after successful verification with common {@link TokenPayload} properties */
+	payload: TokenPayload<T>;
+};
+
+/** Interface of token verification result if token is invalid */
+export type $InvalidToken = {
+	/** Whether the token is valid */
+	isValid: false;
+	/** Error message if the token is invalid */
+	error: string;
+};
+
+/** Result of token verification */
+export type VerifiedToken<T extends GenericObject = GenericObject> =
+	| $ValidToken<T>
+	| $InvalidToken;
+
 export type TokenPayload<T extends GenericObject = GenericObject> = {
+	/** When the token was created (unix timestamp in seconds) */
 	iat: number;
+	/** When the token was created (as JavaScript {@link Date}) */
 	iatDate: Date;
+	/** When the token expires (unix timestamp in seconds) */
 	exp?: number;
+	/** When the token expires (as JavaScript {@link Date}) */
 	expDate?: Date;
+	/** When the token becomes valid (unix timestamp in seconds) */
 	nbf?: number;
+	/** When the token becomes valid (as JavaScript {@link Date}) */
 	nbfDate?: Date;
+	/** Where the token is allowed to be used */
 	aud?: string | string[];
+	/** Who the token is about */
 	sub?: string;
+	/** From where/who the token is issued */
 	iss?: string;
 } & T;
 
+/** Interface of a decoded token */
 export type DecodedToken<T extends GenericObject = GenericObject> = {
+	/** Token header info, algorithm, type etc. */
 	header: TokenHeader;
+	/** Decoded payload after with common {@link TokenPayload} properties */
 	payload: TokenPayload<T>;
+	/** Encrypted signature in base64 */
 	signature: string;
+	/** Encrypted inputs (header.payload) */
 	signingInput: `${string}.${string}`;
 };
-
-export type TokenString = `${string}.${string}.${string}`;
