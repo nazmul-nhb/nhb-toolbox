@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.28.6] - 2025-12-02
+
+- **Updated** *tsdoc* for `stableStringify` + *type augmentation* for `String` methods: `toLowerCase` and `toUpperCase`
+
 ## [4.28.4] - 2025-12-02
 
 - **Updated** *implementation* and *tsdoc* for:
@@ -32,7 +36,7 @@ All notable changes to the package will be documented here.
 
 ## [4.27.10] - 2025-11-28
 
-- **Updated** type augmentation for `String` methods: `toLowerCase` and `toUpperCase` (type level only, implementation remains intact).
+- **Updated** *type augmentation* for `String` methods: `toLowerCase` and `toUpperCase` (type level only, implementation remains intact).
 
 ## [4.27.1] - 2025-11-28
 

@@ -303,7 +303,7 @@ export function getClassDetails(cls: Constructor): ClassDetails {
 
 /**
  * * Create a deterministic JSON string representation of any value.
- * - The output format matches standard JSON but with guaranteed sorted keys.
+ *   - The output format matches standard JSON but with guaranteed sorted keys.
  *
  *
  * @remarks
@@ -312,7 +312,7 @@ export function getClassDetails(cls: Constructor): ClassDetails {
  * 	 - Recursively stabilizing nested objects and arrays.
  * 	 - Converting all `undefined` values into `null` so the output remains valid JSON.
  *   - Converting date-like objects (`Date`, `Chronos`, `Moment.js`, `Day.js`, `Luxon`, `JS-Joda`, `Temporal`) **in the same way that {@link JSON.stringify} would serialize them**, ensuring predictable and JSON-compliant output.
- * 	 - Falling back to native JSON serialization for primitives.
+ *   - Falling back to native JSON serialization for primitives.
  *
  * - **Useful for:**
  *   - Hash generation (e.g., signatures, cache keys)
