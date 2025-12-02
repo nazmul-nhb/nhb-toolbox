@@ -1,15 +1,33 @@
 import { isNotEmptyObject } from '../guards/non-primitives';
+import { stableStringify } from '../utils/index';
 import type { Tuple } from '../utils/types';
 import type { DeepKeys, GenericObject } from './types';
 
 /**
- * * Deep clone an object.
+ * * Deep clone an object using stable JSON serialization.
  *
  * @param obj Object to clone.
  * @returns Deep cloned object.
+ *
+ * @remarks
+ * - Cloning is performed using **JSON serialization after a stable stringify step**.
+ * - All value keys are sorted before serialization.
+ * - Date-like objects (native `Date`, `Chronos`, `Moment.js`, `Day.js`, `Luxon`, `JS-Joda`, `Temporal`) are converted to JSON-compatible **ISO string values**, ensuring deterministic output.
+ * - JSON serialization will:
+ *   - Drop functions, and `Symbol` values.
+ *   - `undefined` values will be replaced with `null`.
+ *   - Lose prototype information.
+ *   - Convert all date-like values into strings.
+ *   - Throw for cyclic references.
+ *
+ * - If JSON serialization fails (e.g., circular references), a shallow clone is returned to guarantee the function always produces an output.
  */
 export const cloneObject = <T extends GenericObject>(obj: T): T => {
-	return JSON.parse(JSON.stringify(obj));
+	try {
+		return JSON.parse(stableStringify(obj));
+	} catch {
+		return { ...obj };
+	}
 };
 
 /**

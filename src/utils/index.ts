@@ -1,5 +1,6 @@
 import { _resolveNestedKey } from '../array/helpers';
 import { sortAnArray } from '../array/sort';
+import { isDateLike } from '../date/guards';
 import {
 	isArray,
 	isArrayOfType,
@@ -309,9 +310,11 @@ export function getClassDetails(cls: Constructor): ClassDetails {
  * - This function guarantees **stable, repeatable output** by:
  * 	 - Sorting all object keys alphabetically.
  * 	 - Recursively stabilizing nested objects and arrays.
- * 	 - Automatically converting all `undefined` values into `null` so the output remains valid JSON.
+ * 	 - Converting all `undefined` values into `null` so the output remains valid JSON.
+ *   - Treating Date-like objects (native `Date`, `Chronos`, `Moment.js`, `Day.js`, `Luxon`, `JS-Joda`, `Temporal`) as **ISO strings** for consistent serialization.
  * 	 - Falling back to native JSON serialization for primitives.
- * - Useful for:
+ *
+ * - **Useful for:**
  *   - Hash generation (e.g., signatures, cache keys)
  *   - Deep equality checks
  *   - Producing predictable output across environments
@@ -328,7 +331,12 @@ export function stableStringify(obj: unknown): string {
 		return (
 			'{' +
 			keys
-				.map((k) => JSON.stringify(k, _replacer) + ':' + stableStringify(obj[k]))
+				.map(
+					(k) =>
+						JSON.stringify(k, _replacer) +
+						':' +
+						(isDateLike(obj[k]) ? JSON.stringify(obj[k]) : stableStringify(obj[k]))
+				)
 				.join(',') +
 			'}'
 		);
