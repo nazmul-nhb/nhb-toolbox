@@ -311,7 +311,7 @@ export function getClassDetails(cls: Constructor): ClassDetails {
  * 	 - Sorting all object keys alphabetically.
  * 	 - Recursively stabilizing nested objects and arrays.
  * 	 - Converting all `undefined` values into `null` so the output remains valid JSON.
- *   - Treating Date-like objects (native `Date`, `Chronos`, `Moment.js`, `Day.js`, `Luxon`, `JS-Joda`, `Temporal`) as **ISO strings** for consistent serialization.
+ *   - Converting date-like objects (`Date`, `Chronos`, `Moment.js`, `Day.js`, `Luxon`, `JS-Joda`, `Temporal`) **in the same way that {@link JSON.stringify} would serialize them**, ensuring predictable and JSON-compliant output.
  * 	 - Falling back to native JSON serialization for primitives.
  *
  * - **Useful for:**
@@ -319,7 +319,7 @@ export function getClassDetails(cls: Constructor): ClassDetails {
  *   - Deep equality checks
  *   - Producing predictable output across environments
  *
- * @param obj - The value to stringify into a deterministic JSON-like string.
+ * @param obj - The value to stringify into a deterministic JSON string.
  * @returns A stable, deterministic string representation of the input.
  */
 export function stableStringify(obj: unknown): string {
@@ -377,12 +377,12 @@ export function stripJsonEdgeGarbage(str: string): string {
  * @returns The parsed JSON value typed as `T`, or the original parsed value with optional primitive conversion.
  * - Returns `{}` if parsing fails, such as when the input is malformed or invalid JSON or passing single quoted string.
  *
- * - *Unlike `parseJsonToObject`, which ensures the root value is an object,
+ * - *Unlike {@link https://toolbox.nazmul-nhb.dev/docs/utilities/object/parseJsonToObject parseJsonToObject}, which ensures the root value is an object,
  * this function returns any valid JSON structure such as arrays, strings, numbers, or objects.*
  *
  * This is useful when you're not sure of the root structure of the JSON, or when you expect something other than an object.
  *
- * @see `parseJsonToObject` for strict object-only parsing.
+ * @see {@link https://toolbox.nazmul-nhb.dev/docs/utilities/object/parseJsonToObject parseJsonToObject} for strict object-only parsing.
  */
 export const parseJSON = <T = unknown>(value: string, parsePrimitives = true): T => {
 	try {

@@ -1,3 +1,5 @@
+import { isObject } from '../guards/non-primitives';
+import { isNumber, isString } from '../guards/primitives';
 import type {
 	ConvertedObject,
 	ConvertObjectOptions,
@@ -55,11 +57,7 @@ export function convertObjectValues<
 	data: T | Array<T>,
 	options: ConvertObjectOptions<T, Key, C>
 ): ConvertedObject<T, Key, C> | Array<ConvertedObject<T, Key, C>> {
-	const { keys, convertTo } = options;
-
-	/** * Helper function to determine if value should be preserved. */
-	const _shouldPreserveValue = (value: unknown): boolean =>
-		convertTo === 'number' && (typeof value !== 'string' || isNaN(Number(value)));
+	const { keys, convertTo } = options || {};
 
 	/** * Helper function to resolve a dot-notation key path and modify the corresponding value in the object. */
 	const _setValueAtPath = (obj: T, path: string, convertTo: 'string' | 'number'): T => {
@@ -71,21 +69,13 @@ export function convertObjectValues<
 			if (index === segments?.length - 1) {
 				const value = current?.[key];
 
-				if (_shouldPreserveValue(value)) {
-					return;
-				}
-
-				if (convertTo === 'string' && typeof value !== 'string') {
+				if (convertTo === 'string' && !isString(value)) {
 					current[key] = String(value);
-				} else if (
-					convertTo === 'number' &&
-					typeof value !== 'number' &&
-					!isNaN(Number(value))
-				) {
+				} else if (convertTo === 'number' && !isNumber(value)) {
 					current[key] = Number(value);
 				}
 			} else {
-				if (typeof current?.[key] === 'object' && current?.[key] !== null) {
+				if (isObject(current?.[key])) {
 					current = current?.[key];
 				} else {
 					current[key] = {};
@@ -99,7 +89,7 @@ export function convertObjectValues<
 
 	/** * Recursively process a single object. */
 	const _convertValue = (obj: T): ConvertedObject<T, Key, C> => {
-		let newObj = structuredClone(obj);
+		let newObj = { ...obj };
 
 		keys?.forEach((key) => {
 			newObj = _setValueAtPath(newObj, key, convertTo);

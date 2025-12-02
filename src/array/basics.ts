@@ -72,7 +72,7 @@ export const isInvalidOrEmptyArray = <T>(value: T): boolean => {
 export const shuffleArray = <T>(array: T[]): T[] => {
 	if (isInvalidOrEmptyArray(array)) return array;
 
-	const shuffled = structuredClone(array);
+	const shuffled = [...array];
 
 	for (let i = shuffled?.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));

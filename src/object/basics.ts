@@ -4,31 +4,58 @@ import type { Tuple } from '../utils/types';
 import type { DeepKeys, GenericObject } from './types';
 
 /**
- * * Deep clone an object using stable JSON serialization.
+ * * Deep clone an object using `structuredClone` or deterministic *JSON serialization*.
  *
  * @param obj Object to clone.
+ * @param serialize Whether to force deterministic JSON serialization instead of using `structuredClone`. Defaults to `false`.
  * @returns Deep cloned object.
  *
  * @remarks
- * - Cloning is performed using **JSON serialization after a stable stringify step**.
- * - All value keys are sorted before serialization.
- * - Date-like objects (native `Date`, `Chronos`, `Moment.js`, `Day.js`, `Luxon`, `JS-Joda`, `Temporal`) are converted to JSON-compatible **ISO string values**, ensuring deterministic output.
- * - JSON serialization will:
- *   - Drop functions, and `Symbol` values.
- *   - `undefined` values will be replaced with `null`.
- *   - Lose prototype information.
- *   - Convert all date-like values into strings.
- *   - Throw for cyclic references.
+ * **Primary behavior**
+ * - By default (`serialize = false`), the function uses {@link https://developer.mozilla.org/docs/Web/API/Window/structuredClone structuredClone} when available. This supports:
+ *   - Circular references
+ *   - `Date` objects
+ *   - `Map` / `Set`
+ *   - `RegExp`
+ *   - Typed arrays
+ *   - Most built-in JavaScript types
+ *   - Preserves `undefined` values
  *
- * - If JSON serialization fails (e.g., circular references), a shallow clone is returned to guarantee the function always produces an output.
+ * - **Note:** `structuredClone` **does not preserve class prototypes**, even though it preserves data types like `Date`, `Map`, and `Set`.
+ *
+ * **Deterministic serialization mode**
+ * - When `serialize = true`, or when `structuredClone` is unavailable, the function falls back to **stable JSON serialization** via `stableStringify`. This guarantees:
+ *   - All object keys are sorted alphabetically.
+ *   - Consistent output across environments (deterministic).
+ *   - All `undefined` values are converted to `null`.
+ *   - Converting date-like objects (`Date`, `Chronos`, `Moment.js`, `Day.js`, `Luxon`, `JS-Joda`, `Temporal`) **in the same way that {@link JSON.stringify} would serialize them**, ensuring predictable and JSON-compliant output.
+ *
+ * - This mode is ideal for:
+ *   - Hashing
+ *   - Signature generation
+ *   - Deep equality checks
+ *   - Anything requiring deterministic, environment-neutral output
+ *
+ * **Deterministic mode limitations**
+ * - JSON serialization will:
+ *   - Drop functions and `Symbol` values.
+ *   - Lose prototype and class instance information.
+ *   - Convert all date-like objects into strings.
+ *   - Fail on circular references.
+ *
+ * **Final safety fallback**
+ * - If JSON serialization fails (e.g., due to circular references), the function returns a **shallow clone** (`{ ...obj }`) to ensure the cloning never throws.
  */
-export const cloneObject = <T extends GenericObject>(obj: T): T => {
+export function cloneObject<T extends GenericObject>(obj: T, serialize = false): T {
 	try {
+		if (!serialize && typeof structuredClone === 'function') {
+			return structuredClone(obj);
+		}
 		return JSON.parse(stableStringify(obj));
 	} catch {
 		return { ...obj };
 	}
-};
+}
 
 /**
  * * Count the number of fields in an object.
@@ -36,11 +63,11 @@ export const cloneObject = <T extends GenericObject>(obj: T): T => {
  * @param obj Object to check.
  * @returns Number of fields in the object.
  */
-export const countObjectFields = <T extends GenericObject>(obj: T): number => {
+export function countObjectFields<T extends GenericObject>(obj: T): number {
 	if (obj != null) return Object.keys(obj)?.length;
 
 	return 0;
-};
+}
 
 /**
  * * Extracts all the top-level keys of an object as an array.

@@ -37,10 +37,10 @@ export function md5(str: string): string {
 	const tail = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 	for (i = 0; i < $str.length; i++) {
-		tail[i >> 2] |= $str.charCodeAt(i) << (i % 4 << 3);
+		tail[i >> 2] |= $str.charCodeAt(i) << ((i % 4) << 3);
 	}
 
-	tail[i >> 2] |= 0x80 << (i % 4 << 3);
+	tail[i >> 2] |= 0x80 << ((i % 4) << 3);
 
 	if (i > 55) {
 		_md5cycle(state, tail);
@@ -169,9 +169,9 @@ export function sha1(msg: string): string {
  * // Returns: '7037e204b825b83553ba336a6ec35b796d505599286ae864729ed6cb33ae9fe1'
  * ```
  *
- * @see {@link sha256Bytes} for hashing raw bytes
- * @see {@link utf8ToBytes} for converting string to `UTF-8` bytes
- * @see {@link bytesToHex} for converting bytes to a hexadecimal string
+ * @see {@link https://toolbox.nazmul-nhb.dev/docs/utilities/hash/sha256Bytes sha256Bytes} for hashing raw bytes
+ * @see {@link https://toolbox.nazmul-nhb.dev/docs/utilities/hash/encoding#utf8tobytes utf8ToBytes} for converting string to bytes
+ * @see {@link https://toolbox.nazmul-nhb.dev/docs/utilities/hash/encoding#bytestotex bytesToHex} for converting bytes to a hexadecimal string
  */
 export function sha256(msg: string): string {
 	return bytesToHex(sha256Bytes(utf8ToBytes(msg)));

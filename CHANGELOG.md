@@ -6,6 +6,14 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.28.4] - 2025-12-02
+
+- **Updated** *implementation* and *tsdoc* for:
+  - `cloneObject`: used `structuredClone` and `stableStringify` (optionally force to use *deterministic serialization*) internally and falls back to *shallow cloning* if serialization fails.
+  - `stableStringify`: stringified value of *Date-like objects* (`Date`, `Chronos`, `Moment.js`, `Day.js`, `Luxon`, `JS-Joda`, `Temporal`) is converted to string representation (in the same way that `JSON.stringify` would serialize them).
+- **Updated** `convertObjectValues` behaviour: *fields* configured for *number conversion* now return `NaN` when *parsing fails*.
+- **Updated** *reference links* in *tsdoc* of some *hash* utilities.
+
 ## [4.28.1] - 2025-12-02
 
 - **Updated** *type* names `TokenHeader` to `SignetHeader` and `TokenPayload` to `SignetPayload` and both are available to import.
