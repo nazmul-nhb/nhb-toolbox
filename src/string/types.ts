@@ -6,9 +6,32 @@ import type { LOWERCASE } from './constants';
 declare global {
 	interface String {
 		toLowerCase(): string;
-		toLowerCase<C extends 'T' | string>(): C extends 'T' ? Lowercase<string> : Lowercase<C>;
+		/**
+		 * * Converts all the alphabetic characters in a string to lowercase.
+		 *
+		 * @typeParam `Lower` - A type-level flag. If `'T'`, returns the lowercase string type (`Lowercase<string>`). Otherwise, returns literal `Lower` (must be Lowercase type).
+		 *
+		 * @remarks
+		 * - This augmentation only affects TypeScript type inference.
+		 * - Runtime behavior remains identical to the standard `toLowerCase()` method.
+		 */
+		toLowerCase<Lower extends 'T' | Lowercase<string>>(): Lower extends 'T' ?
+			Lowercase<string>
+		:	Lower;
+
 		toUpperCase(): string;
-		toUpperCase<C extends 'T' | string>(): C extends 'T' ? Uppercase<string> : Uppercase<C>;
+		/**
+		 * * Converts all the alphabetic characters in a string to uppercase.
+		 *
+		 * @typeParam `Upper` - A type-level flag. If `'T'`, returns the uppercase string type (`Uppercase<string>`). Otherwise, returns literal `Upper` (must be Uppercase type).
+		 *
+		 * @remarks
+		 * - This augmentation only affects TypeScript type inference.
+		 * - Runtime behavior remains identical to the standard `toUpperCase()` method.
+		 */
+		toUpperCase<Upper extends 'T' | Uppercase<string>>(): Upper extends 'T' ?
+			Uppercase<string>
+		:	Upper;
 	}
 }
 
