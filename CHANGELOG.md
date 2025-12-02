@@ -6,9 +6,14 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.28.7] - 2025-12-02
+
+- **Updated** *invalid links* in *tsdoc* of the *hash utilities*.
+- **Implemented** input type *validation* for `sha256` utility.
+
 ## [4.28.6] - 2025-12-02
 
-- **Updated** *tsdoc* for `stableStringify` + *type augmentation* for `String` methods: `toLowerCase` and `toUpperCase`
+- **Updated** *tsdoc* for `stableStringify` + *type augmentation* for `String` methods: `toLowerCase` and `toUpperCase`.
 
 ## [4.28.4] - 2025-12-02
 

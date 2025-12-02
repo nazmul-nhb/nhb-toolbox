@@ -305,7 +305,6 @@ export function getClassDetails(cls: Constructor): ClassDetails {
  * * Create a deterministic JSON string representation of any value.
  *   - The output format matches standard JSON but with guaranteed sorted keys.
  *
- *
  * @remarks
  * - This function guarantees **stable, repeatable output** by:
  * 	 - Sorting all object keys alphabetically.
