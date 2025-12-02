@@ -134,19 +134,6 @@ export const TIME_UNIT_VARIANTS = /* @__PURE__ */ Object.freeze({
 	millisecond: ['ms', 'msec', 'msecs', 'millisecond', 'milliseconds'],
 } as const);
 
-/** Regex for time unit variants */
-const TIME_UNIT_REGEX_STR = /* @__PURE__ */ Object.freeze(
-	Object.values(TIME_UNIT_VARIANTS)
-		.flat()
-		.sort((a, b) => b.length - a.length)
-		.join('|')
-);
-
-/** `RegExp` for time unit variants */
-export const TIME_UNIT_REGEX = /* @__PURE__ */ Object.freeze(
-	new RegExp(`^(?<value>-?\\d*\\.?\\d+) *(?<unit>${TIME_UNIT_REGEX_STR})?$`, 'i')
-);
-
 /** Map to different time units to milliseconds */
 export const MS_MAP = /* @__PURE__ */ Object.freeze(
 	((): Record<$TimeUnitVar, number> => {

@@ -1,7 +1,7 @@
 import { isNonEmptyString, isNumber } from '../guards/primitives';
 import { isNumericString } from '../guards/specials';
 import type { Numeric } from '../types/index';
-import { MS_MAP, TIME_UNIT_REGEX } from './constants';
+import { MS_MAP } from './constants';
 import { isTimeWithUnit } from './guards';
 import type { $TimeUnitVar, TimeWithUnit } from './types';
 
@@ -40,7 +40,10 @@ function _parse(str: TimeWithUnit, sec = false): number {
 		throw new RangeError(`Value must be a string with length between 1 and 99!`);
 	}
 
-	const match = TIME_UNIT_REGEX.exec(str);
+	const match =
+		/^(?<value>-?\d*\.?\d+) *(?<unit>milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|months?|mo|years?|yrs?|y)?$/i.exec(
+			str
+		);
 
 	if (!match?.groups) return NaN;
 

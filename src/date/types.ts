@@ -702,8 +702,14 @@ export type ChronosWithOptions = Partial<{
 	millisecond: Milliseconds;
 }>;
 
+/** Mapped type to {@link TIME_UNIT_VARIANTS} */
+export type $TimeUnitVarMap = typeof TIME_UNIT_VARIANTS;
+
+/** Key of {@link TIME_UNIT_VARIANTS} */
+export type $TimeUnitKey = keyof typeof TIME_UNIT_VARIANTS;
+
 /** Variants of different time units in lowercase */
-export type $TimeUnitVar = (typeof TIME_UNIT_VARIANTS)[keyof typeof TIME_UNIT_VARIANTS][number];
+export type $TimeUnitVar<U extends $TimeUnitKey = $TimeUnitKey> = $TimeUnitVarMap[U][number];
 
 /** Variants of different time units in lowercase, uppercase  and capitalized */
 export type $UnitAnyCase = Capitalize<$TimeUnitVar> | Uppercase<$TimeUnitVar> | $TimeUnitVar;
