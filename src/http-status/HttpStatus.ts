@@ -91,7 +91,7 @@ export class HttpStatus {
 	/**
 	 * * Get status entry by standard name (either as `SOME_NAME` or `Some Name`).
 	 * @param name Standard status name either as `SOME_NAME` or `Some Name`.
-	 * @returns Matching status entry or `undefined` if not found.
+	 * @returns Matching standard status entry.
 	 */
 	getByName(name: HttpStatusName): StatusEntry;
 

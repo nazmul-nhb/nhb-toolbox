@@ -1,4 +1,4 @@
-/** Data for HTTP Status Codes */
+/** HTTP status data from {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status MDN} */
 export const HTTP_STATUS_DATA = /* @__PURE__ */ Object.freeze([
 	{
 		category: 'informational',
@@ -625,7 +625,7 @@ export const HTTP_STATUS_DATA = /* @__PURE__ */ Object.freeze([
 	},
 ] as const);
 
-/** List of HTTP Status Names with Corresponding Codes */
+/** List of {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status HTTP Status Names with Corresponding Codes} */
 export const HTTP_STATUS_CODES = /* @__PURE__ */ Object.freeze({
 	/**
 	 * * {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/100 Continue}

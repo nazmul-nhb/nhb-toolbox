@@ -2,15 +2,15 @@ import type { LooseLiteral } from '../utils/types';
 import type { HTTP_STATUS_DATA } from './constants';
 
 /** Mapped type of HTTP status entries */
-type $HttpStatusMap = (typeof HTTP_STATUS_DATA)[number];
+export type $HttpStatusMap = (typeof HTTP_STATUS_DATA)[number];
 
 /** HTTP status name variants: `name` or `readableName` */
-type $StatusNameVar = 'name' | 'readableName';
+export type $StatusNameVar = 'name' | 'readableName';
 
 /** * Categories of HTTP status codes: `"informational"`, `"success"`, `"redirection"`, `"clientError`" or `"serverError"` */
 export type StatusCategory = $HttpStatusMap['category'];
 
-/** Extracts all HTTP status `code` by the given `Category`. Defaults to all {@link StatusCategory categories}. */
+/** - Extracts standard HTTP status codes by the given `Category` name. Defaults to all {@link StatusCategory categories}. */
 export type HttpStatusCode<Category extends StatusCategory = StatusCategory> =
 	$HttpStatusMap extends infer Target ?
 		Target extends $HttpStatusMap ?
@@ -20,16 +20,17 @@ export type HttpStatusCode<Category extends StatusCategory = StatusCategory> =
 		:	never
 	:	never;
 
-/** HTTP Status Code, e.g. `404`, `500` etc. + any number */
+/** Standard HTTP Status Code, e.g. `404`, `500` etc. + any number */
 export type StatusCode = LooseLiteral<HttpStatusCode>;
 
 /**
- * Extracts HTTP status names filtered by {@link $StatusNameVar variant} and {@link StatusCategory category}.
+ * - Extracts standard HTTP status names filtered by {@link $StatusNameVar variant} and {@link StatusCategory category}.
+ *   - Defaults to all `variants` and `categories`.
  *
  * @remarks
  * - `Name` selects either the `name` (CONSTANT_CASE) or `readableName` (Title Case).
  * - `Category` restricts results to the chosen HTTP status {@link StatusCategory category}.
- * - Produces a union of all matching literal name values.
+ * - Produces a union of all matching literal status name values.
  */
 export type HttpStatusName<
 	Name extends $StatusNameVar = $StatusNameVar,
@@ -43,7 +44,7 @@ export type HttpStatusName<
 		:	never
 	:	never;
 
-/** HTTP status name in `CONSTANT_CASE`, e.g. `"INTERNAL_SERVER_ERROR"` or in `Title Case`, e.g. `"Internal Server Error"` */
+/** Standard HTTP status name in `CONSTANT_CASE`, e.g. `"INTERNAL_SERVER_ERROR"` + any string */
 export type StatusName = LooseLiteral<HttpStatusName>;
 
 /** HTTP status name (`CONSTANT_CASE`) in {@link StatusEntry} interface */

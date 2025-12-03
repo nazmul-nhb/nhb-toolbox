@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.28.10] - 2025-12-03
+
+- **Added** *new* `addOrOverrideCode` method and **modified** *existing* + **introduced** *new types* for `HttpStatus` class.
+
 ## [4.28.8] - 2025-12-03
 
 - **Fixed** a *tree-shaking issue* affecting `Chronos` and other *date/time utilities* by removing a *pre-compiled* `RegExp` instance from **date/constants**.
