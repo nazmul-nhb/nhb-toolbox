@@ -1,5 +1,12 @@
 import { HTTP_STATUS_DATA } from './constants';
-import type { HttpStatusName, StatusCategory, StatusCode, StatusEntry } from './types';
+import type {
+	HttpStatusCode,
+	HttpStatusName,
+	StatusCategory,
+	StatusCode,
+	StatusEntry,
+	StatusName,
+} from './types';
 
 /**
  * * Utility class for retrieving and managing HTTP status codes with rich MDN-based metadata.
@@ -37,11 +44,11 @@ import type { HttpStatusName, StatusCategory, StatusCode, StatusEntry } from './
  */
 export class HttpStatus {
 	#codesByNumber: Map<StatusCode, StatusEntry>;
-	#codesByName: Map<HttpStatusName, StatusEntry>;
+	#codesByName: Map<StatusName, StatusEntry>;
 
 	/**
 	 * * Static category groups for quick reference.
-	 * * Populated at runtime from the provided data.
+	 * @remarks Populated at runtime from default and the provided data.
 	 */
 	static Groups: Record<StatusCategory, StatusCode[]> = {
 		informational: [],
@@ -63,20 +70,40 @@ export class HttpStatus {
 	}
 
 	/**
+	 * * Get status entry by standard numeric HTTP code.
+	 * @param code Standard HTTP status code.
+	 * @returns Matching standard status entry.
+	 */
+	getByCode(code: HttpStatusCode): StatusEntry;
+
+	/**
 	 * * Get status entry by numeric HTTP code.
 	 * @param code HTTP status code.
 	 * @returns Matching status entry or `undefined` if not found.
 	 */
-	getByCode(code: StatusCode): StatusEntry | undefined {
+	getByCode(code: StatusCode): StatusEntry | undefined;
+
+	/** * Get status entry by numeric HTTP code. */
+	getByCode(code: StatusCode) {
 		return this.#codesByNumber.get(code);
 	}
 
 	/**
-	 * * Get status entry by name (either SOME_NAME or "Some Name").
-	 * @param name Status name.
+	 * * Get status entry by standard name (either as `SOME_NAME` or `Some Name`).
+	 * @param name Standard status name either as `SOME_NAME` or `Some Name`.
 	 * @returns Matching status entry or `undefined` if not found.
 	 */
-	getByName(name: HttpStatusName): StatusEntry | undefined {
+	getByName(name: HttpStatusName): StatusEntry;
+
+	/**
+	 * * Get status entry by name (either as `SOME_NAME` or `Some Name`).
+	 * @param name Status name either as `SOME_NAME` or `Some Name`.
+	 * @returns Matching status entry or `undefined` if not found.
+	 */
+	getByName(name: StatusName): StatusEntry | undefined;
+
+	/** * Get status entry by name (either as `SOME_NAME` or `Some Name`). */
+	getByName(name: StatusName) {
 		return this.#codesByName.get(name);
 	}
 
@@ -101,6 +128,7 @@ export class HttpStatus {
 	 * * Add one or more new HTTP status code entries.
 	 *
 	 * @remarks
+	 * - New entries are compared **by their `code` value** to determine uniqueness.
 	 * - If a code already exists, it will be skipped and not overwritten.
 	 * - Returns `true` if at least one code was successfully added.
 	 * - Returns `false` if all provided codes already exist.
@@ -123,17 +151,34 @@ export class HttpStatus {
 	}
 
 	/**
+	 * * Add/override one or more HTTP status code entries.
+	 *
+	 * @remarks New entries use their `code` value as the comparison key and will overwrite existing ones.
+	 *
+	 * @param entries One or more status entries to add/override.
+	 * @returns The modified instance with the newly added/updated entries.
+	 */
+	addOrOverrideCode(...entries: StatusEntry[]): HttpStatus {
+		for (const entry of entries) {
+			this.#storeEntry(entry);
+			HttpStatus.Groups[entry.category].push(entry.code);
+		}
+
+		return this;
+	}
+
+	/**
 	 * * List all codes, optionally filtered by category.
 	 * @param category Optional category filter.
 	 * @returns Array of status entries.
 	 */
 	list(category?: StatusCategory): StatusEntry[] {
+		const entries = [...this.#codesByNumber.values()];
+
 		if (!category) {
-			return [...this.#codesByNumber.values()];
+			return entries;
 		} else {
-			return [...this.#codesByNumber.values()].filter(
-				(entry) => entry.category === category
-			);
+			return entries.filter((entry) => entry.category === category);
 		}
 	}
 
