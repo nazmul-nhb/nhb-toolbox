@@ -94,7 +94,7 @@ declare module '../Chronos' {
 export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 	const { toNewDate } = ChronosClass[INTERNALS];
 
-	ChronosClass.prototype.getRelativeYear = function (this, time) {
+	ChronosClass.prototype.getRelativeYear = function (time) {
 		const $date = this.toDate();
 		const now = toNewDate(this, time);
 
@@ -111,7 +111,7 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		return years;
 	};
 
-	ChronosClass.prototype.getRelativeMonth = function (this, time) {
+	ChronosClass.prototype.getRelativeMonth = function (time) {
 		const $date = this.toDate();
 		const now = toNewDate(this, time);
 
@@ -128,12 +128,12 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		return months;
 	};
 
-	ChronosClass.prototype.getRelativeWeek = function (this, time) {
+	ChronosClass.prototype.getRelativeWeek = function (time) {
 		const relativeDays = this.getRelativeDay(time);
 		return Math.floor(relativeDays / 7);
 	};
 
-	ChronosClass.prototype.getRelativeDay = function (this, time) {
+	ChronosClass.prototype.getRelativeDay = function (time) {
 		const now = toNewDate(this, time);
 		// Set the time of today to 00:00:00 for comparison purposes
 		now.setHours(0, 0, 0, 0);
@@ -148,28 +148,28 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		return diffDays;
 	};
 
-	ChronosClass.prototype.getRelativeHour = function (this, time) {
+	ChronosClass.prototype.getRelativeHour = function (time) {
 		const diff = this.getTimeStamp() - toNewDate(this, time).getTime();
 
 		return Math.floor(diff / (1000 * 60 * 60));
 	};
 
-	ChronosClass.prototype.getRelativeMinute = function (this, time) {
+	ChronosClass.prototype.getRelativeMinute = function (time) {
 		const diff = this.getTimeStamp() - toNewDate(this, time).getTime();
 
 		return Math.floor(diff / (1000 * 60));
 	};
 
-	ChronosClass.prototype.getRelativeSecond = function (this, time) {
+	ChronosClass.prototype.getRelativeSecond = function (time) {
 		const diff = this.getTimeStamp() - toNewDate(this, time).getTime();
 		return Math.floor(diff / 1000);
 	};
 
-	ChronosClass.prototype.getRelativeMilliSecond = function (this, time) {
+	ChronosClass.prototype.getRelativeMilliSecond = function (time) {
 		return this.getTimeStamp() - toNewDate(this, time).getTime();
 	};
 
-	ChronosClass.prototype.compare = function (this, unit: TimeUnit = 'minute', time) {
+	ChronosClass.prototype.compare = function (unit: TimeUnit = 'minute', time) {
 		switch (unit) {
 			case 'year':
 				return this.getRelativeYear(time);

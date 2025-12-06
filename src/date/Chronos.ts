@@ -1,5 +1,5 @@
 import { isValidArray } from '../guards/non-primitives';
-import { isString } from '../guards/primitives';
+import { isNumber, isString } from '../guards/primitives';
 import type { Enumerate, NumberRange } from '../number/types';
 import type { LooseLiteral, TupleOf } from '../utils/types';
 import { DAYS, INTERNALS, MONTHS } from './constants';
@@ -1480,52 +1480,52 @@ export class Chronos {
 	 */
 	getDatesInRange(options?: DatesInRangeOptions): string[] {
 		let startDate = this.clone(),
-			endDate = startDate.addWeeks(4);
+			endDate = this.addWeeks(4);
 
 		const { format = 'local', onlyDays, skipDays, roundDate = false } = options ?? {};
 
 		if (options) {
 			if ('from' in options || 'to' in options) {
-				if (options?.from) {
-					startDate = Chronos.#cast(options?.from);
-				}
-				if (options?.to) {
-					endDate = Chronos.#cast(options?.to);
-				}
+				if (options?.from) startDate = Chronos.#cast(options.from);
+				if (options?.to) endDate = Chronos.#cast(options.to);
 			} else if ('span' in options || 'unit' in options) {
-				const { span = 4, unit = 'week' } = options ?? {};
+				const { span = 4, unit = 'week' } = options;
 				endDate = startDate.add(span, unit);
 			}
 		}
 
-		const datesInRange: string[] = [];
+		if (roundDate) {
+			startDate = startDate.startOf('day');
+			endDate = endDate.startOf('day');
+		}
 
-		const filterSet = new Set<number>(
+		const skipSet = new Set<number>(
 			(isValidArray(onlyDays) ? onlyDays
 			: isValidArray(skipDays) ? skipDays
 			: []
-			).map((day) => (typeof day === 'number' ? day : DAYS.indexOf(day)))
+			).map((day) => (isNumber(day) ? day : DAYS.indexOf(day)))
 		);
 
-		const end = roundDate ? endDate.startOf('day') : endDate;
-		let current = roundDate ? startDate.startOf('day') : startDate;
+		const dates: string[] = [];
 
-		while (current.isSameOrBefore(end, 'day')) {
-			const shouldFilter =
-				onlyDays?.length ?
-					filterSet.has(current.weekDay)
-				:	!filterSet.has(current.weekDay);
+		const startTime = startDate.valueOf();
+		const endTime = endDate.valueOf();
+		const step = startTime <= endTime ? 1 : -1;
+		const totalDays = Math.floor(Math.abs(endTime - startTime) / 86400000);
 
-			if (shouldFilter) {
-				datesInRange.push(
-					format === 'local' ? current.toLocalISOString() : current.toISOString()
-				);
+		for (let i = 0; i <= totalDays; i++) {
+			const ts = startTime + i * 86400000 * step;
+			const wDay = new Date(ts).getDay(); // temporary, just for weekday
+
+			const include = isValidArray(onlyDays) ? skipSet.has(wDay) : !skipSet.has(wDay);
+
+			if (include) {
+				const chr = new Chronos(ts);
+				dates.push(format === 'local' ? chr.toLocalISOString() : chr.toISOString());
 			}
-
-			current = current.add(1, 'day');
 		}
 
-		return datesInRange;
+		return dates;
 	}
 
 	// ! ======= Static Methods ======= //

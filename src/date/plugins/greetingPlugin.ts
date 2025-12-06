@@ -29,13 +29,13 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `getGreeting`/`greet` method */
 export const greetingPlugin = (ChronosClass: MainChronos): void => {
-	ChronosClass.prototype.getGreeting = function (this, configs) {
+	ChronosClass.prototype.getGreeting = function (configs) {
 		const currentTime = this.formatStrict('HH:mm') as ClockTime;
 
 		return getGreeting({ currentTime, ...configs });
 	};
 
-	ChronosClass.prototype.greet = function (this, configs) {
+	ChronosClass.prototype.greet = function (configs) {
 		return this.getGreeting(configs);
 	};
 };

@@ -432,9 +432,9 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 		return mask;
 	};
 
-	/** Count workdays given a start weekday, total days, weekend mask and optional step */
+	/** Count workdays given a `start weekday`, `total days`, `weekend mask` and optional `step` */
 	const _countWorkdays = (wStart: number, totalDays: number, mask: boolean[], step = 1) => {
-		// ! Count workdays in a full 7-day week * full weeks = total workdays in the year
+		// ! Count workdays in a full 7-day week * full weeks = total workdays in the range
 		let total = Math.floor(totalDays / 7) * mask.filter(Boolean).length;
 
 		let dayIndex = wStart % 7;

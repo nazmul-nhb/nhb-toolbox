@@ -26,7 +26,7 @@ declare module '../Chronos' {
 export const fromNowPlugin = (ChronosClass: MainChronos): void => {
 	const { toNewDate } = ChronosClass[INTERNALS];
 
-	ChronosClass.prototype.fromNow = function (this, level = 'second', wSP = true, time) {
+	ChronosClass.prototype.fromNow = function (level = 'second', wSP = true, time) {
 		const now = toNewDate(this, time);
 		const target = this.toDate();
 

@@ -26,7 +26,7 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `getZodiacSign`/`zodiac` method */
 export const zodiacPlugin = (ChronosClass: MainChronos): void => {
-	ChronosClass.prototype.getZodiacSign = function (this, options) {
+	ChronosClass.prototype.getZodiacSign = function (options) {
 		const { birthDate, preset = 'western', custom } = options ?? {};
 
 		let month: NumberRange<1, 12>;
@@ -56,7 +56,7 @@ export const zodiacPlugin = (ChronosClass: MainChronos): void => {
 		return signs[0][0];
 	};
 
-	ChronosClass.prototype.zodiac = function (this, options) {
+	ChronosClass.prototype.zodiac = function (options) {
 		return this.getZodiacSign(options);
 	};
 };

@@ -235,7 +235,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		}
 	};
 
-	ChronosClass.prototype.timeZone = function (this, zone) {
+	ChronosClass.prototype.timeZone = function (zone) {
 		let offset: UTCOffset;
 		let tzId: TimeZoneId;
 
@@ -262,7 +262,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		return withOrigin(instance, `timeZone`, offset, tzName, tzId, $zone);
 	};
 
-	ChronosClass.prototype.getTimeZoneName = function (this, utc) {
+	ChronosClass.prototype.getTimeZoneName = function (utc) {
 		const UTC = utc || this.utcOffset;
 
 		return _getTimeZoneName(utc || this?.$tzTracker || this.utcOffset, $Date(this)) ?? UTC;
@@ -280,7 +280,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 			.replace(/\W/g, '');
 	};
 
-	ChronosClass.prototype.getTimeZoneNameShort = function (this, utc) {
+	ChronosClass.prototype.getTimeZoneNameShort = function (utc) {
 		const tracker = this?.$tzTracker;
 		const UTC = utc || this.utcOffset;
 
@@ -316,7 +316,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		return customAbbr;
 	};
 
-	ChronosClass.prototype.getTimeZoneNameAbbr = function (this, utc) {
+	ChronosClass.prototype.getTimeZoneNameAbbr = function (utc) {
 		return this.getTimeZoneNameShort(utc);
 	};
 };

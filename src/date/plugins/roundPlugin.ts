@@ -31,7 +31,7 @@ declare module '../Chronos' {
 export const roundPlugin = (ChronosClass: MainChronos): void => {
 	const { internalDate, withOrigin } = ChronosClass[INTERNALS];
 
-	ChronosClass.prototype.round = function (this, unit, nearest = 1) {
+	ChronosClass.prototype.round = function (unit, nearest = 1) {
 		const date = new Date(internalDate(this));
 
 		switch (unit) {
