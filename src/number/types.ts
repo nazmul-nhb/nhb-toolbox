@@ -1,3 +1,4 @@
+import type { Maybe } from '../types/index';
 import type { LooseLiteral } from '../utils/types';
 import type {
 	CURRENCY_CODES,
@@ -66,7 +67,7 @@ export interface RandomNumberOptions {
 }
 
 /** - Decimal options for converting to decimal */
-export interface DecimalOptions<T extends boolean | undefined = false> {
+export interface DecimalOptions<T extends Maybe<boolean> = false> {
 	/** Number of decimal places to round to. Defaults to `2`. */
 	decimalPlaces?: number;
 	/** If the return value is in `string` or `number`. Defaults to `false`. */

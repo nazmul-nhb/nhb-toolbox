@@ -1,4 +1,4 @@
-import type { Any } from '../../types/index';
+import type { Any, Maybe } from '../../types/index';
 import type { LooseLiteral } from '../../utils/types';
 import { INTERNALS } from '../constants';
 import { isValidUTCOffset } from '../guards';
@@ -120,7 +120,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	};
 
 	/** Check if a string is the key of `TIME_ZONE_LABELS` constant */
-	const _isLabelKey = (offset: string | undefined): offset is $TZLabelKey => {
+	const _isLabelKey = (offset: Maybe<string>): offset is $TZLabelKey => {
 		return offset ? offset in TIME_ZONE_LABELS : false;
 	};
 
@@ -130,7 +130,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	};
 
 	/** Resolve time zone name from `TIME_ZONE_LABELS` constant using UTC offset or get undefined */
-	const _resolveTzName = (offset: UTCOffset | undefined) => {
+	const _resolveTzName = (offset: Maybe<UTCOffset>) => {
 		if (_isLabelKey(offset)) {
 			return TIME_ZONE_LABELS[offset];
 		}
@@ -149,8 +149,8 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 
 		const obj = { tzId } as {
 			tzId: $TimeZoneIdentifier;
-			tzName: LooseLiteral<TimeZoneName> | undefined;
-			offset: UTCOffset | undefined;
+			tzName: Maybe<LooseLiteral<TimeZoneName>>;
+			offset: Maybe<UTCOffset>;
 		};
 
 		for (const type of TZ_NAME_TYPES) {

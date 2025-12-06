@@ -1,6 +1,6 @@
 import { isNumber } from '../guards/primitives';
 import { isNumericString } from '../guards/specials';
-import type { Numeric } from '../types/index';
+import type { Maybe, Numeric } from '../types/index';
 import { CURRENCY_LOCALES } from './constants';
 import type { CurrencyCode, LocaleCode } from './types';
 
@@ -96,11 +96,11 @@ export const getOrdinal = (num: Numeric, withNumber = true): string => {
  * * Normalize a number or numeric string to a number.
  * @description
  * This function checks if the input is a number or a numeric string and converts it to a number.
- * If the input is not a valid number or numeric string, it returns undefined.
+ * If the input is not a valid number or numeric string, it returns `undefined`.
  * @param num - The number to normalize.
- * @returns The normalized number or undefined if the input is not a valid number or numeric string.
+ * @returns The normalized number or `undefined` if the input is not a valid number or numeric string.
  */
-export function normalizeNumber(num: unknown): number | undefined {
+export function normalizeNumber(num: unknown): Maybe<number> {
 	return (
 		isNumber(num) ? num
 		: isNumericString(num) ? Number(num)

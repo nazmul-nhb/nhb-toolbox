@@ -1,6 +1,7 @@
 import { isValidArray } from '../guards/non-primitives';
 import { roundNumber } from '../number/basics';
 import type { GenericObject, NestedPrimitiveKey, NumericDotKey } from '../object/types';
+import type { Maybe } from '../types/index';
 import { _getNumericProp, _resolveNestedKey } from './helpers';
 import { splitArrayByProperty } from './transform';
 
@@ -18,7 +19,7 @@ import { splitArrayByProperty } from './transform';
  * // => 10
  */
 export function sumFieldDifference<T extends GenericObject, P extends NumericDotKey<T>>(
-	data: T[] | undefined,
+	data: Maybe<T[]>,
 	first: P,
 	second: P,
 	roundTo = 2
@@ -45,7 +46,7 @@ export function sumFieldDifference<T extends GenericObject, P extends NumericDot
  * // => 8
  */
 export function sumByField<T extends GenericObject>(
-	data: T[] | undefined,
+	data: Maybe<T[]>,
 	field: NumericDotKey<T>,
 	roundTo = 2
 ): number {
@@ -69,7 +70,7 @@ export function sumByField<T extends GenericObject>(
  * // => 5
  */
 export function averageByField<T extends GenericObject>(
-	data: T[] | undefined,
+	data: Maybe<T[]>,
 	field: NumericDotKey<T>,
 	roundTo = 2
 ): number {
@@ -94,7 +95,7 @@ export function averageByField<T extends GenericObject>(
  * // => [{ A: 5 }, { B: 1 }]
  */
 export function groupAndSumByField<T extends GenericObject>(
-	data: T[] | undefined,
+	data: Maybe<T[]>,
 	groupBy: NestedPrimitiveKey<T>,
 	sumBy: NumericDotKey<T>,
 	roundTo = 2
@@ -124,7 +125,7 @@ export function groupAndSumByField<T extends GenericObject>(
  * // => [{ A: 3 }, { B: 6 }]
  */
 export function groupAndAverageByField<T extends GenericObject>(
-	data: T[] | undefined,
+	data: Maybe<T[]>,
 	groupBy: NestedPrimitiveKey<T>,
 	averageBy: NumericDotKey<T>,
 	roundTo = 2

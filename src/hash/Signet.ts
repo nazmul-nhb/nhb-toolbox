@@ -2,6 +2,7 @@ import { parseMSec } from '../date/parse';
 import { isNotEmptyObject } from '../guards/non-primitives';
 import { isNonEmptyString } from '../guards/primitives';
 import type { GenericObject } from '../object/types';
+import type { Maybe } from '../types/index';
 import { stableStringify, stripJsonEdgeGarbage } from '../utils/index';
 import { _constantTimeEquals, _secToDate, _toSeconds } from './helpers';
 import type {
@@ -359,7 +360,7 @@ export class Signet {
 	 * }
 	 * ```
 	 */
-	isInvalidIssuer(token: string, expected: string | undefined): boolean {
+	isInvalidIssuer(token: string, expected: Maybe<string>): boolean {
 		if (!expected) return false;
 
 		const { iss } = this.#decode(token).payload;
@@ -403,7 +404,7 @@ export class Signet {
 	 * // Returns false (valid) because 'web-app' matches
 	 * ```
 	 */
-	isInvalidAudience(token: string, expected: string | string[] | undefined): boolean {
+	isInvalidAudience(token: string, expected: Maybe<string | string[]>): boolean {
 		if (!expected) return false;
 
 		const { aud } = this.#decode(token).payload;
@@ -448,7 +449,7 @@ export class Signet {
 	 * }
 	 * ```
 	 */
-	isInvalidSubject(token: string, expected: string | undefined): boolean {
+	isInvalidSubject(token: string, expected: Maybe<string>): boolean {
 		if (!expected) return false;
 
 		const { sub } = this.#decode(token).payload;

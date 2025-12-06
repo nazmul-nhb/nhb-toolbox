@@ -1,4 +1,4 @@
-import type { Numeric } from '../types/index';
+import type { Maybe, Numeric } from '../types/index';
 import { $Area } from './area';
 import { $BaseConverter } from './base';
 import { UNITS } from './constants';
@@ -29,7 +29,7 @@ import { $Volume } from './volume';
  * The returned instance exposes only methods relevant to the provided unit type.
  */
 export function Converter<U extends $Unit>(value: Numeric, unit?: U): Converted<U> {
-	const category = ((): Category | undefined => {
+	const category = ((): Maybe<Category> => {
 		if (unit) {
 			for (const [category, values] of Object.entries(UNITS)) {
 				if ([...values].includes(unit as UnitMap[Category])) {

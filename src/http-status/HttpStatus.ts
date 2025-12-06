@@ -1,3 +1,4 @@
+import type { Maybe } from '../types/index';
 import { HTTP_STATUS_DATA } from './constants';
 import type {
 	HttpStatusCode,
@@ -81,7 +82,7 @@ export class HttpStatus {
 	 * @param code HTTP status code.
 	 * @returns Matching status entry or `undefined` if not found.
 	 */
-	getByCode(code: StatusCode): StatusEntry | undefined;
+	getByCode(code: StatusCode): Maybe<StatusEntry>;
 
 	/** * Get status entry by numeric HTTP code. */
 	getByCode(code: StatusCode) {
@@ -100,7 +101,7 @@ export class HttpStatus {
 	 * @param name Status name either as `SOME_NAME` or `Some Name`.
 	 * @returns Matching status entry or `undefined` if not found.
 	 */
-	getByName(name: StatusName): StatusEntry | undefined;
+	getByName(name: StatusName): Maybe<StatusEntry>;
 
 	/** * Get status entry by name (either as `SOME_NAME` or `Some Name`). */
 	getByName(name: StatusName) {

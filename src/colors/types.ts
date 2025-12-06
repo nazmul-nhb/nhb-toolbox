@@ -1,4 +1,4 @@
-import type { Branded } from '../types/index';
+import type { Branded, Maybe } from '../types/index';
 import type { Color } from './Color';
 import type { CSS_COLORS } from './css-colors';
 
@@ -84,7 +84,7 @@ export interface RandomColorOptions<C extends $ColorType> {
 }
 
 /** Infers random color type (`Hex6`, `RGB`, or `HSL`) based on the provided color type `C`. */
-export type RandomColor<C extends $ColorType | undefined = undefined> =
+export type RandomColor<C extends Maybe<$ColorType> = undefined> =
 	C extends undefined | 'hex' ? Hex6
 	: C extends 'hsl' ? HSL
 	: C extends 'rgb' ? RGB

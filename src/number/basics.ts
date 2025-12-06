@@ -1,5 +1,5 @@
 import { isNumber } from '../guards/primitives';
-import type { Numeric } from '../types/index';
+import type { Maybe, Numeric } from '../types/index';
 import { _find2NumbersHCF, _find2NumbersLCM } from './helpers';
 import type { ConvertedDecimal, DecimalOptions, RandomNumberOptions } from './types';
 import { normalizeNumber } from './utilities';
@@ -63,7 +63,7 @@ export const getRandomNumber = (options?: RandomNumberOptions): number => {
  * @param options - Options for rounding behavior, including decimal places and return type.
  * @returns Converted number as `number` (default) or `string` (if `isString` is `true`).
  */
-export const convertToDecimal = <T extends boolean | undefined = false>(
+export const convertToDecimal = <T extends Maybe<boolean> = false>(
 	input: Numeric,
 	options?: DecimalOptions<T>
 ): ConvertedDecimal<T> => {
@@ -139,7 +139,7 @@ export const calculateLCM = (...numbers: Numeric[]): number => {
  * - May return large values quickly due to factorial growth rate.
  * - Returns `undefined` if the input is negative, not numeric, non-integer, or `undefined`.
  */
-export function factorial(int: Numeric | undefined): number | undefined {
+export function factorial(int: Maybe<Numeric>): Maybe<number> {
 	const num = normalizeNumber(int);
 
 	if (!isNumber(num) || num < 0 || !Number.isInteger(num)) {
@@ -170,7 +170,7 @@ export function factorial(int: Numeric | undefined): number | undefined {
  * - Uses the square root method for better performance (`O(√n)`).
  * - Returns an empty array for invalid, negative, or non-integer input.
  */
-export function getFactors(int: Numeric | undefined): number[] {
+export function getFactors(int: Maybe<Numeric>): number[] {
 	const num = normalizeNumber(int);
 
 	if (!isNumber(num) || num <= 0 || !Number.isInteger(num)) return [];

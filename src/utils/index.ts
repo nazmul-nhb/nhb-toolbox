@@ -16,6 +16,7 @@ import type {
 	ClassDetails,
 	Constructor,
 	DelayedFn,
+	Maybe,
 	Primitive,
 	ThrottledFn,
 	VoidFunction,
@@ -79,7 +80,7 @@ export const isDeepEqual = (a: unknown, b: unknown): boolean => {
  * @returns String formed by joining the property values with the given separator.
  */
 export function convertArrayToString<T extends GenericObject>(
-	array: T[] | undefined,
+	array: Maybe<T[]>,
 	options: ArrayOfObjectsToStringOptions<T>
 ): string;
 
@@ -99,7 +100,7 @@ export function convertArrayToString<T extends GenericObject>(
  * @returns String formed by joining array elements with the given separator.
  */
 export function convertArrayToString<T extends Primitive>(
-	array: T[] | undefined,
+	array: Maybe<T[]>,
 	options?: ArrayOfPrimitivesToStringOptions
 ): string;
 
@@ -111,7 +112,7 @@ export function convertArrayToString<T extends Primitive>(
  * @returns String representation of array values.
  */
 export function convertArrayToString<T extends Primitive | GenericObject>(
-	array: T[] | undefined,
+	array: Maybe<T[]>,
 	options?: ArrayToStringOptions<T>
 ): string {
 	if (!isValidArray(array)) return '';
@@ -146,7 +147,7 @@ export function convertArrayToString<T extends Primitive | GenericObject>(
  * debouncedSearch('laptop'); // Executes after 300ms of inactivity.
  */
 export function debounceAction<T extends VoidFunction>(callback: T, delay = 300): DelayedFn<T> {
-	let timeoutId: ReturnType<typeof setTimeout> | undefined = undefined;
+	let timeoutId: ReturnType<typeof setTimeout>;
 
 	return (...args: Parameters<T>) => {
 		// Clear the previous timeout

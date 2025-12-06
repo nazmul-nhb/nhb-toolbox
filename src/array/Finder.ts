@@ -1,5 +1,5 @@
 import type { GenericObject } from '../object/types';
-import type { OwnKeys } from '../types/index';
+import type { Maybe, OwnKeys } from '../types/index';
 import type { FindOptions } from './types';
 
 type KeySelector<T> = Extract<OwnKeys<T>, string | number> | ((item: T) => string | number);
@@ -172,7 +172,7 @@ export class Finder<T extends GenericObject> {
 		matcher: string | number,
 		keySelector: KeySelector<T>,
 		options?: FindOptions<T>
-	): T | undefined {
+	): Maybe<T> {
 		const {
 			fuzzy = false,
 			needSorting = true,
@@ -206,7 +206,7 @@ export class Finder<T extends GenericObject> {
 			}
 		}
 
-		let result: T | undefined;
+		let result: Maybe<T>;
 
 		if (source?.length < 100 && !forceBinary) {
 			result = source?.find((item) => {
@@ -268,7 +268,7 @@ export class Finder<T extends GenericObject> {
 		matcher: string | number,
 		keySelector: KeySelector<T>,
 		options?: Omit<FindOptions<T>, 'data'>
-	): Promise<T | undefined> {
+	): Promise<Maybe<T>> {
 		const items = await supplier();
 
 		return this.findOne(matcher, keySelector, { ...options, data: items });
@@ -288,7 +288,7 @@ export class Finder<T extends GenericObject> {
 		matcher: string | number,
 		keySelector: (item: T) => string | number,
 		caseInsensitive: boolean
-	): T | undefined {
+	): Maybe<T> {
 		let min = 0,
 			max = sorted?.length - 1;
 
@@ -320,7 +320,7 @@ export class Finder<T extends GenericObject> {
 		matcher: string,
 		keySelector: (item: T) => string | number,
 		caseInsensitive: boolean
-	): T | undefined {
+	): Maybe<T> {
 		for (const item of array) {
 			const rawKey = keySelector(item);
 			const key =

@@ -10,8 +10,8 @@ type $Brand<B> = { [__brand]: B };
 /** Create a branded type */
 export type Branded<T, B> = T & $Brand<B>;
 
-/** Make type optional that may be `undefined` */
-export type Optional<T> = T | undefined;
+/** Represents a value that may or may not be present. */
+export type Maybe<T> = T | undefined;
 
 /** Utility type to flatten Partial type */
 export type FlattenPartial<T> = Partial<{ [K in keyof T]: T[K] }>;
@@ -20,10 +20,10 @@ export type FlattenPartial<T> = Partial<{ [K in keyof T]: T[K] }>;
 export type Numeric = number | `${number}`;
 
 /** Union of All Primitive Types (i.e. `string | number | boolean | symbol | bigint | null | undefined`) */
-export type Primitive = string | number | boolean | symbol | bigint | null | undefined;
+export type Primitive = Maybe<string | number | boolean | symbol | bigint | null>;
 
 /** Union of Normal Primitive Types (i.e. `string | number | boolean | null | undefined`) */
-export type NormalPrimitive = string | number | boolean | null | undefined;
+export type NormalPrimitive = Maybe<string | number | boolean | null>;
 
 /** Extract normal primitive key(s) (i.e. `string | number | boolean | null | undefined`) from an object */
 export type NormalPrimitiveKey<T> = {
@@ -46,7 +46,7 @@ export type NonNullishPrimitiveKey<T> = {
 }[keyof T];
 
 /** Falsy primitive type  */
-export type FalsyPrimitive = false | 0 | '' | null | undefined;
+export type FalsyPrimitive = Maybe<false | 0 | '' | null>;
 
 /** A generic class constructor */
 export type Constructor = new (...args: any[]) => any;

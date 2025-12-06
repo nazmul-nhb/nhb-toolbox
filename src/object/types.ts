@@ -1,5 +1,6 @@
 import type {
 	AdvancedTypes,
+	Maybe,
 	NormalPrimitive,
 	PartialOrRequired,
 	ValidArray,
@@ -55,7 +56,7 @@ export type DotValue<T, K extends string> =
 	K extends `${infer P}.${infer Rest}` ?
 		P extends keyof T ?
 			undefined extends T[P] ?
-				DotValue<NonNullable<T[P]>, Rest> | undefined
+				Maybe<DotValue<NonNullable<T[P]>, Rest>>
 			:	DotValue<T[P], Rest>
 		:	never
 	: K extends keyof T ? T[K]

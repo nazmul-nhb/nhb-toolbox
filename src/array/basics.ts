@@ -1,4 +1,5 @@
 import type { GenericObject } from '../object/types';
+import type { Maybe } from '../types/index';
 import type { Flattened } from './types';
 
 /**
@@ -28,7 +29,7 @@ export const flattenArray = <T>(input: T | T[]): Flattened<T>[] => {
  */
 export const filterArrayOfObjects = <T extends GenericObject>(
 	array: T[],
-	conditions: { [K in keyof T]?: (value: T[K] | undefined) => boolean }
+	conditions: { [K in keyof T]?: (value: Maybe<T[K]>) => boolean }
 ): T[] => {
 	if (!Array.isArray(array)) {
 		throw new Error('The provided input is not a valid array!');
@@ -37,7 +38,7 @@ export const filterArrayOfObjects = <T extends GenericObject>(
 	return array?.filter((item) =>
 		Object.entries(conditions)?.every(([key, conditionFn]) => {
 			if (typeof conditionFn === 'function') {
-				return conditionFn(item[key as keyof T] as T[keyof T] | undefined);
+				return conditionFn(item[key as keyof T]);
 			}
 			return true;
 		})
@@ -88,6 +89,6 @@ export const shuffleArray = <T>(array: T[]): T[] => {
  * @param array Array to get the last element from.
  * @returns The last element or `undefined` if the array is empty.
  */
-export const getLastArrayElement = <T>(array: T[]): T | undefined => {
+export const getLastArrayElement = <T>(array: T[]): Maybe<T> => {
 	return array?.length > 0 ? array[array?.length - 1] : undefined;
 };

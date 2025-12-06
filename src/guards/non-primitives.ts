@@ -1,5 +1,5 @@
 import type { GenericObject } from '../object/types';
-import type { AsyncFunction, GenericFn, ValidArray } from '../types/index';
+import type { AsyncFunction, GenericFn, Maybe, ValidArray } from '../types/index';
 import { isString } from './primitives';
 
 /**
@@ -75,7 +75,7 @@ export function isFunction(value: unknown): value is GenericFn {
  * @param descriptor - The property descriptor to check.
  * @returns `true` if the descriptor is defined and its value is a function; otherwise, `false`.
  */
-export const isMethodDescriptor = (descriptor: PropertyDescriptor | undefined): boolean => {
+export const isMethodDescriptor = (descriptor: Maybe<PropertyDescriptor>): boolean => {
 	return !!descriptor && typeof descriptor?.value === 'function';
 };
 

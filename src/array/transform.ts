@@ -1,6 +1,7 @@
 import { isValidArray } from '../guards/non-primitives';
 import { isNumber } from '../guards/primitives';
 import type { GenericObject, NestedPrimitiveKey } from '../object/types';
+import type { Maybe } from '../types/index';
 import { isDeepEqual } from '../utils/index';
 import { _resolveNestedKey } from './helpers';
 import type { FieldValue, Option, OptionsConfig } from './types';
@@ -144,7 +145,7 @@ export function splitArray<T>(arr: T[], chunkSize: number): Array<T[]> {
  * - Groups objects even when the group key is `undefined` or `null` (object with `null` & `undefined` property-values are grouped together).
  */
 export function splitArrayByProperty<T extends GenericObject, P extends NestedPrimitiveKey<T>>(
-	source: T[] | undefined,
+	source: Maybe<T[]>,
 	property: P
 ): Array<T[]> {
 	if (!isValidArray(source)) return [];

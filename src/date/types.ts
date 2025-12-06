@@ -1,4 +1,5 @@
 import type { Enumerate, LocaleCode, NumberRange } from '../number/types';
+import type { Maybe } from '../types/index';
 import type { LooseLiteral, RangeTuple } from '../utils/types';
 import type { Chronos } from './Chronos';
 import type { ChronosStatics } from './chronos-statics';
@@ -81,11 +82,11 @@ export type TimeZoneDetails = {
 	/** IANA time zone identifier */
 	tzIdentifier: $TimeZoneIdentifier;
 	/** Long localized form (e.g., `'Pacific Standard Time'`, `'Nordamerikanische Westküsten-Normalzeit'`) */
-	tzNameLong: LooseLiteral<TimeZoneName> | undefined;
+	tzNameLong: Maybe<LooseLiteral<TimeZoneName>>;
 	/** Long generic non-location format (e.g.: `'Pacific Time'`, `'Nordamerikanische Westküstenzeit'`) */
-	tzNameLongGeneric: LooseLiteral<TimeZoneName> | undefined;
+	tzNameLongGeneric: Maybe<LooseLiteral<TimeZoneName>>;
 	/** Long localized GMT format, prefixed with `"GMT"` (e.g., `"GMT-08:00"`) */
-	tzNameLongOffset: LooseLiteral<`GMT${$UTCOffset}`> | undefined;
+	tzNameLongOffset: Maybe<LooseLiteral<`GMT${$UTCOffset}`>>;
 };
 
 /** Options for `formatDate` utility */
@@ -641,15 +642,15 @@ export interface $BusinessHourBaseOptions {
 /** Options for configuring business hour with `weekStartsOn` and `weekendLength` */
 export interface BusinessOptionsBasic extends $BusinessHourBaseOptions {
 	/** - Optional day the week starts on (0–6). Default is `0` (Sunday). */
-	weekStartsOn?: Enumerate<7> | undefined;
+	weekStartsOn?: Enumerate<7>;
 	/** - Optional weekend length (1-4). Default is `2`.*/
-	weekendLength?: NumberRange<1, 4> | undefined;
+	weekendLength?: NumberRange<1, 4>;
 }
 
 /** Options for configuring business hour with `weekendDays` tuple */
 export interface BusinessOptionsWeekends extends $BusinessHourBaseOptions {
 	/** - Tuple of indices (0-6) of weekend days. Can pass only 1-4 elements. Default is `undefined`. */
-	weekendDays?: RangeTuple<Enumerate<7>, 1, 4> | undefined;
+	weekendDays?: RangeTuple<Enumerate<7>, 1, 4>;
 }
 
 /** Options for configuring business hour */
