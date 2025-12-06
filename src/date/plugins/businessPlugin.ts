@@ -416,7 +416,7 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `business` related methods */
 export const businessPlugin = (ChronosClass: MainChronos): void => {
-	const { internalDate: $Date, withOrigin, cast } = ChronosClass[INTERNALS];
+	const { internalDate: $Date, withOrigin, cast, offset } = ChronosClass[INTERNALS];
 
 	/** Build weekend mask (array of booleans) based on `week definition` or weekend `length` */
 	const _buildWeekendMask = (weekDef: number | number[], length: number) => {
@@ -470,16 +470,16 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 	};
 
 	ChronosClass.prototype.nextWorkday = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
-		let nbd = this.addDays(1);
+		let nwd = this.addDays(1);
 
-		while (nbd.isWeekend(wDef as Enumerate<7>, wLen)) {
-			nbd = nbd.addDays(1);
+		while (nwd.isWeekend(wDef as Enumerate<7>, wLen)) {
+			nwd = nwd.addDays(1);
 		}
 
 		return withOrigin(
-			nbd.startOf('day'),
+			nwd.startOf('day'),
 			'nextWorkday',
-			this.utcOffset,
+			offset(this),
 			this.timeZoneName,
 			this.timeZoneId,
 			this.$tzTracker
@@ -487,16 +487,16 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 	};
 
 	ChronosClass.prototype.previousWorkday = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
-		let nbd = this.addDays(-1);
+		let pwd = this.addDays(-1);
 
-		while (nbd.isWeekend(wDef as Enumerate<7>, wLen)) {
-			nbd = nbd.addDays(-1);
+		while (pwd.isWeekend(wDef as Enumerate<7>, wLen)) {
+			pwd = pwd.addDays(-1);
 		}
 
 		return withOrigin(
-			nbd.startOf('day'),
+			pwd.startOf('day'),
 			'previousWorkday',
-			this.utcOffset,
+			offset(this),
 			this.timeZoneName,
 			this.timeZoneId,
 			this.$tzTracker
@@ -504,16 +504,16 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 	};
 
 	ChronosClass.prototype.nextWeekend = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
-		let nbd = this.addDays(1);
+		let nw = this.addDays(1);
 
-		while (!nbd.isWeekend(wDef as Enumerate<7>, wLen)) {
-			nbd = nbd.addDays(1);
+		while (!nw.isWeekend(wDef as Enumerate<7>, wLen)) {
+			nw = nw.addDays(1);
 		}
 
 		return withOrigin(
-			nbd.startOf('day'),
+			nw.startOf('day'),
 			'nextWeekend',
-			this.utcOffset,
+			offset(this),
 			this.timeZoneName,
 			this.timeZoneId,
 			this.$tzTracker
@@ -521,16 +521,16 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 	};
 
 	ChronosClass.prototype.previousWeekend = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
-		let nbd = this.addDays(-1);
+		let pw = this.addDays(-1);
 
-		while (!nbd.isWeekend(wDef as Enumerate<7>, wLen)) {
-			nbd = nbd.addDays(-1);
+		while (!pw.isWeekend(wDef as Enumerate<7>, wLen)) {
+			pw = pw.addDays(-1);
 		}
 
 		return withOrigin(
-			nbd.startOf('day'),
+			pw.startOf('day'),
 			'previousWeekend',
-			this.utcOffset,
+			offset(this),
 			this.timeZoneName,
 			this.timeZoneId,
 			this.$tzTracker
@@ -564,6 +564,7 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 	): number {
 		const daysInMonth = this.daysInMonth();
 
+		// Build weekend mask (array of booleans)
 		const weekendMask = _buildWeekendMask(wDef, wLen);
 
 		const startWeekday = this.startOf('month').isoWeekDay % 7;

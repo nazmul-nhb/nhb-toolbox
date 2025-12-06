@@ -109,7 +109,7 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `timeZone` related methods */
 export const timeZonePlugin = (ChronosClass: MainChronos): void => {
-	const { internalDate: $Date, withOrigin } = ChronosClass[INTERNALS];
+	const { internalDate: $Date, withOrigin, offset } = ChronosClass[INTERNALS];
 
 	/** Array of time zone ids extracted from {@link Intl.supportedValuesOf} */
 	const TZ_IDS = Intl.supportedValuesOf('timeZone') as Array<$TimeZoneIdentifier>;
@@ -263,9 +263,9 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	};
 
 	ChronosClass.prototype.getTimeZoneName = function (utc) {
-		const UTC = utc || this.utcOffset;
+		const UTC = utc || offset(this);
 
-		return _getTimeZoneName(utc || this?.$tzTracker || this.utcOffset, $Date(this)) ?? UTC;
+		return _getTimeZoneName(utc || this?.$tzTracker || offset(this), $Date(this)) ?? UTC;
 	};
 
 	/** Cache to store abbreviated time zone names */
@@ -282,9 +282,9 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 
 	ChronosClass.prototype.getTimeZoneNameShort = function (utc) {
 		const tracker = this?.$tzTracker;
-		const UTC = utc || this.utcOffset;
+		const UTC = utc || offset(this);
 
-		const tzMapKey = utc || tracker || this.utcOffset;
+		const tzMapKey = utc || tracker || offset(this);
 
 		if (_isGMT(tzMapKey)) return 'GMT';
 

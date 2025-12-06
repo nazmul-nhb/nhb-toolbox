@@ -507,7 +507,7 @@ export interface RelativeRangeOptions extends $CommonRangeOptions {
 export type WeekdayOptions = RelativeRangeOptions | DateRangeOptions;
 
 /** Common options to either skip or keep days */
-interface $CommonSpecificOptions {
+interface $SkipOrKeepDays {
 	/**
 	 * An array of weekdays to exclude from the date range.
 	 * - Accepts either weekday names (e.g., `'Saturday'`, `'Sunday'`) or numeric indices (0 for Sunday to 6 for Saturday).
@@ -532,10 +532,10 @@ interface $CommonSpecificOptions {
 }
 
 /** - Options to define a **fixed date range** using explicit `from` and `to` dates. */
-export interface RangeWithDates extends DateRangeOptions, $CommonSpecificOptions {}
+export interface RangeWithDates extends DateRangeOptions, $SkipOrKeepDays {}
 
 /** - Options to define a **relative date range** starting from the current date. */
-export interface RelativeDateRange extends RelativeRangeOptions, $CommonSpecificOptions {}
+export interface RelativeDateRange extends RelativeRangeOptions, $SkipOrKeepDays {}
 
 /** - Unified type that supports either a fixed or relative date range configuration. */
 export type DatesInRangeOptions = RangeWithDates | RelativeDateRange;

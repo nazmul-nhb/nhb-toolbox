@@ -29,7 +29,7 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `round` method */
 export const roundPlugin = (ChronosClass: MainChronos): void => {
-	const { internalDate, withOrigin } = ChronosClass[INTERNALS];
+	const { internalDate, withOrigin, offset } = ChronosClass[INTERNALS];
 
 	ChronosClass.prototype.round = function (unit, nearest = 1) {
 		const date = new Date(internalDate(this));
@@ -136,7 +136,7 @@ export const roundPlugin = (ChronosClass: MainChronos): void => {
 		return withOrigin(
 			new ChronosClass(date),
 			'round',
-			this.utcOffset,
+			offset(this),
 			this.timeZoneName,
 			this.timeZoneId,
 			this.$tzTracker
