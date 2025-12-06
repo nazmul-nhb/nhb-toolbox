@@ -350,7 +350,13 @@ export type $StaticMethods = {
 }[keyof $Chronos];
 
 /** * Plugin methods that return `Chronos` instance */
-export type $PluginMethods = `timeZone` | 'round';
+export type $PluginMethods =
+	| `timeZone`
+	| 'round'
+	| 'nextBusinessDay'
+	| 'nextWeekend'
+	| 'previousBusinessDay'
+	| 'previousWeekend';
 
 /** * Plugin methods that return `Chronos` instance + any custom name */
 export type PluginMethods = LooseLiteral<$PluginMethods>;
