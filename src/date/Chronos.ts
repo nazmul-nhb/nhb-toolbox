@@ -4,6 +4,7 @@ import type { Enumerate, NumberRange } from '../number/types';
 import type { LooseLiteral, TupleOf } from '../utils/types';
 import { DAYS, INTERNALS, MONTHS } from './constants';
 import { isLeapYear } from './guards';
+import { _formatDateCore } from './helpers';
 import type {
 	$DateUnit,
 	$PluginMethods,
@@ -39,7 +40,7 @@ import type {
 	WeekDay,
 	WeekdayOptions,
 } from './types';
-import { _formatDateCore, extractMinutesFromUTC } from './utils';
+import { extractMinutesFromUTC } from './utils';
 
 /** Date parts for `Chronos` as `Record<part, number>` */
 type $DateParts = {

@@ -234,9 +234,3 @@ export function _constantTimeEquals(a: string | Uint8Array, b: string | Uint8Arr
 
 	return res === 0;
 }
-
-/** Converts milliseconds to seconds */
-export const _toSeconds = (ms: number) => Math.floor(ms / 1000);
-
-/** Converts timestamp seconds to JS `Date` */
-export const _secToDate = (sec: number) => new Date(sec * 1000);

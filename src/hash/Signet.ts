@@ -1,10 +1,11 @@
+import { _secToDate, _toSeconds } from '../date/helpers';
 import { parseMSec } from '../date/parse';
 import { isNotEmptyObject } from '../guards/non-primitives';
 import { isNonEmptyString } from '../guards/primitives';
 import type { GenericObject } from '../object/types';
 import type { Maybe } from '../types/index';
 import { stableStringify, stripJsonEdgeGarbage } from '../utils/index';
-import { _constantTimeEquals, _secToDate, _toSeconds } from './helpers';
+import { _constantTimeEquals } from './helpers';
 import type {
 	DecodedToken,
 	SignetHeader,

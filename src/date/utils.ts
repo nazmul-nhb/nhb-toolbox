@@ -1,10 +1,9 @@
-import { getOrdinal } from '../number/utilities';
 import type { Numeric } from '../types/index';
-import { DAYS, MONTHS, SORTED_TIME_FORMATS } from './constants';
+import { isValidUTCOffset } from './guards';
+import { _formatDateCore } from './helpers';
 import type {
 	$DateUnit,
 	$TimeZoneIdentifier,
-	ChronosFormat,
 	ClockTime,
 	DateFormatOptions,
 	HourMinutes,
@@ -115,8 +114,7 @@ export function getTimeZoneDetails(tzId?: $TimeZoneIdentifier, date?: Date) {
 	const TZ_NAME_TYPES = ['long', 'longGeneric', 'longOffset'] as const;
 	type TZNameKey = `tzName${Capitalize<(typeof TZ_NAME_TYPES)[number]>}`;
 
-	const $tzId =
-		tzId || (Intl.DateTimeFormat().resolvedOptions().timeZone as $TimeZoneIdentifier);
+	const $tzId = tzId || Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 	const obj = { tzIdentifier: $tzId } as TimeZoneDetails;
 
@@ -140,78 +138,40 @@ export function getTimeZoneDetails(tzId?: $TimeZoneIdentifier, date?: Date) {
 	return obj;
 }
 
-/** Core formatting logic shared by {@link formatDate} and `Chronos` class */
-export function _formatDateCore(
-	format: string,
-	year: number,
-	month: number,
-	day: number,
-	date: number,
-	hours: number,
-	minutes: number,
-	seconds: number,
-	milliseconds: number,
-	offset: string
-) {
-	const dateComponents: Record<ChronosFormat, string> = {
-		YYYY: String(year),
-		YY: String(year).slice(-2),
-		yyyy: String(year),
-		yy: String(year).slice(-2),
-		M: String(month + 1),
-		MM: String(month + 1).padStart(2, '0'),
-		mmm: MONTHS[month].slice(0, 3),
-		mmmm: MONTHS[month],
-		d: DAYS[day].slice(0, 2),
-		dd: DAYS[day].slice(0, 3),
-		ddd: DAYS[day],
-		D: String(date),
-		DD: String(date).padStart(2, '0'),
-		Do: getOrdinal(date),
-		H: String(hours),
-		HH: String(hours).padStart(2, '0'),
-		h: String(hours % 12 || 12),
-		hh: String(hours % 12 || 12).padStart(2, '0'),
-		m: String(minutes),
-		mm: String(minutes).padStart(2, '0'),
-		s: String(seconds),
-		ss: String(seconds).padStart(2, '0'),
-		ms: String(milliseconds),
-		mss: String(milliseconds).padStart(3, '0'),
-		a: hours < 12 ? 'am' : 'pm',
-		A: hours < 12 ? 'AM' : 'PM',
-		ZZ: offset,
-	};
+/** Cache for offset to time zone */
+const TZ_MAP = new Map<UTCOffset, $TimeZoneIdentifier[]>();
 
-	const tokenRegex = new RegExp(`^(${SORTED_TIME_FORMATS.join('|')})`);
+/**
+ * * Resolves all IANA time-zone identifiers that match a given UTC offset.
+ *
+ * @remarks
+ * - Uses an internal in-memory cache that persists for the lifetime of the running application.
+ * - The cache is lazily populated so the `offset`-to-`time-zone` mapping is computed only once per offset.
+ * - Offset and time-zone identifier detection uses the {@link Intl.DateTimeFormat} API.
+ *
+ * @param offset The UTC offset in `"UTC±HH:MM"` format.
+ * @returns An array of matching IANA time-zone identifiers, or an empty array if the offset is invalid.
+ */
+export function getTimeZoneIds(offset: UTCOffset): $TimeZoneIdentifier[] {
+	if (!isValidUTCOffset(offset)) return [];
 
-	let result = '';
-	let i = 0;
+	if (TZ_MAP.has(offset)) return TZ_MAP.get(offset) ?? [];
 
-	while (i < format.length) {
-		// Handle [escaped literal]
-		if (format[i] === '[') {
-			const end = format.indexOf(']', i);
-			if (end !== -1) {
-				result += format.slice(i + 1, end);
-				i = end + 1;
-				continue;
-			}
-		}
+	const zones = Intl.supportedValuesOf('timeZone') as $TimeZoneIdentifier[];
 
-		// Try to match a format token
-		const match = tokenRegex.exec(format.slice(i));
+	for (const zone of zones) {
+		const off = new Intl.DateTimeFormat('en', {
+			timeZone: zone,
+			timeZoneName: 'longOffset',
+		})
+			.formatToParts()
+			.find((part) => part.type === 'timeZoneName')
+			?.value.replace('GMT', 'UTC') as UTCOffset;
 
-		if (match) {
-			result += dateComponents[match[0] as ChronosFormat];
-			i += match[0].length;
-		} else {
-			result += format[i];
-			i++;
-		}
+		TZ_MAP.set(off, [...(TZ_MAP.get(off) ?? []), zone]);
 	}
 
-	return result;
+	return TZ_MAP.get(offset) ?? [];
 }
 
 /**
