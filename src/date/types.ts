@@ -476,50 +476,38 @@ export type WeekDay = (typeof DAYS)[number];
 /** - Represents the full name of a month, e.g., 'January', 'February' etc. */
 export type MonthName = (typeof MONTHS)[number];
 
+/** Common options for formatting and rounding dates */
+interface $CommonRangeOptions {
+	/** - Output format: return ISO strings in `'local'` or `'utc'` format. Defaults to `'local'`. */
+	format?: 'local' | 'utc';
+
+	/** - Whether to round the dates in the range to the start of the day. Default is `false`. */
+	roundDate?: boolean;
+}
+
 /** - Options to define a **fixed date range** using explicit `from` and `to` dates. */
-export interface DateRangeOptions {
+export interface DateRangeOptions extends $CommonRangeOptions {
 	/** - Start date of the range (inclusive). Defaults to **now** if not provided. */
 	from?: ChronosInput;
 
 	/** - End date of the range (inclusive). Defaults to **4 weeks from now** if not provided. */
 	to?: ChronosInput;
-
-	/** - Output format: return ISO strings in `'local'` or `'utc'` format. Defaults to `'local'`. */
-	format?: 'local' | 'utc';
-
-	/** Whether to round the dates in the range to the start of the day. Default is `false`. */
-	roundDate?: boolean;
 }
 
 /** - Options to define a **relative date range** starting from the current date. */
-export interface RelativeRangeOptions {
-	/** - Number of time units forward from now. Defaults to `4`.  Controlled by the `unit` option. */
+export interface RelativeRangeOptions extends $CommonRangeOptions {
+	/** - Number of time units forward from now. Defaults to `4`. Controlled by the `unit` option. */
 	span?: number;
 
-	/** - Unit of time to advance the date range. Defaults to `'week'`.  Controlled by the `span` option. */
+	/** - Unit of time to advance the date range. Defaults to `'week'`. Controlled by the `span` option. */
 	unit?: 'year' | 'month' | 'week' | 'day';
-
-	/** - Output format: return as local ISO string or UTC ISO string. Defaults to `'local'`. */
-	format?: 'local' | 'utc';
-
-	/** Whether to round the dates in the range to the start of the day. Default is `false`. */
-	roundDate?: boolean;
 }
 
 /** - Unified type that supports either a fixed or relative date range configuration. */
 export type WeekdayOptions = RelativeRangeOptions | DateRangeOptions;
 
-/** - Options to define a **fixed date range** using explicit `from` and `to` dates. */
-export interface RangeWithDates {
-	/** - Start date of the range (inclusive). Defaults to **now** if not provided. */
-	from?: ChronosInput;
-
-	/** - End date of the range (inclusive). Defaults to **4 weeks from now** if not provided. */
-	to?: ChronosInput;
-
-	/** - Output format: return ISO strings in `'local'` or `'utc'` format. Defaults to `'local'`. */
-	format?: 'local' | 'utc';
-
+/** Common options to either skip or keep days */
+interface $CommonSpecificOptions {
 	/**
 	 * An array of weekdays to exclude from the date range.
 	 * - Accepts either weekday names (e.g., `'Saturday'`, `'Sunday'`) or numeric indices (0 for Sunday to 6 for Saturday).
@@ -541,47 +529,13 @@ export interface RangeWithDates {
 	 * onlyDays: [1, 3] // Monday and Wednesday
 	 */
 	onlyDays?: Array<WeekDay> | Array<Enumerate<7>>;
-
-	/** Whether to round the dates in the range to the start of the day. Default is `false`. */
-	roundDate?: boolean;
 }
+
+/** - Options to define a **fixed date range** using explicit `from` and `to` dates. */
+export interface RangeWithDates extends DateRangeOptions, $CommonSpecificOptions {}
 
 /** - Options to define a **relative date range** starting from the current date. */
-export interface RelativeDateRange {
-	/** - Number of time units forward from now. Defaults to `4`.  Controlled by the `unit` option. */
-	span?: number;
-
-	/** - Unit of time to advance the date range. Defaults to `'week'`.  Controlled by the `span` option. */
-	unit?: 'year' | 'month' | 'week' | 'day';
-
-	/** - Output format: return as local ISO string or UTC ISO string. Defaults to `'local'`. */
-	format?: 'local' | 'utc';
-
-	/**
-	 * An array of weekdays to exclude from the date range.
-	 * - Accepts either weekday names (e.g., `'Saturday'`, `'Sunday'`) or numeric indices (0 for Sunday to 6 for Saturday).
-	 * - Ignored if `onlyDays` is provided.
-	 *
-	 * @example
-	 * skipDays: ['Saturday', 'Sunday']
-	 * skipDays: [0, 6] // Sunday and Saturday
-	 */
-	skipDays?: Array<WeekDay> | Array<Enumerate<7>>;
-
-	/**
-	 * An array of weekdays to explicitly include in the date range.
-	 * - Accepts either weekday names (e.g., `'Monday'`, `'Wednesday'`) or numeric indices (0 for Sunday to 6 for Saturday).
-	 * - When provided, this overrides `skipDays` and includes only the specified days.
-	 *
-	 * @example
-	 * onlyDays: ['Monday', 'Wednesday']
-	 * onlyDays: [1, 3] // Monday and Wednesday
-	 */
-	onlyDays?: Array<WeekDay> | Array<Enumerate<7>>;
-
-	/** Whether to round the dates in the range to the start of the day. Default is `false`. */
-	roundDate?: boolean;
-}
+export interface RelativeDateRange extends RelativeRangeOptions, $CommonSpecificOptions {}
 
 /** - Unified type that supports either a fixed or relative date range configuration. */
 export type DatesInRangeOptions = RangeWithDates | RelativeDateRange;

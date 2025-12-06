@@ -1508,8 +1508,8 @@ export class Chronos {
 
 		const dates: string[] = [];
 
-		const startTime = startDate.valueOf();
-		const endTime = endDate.valueOf();
+		const startTime = roundDate ? startDate.#timestamp : startDate.getTimeStamp();
+		const endTime = roundDate ? endDate.#timestamp : endDate.getTimeStamp();
 		const step = startTime <= endTime ? 1 : -1;
 		const totalDays = Math.floor(Math.abs(endTime - startTime) / 86400000);
 
@@ -1837,34 +1837,38 @@ export class Chronos {
 
 		if (options) {
 			if ('from' in options || 'to' in options) {
-				if (options?.from) {
-					startDate = Chronos.#cast(options?.from);
-				}
-				if (options?.to) {
-					endDate = Chronos.#cast(options?.to);
-				}
+				if (options?.from) startDate = Chronos.#cast(options?.from);
+				if (options?.to) endDate = Chronos.#cast(options?.to);
 			} else if ('span' in options || 'unit' in options) {
 				const { span = 4, unit = 'week' } = options ?? {};
 				endDate = startDate.add(span, unit);
 			}
 		}
 
-		const dayIndex = DAYS.indexOf(day);
-
-		const end = roundDate ? endDate.startOf('day') : endDate;
-
-		let current = roundDate ? startDate.startOf('day') : startDate;
-		while (current.weekDay !== dayIndex) {
-			current = current.add(1, 'day');
+		if (roundDate) {
+			startDate = startDate.startOf('day');
+			endDate = endDate.startOf('day');
 		}
+
+		const dayIndex = DAYS.indexOf(day);
 
 		const result: string[] = [];
 
-		while (current.isSameOrBefore(end, 'day')) {
-			result.push(
-				format === 'local' ? current.toLocalISOString() : current.toISOString()
-			);
-			current = current.add(1, 'week');
+		// compute total days difference
+		const step = startDate.isBefore(endDate, 'day') ? 1 : -1;
+		const totalDays = Math.abs(endDate.diff(startDate, 'day'));
+		const currentTime = roundDate ? startDate.#timestamp : startDate.getTimeStamp();
+
+		// move to first matching weekday
+		let firstOffset = 0;
+		while (new Date(currentTime + firstOffset * 86400000 * step).getDay() !== dayIndex) {
+			firstOffset++;
+		}
+
+		for (let i = firstOffset; i <= totalDays; i += 7) {
+			const ts = currentTime + i * 86400000 * step;
+			const chr = new Chronos(ts);
+			result.push(format === 'local' ? chr.toLocalISOString() : chr.toISOString());
 		}
 
 		return result;
