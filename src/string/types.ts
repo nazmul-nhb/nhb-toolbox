@@ -341,3 +341,17 @@ export type SentenceCase<Str extends string, Del extends string = ''> =
 	) ?
 		`${Capitalize<Lowercase<F>>} ${Join<$LowercaseWords<R>, ' '>}`
 	:	' ';
+
+/** Matches any non-Latin character. */
+export type SpecialCharacter = Lowercase<string> & Uppercase<string>;
+
+/** Evaluates whether a string consists only of Latin alphabet characters. */
+export type IsAlphabet<T extends string> =
+	T extends `${infer Head}${infer Tail}` ?
+		Head extends SpecialCharacter ?
+			false
+		:	IsAlphabet<Tail>
+	:	true;
+
+/** Restricts a string to Latin-only characters; otherwise resolves to never. */
+export type Alphabet<T extends string> = IsAlphabet<T> extends true ? T : never;

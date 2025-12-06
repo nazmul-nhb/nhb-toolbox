@@ -7,8 +7,11 @@ export type Any = any;
 declare const __brand: unique symbol;
 type $Brand<B> = { [__brand]: B };
 
-/** Create a branded type. */
+/** Create a branded type */
 export type Branded<T, B> = T & $Brand<B>;
+
+/** Make type optional that may be `undefined` */
+export type Optional<T> = T | undefined;
 
 /** Utility type to flatten Partial type */
 export type FlattenPartial<T> = Partial<{ [K in keyof T]: T[K] }>;
