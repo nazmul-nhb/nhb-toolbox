@@ -6,10 +6,11 @@ All notable changes to the package will be documented here.
 
 ---
 
-## [4.28.20] - 2025-12-06
+<!-- ## [4.28.20] - 2025-12-06
 
+- **Added** *new methods* for `Chronos` *business plugin:* `nextWorkday`, `nextWeekend`, `previousWorkday` and `previousWeekend`.
 - **Added** *new utility* `getTimeZoneIds` to get *time zone identifiers* for a given *UTC offset*.
-- **Added** *new utility types* `Maybe<T>`, `Alphabet<T>`, `IsAlphabet<T>` and `SpecialCharacter`.
+- **Added** *new utility types* `Maybe<T>`, `Alphabet<T>`, `IsAlphabet<T>` and `SpecialCharacter`. -->
 
 ## [4.28.10] - 2025-12-03
 
