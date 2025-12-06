@@ -323,6 +323,9 @@ export interface ChronosInternals {
 	 * @returns The stored formatted UTC offset
 	 */
 	offset(instance: Chronos): UTCOffset;
+
+	/** Ensures the input is a `Chronos` instance, creating one if necessary. */
+	cast(date: ChronosInput): Chronos;
 }
 
 /** @internal Helper type to assign instance origin when creating new `Chronos` instance. */
@@ -351,11 +354,11 @@ export type $StaticMethods = {
 
 /** * Plugin methods that return `Chronos` instance */
 export type $PluginMethods =
-	| `timeZone`
 	| 'round'
-	| 'nextBusinessDay'
+	| `timeZone`
+	| 'nextWorkday'
 	| 'nextWeekend'
-	| 'previousBusinessDay'
+	| 'previousWorkday'
 	| 'previousWeekend';
 
 /** * Plugin methods that return `Chronos` instance + any custom name */

@@ -70,7 +70,7 @@ export const durationPlugin = (ChronosClass: MainChronos): void => {
 		return updated;
 	};
 
-	ChronosClass.prototype.duration = function (this, toTime, absolute = true) {
+	ChronosClass.prototype.duration = function (toTime, absolute = true) {
 		const now = this.toDate();
 		const target = toNewDate(this, toTime);
 
@@ -135,7 +135,7 @@ export const durationPlugin = (ChronosClass: MainChronos): void => {
 		return _normalizeDuration(result, absolute, isFuture);
 	};
 
-	ChronosClass.prototype.durationString = function (this, options) {
+	ChronosClass.prototype.durationString = function (options) {
 		const {
 			toTime,
 			absolute = true,

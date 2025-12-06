@@ -44,7 +44,7 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `getPartOfDay` method */
 export const dayPartPlugin = (ChronosClass: MainChronos): void => {
-	ChronosClass.prototype.getPartOfDay = function (this, config) {
+	ChronosClass.prototype.getPartOfDay = function (config) {
 		const hour = this.hour;
 
 		const ranges: DayPartConfig = {

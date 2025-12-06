@@ -107,6 +107,10 @@ export class Chronos {
 		toNewDate(instance, value) {
 			return instance.#toNewDate(value);
 		},
+
+		cast(date: ChronosInput) {
+			return date instanceof Chronos ? date : new Chronos(date);
+		},
 	};
 
 	/** Origin of the `Chronos` instance (Method that created `new Chronos`), useful for tracking instance. */
