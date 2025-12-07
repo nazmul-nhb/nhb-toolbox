@@ -2025,3 +2025,5 @@ export class Chronos {
 }
 
 export { chronos } from './chronos-fn';
+// ! Chronos `INTERNALS` Symbol for plugin authors
+export { INTERNALS } from './constants';

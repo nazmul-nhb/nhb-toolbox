@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.28.21] - 2025-12-07
+
+- **Added** *missing exports* for `getTimeZoneIds` and `getNativeTimeZoneId` *utilities*.
+
 ## [4.28.20] - 2025-12-07
 
 ### 🕧 Updates in Chronos
