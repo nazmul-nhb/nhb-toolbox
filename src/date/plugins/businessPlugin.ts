@@ -330,7 +330,7 @@ declare module '../Chronos' {
 		 * @returns Number of workdays in the current month.
 		 *
 		 * @example
-		 * new Chronos('2025-01-01').workdaysInMonth(); // e.g., 23
+		 * new Chronos('2025-01-01').workdaysInMonth(); // default weekend Friday & Saturday -> 22
 		 */
 		workdaysInMonth(weekStartsOn?: Enumerate<7>, weekendLength?: NumberRange<1, 4>): number;
 
@@ -341,7 +341,7 @@ declare module '../Chronos' {
 		 * @returns Number of workdays in the current month.
 		 *
 		 * @example
-		 * new Chronos('2025-01-01').workdaysInMonth([0, 6]); // Sunday & Saturday are weekend
+		 * new Chronos('2025-01-01').workdaysInMonth([0, 6]); // Sunday & Saturday are weekends
 		 */
 		workdaysInMonth(weekendDays: RangeTuple<Enumerate<7>, 1, 4>): number;
 
@@ -353,7 +353,7 @@ declare module '../Chronos' {
 		 * @returns Number of workdays in the current year.
 		 *
 		 * @example
-		 * new Chronos('2025-01-01').workdaysInYear(); // e.g., 260
+		 * new Chronos('2025-01-01').workdaysInYear(); // default weekend Friday & Saturday -> 261
 		 */
 		workdaysInYear(weekStartsOn?: Enumerate<7>, weekendLength?: NumberRange<1, 4>): number;
 
@@ -364,7 +364,7 @@ declare module '../Chronos' {
 		 * @returns Number of workdays in the current year.
 		 *
 		 * @example
-		 * new Chronos('2025-01-01').workdaysInYear([0, 6]); // weekends Sunday & Saturday
+		 * new Chronos('2025-01-01').workdaysInYear([0, 6]); // Sunday & Saturday are weekends
 		 */
 		workdaysInYear(weekendDays: RangeTuple<Enumerate<7>, 1, 4>): number;
 
@@ -380,7 +380,7 @@ declare module '../Chronos' {
 		 * - Supports standard and overnight business hours. Overnight means `end < start`.
 		 * - Example: `businessStartHour = 22`, `businessEndHour = 6` will cover 10 PM to 6 AM next day.
 		 *
-		 * * *Weekends are determined by `weekStartsOn` and `weekendLength` using the {@link isWorkday} method.*
+		 * - *Weekends are determined by `weekStartsOn` and `weekendLength` using the {@link isWorkday} method.*
 		 */
 		isBusinessHour(options?: BusinessOptionsBasic): boolean;
 
@@ -396,7 +396,7 @@ declare module '../Chronos' {
 		 * - Supports standard and overnight business hours. Overnight means `end < start`.
 		 * - Example: `businessStartHour = 22`, `businessEndHour = 6` will cover 10 PM to 6 AM next day.
 		 *
-		 * * *Weekends are determined by `weekendDays` tuple using the {@link isWorkday} method.*
+		 * - *Weekends are determined by `weekendDays` tuple using the {@link isWorkday} method.*
 		 */
 		isBusinessHour(options?: BusinessOptionsWeekends): boolean;
 

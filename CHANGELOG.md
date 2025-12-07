@@ -6,12 +6,17 @@ All notable changes to the package will be documented here.
 
 ---
 
-<!-- ## [4.28.20] - 2025-12-06
+## [4.28.20] - 2025-12-07
 
-- **Added** *new methods* for `Chronos` *business plugin:* `nextWorkday`, `nextWeekend`, `previousWorkday`, `previousWeekend`, `workdaysBetween`, `workdaysInMonth`, `workdaysInYear`.
+### 🕧 Updates in Chronos
+
+- **Added** *new methods* for *business plugin:* `nextWorkday`, `nextWeekend`, `previousWorkday`, `previousWeekend`, `workdaysBetween`, `workdaysInMonth`, `workdaysInYear`.
 - **Optimized** *time complexity* for `getDatesForDay` and `getDatesInRange` for *longer time ranges*.
-- **Added** *new utilities*: `getTimeZoneIds` to get *time zone identifiers* for a given *UTC offset* and `getNativeTimeZoneId` to get current system's time zone identifier.
-- **Added** *new utility types* `Maybe<T>`, `Alphabet<T>`, `IsAlphabet<T>` and `SpecialCharacter`. -->
+
+### 🛠️ Other Updates
+
+- **Added** *new utilities*: `getTimeZoneIds` to get *time zone identifiers* for a given *UTC offset* and `getNativeTimeZoneId` to get *current system's time zone identifier*.
+- **Added** *new utility types* `Maybe<T>`, `Alphabet<T>`, `IsAlphabet<T>` and `SpecialCharacter`.
 
 ## [4.28.10] - 2025-12-03
 
