@@ -364,7 +364,7 @@ declare module '../Chronos' {
 		 * @returns Number of workdays in the current year.
 		 *
 		 * @example
-		 * new Chronos('2025-01-01').workdaysInYear([0, 6]); // Sunday & Saturday
+		 * new Chronos('2025-01-01').workdaysInYear([0, 6]); // weekends Sunday & Saturday
 		 */
 		workdaysInYear(weekendDays: RangeTuple<Enumerate<7>, 1, 4>): number;
 
@@ -469,14 +469,14 @@ export const businessPlugin = ($Chronos: $Chronos): void => {
 	};
 
 	$Chronos.prototype.nextWorkday = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
-		let nwd = this.addDays(1);
+		let nxtWrk = this.addDays(1);
 
-		while (nwd.isWeekend(wDef as Enumerate<7>, wLen)) {
-			nwd = nwd.addDays(1);
+		while (nxtWrk.isWeekend(wDef as Enumerate<7>, wLen)) {
+			nxtWrk = nxtWrk.addDays(1);
 		}
 
 		return withOrigin(
-			nwd.startOf('day'),
+			nxtWrk.startOf('day'),
 			'nextWorkday',
 			offset(this),
 			this.timeZoneName,
@@ -486,14 +486,14 @@ export const businessPlugin = ($Chronos: $Chronos): void => {
 	};
 
 	$Chronos.prototype.previousWorkday = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
-		let pwd = this.addDays(-1);
+		let prevWrk = this.addDays(-1);
 
-		while (pwd.isWeekend(wDef as Enumerate<7>, wLen)) {
-			pwd = pwd.addDays(-1);
+		while (prevWrk.isWeekend(wDef as Enumerate<7>, wLen)) {
+			prevWrk = prevWrk.addDays(-1);
 		}
 
 		return withOrigin(
-			pwd.startOf('day'),
+			prevWrk.startOf('day'),
 			'previousWorkday',
 			offset(this),
 			this.timeZoneName,
@@ -503,14 +503,14 @@ export const businessPlugin = ($Chronos: $Chronos): void => {
 	};
 
 	$Chronos.prototype.nextWeekend = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
-		let nw = this.addDays(1);
+		let nxtWknd = this.addDays(1);
 
-		while (!nw.isWeekend(wDef as Enumerate<7>, wLen)) {
-			nw = nw.addDays(1);
+		while (!nxtWknd.isWeekend(wDef as Enumerate<7>, wLen)) {
+			nxtWknd = nxtWknd.addDays(1);
 		}
 
 		return withOrigin(
-			nw.startOf('day'),
+			nxtWknd.startOf('day'),
 			'nextWeekend',
 			offset(this),
 			this.timeZoneName,
@@ -520,14 +520,14 @@ export const businessPlugin = ($Chronos: $Chronos): void => {
 	};
 
 	$Chronos.prototype.previousWeekend = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
-		let pw = this.addDays(-1);
+		let prevWknd = this.addDays(-1);
 
-		while (!pw.isWeekend(wDef as Enumerate<7>, wLen)) {
-			pw = pw.addDays(-1);
+		while (!prevWknd.isWeekend(wDef as Enumerate<7>, wLen)) {
+			prevWknd = prevWknd.addDays(-1);
 		}
 
 		return withOrigin(
-			pw.startOf('day'),
+			prevWknd.startOf('day'),
 			'previousWeekend',
 			offset(this),
 			this.timeZoneName,
@@ -593,7 +593,7 @@ export const businessPlugin = ($Chronos: $Chronos): void => {
 		};
 
 		if (options && 'weekendDays' in options && !isUndefined(options?.weekendDays)) {
-			return this.isWorkday(options?.weekendDays) && _isBusinessHour();
+			return this.isWorkday(options.weekendDays) && _isBusinessHour();
 		}
 
 		const { weekStartsOn = 0, weekendLength = 2 } = (options ?? {}) as BusinessOptionsBasic;
@@ -602,17 +602,15 @@ export const businessPlugin = ($Chronos: $Chronos): void => {
 	};
 
 	$Chronos.prototype.toFiscalQuarter = function (startMonth = 7) {
-		const month = $Date(this).getMonth() + 1;
-		const adjusted = (month - startMonth + 12) % 12;
+		const adjusted = (this.isoMonth - startMonth + 12) % 12;
 
 		return (Math.floor(adjusted / 3) + 1) as Quarter;
 	};
 
 	$Chronos.prototype.toAcademicYear = function (this) {
-		const year = $Date(this).getFullYear();
-		const month = $Date(this).getMonth();
+		const year = this.year;
 
-		if (month >= 6) {
+		if (this.month >= 6) {
 			return `${year}-${year + 1}`;
 		} else {
 			return `${year - 1}-${year}`;
