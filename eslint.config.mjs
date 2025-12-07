@@ -102,10 +102,10 @@ export default [
 		files: ['**/*.extensions.ts'],
 		rules: { '@typescript-eslint/no-wrapper-object-types': 'off' },
 	},
-	{
-		files: ['**/*plugins.ts', '**/plugins/*.ts', '**/__ideas__/**'],
-		rules: { '@typescript-eslint/consistent-type-imports': 'off' },
-	},
+	// {
+	// 	files: ['**/*plugins.ts', '**/plugins/*.ts', '**/__ideas__/**'],
+	// 	rules: { '@typescript-eslint/consistent-type-imports': 'off' },
+	// },
 	{
 		files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
 		ignores: ['**/__ideas__/**', '**/__dump__/**', '__test.*'],

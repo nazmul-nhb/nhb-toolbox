@@ -136,7 +136,7 @@ function createStylogProxy(chain: LogStyler): Stylog {
 	return new Proxy(chain, {
 		get(target, prop: Styles) {
 			if (prop in target) {
-				const value = target[prop];
+				const value = target[prop as keyof LogStyler];
 				if (typeof value === 'function') {
 					return value.bind(target);
 				}

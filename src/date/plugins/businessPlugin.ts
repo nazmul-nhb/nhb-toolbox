@@ -4,14 +4,13 @@ import type { Enumerate, NumberRange } from '../../number/types';
 import type { RangeTuple } from '../../utils/types';
 import { INTERNALS } from '../constants';
 import type {
+	$Chronos,
 	AcademicYear,
 	BusinessOptionsBasic,
 	BusinessOptionsWeekends,
 	ChronosInput,
 	Quarter,
 } from '../types';
-
-type MainChronos = typeof import('../Chronos').Chronos;
 
 declare module '../Chronos' {
 	interface Chronos {
@@ -417,8 +416,8 @@ declare module '../Chronos' {
 }
 
 /** * Plugin to inject `business` related methods */
-export const businessPlugin = (ChronosClass: MainChronos): void => {
-	const { internalDate: $Date, withOrigin, cast, offset } = ChronosClass[INTERNALS];
+export const businessPlugin = ($Chronos: $Chronos): void => {
+	const { internalDate: $Date, withOrigin, cast, offset } = $Chronos[INTERNALS];
 
 	/** Build weekend mask (array of booleans) based on `week definition` or weekend `length` */
 	const _buildWeekendMask = (weekDef: number | number[], length: number) => {
@@ -449,7 +448,7 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 		return total;
 	};
 
-	ChronosClass.prototype.isWeekend = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
+	$Chronos.prototype.isWeekend = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
 		const day = $Date(this).getDay() as Enumerate<7>;
 
 		// Use custom weekend days if provided
@@ -465,11 +464,11 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 		return weekendDays.includes(day);
 	};
 
-	ChronosClass.prototype.isWorkday = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
+	$Chronos.prototype.isWorkday = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
 		return !this.isWeekend(wDef as Enumerate<7>, wLen);
 	};
 
-	ChronosClass.prototype.nextWorkday = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
+	$Chronos.prototype.nextWorkday = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
 		let nwd = this.addDays(1);
 
 		while (nwd.isWeekend(wDef as Enumerate<7>, wLen)) {
@@ -486,7 +485,7 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 		);
 	};
 
-	ChronosClass.prototype.previousWorkday = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
+	$Chronos.prototype.previousWorkday = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
 		let pwd = this.addDays(-1);
 
 		while (pwd.isWeekend(wDef as Enumerate<7>, wLen)) {
@@ -503,7 +502,7 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 		);
 	};
 
-	ChronosClass.prototype.nextWeekend = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
+	$Chronos.prototype.nextWeekend = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
 		let nw = this.addDays(1);
 
 		while (!nw.isWeekend(wDef as Enumerate<7>, wLen)) {
@@ -520,7 +519,7 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 		);
 	};
 
-	ChronosClass.prototype.previousWeekend = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
+	$Chronos.prototype.previousWeekend = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
 		let pw = this.addDays(-1);
 
 		while (!pw.isWeekend(wDef as Enumerate<7>, wLen)) {
@@ -537,12 +536,8 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 		);
 	};
 
-	ChronosClass.prototype.workdaysBetween = function (
-		other,
-		wDef = 0,
-		wLen: NumberRange<1, 4> = 2
-	): number {
-		const end = cast(other).startOf('day');
+	$Chronos.prototype.workdaysBetween = function (to, wDef = 0, wLen: NumberRange<1, 4> = 2) {
+		const end = cast(to).startOf('day');
 		const start = this.clone().startOf('day');
 
 		if (start.isSame(end, 'day')) return 0;
@@ -558,10 +553,7 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 		return _countWorkdays(startWeekday, totalDays, weekendMask, step);
 	};
 
-	ChronosClass.prototype.workdaysInMonth = function (
-		wDef = 0,
-		wLen: NumberRange<1, 4> = 2
-	): number {
+	$Chronos.prototype.workdaysInMonth = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
 		const daysInMonth = this.daysInMonth();
 
 		// Build weekend mask (array of booleans)
@@ -572,10 +564,7 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 		return _countWorkdays(startWeekday, daysInMonth, weekendMask);
 	};
 
-	ChronosClass.prototype.workdaysInYear = function (
-		wDef = 0,
-		wLen: NumberRange<1, 4> = 2
-	): number {
+	$Chronos.prototype.workdaysInYear = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
 		const daysInYear = this.isLeapYear() ? 366 : 365;
 
 		// Build weekend mask (array of booleans)
@@ -586,7 +575,7 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 		return _countWorkdays(startWeekday, daysInYear, weekendMask);
 	};
 
-	ChronosClass.prototype.isBusinessHour = function (options) {
+	$Chronos.prototype.isBusinessHour = function (options) {
 		const _isBusinessHour = (): boolean => {
 			const { businessStartHour = 9, businessEndHour = 17 } = options ?? {};
 
@@ -612,14 +601,14 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 		return this.isWorkday(weekStartsOn, weekendLength) && _isBusinessHour();
 	};
 
-	ChronosClass.prototype.toFiscalQuarter = function (startMonth = 7) {
+	$Chronos.prototype.toFiscalQuarter = function (startMonth = 7) {
 		const month = $Date(this).getMonth() + 1;
 		const adjusted = (month - startMonth + 12) % 12;
 
 		return (Math.floor(adjusted / 3) + 1) as Quarter;
 	};
 
-	ChronosClass.prototype.toAcademicYear = function (this) {
+	$Chronos.prototype.toAcademicYear = function (this) {
 		const year = $Date(this).getFullYear();
 		const month = $Date(this).getMonth();
 

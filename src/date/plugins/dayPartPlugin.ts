@@ -1,7 +1,5 @@
 import { DATE_PART_RANGES } from '../constants';
-import type { DayPart, DayPartConfig } from '../types';
-
-type MainChronos = typeof import('../Chronos').Chronos;
+import type { $Chronos, DayPart, DayPartConfig } from '../types';
 
 declare module '../Chronos' {
 	interface Chronos {
@@ -43,8 +41,8 @@ declare module '../Chronos' {
 }
 
 /** * Plugin to inject `getPartOfDay` method */
-export const dayPartPlugin = (ChronosClass: MainChronos): void => {
-	ChronosClass.prototype.getPartOfDay = function (config) {
+export const dayPartPlugin = ($Chronos: $Chronos): void => {
+	$Chronos.prototype.getPartOfDay = function (config) {
 		const hour = this.hour;
 
 		const ranges: DayPartConfig = {

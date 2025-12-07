@@ -1,7 +1,5 @@
 import { INTERNALS } from '../constants';
-import type { ChronosInput, TimeUnit } from '../types';
-
-type MainChronos = typeof import('../Chronos').Chronos;
+import type { $Chronos, ChronosInput, TimeUnit } from '../types';
 
 declare module '../Chronos' {
 	interface Chronos {
@@ -91,10 +89,10 @@ declare module '../Chronos' {
 }
 
 /** * Plugin to inject `relative time` related methods */
-export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
-	const { toNewDate } = ChronosClass[INTERNALS];
+export const relativeTimePlugin = ($Chronos: $Chronos): void => {
+	const { toNewDate } = $Chronos[INTERNALS];
 
-	ChronosClass.prototype.getRelativeYear = function (time) {
+	$Chronos.prototype.getRelativeYear = function (time) {
 		const $date = this.toDate();
 		const now = toNewDate(this, time);
 
@@ -111,7 +109,7 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		return years;
 	};
 
-	ChronosClass.prototype.getRelativeMonth = function (time) {
+	$Chronos.prototype.getRelativeMonth = function (time) {
 		const $date = this.toDate();
 		const now = toNewDate(this, time);
 
@@ -128,12 +126,12 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		return months;
 	};
 
-	ChronosClass.prototype.getRelativeWeek = function (time) {
+	$Chronos.prototype.getRelativeWeek = function (time) {
 		const relativeDays = this.getRelativeDay(time);
 		return Math.floor(relativeDays / 7);
 	};
 
-	ChronosClass.prototype.getRelativeDay = function (time) {
+	$Chronos.prototype.getRelativeDay = function (time) {
 		const now = toNewDate(this, time);
 		// Set the time of today to 00:00:00 for comparison purposes
 		now.setHours(0, 0, 0, 0);
@@ -148,28 +146,28 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		return diffDays;
 	};
 
-	ChronosClass.prototype.getRelativeHour = function (time) {
+	$Chronos.prototype.getRelativeHour = function (time) {
 		const diff = this.getTimeStamp() - toNewDate(this, time).getTime();
 
 		return Math.floor(diff / (1000 * 60 * 60));
 	};
 
-	ChronosClass.prototype.getRelativeMinute = function (time) {
+	$Chronos.prototype.getRelativeMinute = function (time) {
 		const diff = this.getTimeStamp() - toNewDate(this, time).getTime();
 
 		return Math.floor(diff / (1000 * 60));
 	};
 
-	ChronosClass.prototype.getRelativeSecond = function (time) {
+	$Chronos.prototype.getRelativeSecond = function (time) {
 		const diff = this.getTimeStamp() - toNewDate(this, time).getTime();
 		return Math.floor(diff / 1000);
 	};
 
-	ChronosClass.prototype.getRelativeMilliSecond = function (time) {
+	$Chronos.prototype.getRelativeMilliSecond = function (time) {
 		return this.getTimeStamp() - toNewDate(this, time).getTime();
 	};
 
-	ChronosClass.prototype.compare = function (unit: TimeUnit = 'minute', time) {
+	$Chronos.prototype.compare = function (unit: TimeUnit = 'minute', time) {
 		switch (unit) {
 			case 'year':
 				return this.getRelativeYear(time);
@@ -192,15 +190,15 @@ export const relativeTimePlugin = (ChronosClass: MainChronos): void => {
 		}
 	};
 
-	ChronosClass.prototype.isToday = function (this) {
+	$Chronos.prototype.isToday = function (this) {
 		return this.getRelativeDay() === 0;
 	};
 
-	ChronosClass.prototype.isTomorrow = function (this) {
+	$Chronos.prototype.isTomorrow = function (this) {
 		return this.getRelativeDay() === 1;
 	};
 
-	ChronosClass.prototype.isYesterday = function (this) {
+	$Chronos.prototype.isYesterday = function (this) {
 		return this.getRelativeDay() === -1;
 	};
 };

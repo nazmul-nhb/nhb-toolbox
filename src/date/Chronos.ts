@@ -1396,7 +1396,11 @@ export class Chronos {
 	 * @param options - Configuration for the date range. Accepts a fixed (`RangeWithDates`) format.
 	 * @returns Array of ISO date strings in either local or UTC format, excluding any skipped weekdays if specified.
 	 *
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/calculation#getdatesinrange the documentation site} for details.
+	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/calculation#getdatesinrange docs} for details.
+	 *
+	 * @remarks
+	 * - When using `Chronos` instances for `from` and/or `to`, ensure both are created in the **same time zone** to avoid mismatched boundaries.
+	 * - Mixing zones may shift the interpreted start or end by several hours, which can cause the range to include or exclude incorrect weekdays.
 	 *
 	 * @example
 	 * // Using a fixed date range:
@@ -1425,7 +1429,7 @@ export class Chronos {
 	 * @param options - Configuration for the date range. Accepts a relative (`RelativeDateRange`) format.
 	 * @returns Array of ISO date strings in either local or UTC format, excluding any skipped weekdays if specified.
 	 *
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/calculation#getdatesinrange the documentation site} for details.
+	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/calculation#getdatesinrange docs} for details.
 	 *
 	 * @example
 	 * // Using a relative date range with skipDays:
@@ -1452,8 +1456,6 @@ export class Chronos {
 	 *
 	 * @param options - Optional configuration object defining either a fixed or relative date range.
 	 * @returns An array of ISO date strings in local or UTC format, depending on the `format` option.
-	 *
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/calculation#getdatesinrange the documentation site} for details.
 	 */
 	getDatesInRange(options?: DatesInRangeOptions): string[] {
 		let startDate = this.clone(),
@@ -1485,19 +1487,26 @@ export class Chronos {
 
 		const dates: string[] = [];
 
-		const startTime = roundDate ? startDate.#timestamp : startDate.getTimeStamp();
-		const endTime = roundDate ? endDate.#timestamp : endDate.getTimeStamp();
-		const step = startTime <= endTime ? 1 : -1;
+		const startTime = startDate.#timestamp;
+		const endTime = endDate.#timestamp;
+		const step = (startTime <= endTime ? 1 : -1) * 86400000;
 		const totalDays = Math.floor(Math.abs(endTime - startTime) / 86400000);
 
 		for (let i = 0; i <= totalDays; i++) {
-			const ts = startTime + i * 86400000 * step;
+			const ts = startTime + i * step;
 			const wDay = new Date(ts).getDay(); // temporary, just for weekday
 
 			const include = isValidArray(onlyDays) ? skipSet.has(wDay) : !skipSet.has(wDay);
 
 			if (include) {
-				const chr = new Chronos(ts);
+				const chr = new Chronos(ts).#withOrigin(
+					'clone',
+					startDate.#offset,
+					startDate.timeZoneName,
+					startDate.timeZoneId,
+					startDate.$tzTracker
+				);
+
 				dates.push(format === 'local' ? chr.toLocalISOString() : chr.toISOString());
 			}
 		}
@@ -1762,7 +1771,7 @@ export class Chronos {
 	 * @param options - Relative range (e.g., 7 days, 4 weeks) and output format (local with timezone or utc).
 	 * @returns Array of ISO date strings in the specified format. Returns empty array if no matches in the time span.
 	 *
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/statics#getdatesforday the documentation site} for details.
+	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/statics#getdatesforday docs} for details.
 	 *
 	 * @example
 	 * Chronos.getDatesForDay('Wednesday', { span: 7, unit: 'day' });
@@ -1785,7 +1794,11 @@ export class Chronos {
 	 * @param options - Date range (from/to, e.g. `'2025-06-30'`, ` new Date()`, `new Chronos()` etc.) and output format (local with timezone or utc).
 	 * @returns Array of ISO date strings in the specified format. Returns empty array if no matches in the range.
 	 *
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/statics#getdatesforday the documentation site} for details.
+	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/statics#getdatesforday docs} for details.
+	 *
+	 * @remarks
+	 * - When using `Chronos` instances for `from` and/or `to`, ensure both are created in the **same time zone** to avoid mismatched boundaries.
+	 * - Mixing zones may shift the interpreted start or end by several hours, which can cause the range to include or exclude incorrect weekdays.
 	 *
 	 * @example
 	 * Chronos.getDatesForDay('Monday', {
@@ -1804,7 +1817,7 @@ export class Chronos {
 	 * @param options - Relative range (e.g., 7 days, 4 weeks) or date range (from/to) and output format.
 	 * @returns Array of ISO date strings in the specified format.
 	 *
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/statics#getdatesforday the documentation site} for details.
+	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/statics#getdatesforday docs} for details.
 	 */
 	static getDatesForDay(day: WeekDay, options?: WeekdayOptions): string[] {
 		let startDate = new Chronos(),
@@ -1827,24 +1840,29 @@ export class Chronos {
 			endDate = endDate.startOf('day');
 		}
 
-		const dayIndex = DAYS.indexOf(day);
-
 		const result: string[] = [];
 
 		// compute total days difference
-		const step = startDate.isBefore(endDate, 'day') ? 1 : -1;
+		const step = (startDate.isBefore(endDate, 'day') ? 1 : -1) * 86400000;
 		const totalDays = Math.abs(endDate.diff(startDate, 'day'));
-		const currentTime = roundDate ? startDate.#timestamp : startDate.getTimeStamp();
+		const currentTime = startDate.#timestamp;
 
 		// move to first matching weekday
 		let firstOffset = 0;
-		while (new Date(currentTime + firstOffset * 86400000 * step).getDay() !== dayIndex) {
+		while (new Date(currentTime + firstOffset * step).getDay() !== DAYS.indexOf(day)) {
 			firstOffset++;
 		}
 
 		for (let i = firstOffset; i <= totalDays; i += 7) {
-			const ts = currentTime + i * 86400000 * step;
-			const chr = new Chronos(ts);
+			const ts = currentTime + i * step;
+			const chr = new Chronos(ts).#withOrigin(
+				'clone',
+				startDate.#offset,
+				startDate.timeZoneName,
+				startDate.timeZoneId,
+				startDate.$tzTracker
+			);
+
 			result.push(format === 'local' ? chr.toLocalISOString() : chr.toISOString());
 		}
 
@@ -1925,7 +1943,7 @@ export class Chronos {
 			if (date > 0 && date <= 9999) {
 				year = date;
 			} else {
-				year = new Chronos(date).year;
+				year = new Date(date).getFullYear();
 			}
 		} else {
 			year = Chronos.#cast(date).year;

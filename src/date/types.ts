@@ -503,10 +503,24 @@ export interface DateRangeOptions extends $CommonRangeOptions {
 
 /** - Options to define a **relative date range** starting from the current date. */
 export interface RelativeRangeOptions extends $CommonRangeOptions {
-	/** - Number of time units forward from now. Defaults to `4`. Controlled by the `unit` option. */
+	/**
+	 * The number of time units to move **forward from `now`**.
+	 *
+	 * - Determines the size of the range.
+	 * - `now` → `start`, and `start + span` → `end`.
+	 * - Both `start` and `end` are included in the result.
+	 * - Controlled by the {@link unit} option.
+	 * - Defaults to `4`.
+	 */
 	span?: number;
 
-	/** - Unit of time to advance the date range. Defaults to `'week'`. Controlled by the `span` option. */
+	/**
+	 * The time unit used to advance the range.
+	 *
+	 * - Works together with {@link span} to calculate the final date range.
+	 * - For example: `span: 2, unit: 'week'` → 2-week range.
+	 * - Defaults to `'week'`.
+	 */
 	unit?: 'year' | 'month' | 'week' | 'day';
 }
 
@@ -518,7 +532,7 @@ interface $SkipOrKeepDays {
 	/**
 	 * An array of weekdays to exclude from the date range.
 	 * - Accepts either weekday names (e.g., `'Saturday'`, `'Sunday'`) or numeric indices (0 for Sunday to 6 for Saturday).
-	 * - Ignored if `onlyDays` is provided.
+	 * - Ignored if {@link onlyDays} is provided.
 	 *
 	 * @example
 	 * skipDays: ['Saturday', 'Sunday']
@@ -529,7 +543,7 @@ interface $SkipOrKeepDays {
 	/**
 	 * An array of weekdays to explicitly include in the date range.
 	 * - Accepts either weekday names (e.g., `'Monday'`, `'Wednesday'`) or numeric indices (0 for Sunday to 6 for Saturday).
-	 * - When provided, this overrides `skipDays` and includes only the specified days.
+	 * - When provided, this overrides {@link skipDays} and includes only the specified days.
 	 *
 	 * @example
 	 * onlyDays: ['Monday', 'Wednesday']
@@ -554,7 +568,7 @@ export type Milliseconds = Enumerate<999> | 999;
 export type DateString = `0${NumberRange<1, 9>}` | `${NumberRange<10, 31>}`;
 
 /** Month as `0` padded numeric string, e.g. `02`, `01` etc. */
-export type MonthString = `0${NumberRange<1, 9>}` | `${NumberRange<10, 12>}`;
+export type MonthString = `0${NumberRange<1, 9>}` | '10' | '11' | '12';
 
 /** Date and month in `MM-DD` format, e.g. `01-12` means 'January 18' */
 export type MonthDateString = Exclude<
@@ -599,8 +613,8 @@ export interface SeasonOptions {
 
 // ! ======= SEASON CONFIG TYPES END ======== //
 
-/** * A plugin that augments the Chronos class with methods or properties. */
-export type ChronosPlugin = (ChronosClass: $Chronos) => void;
+/** * A plugin that augments the `Chronos` class with methods or properties. */
+export type ChronosPlugin = (Chronos: $Chronos) => void;
 
 export interface $BusinessHourBaseOptions {
 	/** - Optional starting hour of business time (0–23). Defaults to `9` (9 AM). */

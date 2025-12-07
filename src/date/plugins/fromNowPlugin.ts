@@ -1,8 +1,6 @@
 import { formatUnitWithPlural } from '../../string/convert';
 import { INTERNALS } from '../constants';
-import type { $DateUnit, ChronosInput, FromNowUnit } from '../types';
-
-type MainChronos = typeof import('../Chronos').Chronos;
+import type { $Chronos, $DateUnit, ChronosInput, FromNowUnit } from '../types';
 
 declare module '../Chronos' {
 	interface Chronos {
@@ -23,10 +21,10 @@ declare module '../Chronos' {
 }
 
 /** * Plugin to inject `fromNow` method */
-export const fromNowPlugin = (ChronosClass: MainChronos): void => {
-	const { toNewDate } = ChronosClass[INTERNALS];
+export const fromNowPlugin = ($Chronos: $Chronos): void => {
+	const { toNewDate } = $Chronos[INTERNALS];
 
-	ChronosClass.prototype.fromNow = function (level = 'second', wSP = true, time) {
+	$Chronos.prototype.fromNow = function (level = 'second', wSP = true, time) {
 		const now = toNewDate(this, time);
 		const target = this.toDate();
 

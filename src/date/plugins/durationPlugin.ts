@@ -1,14 +1,13 @@
 import type { $Record } from '../../object/types';
 import { INTERNALS } from '../constants';
 import type {
+	$Chronos,
 	$DateUnit,
 	ChronosInput,
 	DurationKey,
 	DurationOptions,
 	TimeDuration,
 } from '../types';
-
-type MainChronos = typeof import('../Chronos').Chronos;
 
 declare module '../Chronos' {
 	interface Chronos {
@@ -36,8 +35,8 @@ declare module '../Chronos' {
 }
 
 /** * Plugin to inject `duration` related methods */
-export const durationPlugin = (ChronosClass: MainChronos): void => {
-	const { toNewDate } = ChronosClass[INTERNALS];
+export const durationPlugin = ($Chronos: $Chronos): void => {
+	const { toNewDate } = $Chronos[INTERNALS];
 
 	/**
 	 * @private Normalizes duration values based on sign and `absolute` flag.
@@ -70,7 +69,7 @@ export const durationPlugin = (ChronosClass: MainChronos): void => {
 		return updated;
 	};
 
-	ChronosClass.prototype.duration = function (toTime, absolute = true) {
+	$Chronos.prototype.duration = function (toTime, absolute = true) {
 		const now = this.toDate();
 		const target = toNewDate(this, toTime);
 
@@ -135,7 +134,7 @@ export const durationPlugin = (ChronosClass: MainChronos): void => {
 		return _normalizeDuration(result, absolute, isFuture);
 	};
 
-	ChronosClass.prototype.durationString = function (options) {
+	$Chronos.prototype.durationString = function (options) {
 		const {
 			toTime,
 			absolute = true,

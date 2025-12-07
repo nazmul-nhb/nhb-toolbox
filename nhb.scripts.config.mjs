@@ -139,7 +139,7 @@ function generatePlugin(pluginName) {
 	return [
 		{
 			name: `${pluginName}Plugin.ts`,
-			content: `type MainChronos = typeof import('../Chronos').Chronos;
+			content: `import type { $Chronos } from '../types';
 
 declare module '../Chronos' {
     interface Chronos {
@@ -149,8 +149,8 @@ declare module '../Chronos' {
 }
 
 /** * Plugin to inject \`${pluginName}\` method */
-export const ${pluginName}Plugin = (ChronosClass: MainChronos): void => {
-    ChronosClass.prototype.${pluginName} = function () {
+export const ${pluginName}Plugin = ($Chronos: $Chronos): void => {
+    $Chronos.prototype.${pluginName} = function () {
         // Logic
     };
 };`,

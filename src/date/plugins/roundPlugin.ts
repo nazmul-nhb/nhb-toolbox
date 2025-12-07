@@ -1,8 +1,6 @@
 import { roundToNearest } from '../../number/utilities';
 import { INTERNALS } from '../constants';
-import type { TimeUnit } from '../types';
-
-type MainChronos = typeof import('../Chronos').Chronos;
+import type { $Chronos, TimeUnit } from '../types';
 
 declare module '../Chronos' {
 	interface Chronos {
@@ -28,10 +26,10 @@ declare module '../Chronos' {
 }
 
 /** * Plugin to inject `round` method */
-export const roundPlugin = (ChronosClass: MainChronos): void => {
-	const { internalDate, withOrigin, offset } = ChronosClass[INTERNALS];
+export const roundPlugin = ($Chronos: $Chronos): void => {
+	const { internalDate, withOrigin, offset } = $Chronos[INTERNALS];
 
-	ChronosClass.prototype.round = function (unit, nearest = 1) {
+	$Chronos.prototype.round = function (unit, nearest = 1) {
 		const date = new Date(internalDate(this));
 
 		switch (unit) {
@@ -102,7 +100,7 @@ export const roundPlugin = (ChronosClass: MainChronos): void => {
 
 				const rounded = diffToEnd < diffToStart ? endOfWeek : startOfWeek;
 
-				return withOrigin(new ChronosClass(rounded), 'round');
+				return withOrigin(new $Chronos(rounded), 'round');
 			}
 
 			case 'month': {
@@ -134,7 +132,7 @@ export const roundPlugin = (ChronosClass: MainChronos): void => {
 		}
 
 		return withOrigin(
-			new ChronosClass(date),
+			new $Chronos(date),
 			'round',
 			offset(this),
 			this.timeZoneName,
