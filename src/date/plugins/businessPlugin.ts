@@ -286,7 +286,7 @@ declare module '../Chronos' {
 		previousWeekend(weekendDays: RangeTuple<Enumerate<7>, 1, 4>): Chronos;
 
 		/**
-		 * @instance Calculates the number of workdays between the current date and another `Chronos` instance using week start day and weekend length.
+		 * @instance Calculates the number of workdays between the current date and another using week start day and weekend length.
 		 *
 		 * @param other The target date to compare against.
 		 * @param weekStartsOn Optional. The day index (0–6) that the week starts on. Default is `0` (Sunday).
@@ -296,7 +296,8 @@ declare module '../Chronos' {
 		 * @remarks This calculation is exclusive of the starting date and inclusive of the ending date.
 		 *
 		 * @example
-		 * new Chronos('2025-01-20').workdaysBetween(new Chronos('2025-01-25')); // e.g., 4
+		 * new Chronos('2025-12-15').workdaysBetween(new Chronos('2025-12-21'));
+		 * // default weekend Friday & Saturday -> 4
 		 */
 		workdaysBetween(
 			other: ChronosInput,
@@ -305,7 +306,7 @@ declare module '../Chronos' {
 		): number;
 
 		/**
-		 * @instance Calculates the number of workdays between the current date and another `Chronos` instance using custom weekend days.
+		 * @instance Calculates the number of workdays between the current date and another using custom weekend days.
 		 *
 		 * @param other The target date to compare against.
 		 * @param weekendDays A tuple of custom weekend day indices (0–6). Must contain 1–4 elements.
@@ -314,7 +315,8 @@ declare module '../Chronos' {
 		 * @remarks This calculation is exclusive of the starting date and inclusive of the ending date.
 		 *
 		 * @example
-		 * new Chronos('2025-01-20').workdaysBetween(new Chronos('2025-01-25'), [0, 6]); // custom weekend Sunday & Saturday
+		 * new Chronos('2025-12-15').workdaysBetween(new Chronos('2025-12-20'), [0, 6]);
+		 * // custom weekend Sunday & Saturday -> 4
 		 */
 		workdaysBetween(
 			other: ChronosInput,
@@ -368,7 +370,7 @@ declare module '../Chronos' {
 		workdaysInYear(weekendDays: RangeTuple<Enumerate<7>, 1, 4>): number;
 
 		/**
-		 * @instance Checks if the current date and time fall within business hours using week start day and weekend length & other options.
+		 * @instance Checks if the current time fall within business hours using week start day and weekend length & other options.
 		 *
 		 * @param options Options to configure business hour and weekends.
 		 *
@@ -384,7 +386,7 @@ declare module '../Chronos' {
 		isBusinessHour(options?: BusinessOptionsBasic): boolean;
 
 		/**
-		 * @instance Checks if the current date and time fall within business hours using indices of weekend days & other options.
+		 * @instance Checks if the current time fall within business hours using indices of weekend days & other options.
 		 *
 		 * @param options Options to configure business hour and weekends.
 		 *
@@ -437,6 +439,7 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 		// ! Count workdays in a full 7-day week * full weeks = total workdays in the range
 		let total = Math.floor(totalDays / 7) * mask.filter(Boolean).length;
 
+		// ! Handle remainder and update total
 		let dayIndex = wStart % 7;
 		for (let i = 0; i < totalDays % 7; i++) {
 			if (mask[dayIndex]) total++;
@@ -457,12 +460,9 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 		// Auto-calculate weekend days from start & length
 		const lastDayOfWeek = (wDef + 6) % 7;
 
-		const computedWeekendDays = Array.from(
-			{ length: wLen },
-			(_, i) => (lastDayOfWeek - i + 7) % 7
-		);
+		const weekendDays = Array.from({ length: wLen }, (_, i) => (lastDayOfWeek - i + 7) % 7);
 
-		return computedWeekendDays.includes(day);
+		return weekendDays.includes(day);
 	};
 
 	ChronosClass.prototype.isWorkday = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
@@ -590,9 +590,7 @@ export const businessPlugin = (ChronosClass: MainChronos): void => {
 		const _isBusinessHour = (): boolean => {
 			const { businessStartHour = 9, businessEndHour = 17 } = options ?? {};
 
-			if (businessStartHour === businessEndHour) {
-				return false;
-			}
+			if (businessStartHour === businessEndHour) return false;
 
 			const hour = $Date(this).getHours();
 

@@ -1,6 +1,7 @@
 import type { Numeric } from '../types/index';
 import { isValidUTCOffset } from './guards';
-import { _formatDateCore } from './helpers';
+import { _formatDateCore, _gmtToUtcOffset, _resolveNativeTzName } from './helpers';
+import { NATIVE_TZ_IDS } from './timezone';
 import type {
 	$DateUnit,
 	$TimeZoneIdentifier,
@@ -8,6 +9,7 @@ import type {
 	DateFormatOptions,
 	HourMinutes,
 	TimeZoneDetails,
+	TimeZoneIdNative,
 	UTCOffset,
 } from './types';
 
@@ -104,6 +106,11 @@ export function formatUTCOffset(minutes: Numeric): UTCOffset {
 	return `UTC${sign}${hours}:${mins}` as UTCOffset;
 }
 
+/** Get the current system's time zone identifier using {@link Intl.DateTimeFormat} API. */
+export function getNativeTimeZoneId() {
+	return Intl.DateTimeFormat().resolvedOptions().timeZone as TimeZoneIdNative;
+}
+
 /**
  * * Retrieves comprehensive time zone details using the {@link Intl.DateTimeFormat} API.
  * @param tzId Optional timezone identifier. Defaults to the system timezone.
@@ -114,32 +121,21 @@ export function getTimeZoneDetails(tzId?: $TimeZoneIdentifier, date?: Date) {
 	const TZ_NAME_TYPES = ['long', 'longGeneric', 'longOffset'] as const;
 	type TZNameKey = `tzName${Capitalize<(typeof TZ_NAME_TYPES)[number]>}`;
 
-	const $tzId = tzId || Intl.DateTimeFormat().resolvedOptions().timeZone;
+	const $tzId = tzId || getNativeTimeZoneId();
 
 	const obj = { tzIdentifier: $tzId } as TimeZoneDetails;
 
 	for (const type of TZ_NAME_TYPES) {
 		const key = `tzName${type[0].toUpperCase()}${type.slice(1)}` as TZNameKey;
 
-		try {
-			const parts = new Intl.DateTimeFormat('en', {
-				timeZone: $tzId,
-				timeZoneName: type,
-			}).formatToParts(date);
-
-			const tzPart = parts.find((p) => p.type === 'timeZoneName');
-
-			obj[key] = tzPart?.value;
-		} catch {
-			obj[key] = undefined;
-		}
+		obj[key] = _resolveNativeTzName($tzId, type, date);
 	}
 
 	return obj;
 }
 
 /** Cache for offset to time zone */
-const TZ_MAP = new Map<UTCOffset, $TimeZoneIdentifier[]>();
+const TZ_MAP = new Map<UTCOffset, TimeZoneIdNative[]>();
 
 /**
  * * Resolves all IANA time-zone identifiers that match a given UTC offset.
@@ -152,23 +148,17 @@ const TZ_MAP = new Map<UTCOffset, $TimeZoneIdentifier[]>();
  * @param offset The UTC offset in `"UTC±HH:MM"` format.
  * @returns An array of matching IANA time-zone identifiers, or an empty array if the offset is invalid.
  */
-export function getTimeZoneIds(offset: UTCOffset): $TimeZoneIdentifier[] {
+export function getTimeZoneIds(offset: UTCOffset): TimeZoneIdNative[] {
 	if (!isValidUTCOffset(offset)) return [];
 
 	if (TZ_MAP.has(offset)) return TZ_MAP.get(offset) ?? [];
 
-	const zones = Intl.supportedValuesOf('timeZone') as $TimeZoneIdentifier[];
+	for (const zone of NATIVE_TZ_IDS) {
+		const partValue = _resolveNativeTzName(zone, 'longOffset');
 
-	for (const zone of zones) {
-		const off = new Intl.DateTimeFormat('en', {
-			timeZone: zone,
-			timeZoneName: 'longOffset',
-		})
-			.formatToParts()
-			.find((part) => part.type === 'timeZoneName')
-			?.value.replace('GMT', 'UTC') as UTCOffset;
+		const off = _gmtToUtcOffset(partValue);
 
-		TZ_MAP.set(off, [...(TZ_MAP.get(off) ?? []), zone]);
+		if (off) TZ_MAP.set(off, [...(TZ_MAP.get(off) ?? []), zone]);
 	}
 
 	return TZ_MAP.get(offset) ?? [];

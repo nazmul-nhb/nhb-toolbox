@@ -7,6 +7,7 @@ export {
 
 export {
 	IANA_TZ_IDS,
+	NATIVE_TZ_IDS,
 	TIME_ZONE_IDS,
 	TIME_ZONE_LABELS,
 	TIME_ZONES,

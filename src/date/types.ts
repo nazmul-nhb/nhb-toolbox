@@ -86,7 +86,7 @@ export type TimeZoneDetails = {
 	/** Long generic non-location format (e.g.: `'Pacific Time'`, `'Nordamerikanische Westküstenzeit'`) */
 	tzNameLongGeneric: Maybe<LooseLiteral<TimeZoneName>>;
 	/** Long localized GMT format, prefixed with `"GMT"` (e.g., `"GMT-08:00"`) */
-	tzNameLongOffset: Maybe<LooseLiteral<`GMT${$UTCOffset}`>>;
+	tzNameLongOffset: Maybe<LooseLiteral<$GMTOffset>>;
 };
 
 /** Options for `formatDate` utility */
@@ -210,6 +210,7 @@ export type LocalesArguments = LocaleCode | Intl.Locale | Array<LocaleCode | Int
 
 /** Format options for `toLocaleString` method. Extends `Intl.DateTimeFormatOptions `to update `timeZone` option. */
 export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
+	/** {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones Time zone identifier} excluding `'Factory'`. */
 	timeZone?: $TimeZoneIdentifier;
 }
 
@@ -324,7 +325,7 @@ export interface ChronosInternals {
 	 */
 	offset(instance: Chronos): UTCOffset;
 
-	/** Ensures the input is a `Chronos` instance, creating one if necessary. */
+	/** * Ensures the input is a `Chronos` instance, creating one if necessary. */
 	cast(date: ChronosInput): Chronos;
 }
 
@@ -399,6 +400,9 @@ export type TimeZoneIdNative = keyof typeof TIME_ZONES_NATIVE;
 /** JavaScript native time zone name (from {@link Intl.supportedValuesOf} API) */
 export type TimeZoneNameNative = (typeof TIME_ZONES_NATIVE)[TimeZoneIdNative]['tzName'];
 
+/** Native time zone name or IANA time zone identifier */
+export type $NativeTzNameOrId = TimeZoneNameNative | $TimeZoneIdentifier;
+
 /** Full time zone names from {@link https://en.wikipedia.org/wiki/List_of_time_zone_abbreviations Wikipedia}, {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones IANA TZ Database on Wikipedia} and JavaScript native API ({@link Intl.supportedValuesOf}). */
 export type TimeZoneName = NonNullable<
 	| (typeof TIME_ZONE_LABELS)[$TZLabelKey]
@@ -421,6 +425,9 @@ export type $UTCOffset = `${PositiveUTCHour | NegativeUTCHour}:${UTCMinute}`;
 
 /** UTC offset in `UTC±HH:mm` format */
 export type UTCOffset = `UTC${$UTCOffset}`;
+
+/** GMT offset in `GMT±HH:mm` or simply `GMT` format */
+export type $GMTOffset = `GMT${$UTCOffset}` | 'GMT';
 
 /** `Chronos` Date Format options */
 export interface FormatOptions {

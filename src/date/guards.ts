@@ -2,7 +2,7 @@ import { isNonEmptyString, isString } from '../guards/primitives';
 import { isNumericString } from '../guards/specials';
 import { normalizeNumber } from '../number/utilities';
 import type { Numeric } from '../types/index';
-import { IANA_TZ_IDS } from './timezone';
+import { IANA_TZ_IDS, NATIVE_TZ_IDS } from './timezone';
 import type {
 	$TimeZoneIdentifier,
 	ClockTime,
@@ -66,9 +66,7 @@ export function isValidTimeZoneId(value: unknown): value is $TimeZoneIdentifier 
  * @returns `true` if the value is a valid native JS-supported time zone identifier, otherwise `false`.
  */
 export function isNativeTimeZoneId(value: unknown): value is TimeZoneIdNative {
-	return isNonEmptyString(value) ?
-			new Set(Intl.supportedValuesOf('timeZone')).has(value)
-		:	false;
+	return isNonEmptyString(value) ? new Set<string>(NATIVE_TZ_IDS).has(value) : false;
 }
 
 /**

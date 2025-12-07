@@ -1,3 +1,5 @@
+import type { TimeZoneIdNative } from './types';
+
 /** Record of `212` time-zones (abbreviation of timezone names from {@link https://en.wikipedia.org/wiki/List_of_time_zone_abbreviations time zone abbreviations on Wikipedia}) with respective time-zone offsets and full timezone names. */
 export const TIME_ZONES = /* @__PURE__ */ Object.freeze({
 	ACDT: {
@@ -5569,3 +5571,8 @@ export const IANA_TZ_IDS = /* @__PURE__ */ Object.freeze([
 	'WET',
 	'Zulu',
 ] as const);
+
+/** Array of `418` timezone identifiers from {@link Intl.supportedValuesOf} API. */
+export const NATIVE_TZ_IDS = /* @__PURE__ */ Object.freeze(
+	Intl.supportedValuesOf('timeZone') as TimeZoneIdNative[]
+);

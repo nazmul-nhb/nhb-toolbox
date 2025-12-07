@@ -4,9 +4,10 @@ import type { Enumerate, NumberRange } from '../number/types';
 import type { LooseLiteral, TupleOf } from '../utils/types';
 import { DAYS, INTERNALS, MONTHS } from './constants';
 import { isLeapYear } from './guards';
-import { _formatDateCore } from './helpers';
+import { _formatDateCore, _resolveNativeTzName } from './helpers';
 import type {
 	$DateUnit,
+	$NativeTzNameOrId,
 	$PluginMethods,
 	$TimeZoneIdentifier,
 	$UTCOffset,
@@ -35,12 +36,11 @@ import type {
 	TimeZoneId,
 	TimeZoneIdNative,
 	TimeZoneName,
-	TimeZoneNameNative,
 	UTCOffset,
 	WeekDay,
 	WeekdayOptions,
 } from './types';
-import { extractMinutesFromUTC } from './utils';
+import { extractMinutesFromUTC, getNativeTimeZoneId } from './utils';
 
 /** Date parts for `Chronos` as `Record<part, number>` */
 type $DateParts = {
@@ -109,7 +109,7 @@ export class Chronos {
 		},
 
 		cast(date: ChronosInput) {
-			return date instanceof Chronos ? date : new Chronos(date);
+			return Chronos.#cast(date);
 		},
 	};
 
@@ -362,12 +362,10 @@ export class Chronos {
 	 *
 	 * @returns The resolved time zone name or its IANA identifier as a fallback.
 	 */
-	$getNativeTimeZoneName(
-		tzId?: $TimeZoneIdentifier
-	): LooseLiteral<TimeZoneNameNative | $TimeZoneIdentifier> {
-		const $tzId = tzId || this.$getNativeTimeZoneId();
+	$getNativeTimeZoneName(tzId?: $TimeZoneIdentifier): $NativeTzNameOrId {
+		const $tzId = tzId || getNativeTimeZoneId();
 
-		return this.#getNativeTzName($tzId) ?? $tzId;
+		return _resolveNativeTzName($tzId, 'long', this.#date) ?? $tzId;
 	}
 
 	/**
@@ -381,7 +379,7 @@ export class Chronos {
 	 * @returns The local system's IANA time zone identifier.
 	 */
 	$getNativeTimeZoneId(): TimeZoneIdNative {
-		return Intl.DateTimeFormat().resolvedOptions().timeZone as TimeZoneIdNative;
+		return getNativeTimeZoneId();
 	}
 
 	// ! ======= Private Methods ======= //
@@ -456,27 +454,6 @@ export class Chronos {
 			this.timeZoneId,
 			this.$tzTracker
 		);
-	}
-
-	/**
-	 * @private Resolves the native long timezone name (e.g. `"Bangladesh Standard Time"`, `"Eastern Daylight Time"`) for a given timezone identifier.
-	 *
-	 * @param tzId The IANA timezone identifier (e.g. `"Asia/Dhaka"`, `"America/New_York"`). Defaults to the system timezone if not provided.
-	 * @returns The resolved native timezone name or `undefined` if unavailable.
-	 */
-	#getNativeTzName(tzId?: $TimeZoneIdentifier) {
-		try {
-			const tzDetails = new Intl.DateTimeFormat('en', {
-				timeZone: tzId,
-				timeZoneName: 'long',
-			}).formatToParts(this.#date);
-
-			const tzPart = tzDetails.find((p) => p.type === 'timeZoneName');
-
-			return tzPart?.value as LooseLiteral<TimeZoneNameNative>;
-		} catch {
-			return undefined;
-		}
 	}
 
 	/**

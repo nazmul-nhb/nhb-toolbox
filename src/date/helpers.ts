@@ -1,6 +1,13 @@
 import { getOrdinal } from '../number/utilities';
+import type { Maybe } from '../types/index';
 import { DAYS, MONTHS, SORTED_TIME_FORMATS } from './constants';
-import type { ChronosFormat } from './types';
+import type {
+	$GMTOffset,
+	$TimeZoneIdentifier,
+	ChronosFormat,
+	TimeZoneNameNative,
+	UTCOffset,
+} from './types';
 
 /** Core formatting logic shared by {@link formatDate} and `Chronos` class */
 export function _formatDateCore(
@@ -81,3 +88,30 @@ export const _toSeconds = (ms: number) => Math.floor(ms / 1000);
 
 /** Converts timestamp seconds to JS `Date` */
 export const _secToDate = (sec: number) => new Date(sec * 1000);
+
+type $TzNameType = Intl.DateTimeFormatOptions['timeZoneName'];
+type $TzId = Maybe<$TimeZoneIdentifier>;
+type $ResolvedTzName<T extends $TzNameType> = Maybe<
+	T extends 'long' ? TimeZoneNameNative
+	: T extends 'longOffset' ? $GMTOffset
+	: string
+>;
+
+/** Resolve `timeZoneName` value from `Intl.DateTimeFormat` */
+export function _resolveNativeTzName<T extends $TzNameType>(tzId: $TzId, type: T, date?: Date) {
+	try {
+		const parts = new Intl.DateTimeFormat('en', {
+			timeZone: tzId,
+			timeZoneName: type,
+		}).formatToParts(date);
+
+		return parts.find((p) => p.type === 'timeZoneName')?.value as $ResolvedTzName<T>;
+	} catch {
+		return undefined;
+	}
+}
+
+/** Convert `GMT±HH:mm` string to `UTC±HH:mm` format*/
+export function _gmtToUtcOffset(gmt: Maybe<string>) {
+	return gmt === 'GMT' ? 'UTC+00:00' : (gmt?.replace(/^GMT/, 'UTC') as Maybe<UTCOffset>);
+}

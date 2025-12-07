@@ -2,7 +2,8 @@ import type { Any, Maybe } from '../../types/index';
 import type { LooseLiteral } from '../../utils/types';
 import { INTERNALS } from '../constants';
 import { isValidUTCOffset } from '../guards';
-import { TIME_ZONES, TIME_ZONE_LABELS } from '../timezone';
+import { _gmtToUtcOffset, _resolveNativeTzName } from '../helpers';
+import { NATIVE_TZ_IDS, TIME_ZONES, TIME_ZONE_LABELS } from '../timezone';
 import type {
 	$TZLabelKey,
 	$TimeZoneIdentifier,
@@ -111,9 +112,6 @@ declare module '../Chronos' {
 export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	const { internalDate: $Date, withOrigin, offset } = ChronosClass[INTERNALS];
 
-	/** Array of time zone ids extracted from {@link Intl.supportedValuesOf} */
-	const TZ_IDS = Intl.supportedValuesOf('timeZone') as Array<$TimeZoneIdentifier>;
-
 	/** Check if a time zone factor represents GMT */
 	const _isGMT = (factor: LooseLiteral<UTCOffset>) => {
 		return factor === 'UTC+00:00' || factor === 'UTC-00:00';
@@ -138,6 +136,12 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 		return undefined;
 	};
 
+	type $TzDetails = {
+		tzId: $TimeZoneIdentifier;
+		tzName: Maybe<LooseLiteral<TimeZoneName>>;
+		offset: Maybe<UTCOffset>;
+	};
+
 	/**
 	 * * Retrieves comprehensive time zone details using the {@link Intl.supportedValuesOf} API.
 	 * @param tzId Time zone identifier. Defaults to the system timezone.
@@ -147,29 +151,15 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 	const _getTimeZoneDetails = (tzId: $TimeZoneIdentifier, date?: Date) => {
 		const TZ_NAME_TYPES = ['long', 'longOffset'] as const;
 
-		const obj = { tzId } as {
-			tzId: $TimeZoneIdentifier;
-			tzName: Maybe<LooseLiteral<TimeZoneName>>;
-			offset: Maybe<UTCOffset>;
-		};
+		const obj = { tzId } as $TzDetails;
 
 		for (const type of TZ_NAME_TYPES) {
 			const key = type === 'long' ? 'tzName' : 'offset';
 
 			try {
-				const parts = new Intl.DateTimeFormat('en', {
-					timeZone: tzId,
-					timeZoneName: type,
-				}).formatToParts(date);
+				const partValue = _resolveNativeTzName(tzId, type, date);
 
-				const tzPart = parts.find((p) => p.type === 'timeZoneName');
-
-				const value =
-					type === 'longOffset' ?
-						tzPart?.value === 'GMT' ?
-							'UTC+00:00'
-						:	tzPart?.value?.replace(/^GMT/, 'UTC')
-					:	tzPart?.value;
+				const value = type === 'longOffset' ? _gmtToUtcOffset(partValue) : partValue;
 
 				obj[key] = value as Any;
 			} catch {
@@ -182,7 +172,7 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 
 	/** Cache to store time zone id (from {@link Intl.supportedValuesOf}) against UTC offset  */
 	const TZ_ID_MAP = new Map<UTCOffset, $TimeZoneIdentifier[]>(
-		TZ_IDS.reduce((tzIds, id) => {
+		NATIVE_TZ_IDS.reduce((tzIds, id) => {
 			const { offset } = _getTimeZoneDetails(id);
 
 			if (offset) {

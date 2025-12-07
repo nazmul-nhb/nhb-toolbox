@@ -47,13 +47,9 @@ export const seasonPlugin = (ChronosClass: MainChronos): void => {
 			} else if ('startMonth' in boundary && 'endMonth' in boundary) {
 				const { startMonth, endMonth } = boundary;
 				if (startMonth <= endMonth) {
-					if (this.month >= startMonth && this.month <= endMonth) {
-						return name;
-					}
+					if (this.month >= startMonth && this.month <= endMonth) return name;
 				} else {
-					if (this.month >= startMonth || this.month <= endMonth) {
-						return name;
-					}
+					if (this.month >= startMonth || this.month <= endMonth) return name;
 				}
 			}
 		}
