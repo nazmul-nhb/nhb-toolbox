@@ -19,11 +19,14 @@ export type FlattenPartial<T> = Partial<{ [K in keyof T]: T[K] }>;
 /** Union of `number` and numeric string */
 export type Numeric = number | `${number}`;
 
+/** Union of Basic Primitive Types (i.e. `string | number | boolean`) */
+export type BasicPrimitive = string | number | boolean;
+
 /** Union of All Primitive Types (i.e. `string | number | boolean | symbol | bigint | null | undefined`) */
-export type Primitive = Maybe<string | number | boolean | symbol | bigint | null>;
+export type Primitive = Maybe<BasicPrimitive | symbol | bigint | null>;
 
 /** Union of Normal Primitive Types (i.e. `string | number | boolean | null | undefined`) */
-export type NormalPrimitive = Maybe<string | number | boolean | null>;
+export type NormalPrimitive = Maybe<BasicPrimitive | null>;
 
 /** Extract normal primitive key(s) (i.e. `string | number | boolean | null | undefined`) from an object */
 export type NormalPrimitiveKey<T> = {
@@ -42,7 +45,7 @@ export type OwnKeys<T> = {
 
 /** Extract primitive (string, number or boolean) key(s) from an object */
 export type NonNullishPrimitiveKey<T> = {
-	[K in keyof T]: T[K] extends string | number | boolean ? K : never;
+	[K in keyof T]: T[K] extends BasicPrimitive ? K : never;
 }[keyof T];
 
 /** Falsy primitive type  */
@@ -55,13 +58,13 @@ export type Constructor = new (...args: any[]) => any;
 export type GenericFn = (...args: any[]) => any;
 
 /** Generic function type that returns `void` */
-export type VoidFunction = (...args: any[]) => void;
+export type VoidFn = (...args: any[]) => void;
 
-/** Debounced function type after certain delay */
-export type DelayedFn<T extends VoidFunction> = (...args: Parameters<T>) => void;
+/** Delayed (debounced or throttled) function type after certain delay */
+export type DelayedFn<T extends VoidFn> = (...args: Parameters<T>) => void;
 
-/** Throttled function type after specific delay */
-export type ThrottledFn<T extends VoidFunction> = (...args: Parameters<T>) => void;
+// ! Re-export with alias
+export type { DelayedFn as ThrottledFn, VoidFn as VoidFunction };
 
 /** Asynchronous function type */
 export type AsyncFunction<T> = (...args: any[]) => Promise<T>;
@@ -82,7 +85,7 @@ export type AdvancedTypes =
 	| Set<unknown>
 	| Function
 	| GenericFn
-	| VoidFunction
+	| VoidFn
 	| AsyncFunction<unknown>
 	| Promise<unknown>
 	| Error

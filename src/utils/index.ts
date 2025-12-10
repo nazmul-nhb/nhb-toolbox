@@ -18,8 +18,7 @@ import type {
 	DelayedFn,
 	Maybe,
 	Primitive,
-	ThrottledFn,
-	VoidFunction,
+	VoidFn,
 } from '../types/index';
 import type {
 	ArrayOfObjectsToStringOptions,
@@ -146,7 +145,7 @@ export function convertArrayToString<T extends Primitive | GenericObject>(
  *
  * debouncedSearch('laptop'); // Executes after 300ms of inactivity.
  */
-export function debounceAction<T extends VoidFunction>(callback: T, delay = 300): DelayedFn<T> {
+export function debounceAction<T extends VoidFn>(callback: T, delay = 300): DelayedFn<T> {
 	let timeoutId: ReturnType<typeof setTimeout>;
 
 	return (...args: Parameters<T>) => {
@@ -174,10 +173,7 @@ export function debounceAction<T extends VoidFunction>(callback: T, delay = 300)
  *
  * window.addEventListener('resize', throttledResize);
  */
-export function throttleAction<T extends VoidFunction>(
-	callback: T,
-	delay = 150
-): ThrottledFn<T> {
+export function throttleAction<T extends VoidFn>(callback: T, delay = 150): DelayedFn<T> {
 	let lastCall = 0;
 
 	return (...args: Parameters<T>) => {

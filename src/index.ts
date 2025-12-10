@@ -318,7 +318,13 @@ export {
 
 export { Finder } from './array/Finder';
 
-export { sortAnArray } from './array/sort';
+export {
+	naturalSort as compareNaturally,
+	naturalSort as compareSorter,
+	naturalSort,
+	naturalSort as naturalSortForString,
+	sortAnArray,
+} from './array/sort';
 
 export {
 	createOptionsArray,
@@ -337,13 +343,6 @@ export {
 	splitArray,
 	splitArrayByProperty,
 } from './array/transform';
-
-export {
-	naturalSort as compareNaturally,
-	naturalSort as compareSorter,
-	naturalSort,
-	naturalSort as naturalSortForString,
-} from './array/utils';
 
 // ! Form Utilities
 export {
