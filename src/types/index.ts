@@ -7,7 +7,18 @@ export type Any = any;
 declare const __brand: unique symbol;
 type $Brand<B> = { [__brand]: B };
 
-/** Create a branded type */
+/**
+ * * Creates a branded version of a base type by intersecting it with a unique compile-time marker.
+ * 
+ * @param T - Base type to brand.
+ * @param B - Brand identifier used to distinguish this type from structurally similar types.
+ 
+ * @remarks Useful for preventing accidental mixing of structurally identical types, while keeping the runtime value unchanged.
+ *
+ * @example
+ * type UserId = Branded<string, 'UserId'>;
+ * const id = 'abc123' as UserId;
+ */
 export type Branded<T, B> = T & $Brand<B>;
 
 /** Represents a value that may or may not be present. */
@@ -66,7 +77,7 @@ export type VoidFn = (...args: any[]) => void;
 /** Delayed (debounced or throttled) function type after certain delay */
 export type DelayedFn<T extends VoidFn> = (...args: Parameters<T>) => void;
 
-// ! Re-export with alias
+// ! Export with previous alias
 export type { DelayedFn as ThrottledFn, VoidFn as VoidFunction };
 
 /** Asynchronous function type */
