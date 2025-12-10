@@ -103,6 +103,9 @@ export default defineScriptConfig({
 	commit: {
 		runFormatter: false,
 		wrapPrefixWith: '`',
+		commitTypes: {
+			custom: [{ emoji: '🔣', type: 'types' }],
+		},
 	},
 	count: {
 		defaultPath: 'src/index.ts',

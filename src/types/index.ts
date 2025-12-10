@@ -22,11 +22,14 @@ export type Numeric = number | `${number}`;
 /** Union of Basic Primitive Types (i.e. `string | number | boolean`) */
 export type BasicPrimitive = string | number | boolean;
 
+/** `null` or `undefined` */
+export type NullOrUndefined = null | undefined;
+
 /** Union of All Primitive Types (i.e. `string | number | boolean | symbol | bigint | null | undefined`) */
-export type Primitive = Maybe<BasicPrimitive | symbol | bigint | null>;
+export type Primitive = string | number | boolean | symbol | bigint | null | undefined;
 
 /** Union of Normal Primitive Types (i.e. `string | number | boolean | null | undefined`) */
-export type NormalPrimitive = Maybe<BasicPrimitive | null>;
+export type NormalPrimitive = string | number | boolean | null | undefined;
 
 /** Extract normal primitive key(s) (i.e. `string | number | boolean | null | undefined`) from an object */
 export type NormalPrimitiveKey<T> = {
@@ -48,8 +51,8 @@ export type NonNullishPrimitiveKey<T> = {
 	[K in keyof T]: T[K] extends BasicPrimitive ? K : never;
 }[keyof T];
 
-/** Falsy primitive type  */
-export type FalsyPrimitive = Maybe<false | 0 | '' | null>;
+/** Falsy primitive type */
+export type FalsyPrimitive = false | '' | 0 | null | undefined;
 
 /** A generic class constructor */
 export type Constructor = new (...args: any[]) => any;
@@ -100,10 +103,7 @@ export type AdvancedTypes =
 
 /** Helper to detect if a type has methods */
 export type HasMethods<T> =
-	{
-		[K in keyof T]: T[K] extends Function ? true : never;
-	}[keyof T] extends never ?
-		false
+	{ [K in keyof T]: T[K] extends Function ? true : never }[keyof T] extends never ? false
 	:	true;
 
 /** * Represents detailed information about a class's methods. */
