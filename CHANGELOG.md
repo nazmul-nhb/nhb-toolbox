@@ -5,6 +5,10 @@
 All notable changes to the package will be documented here.
 
 ---
+<!-- 
+## [4.28.24] - 2025-12-11
+
+- **Updated** *type names* `VoidFunction` to `VoidFn`. `DelayedFn<T>` is used for both *debounced* and *throttled* functions. -->
 
 ## [4.28.21] - 2025-12-07
 

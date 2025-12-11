@@ -323,6 +323,44 @@ declare module '../Chronos' {
 		): number;
 
 		/**
+		 * @instance Calculates the number of weekends between the current date and another using week start day and weekend length.
+		 *
+		 * @param other The target date to compare against.
+		 * @param weekStartsOn Optional. The day index (0–6) that the week starts on. Default is `0` (Sunday).
+		 * @param weekendLength Optional. Number of consecutive days at the end of the week considered as weekend. Must be between 1 and 4. Default is `2`.
+		 * @returns The total count of weekends between the two dates.
+		 *
+		 * @remarks This calculation is exclusive of the starting date and inclusive of the ending date.
+		 *
+		 * @example
+		 * new Chronos('2025-12-15').weekendsBetween(new Chronos('2025-12-21'));
+		 * // default weekend Friday & Saturday -> 4
+		 */
+		weekendsBetween(
+			other: ChronosInput,
+			weekStartsOn?: Enumerate<7>,
+			weekendLength?: NumberRange<1, 4>
+		): number;
+
+		/**
+		 * @instance Calculates the number of weekends between the current date and another using custom weekend days.
+		 *
+		 * @param other The target date to compare against.
+		 * @param weekendDays A tuple of custom weekend day indices (0–6). Must contain 1–4 elements.
+		 * @returns The total count of weekends between the two dates.
+		 *
+		 * @remarks This calculation is exclusive of the starting date and inclusive of the ending date.
+		 *
+		 * @example
+		 * new Chronos('2025-12-15').weekendsBetween(new Chronos('2025-12-20'), [0, 6]);
+		 * // custom weekend Sunday & Saturday -> 4
+		 */
+		weekendsBetween(
+			other: ChronosInput,
+			weekendDays: RangeTuple<Enumerate<7>, 1, 4>
+		): number;
+
+		/**
 		 * @instance Counts the number of workdays in the current month using week start day and weekend length.
 		 *
 		 * @param weekStartsOn Optional. The day index (0–6) that the week starts on. Default is `0` (Sunday).
@@ -433,15 +471,17 @@ export const businessPlugin = ($Chronos: $Chronos): void => {
 		return mask;
 	};
 
-	/** Count workdays given a `start weekday`, `total days`, `weekend mask` and optional `step` */
-	const _countWorkdays = (wStart: number, totalDays: number, mask: boolean[], step = 1) => {
+	/** Count workdays (`wd=true`) or weekends(`wd=false`) given a `start weekday`, `total days`, `weekend mask` and optional `step` */
+	const _countDays = (sWeek: number, days: number, mask: boolean[], step = 1, wd = true) => {
 		// ! Count workdays in a full 7-day week * full weeks = total workdays in the range
-		let total = Math.floor(totalDays / 7) * mask.filter(Boolean).length;
+		let total = Math.floor(days / 7) * mask.filter((m) => (wd ? Boolean(m) : !m)).length;
 
 		// ! Handle remainder and update total
-		let dayIndex = wStart % 7;
-		for (let i = 0; i < totalDays % 7; i++) {
-			if (mask[dayIndex]) total++;
+		let dayIndex = ((sWeek % 7) + 7) % 7;
+		for (let i = 0; i < days % 7; i++) {
+			const isMatch = wd ? Boolean(mask[dayIndex]) : !mask[dayIndex];
+			if (isMatch) total++;
+			// advance (works for step === 1 or -1)
 			dayIndex = (dayIndex + step + 7) % 7;
 		}
 
@@ -538,41 +578,54 @@ export const businessPlugin = ($Chronos: $Chronos): void => {
 
 	$Chronos.prototype.workdaysBetween = function (to, wDef = 0, wLen: NumberRange<1, 4> = 2) {
 		const end = cast(to).startOf('day');
-		const start = this.clone().startOf('day');
+		const start = this.startOf('day');
 
 		if (start.isSame(end, 'day')) return 0;
 
 		const step = start.isBefore(end, 'day') ? 1 : -1;
 		const totalDays = Math.abs(end.diff(start, 'day'));
 
-		// Build weekend mask (array of booleans)
 		const weekendMask = _buildWeekendMask(wDef, wLen);
 
 		const startWeekday = (start.isoWeekDay + step) % 7;
 
-		return _countWorkdays(startWeekday, totalDays, weekendMask, step);
+		return _countDays(startWeekday, totalDays, weekendMask, step);
+	};
+
+	$Chronos.prototype.weekendsBetween = function (to, wDef = 0, wLen: NumberRange<1, 4> = 2) {
+		const end = cast(to).startOf('day');
+		const start = this.startOf('day');
+
+		if (start.isSame(end, 'day')) return 0;
+
+		const step = start.isBefore(end, 'day') ? 1 : -1;
+		const totalDays = Math.abs(end.diff(start, 'day'));
+
+		const weekendMask = _buildWeekendMask(wDef, wLen);
+
+		const startWeekday = (start.isoWeekDay + step) % 7;
+
+		return _countDays(startWeekday, totalDays, weekendMask, step, false);
 	};
 
 	$Chronos.prototype.workdaysInMonth = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
 		const daysInMonth = this.daysInMonth();
 
-		// Build weekend mask (array of booleans)
 		const weekendMask = _buildWeekendMask(wDef, wLen);
 
 		const startWeekday = this.startOf('month').isoWeekDay % 7;
 
-		return _countWorkdays(startWeekday, daysInMonth, weekendMask);
+		return _countDays(startWeekday, daysInMonth, weekendMask);
 	};
 
 	$Chronos.prototype.workdaysInYear = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
 		const daysInYear = this.isLeapYear() ? 366 : 365;
 
-		// Build weekend mask (array of booleans)
 		const weekendMask = _buildWeekendMask(wDef, wLen);
 
 		const startWeekday = this.startOf('year').isoWeekDay % 7;
 
-		return _countWorkdays(startWeekday, daysInYear, weekendMask);
+		return _countDays(startWeekday, daysInYear, weekendMask);
 	};
 
 	$Chronos.prototype.isBusinessHour = function (options) {
