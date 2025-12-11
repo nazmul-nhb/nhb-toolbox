@@ -295,7 +295,7 @@ declare module '../Chronos' {
 		 * @remarks This calculation is exclusive of the starting date and inclusive of the ending date.
 		 *
 		 * @example
-		 * new Chronos('2025-12-15').workdaysBetween(new Chronos('2025-12-21'));
+		 * new Chronos('2025-12-15').workdaysBetween('2025-12-21');
 		 * // default weekend Friday & Saturday -> 4
 		 */
 		workdaysBetween(
@@ -314,7 +314,7 @@ declare module '../Chronos' {
 		 * @remarks This calculation is exclusive of the starting date and inclusive of the ending date.
 		 *
 		 * @example
-		 * new Chronos('2025-12-15').workdaysBetween(new Chronos('2025-12-20'), [0, 6]);
+		 * new Chronos('2025-12-15').workdaysBetween('2025-12-20', [0, 6]);
 		 * // custom weekend Sunday & Saturday -> 4
 		 */
 		workdaysBetween(
@@ -333,8 +333,8 @@ declare module '../Chronos' {
 		 * @remarks This calculation is exclusive of the starting date and inclusive of the ending date.
 		 *
 		 * @example
-		 * new Chronos('2025-12-15').weekendsBetween(new Chronos('2025-12-21'));
-		 * // default weekend Friday & Saturday -> 4
+		 * new Chronos('2025-12-15').weekendsBetween('2025-12-21');
+		 * // default weekend Friday & Saturday -> 2
 		 */
 		weekendsBetween(
 			other: ChronosInput,
@@ -352,8 +352,8 @@ declare module '../Chronos' {
 		 * @remarks This calculation is exclusive of the starting date and inclusive of the ending date.
 		 *
 		 * @example
-		 * new Chronos('2025-12-15').weekendsBetween(new Chronos('2025-12-20'), [0, 6]);
-		 * // custom weekend Sunday & Saturday -> 4
+		 * new Chronos('2025-12-15').weekendsBetween('2025-12-20', [0, 6]);
+		 * // custom weekend Sunday & Saturday -> 1
 		 */
 		weekendsBetween(
 			other: ChronosInput,
@@ -384,6 +384,29 @@ declare module '../Chronos' {
 		workdaysInMonth(weekendDays: RangeTuple<Enumerate<7>, 1, 4>): number;
 
 		/**
+		 * @instance Counts the number of weekends in the current month using week start day and weekend length.
+		 *
+		 * @param weekStartsOn Optional. The day index (0–6) that the week starts on. Default is `0` (Sunday).
+		 * @param weekendLength Optional. Number of consecutive days at the end of the week considered as weekend. Must be between 1 and 4. Default is `2`.
+		 * @returns Number of weekends in the current month.
+		 *
+		 * @example
+		 * new Chronos('2025-01-01').weekendsInMonth(); // default weekend Friday & Saturday -> 8
+		 */
+		weekendsInMonth(weekStartsOn?: Enumerate<7>, weekendLength?: NumberRange<1, 4>): number;
+
+		/**
+		 * @instance Counts the number of weekends in the current month using custom weekend days.
+		 *
+		 * @param weekendDays A tuple of custom weekend day indices (0–6). Must contain 1–4 elements.
+		 * @returns Number of weekends in the current month.
+		 *
+		 * @example
+		 * new Chronos('2025-01-01').weekendsInMonth([0, 6]); // Sunday & Saturday are weekends
+		 */
+		weekendsInMonth(weekendDays: RangeTuple<Enumerate<7>, 1, 4>): number;
+
+		/**
 		 * @instance Counts the number of workdays in the current year using week start day and weekend length.
 		 *
 		 * @param weekStartsOn Optional. The day index (0–6) that the week starts on. Default is `0` (Sunday).
@@ -405,6 +428,29 @@ declare module '../Chronos' {
 		 * new Chronos('2025-01-01').workdaysInYear([0, 6]); // Sunday & Saturday are weekends
 		 */
 		workdaysInYear(weekendDays: RangeTuple<Enumerate<7>, 1, 4>): number;
+
+		/**
+		 * @instance Counts the number of weekends in the current year using week start day and weekend length.
+		 *
+		 * @param weekStartsOn Optional. The day index (0–6) that the week starts on. Default is `0` (Sunday).
+		 * @param weekendLength Optional. Number of consecutive days at the end of the week considered as weekend. Must be between 1–4. Default is `2`.
+		 * @returns Number of weekends in the current year.
+		 *
+		 * @example
+		 * new Chronos('2025-01-01').weekendsInYear(); // default weekend Friday & Saturday -> 104
+		 */
+		weekendsInYear(weekStartsOn?: Enumerate<7>, weekendLength?: NumberRange<1, 4>): number;
+
+		/**
+		 * @instance Counts the number of weekends in the current year using custom weekend days.
+		 *
+		 * @param weekendDays A tuple of custom weekend day indices (0–6). Must contain 1–4 elements.
+		 * @returns Number of weekends in the current year.
+		 *
+		 * @example
+		 * new Chronos('2025-01-01').weekendsInYear([0, 6]); // Sunday & Saturday are weekends
+		 */
+		weekendsInYear(weekendDays: RangeTuple<Enumerate<7>, 1, 4>): number;
 
 		/**
 		 * @instance Checks if the current time fall within business hours using week start day and weekend length & other options.
@@ -618,6 +664,16 @@ export const businessPlugin = ($Chronos: $Chronos): void => {
 		return _countDays(startWeekday, daysInMonth, weekendMask);
 	};
 
+	$Chronos.prototype.weekendsInMonth = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
+		const daysInMonth = this.daysInMonth();
+
+		const weekendMask = _buildWeekendMask(wDef, wLen);
+
+		const startWeekday = this.startOf('month').isoWeekDay % 7;
+
+		return _countDays(startWeekday, daysInMonth, weekendMask, 1, false);
+	};
+
 	$Chronos.prototype.workdaysInYear = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
 		const daysInYear = this.isLeapYear() ? 366 : 365;
 
@@ -626,6 +682,16 @@ export const businessPlugin = ($Chronos: $Chronos): void => {
 		const startWeekday = this.startOf('year').isoWeekDay % 7;
 
 		return _countDays(startWeekday, daysInYear, weekendMask);
+	};
+
+	$Chronos.prototype.weekendsInYear = function (wDef = 0, wLen: NumberRange<1, 4> = 2) {
+		const daysInYear = this.isLeapYear() ? 366 : 365;
+
+		const weekendMask = _buildWeekendMask(wDef, wLen);
+
+		const startWeekday = this.startOf('year').isoWeekDay % 7;
+
+		return _countDays(startWeekday, daysInYear, weekendMask, 1, false);
 	};
 
 	$Chronos.prototype.isBusinessHour = function (options) {
