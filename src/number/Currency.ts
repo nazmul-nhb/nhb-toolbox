@@ -68,6 +68,7 @@ export class Currency<Code extends CurrencyCode> {
 	 *   `KRW`, `MXN`, `MYR`, `NOK`, `NZD`, `PHP`, `PLN`, `RON`, `SEK`, `SGD`, `THB`, `TRY`, `USD`, `ZAR`.
 	 * - Uses cached rates unless `forceRefresh` is set to `true`.
 	 * - If API fails or currency not supported, falls back to `fallbackRate` if provided.
+	 * - Use {@link convertSync} method to convert to other currencies using custom exchange rate.
 	 *
 	 * @param to - The target currency code (must be one of the supported ones, e.g., `'EUR'`, `'USD'`).
 	 * @param options - Optional settings:
@@ -79,10 +80,7 @@ export class Currency<Code extends CurrencyCode> {
 	 * @example
 	 * await new Currency(100, 'USD').convert('EUR');
 	 */
-	async convert<To extends FrankFurterCurrency>(
-		to: To,
-		options?: ConvertOptions
-	): Promise<Currency<To>> {
+	async convert<To extends FrankFurterCurrency>(to: To, options?: ConvertOptions) {
 		const key = `${this.#code}->${to}`;
 
 		if (!options?.forceRefresh && Currency.#RATE_CACHE.has(key)) {
@@ -99,13 +97,13 @@ export class Currency<Code extends CurrencyCode> {
 		} catch (error) {
 			if (options?.fallbackRate != null) {
 				console.warn(
-					`Currency conversion failed (${this.#code} → ${to}): ${(error as Error).message}. Using fallback rate...`
+					`Currency conversion failed (${this.#code} → ${to}): ${(error as Error)?.message}. Using fallback rate...`
 				);
 
 				return new Currency(this.#amount * options.fallbackRate, to);
 			} else {
 				throw new Error(
-					`Currency conversion failed (${this.#code} → ${to}): ${(error as Error).message}`
+					`Currency conversion failed (${this.#code} → ${to}): ${(error as Error)?.message}`
 				);
 			}
 		}
@@ -166,7 +164,7 @@ export class Currency<Code extends CurrencyCode> {
 			return data.rates[to];
 		} catch (error) {
 			throw new Error(
-				(error as Error).message || `Failed to fetch data from FrankFurter API`
+				(error as Error)?.message || `Failed to fetch data from FrankFurter API`
 			);
 		}
 	}

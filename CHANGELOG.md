@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.28.30] - 2025-12-13
+
+- **Updated** *tsdoc* for `Chronos` and *signature* of `Currency` class with generic `CurrencyCode`.
+
 ## [4.28.24] - 2025-12-11
 
 - **Updated** *type names* `VoidFunction` to `VoidFn`. `DelayedFn<T>` is used for both *debounced* and *throttled* functions.

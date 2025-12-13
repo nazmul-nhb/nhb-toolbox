@@ -178,10 +178,9 @@ export class Chronos {
 	/**
 	 * * Creates a new immutable `Chronos` instance.
 	 *
-	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
-	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
+	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC and convert it to the **equivalent local time** using the current environment's UTC offset.*
 	 *
-	 * @param value - A date value in `string`, it should be in a format that can be parsed by the `Date` constructor.
+	 * @param value - A date value in `string`, it should be in a format that can be parsed by the {@link Date} constructor.
 	 *
 	 * @returns Instance of `Chronos` with all methods and properties.
 	 */
@@ -190,7 +189,7 @@ export class Chronos {
 	/**
 	 * * Creates a new immutable `Chronos` instance.
 	 *
-	 * @param value - A date value as `Date` object, it will be used as is.
+	 * @param value - A date value as {@link Date} object.
 	 *
 	 * @returns Instance of `Chronos` with all methods and properties.
 	 */
@@ -208,8 +207,7 @@ export class Chronos {
 	/**
 	 * * Creates a new immutable `Chronos` instance.
 	 *
-	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
-	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
+	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC and convert it to the **equivalent local time** using the current environment's UTC offset.*
 	 *
 	 * @param year The full year designation is required for cross-century date accuracy. If year is between 0 and 99, year is assumed to be 1900 + year.
 	 * @param month The month as a `number` between 1 and 12 (January to December).
@@ -234,8 +232,7 @@ export class Chronos {
 	/**
 	 * * Creates a new immutable `Chronos` instance.
 	 *
-	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
-	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
+	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC and convert it to the **equivalent local time** using the current environment's UTC offset.*
 	 *
 	 * @param value - A date value (`number`, `string`, `Date`, or `Chronos` object).
 	 * - If a `string` is provided, it should be in a format that can be parsed by the `Date` constructor.
@@ -250,8 +247,7 @@ export class Chronos {
 	/**
 	 * * Creates a new immutable `Chronos` instance.
 	 *
-	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
-	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
+	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC and convert it to the **equivalent local time** using the current environment's UTC offset.*
 	 *
 	 * @param valueOrYear The value in `number`, `string`, `Date` or `Chronos` format or the full year designation is required for cross-century date accuracy. If year is between 0 and 99, year is assumed to be 1900 + year.
 	 * @param month The month as a `number` between 1 and 12 (1: January to 12: December).
