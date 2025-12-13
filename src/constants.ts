@@ -36,7 +36,7 @@ export { CSS_COLORS } from './colors/css-colors';
 export {
 	CURRENCY_CODES,
 	CURRENCY_LOCALES,
-	SUPPORTED_CURRENCIES as FRANKFURTER_CURRENCIES,
+	FRANKFURTER_CURRENCIES,
 	UNITS as GENERAL_UNITS,
 	LOCALE_CODES,
 } from './number/constants';

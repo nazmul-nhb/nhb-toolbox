@@ -54,16 +54,17 @@ type $DateParts = {
 };
 
 /**
- * * Creates a new immutable local-aware `Chronos` instance.
+ * * Creates a new immutable `Chronos` instance.
  *
- * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
- * and convert it to the **equivalent local time** using the current environment's UTC offset.*
+ * **Note**:
+ * - *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC and convert it to the **equivalent local time** using the current environment's UTC offset.*
  *
  * @param value - A date value (`number`, `string`, `Date`, or `Chronos` object).
- * - If a string is provided, it should be in a format that can be parsed by the `Date` constructor.
+ *
+ * @remarks
+ * - If a string is provided, it should be in a format that can be parsed by the {@link Date} constructor.
  * - If a number is provided, it should be a timestamp (milliseconds since the Unix epoch).
- * - If a `Date` object is provided, it will be used as is.
- * - If a `Chronos` object is provided, it will be converted to a `Date` object.
+ * - If a `Date` or `Chronos` object is provided, it will be handled internally to parse the date value.
  *
  * **It also accepts number values as following:**
  * - **`year, month, date, hours, minutes, seconds, milliseconds`**: Individual components of a date-time to construct a `Chronos` instance.
@@ -157,7 +158,7 @@ export class Chronos {
 	protected $tzTracker?: $TimeZoneIdentifier | TimeZone | UTCOffset;
 
 	/**
-	 * * Creates a new immutable local-aware `Chronos` instance.
+	 * * Creates a new immutable `Chronos` instance.
 	 *
 	 * Accepts no arguments (defaults to now).
 	 *
@@ -166,7 +167,7 @@ export class Chronos {
 	constructor();
 
 	/**
-	 * * Creates a new immutable local-aware `Chronos` instance.
+	 * * Creates a new immutable `Chronos` instance.
 	 *
 	 * @param value - A date value in `number`, it should be a timestamp (milliseconds since the Unix epoch).
 	 *
@@ -175,7 +176,7 @@ export class Chronos {
 	constructor(value: number);
 
 	/**
-	 * * Creates a new immutable local-aware `Chronos` instance.
+	 * * Creates a new immutable `Chronos` instance.
 	 *
 	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
 	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
@@ -187,7 +188,7 @@ export class Chronos {
 	constructor(value: string);
 
 	/**
-	 * * Creates a new immutable local-aware `Chronos` instance.
+	 * * Creates a new immutable `Chronos` instance.
 	 *
 	 * @param value - A date value as `Date` object, it will be used as is.
 	 *
@@ -196,7 +197,7 @@ export class Chronos {
 	constructor(value: Date);
 
 	/**
-	 * * Creates a new immutable local-aware `Chronos` instance.
+	 * * Creates a new immutable `Chronos` instance.
 	 *
 	 * @param value - A date value as `Chronos` object.
 	 *
@@ -205,7 +206,7 @@ export class Chronos {
 	constructor(value: Chronos);
 
 	/**
-	 * * Creates a new immutable local-aware `Chronos` instance.
+	 * * Creates a new immutable `Chronos` instance.
 	 *
 	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
 	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
@@ -231,7 +232,7 @@ export class Chronos {
 	);
 
 	/**
-	 * * Creates a new immutable local-aware `Chronos` instance.
+	 * * Creates a new immutable `Chronos` instance.
 	 *
 	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
 	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*
@@ -247,7 +248,7 @@ export class Chronos {
 	constructor(value?: ChronosInput);
 
 	/**
-	 * * Creates a new immutable local-aware `Chronos` instance.
+	 * * Creates a new immutable `Chronos` instance.
 	 *
 	 * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
 	 * and convert it to the **equivalent local time** using the current environment's UTC offset.*

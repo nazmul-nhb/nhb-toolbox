@@ -3,8 +3,8 @@ import type {
 	ConvertOptions,
 	CurrencyCode,
 	FrankFurter,
+	FrankFurterCurrency,
 	LocaleCode,
-	SupportedCurrency,
 } from './types';
 import { formatCurrency } from './utilities';
 
@@ -16,7 +16,7 @@ import { formatCurrency } from './utilities';
  * - Automatically caches conversion rates to reduce redundant API calls.
  * - Intended for use with numeric inputs (number or numeric string).
  */
-export class Currency {
+export class Currency<Code extends CurrencyCode> {
 	readonly #amount: number;
 	readonly #code: CurrencyCode;
 	/**
@@ -34,17 +34,17 @@ export class Currency {
 	 * @param amount - The numeric amount of currency (e.g., `100`, `'99.99'`).
 	 * @param code - The ISO 4217 currency code representing the currency (e.g., `'USD'`, `'EUR'`).
 	 */
-	constructor(amount: Numeric, code: CurrencyCode) {
+	constructor(amount: Numeric, code: Code) {
 		this.#amount = Number(amount);
 		this.#code = code;
 		this.currency = this.format('en-US');
 	}
 
-	static readonly #rateCache: Map<string, number> = new Map();
+	static readonly #RATE_CACHE = new Map<string, number>();
 
 	/** * Clears cached rates that were fetched previously. */
 	static clearRateCache(): void {
-		Currency.#rateCache.clear();
+		Currency.#RATE_CACHE.clear();
 	}
 
 	/**
@@ -62,7 +62,7 @@ export class Currency {
 	/**
 	 * @instance Converts the current currency amount to a target currency using real-time exchange rates.
 	 *
-	 * - Uses `api.frankfurter.app` to fetch live exchange rates.
+	 * - Uses {@link https://api.frankfurter.app/latest api.frankfurter.app} to fetch live exchange rates.
 	 * - Supports **only the following fiat currencies**:
 	 *   `AUD`, `BGN`, `BRL`, `CAD`, `CHF`, `CNY`, `CZK`, `DKK`, `EUR`, `GBP`, `HKD`, `HUF`, `IDR`, `ILS`, `INR`, `ISK`, `JPY`,
 	 *   `KRW`, `MXN`, `MYR`, `NOK`, `NZD`, `PHP`, `PLN`, `RON`, `SEK`, `SGD`, `THB`, `TRY`, `USD`, `ZAR`.
@@ -79,21 +79,21 @@ export class Currency {
 	 * @example
 	 * await new Currency(100, 'USD').convert('EUR');
 	 */
-	async convert(
-		to: SupportedCurrency | CurrencyCode,
+	async convert<To extends FrankFurterCurrency>(
+		to: To,
 		options?: ConvertOptions
-	): Promise<Currency> {
+	): Promise<Currency<To>> {
 		const key = `${this.#code}->${to}`;
 
-		if (!options?.forceRefresh && Currency.#rateCache.has(key)) {
-			const cachedRate = Currency.#rateCache.get(key)!;
+		if (!options?.forceRefresh && Currency.#RATE_CACHE.has(key)) {
+			const cachedRate = Currency.#RATE_CACHE.get(key)!;
 
 			return new Currency(this.#amount * cachedRate, to);
 		}
 
 		try {
 			const rate = await this.#fetchFromFrankfurter(to);
-			Currency.#rateCache.set(key, rate);
+			Currency.#RATE_CACHE.set(key, rate);
 
 			return new Currency(this.#amount * rate, to);
 		} catch (error) {
@@ -129,9 +129,9 @@ export class Currency {
 	 *
 	 * console.log(eur.currency); // €92.00
 	 */
-	convertSync(to: CurrencyCode, rate: number): Currency {
+	convertSync<To extends CurrencyCode>(to: To, rate: number): Currency<To> {
 		const key = `${this.#code}->${to}`;
-		const cachedRate = Currency.#rateCache.get(key);
+		const cachedRate = Currency.#RATE_CACHE.get(key);
 
 		if (cachedRate) {
 			return new Currency(this.#amount * cachedRate, to);
@@ -147,8 +147,8 @@ export class Currency {
 	 * @param to - Target currency code
 	 * @returns Exchange rate (multiplier)
 	 */
-	async #fetchFromFrankfurter(to: CurrencyCode): Promise<number> {
-		const url = `https://api.frankfurter.app/latest?amount=${this.#amount}&from=${this.#code}`;
+	async #fetchFromFrankfurter(to: FrankFurterCurrency): Promise<number> {
+		const url = `https://api.frankfurter.app/latest?amount=1&from=${this.#code}`;
 
 		try {
 			const res = await fetch(url, { redirect: 'error' });
@@ -160,12 +160,10 @@ export class Currency {
 			const data: FrankFurter = await res.json();
 
 			if (!data.rates?.[to]) {
-				throw new Error(
-					`Currency "${to}" not allowed or not found in FrankFurter Database!`
-				);
+				throw new Error(`Currency "${to}" is not found in FrankFurter Database!`);
 			}
 
-			return data.rates[to] / this.#amount;
+			return data.rates[to];
 		} catch (error) {
 			throw new Error(
 				(error as Error).message || `Failed to fetch data from FrankFurter API`

@@ -3,9 +3,9 @@ import type { LooseLiteral } from '../utils/types';
 import type {
 	CURRENCY_CODES,
 	CURRENCY_LOCALES,
+	FRANKFURTER_CURRENCIES,
 	LOCALE_CODES,
 	PREFIX_MULTIPLIERS,
-	SUPPORTED_CURRENCIES,
 	UNITS,
 } from './constants';
 import type { Unit } from './Unit';
@@ -102,7 +102,9 @@ export type LocaleCode =
 	| (typeof LOCALE_CODES)[number];
 
 /** * Fiat currencies supported by Frankfurter API */
-export type SupportedCurrency = (typeof SUPPORTED_CURRENCIES)[number];
+export type FrankFurterCurrency = (typeof FRANKFURTER_CURRENCIES)[number];
+
+export type { FrankFurterCurrency as SupportedCurrency };
 
 /** - Options for `convert` method in `Currency` class */
 export interface ConvertOptions {
@@ -115,9 +117,9 @@ export interface ConvertOptions {
 /** Type Interface for API Response from `api.frankfurter.app` */
 export interface FrankFurter {
 	amount: number;
-	base: CurrencyCode;
+	base: FrankFurterCurrency;
 	date: string;
-	rates: Record<CurrencyCode, number>;
+	rates: Record<FrankFurterCurrency, number>;
 }
 
 /** * Options to calculate what percentage a `part` is of a `total`. */

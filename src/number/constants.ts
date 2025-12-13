@@ -555,7 +555,7 @@ export const CURRENCY_LOCALES = /* @__PURE__ */ Object.freeze({
 } as const);
 
 /** * Fiat currencies supported by Frankfurter API */
-export const SUPPORTED_CURRENCIES = /* @__PURE__ */ Object.freeze([
+export const FRANKFURTER_CURRENCIES = /* @__PURE__ */ Object.freeze([
 	'AUD',
 	'BGN',
 	'BRL',
