@@ -239,7 +239,7 @@ export function _constantTimeEquals(a: string | Uint8Array, b: string | Uint8Arr
 export function _splitByCharLength(str: string, chars = 2) {
 	if (!isNonEmptyString(str)) return [];
 
-	const sanitized = str.trim().replace(/\s+/g, '');
+	const sanitized = str.replace(/\s+/g, '');
 
 	const result = [];
 
@@ -250,7 +250,7 @@ export function _splitByCharLength(str: string, chars = 2) {
 	return result;
 }
 
-/** Pad start of a byte with 0 for hex or binary */
+/** Pad start of a byte with 0 for `hex` or `binary` */
 export function _padStartWith0(byte: number, type: 'hex' | 'binary'): string {
 	return byte.toString(type === 'hex' ? 16 : 2).padStart(type === 'hex' ? 2 : 8, '0');
 }
