@@ -234,3 +234,23 @@ export function _constantTimeEquals(a: string | Uint8Array, b: string | Uint8Arr
 
 	return res === 0;
 }
+
+/** Split string by substring length */
+export function _splitByCharLength(str: string, chars = 2) {
+	if (!isNonEmptyString(str)) return [];
+
+	const sanitized = str.trim().replace(/\s+/g, '');
+
+	const result = [];
+
+	for (let i = 0; i < sanitized.length; i += chars) {
+		result.push(sanitized.slice(i, i + chars));
+	}
+
+	return result;
+}
+
+/** Pad start of a byte with 0 for hex or binary */
+export function _padStartWith0(byte: number, type: 'hex' | 'binary'): string {
+	return byte.toString(type === 'hex' ? 16 : 2).padStart(type === 'hex' ? 2 : 8, '0');
+}

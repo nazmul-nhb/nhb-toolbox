@@ -3,6 +3,7 @@ export { generateRandomID, generateRandomID as randomID } from '../string/basics
 export { Cipher } from './Cipher';
 export { md5, sha1, sha256 } from './core';
 export { Signet } from './Signet';
+export { UTF8 } from './UTF8';
 export {
 	base64ToBytes,
 	bytesToBase64,
