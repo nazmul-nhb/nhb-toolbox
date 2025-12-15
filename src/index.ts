@@ -515,6 +515,7 @@ export { HttpStatus, httpStatus } from './http-status/HttpStatus';
 // ! Special Type Guards
 export {
 	isBase64,
+	isBinaryString,
 	isBrowser,
 	isDateString,
 	isEmail,
