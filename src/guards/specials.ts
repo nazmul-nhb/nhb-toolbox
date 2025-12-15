@@ -87,6 +87,30 @@ export function isBase64(value: unknown): value is string {
 }
 
 /**
+ * * Type guard to check if a value is a valid hexadecimal byte sequence.
+ * @param value - The value to check, spaced between bytes or un-spaced.
+ * @returns `true` if the value is a valid hexadecimal byte sequence, otherwise `false`.
+ */
+export function isHexString(value: unknown): value is string {
+	return (
+		isString(value) &&
+		/^[\da-fA-F\s]+$/.test(value) &&
+		value.replace(/\s+/g, '').length % 2 === 0
+	);
+}
+
+/**
+ * * Type guard to check if a value is a valid binary byte sequence.
+ * @param value - The value to check, spaced between bytes or un-spaced.
+ * @returns `true` if the value is a valid binary byte sequence, otherwise `false`.
+ */
+export function isBinaryString(value: unknown): value is string {
+	return (
+		isString(value) && /^[01\s]+$/.test(value) && value.replace(/\s+/g, '').length % 8 === 0
+	);
+}
+
+/**
  * * Type guard to check if a value is a valid phone number.
  * @param value - The value to check.
  * @returns `true` if the value is a valid phone number, otherwise `false`.
@@ -118,8 +142,9 @@ export function isEnvironment(env: string): boolean {
 /**
  * * Type guard to check if a value is a string representing a finite number.
  *
- * Accepts strings like: `"42"`, `"  -5.5 "`, `"0.123"`, `"-0"`, `"1e5"`.
- * Rejects strings like: `"NaN"`, `"Infinity"`, `"-Infinity"`, `"abc"`, `""`, `"42abc"`.
+ * @remarks
+ * - Accepts strings like: `"42"`, `"  -5.5 "`, `"0.123"`, `"-0"`, `"1e5"`.
+ * - Rejects strings like: `"NaN"`, `"Infinity"`, `"-Infinity"`, `"abc"`, `""`, `"42abc"`.
  *
  * @param value - The value to test.
  * @returns `true` if the value is a string that fully represents a finite number.

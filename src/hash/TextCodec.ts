@@ -1,10 +1,10 @@
 import { isNonEmptyString } from '../guards/primitives';
-import { isBase64 } from '../guards/specials';
+import { isBase64, isBinaryString, isHexString } from '../guards/specials';
 import { _padStartWith0, _splitByCharLength } from './helpers';
-import { base64ToBytes, bytesToBase64, bytesToUtf8, utf8ToBytes } from './utils';
+import { base64ToBytes, bytesToBase64, bytesToUtf8, hexToBytes, utf8ToBytes } from './utils';
 
 /**
- * @class `TextCodec` provides `UTF-8–safe` conversions between `text`, `hex`, `binary`, and `Base64` representations using byte-level transformations.
+ * @class `TextCodec` provides **UTF-8–safe** conversions between `text`, `hex`, `binary`, and `Base64` representations using byte-level transformations.
  *
  * @example
  * TextCodec.utf8ToHex('ভাষা'); // 'e0 a6 ad e0 a6 be e0 a6 b7 e0 a6 be'
@@ -23,7 +23,7 @@ export class TextCodec {
 	 * TextCodec.isValidHex('ff 0a');
 	 */
 	static isValidHex(hex: string): boolean {
-		return /^[\da-fA-F\s]+$/.test(hex) && hex.replace(/\s+/g, '').length % 2 === 0;
+		return isHexString(hex);
 	}
 
 	/**
@@ -36,14 +36,27 @@ export class TextCodec {
 	 * TextCodec.isValidBinary('01000001');
 	 */
 	static isValidBinary(binary: string): boolean {
-		return /^[01\s]+$/.test(binary) && binary.replace(/\s+/g, '').length % 8 === 0;
+		return isBinaryString(binary);
+	}
+
+	/**
+	 * @static Validates whether a string represents a valid Base64-encoded string.
+	 *
+	 * @param b64 - Base64 string to check
+	 * @returns `true` if the input is valid Base64-encoded string
+	 *
+	 * @example
+	 * TextCodec.isValidBase64('SGVsbG8=');
+	 */
+	static isValidBase64(b64: string): boolean {
+		return isBase64(b64);
 	}
 
 	/**
 	 * @static Converts UTF-8 text into hexadecimal byte representation.
 	 *
 	 * @param text - UTF-8 text to convert
-	 * @param spaced - Whether to separate bytes with spaces
+	 * @param spaced - Whether to separate bytes with spaces, defaults to `true`
 	 * @returns Hexadecimal byte string
 	 *
 	 * @example
@@ -59,7 +72,7 @@ export class TextCodec {
 	 * @static Converts UTF-8 text into binary byte representation.
 	 *
 	 * @param text - UTF-8 text to convert
-	 * @param spaced - Whether to separate bytes with spaces
+	 * @param spaced - Whether to separate bytes with spaces, defaults to `true`
 	 * @returns Binary byte string
 	 *
 	 * @example
@@ -81,11 +94,7 @@ export class TextCodec {
 	 * TextCodec.hexToUtf8('48 69');
 	 */
 	static hexToUtf8(hex: string) {
-		if (!this.isValidHex(hex)) return '';
-
-		const bytes = _splitByCharLength(hex, 2).map((h) => parseInt(h, 16));
-
-		return bytesToUtf8(new Uint8Array(bytes));
+		return bytesToUtf8(hexToBytes(hex));
 	}
 
 	/**
@@ -98,7 +107,7 @@ export class TextCodec {
 	 * TextCodec.binaryToUtf8('01001000 01101001');
 	 */
 	static binaryToUtf8(binary: string) {
-		if (!this.isValidBinary(binary)) return '';
+		if (!isBinaryString(binary)) return '';
 
 		const bytes = _splitByCharLength(binary, 8).map((b) => parseInt(b, 2));
 
@@ -109,14 +118,14 @@ export class TextCodec {
 	 * @static Converts hexadecimal byte string into binary byte string.
 	 *
 	 * @param hex - Hexadecimal byte string
-	 * @param spaced - Whether to separate bytes with spaces
+	 * @param spaced - Whether to separate bytes with spaces, defaults to `true`
 	 * @returns Binary byte string
 	 *
 	 * @example
 	 * TextCodec.hexToBinary('ff');
 	 */
 	static hexToBinary(hex: string, spaced = true) {
-		if (!this.isValidHex(hex)) return '';
+		if (!isHexString(hex)) return '';
 
 		return _splitByCharLength(hex, 2)
 			.map((h) => _padStartWith0(parseInt(h, 16), 'binary'))
@@ -127,14 +136,14 @@ export class TextCodec {
 	 * @static Converts binary byte string into hexadecimal byte string.
 	 *
 	 * @param binary - Binary byte string
-	 * @param spaced - Whether to separate bytes with spaces
+	 * @param spaced - Whether to separate bytes with spaces, defaults to `true`
 	 * @returns Hexadecimal byte string
 	 *
 	 * @example
 	 * TextCodec.binaryToHex('00000001');
 	 */
 	static binaryToHex(binary: string, spaced = true) {
-		if (!this.isValidBinary(binary)) return '';
+		if (!isBinaryString(binary)) return '';
 
 		return _splitByCharLength(binary, 8)
 			.map((b) => _padStartWith0(parseInt(b, 2), 'hex'))
@@ -175,7 +184,7 @@ export class TextCodec {
 	 * @static Converts Base64 directly into hexadecimal byte string.
 	 *
 	 * @param b64 - Base64 encoded string
-	 * @param spaced - Whether to separate bytes with spaces
+	 * @param spaced - Whether to separate bytes with spaces, defaults to `true`
 	 * @returns Hexadecimal byte string
 	 *
 	 * @example
@@ -189,7 +198,7 @@ export class TextCodec {
 	 * @static Converts Base64 directly into binary byte string.
 	 *
 	 * @param b64 - Base64 encoded string
-	 * @param spaced - Whether to separate bytes with spaces
+	 * @param spaced - Whether to separate bytes with spaces, defaults to `true`
 	 * @returns Binary byte string
 	 *
 	 * @example

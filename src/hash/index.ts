@@ -10,6 +10,7 @@ export {
 	bytesToHex,
 	bytesToUtf8,
 	concatBytes,
+	hexToBytes,
 	hmacSha256,
 	intTo4BytesBE,
 	randomHex,

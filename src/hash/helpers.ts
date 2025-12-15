@@ -236,15 +236,15 @@ export function _constantTimeEquals(a: string | Uint8Array, b: string | Uint8Arr
 }
 
 /** Split string by substring length */
-export function _splitByCharLength(str: string, chars = 2) {
+export function _splitByCharLength(str: string, splitByChars = 2) {
 	if (!isNonEmptyString(str)) return [];
 
 	const sanitized = str.replace(/\s+/g, '');
 
 	const result = [];
 
-	for (let i = 0; i < sanitized.length; i += chars) {
-		result.push(sanitized.slice(i, i + chars));
+	for (let i = 0; i < sanitized.length; i += splitByChars) {
+		result.push(sanitized.slice(i, i + splitByChars));
 	}
 
 	return result;

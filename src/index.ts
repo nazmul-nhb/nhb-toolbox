@@ -521,6 +521,7 @@ export {
 	isEmailArray,
 	isEnvironment,
 	isEnvironment as isExpectedNodeENV,
+	isHexString,
 	isIPAddress,
 	isNode,
 	isEnvironment as isNodeENV,

@@ -1,3 +1,6 @@
+import { isHexString } from '../guards/specials';
+import { _splitByCharLength } from './helpers';
+
 /**
  * * Generates a random hexadecimal string of the specified length.
  *
@@ -625,6 +628,7 @@ export function intTo4BytesBE(n: number): Uint8Array {
  * - Converting binary data for JSON serialization
  * - Creating hex-encoded strings for APIs and protocols
  *
+ * @see {@link hexToBytes} for reverse process
  * @see {@link sha256Bytes} for raw byte hash results
  */
 export function bytesToHex(bytes: Uint8Array): string {
@@ -634,4 +638,52 @@ export function bytesToHex(bytes: Uint8Array): string {
 		hex += byte;
 	}
 	return hex;
+}
+
+/**
+ * * Converts a hexadecimal string to a `Uint8Array`.
+ *   - This function decodes a hexadecimal-encoded string into its raw byte representation, where every two hexadecimal characters (00–ff) are converted into one byte.
+ *
+ * @example
+ * ```ts
+ * // Convert hex to bytes
+ * const hex = '12abff00';
+ * const bytes = hexToBytes(hex);
+ * // Returns: Uint8Array(4) [18, 171, 255, 0]
+ *
+ * // Empty string
+ * const emptyBytes = hexToBytes('');
+ * // Returns: Uint8Array []
+ *
+ * // Decode SHA-256 hash from hex
+ * const hashHex =
+ *   '2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824';
+ * const hashBytes = hexToBytes(hashHex);
+ * // Returns: Uint8Array(32)
+ * ```
+ *
+ * @param hex - A hexadecimal string where each byte is represented by two characters (00–ff).
+ * @returns A `Uint8Array` containing the decoded bytes. Returns an empty array for invalid input.
+ *
+ * @remarks
+ * - Accepts lowercase and uppercase hexadecimal characters (0–9, a–f, A–F) with or without space between bytes
+ * - Ignores no prefixes (e.g., does not support "0x")
+ * - Requires an even number of hexadecimal characters
+ * - Efficient O(n) implementation with direct byte parsing
+ *
+ * **Common use cases:**
+ * - Decoding cryptographic hashes and signatures
+ * - Parsing hex-encoded binary payloads
+ * - Reconstructing binary data from storage or transport formats
+ * - Working with low-level protocols and binary APIs
+ *
+ * @see {@link bytesToHex} for the reverse process
+ * @see {@link isHexString} for input validation
+ */
+export function hexToBytes(hex: string): Uint8Array {
+	if (!isHexString(hex)) return new Uint8Array();
+
+	const bytes = _splitByCharLength(hex, 2).map((h) => parseInt(h, 16));
+
+	return new Uint8Array(bytes);
 }
