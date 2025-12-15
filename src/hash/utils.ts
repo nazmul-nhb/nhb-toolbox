@@ -629,7 +629,6 @@ export function intTo4BytesBE(n: number): Uint8Array {
  * - Creating hex-encoded strings for APIs and protocols
  *
  * @see {@link hexToBytes} for reverse process
- * @see {@link sha256Bytes} for raw byte hash results
  */
 export function bytesToHex(bytes: Uint8Array): string {
 	let hex = '';
@@ -656,8 +655,7 @@ export function bytesToHex(bytes: Uint8Array): string {
  * // Returns: Uint8Array []
  *
  * // Decode SHA-256 hash from hex
- * const hashHex =
- *   '2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824';
+ * const hashHex = '2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824';
  * const hashBytes = hexToBytes(hashHex);
  * // Returns: Uint8Array(32)
  * ```
@@ -678,7 +676,6 @@ export function bytesToHex(bytes: Uint8Array): string {
  * - Working with low-level protocols and binary APIs
  *
  * @see {@link bytesToHex} for the reverse process
- * @see {@link isHexString} for input validation
  */
 export function hexToBytes(hex: string): Uint8Array {
 	if (!isHexString(hex)) return new Uint8Array();
