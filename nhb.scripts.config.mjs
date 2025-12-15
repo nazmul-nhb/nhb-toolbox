@@ -104,7 +104,10 @@ export default defineScriptConfig({
 		runFormatter: false,
 		wrapPrefixWith: '`',
 		commitTypes: {
-			custom: [{ emoji: '🔣', type: 'types' }],
+			custom: [
+				{ emoji: '🔣', type: 'types' },
+				{ emoji: '💩', type: 'dump' },
+			],
 		},
 	},
 	count: {
