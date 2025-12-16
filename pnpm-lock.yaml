@@ -45,8 +45,8 @@ importers:
         specifier: ^16.2.7
         version: 16.2.7
       nhb-scripts:
-        specifier: ^1.9.0
-        version: 1.9.0
+        specifier: ^1.9.2
+        version: 1.9.2
       prettier:
         specifier: ^3.7.4
         version: 3.7.4
@@ -1610,8 +1610,8 @@ packages:
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
 
-  nhb-scripts@1.9.0:
-    resolution: {integrity: sha512-rAvGi2CxDG83fQ+rSreQas5mYcN7vvScTM2s/0Q+VrnndTJ3B/BVjB6rf5jXcWX/uCEdrp2ZK5nKu81+2OMPUw==}
+  nhb-scripts@1.9.2:
+    resolution: {integrity: sha512-bqTqur5SDWKB2VG0R+qagJFlwi/vnzOmma5DUFgeGngIOj1PV7JdbjbYZ1ff99+lpufaSDA0WjrfSIC8mg05Bg==}
     engines: {node: '>=22'}
     hasBin: true
 
@@ -3999,7 +3999,7 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  nhb-scripts@1.9.0:
+  nhb-scripts@1.9.2:
     dependencies:
       '@clack/prompts': 0.11.0
       chalk: 5.6.2
