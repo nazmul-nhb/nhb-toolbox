@@ -235,13 +235,13 @@ export function _constantTimeEquals(a: string | Uint8Array, b: string | Uint8Arr
 	return res === 0;
 }
 
-/** Split string by substring length */
+/** Split string by substring length, intended to be used internally for hex and binary converters only */
 export function _splitByCharLength(str: string, splitByChars = 2) {
 	if (!isNonEmptyString(str)) return [];
 
 	const sanitized = str.replace(/\s+/g, '');
 
-	const result = [];
+	const result: string[] = [];
 
 	for (let i = 0; i < sanitized.length; i += splitByChars) {
 		result.push(sanitized.slice(i, i + splitByChars));

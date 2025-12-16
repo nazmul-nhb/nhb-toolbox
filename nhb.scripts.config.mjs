@@ -107,6 +107,7 @@ export default defineScriptConfig({
 			custom: [
 				{ emoji: '🔣', type: 'types' },
 				{ emoji: '💩', type: 'dump' },
+				{ emoji: '📝', type: 'draft' },
 			],
 		},
 	},
