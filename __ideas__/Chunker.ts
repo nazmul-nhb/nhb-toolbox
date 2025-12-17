@@ -2,13 +2,13 @@ import { utf8ToBytes, bytesToUtf8 } from '../src/hash/utils';
 import { isNonEmptyString } from '../src/guards/primitives';
 
 /**
- * @class `Chunker` provides deterministic utilities to split strings and byte arrays into fixed-size or logical chunks.
- * *
+ * @class `Splitter` provides deterministic utilities to split strings and byte arrays into fixed-size or logical chunks.
+ *
  * @example
- * Chunker.string('hello world', 5); // ['hello', ' worl', 'd']
- * Chunker.bytes(new Uint8Array([1, 2, 3, 4]), 2); // [[1,2], [3,4]]
+ * Splitter.string('hello world', 5); // ['hello', ' worl', 'd']
+ * Splitter.bytes(new Uint8Array([1, 2, 3, 4]), 2); // [[1,2], [3,4]]
  */
-export class Chunker {
+export class Splitter {
 	private constructor() {}
 
 	/**
@@ -19,7 +19,7 @@ export class Chunker {
 	 * @returns Array of string chunks
 	 *
 	 * @example
-	 * Chunker.string('abcdef', 2); // ['ab', 'cd', 'ef']
+	 * Splitter.string('abcdef', 2); // ['ab', 'cd', 'ef']
 	 */
 	static string(text: string, size: number): string[] {
 		if (size <= 0 || !isNonEmptyString(text)) return [];
@@ -41,7 +41,7 @@ export class Chunker {
 	 * @returns Array of UTF-8–safe string chunks
 	 *
 	 * @example
-	 * Chunker.utf8('ভাষা', 3); // [ 'ভ', 'া', 'ষ', 'া' ]
+	 * Splitter.utf8('ভাষা', 3); // [ 'ভ', 'া', 'ষ', 'া' ]
 	 */
 	static utf8(text: string, byteSize: number): string[] {
 		if (byteSize <= 0 || !isNonEmptyString(text)) return [];
@@ -65,16 +65,18 @@ export class Chunker {
 	 * @returns Array of Uint8Array chunks
 	 *
 	 * @example
-	 * Chunker.bytes(new Uint8Array([1, 2, 3, 4]), 2);
+	 * Splitter.bytes(new Uint8Array([1, 2, 3, 4]), 2);
 	 * // [Uint8Array([1,2]), Uint8Array([3,4])]
 	 */
 	static bytes(bytes: Uint8Array, size: number): Uint8Array[] {
 		if (size <= 0 || bytes.length === 0) return [];
 
 		const chunks: Uint8Array[] = [];
+
 		for (let i = 0; i < bytes.length; i += size) {
 			chunks.push(bytes.slice(i, i + size));
 		}
+
 		return chunks;
 	}
 
@@ -86,7 +88,7 @@ export class Chunker {
 	 * @returns Array of non-empty string segments
 	 *
 	 * @example
-	 * Chunker.byDelimiter('a,,b,c', ','); // ['a', 'b', 'c']
+	 * Splitter.byDelimiter('a,,b,c', ','); // ['a', 'b', 'c']
 	 */
 	static byDelimiter(text: string, delimiter: string): string[] {
 		if (!isNonEmptyString(text) || !isNonEmptyString(text)) return [];
@@ -102,16 +104,18 @@ export class Chunker {
 	 * @returns Array of overlapping byte windows
 	 *
 	 * @example
-	 * Chunker.sliding(new Uint8Array([1, 2, 3, 4]), 3);
+	 * Splitter.sliding(new Uint8Array([1, 2, 3, 4]), 3);
 	 * // [[1,2,3], [2,3,4]]
 	 */
 	static sliding(bytes: Uint8Array, windowSize: number): Uint8Array[] {
 		if (windowSize <= 0 || bytes.length < windowSize) return [];
 
 		const chunks: Uint8Array[] = [];
+
 		for (let i = 0; i <= bytes.length - windowSize; i++) {
 			chunks.push(bytes.slice(i, i + windowSize));
 		}
+
 		return chunks;
 	}
 }
