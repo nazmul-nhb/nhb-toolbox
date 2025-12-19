@@ -6,6 +6,10 @@ All notable changes to the package will be documented here.
 
 ---
 
+## [4.28.44] - 2025-12-19
+
+- **Updated** `DateTimeFormatOptions` with *improved type system* and **removed** *unsupported* **locales/currencies** from *constants* and *types*.
+
 ## [4.28.40] - 2025-12-15
 
 - **Added** *new class* `TextCodec` with only *static methods* to convert between `text`, `hex`, `binary`, and `Base64` representations using *byte-level transformations*.

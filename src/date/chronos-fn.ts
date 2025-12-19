@@ -58,7 +58,7 @@ import type { ChronosInput, ChronosStaticKey, ChronosStatics } from './types';
  * Chronos.parse("2023-12-31", "YYYY-MM-DD");
  * ```
  */
-const chronos = (
+const $chronos = (
 	valueOrYear?: ChronosInput,
 	month?: number,
 	date?: number,
@@ -81,6 +81,22 @@ const chronos = (
 		return new Chronos(valueOrYear);
 	}
 };
+
+/**
+ * @internal Type guard to check if a property is a static method of the `Chronos` class.
+ *
+ * @param prop - The property name to check.
+ * @returns `true` if the property is a static method of `Chronos`, `false` otherwise.
+ */
+function _isChronosStaticKey(prop: string): prop is ChronosStaticKey {
+	return (
+		prop in Chronos &&
+		prop !== 'prototype' &&
+		prop !== 'name' &&
+		prop !== 'length' &&
+		typeof Chronos[prop as ChronosStaticKey] === 'function'
+	);
+}
 
 /**
  * * Use `chronos` with all static methods from the `Chronos` class.
@@ -134,7 +150,7 @@ const chronos = (
  * chronos.register(plugin: ChronosPlugin): void;
  * ```
  */
-const chronosStatics = new Proxy(chronos, {
+const chronosStatics = new Proxy($chronos, {
 	get(target, prop: string, receiver) {
 		// If the property exists on the function itself, return it
 		if (prop in target) {
@@ -142,14 +158,8 @@ const chronosStatics = new Proxy(chronos, {
 		}
 
 		// If the property exists on Chronos (and it's not a reserved property), return it
-		if (
-			prop in Chronos &&
-			prop !== 'prototype' &&
-			prop !== 'name' &&
-			prop !== 'length' &&
-			typeof Chronos[prop as ChronosStaticKey] === 'function'
-		) {
-			return Chronos[prop as ChronosStaticKey];
+		if (_isChronosStaticKey(prop)) {
+			return Chronos[prop];
 		}
 
 		// Fall back to default behavior
@@ -158,14 +168,7 @@ const chronosStatics = new Proxy(chronos, {
 
 	// Handle checking if a property exists
 	has(target, prop: string) {
-		return (
-			prop in target ||
-			(prop in Chronos &&
-				prop !== 'prototype' &&
-				prop !== 'name' &&
-				prop !== 'length' &&
-				typeof Chronos[prop as ChronosStaticKey] === 'function')
-		);
+		return prop in target || _isChronosStaticKey(prop);
 	},
 }) as ChronosStatics;
 

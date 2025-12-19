@@ -251,14 +251,15 @@ export const CURRENCY_CODES = /* @__PURE__ */ Object.freeze([
 	'VND',
 	'VUV',
 	'WST',
-	'XAF',
-	'XCD',
-	'XOF',
-	'XPF',
 	'YER',
 	'ZAR',
 	'ZMW',
 	'ZWL',
+	// ! Unsupported
+	// 'XAF',
+	// 'XCD',
+	// 'XOF',
+	// 'XPF',
 ] as const);
 
 /** List of all supported BCP 47 locales */
@@ -390,7 +391,7 @@ export const LOCALE_CODES = /* @__PURE__ */ Object.freeze([
 	'zh-TW',
 ] as const);
 
-/** Mapping of CurrencyCodes to LocaleCodes */
+/** Mapping of CurrencyCodes to `LocaleCodes` */
 export const CURRENCY_LOCALES = /* @__PURE__ */ Object.freeze({
 	AED: 'ar-AE', // United Arab Emirates Dirham
 	AFN: 'fa-IR', // Afghan Afghani
@@ -544,14 +545,15 @@ export const CURRENCY_LOCALES = /* @__PURE__ */ Object.freeze({
 	VND: 'vi-VN', // Vietnamese Dong
 	VUV: 'en-VU', // Vanuatu Vatu
 	WST: 'en-WS', // Samoan Tala
-	XAF: 'fr-XAF', // Central African CFA Franc
-	XCD: 'en-XCD', // East Caribbean Dollar
-	XOF: 'fr-XOF', // West African CFA Franc
-	XPF: 'fr-XPF', // CFP Franc
 	YER: 'ar-YE', // Yemeni Rial
 	ZAR: 'en-ZA', // South African Rand
 	ZMW: 'en-ZM', // Zambian Kwacha
 	ZWL: 'en-ZW', // Zimbabwean Dollar
+	// ! Unsupported
+	// XAF: 'fr-XAF', // Central African CFA Franc
+	// XCD: 'en-XCD', // East Caribbean Dollar
+	// XOF: 'fr-XOF', // West African CFA Franc
+	// XPF: 'fr-XPF', // CFP Franc
 } as const);
 
 /** * Fiat currencies supported by Frankfurter API */

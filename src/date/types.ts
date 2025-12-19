@@ -1,6 +1,6 @@
 import type { Enumerate, LocaleCode, NumberRange } from '../number/types';
 import type { Maybe } from '../types/index';
-import type { LooseLiteral, RangeTuple } from '../utils/types';
+import type { LooseLiteral, RangeTuple, Split } from '../utils/types';
 import type { Chronos } from './Chronos';
 import type { ChronosStatics } from './chronos-statics';
 import type {
@@ -8,11 +8,13 @@ import type {
 	DAY_FORMATS,
 	DAYS,
 	HOUR_FORMATS,
+	LOCALE_NUMBERING_SYSTEMS,
 	MILLISECOND_FORMATS,
 	MINUTE_FORMATS,
 	MONTH_FORMATS,
 	MONTHS,
 	SECOND_FORMATS,
+	LOCALE_CALENDARS,
 	TIME_FORMATS,
 	TIME_UNIT_VARIANTS,
 	WESTERN_ZODIAC_SIGNS,
@@ -205,13 +207,28 @@ export type StrictFormat = LooseLiteral<
 	DateTimeISO | DateParts | TimeParts | `${DateParts}${DateTimeConnector}${TimeParts}`
 >;
 
-/** Locale arguments for `toLocaleString` method. Includes `BCP47` tags and `Intl.Locale`. */
-export type LocalesArguments = LocaleCode | Intl.Locale | Array<LocaleCode | Intl.Locale>;
+/** `BCP47` locale string or {@link Intl.Locale} object that contain one or more language or locale tags */
+export type $LocalArguments =
+	| LooseLiteral<LocaleCode | Split<LocaleCode, '-'>[0]>
+	| Intl.Locale;
 
-/** Format options for `toLocaleString` method. Extends `Intl.DateTimeFormatOptions `to update `timeZone` option. */
+/** `BCP47` locale string, array of locale strings, {@link Intl.Locale} object, or array of {@link Intl.Locale} objects that contain one or more language or locale tags. */
+export type LocalesArguments = $LocalArguments | $LocalArguments[];
+
+/** Locale calendars supported by {@link Intl} API */
+export type LocaleCalendar = (typeof LOCALE_CALENDARS)[number];
+
+/** Locale numbering systems supported by {@link Intl} API */
+export type NumberingSystem = (typeof LOCALE_NUMBERING_SYSTEMS)[number];
+
+/** Extends {@link Intl.DateTimeFormatOptions} with improved type system. */
 export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
-	/** {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones Time zone identifier} excluding `'Factory'`. */
+	/** {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones Time zone identifier} to use (excluding `'Factory'`). */
 	timeZone?: $TimeZoneIdentifier;
+	/** Locale calendar system to use. */
+	calendar?: LocaleCalendar;
+	/** Locale numbering system to use. */
+	numberingSystem?: NumberingSystem;
 }
 
 /** Iterable `Chronos` object properties */
