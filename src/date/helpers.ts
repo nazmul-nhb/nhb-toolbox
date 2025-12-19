@@ -9,49 +9,9 @@ import type {
 	UTCOffset,
 } from './types';
 
-/** Core formatting logic shared by {@link formatDate} and `Chronos` class */
-export function _formatDateCore(
-	format: string,
-	year: number,
-	month: number,
-	day: number,
-	date: number,
-	hours: number,
-	minutes: number,
-	seconds: number,
-	milliseconds: number,
-	offset: string
-) {
-	const dateComponents: Record<ChronosFormat, string> = {
-		YYYY: String(year),
-		YY: String(year).slice(-2),
-		yyyy: String(year),
-		yy: String(year).slice(-2),
-		M: String(month + 1),
-		MM: String(month + 1).padStart(2, '0'),
-		mmm: MONTHS[month].slice(0, 3),
-		mmmm: MONTHS[month],
-		d: DAYS[day].slice(0, 2),
-		dd: DAYS[day].slice(0, 3),
-		ddd: DAYS[day],
-		D: String(date),
-		DD: String(date).padStart(2, '0'),
-		Do: getOrdinal(date),
-		H: String(hours),
-		HH: String(hours).padStart(2, '0'),
-		h: String(hours % 12 || 12),
-		hh: String(hours % 12 || 12).padStart(2, '0'),
-		m: String(minutes),
-		mm: String(minutes).padStart(2, '0'),
-		s: String(seconds),
-		ss: String(seconds).padStart(2, '0'),
-		ms: String(milliseconds),
-		mss: String(milliseconds).padStart(3, '0'),
-		a: hours < 12 ? 'am' : 'pm',
-		A: hours < 12 ? 'AM' : 'PM',
-		ZZ: offset,
-	};
+type $DateComponents = Record<ChronosFormat, string>;
 
+export function _formatDateCore(format: string, dateComponents: $DateComponents) {
 	const tokenRegex = new RegExp(`^(${SORTED_TIME_FORMATS.join('|')})`);
 
 	let result = '';
@@ -81,6 +41,52 @@ export function _formatDateCore(
 	}
 
 	return result;
+}
+
+/** Core formatting logic shared by {@link formatDate} and `Chronos` class */
+export function _formatDate(
+	format: string,
+	year: number,
+	month: number,
+	day: number,
+	date: number,
+	hours: number,
+	minutes: number,
+	seconds: number,
+	milliseconds: number,
+	offset: string
+) {
+	const dateComponents: $DateComponents = {
+		YYYY: String(year),
+		YY: String(year).slice(-2),
+		yyyy: String(year),
+		yy: String(year).slice(-2),
+		M: String(month + 1),
+		MM: String(month + 1).padStart(2, '0'),
+		mmm: MONTHS[month].slice(0, 3),
+		mmmm: MONTHS[month],
+		d: DAYS[day].slice(0, 2),
+		dd: DAYS[day].slice(0, 3),
+		ddd: DAYS[day],
+		D: String(date),
+		DD: String(date).padStart(2, '0'),
+		Do: getOrdinal(date),
+		H: String(hours),
+		HH: String(hours).padStart(2, '0'),
+		h: String(hours % 12 || 12),
+		hh: String(hours % 12 || 12).padStart(2, '0'),
+		m: String(minutes),
+		mm: String(minutes).padStart(2, '0'),
+		s: String(seconds),
+		ss: String(seconds).padStart(2, '0'),
+		ms: String(milliseconds),
+		mss: String(milliseconds).padStart(3, '0'),
+		a: hours < 12 ? 'am' : 'pm',
+		A: hours < 12 ? 'AM' : 'PM',
+		ZZ: offset,
+	};
+
+	return _formatDateCore(format, dateComponents);
 }
 
 /** Converts milliseconds to seconds */

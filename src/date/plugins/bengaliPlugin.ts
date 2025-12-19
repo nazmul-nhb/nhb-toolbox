@@ -1,43 +1,48 @@
-import type { $Chronos } from '../types';
 import { INTERNALS } from '../Chronos';
+import { _formatDateCore } from '../helpers';
+import type { $Chronos, ChronosFormat, StrictFormat } from '../types';
 
 type BanglaDate = {
 	year: string;
-	month: string; // 1–12
+	month: string;
 	date: string; // 1–31
-	weekDay: string;
-	monthName: string; // বৈশাখ
+	dayName: (typeof BN_DAYS)[number]['full']; // সোমবার
+	dayNameShort: (typeof BN_DAYS)[number]['short'];
+	monthName: (typeof BN_MONTHS)[number]['full']; // বৈশাখ
+	monthNameShort: (typeof BN_MONTHS)[number]['short'];
 	season: string; // গ্রীষ্ম
 	isLeapYear: boolean;
-	time: string;
+	// bnISOString: string;
 };
 
-const monthNames = [
-	'বৈশাখ',
-	'জ্যৈষ্ঠ',
-	'আষাঢ়',
-	'শ্রাবণ',
-	'ভাদ্র',
-	'আশ্বিন',
-	'কার্তিক',
-	'অগ্রহায়ণ',
-	'পৌষ',
-	'মাঘ',
-	'ফাল্গুন',
-	'চৈত্র',
-];
-const weekDays = [
-	'রবিবার',
-	'সোমবার',
-	'মঙ্গলবার',
-	'বুধবার',
-	'বৃহস্পতিবার',
-	'শুক্রবার',
-	'শনিবার',
-];
-const seasonNames = ['গ্রীষ্ম', 'বর্ষা', 'শরৎ', 'হেমন্ত', 'শীত', 'বসন্ত'];
+const BN_SEASONS = ['গ্রীষ্ম', 'বর্ষা', 'শরৎ', 'হেমন্ত', 'শীত', 'বসন্ত'] as const;
 
-const digits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+const BN_DAYS = [
+	{ full: 'রবিবার', short: 'র' },
+	{ full: 'সোমবার', short: 'সো' },
+	{ full: 'মঙ্গলবার', short: 'ম' },
+	{ full: 'বুধবার', short: 'বু' },
+	{ full: 'বৃহস্পতিবার', short: 'বৃ' },
+	{ full: 'শুক্রবার', short: 'শু' },
+	{ full: 'শনিবার', short: 'শ' },
+] as const;
+
+const BN_MONTHS = [
+	{ full: 'বৈশাখ', short: 'বৈ' },
+	{ full: 'জ্যৈষ্ঠ', short: 'জ্য' },
+	{ full: 'আষাঢ়', short: 'আ' },
+	{ full: 'শ্রাবণ', short: 'শ্রা' },
+	{ full: 'ভাদ্র', short: 'ভা' },
+	{ full: 'আশ্বিন', short: 'আ' },
+	{ full: 'কার্তিক', short: 'কা' },
+	{ full: 'অগ্রহায়ণ', short: 'অ' },
+	{ full: 'পৌষ', short: 'পৌ' },
+	{ full: 'মাঘ', short: 'মা' },
+	{ full: 'ফাল্গুন', short: 'ফা' },
+	{ full: 'চৈত্র', short: 'চৈ' },
+] as const;
+
+const BN_DIGITS = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'] as const;
 
 // let banglaObj: Record<string, number>;
 
@@ -51,8 +56,9 @@ const digits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '
 // 	);
 // };
 
-const digitToBangla = (dig: number) =>
-	String(dig).replace(/\d/g, (digit) => digits[Number(digit)]);
+const digitToBangla = (dig: number | string) => {
+	return String(dig).replace(/\d/g, (digit) => BN_DIGITS[Number(digit)]);
+};
 
 // const banglaToDigit = (bangla: string) => {
 // 	if (!banglaObj) createBanglaObj(); // memoize
@@ -71,21 +77,20 @@ const digitToBangla = (dig: number) =>
 
 // const monthName = (month: number) => monthNames[month - 1];
 
-const seasonName = (month: number) => seasonNames[Math.floor((month - 1) / 2)];
+const seasonName = (month: number) => BN_SEASONS[Math.floor((month - 1) / 2)];
 
 const YEAR0 = 593;
 const MILLISECONDS_PER_DAY = 86400000;
 const monthDaysNorm = [31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 30, 30];
 const monthDaysLeap = [31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 31, 30];
 
-// const UTC6 = 6; // timezone offset UTC+6
 const toEpoch = (year: number) => Date.UTC(year, 3, 13);
 
 declare module '../Chronos' {
 	interface Chronos {
 		toBangla(): BanglaDate;
 
-		formatBangla(format: string): string;
+		formatBangla(format: StrictFormat): string;
 
 		getBanglaYear(): number;
 		getBanglaMonth(): number;
@@ -120,9 +125,9 @@ export const bengaliPlugin = ($Chronos: $Chronos): void => {
 			_year -= 1;
 		}
 
-		const date = internalDate(this).getTime();
+		const dateInMs = internalDate(this).getTime();
 
-		let days = Math.floor((date - toEpoch(_year)) / MILLISECONDS_PER_DAY);
+		let days = Math.floor((dateInMs - toEpoch(_year)) / MILLISECONDS_PER_DAY);
 
 		let month = 0;
 
@@ -137,42 +142,55 @@ export const bengaliPlugin = ($Chronos: $Chronos): void => {
 		return {
 			year: digitToBangla(_year - YEAR0),
 			month: digitToBangla(month),
+			monthEn: month,
 			date: digitToBangla(days),
-			monthName: monthNames[month - 1],
-			weekDay: weekDays[this.weekDay],
+			monthName: BN_MONTHS[month - 1].full,
+			monthNameShort: BN_MONTHS[month - 1].short,
+			dayName: BN_DAYS[this.weekDay].full,
+			dayNameShort: BN_DAYS[this.weekDay].short,
 			season: seasonName(month + 1),
 			isLeapYear: this.isLeapYear(),
-			time: this.format('HH:mm:ss').replace(/\d/g, (digit) => digits[Number(digit)]),
+			// bnISOString: this.formatBangla('YYYY-MM-DDTHH:mm:ss.mssZZ'),
 		};
 	};
 
 	$Chronos.prototype.formatBangla = function (fmt) {
-		const banglaDate = this.toBangla();
+		const { year, month, date, monthName, monthNameShort } = this.toBangla();
 
-		const replacements: Record<string, string> = {
-			YYYY: banglaDate.year,
-			MM: banglaDate.month.padStart(2, '০'),
-			DD: banglaDate.date.padStart(2, '০'),
-			MMMM: banglaDate.monthName,
-			dddd: banglaDate.weekDay,
-			SSSS: banglaDate.season,
-			'HH:mm:ss': banglaDate.time,
+		const { hour, minute, second, millisecond } = this.toObject();
+
+		const DAY = BN_DAYS[this.weekDay];
+
+		const dateComponents: Record<ChronosFormat, string> = {
+			YYYY: year,
+			YY: year.slice(-2),
+			yyyy: year,
+			yy: year.slice(-2),
+			M: month,
+			MM: month.padStart(2, '০'),
+			mmm: monthNameShort,
+			mmmm: monthName,
+			d: DAY.short,
+			dd: DAY.full.replace('বার', ''),
+			ddd: DAY.full,
+			D: date,
+			DD: date.padStart(2, '০'),
+			Do: date,
+			H: digitToBangla(hour),
+			HH: digitToBangla(hour).padStart(2, '০'),
+			h: digitToBangla(hour % 12 || 12),
+			hh: digitToBangla(hour % 12 || 12).padStart(2, '০'),
+			m: digitToBangla(minute),
+			mm: digitToBangla(minute).padStart(2, '০'),
+			s: digitToBangla(second),
+			ss: digitToBangla(second).padStart(2, '০'),
+			ms: digitToBangla(millisecond),
+			mss: digitToBangla(millisecond).padStart(3, '০'),
+			a: hour < 12 ? 'পূর্বাহ্ণ' : 'অপরাহ্ণ',
+			A: hour < 12 ? 'পূর্বাহ্ণ' : 'অপরাহ্ণ',
+			ZZ: this.getTimeZoneOffset().replace(/\d/g, (dig) => digitToBangla(dig)),
 		};
 
-		let result = fmt;
-
-		for (const [key, value] of Object.entries(replacements)) {
-			result = result.replace(key, value);
-		}
-
-		// const enFormatted = this.format(fmt);
-
-		// let result = enFormatted;
-
-		// for (const [key, value] of Object.entries(replacements)) {
-		// 	result = result.replace(key, value);
-		// }
-
-		return result;
+		return _formatDateCore(fmt, dateComponents);
 	};
 };

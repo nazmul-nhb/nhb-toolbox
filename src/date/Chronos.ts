@@ -4,7 +4,7 @@ import type { Enumerate, NumberRange } from '../number/types';
 import type { LooseLiteral, TupleOf } from '../utils/types';
 import { DAYS, INTERNALS, MONTHS } from './constants';
 import { isLeapYear } from './guards';
-import { _formatDateCore, _resolveNativeTzName } from './helpers';
+import { _formatDate, _resolveNativeTzName } from './helpers';
 import type {
 	$DateUnit,
 	$NativeTzNameOrId,
@@ -480,7 +480,7 @@ export class Chronos {
 
 		const offset = useUTC ? 'Z' : this.getTimeZoneOffset();
 
-		return _formatDateCore(format, y, mo, d, dt, h, m, s, ms, offset);
+		return _formatDate(format, y, mo, d, dt, h, m, s, ms, offset);
 	}
 
 	/**

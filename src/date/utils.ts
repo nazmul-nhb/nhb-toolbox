@@ -1,6 +1,6 @@
 import type { Numeric } from '../types/index';
 import { isValidUTCOffset } from './guards';
-import { _formatDateCore, _gmtToUtcOffset, _resolveNativeTzName } from './helpers';
+import { _formatDate, _gmtToUtcOffset, _resolveNativeTzName } from './helpers';
 import { NATIVE_TZ_IDS } from './timezone';
 import type {
 	$DateUnit,
@@ -209,5 +209,5 @@ export function formatDate(options?: DateFormatOptions): string {
 
 	const offset = useUTC ? 'Z' : formatUTCOffset(-$date.getTimezoneOffset()).slice(3);
 
-	return _formatDateCore(format, y, mo, d, dt, h, m, s, ms, offset);
+	return _formatDate(format, y, mo, d, dt, h, m, s, ms, offset);
 }
