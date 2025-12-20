@@ -1,16 +1,18 @@
 import { INTERNALS } from '../Chronos';
 import { _formatDateCore } from '../helpers';
 import type { $Chronos, ChronosFormat, StrictFormat } from '../types';
+import { DAYS } from '../constants';
+import { BANGLADESH_SEASONS } from '../seasons';
 
-type BanglaDate = {
-	year: string;
-	month: string;
-	date: string; // 1–31
-	dayName: (typeof BN_DAYS)[number]['full']; // সোমবার
-	dayNameShort: (typeof BN_DAYS)[number]['short'];
-	monthName: (typeof BN_MONTHS)[number]['full']; // বৈশাখ
-	monthNameShort: (typeof BN_MONTHS)[number]['short'];
-	season: string; // গ্রীষ্ম
+type BanglaDate<Locale extends 'bn' | 'en' = 'bn'> = {
+	year: Locale extends 'en' ? number : string;
+	month: Locale extends 'en' ? number : string;
+	date: Locale extends 'en' ? number : string;
+	dayName: string;
+	dayNameShort: string;
+	monthName: string;
+	monthNameShort: string;
+	seasonName: string;
 	isLeapYear: boolean;
 	// bnISOString: string;
 };
@@ -28,67 +30,60 @@ const BN_DAYS = [
 ] as const;
 
 const BN_MONTHS = [
-	{ full: 'বৈশাখ', short: 'বৈ' },
-	{ full: 'জ্যৈষ্ঠ', short: 'জ্য' },
-	{ full: 'আষাঢ়', short: 'আ' },
-	{ full: 'শ্রাবণ', short: 'শ্রা' },
-	{ full: 'ভাদ্র', short: 'ভা' },
-	{ full: 'আশ্বিন', short: 'আ' },
-	{ full: 'কার্তিক', short: 'কা' },
-	{ full: 'অগ্রহায়ণ', short: 'অ' },
-	{ full: 'পৌষ', short: 'পৌ' },
-	{ full: 'মাঘ', short: 'মা' },
-	{ full: 'ফাল্গুন', short: 'ফা' },
-	{ full: 'চৈত্র', short: 'চৈ' },
+	{ full: 'বৈশাখ', en: 'Boishakh', short: 'বৈ' },
+	{ full: 'জ্যৈষ্ঠ', en: 'Joishtho', short: 'জ্য' },
+	{ full: 'আষাঢ়', en: 'Asharh', short: 'আ' },
+	{ full: 'শ্রাবণ', en: 'Srabon', short: 'শ্রা' },
+	{ full: 'ভাদ্র', en: 'Bhadro', short: 'ভা' },
+	{ full: 'আশ্বিন', en: 'Ashwin', short: 'আ' },
+	{ full: 'কার্তিক', en: 'Kartik', short: 'কা' },
+	{ full: 'অগ্রহায়ণ', en: 'Ogrohayon', short: 'অ' },
+	{ full: 'পৌষ', en: 'Poush', short: 'পৌ' },
+	{ full: 'মাঘ', en: 'Magh', short: 'মা' },
+	{ full: 'ফাল্গুন', en: 'Falgun', short: 'ফা' },
+	{ full: 'চৈত্র', en: 'Choitro', short: 'চৈ' },
 ] as const;
 
 const BN_DIGITS = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'] as const;
 
-// let banglaObj: Record<string, number>;
+// type BanglaDigit = (typeof BN_DIGITS)[number];
+// type BanglaDayName = (typeof BN_DAYS)[number]['full'];
+// type BanglaMonthName = (typeof BN_MONTHS)[number]['full'];
+// type BanglaSeasonName = (typeof BN_SEASONS)[number];
 
-// const createBanglaObj = () => {
-// 	banglaObj = digits.reduce(
-// 		(o, c, i) => {
-// 			o[c] = i;
-// 			return o;
-// 		},
-// 		{} as Record<string, number>
-// 	);
-// };
+// const BANGLA_DIGIT_MAP = {
+// 	'০': 0,
+// 	'১': 1,
+// 	'২': 2,
+// 	'৩': 3,
+// 	'৪': 4,
+// 	'৫': 5,
+// 	'৬': 6,
+// 	'৭': 7,
+// 	'৮': 8,
+// 	'৯': 9,
+// } as const;
 
 const digitToBangla = (dig: number | string) => {
 	return String(dig).replace(/\d/g, (digit) => BN_DIGITS[Number(digit)]);
 };
 
-// const banglaToDigit = (bangla: string) => {
-// 	if (!banglaObj) createBanglaObj(); // memoize
-// 	const month = monthNames.indexOf(bangla);
-// 	const str =
-// 		month !== -1 ?
-// 			month + 1
-// 		:	String(bangla).replace(/./g, (bn) => {
-// 				const r = String(banglaObj[bn]);
-// 				return r !== undefined ? r : bn;
-// 			});
-// 	return Number(str);
+// const banglaToDigit = (bnDigit: BanglaDigit) => {
+// 	return BANGLA_DIGIT_MAP[bnDigit];
 // };
-
-// const weekDay = (day: number) => weekDays[day];
-
-// const monthName = (month: number) => monthNames[month - 1];
 
 const seasonName = (month: number) => BN_SEASONS[Math.floor((month - 1) / 2)];
 
+const toEpoch = (year: number) => Date.UTC(year, 3, 13);
+
 const YEAR0 = 593;
 const MILLISECONDS_PER_DAY = 86400000;
-const monthDaysNorm = [31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 30, 30];
-const monthDaysLeap = [31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 31, 30];
-
-const toEpoch = (year: number) => Date.UTC(year, 3, 13);
+const monthDaysNorm = [31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 30, 30] as const;
+const monthDaysLeap = [31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 31, 30] as const;
 
 declare module '../Chronos' {
 	interface Chronos {
-		toBangla(): BanglaDate;
+		toBangla<Locale extends 'bn' | 'en' = 'bn'>(locale?: Locale): BanglaDate<Locale>;
 
 		formatBangla(format: StrictFormat): string;
 
@@ -117,7 +112,7 @@ declare module '../Chronos' {
 export const bengaliPlugin = ($Chronos: $Chronos): void => {
 	const { internalDate } = $Chronos[INTERNALS];
 
-	$Chronos.prototype.toBangla = function () {
+	$Chronos.prototype.toBangla = function <Locale extends 'bn' | 'en'>(locale?: Locale) {
 		const monthDays = this.isLeapYear() ? monthDaysLeap : monthDaysNorm;
 
 		let _year = this.year;
@@ -139,19 +134,33 @@ export const bengaliPlugin = ($Chronos: $Chronos): void => {
 			days -= monthDays[i];
 		}
 
-		return {
-			year: digitToBangla(_year - YEAR0),
-			month: digitToBangla(month),
-			monthEn: month,
-			date: digitToBangla(days),
-			monthName: BN_MONTHS[month - 1].full,
-			monthNameShort: BN_MONTHS[month - 1].short,
-			dayName: BN_DAYS[this.weekDay].full,
-			dayNameShort: BN_DAYS[this.weekDay].short,
-			season: seasonName(month + 1),
-			isLeapYear: this.isLeapYear(),
-			// bnISOString: this.formatBangla('YYYY-MM-DDTHH:mm:ss.mssZZ'),
-		};
+		switch (locale) {
+			case 'en':
+				return {
+					year: _year - YEAR0,
+					month: month,
+					date: days,
+					monthName: BN_MONTHS[month - 1].en,
+					monthNameShort: BN_MONTHS[month - 1].en.slice(0, 3),
+					dayName: DAYS[this.weekDay],
+					dayNameShort: DAYS[this.weekDay].slice(0, 3),
+					seasonName: BANGLADESH_SEASONS[Math.floor((month - 1) / 2)].name,
+					isLeapYear: this.isLeapYear(),
+				} as BanglaDate<Locale>;
+
+			default:
+				return {
+					year: digitToBangla(_year - YEAR0),
+					month: digitToBangla(month),
+					date: digitToBangla(days),
+					monthName: BN_MONTHS[month - 1].full,
+					monthNameShort: BN_MONTHS[month - 1].short,
+					dayName: BN_DAYS[this.weekDay].full,
+					dayNameShort: BN_DAYS[this.weekDay].short,
+					seasonName: seasonName(month + 1),
+					isLeapYear: this.isLeapYear(),
+				} as BanglaDate<Locale>;
+		}
 	};
 
 	$Chronos.prototype.formatBangla = function (fmt) {

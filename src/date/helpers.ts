@@ -11,12 +11,13 @@ import type {
 
 type $DateComponents = Record<ChronosFormat, string>;
 
+/** Core formatting logic shared by `formatDate` and `Chronos` class */
 export function _formatDateCore(format: string, dateComponents: $DateComponents) {
 	const tokenRegex = new RegExp(`^(${SORTED_TIME_FORMATS.join('|')})`);
 
 	let result = '';
-	let i = 0;
 
+	let i = 0;
 	while (i < format.length) {
 		// Handle [escaped literal]
 		if (format[i] === '[') {
@@ -43,7 +44,7 @@ export function _formatDateCore(format: string, dateComponents: $DateComponents)
 	return result;
 }
 
-/** Core formatting logic shared by {@link formatDate} and `Chronos` class */
+/** Core formatting logic shared by `formatDate` and `Chronos` class */
 export function _formatDate(
 	format: string,
 	year: number,
