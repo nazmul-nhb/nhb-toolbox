@@ -18,11 +18,22 @@ import { BN_DAYS, BN_DIGITS, BN_MONTHS, BN_SEASONS } from '../constants';
 const YEAR_OFFSET = 593;
 const MS_PER_DAY = 86400000;
 
-const BN_POST_2019_NORMAL = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 29, 30] as const;
-const BN_POST_2019_LEAP = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 30] as const;
+// const BN_POST_2019_NORMAL = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 29, 30] as const;
+// const BN_POST_2019_LEAP = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 30] as const;
 
 // const BN_PRE_2019_NORMAL = [31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 30, 30] as const;
 // const BN_PRE_2019_LEAP = [31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 31, 30] as const;
+
+const BN_MONTH_TABLES = {
+	latest: {
+		normal: [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 29, 30],
+		leap: [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 30],
+	},
+	revised: {
+		normal: [31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 30, 30],
+		leap: [31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 31, 30],
+	},
+} as const;
 
 // const BANGLA_DIGIT_MAP = {
 // 	'০': 0,
@@ -93,31 +104,26 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `Bengali` date system in `Chronos` */
 export const bengaliPlugin = ($Chronos: $Chronos): void => {
-	const getBaseYear = (chronos: Chronos) => {
-		const gy = chronos.year;
-		const gm = chronos.isoMonth;
+	const getBaseYear = (chr: Chronos) => {
+		const gy = chr.year;
+		const gm = chr.isoMonth;
 
-		return gm < 4 || (gm === 4 && chronos.date < 14) ? gy - 1 : gy;
+		return gm < 4 || (gm === 4 && chr.date < 14) ? gy - 1 : gy;
 	};
 
-	const selectMonthTable = (chronos: Chronos) => {
-		return chronos.isLeapYear() ? BN_POST_2019_LEAP : BN_POST_2019_NORMAL;
+	const getUtcTs = (chr: Chronos) => {
+		return Date.UTC(chr.year, chr.month, chr.date);
 	};
 
-	const getUtcTs = (chronos: Chronos) => {
-		return Date.UTC(chronos.year, chronos.month, chronos.date);
+	const getElapsedDays = (chr: Chronos) => {
+		return Math.floor((getUtcTs(chr) - Date.UTC(getBaseYear(chr), 3, 14)) / MS_PER_DAY);
 	};
 
-	const getElapsedDays = (chronos: Chronos) => {
-		return Math.floor(
-			(getUtcTs(chronos) - Date.UTC(getBaseYear(chronos), 3, 14)) / MS_PER_DAY
-		);
-	};
+	const bnDaysMonthIdx = (chr: Chronos, ed: keyof typeof BN_MONTH_TABLES = 'latest') => {
+		const monthTable =
+			chr.isLeapYear() ? BN_MONTH_TABLES?.[ed].leap : BN_MONTH_TABLES?.[ed].normal;
 
-	const bnDaysMonthIdx = (chronos: Chronos) => {
-		const monthTable = selectMonthTable(chronos);
-
-		let days = getElapsedDays(chronos);
+		let days = getElapsedDays(chr);
 		let month = 0;
 
 		while (days >= monthTable[month]) {
