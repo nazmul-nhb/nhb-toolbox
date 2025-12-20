@@ -1,15 +1,15 @@
 // import { INTERNALS } from '../Chronos';
 import { _formatDateCore } from '../helpers';
 import type {
+	$BanglaMonth,
+	$BanglaMonthDate,
+	$BanglaYear,
 	$Chronos,
 	$BnEn,
 	BanglaDate,
 	BanglaDayName,
-	BanglaMonth,
-	BanglaMonthDate,
 	BanglaMonthName,
 	BanglaSeasonName,
-	BanglaYear,
 	StrictFormat,
 } from '../types';
 import type { Chronos } from '../Chronos';
@@ -67,22 +67,18 @@ declare module '../Chronos' {
 
 		formatBangla(format: StrictFormat): string;
 
-		getBanglaYear<Locale extends $BnEn = 'bn'>(
-			locale?: Locale
-		): Locale extends 'en' ? number : BanglaYear;
+		getBanglaYear<Locale extends $BnEn = 'bn'>(locale?: Locale): $BanglaYear<Locale>;
 
-		getBanglaMonth<Locale extends $BnEn = 'bn'>(
-			locale?: Locale
-		): Locale extends 'en' ? number : BanglaMonth;
+		getBanglaMonth<Locale extends $BnEn = 'bn'>(locale?: Locale): $BanglaMonth<Locale>;
 
-		getBanglaDay<Locale extends $BnEn = 'bn'>(
-			locale?: Locale
-		): Locale extends 'en' ? number : BanglaMonthDate;
+		getBanglaDay<Locale extends $BnEn = 'bn'>(locale?: Locale): $BanglaMonthDate<Locale>;
 
 		getBanglaDayName<Locale extends $BnEn = 'bn'>(locale?: Locale): BanglaDayName<Locale>;
+
 		getBanglaMonthName<Locale extends $BnEn = 'bn'>(
 			locale?: Locale
 		): BanglaMonthName<Locale>;
+
 		getBanglaSeasonName<Locale extends $BnEn = 'bn'>(
 			locale?: Locale
 		): BanglaSeasonName<Locale>;
@@ -97,8 +93,6 @@ declare module '../Chronos' {
 
 /** * Plugin to inject `Bengali` date system in `Chronos` */
 export const bengaliPlugin = ($Chronos: $Chronos): void => {
-	// const { internalDate } = $Chronos[INTERNALS];
-
 	const getBaseYear = (chronos: Chronos) => {
 		const gy = chronos.year;
 		const gm = chronos.isoMonth;
@@ -120,7 +114,7 @@ export const bengaliPlugin = ($Chronos: $Chronos): void => {
 		);
 	};
 
-	const getBnMonthIdx = (chronos: Chronos) => {
+	const bnDaysMonthIdx = (chronos: Chronos) => {
 		const monthTable = selectMonthTable(chronos);
 
 		let days = getElapsedDays(chronos);
@@ -131,110 +125,46 @@ export const bengaliPlugin = ($Chronos: $Chronos): void => {
 			month++;
 		}
 
-		return month;
+		return { days, month };
 	};
 
-	$Chronos.prototype.getBanglaYear = function <Locale extends $BnEn>(locale?: Locale) {
+	$Chronos.prototype.getBanglaYear = function <L extends $BnEn>(locale?: L) {
 		const bnYearBase = getBaseYear(this);
 
 		const bnYear = bnYearBase - YEAR_OFFSET;
 
-		return (locale === 'en' ? bnYear : digitToBangla(bnYear)) as Locale extends 'en' ?
-			number
-		:	BanglaYear;
+		return (locale === 'en' ? bnYear : digitToBangla(bnYear)) as $BanglaYear<L>;
 	};
 
-	$Chronos.prototype.getBanglaMonth = function <Locale extends $BnEn>(locale?: Locale) {
-		const isoMonth = getBnMonthIdx(this) + 1;
+	$Chronos.prototype.getBanglaMonth = function <L extends $BnEn>(locale?: L) {
+		const isoMonth = bnDaysMonthIdx(this).month + 1;
 
-		return (locale === 'en' ? isoMonth : digitToBangla(isoMonth)) as Locale extends 'en' ?
-			number
-		:	BanglaMonth;
+		return (locale === 'en' ? isoMonth : digitToBangla(isoMonth)) as $BanglaMonth<L>;
 	};
 
-	$Chronos.prototype.getBanglaDay = function <Locale extends $BnEn>(locale?: Locale) {
-		const monthTable = selectMonthTable(this);
+	$Chronos.prototype.getBanglaDay = function <L extends $BnEn>(locale?: L) {
+		const date = bnDaysMonthIdx(this).days + 1;
 
-		let days = getElapsedDays(this);
-		let month = 0;
-
-		while (days >= monthTable[month]) {
-			days -= monthTable[month];
-			month++;
-		}
-
-		const date = days + 1;
-
-		return (locale === 'en' ? date : digitToBangla(date)) as Locale extends 'en' ? number
-		:	BanglaMonthDate;
+		return (locale === 'en' ? date : digitToBangla(date)) as $BanglaMonthDate<L>;
 	};
 
-	$Chronos.prototype.getBanglaDayName = function <Locale extends $BnEn>(locale?: Locale) {
+	$Chronos.prototype.getBanglaDayName = function <L extends $BnEn>(locale?: L) {
 		const DAY = BN_DAYS[this.weekDay];
 
-		return (locale === 'en' ? DAY.en : DAY.bn) as BanglaDayName<Locale>;
+		return (locale === 'en' ? DAY.en : DAY.bn) as BanglaDayName<L>;
 	};
 
-	$Chronos.prototype.getBanglaMonthName = function <Locale extends $BnEn>(locale?: Locale) {
-		const MONTH = BN_MONTHS[getBnMonthIdx(this)];
+	$Chronos.prototype.getBanglaMonthName = function <L extends $BnEn>(locale?: L) {
+		const MONTH = BN_MONTHS[bnDaysMonthIdx(this).month];
 
-		return (locale === 'en' ? MONTH.en : MONTH.bn) as BanglaMonthName<Locale>;
+		return (locale === 'en' ? MONTH.en : MONTH.bn) as BanglaMonthName<L>;
 	};
 
-	$Chronos.prototype.getBanglaSeasonName = function <Locale extends $BnEn>(locale?: Locale) {
-		return getSeason(getBnMonthIdx(this), locale);
+	$Chronos.prototype.getBanglaSeasonName = function <L extends $BnEn>(locale?: L) {
+		return getSeason(bnDaysMonthIdx(this).month, locale);
 	};
 
-	$Chronos.prototype.toBangla = function <Locale extends $BnEn>(locale?: Locale) {
-		// const gy = this.year;
-		// const gm = this.isoMonth;
-		// const gd = this.date;
-
-		// const utcTs = Date.UTC(gy, gm - 1, gd);
-
-		// const bnYearBase = gm < 4 || (gm === 4 && gd < 14) ? gy - 1 : gy;
-
-		// const monthTable = this.isLeapYear() ? BN_POST_2019_LEAP : BN_POST_2019_NORMAL;
-
-		// let days = Math.floor((utcTs - Date.UTC(bnYearBase, 3, 14)) / MS_PER_DAY);
-		// let month = 0;
-
-		// while (days >= monthTable[month]) {
-		// 	days -= monthTable[month];
-		// 	month++;
-		// }
-
-		// const date = days + 1;
-		// const isoMonth = month + 1;
-		// const bnYear = bnYearBase - YEAR_OFFSET;
-
-		// const DAY = BN_DAYS[this.weekDay];
-		// const MONTH = BN_MONTHS[month];
-
-		// switch (locale) {
-		// 	case 'en':
-		// 		return {
-		// 			year: bnYear,
-		// 			month: isoMonth,
-		// 			date: date,
-		// 			monthName: MONTH.en,
-		// 			dayName: DAY.en,
-		// 			seasonName: getSeason(month, 'en'),
-		// 			isLeapYear: this.isLeapYear(),
-		// 		} as BanglaDate<Locale>;
-
-		// 	default:
-		// 		return {
-		// 			year: digitToBangla(bnYear),
-		// 			month: digitToBangla(isoMonth),
-		// 			date: digitToBangla(date),
-		// 			monthName: MONTH.bn,
-		// 			dayName: DAY.bn,
-		// 			seasonName: getSeason(month),
-		// 			isLeapYear: this.isLeapYear(),
-		// 		} as BanglaDate<Locale>;
-		// }
-
+	$Chronos.prototype.toBangla = function <L extends $BnEn>(locale?: L) {
 		return {
 			year: this.getBanglaYear(locale),
 			month: this.getBanglaMonth(locale),
@@ -243,35 +173,37 @@ export const bengaliPlugin = ($Chronos: $Chronos): void => {
 			dayName: this.getBanglaDayName(locale),
 			seasonName: this.getBanglaSeasonName(locale),
 			isLeapYear: this.isLeapYear(),
-		} as BanglaDate<Locale>;
+		} as BanglaDate<L>;
 	};
 
 	$Chronos.prototype.formatBangla = function (fmt) {
-		const { year, month, date } = this.toBangla('en');
-
 		const { hour, minute, second, millisecond } = this.toObject();
 
 		const DAY = BN_DAYS[this.weekDay];
-		const MONTH = BN_MONTHS[month - 1];
+		const MONTH = BN_MONTHS[bnDaysMonthIdx(this).month];
 
-		const $year = digitToBangla(year);
+		const month = this.getBanglaMonth('bn');
+		const year = this.getBanglaYear('bn');
+		const date = this.getBanglaDay('bn');
+		const seasonName = this.getBanglaSeasonName('bn');
+
 		const offset = this.getTimeZoneOffset().replace(/\d/g, (dig) => digitToBangla(dig));
 
 		const dateComponents: Record<string, string> = {
-			YYYY: $year,
-			YY: $year.slice(-2),
-			yyyy: $year,
-			yy: $year.slice(-2),
-			M: digitToBangla(month),
-			MM: digitToBangla(month).padStart(2, '০'),
+			YYYY: year,
+			YY: year.slice(-2),
+			yyyy: year,
+			yy: year.slice(-2),
+			M: month,
+			MM: month.padStart(2, '০'),
 			mmm: MONTH.short,
 			mmmm: MONTH.bn,
 			d: DAY.short,
 			dd: DAY.bn.replace('বার', ''),
 			ddd: DAY.bn,
-			D: digitToBangla(date),
-			DD: digitToBangla(date).padStart(2, '০'),
-			Do: digitToBangla(date),
+			D: date,
+			DD: date.padStart(2, '০'),
+			Do: date,
 			H: digitToBangla(hour),
 			HH: digitToBangla(hour).padStart(2, '০'),
 			h: digitToBangla(hour % 12 || 12),
@@ -286,8 +218,8 @@ export const bengaliPlugin = ($Chronos: $Chronos): void => {
 			A: hour < 12 ? 'পূর্বাহ্ণ' : 'অপরাহ্ণ',
 			Z: offset,
 			ZZ: offset,
-			S: getSeason(month),
-			SS: getSeason(month),
+			S: seasonName,
+			SS: seasonName,
 		};
 
 		return _formatDateCore(fmt, dateComponents);

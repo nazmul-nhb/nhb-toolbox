@@ -759,25 +759,21 @@ export type BanglaDayName<Locale extends $BnEn = 'bn'> = (typeof BN_DAYS)[number
 export type BanglaMonthName<Locale extends $BnEn = 'bn'> = (typeof BN_MONTHS)[number][Locale];
 export type BanglaSeasonName<Locale extends $BnEn = 'bn'> = (typeof BN_SEASONS)[number][Locale];
 
-export type $BanglaDateEn = {
-	year: number;
-	month: NumberRange<1, 12>;
-	date: NumberRange<1, 31>;
-	dayName: BanglaDayName<'en'>;
-	monthName: BanglaMonthName<'en'>;
-	seasonName: BanglaSeasonName<'en'>;
+export type $BanglaYear<Locale extends $BnEn = 'bn'> =
+	Locale extends 'en' ? number : BanglaYear;
+
+export type $BanglaMonth<Locale extends $BnEn = 'bn'> =
+	Locale extends 'en' ? NumberRange<1, 12> : BanglaMonth;
+
+export type $BanglaMonthDate<Locale extends $BnEn = 'bn'> =
+	Locale extends 'en' ? NumberRange<1, 31> : BanglaMonthDate;
+
+export type BanglaDate<Locale extends $BnEn = 'bn'> = {
+	year: $BanglaYear<Locale>;
+	month: $BanglaMonth<Locale>;
+	date: $BanglaMonthDate<Locale>;
+	dayName: BanglaDayName<Locale>;
+	monthName: BanglaMonthName<Locale>;
+	seasonName: BanglaSeasonName<Locale>;
 	isLeapYear: boolean;
 };
-
-export type $BanglaDateBn = {
-	year: BanglaYear;
-	month: BanglaMonth;
-	date: BanglaMonthDate;
-	dayName: BanglaDayName<'bn'>;
-	monthName: BanglaMonthName<'bn'>;
-	seasonName: BanglaSeasonName<'bn'>;
-	isLeapYear: boolean;
-};
-
-export type BanglaDate<Locale extends $BnEn = 'bn'> =
-	Locale extends 'en' ? $BanglaDateEn : $BanglaDateBn;
