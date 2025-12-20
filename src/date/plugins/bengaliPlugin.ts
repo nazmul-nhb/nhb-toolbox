@@ -3,6 +3,15 @@ import { _formatDateCore } from '../helpers';
 import type { $Chronos, $BnEn, BanglaDate, BanglaSeasonName, StrictFormat } from '../types';
 import { BN_DAYS, BN_DIGITS, BN_MONTHS, BN_SEASONS } from '../constants';
 
+const YEAR_OFFSET = 593;
+const MS_PER_DAY = 86400000;
+
+const BN_POST_2019_NORMAL = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 29, 30] as const;
+const BN_POST_2019_LEAP = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 30] as const;
+
+// const BN_PRE_2019_NORMAL = [31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 30, 30] as const;
+// const BN_PRE_2019_LEAP = [31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 31, 30] as const;
+
 // const BANGLA_DIGIT_MAP = {
 // 	'০': 0,
 // 	'১': 1,
@@ -16,30 +25,29 @@ import { BN_DAYS, BN_DIGITS, BN_MONTHS, BN_SEASONS } from '../constants';
 // 	'৯': 9,
 // } as const;
 
-const digitToBangla = (dig: number | string) => {
-	return String(dig).replace(/\d/g, (digit) => BN_DIGITS[Number(digit)]);
-};
-
 // const banglaToDigit = (bnDigit: BanglaDigit) => {
 // 	return BANGLA_DIGIT_MAP[bnDigit];
 // };
+
+const digitToBangla = (dig: number | string) => {
+	return String(dig).replace(/\d/g, (digit) => BN_DIGITS[Number(digit)]);
+};
 
 const floorAndAbs = (num: number) => {
 	return Math.abs(Math.floor(num));
 };
 
 const getSeason = <L extends $BnEn = 'bn'>(month: number, locale?: L): BanglaSeasonName<L> => {
-	const season = BN_SEASONS[floorAndAbs((month - 1) / 2)];
+	const season = BN_SEASONS[floorAndAbs(month / 2)];
 
 	return (locale === 'en' ? season.en : season.bn) as BanglaSeasonName<L>;
 };
 
-const toEpoch = (year: number) => Date.UTC(year, 3, 13, 23, 59, 59, 999);
+// const BN_REFORM_DATE_UTC = Date.UTC(2019, 3, 14); // 14 April 2019
 
-const YEAR0 = 593;
-const MS_PER_DAY = 86400000;
-const monthDaysNorm = [31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29, 30] as const;
-const monthDaysLeap = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 30] as const;
+// const isPost2019Bangla = (timestamp: number): boolean => {
+// 	return timestamp >= BN_REFORM_DATE_UTC;
+// };
 
 declare module '../Chronos' {
 	interface Chronos {
@@ -70,36 +78,37 @@ export const bengaliPlugin = ($Chronos: $Chronos): void => {
 	// const { internalDate } = $Chronos[INTERNALS];
 
 	$Chronos.prototype.toBangla = function <Locale extends $BnEn>(locale?: Locale) {
-		const monthDays = this.isLeapYear() ? monthDaysLeap : monthDaysNorm;
-		const $month = this.isoMonth;
-		let $year = this.year;
-		if ($month < 4 || ($month === 4 && this.date < 14)) {
-			$year -= 1;
+		const gy = this.year;
+		const gm = this.isoMonth;
+		const gd = this.date;
+
+		const utcTs = Date.UTC(gy, gm - 1, gd);
+
+		const bnYearBase = gm < 4 || (gm === 4 && gd < 14) ? gy - 1 : gy;
+
+		const monthTable = this.isLeapYear() ? BN_POST_2019_LEAP : BN_POST_2019_NORMAL;
+
+		let days = Math.floor((utcTs - Date.UTC(bnYearBase, 3, 14)) / MS_PER_DAY);
+		let month = 0;
+
+		while (days >= monthTable[month]) {
+			days -= monthTable[month];
+			month++;
 		}
 
-		const dateInMs = this.endOf('day').getTimeStamp();
-
-		let days = floorAndAbs((dateInMs - toEpoch($year)) / MS_PER_DAY);
-
-		let month = 12;
-
-		for (let i = 0; i < monthDays.length; i++) {
-			if (days <= monthDays[i]) {
-				month = i + 1;
-				break;
-			}
-			days -= monthDays[i];
-		}
+		const date = days + 1;
+		const isoMonth = month + 1;
+		const bnYear = bnYearBase - YEAR_OFFSET;
 
 		const DAY = BN_DAYS[this.weekDay];
-		const MONTH = BN_MONTHS[month - 1];
+		const MONTH = BN_MONTHS[month];
 
 		switch (locale) {
 			case 'en':
 				return {
-					year: $year - YEAR0,
-					month: month,
-					date: days,
+					year: bnYear,
+					month: isoMonth,
+					date: date,
 					monthName: MONTH.en,
 					dayName: DAY.en,
 					seasonName: getSeason(month, 'en'),
@@ -108,9 +117,9 @@ export const bengaliPlugin = ($Chronos: $Chronos): void => {
 
 			default:
 				return {
-					year: digitToBangla($year - YEAR0),
-					month: digitToBangla(month),
-					date: digitToBangla(days),
+					year: digitToBangla(bnYear),
+					month: digitToBangla(isoMonth),
+					date: digitToBangla(date),
 					monthName: MONTH.bn,
 					dayName: DAY.bn,
 					seasonName: getSeason(month),
