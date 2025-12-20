@@ -398,7 +398,6 @@ export type $Countries = (typeof COUNTRIES)[number];
  * Construct a `Record` (`object`) type with a set of properties `Key` of type `T`.
  *
  * @example
- * ```ts
  * type UserRoles = 'admin' | 'editor' | 'viewer';
  *
  * type RolePermissions = $Record<UserRoles, string[]>;
@@ -409,7 +408,6 @@ export type $Countries = (typeof COUNTRIES)[number];
  * //   editor: string[];
  * //   viewer: string[];
  * // }
- * ```
  *
  * @remarks Unlike the built-in `Record<K, T>`, this type ensures that all properties are explicitly defined and expanded.
  */

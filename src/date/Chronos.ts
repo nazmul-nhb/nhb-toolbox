@@ -1532,11 +1532,9 @@ export class Chronos {
 	 * - `mss`: Millisecond (000-999)
 	 * - `ms`: Millisecond (0-999)
 	 *
-	 * **Example**:
-	 * ```ts
+	 * @example
 	 * Chronos.parse('23-12-31 15:30:45', 'YY-MM-DD HH:mm:ss');
 	 * // returns `Chronos` instance with the parsed date 2023-12-31T15:30:45
-	 * ```
 	 *
 	 * @param dateStr - The date string to be parsed
 	 * @param format - The format of the date string. Supported tokens `YYYY`, `YY` `MM`, `M`, `DD`, `D`, `HH`, `H`, `mm`, `m`, `ss`, `s`, `mss`, `ms` are used to specify the structure.

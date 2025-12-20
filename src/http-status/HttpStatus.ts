@@ -21,7 +21,6 @@ import type {
  * @see {@link https://toolbox.nazmul-nhb.dev/docs/utilities/misc/httpStatus httpStatus} for the default preloaded singleton instance.
  *
  * @example
- * ```ts
  * // Using the class directly
  * const customStatus = new HttpStatus();
  * customStatus.addCode({
@@ -41,7 +40,6 @@ import type {
  *
  * console.log(customStatus.getByCode(404)?.message);
  * // "Not Found"
- * ```
  */
 export class HttpStatus {
 	#codesByNumber: Map<StatusCode, StatusEntry>;
@@ -201,7 +199,6 @@ export class HttpStatus {
  *   mutation methods without manual instantiation.
  *
  * @example
- * ```ts
  * import { httpStatus } from 'nhb-toolbox';
  *
  * console.log(httpStatus.getByCode(404)?.readableName);
@@ -210,6 +207,5 @@ export class HttpStatus {
  * httpStatus.setMessage(404, 'This page is gone');
  * console.log(httpStatus.getByCode(404)?.message);
  * // "This page is gone"
- * ```
  */
 export const httpStatus = new HttpStatus();

@@ -749,11 +749,9 @@ export type $JoinRepeat<S extends string, A extends unknown[]> =
  * * Repeat string `S`, `N` times.
  *
  * @example
- * ```ts
  * type L10 = Repeat<'l', 10>; // "llllllllll"
  *
  * type AB3 = Repeat<'a' | 'b', 3>; // "aab" | "aaa" | "aba" | "abb" | "bab" | "baa" | "bba" | "bbb"
- * ```
  *
  * **Limitations:**
  * - `N` must be a literal number.
@@ -765,13 +763,11 @@ export type Repeat<S extends string, N extends number> = $JoinRepeat<S, $BuildTu
  * * Replace all occurrences of substring `Search` in `Str` with `With`.
  *
  * @example
- * ```ts
  * type Dash = Replace<'hello world', ' ', '-'>; // "hello-world"
  *
  * type Underscore = Replace<'a-b-c', '-', '_'>; // "a_b_c"
  *
  * type NoSpaces = Replace<' spaced out ', ' ', ''>; // "spacedout"
- * ```
  *
  * **Notes:**
  * - Works recursively to replace **all** occurrences of `Search`.
@@ -795,7 +791,6 @@ export type Replace<
  * * Replace the **first occurrence** of substring `Search` in `Str` with `With`.
  *
  * @example
- * ```ts
  * type Dash = ReplaceFirst<'hello world wide web', ' ', '-'>;
  * // "hello-world wide web"
  *
@@ -804,7 +799,6 @@ export type Replace<
  *
  * type NoSpaces = ReplaceFirst<' spaced out', ' ', ''>;
  * // "spaced out"
- * ```
  *
  * **Notes:**
  * - Replaces **only the first** occurrence of `Search`.

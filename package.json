@@ -238,6 +238,11 @@
       "types": "./dist/dts/verbalizer/types.d.ts",
       "default": "./dist/dts/verbalizer/types.d.ts"
     },
+    "./plugins/bengaliPlugin": {
+      "types": "./dist/dts/date/plugins/bengaliPlugin.d.ts",
+      "import": "./dist/esm/date/plugins/bengaliPlugin.js",
+      "require": "./dist/cjs/date/plugins/bengaliPlugin.js"
+    },
     "./plugins/businessPlugin": {
       "types": "./dist/dts/date/plugins/businessPlugin.d.ts",
       "import": "./dist/esm/date/plugins/businessPlugin.js",
@@ -367,6 +372,9 @@
       ],
       "verbalizer/types": [
         "dist/dts/verbalizer/types.d.ts"
+      ],
+      "plugins/bengaliPlugin": [
+        "dist/dts/date/plugins/bengaliPlugin.d.ts"
       ],
       "plugins/businessPlugin": [
         "dist/dts/date/plugins/businessPlugin.d.ts"

@@ -124,13 +124,11 @@ export const calculateLCM = (...numbers: Numeric[]): number => {
  * @returns The factorial result as a number if valid, otherwise `undefined`.
  *
  * @example
- * ```ts
  * factorial(5); // → 120
  * factorial(0); // → 1
  * factorial(-3); // → undefined
  * factorial(undefined); // → undefined
  * factorial(5.5); // → undefined
- * ```
  *
  * @remarks
  * - Factorial of `0` and `1` is `1`.
@@ -159,12 +157,10 @@ export function factorial(int: Maybe<Numeric>): Maybe<number> {
  * @returns An array of positive factors in ascending order.
  *
  * @example
- * ```ts
  * getFactors(12); // → [1, 2, 3, 4, 6, 12]
  * getFactors(7);  // → [1, 7]
  * getFactors(-4); // → []
  * getFactors(undefined); // → []
- * ```
  *
  * @remarks
  * - Uses the square root method for better performance (`O(√n)`).

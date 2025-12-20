@@ -644,7 +644,6 @@ export function bytesToHex(bytes: Uint8Array): string {
  *   - This function decodes a hexadecimal-encoded string into its raw byte representation, where every two hexadecimal characters (00–ff) are converted into one byte.
  *
  * @example
- * ```ts
  * // Convert hex to bytes
  * const hex = '12abff00';
  * const bytes = hexToBytes(hex);
@@ -658,7 +657,6 @@ export function bytesToHex(bytes: Uint8Array): string {
  * const hashHex = '2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824';
  * const hashBytes = hexToBytes(hashHex);
  * // Returns: Uint8Array(32)
- * ```
  *
  * @param hex - A hexadecimal string where each byte is represented by two characters (00–ff).
  * @returns A `Uint8Array` containing the decoded bytes. Returns an empty array for invalid input.

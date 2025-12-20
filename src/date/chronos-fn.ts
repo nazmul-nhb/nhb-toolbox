@@ -30,14 +30,10 @@ import type { ChronosInput, ChronosStaticKey, ChronosStatics } from './types';
  * Therefore, static methods can be called either through the `Chronos` class directly or through the `chronos` function.
  *
  * @example
- * Example usage:
- *
- * ```ts
  * const chronosInstanceFn = chronos("2023-12-31");
  * const chronosInstanceClass = new Chronos("2023-12-31");
  * const sameInstanceFn = chronos.parse("2023-12-31", "YYYY-MM-DD");
  * const sameInstanceClass = Chronos.parse("2023-12-31", "YYYY-MM-DD");
- * ```
  *
  * @param valueOrYear The value in number, string, Date or Chronos format or the full year designation is required for cross-century date accuracy. If year is between 0 and 99 is used, then year is assumed to be 1900 + year.
  * @param month The month as a number between 1 and 12 (January to December).
@@ -107,15 +103,12 @@ function _isChronosStaticKey(prop: string): prop is ChronosStaticKey {
  * **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC and convert it to the **equivalent local time** using the current environment's UTC offset.*
  *
  * @example
- * Example usage as constructor:
- * ```ts
+ * // Example usage as constructor:
  * const instance = chronos("2023-12-31");
  * const instanceWithTime = chronos(2023, 12, 31, 15, 30, 0);
- * ```
  *
  * @example
- * Example usage of static methods:
- * ```ts
+ * // Example usage of static methods:
  * // Both work identically - thanks to automatic Proxy delegation
  * chronos.parse("2023-12-31", "YYYY-MM-DD");
  * Chronos.parse("2023-12-31", "YYYY-MM-DD");
@@ -123,10 +116,8 @@ function _isChronosStaticKey(prop: string): prop is ChronosStaticKey {
  * chronos.today();
  * chronos.isLeapYear(2024);
  * chronos.min(date1, date2, date3);
- * ```
  *
- * @remarks
- * - _No need to call `chronos` for accessing the static methods. Simply call the static methods._
+ * @remarks *No need to call `chronos` for accessing the static methods. Simply call the static methods.*
  *
  * **Available Static Methods:**
  *

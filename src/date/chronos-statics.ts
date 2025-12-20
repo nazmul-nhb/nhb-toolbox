@@ -181,11 +181,9 @@ export interface ChronosStatics {
 	 * - `ss`: Second (00-59)
 	 * - `s`: 1-Digit Second (0-9)
 	 *
-	 * **Example**:
-	 * ```ts
+	 * @example
 	 * Chronos.parse('23-12-31 15:30:45', 'YY-MM-DD HH:mm:ss');
 	 * // returns Chronos instance with the parsed date 2023-12-31T15:30:45
-	 * ```
 	 *
 	 * @param dateStr - The date string to be parsed
 	 * @param format - The format of the date string. Tokens like `YYYY`, `MM`, `DD`, `HH`, `mm`, `ss` are used to specify the structure.

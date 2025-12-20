@@ -245,11 +245,9 @@ export type RomanCapital = Exclude<$RawRoman, ''>;
  * * Strict Roman numeral in both literal lower and uppercase (1-3999).
  *
  * @example
- * ```ts
  * 	const a: RomanNumeral = 'xiv';   // ✅ Lowercase: OK
  * 	const b: RomanNumeral = 'MMX';   // ✅ Uppercase: OK
  * 	const c: RomanNumeral = 'xyz';   // 🛑 Invalid: Error (xyz not allowed)
- * ```
  */
 export type RomanNumeral = RomanCapital | Lowercase<RomanCapital>;
 
@@ -257,11 +255,9 @@ export type RomanNumeral = RomanCapital | Lowercase<RomanCapital>;
  * * Comprehensive valid Roman numeral in both literal lower and uppercase (1-3999) & any string type.
  *
  * @example
- * ```ts
- * 	const a: LooseRomanNumeral = 'xiv';   // ✅ IntelliSense suggests Roman letters
- * 	const b: LooseRomanNumeral = 'MMX';   // ✅ Supported
- * 	const c: LooseRomanNumeral = 'xyz';   // ⚠️ Allowed only via LooseLiteral fallback
- * ```
+ * const a: LooseRomanNumeral = 'xiv';   // ✅ IntelliSense suggests Roman letters
+ * const b: LooseRomanNumeral = 'MMX';   // ✅ Supported
+ * const c: LooseRomanNumeral = 'xyz';   // ⚠️ Allowed only via LooseLiteral fallback
  *
  * @remarks
  * - Combines {@link RomanCapital} and its lowercase variants, see {@link RomanNumeral}.
