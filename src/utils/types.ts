@@ -753,9 +753,9 @@ export type $JoinRepeat<S extends string, A extends unknown[]> =
  *
  * type AB3 = Repeat<'a' | 'b', 3>; // "aab" | "aaa" | "aba" | "abb" | "bab" | "baa" | "bba" | "bbb"
  *
- * **Limitations:**
+ * @remarks **Limitations:**
  * - `N` must be a literal number.
- * - If `S` is a union (e.g. 'a'|'b'), the resulting union grows exponentially with N.
+ * - If `S` is a union (e.g. 'a' | 'b'), the resulting union grows exponentially with `N`.
  */
 export type Repeat<S extends string, N extends number> = $JoinRepeat<S, $BuildTuple<N>>;
 
@@ -769,7 +769,7 @@ export type Repeat<S extends string, N extends number> = $JoinRepeat<S, $BuildTu
  *
  * type NoSpaces = Replace<' spaced out ', ' ', ''>; // "spacedout"
  *
- * **Notes:**
+ * @remarks **Notes:**
  * - Works recursively to replace **all** occurrences of `Search`.
  * - If `Search` does not exist in `Str`, returns `Str` unchanged.
  * - `Str`, `Search` (Default is space `" "`) and `With` (Default is `"-"`) must be literal string types.
@@ -800,7 +800,7 @@ export type Replace<
  * type NoSpaces = ReplaceFirst<' spaced out', ' ', ''>;
  * // "spaced out"
  *
- * **Notes:**
+ * @remarks **Notes:**
  * - Replaces **only the first** occurrence of `Search`.
  * - If `Search` does not exist in `Str`, returns `Str` unchanged.
  * - `Str`, `Search` (Default is space `" "`) and `With` (Default is `"-"`) must be literal string types.

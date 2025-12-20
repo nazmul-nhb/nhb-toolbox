@@ -1,9 +1,13 @@
 import type { Enumerate, LocaleCode, NumberRange } from '../number/types';
 import type { Maybe } from '../types/index';
-import type { LooseLiteral, RangeTuple, Split } from '../utils/types';
+import type { LooseLiteral, RangeTuple, Repeat, Split } from '../utils/types';
 import type { Chronos } from './Chronos';
 import type { ChronosStatics } from './chronos-statics';
 import type {
+	BN_DAYS,
+	BN_DIGITS,
+	BN_MONTHS,
+	BN_SEASONS,
 	DATE_FORMATS,
 	DAY_FORMATS,
 	DAYS,
@@ -163,6 +167,7 @@ export type ChronosFormat =
 	| Second
 	| Millisecond
 	| TimeFormats
+	| 'Z'
 	| 'ZZ';
 
 /** Standard date formats. */
@@ -718,3 +723,61 @@ export type $UnitAnyCase = Capitalize<$TimeUnitVar> | Uppercase<$TimeUnitVar> | 
 
 /** Number (time value) with variants of different time units */
 export type TimeWithUnit = `${number}${$UnitAnyCase}` | `${number} ${$UnitAnyCase}`;
+
+// ! Types for Bengali Plugin for `Chronos`
+
+export type $BnEn = 'bn' | 'en';
+
+/** Bangla digits from `০-৯` */
+export type BanglaDigit = (typeof BN_DIGITS)[number];
+
+/** Bangla digits from `১-৯` */
+export type $BnExcludeZero = Exclude<BanglaDigit, '০'>;
+
+/** Bangla month from `১-১২` */
+export type BanglaMonth = $BnExcludeZero | '১০' | '১১' | '১২';
+
+/** Bangla date of month from `১-৩১` */
+export type BanglaMonthDate =
+	| $BnExcludeZero
+	| `১${BanglaDigit}`
+	| `২${BanglaDigit}`
+	| '৩০'
+	| '৩১';
+
+/** Bangla year from `০-৯৯৯৯` */
+export type BanglaYear =
+	| BanglaDigit
+	| `${$BnExcludeZero}০`
+	| `${$BnExcludeZero}০০`
+	| `${$BnExcludeZero}০০০`
+	| Repeat<$BnExcludeZero, 2>
+	| Repeat<$BnExcludeZero, 3>
+	| Repeat<$BnExcludeZero, 4>;
+
+export type BanglaDayName<Locale extends $BnEn = 'bn'> = (typeof BN_DAYS)[number][Locale];
+export type BanglaMonthName<Locale extends $BnEn = 'bn'> = (typeof BN_MONTHS)[number][Locale];
+export type BanglaSeasonName<Locale extends $BnEn = 'bn'> = (typeof BN_SEASONS)[number][Locale];
+
+export type $BanglaDateEn = {
+	year: number;
+	month: NumberRange<1, 12>;
+	date: NumberRange<1, 31>;
+	dayName: BanglaDayName<'en'>;
+	monthName: BanglaMonthName<'en'>;
+	seasonName: BanglaSeasonName<'en'>;
+	isLeapYear: boolean;
+};
+
+export type $BanglaDateBn = {
+	year: BanglaYear;
+	month: BanglaMonth;
+	date: BanglaMonthDate;
+	dayName: BanglaDayName<'bn'>;
+	monthName: BanglaMonthName<'bn'>;
+	seasonName: BanglaSeasonName<'bn'>;
+	isLeapYear: boolean;
+};
+
+export type BanglaDate<Locale extends $BnEn = 'bn'> =
+	Locale extends 'en' ? $BanglaDateEn : $BanglaDateBn;

@@ -49,11 +49,11 @@ export const MINUTE_FORMATS = /* @__PURE__ */ Object.freeze(['mm', 'm'] as const
 
 export const SECOND_FORMATS = /* @__PURE__ */ Object.freeze(['ss', 's'] as const);
 
-export const ZONE_FORMATS = /* @__PURE__ */ Object.freeze(['ZZ'] as const);
-
 export const MILLISECOND_FORMATS = /* @__PURE__ */ Object.freeze(['ms', 'mss'] as const);
 
 export const TIME_FORMATS = /* @__PURE__ */ Object.freeze(['a', 'A'] as const);
+
+export const EXTRA_FORMATS = /* @__PURE__ */ Object.freeze(['Z', 'ZZ', 'S', 'SS'] as const);
 
 export const SORTED_TIME_FORMATS = /* @__PURE__ */ Object.freeze(
 	[
@@ -66,7 +66,7 @@ export const SORTED_TIME_FORMATS = /* @__PURE__ */ Object.freeze(
 		...SECOND_FORMATS,
 		...MILLISECOND_FORMATS,
 		...TIME_FORMATS,
-		...ZONE_FORMATS,
+		...EXTRA_FORMATS,
 	].sort((a, b) => b.length - a.length)
 );
 
@@ -285,4 +285,51 @@ export const LOCALE_NUMBERING_SYSTEMS = /* @__PURE__ */ Object.freeze([
 	'vaii',
 	'wara',
 	'wcho',
+] as const);
+
+export const BN_SEASONS = /* @__PURE__ */ Object.freeze([
+	{ bn: 'গ্রীষ্ম', en: 'Grisma (Summer)' },
+	{ bn: 'বর্ষা', en: 'Barsa (Monsoon)' },
+	{ bn: 'শরৎ', en: 'Sarat (Autumn)' },
+	{ bn: 'হেমন্ত', en: 'Hemanta (Late-Autumn)' },
+	{ bn: 'শীত', en: 'Shhit (Winter)' },
+	{ bn: 'বসন্ত', en: 'Basanta (Spring)' },
+] as const);
+
+export const BN_DAYS = /* @__PURE__ */ Object.freeze([
+	{ bn: 'রবিবার', en: 'Robibar (Sunday)', short: 'র' },
+	{ bn: 'সোমবার', en: 'Shombar (Monday)', short: 'সো' },
+	{ bn: 'মঙ্গলবার', en: 'Mongolbar (Tuesday)', short: 'ম' },
+	{ bn: 'বুধবার', en: 'Budhbar (Wednesday)', short: 'বু' },
+	{ bn: 'বৃহস্পতিবার', en: 'Brihoshpotibar (Thursday)', short: 'বৃ' },
+	{ bn: 'শুক্রবার', en: 'Shukrobar (Friday)', short: 'শু' },
+	{ bn: 'শনিবার', en: 'Shonibar (Saturday)', short: 'শ' },
+] as const);
+
+export const BN_MONTHS = /* @__PURE__ */ Object.freeze([
+	{ bn: 'বৈশাখ', en: 'Boishakh', short: 'বৈ' },
+	{ bn: 'জ্যৈষ্ঠ', en: 'Joishtho', short: 'জ্য' },
+	{ bn: 'আষাঢ়', en: 'Asharh', short: 'আ' },
+	{ bn: 'শ্রাবণ', en: 'Srabon', short: 'শ্রা' },
+	{ bn: 'ভাদ্র', en: 'Bhadro', short: 'ভা' },
+	{ bn: 'আশ্বিন', en: 'Ashwin', short: 'আ' },
+	{ bn: 'কার্তিক', en: 'Kartik', short: 'কা' },
+	{ bn: 'অগ্রহায়ণ', en: 'Ogrohayon', short: 'অ' },
+	{ bn: 'পৌষ', en: 'Poush', short: 'পৌ' },
+	{ bn: 'মাঘ', en: 'Magh', short: 'মা' },
+	{ bn: 'ফাল্গুন', en: 'Falgun', short: 'ফা' },
+	{ bn: 'চৈত্র', en: 'Choitro', short: 'চৈ' },
+] as const);
+
+export const BN_DIGITS = /* @__PURE__ */ Object.freeze([
+	'০',
+	'১',
+	'২',
+	'৩',
+	'৪',
+	'৫',
+	'৬',
+	'৭',
+	'৮',
+	'৯',
 ] as const);

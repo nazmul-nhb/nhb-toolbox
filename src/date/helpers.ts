@@ -9,10 +9,8 @@ import type {
 	UTCOffset,
 } from './types';
 
-type $DateComponents = Record<ChronosFormat, string>;
-
 /** Core formatting logic shared by `formatDate` and `Chronos` class */
-export function _formatDateCore(format: string, dateComponents: $DateComponents) {
+export function _formatDateCore(format: string, dateComponents: Record<string, string>) {
 	const tokenRegex = new RegExp(`^(${SORTED_TIME_FORMATS.join('|')})`);
 
 	let result = '';
@@ -33,7 +31,7 @@ export function _formatDateCore(format: string, dateComponents: $DateComponents)
 		const match = tokenRegex.exec(format.slice(i));
 
 		if (match) {
-			result += dateComponents[match[0] as ChronosFormat];
+			result += dateComponents[match[0]] ?? match[0];
 			i += match[0].length;
 		} else {
 			result += format[i];
@@ -57,7 +55,7 @@ export function _formatDate(
 	milliseconds: number,
 	offset: string
 ) {
-	const dateComponents: $DateComponents = {
+	const dateComponents: Record<ChronosFormat, string> = {
 		YYYY: String(year),
 		YY: String(year).slice(-2),
 		yyyy: String(year),
@@ -84,6 +82,7 @@ export function _formatDate(
 		mss: String(milliseconds).padStart(3, '0'),
 		a: hours < 12 ? 'am' : 'pm',
 		A: hours < 12 ? 'AM' : 'PM',
+		Z: offset,
 		ZZ: offset,
 	};
 
