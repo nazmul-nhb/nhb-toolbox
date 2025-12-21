@@ -6,6 +6,7 @@ import type { ChronosStatics } from './chronos-statics';
 import type {
 	BN_DAYS,
 	BN_DIGITS,
+	BN_MONTH_TABLES,
 	BN_MONTHS,
 	BN_SEASONS,
 	DATE_FORMATS,
@@ -777,3 +778,5 @@ export type BanglaDate<Locale extends $BnEn = 'bn'> = {
 	seasonName: BanglaSeasonName<Locale>;
 	isLeapYear: boolean;
 };
+
+export type BnCalendarVariant = keyof typeof BN_MONTH_TABLES;
