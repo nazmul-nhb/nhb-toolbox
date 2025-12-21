@@ -18,23 +18,14 @@ import type {
 	StrictFormat,
 } from '../types';
 
-const YEAR_OFFSET = 593;
-const MS_PER_DAY = 86400000;
-
-const floorAndAbs = (num: number) => {
-	return Math.abs(Math.floor(num));
-};
-
-const getSeason = <L extends $BnEn = 'bn'>(month: number, locale?: L | $BnEn) => {
-	const season = BN_SEASONS[floorAndAbs(month / 2)];
-
-	return (locale === 'en' ? season.en : season.bn) as BanglaSeasonName<L>;
-};
-
 // const BN_REFORM_DATE_UTC = Date.UTC(2019, 3, 14); // 14 April 2019
 
 // const isPost2019Bangla = (timestamp: number): boolean => {
 // 	return timestamp >= BN_REFORM_DATE_UTC;
+// };
+
+// const floorAndAbs = (num: number) => {
+// 	return Math.abs(Math.floor(num));
 // };
 
 declare module '../Chronos' {
@@ -43,7 +34,7 @@ declare module '../Chronos' {
 			options?: BanglaDateOptions<Locale>
 		): BanglaDate<Locale>;
 
-		formatBangla(format: StrictFormat, options?: BnCalendarConfig): string;
+		formatBangla(format?: StrictFormat, options?: BnCalendarConfig): string;
 
 		getBanglaYear<Locale extends $BnEn = 'bn'>(locale?: Locale): $BanglaYear<Locale>;
 
@@ -65,11 +56,42 @@ declare module '../Chronos' {
 			options?: BanglaDateOptions<Locale>
 		): BanglaSeasonName<Locale>;
 
-		startOfBanglaMonth(): Chronos;
-		endOfBanglaMonth(): Chronos;
-
-		startOfBanglaYear(): Chronos;
-		endOfBanglaYear(): Chronos;
+		/**
+		 * Sets the default Bangla calendar variant globally for all `Chronos` instances.
+		 *
+		 * @param options Configuration object containing the default Bangla calendar variant.
+		 *
+		 * This configuration is applied as the default variant for all Bangla-related methods
+		 * (like {@link getBanglaMonth}, {@link getBanglaDay}, {@link toBangla}, etc.) across all instances of `Chronos`,
+		 * unless a specific `variant` is provided in the method options.
+		 *
+		 * @remarks
+		 * - If this method is not called, the default variant is 'revised-2019'.
+		 * - Calling this method overrides the default globally for **all instances**, both existing and future.
+		 * - Per-call overrides using the `variant` option will always take precedence over this global default.
+		 * - Valid variants are `'revised-1966'` and `'revised-2019'`.
+		 *
+		 * **Notes**
+		 * - This method **does not modify the instance**, only sets the default calendar variant.
+		 *
+		 * @example
+		 * const c1 = new Chronos();
+		 * const c2 = new Chronos();
+		 *
+		 * // Before calling the method, all instances use the 2019 variant by default
+		 * c1.getBanglaMonth(); // uses 'revised-2019'
+		 * c2.getBanglaMonth(); // uses 'revised-2019'
+		 *
+		 * // Set the global default to 1966 variant
+		 * c1.configureBanglaCalendar({ variant: 'revised-1966' });
+		 *
+		 * c1.getBanglaMonth(); // now uses 'revised-1966'
+		 * c2.getBanglaMonth(); // also uses 'revised-1966'
+		 *
+		 * // Per-call override still works
+		 * c1.getBanglaMonth({ variant: 'revised-2019' }); // uses 'revised-2019' just for this call
+		 */
+		configureBanglaCalendar(options: BnCalendarConfig): void;
 	}
 }
 
@@ -77,8 +99,19 @@ declare module '../Chronos' {
 export const bengaliPlugin = ($Chronos: $Chronos): void => {
 	const { internalDate: $Date } = $Chronos[INTERNALS];
 
-	const isWeirdLeapYear = (year: number) => {
-		return year % 4 === 2;
+	const YEAR_OFFSET = 593;
+	const MS_PER_DAY = 86400000;
+
+	const DEFAULT_CONFIG = new Map<'config', BnCalendarConfig>();
+
+	const getSeason = <L extends $BnEn = 'bn'>(month: number, locale?: L | $BnEn) => {
+		const season = BN_SEASONS[Math.floor(month / 2)];
+
+		return (locale === 'en' ? season.en : season.bn) as BanglaSeasonName<L>;
+	};
+
+	const isBnLeapYear = (by: number, gy: number, v?: BnCalendarVariant) => {
+		return v === 'revised-1966' ? by % 4 === 2 : isLeapYear(gy);
 	};
 
 	const extractDateUnits = (date: Date) => {
@@ -114,13 +147,13 @@ export const bengaliPlugin = ($Chronos: $Chronos): void => {
 		);
 	};
 
-	const bnDaysMonthIdx = (date: Date, v: BnCalendarVariant = 'revised-2019') => {
-		const isLeap =
-			v === 'revised-1966' ?
-				isWeirdLeapYear(getBnYear(date))
-			:	isLeapYear(date.getFullYear());
+	const bnDaysMonthIdx = (date: Date, variant?: BnCalendarVariant) => {
+		const v = variant ?? DEFAULT_CONFIG.get('config')?.variant ?? 'revised-2019';
 
-		const table = isLeap ? BN_MONTH_TABLES?.[v].leap : BN_MONTH_TABLES?.[v].normal;
+		const table =
+			isBnLeapYear(getBnYear(date), date.getFullYear(), v) ?
+				BN_MONTH_TABLES?.[v].leap
+			:	BN_MONTH_TABLES?.[v].normal;
 
 		let days = getElapsedDays(date);
 		let month = 0;
@@ -131,6 +164,10 @@ export const bengaliPlugin = ($Chronos: $Chronos): void => {
 		}
 
 		return { days, month };
+	};
+
+	$Chronos.prototype.configureBanglaCalendar = function (configs) {
+		DEFAULT_CONFIG.set('config', configs);
 	};
 
 	$Chronos.prototype.getBanglaYear = function <L extends $BnEn>(locale = 'bn' as L) {
@@ -181,23 +218,23 @@ export const bengaliPlugin = ($Chronos: $Chronos): void => {
 		return getSeason(bnDaysMonthIdx($Date(this), variant).month, locale);
 	};
 
-	$Chronos.prototype.toBangla = function <L extends $BnEn>(options?: BanglaDateOptions<L>) {
+	$Chronos.prototype.toBangla = function <L extends $BnEn>(opts?: BanglaDateOptions<L>) {
 		return {
-			year: this.getBanglaYear(options?.locale),
-			month: this.getBanglaMonth(options),
-			date: this.getBanglaDay(options),
-			monthName: this.getBanglaMonthName(options),
-			dayName: this.getBanglaDayName(options?.locale),
-			seasonName: this.getBanglaSeasonName(options),
-			isLeapYear: this.isLeapYear(),
+			year: this.getBanglaYear(opts?.locale),
+			month: this.getBanglaMonth(opts),
+			date: this.getBanglaDay(opts),
+			monthName: this.getBanglaMonthName(opts),
+			dayName: this.getBanglaDayName(opts?.locale),
+			seasonName: this.getBanglaSeasonName(opts),
+			isLeapYear: isBnLeapYear(getBnYear($Date(this)), this.year, opts?.variant),
 		} as BanglaDate<L>;
 	};
 
-	$Chronos.prototype.formatBangla = function (fmt) {
+	$Chronos.prototype.formatBangla = function (fmt, opts) {
 		const { hour, minute, second, millisecond } = this.toObject();
 
-		const DAY = BN_DAYS[this.weekDay];
-		const MONTH = BN_MONTHS[bnDaysMonthIdx($Date(this)).month];
+		const D_NAME = BN_DAYS[this.weekDay];
+		const M_NAME = BN_MONTHS[bnDaysMonthIdx($Date(this), opts?.variant).month];
 
 		const month = this.getBanglaMonth();
 		const year = this.getBanglaYear();
@@ -213,11 +250,11 @@ export const bengaliPlugin = ($Chronos: $Chronos): void => {
 			yy: year.slice(-2),
 			M: month,
 			MM: month.padStart(2, '০'),
-			mmm: MONTH.short,
-			mmmm: MONTH.bn,
-			d: DAY.short,
-			dd: DAY.bn.replace('বার', ''),
-			ddd: DAY.bn,
+			mmm: M_NAME.short,
+			mmmm: M_NAME.bn,
+			d: D_NAME.short,
+			dd: D_NAME.bn.replace('বার', ''),
+			ddd: D_NAME.bn,
 			D: date,
 			DD: date.padStart(2, '০'),
 			Do: date,
@@ -239,6 +276,9 @@ export const bengaliPlugin = ($Chronos: $Chronos): void => {
 			SS: seasonName + 'কাল',
 		};
 
-		return _formatDateCore(fmt, dateComponents);
+		return _formatDateCore(
+			fmt || 'ddd, mmmm DD (SS), YYYY বঙ্গাব্দ - hh:mm:ss (A)',
+			dateComponents
+		);
 	};
 };
