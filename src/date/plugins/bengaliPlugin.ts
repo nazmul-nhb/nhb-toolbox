@@ -12,39 +12,12 @@ import type {
 	BnCalendarVariant,
 	StrictFormat,
 } from '../types';
-import {
-	BN_DAYS,
-	BN_DIGITS,
-	BN_MONTH_TABLES,
-	BN_MONTHS,
-	BN_SEASONS,
-	INTERNALS,
-} from '../constants';
+import { BN_DAYS, BN_MONTH_TABLES, BN_MONTHS, BN_SEASONS, INTERNALS } from '../constants';
 import { isLeapYear } from '../guards';
+import { digitToBangla } from '../../number/convert';
 
 const YEAR_OFFSET = 593;
 const MS_PER_DAY = 86400000;
-
-// const BANGLA_DIGIT_MAP = {
-// 	'০': 0,
-// 	'১': 1,
-// 	'২': 2,
-// 	'৩': 3,
-// 	'৪': 4,
-// 	'৫': 5,
-// 	'৬': 6,
-// 	'৭': 7,
-// 	'৮': 8,
-// 	'৯': 9,
-// } as const;
-
-// const banglaToDigit = (bnDigit: BanglaDigit) => {
-// 	return BANGLA_DIGIT_MAP[bnDigit];
-// };
-
-const digitToBangla = (dig: number | string) => {
-	return String(dig).replace(/\d/g, (digit) => BN_DIGITS[Number(digit)]);
-};
 
 const floorAndAbs = (num: number) => {
 	return Math.abs(Math.floor(num));
@@ -204,7 +177,7 @@ export const bengaliPlugin = ($Chronos: $Chronos): void => {
 		const date = this.getBanglaDay('bn');
 		const seasonName = this.getBanglaSeasonName('bn');
 
-		const offset = this.getTimeZoneOffset().replace(/\d/g, (dig) => digitToBangla(dig));
+		const offset = digitToBangla(this.getTimeZoneOffset(), true);
 
 		const dateComponents: Record<string, string> = {
 			YYYY: year,

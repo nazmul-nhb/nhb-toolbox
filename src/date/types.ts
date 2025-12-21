@@ -1,11 +1,16 @@
-import type { Enumerate, LocaleCode, NumberRange } from '../number/types';
+import type {
+	$BnExcludeZero,
+	BanglaDigit,
+	Enumerate,
+	LocaleCode,
+	NumberRange,
+} from '../number/types';
 import type { Maybe } from '../types/index';
 import type { LooseLiteral, RangeTuple, Repeat, Split } from '../utils/types';
 import type { Chronos } from './Chronos';
 import type { ChronosStatics } from './chronos-statics';
 import type {
 	BN_DAYS,
-	BN_DIGITS,
 	BN_MONTH_TABLES,
 	BN_MONTHS,
 	BN_SEASONS,
@@ -728,12 +733,6 @@ export type TimeWithUnit = `${number}${$UnitAnyCase}` | `${number} ${$UnitAnyCas
 // ! Types for Bengali Plugin for `Chronos`
 
 export type $BnEn = 'bn' | 'en';
-
-/** Bangla digits from `০-৯` */
-export type BanglaDigit = (typeof BN_DIGITS)[number];
-
-/** Bangla digits from `১-৯` */
-export type $BnExcludeZero = Exclude<BanglaDigit, '০'>;
 
 /** Bangla month from `১-১২` */
 export type BanglaMonth = $BnExcludeZero | '১০' | '১১' | '১২';

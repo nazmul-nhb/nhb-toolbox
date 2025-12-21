@@ -2,6 +2,7 @@ import { isInteger, isNonEmptyString, isNumber } from '../guards/primitives';
 import { isNumericString } from '../guards/specials';
 import type { Numeric } from '../types/index';
 import {
+	BN_DIGITS,
 	ONES,
 	ORDINAL_TO_CARDINAL,
 	ORDINAL_UNDER_TEEN,
@@ -10,7 +11,7 @@ import {
 	THOUSANDS,
 } from './constants';
 import { _convertLessThanThousand } from './helpers';
-import type { LooseRomanNumeral, RomanCapital } from './types';
+import type { BanglaDigit, BnDigitResult, LooseRomanNumeral, RomanCapital } from './types';
 import { normalizeNumber } from './utilities';
 
 /**
@@ -102,7 +103,7 @@ export const convertToRomanNumerals = (value: Numeric): RomanCapital => {
 /**
  * * Converts a Roman numeral to its Arabic numeric representation.
  * @param roman - The Roman numeral to convert. Case-insensitive but must represent a valid Roman numeral (`I`–`MMMCMXCIX`) otherwise throws runtime error.
- * @returns The numeric (Arabic) representation of the Roman numeral.
+ * @returns The numeric (Arabic system) representation of the Roman numeral.
  *
  * @example
  * romanToInteger("XXIX") // → 29
@@ -329,4 +330,75 @@ export function wordsToNumber(word: string): number {
 	total += currentNumber;
 
 	return negative ? -total : total;
+}
+
+/**
+ * * Converts Bangla (Arabic system) digits to Latin (Arabic system) digits.
+ *
+ * @remarks
+ * - Behavior depends on the `force` flag:
+ *   - When `force` is `true`, always returns a `number` (may be `NaN`).
+ *   - When `force` is `false`, returns a `number` if conversion succeeds, otherwise returns the converted digit string.
+ *
+ * @param bnDigit - A string containing Bangla (Arabic system) digits.
+ * @param force - Whether to force number conversion even if the input includes non-digit character. Default is `false`.
+ *
+ * @example
+ * banglaToDigit('১২৩');        // 123
+ * banglaToDigit('১২৩abc');    // "123abc"
+ *
+ * @example
+ * banglaToDigit('১২৩abc', true); // NaN
+ * banglaToDigit('৪৫৬', true);    // 456
+ */
+export function banglaToDigit<Force extends boolean = false>(
+	bnDigit: string,
+	force = false as Force
+): BnDigitResult<Force> {
+	if (!isNonEmptyString(bnDigit)) return NaN;
+
+	const digitStr = bnDigit.replace(/[০১২৩৪৫৬৭৮৯]/g, (d) =>
+		String(BN_DIGITS[d as BanglaDigit])
+	);
+
+	const number = Number(digitStr);
+
+	if (force || !isNaN(number)) return number;
+
+	return digitStr as BnDigitResult<Force>;
+}
+
+/**
+ * * Converts Latin (Arabic system) digits to Bangla digits (Arabic system).
+ *
+ * @remarks
+ * - Accepts numbers or numeric strings including non-digit characters.
+ * - When `preserveNonDigit` is `false`, non-numeric strings return an empty string.
+ * - When `preserveNonDigit` is `true`, non-digit characters are preserved in the output.
+ *
+ * @param digit - A number or string containing Latin (Arabic system) digits.
+ * @param preserveNonDigit - Whether to preserve non-digit characters in the output. Default is `false`.
+ *
+ * @example
+ * digitToBangla(123);          // "১২৩"
+ * digitToBangla('456');        // "৪৫৬"
+ *
+ * @example
+ * digitToBangla('12ab');       // ""
+ * digitToBangla('12ab', true); // "১২ab"
+ */
+export function digitToBangla(digit: number | string, preserveNonDigit = false): string {
+	const _matchDigit = (value: string) => {
+		return value.replace(/\d/g, (dig) => Object.keys(BN_DIGITS)[Number(dig)]);
+	};
+
+	if (isNumber(digit)) {
+		return _matchDigit(String(digit));
+	}
+
+	if (isNonEmptyString(digit) && (preserveNonDigit || isNumericString(digit))) {
+		return _matchDigit(digit);
+	}
+
+	return '';
 }

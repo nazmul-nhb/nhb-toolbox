@@ -9,6 +9,7 @@ import type {
 	UNITS,
 } from './constants';
 import type { Unit } from './Unit';
+import type { BN_DIGITS } from './constants';
 
 /** Enumerate & Enumerate Internal: builds a union of all numbers from 0 to N - 1 */
 type $EnumerateInternal<N extends number, Acc extends number[] = []> =
@@ -264,3 +265,13 @@ export type RomanNumeral = RomanCapital | Lowercase<RomanCapital>;
  * - The {@link LooseLiteral} wrapper allows non-literal strings (e.g., variables) without losing IntelliSense for literals.
  */
 export type LooseRomanNumeral = LooseLiteral<RomanNumeral>;
+
+/** Bangla digits from `০-৯` */
+export type BanglaDigit = keyof typeof BN_DIGITS;
+
+/** Bangla digits from `১-৯` */
+export type $BnExcludeZero = Exclude<BanglaDigit, '০'>;
+
+/** Result type for Bangla digit conversion based on `force` flag */
+export type BnDigitResult<Force extends boolean> =
+	Force extends true ? number : number | string;

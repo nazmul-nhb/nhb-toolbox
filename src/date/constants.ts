@@ -289,7 +289,7 @@ export const LOCALE_NUMBERING_SYSTEMS = /* @__PURE__ */ Object.freeze([
 
 // ! Bangla Calendar Constants
 
-export const BN_MONTH_TABLES = {
+export const BN_MONTH_TABLES = /* @__PURE__ */ Object.freeze({
 	latest: {
 		normal: [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 29, 30],
 		leap: [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 30],
@@ -298,7 +298,7 @@ export const BN_MONTH_TABLES = {
 		normal: [31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 30, 30],
 		leap: [31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 31, 30],
 	},
-} as const;
+} as const);
 
 export const BN_SEASONS = /* @__PURE__ */ Object.freeze([
 	{ bn: 'গ্রীষ্ম', en: 'Grisma (Summer)' },
@@ -332,17 +332,4 @@ export const BN_MONTHS = /* @__PURE__ */ Object.freeze([
 	{ bn: 'মাঘ', en: 'Magh', short: 'মা' },
 	{ bn: 'ফাল্গুন', en: 'Falgun', short: 'ফা' },
 	{ bn: 'চৈত্র', en: 'Choitro', short: 'চৈ' },
-] as const);
-
-export const BN_DIGITS = /* @__PURE__ */ Object.freeze([
-	'০',
-	'১',
-	'২',
-	'৩',
-	'৪',
-	'৫',
-	'৬',
-	'৭',
-	'৮',
-	'৯',
 ] as const);

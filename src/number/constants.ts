@@ -671,3 +671,16 @@ export const PREFIX_MULTIPLIERS = /* @__PURE__ */ Object.freeze({
 	Y: 1e24,
 	'': 1, // base unit, like meter, gram, byte etc.
 } as const);
+
+export const BN_DIGITS = /* @__PURE__ */ Object.freeze({
+	'০': 0,
+	'১': 1,
+	'২': 2,
+	'৩': 3,
+	'৪': 4,
+	'৫': 5,
+	'৬': 6,
+	'৭': 7,
+	'৮': 8,
+	'৯': 9,
+} as const);

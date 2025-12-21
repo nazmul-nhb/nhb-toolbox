@@ -137,6 +137,7 @@ export {
 
 export {
 	convertToRomanNumerals as arabicToRoman,
+	banglaToDigit,
 	numberToWordsOrdinal as cardinalWordsToOrdinal,
 	numberToWords as convertNumberToWords,
 	numberToWordsOrdinal as convertNumberToWordsOrdinal,
@@ -146,6 +147,7 @@ export {
 	convertToRomanNumerals,
 	wordsToNumber as convertWordsToNumber,
 	wordsToNumber as convertWordToNumber,
+	digitToBangla,
 	convertToRomanNumerals as integerToRoman,
 	convertToRomanNumerals as numberToRoman,
 	numberToWords,
