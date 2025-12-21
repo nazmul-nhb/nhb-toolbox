@@ -336,36 +336,32 @@ export function wordsToNumber(word: string): number {
  * * Converts Bangla (Arabic system) digits to Latin (Arabic system) digits.
  *
  * @remarks
- * - Behavior depends on the `force` flag:
- *   - When `force` is `true`, always returns a `number` (may be `NaN`).
- *   - When `force` is `false`, returns a `number` if conversion succeeds, otherwise returns the converted digit string.
+ * - Behavior depends on the `forceNumber` flag:
+ *   - When `forceNumber` is `true`, always returns a `number` (`NaN` if the input includes non-digit characters).
+ *   - When `forceNumber` is `false`, always returns a string, including non-digit characters.
  *
  * @param bnDigit - A string containing Bangla (Arabic system) digits.
- * @param force - Whether to force number conversion even if the input includes non-digit character. Default is `false`.
+ * @param forceNumber - Whether to force number conversion even if the input includes non-digit character(s). Default is `false`.
  *
  * @example
- * banglaToDigit('১২৩');        // 123
- * banglaToDigit('১২৩abc');    // "123abc"
+ * banglaToDigit('১২৩abc'); // NaN
+ * banglaToDigit('৪৫৬');    // 456
  *
  * @example
- * banglaToDigit('১২৩abc', true); // NaN
- * banglaToDigit('৪৫৬', true);    // 456
+ * banglaToDigit('১২৩', false);	// "123"
+ * banglaToDigit('১২৩abc', false);	// "123abc"
  */
-export function banglaToDigit<Force extends boolean = false>(
+export function banglaToDigit<Force extends boolean = true>(
 	bnDigit: string,
-	force = false as Force
+	forceNumber = true as Force
 ): BnDigitResult<Force> {
-	if (!isNonEmptyString(bnDigit)) return NaN;
+	if (!isNonEmptyString(bnDigit)) return (forceNumber ? NaN : '') as BnDigitResult<Force>;
 
 	const digitStr = bnDigit.replace(/[০১২৩৪৫৬৭৮৯]/g, (d) =>
 		String(BN_DIGITS[d as BanglaDigit])
 	);
 
-	const number = Number(digitStr);
-
-	if (force || !isNaN(number)) return number;
-
-	return digitStr as BnDigitResult<Force>;
+	return (forceNumber ? Number(digitStr) : digitStr) as BnDigitResult<Force>;
 }
 
 /**

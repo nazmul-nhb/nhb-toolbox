@@ -273,5 +273,4 @@ export type BanglaDigit = keyof typeof BN_DIGITS;
 export type $BnExcludeZero = Exclude<BanglaDigit, '০'>;
 
 /** Result type for Bangla digit conversion based on `force` flag */
-export type BnDigitResult<Force extends boolean> =
-	Force extends true ? number : number | string;
+export type BnDigitResult<Force extends boolean> = Force extends true ? number : string;
