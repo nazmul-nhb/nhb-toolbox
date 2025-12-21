@@ -373,31 +373,29 @@ export function banglaToDigit<Force extends boolean = false>(
  *
  * @remarks
  * - Accepts numbers or numeric strings including non-digit characters.
- * - When `preserveNonDigit` is `false`, non-numeric strings return an empty string.
  * - When `preserveNonDigit` is `true`, non-digit characters are preserved in the output.
+ * - When `preserveNonDigit` is `false`, non-numeric strings return an empty string.
  *
  * @param digit - A number or string containing Latin (Arabic system) digits.
- * @param preserveNonDigit - Whether to preserve non-digit characters in the output. Default is `false`.
+ * @param preserveNonDigit - Whether to preserve non-digit characters in the output. Default is `true`.
  *
  * @example
  * digitToBangla(123);          // "১২৩"
  * digitToBangla('456');        // "৪৫৬"
  *
  * @example
- * digitToBangla('12ab');       // ""
- * digitToBangla('12ab', true); // "১২ab"
+ * digitToBangla('12ab', false);	// ""
+ * digitToBangla('12ab');		// "১২ab"
  */
-export function digitToBangla(digit: number | string, preserveNonDigit = false): string {
-	const _matchDigit = (value: string) => {
+export function digitToBangla(digit: number | string, preserveNonDigit = true): string {
+	const _matchAndConvert = (value: string) => {
 		return value.replace(/\d/g, (dig) => Object.keys(BN_DIGITS)[Number(dig)]);
 	};
 
-	if (isNumber(digit)) {
-		return _matchDigit(String(digit));
-	}
+	if (isNumber(digit)) return _matchAndConvert(String(digit));
 
 	if (isNonEmptyString(digit) && (preserveNonDigit || isNumericString(digit))) {
-		return _matchDigit(digit);
+		return _matchAndConvert(digit);
 	}
 
 	return '';

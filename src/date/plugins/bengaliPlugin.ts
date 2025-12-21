@@ -177,7 +177,7 @@ export const bengaliPlugin = ($Chronos: $Chronos): void => {
 		const date = this.getBanglaDay('bn');
 		const seasonName = this.getBanglaSeasonName('bn');
 
-		const offset = digitToBangla(this.getTimeZoneOffset(), true);
+		const offset = digitToBangla(this.getTimeZoneOffset());
 
 		const dateComponents: Record<string, string> = {
 			YYYY: year,

@@ -672,6 +672,7 @@ export const PREFIX_MULTIPLIERS = /* @__PURE__ */ Object.freeze({
 	'': 1, // base unit, like meter, gram, byte etc.
 } as const);
 
+/** * Bangla digits from `০-৯` mapped against `0-9` */
 export const BN_DIGITS = /* @__PURE__ */ Object.freeze({
 	'০': 0,
 	'১': 1,
