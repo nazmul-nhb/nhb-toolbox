@@ -18,13 +18,13 @@ import type {
 	DAY_FORMATS,
 	DAYS,
 	HOUR_FORMATS,
+	LOCALE_CALENDARS,
 	LOCALE_NUMBERING_SYSTEMS,
 	MILLISECOND_FORMATS,
 	MINUTE_FORMATS,
 	MONTH_FORMATS,
 	MONTHS,
 	SECOND_FORMATS,
-	LOCALE_CALENDARS,
 	TIME_FORMATS,
 	TIME_UNIT_VARIANTS,
 	WESTERN_ZODIAC_SIGNS,
@@ -779,3 +779,13 @@ export type BanglaDate<Locale extends $BnEn = 'bn'> = {
 };
 
 export type BnCalendarVariant = keyof typeof BN_MONTH_TABLES;
+
+export interface BnCalendarConfig {
+	/** - Locale calendar variant to use. Defaults to `'revised-2019'`. */
+	variant?: BnCalendarVariant;
+}
+
+export interface BanglaDateOptions<Locale extends $BnEn> extends BnCalendarConfig {
+	/** - Locale to use for output values. Defaults to `'bn'`. */
+	locale?: Locale | $BnEn;
+}

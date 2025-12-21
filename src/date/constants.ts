@@ -290,11 +290,11 @@ export const LOCALE_NUMBERING_SYSTEMS = /* @__PURE__ */ Object.freeze([
 // ! Bangla Calendar Constants
 
 export const BN_MONTH_TABLES = /* @__PURE__ */ Object.freeze({
-	latest: {
+	'revised-2019': {
 		normal: [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 29, 30],
 		leap: [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 30],
 	},
-	revised: {
+	'revised-1966': {
 		normal: [31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 30, 30],
 		leap: [31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 31, 30],
 	},
