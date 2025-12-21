@@ -1,6 +1,7 @@
 import type { Maybe } from '../types/index';
 import type { LooseLiteral } from '../utils/types';
 import type {
+	BN_DIGITS,
 	CURRENCY_CODES,
 	CURRENCY_LOCALES,
 	FRANKFURTER_CURRENCIES,
@@ -9,7 +10,6 @@ import type {
 	UNITS,
 } from './constants';
 import type { Unit } from './Unit';
-import type { BN_DIGITS } from './constants';
 
 /** Enumerate & Enumerate Internal: builds a union of all numbers from 0 to N - 1 */
 type $EnumerateInternal<N extends number, Acc extends number[] = []> =
@@ -222,15 +222,15 @@ export type UnitLabel = (typeof UNITS)[UnitKey];
 export type SIPrefix = keyof typeof PREFIX_MULTIPLIERS;
 
 /** Roman numerals representing only the thousand (1000, 2000 and 3000) */
-type $Thousands = '' | 'M' | 'MM' | 'MMM';
+type $RomanThousands = '' | 'M' | 'MM' | 'MMM';
 /** Roman numerals representing only the hundreds (100, 200, ... 900) */
-type $Hundreds = '' | 'C' | 'CC' | 'CCC' | 'CD' | 'D' | 'DC' | 'DCC' | 'DCCC' | 'CM';
+type $RomanHundreds = '' | 'C' | 'CC' | 'CCC' | 'CD' | 'D' | 'DC' | 'DCC' | 'DCCC' | 'CM';
 /** Roman numerals representing only the tens (10, 20, ... 90) */
-type $Tens = '' | 'X' | 'XX' | 'XXX' | 'XL' | 'L' | 'LX' | 'LXX' | 'LXXX' | 'XC';
+type $RomanTens = '' | 'X' | 'XX' | 'XXX' | 'XL' | 'L' | 'LX' | 'LXX' | 'LXXX' | 'XC';
 /** Roman numerals representing only the ones (1-9) */
-type $Ones = '' | 'I' | 'II' | 'III' | 'IV' | 'V' | 'VI' | 'VII' | 'VIII' | 'IX';
+type $RomanOnes = '' | 'I' | 'II' | 'III' | 'IV' | 'V' | 'VI' | 'VII' | 'VIII' | 'IX';
 /** Roman numerals representing the combination of thousands, hundreds, tens and ones */
-type $RawRoman = `${$Thousands}${$Hundreds}${$Tens}${$Ones}`;
+type $RawRoman = `${$RomanThousands}${$RomanHundreds}${$RomanTens}${$RomanOnes}`;
 
 /**
  * * Literal type representing every valid Roman numeral (uppercase) from 1 to 3999 (I .. MMMCMXCIX).
@@ -270,7 +270,7 @@ export type LooseRomanNumeral = LooseLiteral<RomanNumeral>;
 export type BanglaDigit = keyof typeof BN_DIGITS;
 
 /** Bangla digits from `১-৯` */
-export type $BnExcludeZero = Exclude<BanglaDigit, '০'>;
+export type $BnOnes = Exclude<BanglaDigit, '০'>;
 
 /** Result type for Bangla digit conversion based on `force` flag */
 export type BnDigitResult<Force extends boolean> = Force extends true ? number : string;

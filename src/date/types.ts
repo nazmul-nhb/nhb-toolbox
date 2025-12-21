@@ -1,12 +1,6 @@
-import type {
-	$BnExcludeZero,
-	BanglaDigit,
-	Enumerate,
-	LocaleCode,
-	NumberRange,
-} from '../number/types';
+import type { $BnOnes, BanglaDigit, Enumerate, LocaleCode, NumberRange } from '../number/types';
 import type { Maybe } from '../types/index';
-import type { LooseLiteral, RangeTuple, Repeat, Split } from '../utils/types';
+import type { LooseLiteral, RangeTuple, Split } from '../utils/types';
 import type { Chronos } from './Chronos';
 import type { ChronosStatics } from './chronos-statics';
 import type {
@@ -735,25 +729,17 @@ export type TimeWithUnit = `${number}${$UnitAnyCase}` | `${number} ${$UnitAnyCas
 export type $BnEn = 'bn' | 'en';
 
 /** Bangla month from `১-১২` */
-export type BanglaMonth = $BnExcludeZero | '১০' | '১১' | '১২';
+export type BanglaMonth = $BnOnes | '১০' | '১১' | '১২';
 
 /** Bangla date of month from `১-৩১` */
-export type BanglaMonthDate =
-	| $BnExcludeZero
-	| `১${BanglaDigit}`
-	| `২${BanglaDigit}`
-	| '৩০'
-	| '৩১';
+export type BanglaMonthDate = $BnOnes | `১${BanglaDigit}` | `২${BanglaDigit}` | '৩০' | '৩১';
 
 /** Bangla year from `০-৯৯৯৯` */
 export type BanglaYear =
 	| BanglaDigit
-	| `${$BnExcludeZero}০`
-	| `${$BnExcludeZero}০০`
-	| `${$BnExcludeZero}০০০`
-	| Repeat<$BnExcludeZero, 2>
-	| Repeat<$BnExcludeZero, 3>
-	| Repeat<$BnExcludeZero, 4>;
+	| `${$BnOnes}${BanglaDigit}`
+	| `${$BnOnes}${BanglaDigit}${BanglaDigit}`
+	| `${$BnOnes}${BanglaDigit}${BanglaDigit}${BanglaDigit}`;
 
 export type BanglaDayName<Locale extends $BnEn = 'bn'> = (typeof BN_DAYS)[number][Locale];
 export type BanglaMonthName<Locale extends $BnEn = 'bn'> = (typeof BN_MONTHS)[number][Locale];
