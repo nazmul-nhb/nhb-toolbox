@@ -88,7 +88,7 @@ export class BanglaCalendar {
 		let date =
 			dbnyv instanceof Date ? dbnyv : (
 				new Date(
-					isDateString(dbnyv) && !this.#isConfig(dbnyv) ? dbnyv
+					isDateString(dbnyv) ? dbnyv
 					: isNumber(dbnyv) && !BanglaCalendar.isBanglaYearEn(dbnyv) ? dbnyv
 					: Date.now()
 				)

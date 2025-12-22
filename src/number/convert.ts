@@ -337,14 +337,17 @@ export function wordsToNumber(word: string): number {
  *
  * @remarks
  * - Behavior depends on the `forceNumber` flag:
- *   - When `forceNumber` is `true`, always returns a `number` (`NaN` if the input includes non-digit characters).
+ *   - When `forceNumber` is `true`, always returns a `number` (strips non-digit characters).
+ * 	   - Returns `NaN` if the input is non empty string or does not include any numeric string.
  *   - When `forceNumber` is `false`, always returns a string, including non-digit characters.
+ * 	   - Returns empty string if the input is non empty string.
  *
  * @param bnDigit - A string containing Bangla (Arabic system) digits.
  * @param forceNumber - Whether to force number conversion even if the input includes non-digit character(s). Default is `false`.
  *
  * @example
- * banglaToDigit('১২৩abc'); // NaN
+ * banglaToDigit('১২৩abc'); // 123
+ * banglaToDigit(''); // NaN
  * banglaToDigit('৪৫৬');    // 456
  *
  * @example
@@ -361,7 +364,16 @@ export function banglaToDigit<Force extends boolean = true>(
 		String(BN_DIGITS[d as BanglaDigit])
 	);
 
-	return (forceNumber ? Number(digitStr) : digitStr) as BnDigitResult<Force>;
+	if (forceNumber) {
+		return Number(
+			digitStr
+				.split('')
+				.filter((dig) => !isNaN(Number(dig)))
+				.join('')
+		) as BnDigitResult<Force>;
+	}
+
+	return digitStr as BnDigitResult<Force>;
 }
 
 /**
@@ -370,7 +382,8 @@ export function banglaToDigit<Force extends boolean = true>(
  * @remarks
  * - Accepts numbers or numeric strings including non-digit characters.
  * - When `preserveNonDigit` is `true`, non-digit characters are preserved in the output.
- * - When `preserveNonDigit` is `false`, non-numeric strings return an empty string.
+ * - When `preserveNonDigit` is `false`, non-numeric strings are stripped.
+ * - Returns empty string for invalid input.
  *
  * @param digit - A number or string containing Latin (Arabic system) digits.
  * @param preserveNonDigit - Whether to preserve non-digit characters in the output. Default is `true`.
@@ -380,18 +393,29 @@ export function banglaToDigit<Force extends boolean = true>(
  * digitToBangla('456');        // "৪৫৬"
  *
  * @example
- * digitToBangla('12ab', false);	// ""
+ * digitToBangla('12ab', false);	// "১২"
  * digitToBangla('12ab');		// "১২ab"
  */
 export function digitToBangla(digit: number | string, preserveNonDigit = true): string {
+	const banglaDigits = Object.keys(BN_DIGITS);
+
 	const _matchAndConvert = (value: string) => {
-		return value.replace(/\d/g, (dig) => Object.keys(BN_DIGITS)[Number(dig)]);
+		return value.replace(/\d/g, (dig) => banglaDigits[Number(dig)]);
 	};
 
 	if (isNumber(digit)) return _matchAndConvert(String(digit));
 
-	if (isNonEmptyString(digit) && (preserveNonDigit || isNumericString(digit))) {
-		return _matchAndConvert(digit);
+	if (isNonEmptyString(digit)) {
+		const bnDigStr = _matchAndConvert(digit);
+
+		if (preserveNonDigit || isNumericString(digit)) {
+			return bnDigStr;
+		}
+
+		return bnDigStr
+			.split('')
+			.filter((dig) => banglaDigits.includes(dig))
+			.join('');
 	}
 
 	return '';
