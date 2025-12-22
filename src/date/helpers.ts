@@ -1,9 +1,21 @@
 import { getOrdinal } from '../number/utilities';
 import type { Maybe } from '../types/index';
-import { DAYS, MONTHS, SORTED_TIME_FORMATS } from './constants';
+import {
+	BN_MONTH_TABLES,
+	BN_SEASONS,
+	BN_YEAR_OFFSET,
+	DAYS,
+	MONTHS,
+	MS_PER_DAY,
+	SORTED_TIME_FORMATS,
+} from './constants';
+import { isLeapYear } from './guards';
 import type {
+	$BnEn,
 	$GMTOffset,
 	$TimeZoneIdentifier,
+	BanglaSeasonName,
+	BnCalendarVariant,
 	ChronosFormat,
 	TimeZoneNameNative,
 	UTCOffset,
@@ -120,4 +132,64 @@ export function _resolveNativeTzName<T extends $TzNameType>(tzId: $TzId, type: T
 /** Convert `GMT±HH:mm` string to `UTC±HH:mm` format*/
 export function _gmtToUtcOffset(gmt: Maybe<string>) {
 	return gmt === 'GMT' ? 'UTC+00:00' : (gmt?.replace(/^GMT/, 'UTC') as Maybe<UTCOffset>);
+}
+
+export function _getSeason<L extends $BnEn = 'bn'>(month: number, locale?: L | $BnEn) {
+	const season = BN_SEASONS[Math.floor(month / 2)];
+
+	return (locale === 'en' ? season.en : season.bn) as BanglaSeasonName<L>;
+}
+
+export function _isBnLeapYear(by: number, gy: number, v?: BnCalendarVariant) {
+	return v === 'revised-1966' ? by % 4 === 2 : isLeapYear(gy);
+}
+
+export function _extractDateUnits(date: Date) {
+	const month = date.getMonth();
+
+	return {
+		gy: date.getFullYear(),
+		$gm: month,
+		gm: month + 1,
+		gd: date.getDate(),
+	};
+}
+
+export function _getGregBaseYear(date: Date): number {
+	const { gy, gm, gd } = _extractDateUnits(date);
+
+	return gm < 4 || (gm === 4 && gd < 14) ? gy - 1 : gy;
+}
+
+export function _getBnYear(date: Date): number {
+	return _getGregBaseYear(date) - BN_YEAR_OFFSET;
+}
+
+export function _getUtcTs(date: Date): number {
+	const { gy, $gm, gd } = _extractDateUnits(date);
+
+	return Date.UTC(gy, $gm, gd);
+}
+
+export function _getElapsedDays(date: Date): number {
+	return Math.floor((_getUtcTs(date) - Date.UTC(_getGregBaseYear(date), 3, 14)) / MS_PER_DAY);
+}
+
+export function _bnDaysMonthIdx(date: Date, variant?: BnCalendarVariant) {
+	const v = variant ?? 'revised-2019';
+
+	const table =
+		_isBnLeapYear(_getBnYear(date), date.getFullYear(), v) ?
+			BN_MONTH_TABLES?.[v].leap
+		:	BN_MONTH_TABLES?.[v].normal;
+
+	let days = _getElapsedDays(date);
+	let monthIdx = 0;
+
+	while (days >= table[monthIdx]) {
+		days -= table[monthIdx];
+		monthIdx++;
+	}
+
+	return { days, monthIdx };
 }

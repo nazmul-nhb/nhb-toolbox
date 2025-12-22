@@ -292,6 +292,9 @@ export const LOCALE_NUMBERING_SYSTEMS = /* @__PURE__ */ Object.freeze([
 
 // ! Bangla Calendar Constants
 
+/** Bangla year offset */
+export const BN_YEAR_OFFSET = 593;
+
 /** Bangla month days table for different variants */
 export const BN_MONTH_TABLES = /* @__PURE__ */ Object.freeze({
 	'revised-2019': {
