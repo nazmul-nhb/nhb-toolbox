@@ -655,7 +655,7 @@ export class Chronos {
 	 * Uses local time by default unless `useUTC` is set to `true`.
 	 */
 	format(format?: string, useUTC = false): string {
-		return this.#format(format ?? 'dd, mmm DD, YYYY HH:mm:ss', useUTC);
+		return this.#format(format || 'dd, mmm DD, YYYY HH:mm:ss', useUTC);
 	}
 
 	/**
@@ -672,7 +672,7 @@ export class Chronos {
 	 * @returns A formatted date string in the specified format.
 	 */
 	formatStrict(format?: StrictFormat, useUTC = false): string {
-		return this.#format(format ?? 'dd, mmm DD, YYYY HH:mm:ss', useUTC);
+		return this.#format(format || 'dd, mmm DD, YYYY HH:mm:ss', useUTC);
 	}
 
 	/**
@@ -1756,7 +1756,7 @@ export class Chronos {
 
 		const timeWithDate = `${new Chronos().#format('YYYY-MM-DD')}T${normalizeOffset(time)}`;
 
-		return new Chronos(timeWithDate).formatStrict(format ?? 'hh:mm:ss a');
+		return new Chronos(timeWithDate).#format(format || 'hh:mm:ss a');
 	}
 
 	/**
@@ -2019,6 +2019,8 @@ export class Chronos {
 	}
 }
 
-export { chronos } from './chronos-fn';
+export { Chronos as Chronus };
+export { chronos, chronosjs, chronosts, chronus, chronusjs, chronusts } from './chronos-fn';
+
 // ! Chronos `INTERNALS` Symbol for plugin authors
 export { INTERNALS } from './constants';

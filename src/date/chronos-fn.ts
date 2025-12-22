@@ -141,7 +141,7 @@ function _isChronosStaticKey(prop: string): prop is ChronosStaticKey {
  * chronos.register(plugin: ChronosPlugin): void;
  * ```
  */
-const chronosStatics = new Proxy($chronos, {
+export const chronos = new Proxy($chronos, {
 	get(target, prop: string, receiver) {
 		// If the property exists on the function itself, return it
 		if (prop in target) {
@@ -163,4 +163,11 @@ const chronosStatics = new Proxy($chronos, {
 	},
 }) as ChronosStatics;
 
-export { chronosStatics as chronos };
+// ! Export aliases
+export {
+	chronos as chronosjs,
+	chronos as chronosts,
+	chronos as chronus,
+	chronos as chronusjs,
+	chronos as chronusts,
+};

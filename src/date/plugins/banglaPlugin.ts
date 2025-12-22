@@ -23,16 +23,6 @@ import type {
 	StrictFormat,
 } from '../types';
 
-// const BN_REFORM_DATE_UTC = Date.UTC(2019, 3, 14); // 14 April 2019
-
-// const isPost2019Bangla = (timestamp: number): boolean => {
-// 	return timestamp >= BN_REFORM_DATE_UTC;
-// };
-
-// const floorAndAbs = (num: number) => {
-// 	return Math.abs(Math.floor(num));
-// };
-
 declare module '../Chronos' {
 	interface Chronos {
 		/**
@@ -68,8 +58,8 @@ declare module '../Chronos' {
 		 * // }
 		 *
 		 * @remarks
-		 * The method uses the default calendar variant unless specified in options.
-		 * The locale option determines whether values are returned in Bangla or Latin format.
+		 * - The method uses the default calendar variant unless specified in options.
+		 * - The locale option determines whether values are returned in Bangla or Latin format.
 		 */
 		toBangla<Locale extends $BnEn = 'bn'>(
 			options?: BanglaDateOptions<Locale>
@@ -219,7 +209,7 @@ declare module '../Chronos' {
 		 * chronos.getBanglaSeasonName({ locale: 'en' }); // Returns: 'Grisma (Summer)'
 		 *
 		 * @remarks
-		 * Bangla calendar traditionally divided into 6 seasons (ঋতু):
+		 * Bangla calendar is traditionally divided into 6 seasons (ঋতু):
 		 * - গ্রীষ্ম (Summer): Mid-April to Mid-June
 		 * - বর্ষা (Monsoon): Mid-June to Mid-August
 		 * - শরৎ (Autumn): Mid-August to Mid-October

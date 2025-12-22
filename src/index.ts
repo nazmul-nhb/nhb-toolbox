@@ -257,7 +257,7 @@ export {
 export { BanglaCalendar, BnCalendar, Bongabdo } from './date/BanglaCalendar';
 
 // ! Chronos
-export { Chronos, Chronos as Chronus } from './date/Chronos';
+export { Chronos, Chronus } from './date/Chronos';
 
 // ! Chronos `INTERNALS` Symbol for plugin authors
 export { INTERNALS } from './date/constants';
@@ -265,11 +265,11 @@ export { INTERNALS } from './date/constants';
 // ! Chronos wrapper function
 export {
 	chronos,
-	chronos as chronosjs,
-	chronos as chronosts,
-	chronos as chronus,
-	chronos as chronusjs,
-	chronos as chronusts,
+	chronosjs,
+	chronosts,
+	chronus,
+	chronusjs,
+	chronusts,
 } from './date/chronos-fn';
 
 // ! Other date/time utils
