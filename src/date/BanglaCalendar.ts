@@ -13,6 +13,33 @@ import type {
 	BnCalendarVariant,
 } from './types';
 
+/**
+ * * Represents a date in the Bangla calendar system with support for different variants.
+ *
+ * - This class provides functionality to create, manipulate, and convert dates between the Bangla and Gregorian calendar systems.
+ * - It supports two calendar variants: `'revised-2019'` (default) and `'revised-1966'`.
+ *
+ * @example
+ * // Create from current date
+ * const today = new BanglaCalendar();
+ *
+ * // Create from Gregorian date
+ * const date1 = new BanglaCalendar('2023-04-14');
+ * const date2 = new BanglaCalendar(new Date('2023-04-14'));
+ *
+ * // Create with specific Bangla date using Latin digits
+ * const date3 = new BanglaCalendar(1430, 1, 1);
+ *
+ * // Create with specific Bangla date using Bangla digits
+ * const date4 = new BanglaCalendar('১৪৩০', '১', '১');
+ *
+ * // Create with specific variant
+ * const date5 = new BanglaCalendar('১৪৩০', '১', '১', { variant: 'revised-1966' });
+ *
+ * @remarks
+ * - The Bangla calendar year starts on April 14th (১ বৈশাখ) in the Gregorian calendar.
+ * - The class automatically handles leap years according to the selected variant.
+ */
 export class BanglaCalendar {
 	/** Bangla calendar variant */
 	readonly variant: BnCalendarVariant;
@@ -51,14 +78,64 @@ export class BanglaCalendar {
 		day: NumberRange<1, 31>;
 	}>;
 
+	/**
+	 * * Creates a `BanglaCalendar` instance from the current date.
+	 *
+	 * @param config - Calendar configuration options
+	 */
 	constructor(config?: BnCalendarConfig);
 
+	/**
+	 * * Creates a `BanglaCalendar` instance from a Gregorian date string or {@link Date} object.
+	 *
+	 * @param date - Gregorian date string or {@link Date} object
+	 * @param config - Calendar configuration options
+	 *
+	 * @example
+	 * const fromString = new BanglaCalendar('2023-04-14');
+	 * const fromDate = new BanglaCalendar(new Date('2023-04-14'));
+	 */
 	constructor(date: string | Date, config?: BnCalendarConfig);
 
+	/**
+	 * * Creates a `BanglaCalendar` instance from a timestamp or Bangla year (Latin digits).
+	 *
+	 * @param tsOrBnYear - Timestamp (number of milliseconds) or Bangla year in Latin digits (`0-9999`)
+	 * @param config - Calendar configuration options
+	 *
+	 * @remarks Current month and day of the month is used but for the specified `bnYear`.
+	 *
+	 * @example
+	 * const fromTimestamp = new BanglaCalendar(1681430400000); // 2023-04-14 timestamp
+	 * const fromYear = new BanglaCalendar(1430); // Bangla year 1430
+	 */
 	constructor(tsOrBnYear: number, config?: BnCalendarConfig);
 
+	/**
+	 * * Creates a `BanglaCalendar` instance from Bangla year and month (Latin digits).
+	 *
+	 * @param bnYear - Bangla year in Latin digits (`0-9999`)
+	 * @param bnMonth - Bangla month in Latin digits (`1-12`)
+	 * @param config - Calendar configuration options
+	 *
+	 * @remarks Current day of the month is used but for the specified `bnYear` and `bnMonth`.
+	 *
+	 * @example
+	 * const date = new BanglaCalendar(1430, 1); // বৈশাখ 1430
+	 */
 	constructor(bnYear: number, bnMonth: NumberRange<1, 12>, config?: BnCalendarConfig);
 
+	/**
+	 * * Creates a `BanglaCalendar` instance from Bangla year, month, and day (Latin digits).
+	 *
+	 * @param bnYear - Bangla year in Latin digits (`0-9999`)
+	 * @param bnMonth - Bangla month in Latin digits (`1-12`)
+	 * @param bnDay - Bangla day of month in Latin digits (`1-31`)
+	 * @param config - Calendar configuration options
+	 *
+	 * @example
+	 * const date = new BanglaCalendar(1430, 1, 1); // ১ বৈশাখ ১৪৩০
+	 */
 	constructor(
 		bnYear: number,
 		bnMonth: NumberRange<1, 12>,
@@ -66,10 +143,44 @@ export class BanglaCalendar {
 		config?: BnCalendarConfig
 	);
 
+	/**
+	 * * Creates a BanglaCalendar instance from Bangla year (Bangla digits).
+	 *
+	 * @param bnYear - Bangla year in Bangla digits (`০-৯৯৯৯`)
+	 * @param config - Calendar configuration options
+	 *
+	 * @remarks Current month and day of the month is used but for the specified `bnYear`.
+	 *
+	 * @example
+	 * const date = new BanglaCalendar('১৪৩০'); // Bangla year 1430
+	 */
 	constructor(bnYear: BanglaYear, config?: BnCalendarConfig);
 
+	/**
+	 * * Creates a `BanglaCalendar` instance from Bangla year and month (Bangla digits).
+	 *
+	 * @param bnYear - Bangla year in Bangla digits (`০-৯৯৯৯`)
+	 * @param bnMonth - Bangla month in Bangla digits (`১-১২`)
+	 * @param config - Calendar configuration options
+	 *
+	 * @remarks Current day of the month is used but for the specified `bnYear` and `bnMonth`.
+	 *
+	 * @example
+	 * const date = new BanglaCalendar('১৪৩০', '১'); // বৈশাখ 1430
+	 */
 	constructor(bnYear: BanglaYear, bnMonth: BanglaMonth, config?: BnCalendarConfig);
 
+	/**
+	 * * Creates a `BanglaCalendar` instance from Bangla year, month, and day (Bangla digits).
+	 *
+	 * @param bnYear - Bangla year in Bangla digits (`০-৯৯৯৯`)
+	 * @param bnMonth - Bangla month in Bangla digits (`১-১২`)
+	 * @param bnDay - Bangla day of month in Bangla digits (`১-৩১`)
+	 * @param config - Calendar configuration options
+	 *
+	 * @example
+	 * const date = new BanglaCalendar('১৪৩০', '১', '১'); // ১ বৈশাখ ১৪৩০
+	 */
 	constructor(
 		bnYear: BanglaYear,
 		bnMonth: BanglaMonth,
@@ -77,20 +188,22 @@ export class BanglaCalendar {
 		config?: BnCalendarConfig
 	);
 
+	/** * Creates a `BanglaCalendar` instance from given parameters */
 	constructor(
-		dbnyv?: string | number | Date | BanglaYear | BnCalendarConfig,
-		bnmv?: BanglaMonth | NumberRange<1, 12> | BnCalendarConfig,
-		bndv?: BanglaDate | NumberRange<1, 31> | BnCalendarConfig,
+		dateBnYrOrCfg?: string | number | Date | BanglaYear | BnCalendarConfig,
+		bnMonthOrCfg?: BanglaMonth | NumberRange<1, 12> | BnCalendarConfig,
+		bnDayOrCfg?: BanglaDate | NumberRange<1, 31> | BnCalendarConfig,
 		config?: BnCalendarConfig
 	) {
-		this.variant = this.#processVariants(dbnyv, bnmv, bndv, config);
+		this.variant = this.#processVariants(dateBnYrOrCfg, bnMonthOrCfg, bnDayOrCfg, config);
 
 		let date =
-			dbnyv instanceof Date ? dbnyv : (
+			dateBnYrOrCfg instanceof Date ? dateBnYrOrCfg : (
 				new Date(
-					isDateString(dbnyv) ? dbnyv
-					: isNumber(dbnyv) && !BanglaCalendar.isBanglaYearEn(dbnyv) ? dbnyv
-					: Date.now()
+					isDateString(dateBnYrOrCfg) ? dateBnYrOrCfg
+					: isNumber(dateBnYrOrCfg) && !BanglaCalendar.isBanglaYearEn(dateBnYrOrCfg) ?
+						dateBnYrOrCfg
+					:	Date.now()
 				)
 			);
 
@@ -101,23 +214,24 @@ export class BanglaCalendar {
 		const { year, month, monthDate } = this.#processDate(date);
 
 		this.year =
-			BanglaCalendar.isBanglaYear(dbnyv) ? { bn: dbnyv, en: banglaToDigit(dbnyv) }
-			: isNumber(dbnyv) && BanglaCalendar.isBanglaYearEn(dbnyv) ?
-				{ bn: digitToBangla(dbnyv) as BanglaYear, en: dbnyv }
+			BanglaCalendar.isBanglaYear(dateBnYrOrCfg) ?
+				{ bn: dateBnYrOrCfg, en: banglaToDigit(dateBnYrOrCfg) }
+			: isNumber(dateBnYrOrCfg) && BanglaCalendar.isBanglaYearEn(dateBnYrOrCfg) ?
+				{ bn: digitToBangla(dateBnYrOrCfg) as BanglaYear, en: dateBnYrOrCfg }
 			:	year;
 
 		this.month =
-			BanglaCalendar.isBanglaMonth(bnmv) ?
-				{ bn: bnmv, en: banglaToDigit(bnmv) as NumberRange<1, 12> }
-			: BanglaCalendar.isBanglaMonthEn(bnmv) ?
-				{ bn: digitToBangla(bnmv) as BanglaMonth, en: bnmv }
+			BanglaCalendar.isBanglaMonth(bnMonthOrCfg) ?
+				{ bn: bnMonthOrCfg, en: banglaToDigit(bnMonthOrCfg) as NumberRange<1, 12> }
+			: BanglaCalendar.isBanglaMonthEn(bnMonthOrCfg) ?
+				{ bn: digitToBangla(bnMonthOrCfg) as BanglaMonth, en: bnMonthOrCfg }
 			:	month;
 
 		this.day =
-			BanglaCalendar.isBanglaDate(bndv) ?
-				{ bn: bndv, en: banglaToDigit(bndv) as NumberRange<1, 31> }
-			: BanglaCalendar.isBanglaDateEn(bndv) ?
-				{ bn: digitToBangla(bndv) as BanglaDate, en: bndv }
+			BanglaCalendar.isBanglaDate(bnDayOrCfg) ?
+				{ bn: bnDayOrCfg, en: banglaToDigit(bnDayOrCfg) as NumberRange<1, 31> }
+			: BanglaCalendar.isBanglaDateEn(bnDayOrCfg) ?
+				{ bn: digitToBangla(bnDayOrCfg) as BanglaDate, en: bnDayOrCfg }
 			:	monthDate;
 
 		const { gy, gm, gd } = _extractDateUnits(this.toDate());
@@ -125,10 +239,39 @@ export class BanglaCalendar {
 		this.gregorian = { year: gy, month: gm, day: gd };
 	}
 
+	/**
+	 * * Checks if the current Bangla year is a leap year.
+	 * @returns `true` if the year is a leap year, `false` otherwise
+	 *
+	 * @example
+	 * const date = new BanglaCalendar(1430, 1, 1);
+	 * const isLeap = date.isLeapYear(); // false
+	 *
+	 * @remarks
+	 * - Leap year determination depends on the selected calendar variant.
+	 * - The `'revised-2019'` and `'revised-1966'` variants have different leap year rules.
+	 *   - **Revised-2019**: Leap year is determined by the associated Gregorian year's leap rule:
+	 *     - A year is a leap year if it is divisible by 4, but not divisible by 100, unless it is also divisible by 400.
+	 *   - **Revised-1966**: Leap year is determined solely by the Bangla year (`bnYear % 4 === 2`), no Gregorian rule applies.
+	 */
 	isLeapYear(): boolean {
 		return this.#getGregYearBnMonthTable().isBnLeapYear;
 	}
 
+	/**
+	 * * Converts the Bangla calendar date to a JS {@link Date} object.
+	 *
+	 * @returns Gregorian Date object equivalent to the Bangla date
+	 *
+	 * @example
+	 * const bnDate = new BanglaCalendar('১৪৩০', '১', '১');
+	 * const gregorianDate = bnDate.toDate(); // Date for April 14, 2023
+	 * console.log(gregorianDate.toISOString()); // 2023-04-14T00:00:00.000Z
+	 *
+	 * @remarks
+	 * - The conversion takes into account the calendar variant and leap year rules.
+	 * - Time component is set to `00:00:00` in UTC.
+	 */
 	toDate(): Date {
 		const { baseGregYear, bnMonthTable } = this.#getGregYearBnMonthTable();
 
@@ -142,6 +285,7 @@ export class BanglaCalendar {
 		return new Date(days * MS_PER_DAY + epoch);
 	}
 
+	/** Get the Gregorian year(s), Bangla month table and leap year flag based on calendar variant */
 	#getGregYearBnMonthTable() {
 		const baseGregYear = this.year.en + BN_YEAR_OFFSET;
 
@@ -157,6 +301,7 @@ export class BanglaCalendar {
 		return { baseGregYear, gregYear, bnMonthTable, isBnLeapYear };
 	}
 
+	/** Process variant from the config */
 	#processVariants(v1: unknown, v2: unknown, v3: unknown, v4: unknown) {
 		return (
 			this.#isConfig(v1) ? v1.variant
@@ -167,6 +312,7 @@ export class BanglaCalendar {
 		);
 	}
 
+	/** Process {@link Date} and extract Bangla year, month and dates in both Bangla and Latin */
 	#processDate(date: Date) {
 		const bnYear = _getBnYear(date);
 
@@ -185,6 +331,7 @@ export class BanglaCalendar {
 		};
 	}
 
+	/** Check if a value is a configuration object */
 	#isConfig(value: unknown): value is Required<BnCalendarConfig> {
 		return (
 			isObjectWithKeys(value, ['variant']) &&
@@ -194,49 +341,97 @@ export class BanglaCalendar {
 	}
 
 	/**
-	 * @static Checks whether a value is a valid Bangla year (`০–৯৯৯৯`)
-	 * @param value Value to check
+	 * * Checks whether a value is a valid Bangla year in Bangla digits (`০–৯৯৯৯`).
+	 *
+	 * @param value - Value to check
+	 * @returns `true` if the value is a valid Bangla year, `false` otherwise
+	 *
+	 * @example
+	 * BanglaCalendar.isBanglaYear('১৪৩০'); // true
+	 * BanglaCalendar.isBanglaYear('০');    // true
+	 * BanglaCalendar.isBanglaYear('১০০০০'); // false (too many digits)
+	 * BanglaCalendar.isBanglaYear('1430');  // false (Latin digits)
 	 */
 	static isBanglaYear(value: unknown): value is BanglaYear {
-		// /^[০-৯]{1,4}$/
+		// /^[০-৯]{1,4}$/ // Allow unlimited left padding with ০
 		return isNonEmptyString(value) && /^(?:০|[১-৯][০-৯]{0,3})$/.test(value);
 	}
 
 	/**
-	 * @static Checks whether a value is a valid Bangla year (`0–9999`)
-	 * @param value Value to check
+	 * * Checks whether a value is a valid Bangla year in Latin digits (`0–9999`).
+	 *
+	 * @param value - Value to check (must be a number)
+	 * @returns `true` if the value is a valid Bangla year, `false` otherwise
+	 *
+	 * @example
+	 * BanglaCalendar.isBanglaYearEn(1430);  // true
+	 * BanglaCalendar.isBanglaYearEn(0);     // true
+	 * BanglaCalendar.isBanglaYearEn(10000); // false
+	 * BanglaCalendar.isBanglaYearEn(-1);    // false
 	 */
 	static isBanglaYearEn(value: number): boolean {
 		return isInteger(value) && value >= 0 && value <= 9999;
 	}
 
 	/**
-	 * @static Checks whether a value is a valid Bangla month (`১–১২`)
-	 * @param value Value to check
+	 * * Checks whether a value is a valid Bangla month in Bangla digits (`১–১২`).
+	 *
+	 * @param value - Value to check
+	 * @returns `true` if the value is a valid Bangla month, `false` otherwise
+	 *
+	 * @example
+	 * BanglaCalendar.isBanglaMonth('১');  // true
+	 * BanglaCalendar.isBanglaMonth('১২'); // true
+	 * BanglaCalendar.isBanglaMonth('১৩'); // false
+	 * BanglaCalendar.isBanglaMonth('0');  // false (Latin digit)
 	 */
 	static isBanglaMonth(value: unknown): value is BanglaMonth {
 		return isNonEmptyString(value) && /^(?:[১-৯]|১০|১১|১২)$/.test(value);
 	}
 
 	/**
-	 * @static Checks whether a value is a valid Bangla month (`1-12`)
-	 * @param value Value to check
+	 * * Checks whether a value is a valid Bangla month in Latin digits (`1–12`).
+	 *
+	 * @param value - Value to check
+	 * @returns `true` if the value is a valid Bangla month, `false` otherwise
+	 *
+	 * @example
+	 * BanglaCalendar.isBanglaMonthEn(1);  // true
+	 * BanglaCalendar.isBanglaMonthEn(12); // true
+	 * BanglaCalendar.isBanglaMonthEn(0);  // false
+	 * BanglaCalendar.isBanglaMonthEn(13); // false
 	 */
 	static isBanglaMonthEn(value: unknown): value is NumberRange<1, 12> {
 		return isInteger(value) && value >= 1 && value <= 12;
 	}
 
 	/**
-	 * @static Checks whether a value is a valid Bangla date of month (`১–৩১`)
-	 * @param value Value to check
+	 * * Checks whether a value is a valid Bangla date of month in Bangla digits (`১–৩১`).
+	 *
+	 * @param value - Value to check
+	 * @returns `true` if the value is a valid Bangla date, `false` otherwise
+	 *
+	 * @example
+	 * BanglaCalendar.isBanglaDate('১');   // true
+	 * BanglaCalendar.isBanglaDate('৩১');  // true
+	 * BanglaCalendar.isBanglaDate('৩২');  // false
+	 * BanglaCalendar.isBanglaDate('০');   // false
 	 */
 	static isBanglaDate(value: unknown): value is BanglaDate {
 		return isNonEmptyString(value) && /^(?:[১-৯]|[১২][০-৯]|৩০|৩১)$/.test(value);
 	}
 
 	/**
-	 * @static Checks whether a value is a valid Bangla date of month (`১–৩১`)
-	 * @param value Value to check
+	 * * Checks whether a value is a valid Bangla date of month in Latin digits (`1–31`).
+	 *
+	 * @param value - Value to check
+	 * @returns `true` if the value is a valid Bangla date, `false` otherwise
+	 *
+	 * @example
+	 * BanglaCalendar.isBanglaDateEn(1);   // true
+	 * BanglaCalendar.isBanglaDateEn(31);  // true
+	 * BanglaCalendar.isBanglaDateEn(32);  // false
+	 * BanglaCalendar.isBanglaDateEn(0);   // false
 	 */
 	static isBanglaDateEn(value: unknown): value is NumberRange<1, 31> {
 		return isInteger(value) && value >= 1 && value <= 31;

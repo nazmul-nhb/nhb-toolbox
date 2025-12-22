@@ -105,9 +105,10 @@ export default defineScriptConfig({
 		wrapPrefixWith: '`',
 		commitTypes: {
 			custom: [
-				{ emoji: '🔣', type: 'types' },
 				{ emoji: '💩', type: 'dump' },
 				{ emoji: '📝', type: 'draft' },
+				{ emoji: '🔣', type: 'types' },
+				{ emoji: '🔡', type: 'tsdoc' },
 			],
 		},
 	},
