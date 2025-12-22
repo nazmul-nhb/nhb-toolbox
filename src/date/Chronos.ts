@@ -2,7 +2,7 @@ import { isValidArray } from '../guards/non-primitives';
 import { isNumber, isString } from '../guards/primitives';
 import type { Enumerate, NumberRange } from '../number/types';
 import type { LooseLiteral, TupleOf } from '../utils/types';
-import { DAYS, INTERNALS, MONTHS } from './constants';
+import { DAYS, INTERNALS, MONTHS, MS_PER_DAY } from './constants';
 import { isLeapYear } from './guards';
 import { _formatDate, _resolveNativeTzName } from './helpers';
 import type {
@@ -1486,8 +1486,8 @@ export class Chronos {
 
 		const startTime = startDate.#timestamp;
 		const endTime = endDate.#timestamp;
-		const step = (startTime <= endTime ? 1 : -1) * 86400000;
-		const totalDays = Math.floor(Math.abs(endTime - startTime) / 86400000);
+		const step = (startTime <= endTime ? 1 : -1) * MS_PER_DAY;
+		const totalDays = Math.floor(Math.abs(endTime - startTime) / MS_PER_DAY);
 
 		for (let i = 0; i <= totalDays; i++) {
 			const ts = startTime + i * step;
@@ -1838,7 +1838,7 @@ export class Chronos {
 		const result: string[] = [];
 
 		// compute total days difference
-		const step = (startDate.isBefore(endDate, 'day') ? 1 : -1) * 86400000;
+		const step = (startDate.isBefore(endDate, 'day') ? 1 : -1) * MS_PER_DAY;
 		const totalDays = Math.abs(endDate.diff(startDate, 'day'));
 		const currentTime = startDate.#timestamp;
 

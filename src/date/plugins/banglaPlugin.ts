@@ -1,5 +1,12 @@
 import { digitToBangla } from '../../number/convert';
-import { BN_DAYS, BN_MONTH_TABLES, BN_MONTHS, BN_SEASONS, INTERNALS } from '../constants';
+import {
+	BN_DAYS,
+	BN_MONTH_TABLES,
+	BN_MONTHS,
+	BN_SEASONS,
+	INTERNALS,
+	MS_PER_DAY,
+} from '../constants';
 import { isLeapYear } from '../guards';
 import { _formatDateCore } from '../helpers';
 import type {
@@ -95,12 +102,11 @@ declare module '../Chronos' {
 	}
 }
 
-/** * Plugin to inject methods related to `Bengali` date system */
-export const bengaliPlugin = ($Chronos: $Chronos): void => {
+/** * Plugin to inject methods related to Bangla calendar system (`Bongabdo`) */
+export const banglaPlugin = ($Chronos: $Chronos): void => {
 	const { internalDate: $Date } = $Chronos[INTERNALS];
 
 	const YEAR_OFFSET = 593;
-	const MS_PER_DAY = 86400000;
 
 	const DEFAULT_CONFIG = new Map<'config', BnCalendarConfig>();
 

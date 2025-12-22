@@ -3,6 +3,9 @@ import type { $TimeUnitVar, ClockHour, DayPart } from './types';
 /** @internal Symbol for accessing Chronos internals (plugin author use only) */
 export const INTERNALS = Symbol('Internals');
 
+/** Milliseconds per day */
+export const MS_PER_DAY = 86400000;
+
 /** Array of strings containing all the seven week-day names, starting with `Sunday` */
 export const DAYS = /* @__PURE__ */ Object.freeze([
 	'Sunday',
@@ -289,6 +292,7 @@ export const LOCALE_NUMBERING_SYSTEMS = /* @__PURE__ */ Object.freeze([
 
 // ! Bangla Calendar Constants
 
+/** Bangla month days table for different variants */
 export const BN_MONTH_TABLES = /* @__PURE__ */ Object.freeze({
 	'revised-2019': {
 		normal: [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 29, 30],
@@ -300,6 +304,7 @@ export const BN_MONTH_TABLES = /* @__PURE__ */ Object.freeze({
 	},
 } as const);
 
+/** List of Bangla season names in Bangla and English */
 export const BN_SEASONS = /* @__PURE__ */ Object.freeze([
 	{ bn: 'গ্রীষ্ম', en: 'Grisma (Summer)' },
 	{ bn: 'বর্ষা', en: 'Barsa (Monsoon)' },
@@ -309,6 +314,7 @@ export const BN_SEASONS = /* @__PURE__ */ Object.freeze([
 	{ bn: 'বসন্ত', en: 'Basanta (Spring)' },
 ] as const);
 
+/** List of Bangla day names in Bangla and English */
 export const BN_DAYS = /* @__PURE__ */ Object.freeze([
 	{ bn: 'রবিবার', en: 'Robibar (Sunday)', short: 'র' },
 	{ bn: 'সোমবার', en: 'Shombar (Monday)', short: 'সো' },
@@ -319,6 +325,7 @@ export const BN_DAYS = /* @__PURE__ */ Object.freeze([
 	{ bn: 'শনিবার', en: 'Shonibar (Saturday)', short: 'শ' },
 ] as const);
 
+/** List of Bangla month names in Bangla and English */
 export const BN_MONTHS = /* @__PURE__ */ Object.freeze([
 	{ bn: 'বৈশাখ', en: 'Boishakh', short: 'বৈ' },
 	{ bn: 'জ্যৈষ্ঠ', en: 'Joishtho', short: 'জ্য' },

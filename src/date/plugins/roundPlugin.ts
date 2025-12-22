@@ -1,5 +1,5 @@
 import { roundToNearest } from '../../number/utilities';
-import { INTERNALS } from '../constants';
+import { INTERNALS, MS_PER_DAY } from '../constants';
 import type { $Chronos, TimeUnit } from '../types';
 
 declare module '../Chronos' {
@@ -75,7 +75,7 @@ export const roundPlugin = ($Chronos: $Chronos): void => {
 					(date.getHours() / 24 +
 						date.getMinutes() / 1440 +
 						date.getSeconds() / 86400 +
-						date.getMilliseconds() / 86400000);
+						date.getMilliseconds() / MS_PER_DAY);
 
 				const rounded = roundToNearest(fullDay, nearest);
 				date.setDate(rounded);
@@ -114,7 +114,7 @@ export const roundPlugin = ($Chronos: $Chronos): void => {
 
 			case 'year': {
 				const dayOfYear = Math.floor(
-					(date.getTime() - new Date(date.getFullYear(), 0, 1).getTime()) / 86400000
+					(date.getTime() - new Date(date.getFullYear(), 0, 1).getTime()) / MS_PER_DAY
 				);
 
 				const isLeap = new Date(date.getFullYear(), 1, 29).getDate() === 29;
