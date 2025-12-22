@@ -1,3 +1,4 @@
+import type { Enumerate, NumberRange } from '../number/types';
 import { getOrdinal } from '../number/utilities';
 import type { Maybe } from '../types/index';
 import {
@@ -149,9 +150,9 @@ export function _extractDateUnits(date: Date) {
 
 	return {
 		gy: date.getFullYear(),
-		$gm: month,
-		gm: month + 1,
-		gd: date.getDate(),
+		$gm: month as Enumerate<12>,
+		gm: (month + 1) as NumberRange<1, 12>,
+		gd: date.getDate() as NumberRange<1, 31>,
 	};
 }
 

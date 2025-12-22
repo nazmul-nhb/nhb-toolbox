@@ -767,7 +767,7 @@ export type BanglaDateObject<Locale extends $BnEn = 'bn'> = {
 export type BnCalendarVariant = keyof typeof BN_MONTH_TABLES;
 
 export interface BnCalendarConfig {
-	/** - Locale calendar variant to use. Defaults to `'revised-2019'`. */
+	/** - Calendar variant to use. Defaults to `'revised-2019'`. */
 	variant?: BnCalendarVariant;
 }
 
