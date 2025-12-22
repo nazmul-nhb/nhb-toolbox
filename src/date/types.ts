@@ -732,7 +732,7 @@ export type $BnEn = 'bn' | 'en';
 export type BanglaMonth = $BnOnes | '১০' | '১১' | '১২';
 
 /** Bangla date of month from `১-৩১` */
-export type BanglaMonthDate = $BnOnes | `১${BanglaDigit}` | `২${BanglaDigit}` | '৩০' | '৩১';
+export type BanglaDate = $BnOnes | `১${BanglaDigit}` | `২${BanglaDigit}` | '৩০' | '৩১';
 
 /** Bangla year from `০-৯৯৯৯` */
 export type BanglaYear =
@@ -752,9 +752,9 @@ export type $BanglaMonth<Locale extends $BnEn = 'bn'> =
 	Locale extends 'en' ? NumberRange<1, 12> : BanglaMonth;
 
 export type $BanglaMonthDate<Locale extends $BnEn = 'bn'> =
-	Locale extends 'en' ? NumberRange<1, 31> : BanglaMonthDate;
+	Locale extends 'en' ? NumberRange<1, 31> : BanglaDate;
 
-export type BanglaDate<Locale extends $BnEn = 'bn'> = {
+export type BanglaDateObject<Locale extends $BnEn = 'bn'> = {
 	year: $BanglaYear<Locale>;
 	month: $BanglaMonth<Locale>;
 	date: $BanglaMonthDate<Locale>;

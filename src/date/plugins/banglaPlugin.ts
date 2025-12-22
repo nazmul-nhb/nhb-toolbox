@@ -13,7 +13,7 @@ import type {
 	$BanglaYear,
 	$BnEn,
 	$Chronos,
-	BanglaDate,
+	BanglaDateObject,
 	BanglaDateOptions,
 	BanglaDayName,
 	BanglaMonthName,
@@ -37,7 +37,7 @@ declare module '../Chronos' {
 	interface Chronos {
 		toBangla<Locale extends $BnEn = 'bn'>(
 			options?: BanglaDateOptions<Locale>
-		): BanglaDate<Locale>;
+		): BanglaDateObject<Locale>;
 
 		formatBangla(format?: StrictFormat, options?: BnCalendarConfig): string;
 
@@ -172,7 +172,7 @@ export const banglaPlugin = ($Chronos: $Chronos): void => {
 			dayName: this.getBanglaDayName(opts?.locale),
 			seasonName: this.getBanglaSeasonName(opts),
 			isLeapYear: _isBnLeapYear(_getBnYear($Date(this)), this.year, opts?.variant),
-		} as BanglaDate<L>;
+		} as BanglaDateObject<L>;
 	};
 
 	$Chronos.prototype.formatBangla = function (fmt, opts) {
