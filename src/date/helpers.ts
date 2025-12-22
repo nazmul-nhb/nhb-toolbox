@@ -135,7 +135,7 @@ export function _gmtToUtcOffset(gmt: Maybe<string>) {
 	return gmt === 'GMT' ? 'UTC+00:00' : (gmt?.replace(/^GMT/, 'UTC') as Maybe<UTCOffset>);
 }
 
-export function _getSeason<L extends $BnEn = 'bn'>(month: number, locale?: L | $BnEn) {
+export function _getBnSeason<L extends $BnEn = 'bn'>(month: number, locale?: L | $BnEn) {
 	const season = BN_SEASONS[Math.floor(month / 2)];
 
 	return (locale === 'en' ? season.en : season.bn) as BanglaSeasonName<L>;

@@ -253,6 +253,9 @@ export {
 	isValidUTCOffset,
 } from './date/guards';
 
+// ! Bangla calendar
+export { BanglaCalendar, BnCalendar, Bongabdo } from './date/BanglaCalendar';
+
 // ! Chronos
 export { Chronos, Chronos as Chronus } from './date/Chronos';
 

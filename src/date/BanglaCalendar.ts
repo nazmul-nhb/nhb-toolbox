@@ -2,12 +2,22 @@ import { isObjectWithKeys } from '../guards/non-primitives';
 import { isInteger, isNonEmptyString, isNumber } from '../guards/primitives';
 import { isDateString } from '../guards/specials';
 import { banglaToDigit, digitToBangla } from '../number/convert';
-import type { NumberRange } from '../number/types';
-import { BN_MONTH_TABLES, BN_YEAR_OFFSET, MS_PER_DAY } from './constants';
-import { _bnDaysMonthIdx, _extractDateUnits, _getBnYear, _isBnLeapYear } from './helpers';
+import type { Enumerate, NumberRange } from '../number/types';
+import { BN_DAYS, BN_MONTH_TABLES, BN_MONTHS, BN_YEAR_OFFSET, MS_PER_DAY } from './constants';
+import {
+	_bnDaysMonthIdx,
+	_extractDateUnits,
+	_getBnSeason,
+	_getBnYear,
+	_isBnLeapYear,
+} from './helpers';
 import type {
+	$BnEn,
 	BanglaDate,
+	BanglaDayName,
 	BanglaMonth,
+	BanglaMonthName,
+	BanglaSeasonName,
 	BanglaYear,
 	BnCalendarConfig,
 	BnCalendarVariant,
@@ -61,7 +71,7 @@ export class BanglaCalendar {
 	}>;
 
 	/** Bangla day of the month */
-	readonly day: Readonly<{
+	readonly date: Readonly<{
 		/** Bangla day of the month in Bangla digit */
 		bn: BanglaDate;
 		/** Bangla day of the month in Latin digit */
@@ -75,8 +85,11 @@ export class BanglaCalendar {
 		/** Gregorian month in Latin digit (`1-12`) */
 		month: NumberRange<1, 12>;
 		/** Gregorian day of the month in Latin digit (`1-31`) */
-		day: NumberRange<1, 31>;
+		date: NumberRange<1, 31>;
 	}>;
+
+	/** Gets the day of the week (0-6, where 0 is Sunday (রবিবার)). */
+	readonly weekDay: Enumerate<7>;
 
 	/**
 	 * * Creates a `BanglaCalendar` instance from the current date.
@@ -103,7 +116,7 @@ export class BanglaCalendar {
 	 * @param tsOrBnYear - Timestamp (number of milliseconds) or Bangla year in Latin digits (`0-9999`)
 	 * @param config - Calendar configuration options
 	 *
-	 * @remarks Current month and day of the month is used but for the specified `bnYear`.
+	 * @remarks Current month and day of the month is set with the specified `bnYear`.
 	 *
 	 * @example
 	 * const fromTimestamp = new BanglaCalendar(1681430400000); // 2023-04-14 timestamp
@@ -118,7 +131,7 @@ export class BanglaCalendar {
 	 * @param bnMonth - Bangla month in Latin digits (`1-12`)
 	 * @param config - Calendar configuration options
 	 *
-	 * @remarks Current day of the month is used but for the specified `bnYear` and `bnMonth`.
+	 * @remarks Current day of the month is set with the specified `bnYear` and `bnMonth`.
 	 *
 	 * @example
 	 * const date = new BanglaCalendar(1430, 1); // বৈশাখ 1430
@@ -130,7 +143,7 @@ export class BanglaCalendar {
 	 *
 	 * @param bnYear - Bangla year in Latin digits (`0-9999`)
 	 * @param bnMonth - Bangla month in Latin digits (`1-12`)
-	 * @param bnDay - Bangla day of month in Latin digits (`1-31`)
+	 * @param bnDate - Bangla day of month in Latin digits (`1-31`)
 	 * @param config - Calendar configuration options
 	 *
 	 * @example
@@ -139,7 +152,7 @@ export class BanglaCalendar {
 	constructor(
 		bnYear: number,
 		bnMonth: NumberRange<1, 12>,
-		bnDay: NumberRange<1, 31>,
+		bnDate: NumberRange<1, 31>,
 		config?: BnCalendarConfig
 	);
 
@@ -149,7 +162,7 @@ export class BanglaCalendar {
 	 * @param bnYear - Bangla year in Bangla digits (`০-৯৯৯৯`)
 	 * @param config - Calendar configuration options
 	 *
-	 * @remarks Current month and day of the month is used but for the specified `bnYear`.
+	 * @remarks Current month and day of the month is set with the specified `bnYear`.
 	 *
 	 * @example
 	 * const date = new BanglaCalendar('১৪৩০'); // Bangla year 1430
@@ -163,7 +176,7 @@ export class BanglaCalendar {
 	 * @param bnMonth - Bangla month in Bangla digits (`১-১২`)
 	 * @param config - Calendar configuration options
 	 *
-	 * @remarks Current day of the month is used but for the specified `bnYear` and `bnMonth`.
+	 * @remarks Current day of the month is set with the specified `bnYear` and `bnMonth`.
 	 *
 	 * @example
 	 * const date = new BanglaCalendar('১৪৩০', '১'); // বৈশাখ 1430
@@ -175,7 +188,7 @@ export class BanglaCalendar {
 	 *
 	 * @param bnYear - Bangla year in Bangla digits (`০-৯৯৯৯`)
 	 * @param bnMonth - Bangla month in Bangla digits (`১-১২`)
-	 * @param bnDay - Bangla day of month in Bangla digits (`১-৩১`)
+	 * @param bnDate - Bangla day of month in Bangla digits (`১-৩১`)
 	 * @param config - Calendar configuration options
 	 *
 	 * @example
@@ -184,7 +197,7 @@ export class BanglaCalendar {
 	constructor(
 		bnYear: BanglaYear,
 		bnMonth: BanglaMonth,
-		bnDay: BanglaDate,
+		bnDate: BanglaDate,
 		config?: BnCalendarConfig
 	);
 
@@ -192,10 +205,10 @@ export class BanglaCalendar {
 	constructor(
 		dateBnYrOrCfg?: string | number | Date | BanglaYear | BnCalendarConfig,
 		bnMonthOrCfg?: BanglaMonth | NumberRange<1, 12> | BnCalendarConfig,
-		bnDayOrCfg?: BanglaDate | NumberRange<1, 31> | BnCalendarConfig,
+		bnDateOrCfg?: BanglaDate | NumberRange<1, 31> | BnCalendarConfig,
 		config?: BnCalendarConfig
 	) {
-		this.variant = this.#processVariants(dateBnYrOrCfg, bnMonthOrCfg, bnDayOrCfg, config);
+		this.variant = this.#processVariants(dateBnYrOrCfg, bnMonthOrCfg, bnDateOrCfg, config);
 
 		let date =
 			dateBnYrOrCfg instanceof Date ? dateBnYrOrCfg : (
@@ -227,16 +240,17 @@ export class BanglaCalendar {
 				{ bn: digitToBangla(bnMonthOrCfg) as BanglaMonth, en: bnMonthOrCfg }
 			:	month;
 
-		this.day =
-			BanglaCalendar.isBanglaDate(bnDayOrCfg) ?
-				{ bn: bnDayOrCfg, en: banglaToDigit(bnDayOrCfg) as NumberRange<1, 31> }
-			: BanglaCalendar.isBanglaDateEn(bnDayOrCfg) ?
-				{ bn: digitToBangla(bnDayOrCfg) as BanglaDate, en: bnDayOrCfg }
+		this.date =
+			BanglaCalendar.isBanglaDate(bnDateOrCfg) ?
+				{ bn: bnDateOrCfg, en: banglaToDigit(bnDateOrCfg) as NumberRange<1, 31> }
+			: BanglaCalendar.isBanglaDateEn(bnDateOrCfg) ?
+				{ bn: digitToBangla(bnDateOrCfg) as BanglaDate, en: bnDateOrCfg }
 			:	monthDate;
 
 		const { gy, gm, gd } = _extractDateUnits(this.toDate());
 
-		this.gregorian = { year: gy, month: gm, day: gd };
+		this.gregorian = { year: gy, month: gm, date: gd };
+		this.weekDay = this.toDate().getDay() as Enumerate<7>;
 	}
 
 	/**
@@ -277,12 +291,79 @@ export class BanglaCalendar {
 
 		const epoch = Date.UTC(baseGregYear, 3, 13);
 
-		let days = this.day.en;
+		let days = this.date.en;
 		for (let i = 0; i < this.month.en - 1; i++) {
 			days += bnMonthTable[i];
 		}
 
 		return new Date(days * MS_PER_DAY + epoch);
+	}
+
+	/**
+	 * @instance Gets the Bangla season name for the current date.
+	 *
+	 * @param locale - Output locale ('bn' for Bengali, 'en' for English)
+	 * @returns Name of the season in the specified locale
+	 *
+	 * @example
+	 * const bnCal = new BanglaCalendar('2023-04-14');
+	 * bnCal.getSeasonName(); // Returns: 'গ্রীষ্ম'
+	 * bnCal.getSeasonName({ locale: 'en' }); // Returns: 'Grisma (Summer)'
+	 *
+	 * @remarks
+	 * Bangla calendar is traditionally divided into 6 seasons (ঋতু):
+	 * - গ্রীষ্ম (Summer): Mid-April to Mid-June
+	 * - বর্ষা (Monsoon): Mid-June to Mid-August
+	 * - শরৎ (Autumn): Mid-August to Mid-October
+	 * - হেমন্ত (Late Autumn): Mid-October to Mid-December
+	 * - শীত (Winter): Mid-December to Mid-February
+	 * - বসন্ত (Spring): Mid-February to Mid-April
+	 */
+	getSeasonName<Locale extends $BnEn = 'bn'>(locale?: Locale): BanglaSeasonName<Locale> {
+		return _getBnSeason(this.month.en - 1, locale);
+	}
+
+	/**
+	 * @instance Gets the Bangla name of the month for the current date.
+	 *
+	 * @param locale - Output locale ('bn' for Bengali, 'en' for English)
+	 * @returns Name of the month in the specified locale
+	 *
+	 * @example
+	 * const bnCal = new BanglaCalendar('2023-04-14');
+	 * bnCal.getMonthName(); // Returns: 'বৈশাখ'
+	 * bnCal.getMonthName('en'); // Returns: 'Boishakh'
+	 *
+	 * @remarks
+	 * - Month names follow traditional Bengali naming conventions.
+	 * - English names are transliterated versions of the Bengali names.
+	 * - Month determination may vary slightly between calendar variants near month boundaries.
+	 */
+	getMonthName<Locale extends $BnEn = 'bn'>(locale?: Locale): BanglaMonthName<Locale> {
+		const MONTH = BN_MONTHS[this.month.en - 1];
+
+		return (locale === 'en' ? MONTH.en : MONTH.bn) as BanglaMonthName<Locale>;
+	}
+
+	/**
+	 * @instance Gets the Bangla name of the weekday for the current date.
+	 *
+	 * @param locale - Output locale ('bn' for Bengali, 'en' for English)
+	 * @returns Name of the weekday in the specified locale
+	 *
+	 * @example
+	 * const bnCal = new BanglaCalendar('2023-04-14'); // Friday
+	 * bnCal.getDayName(); // Returns: 'শুক্রবার'
+	 * bnCal.getDayName('en'); // Returns: 'Shukrobar (Friday)'
+	 *
+	 * @remarks
+	 * - Weekday names follow the standard Bengali naming convention ending with 'বার'.
+	 * - English names are the Latin transliterations of the Bangla names with standard English weekday names.
+	 */
+	getDayName<Locale extends $BnEn = 'bn'>(locale?: Locale): BanglaDayName<Locale> {
+		const DAY = BN_DAYS[this.weekDay];
+
+		return (locale === 'en' ? DAY.en : DAY.bn) as BanglaDayName<Locale>;
 	}
 
 	/** Get the Gregorian year(s), Bangla month table and leap year flag based on calendar variant */
@@ -437,3 +518,5 @@ export class BanglaCalendar {
 		return isInteger(value) && value >= 1 && value <= 31;
 	}
 }
+
+export { BanglaCalendar as BnCalendar, BanglaCalendar as Bongabdo };

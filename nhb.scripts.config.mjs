@@ -56,6 +56,11 @@ export default defineScriptConfig({
 							import: './dist/esm/string/case.js',
 							require: './dist/cjs/string/case.js',
 						},
+						'./bn-calendar': {
+							types: './dist/dts/date/BanglaCalendar.d.ts',
+							import: './dist/esm/date/BanglaCalendar.js',
+							require: './dist/cjs/date/BanglaCalendar.js',
+						},
 						'./chronos': {
 							types: './dist/dts/date/Chronos.d.ts',
 							import: './dist/esm/date/Chronos.js',

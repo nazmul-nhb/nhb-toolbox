@@ -3,8 +3,8 @@ import { BN_DAYS, BN_MONTHS, INTERNALS } from '../constants';
 import {
 	_bnDaysMonthIdx,
 	_formatDateCore,
+	_getBnSeason,
 	_getBnYear,
-	_getSeason,
 	_isBnLeapYear,
 } from '../helpers';
 import type {
@@ -219,7 +219,7 @@ declare module '../Chronos' {
 		 * chronos.getBanglaSeasonName({ locale: 'en' }); // Returns: 'Grisma (Summer)'
 		 *
 		 * @remarks
-		 * Bangla seasons are traditionally divided into 6 seasons (ঋতু):
+		 * Bangla calendar traditionally divided into 6 seasons (ঋতু):
 		 * - গ্রীষ্ম (Summer): Mid-April to Mid-June
 		 * - বর্ষা (Monsoon): Mid-June to Mid-August
 		 * - শরৎ (Autumn): Mid-August to Mid-October
@@ -330,7 +330,7 @@ export const banglaPlugin = ($Chronos: $Chronos): void => {
 	$Chronos.prototype.getBanglaSeasonName = function (options) {
 		const { locale, variant } = options ?? {};
 		const { monthIdx } = $bnDaysMonthIdx($Date(this), variant);
-		return _getSeason(monthIdx, locale);
+		return _getBnSeason(monthIdx, locale);
 	};
 
 	$Chronos.prototype.toBangla = function <L extends $BnEn>(opts?: BanglaDateOptions<L>) {

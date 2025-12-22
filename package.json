@@ -146,6 +146,11 @@
       "import": "./dist/esm/string/case.js",
       "require": "./dist/cjs/string/case.js"
     },
+    "./bn-calendar": {
+      "types": "./dist/dts/date/BanglaCalendar.d.ts",
+      "import": "./dist/esm/date/BanglaCalendar.js",
+      "require": "./dist/cjs/date/BanglaCalendar.js"
+    },
     "./chronos": {
       "types": "./dist/dts/date/Chronos.d.ts",
       "import": "./dist/esm/date/Chronos.js",
@@ -238,10 +243,10 @@
       "types": "./dist/dts/verbalizer/types.d.ts",
       "default": "./dist/dts/verbalizer/types.d.ts"
     },
-    "./plugins/bengaliPlugin": {
-      "types": "./dist/dts/date/plugins/bengaliPlugin.d.ts",
-      "import": "./dist/esm/date/plugins/bengaliPlugin.js",
-      "require": "./dist/cjs/date/plugins/bengaliPlugin.js"
+    "./plugins/banglaPlugin": {
+      "types": "./dist/dts/date/plugins/banglaPlugin.d.ts",
+      "import": "./dist/esm/date/plugins/banglaPlugin.js",
+      "require": "./dist/cjs/date/plugins/banglaPlugin.js"
     },
     "./plugins/businessPlugin": {
       "types": "./dist/dts/date/plugins/businessPlugin.d.ts",
@@ -310,6 +315,9 @@
       "change-case": [
         "dist/dts/string/case.d.ts"
       ],
+      "bn-calendar": [
+        "dist/dts/date/BanglaCalendar.d.ts"
+      ],
       "chronos": [
         "dist/dts/date/Chronos.d.ts"
       ],
@@ -373,8 +381,8 @@
       "verbalizer/types": [
         "dist/dts/verbalizer/types.d.ts"
       ],
-      "plugins/bengaliPlugin": [
-        "dist/dts/date/plugins/bengaliPlugin.d.ts"
+      "plugins/banglaPlugin": [
+        "dist/dts/date/plugins/banglaPlugin.d.ts"
       ],
       "plugins/businessPlugin": [
         "dist/dts/date/plugins/businessPlugin.d.ts"
