@@ -1,3 +1,4 @@
+import { isString } from '../guards/primitives';
 import type { Numeric } from '../types/index';
 import { isValidUTCOffset } from './guards';
 import {
@@ -193,7 +194,10 @@ export function formatDate(options?: DateFormatOptions): string {
 		useUTC = false,
 	} = options ?? {};
 
-	const $date = date instanceof Date ? date : new Date(date);
+	const $date =
+		date instanceof Date ? date : (
+			new Date(isString(date) ? date.replace(/['"]/g, '') : date)
+		);
 
 	if (isNaN($date.getTime())) {
 		return 'Invalid Date!';
