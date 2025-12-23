@@ -68,7 +68,7 @@ declare module '../Chronos' {
 		/**
 		 * @instance Formats the current date as a Bangla calendar date string using customizable tokens.
 		 *
-		 * @param format - Format string using tokens (default: `'ddd, mmmm DD (SS), YYYY বঙ্গাব্দ - hh:mm:ss (A)'`)
+		 * @param format - Format string using tokens (default: `'ddd, DD mmmm (SS), YYYY বঙ্গাব্দ - hh:mm:ss (A)'`)
 		 * @param options - Calendar configuration options
 		 * @returns Formatted Bangla date string according to the specified format
 		 *
@@ -87,7 +87,7 @@ declare module '../Chronos' {
 		 * // Returns: '০২:৩০:০০ অপরাহ্ণ'
 		 *
 		 * @remarks
-		 *- Supported format tokens include: `YYYY`, `YY`, `mmmm`, `mmm`, `MM`, `M`, `DD`, `D`, `dd`, `ddd`, `Do`, `HH`, `H`, `hh`, `h`, `mm`, `m`, `ss`, `s`, `ms`, `mss`, `a`, `A`, `ZZ` and `Z`.
+		 *- Supported format tokens include: `YYYY`, `YY`, `mmmm`, `mmm`, `MM`, `M`, `DD`, `D`, `dd`, `ddd`, `Do`, `HH`, `H`, `hh`, `h`, `mm`, `m`, `ss`, `s`, `ms`, `mss`, `a`, `A`, `ZZ`, `Z`. `SS`, `S` and.
 		 *   - **Year**: `YYYY/yyyy` (full year), `YY/yy` (last 2 digits)
 		 *   - **Month**: `M/MM`(padded), `mmm` (short name), `mmmm` (full name)
 		 *   - **Day**: `D/DD`(padded), Do (results same as cardinal for Bangla dates)
@@ -384,7 +384,7 @@ export const banglaPlugin = ($Chronos: $Chronos): void => {
 		};
 
 		return _formatDateCore(
-			fmt || 'ddd, mmmm DD (SS), YYYY বঙ্গাব্দ - hh:mm:ss (A)',
+			fmt || 'ddd, DD mmmm (SS), YYYY বঙ্গাব্দ - hh:mm:ss (A)',
 			dateComponents
 		);
 	};

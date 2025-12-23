@@ -7,6 +7,7 @@ import { BN_DAYS, BN_MONTH_TABLES, BN_MONTHS, BN_YEAR_OFFSET, MS_PER_DAY } from 
 import {
 	_bnDaysMonthIdx,
 	_extractDateUnits,
+	_formatDateCore,
 	_getBnSeason,
 	_getBnYear,
 	_isBnLeapYear,
@@ -14,6 +15,7 @@ import {
 import type {
 	$BnEn,
 	BanglaDate,
+	BanglaDateFormat,
 	BanglaDayName,
 	BanglaMonth,
 	BanglaMonthName,
@@ -250,7 +252,7 @@ export class BanglaCalendar {
 			: monthDate;
 
 		if (BanglaCalendar.isBanglaDateString(dateBnYrOrCfg)) {
-			const parts = dateBnYrOrCfg.split('-');
+			const parts = dateBnYrOrCfg.replace(/['"]/g, '').split('-');
 
 			bnYear = banglaToDigit(parts[0]);
 			bnMonth = banglaToDigit(parts[1]);
@@ -451,15 +453,72 @@ export class BanglaCalendar {
 	}
 
 	toString(): string {
-		const { year, date } = this;
-
-		return `${this.getDayName()}, ${date.bn} ${this.getMonthName()}, ${year.bn} [${this.getSeasonName()}]`;
+		return this.#toString('bn');
 	}
 
 	toStringEn(): string {
-		const { year, date } = this;
+		return this.#toString('en');
+	}
 
-		return `${this.getDayName('en')}, ${date.en} ${this.getMonthName('en')}, ${year.en} [${this.getSeasonName('en')}]`;
+	/**
+	 * @instance Formats the current date as a Bangla calendar date string using customizable tokens.
+	 *
+	 * @param format - Format string using tokens (default: `'ddd, DD mmmm (SS), YYYY বঙ্গাব্দ'`)
+	 * @returns Formatted Bangla date string according to the specified format
+	 *
+	 * @example
+	 * const bnCal = new BanglaCalendar('2023-04-14');
+	 *
+	 * bnCal.format();
+	 * // Returns: 'শুক্রবার, বৈশাখ ০১ (গ্রীষ্মকাল), ১৪৩০ বঙ্গাব্দ'
+	 *
+	 * bnCal.format('YYYY-MM-DD');
+	 * // Returns: '১৪৩০-০১-০১'
+	 *
+	 * bnCal.format('mmmm DD, YYYY');
+	 * // Returns: 'বৈশাখ ০১, ১৪৩০'
+	 *
+	 * @remarks
+	 *- Supported format tokens include: `YYYY`, `YY`, `mmmm`, `mmm`, `MM`, `M`, `DD`, `D`, `dd`, `ddd`, `Do`, `SS` and `S`.
+	 *   - **Year**: `YYYY/yyyy` (full year), `YY/yy` (last 2 digits)
+	 *   - **Month**: `M/MM`(padded), `mmm` (short name), `mmmm` (full name)
+	 *   - **Day**: `D/DD`(padded), Do (results same as cardinal for Bangla dates)
+	 *   - **Weekday**: `d` (short), `dd` (without 'বার'), `ddd` (full)
+	 *   - **Season**: `S` (season), `SS` (season with 'কাল' suffix)
+	 * - To output raw text (i.e., not interpreted as a date token), wrap it in square brackets.
+	 * - For example, `[আজ] ddd` results in `আজ রবিবার`, and `[year ]YYYY` results in `year ২০২৫`.
+	 * - *Any token not wrapped in brackets will be parsed and replaced with its corresponding date component.*
+	 */
+	format(format?: BanglaDateFormat) {
+		const { year, month, date, weekDay } = this;
+
+		const seasonName = this.getSeasonName();
+
+		const M_NAME = BN_MONTHS[month.en - 1];
+		const D_NAME = BN_DAYS[weekDay];
+
+		const paddedYear = year.bn.padStart(4, '০');
+
+		const dateComponents: Record<string, string> = {
+			YYYY: paddedYear,
+			YY: paddedYear.slice(-2),
+			yyyy: paddedYear,
+			yy: paddedYear.slice(-2),
+			M: month.bn,
+			MM: month.bn.padStart(2, '০'),
+			mmm: M_NAME.short,
+			mmmm: M_NAME.bn,
+			d: D_NAME.short,
+			dd: D_NAME.bn.replace('বার', ''),
+			ddd: D_NAME.bn,
+			D: date.bn,
+			DD: date.bn.padStart(2, '০'),
+			Do: date.bn,
+			S: seasonName,
+			SS: seasonName + 'কাল',
+		};
+
+		return _formatDateCore(format || 'ddd, DD mmmm (SS), YYYY বঙ্গাব্দ', dateComponents);
 	}
 
 	#processGregYear(bnYear?: number, bnMonth?: NumberRange<1, 12>) {
@@ -504,6 +563,12 @@ export class BanglaCalendar {
 			month: (monthIdx + 1) as NumberRange<1, 12>,
 			monthDate: (days + 1) as NumberRange<1, 31>,
 		};
+	}
+
+	#toString<Locale extends $BnEn = 'bn'>(lcl = 'bn' as Locale) {
+		const { year, date } = this;
+
+		return `${this.getDayName(lcl)}, ${date[lcl]} ${this.getMonthName(lcl)}, ${year[lcl]} [${this.getSeasonName(lcl)}]`;
 	}
 
 	/** Check if a value is a configuration object */
@@ -618,7 +683,7 @@ export class BanglaCalendar {
 
 	static isBanglaDateString(value: unknown): value is string {
 		if (isNonEmptyString(value) && value.includes('-')) {
-			const [year, month, date] = value.split('-');
+			const [year, month, date] = value.replace(/['"]/g, '').split('-');
 
 			return (
 				BanglaCalendar.isBanglaYear(year) &&

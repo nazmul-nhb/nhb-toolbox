@@ -268,7 +268,7 @@ export class Chronos {
 		seconds?: number,
 		ms?: number
 	) {
-		if (typeof valueOrYear === 'number' && typeof month === 'number') {
+		if (isNumber(valueOrYear) && isNumber(month)) {
 			this.#date = new Date(
 				valueOrYear,
 				month - 1,
@@ -392,7 +392,10 @@ export class Chronos {
 	 * @returns Instance of native `Date` object.
 	 */
 	#toNewDate(value?: ChronosInput): Date {
-		const date = value instanceof Chronos ? value.toDate() : new Date(value ?? Date.now());
+		const date =
+			value instanceof Chronos ?
+				value.toDate()
+			:	new Date(isString(value) ? value.replace(/['"]/g, '') : (value ?? Date.now()));
 
 		// Check if the date is invalid
 		if (isNaN(date.getTime())) {
@@ -1744,7 +1747,7 @@ export class Chronos {
 	 * - `HH:mm:ss.mss+TimeZoneOffset(HH)` → e.g., `'14:50:00.800+06'`
 	 * - `HH:mm:ss.mss+TimeZoneOffset(HH:mm)` → e.g., `'14:50:00.800+06:30'`
 	 *
-	 * * *Input will default to today's date and assume local timezone if no offset is provided.*
+	 * - *Input will default to today's date and assume local timezone if no offset is provided.*
 	 *
 	 * @param format - Format tokens accepted by {@link formatStrict()} method ({@link TimeFormatToken}) for time part only.
 	 *                 Default: `hh:mm:ss a` → 02:33:36 pm.
@@ -1931,7 +1934,7 @@ export class Chronos {
 	static isLeapYear(date: ChronosInput): boolean {
 		let year: number;
 
-		if (typeof date === 'number') {
+		if (isNumber(date)) {
 			if (date > 0 && date <= 9999) {
 				year = date;
 			} else {

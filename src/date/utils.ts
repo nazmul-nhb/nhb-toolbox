@@ -232,7 +232,7 @@ export function formatDate(options?: DateFormatOptions): string {
  * - `HH:mm:ss.mss+TimeZoneOffset(HH)` → e.g., `'14:50:00.800+06'`
  * - `HH:mm:ss.mss+TimeZoneOffset(HH:mm)` → e.g., `'14:50:00.800+06:30'`
  *
- * * *Input will default to today's date and assume local timezone if no offset is provided.*
+ * - *Input will default to today's date and assume local timezone if no offset is provided.*
  *
  * @param format - Format tokens accepted by {@link formatDate} method ({@link TimeFormatToken}) for time part only.
  *                 Default: `hh:mm:ss a` → 02:33:36 pm.
