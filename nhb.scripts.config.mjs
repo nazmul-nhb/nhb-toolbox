@@ -111,6 +111,7 @@ export default defineScriptConfig({
 		commitTypes: {
 			custom: [
 				{ emoji: '💩', type: 'dump' },
+				{ emoji: '🧠', type: 'ideas' },
 				{ emoji: '📝', type: 'draft' },
 				{ emoji: '🔣', type: 'types' },
 				{ emoji: '🔡', type: 'tsdoc' },

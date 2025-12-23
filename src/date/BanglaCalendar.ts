@@ -469,10 +469,8 @@ export class BanglaCalendar {
 	 */
 	endOfMonth(): BanglaCalendar {
 		const { year, month, variant } = this;
-		const { gregYear } = this.#processGregYear();
-		const { bnMonthTable } = this.#getGregYearBnMonthTable(gregYear);
 
-		return new BanglaCalendar(year.en, month.en, bnMonthTable[month.en - 1], { variant });
+		return new BanglaCalendar(year.en, month.en, this.daysInMonth(), { variant });
 	}
 
 	/**
@@ -513,6 +511,35 @@ export class BanglaCalendar {
 		const { year, variant } = this;
 
 		return new BanglaCalendar(year.en, 12, 30, { variant });
+	}
+
+	/**
+	 * @instance Gets the number of days in a Bangla month.
+	 *
+	 * @param month - Optional Bangla month (1-12 in Latin digits)
+	 * @returns Number of days in the specified month (29, 30, or 31)
+	 *
+	 * @example
+	 * const bnCal = new BanglaCalendar('১৪৩০', '১', '১');
+	 *
+	 * // Get days in current month
+	 * bnCal.daysInMonth(); // Returns: 31 (বৈশাখ has 31 days)
+	 *
+	 * // Get days in specific month
+	 * bnCal.daysInMonth(2); // Returns: 31 (জ্যৈষ্ঠ has 31 days)
+	 * bnCal.daysInMonth(12); // Returns: 30 (চৈত্র has 30 days)
+	 *
+	 * @remarks
+	 * - The method accounts for the selected calendar variant when determining leap years
+	 * - If no month is provided, uses the current instance's month
+	 * - In the 'revised-2019' variant, leap years follow Gregorian leap rules
+	 * - In the 'revised-1966' variant, leap years occur when `bnYear % 4 === 2`
+	 */
+	daysInMonth(month?: NumberRange<1, 12>): NumberRange<29, 31> {
+		const { gregYear } = this.#processGregYear();
+		const { bnMonthTable } = this.#getGregYearBnMonthTable(gregYear);
+
+		return bnMonthTable[(month ?? this.month.en) - 1];
 	}
 
 	/**
