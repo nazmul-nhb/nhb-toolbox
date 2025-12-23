@@ -216,7 +216,11 @@ export class BanglaCalendar {
 		let date =
 			dateBnYrOrCfg instanceof Date ? dateBnYrOrCfg : (
 				new Date(
-					isDateString(dateBnYrOrCfg) ? dateBnYrOrCfg
+					(
+						isDateString(dateBnYrOrCfg) &&
+							!BanglaCalendar.isBanglaDateString(dateBnYrOrCfg)
+					) ?
+						dateBnYrOrCfg
 					: isNumber(dateBnYrOrCfg) && !BanglaCalendar.isBanglaYearEn(dateBnYrOrCfg) ?
 						dateBnYrOrCfg
 					:	Date.now()
@@ -236,18 +240,24 @@ export class BanglaCalendar {
 			:	year;
 
 		let bnMonth =
-			BanglaCalendar.isBanglaMonth(bnMonthOrCfg) ?
-				(banglaToDigit(bnMonthOrCfg) as NumberRange<1, 12>)
+			BanglaCalendar.isBanglaMonth(bnMonthOrCfg) ? banglaToDigit(bnMonthOrCfg)
 			: BanglaCalendar.isBanglaMonthEn(bnMonthOrCfg) ? bnMonthOrCfg
 			: month;
 
 		let bnDate =
-			BanglaCalendar.isBanglaDate(bnDateOrCfg) ?
-				(banglaToDigit(bnDateOrCfg) as NumberRange<1, 31>)
+			BanglaCalendar.isBanglaDate(bnDateOrCfg) ? banglaToDigit(bnDateOrCfg)
 			: BanglaCalendar.isBanglaDateEn(bnDateOrCfg) ? bnDateOrCfg
 			: monthDate;
 
-		const { gregYear } = this.#processGregYear(bnYear, bnMonth);
+		if (BanglaCalendar.isBanglaDateString(dateBnYrOrCfg)) {
+			const parts = dateBnYrOrCfg.split('-');
+
+			bnYear = banglaToDigit(parts[0]);
+			bnMonth = banglaToDigit(parts[1]);
+			bnDate = banglaToDigit(parts[2]);
+		}
+
+		const { gregYear } = this.#processGregYear(bnYear, bnMonth as NumberRange<1, 12>);
 
 		const { bnMonthTable } = this.#getGregYearBnMonthTable(gregYear, bnYear);
 
@@ -285,6 +295,10 @@ export class BanglaCalendar {
 
 		this.weekDay = wd;
 		this.isoWeekDay = wd === 0 ? 7 : wd;
+	}
+
+	get [Symbol.toStringTag](): string {
+		return this.toJSON();
 	}
 
 	/**
@@ -430,6 +444,24 @@ export class BanglaCalendar {
 		return new BanglaCalendar(year.en, 12, 30, { variant });
 	}
 
+	toJSON(): string {
+		const { year, month, date } = this;
+
+		return `${year.bn.padStart(4, '০')}-${month.bn.padStart(2, '০')}-${date.bn.padStart(2, '০')}`;
+	}
+
+	toString(): string {
+		const { year, date } = this;
+
+		return `${this.getDayName()}, ${date.bn} ${this.getMonthName()}, ${year.bn} [${this.getSeasonName()}]`;
+	}
+
+	toStringEn(): string {
+		const { year, date } = this;
+
+		return `${this.getDayName('en')}, ${date.en} ${this.getMonthName('en')}, ${year.en} [${this.getSeasonName('en')}]`;
+	}
+
 	#processGregYear(bnYear?: number, bnMonth?: NumberRange<1, 12>) {
 		const baseGregYear = bnYear ?? this.year.en + BN_YEAR_OFFSET;
 
@@ -497,7 +529,9 @@ export class BanglaCalendar {
 	 */
 	static isBanglaYear(value: unknown): value is BanglaYear {
 		// /^[০-৯]{1,4}$/ // Allow unlimited left padding with ০
-		return isNonEmptyString(value) && /^(?:০|[১-৯][০-৯]{0,3})$/.test(value);
+		// return isNonEmptyString(value) && /^[০-৯]{1,4}$/.test(value.trim());
+		// return isNonEmptyString(value) && /^(?:০|[১-৯][০-৯]{0,3})$/.test(value.trim());
+		return isNonEmptyString(value) && /^(?:০{0,3}[১-৯][০-৯]{0,3}|০)$/.test(value.trim());
 	}
 
 	/**
@@ -529,7 +563,8 @@ export class BanglaCalendar {
 	 * BanglaCalendar.isBanglaMonth('0');  // false (Latin digit)
 	 */
 	static isBanglaMonth(value: unknown): value is BanglaMonth {
-		return isNonEmptyString(value) && /^(?:[১-৯]|১০|১১|১২)$/.test(value);
+		// return isNonEmptyString(value) && /^(?:[১-৯]|১০|১১|১২)$/.test(value.trim());
+		return isNonEmptyString(value) && /^(?:০?[১-৯]|১০|১১|১২)$/.test(value.trim());
 	}
 
 	/**
@@ -561,7 +596,8 @@ export class BanglaCalendar {
 	 * BanglaCalendar.isBanglaDate('০');   // false
 	 */
 	static isBanglaDate(value: unknown): value is BanglaDate {
-		return isNonEmptyString(value) && /^(?:[১-৯]|[১২][০-৯]|৩০|৩১)$/.test(value);
+		// return isNonEmptyString(value) && /^(?:[১-৯]|[১২][০-৯]|৩০|৩১)$/.test(value.trim());
+		return isNonEmptyString(value) && /^(?:০?[১-৯]|[১২][০-৯]|৩০|৩১)$/.test(value.trim());
 	}
 
 	/**
@@ -578,6 +614,20 @@ export class BanglaCalendar {
 	 */
 	static isBanglaDateEn(value: unknown): value is NumberRange<1, 31> {
 		return isInteger(value) && value >= 1 && value <= 31;
+	}
+
+	static isBanglaDateString(value: unknown): value is string {
+		if (isNonEmptyString(value) && value.includes('-')) {
+			const [year, month, date] = value.split('-');
+
+			return (
+				BanglaCalendar.isBanglaYear(year) &&
+				BanglaCalendar.isBanglaMonth(month) &&
+				BanglaCalendar.isBanglaDate(date)
+			);
+		}
+
+		return false;
 	}
 }
 

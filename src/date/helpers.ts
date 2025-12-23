@@ -68,11 +68,13 @@ export function _formatDate(
 	milliseconds: number,
 	offset: string
 ) {
+	const paddedYear = String(year).padStart(4, '0');
+
 	const dateComponents: Record<ChronosFormat, string> = {
-		YYYY: String(year),
-		YY: String(year).slice(-2),
-		yyyy: String(year),
-		yy: String(year).slice(-2),
+		YYYY: paddedYear,
+		YY: paddedYear.slice(-2),
+		yyyy: paddedYear,
+		yy: paddedYear.slice(-2),
 		M: String(month + 1),
 		MM: String(month + 1).padStart(2, '0'),
 		mmm: MONTHS[month].slice(0, 3),

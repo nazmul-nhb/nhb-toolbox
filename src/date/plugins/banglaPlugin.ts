@@ -344,7 +344,7 @@ export const banglaPlugin = ($Chronos: $Chronos): void => {
 		const M_NAME = BN_MONTHS[monthIdx];
 
 		const month = this.getBanglaMonth();
-		const year = this.getBanglaYear();
+		const year = this.getBanglaYear().padStart(4, '০');
 		const date = this.getBanglaDay();
 		const seasonName = this.getBanglaSeasonName();
 
