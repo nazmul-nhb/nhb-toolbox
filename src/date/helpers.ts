@@ -17,7 +17,7 @@ import type {
 	$TimeZoneIdentifier,
 	BanglaSeasonName,
 	BnCalendarVariant,
-	ChronosFormat,
+	FormatToken,
 	TimeZoneNameNative,
 	UTCOffset,
 } from './types';
@@ -70,7 +70,7 @@ export function _formatDate(
 ) {
 	const paddedYear = String(year).padStart(4, '0');
 
-	const dateComponents: Record<ChronosFormat, string> = {
+	const dateComponents: Record<FormatToken, string> = {
 		YYYY: paddedYear,
 		YY: paddedYear.slice(-2),
 		yyyy: paddedYear,
@@ -102,6 +102,11 @@ export function _formatDate(
 	};
 
 	return _formatDateCore(format, dateComponents);
+}
+
+/** Normalize a time string with by adding offset at the end */
+export function _normalizeOffset(timeStr: string): string {
+	return timeStr.replace(/([+-]\d{2})(?!:)/, '$1:00');
 }
 
 /** Converts milliseconds to seconds */

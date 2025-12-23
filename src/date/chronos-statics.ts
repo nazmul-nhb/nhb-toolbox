@@ -6,7 +6,7 @@ import type {
 	DateRangeOptions,
 	FormatOptions,
 	RelativeRangeOptions,
-	TimeParts,
+	TimeFormatToken,
 	WeekDay,
 	WeekdayOptions,
 } from './types';
@@ -242,7 +242,7 @@ export interface ChronosStatics {
 	 * @param format - Format string accepted by `formatStrict()` method (`TimeParts`). Default: `hh:mm:ss a` → 02:33:36 pm.
 	 * @returns Formatted time string in local (System) time.
 	 */
-	formatTimePart(time: string, format?: TimeParts): string;
+	formatTimePart(time: string, format?: TimeFormatToken): string;
 
 	/**
 	 * * Returns ISO date strings for each occurrence of a weekday from today, spanning a relative time range.

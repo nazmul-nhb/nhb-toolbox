@@ -127,25 +127,25 @@ export type TimeUnitValue<Unit extends TimeUnit> =
 	: number;
 
 /** Year in either 4 or 2 digits format */
-export type Year = (typeof YEAR_FORMATS)[number];
+export type YearToken = (typeof YEAR_FORMATS)[number];
 /** Month in either 1 or 2 digits or 3 letters or full word format */
-export type Month = (typeof MONTH_FORMATS)[number];
+export type MonthToken = (typeof MONTH_FORMATS)[number];
 /** Day in either 2 letters or full word format */
-export type Day = (typeof DAY_FORMATS)[number];
+export type DayToken = (typeof DAY_FORMATS)[number];
 /** Date in either 1 or 2 digits format */
-export type MonthDate = (typeof DATE_FORMATS)[number];
+export type DateToken = (typeof DATE_FORMATS)[number];
 /** Second in either 1 or 2 digits format */
-export type Hour = (typeof HOUR_FORMATS)[number];
+export type HourToken = (typeof HOUR_FORMATS)[number];
 /** Second in either 1 or 2 digits format */
-export type Minute = (typeof MINUTE_FORMATS)[number];
+export type MinuteToken = (typeof MINUTE_FORMATS)[number];
 /** Second in either 1 or 2 digits format */
-export type Second = (typeof SECOND_FORMATS)[number];
+export type SecondToken = (typeof SECOND_FORMATS)[number];
 /** Millisecond in either 1 or 2 digits format */
-export type Millisecond = (typeof MILLISECOND_FORMATS)[number];
+export type MSToken = (typeof MILLISECOND_FORMATS)[number];
 /** Time formats in either capital or lowercase `am/pm` format */
-export type TimeFormats = (typeof TIME_FORMATS)[number];
+export type TimeToken = (typeof TIME_FORMATS)[number];
 
-/** Represents a unit suffix for {@link Date} getter methods (e.g., `'FullYear'` in `'getFullYear'`, `'Month'` in `'getMonth'` etc.). */
+/** Unit suffix for {@link Date} getter methods (e.g., `'FullYear'` in `'getFullYear'`, `'Month'` in `'getMonth'` etc.). */
 export type $DateUnit =
 	| 'FullYear'
 	| 'Month'
@@ -156,60 +156,63 @@ export type $DateUnit =
 	| 'Seconds'
 	| 'Milliseconds';
 
-/** Standard union formats for `Chronos`. */
-export type ChronosFormat =
-	| Year
-	| Month
-	| Day
-	| MonthDate
-	| Hour
-	| Minute
-	| Second
-	| Millisecond
-	| TimeFormats
+/** Standard date/time format tokens for `Chronos`. */
+export type FormatToken =
+	| YearToken
+	| MonthToken
+	| DayToken
+	| DateToken
+	| HourToken
+	| MinuteToken
+	| SecondToken
+	| MSToken
+	| TimeToken
 	| 'Z'
 	| 'ZZ';
 
 /** Standard date formats. */
-export type DateParts =
-	| `${MonthDate} ${Exclude<Month, 'M' | 'MM'>}`
-	| `${Exclude<Month, 'M' | 'MM'>} ${MonthDate}`
-	| `${Day}, ${MonthDate} ${Exclude<Month, 'M' | 'MM'>}`
-	| `${Day}, ${Exclude<Month, 'M' | 'MM'>} ${MonthDate}`
-	| `${Exclude<Month, 'M' | 'MM'>} ${MonthDate}, ${Year}`
-	| `${MonthDate} ${Exclude<Month, 'M' | 'MM'>}, ${Year}`
-	| `${Exclude<Month, 'M' | 'MM'>} ${MonthDate} ${Year}`
-	| `${MonthDate} ${Exclude<Month, 'M' | 'MM'>} ${Year}`
-	| `${Day}, ${Exclude<Month, 'M' | 'MM'>} ${MonthDate}, ${Year}`
-	| `${Day}, ${MonthDate} ${Exclude<Month, 'M' | 'MM'>}, ${Year}`
-	| `${Day}, ${Exclude<Month, 'M' | 'MM'>} ${MonthDate} ${Year}`
-	| `${Day}, ${MonthDate} ${Exclude<Month, 'M' | 'MM'>} ${Year}`
-	| `${Exclude<MonthDate, 'Do'>}.${Exclude<Month, 'mmm' | 'mmmm'>}.${Year}`
-	| `${Year}.${Exclude<Month, 'mmm' | 'mmmm'>}.${Exclude<MonthDate, 'Do'>}`
-	| `${Exclude<MonthDate, 'Do'>}/${Exclude<Month, 'mmm' | 'mmmm'>}/${Year}`
-	| `${Exclude<MonthDate, 'Do'>}-${Exclude<Month, 'mmm' | 'mmmm'>}-${Year}`
-	| `${Exclude<Month, 'mmm' | 'mmmm'>}/${Exclude<MonthDate, 'Do'>}/${Year}`
-	| `${Exclude<Month, 'mmm' | 'mmmm'>}-${Exclude<MonthDate, 'Do'>}-${Year}`
-	| `${Year}-${Exclude<Month, 'mmm' | 'mmmm'>}-${Exclude<MonthDate, 'Do'>}`
-	| `${Year}/${Exclude<Month, 'mmm' | 'mmmm'>}/${Exclude<MonthDate, 'Do'>}`
-	| `${Year}-${Exclude<MonthDate, 'Do'>}-${Exclude<Month, 'mmm' | 'mmmm'>}`
-	| `${Year}/${Exclude<MonthDate, 'Do'>}/${Exclude<Month, 'mmm' | 'mmmm'>}`;
+export type DateFormatToken =
+	| `${DateToken} ${Exclude<MonthToken, 'M' | 'MM'>}`
+	| `${Exclude<MonthToken, 'M' | 'MM'>} ${DateToken}`
+	| `${DayToken}, ${DateToken} ${Exclude<MonthToken, 'M' | 'MM'>}`
+	| `${DayToken}, ${Exclude<MonthToken, 'M' | 'MM'>} ${DateToken}`
+	| `${Exclude<MonthToken, 'M' | 'MM'>} ${DateToken}, ${YearToken}`
+	| `${DateToken} ${Exclude<MonthToken, 'M' | 'MM'>}, ${YearToken}`
+	| `${Exclude<MonthToken, 'M' | 'MM'>} ${DateToken} ${YearToken}`
+	| `${DateToken} ${Exclude<MonthToken, 'M' | 'MM'>} ${YearToken}`
+	| `${DayToken}, ${Exclude<MonthToken, 'M' | 'MM'>} ${DateToken}, ${YearToken}`
+	| `${DayToken}, ${DateToken} ${Exclude<MonthToken, 'M' | 'MM'>}, ${YearToken}`
+	| `${DayToken}, ${Exclude<MonthToken, 'M' | 'MM'>} ${DateToken} ${YearToken}`
+	| `${DayToken}, ${DateToken} ${Exclude<MonthToken, 'M' | 'MM'>} ${YearToken}`
+	| `${Exclude<DateToken, 'Do'>}.${Exclude<MonthToken, 'mmm' | 'mmmm'>}.${YearToken}`
+	| `${YearToken}.${Exclude<MonthToken, 'mmm' | 'mmmm'>}.${Exclude<DateToken, 'Do'>}`
+	| `${Exclude<DateToken, 'Do'>}/${Exclude<MonthToken, 'mmm' | 'mmmm'>}/${YearToken}`
+	| `${Exclude<DateToken, 'Do'>}-${Exclude<MonthToken, 'mmm' | 'mmmm'>}-${YearToken}`
+	| `${Exclude<MonthToken, 'mmm' | 'mmmm'>}/${Exclude<DateToken, 'Do'>}/${YearToken}`
+	| `${Exclude<MonthToken, 'mmm' | 'mmmm'>}-${Exclude<DateToken, 'Do'>}-${YearToken}`
+	| `${YearToken}-${Exclude<MonthToken, 'mmm' | 'mmmm'>}-${Exclude<DateToken, 'Do'>}`
+	| `${YearToken}/${Exclude<MonthToken, 'mmm' | 'mmmm'>}/${Exclude<DateToken, 'Do'>}`
+	| `${YearToken}-${Exclude<DateToken, 'Do'>}-${Exclude<MonthToken, 'mmm' | 'mmmm'>}`
+	| `${YearToken}/${Exclude<DateToken, 'Do'>}/${Exclude<MonthToken, 'mmm' | 'mmmm'>}`;
 
 /** Standard Time Formats */
-export type TimeParts =
-	| `${Exclude<Hour, 'h' | 'hh' | 'H'>}:${Exclude<Minute, 'm'>}`
-	| `${Exclude<Hour, 'H' | 'HH' | 'h'>}:${Exclude<Minute, 'm'>} ${TimeFormats}`
-	| `${Exclude<Hour, 'h' | 'hh' | 'H'>}:${Exclude<Minute, 'm'>}:${Exclude<Second, 's'>}`
-	| `${Exclude<Hour, 'H' | 'HH' | 'h'>}:${Exclude<Minute, 'm'>}:${Exclude<Second, 's'>} ${TimeFormats}`
-	| `${Exclude<Hour, 'h' | 'hh' | 'H'>}:${Exclude<Minute, 'm'>}:${Exclude<Second, 's'>}:${Exclude<Millisecond, 'ms'>}`
-	| `${Exclude<Hour, 'H' | 'HH' | 'h'>}:${Exclude<Minute, 'm'>}:${Exclude<Second, 's'>}:${Exclude<Millisecond, 'ms'>} ${TimeFormats}`;
+export type TimeFormatToken =
+	| `${Exclude<HourToken, 'h' | 'hh' | 'H'>}:${Exclude<MinuteToken, 'm'>}`
+	| `${Exclude<HourToken, 'H' | 'HH' | 'h'>}:${Exclude<MinuteToken, 'm'>} ${TimeToken}`
+	| `${Exclude<HourToken, 'h' | 'hh' | 'H'>}:${Exclude<MinuteToken, 'm'>}:${Exclude<SecondToken, 's'>}`
+	| `${Exclude<HourToken, 'H' | 'HH' | 'h'>}:${Exclude<MinuteToken, 'm'>}:${Exclude<SecondToken, 's'>} ${TimeToken}`
+	| `${Exclude<HourToken, 'h' | 'hh' | 'H'>}:${Exclude<MinuteToken, 'm'>}:${Exclude<SecondToken, 's'>}:${Exclude<MSToken, 'ms'>}`
+	| `${Exclude<HourToken, 'H' | 'HH' | 'h'>}:${Exclude<MinuteToken, 'm'>}:${Exclude<SecondToken, 's'>}:${Exclude<MSToken, 'ms'>} ${TimeToken}`;
 
 type DateTimeISO = 'YYYY-MM-DDTHH:mm:ss.mssZZ';
-type DateTimeConnector = ' ' | ', ' | '; ' | ' - ';
+type TokenConnector = ' ' | ', ' | '; ' | ' - ';
 
 /** Pre-defined literal types for formatting date and time. Optionally can pass any string. */
 export type StrictFormat = LooseLiteral<
-	DateTimeISO | DateParts | TimeParts | `${DateParts}${DateTimeConnector}${TimeParts}`
+	| DateTimeISO
+	| DateFormatToken
+	| TimeFormatToken
+	| `${DateFormatToken}${TokenConnector}${TimeFormatToken}`
 >;
 
 /** `BCP47` locale string or {@link Intl.Locale} object that contain one or more language or locale tags */
@@ -740,6 +743,28 @@ export type BanglaYear =
 	| `${$BnOnes}${BanglaDigit}`
 	| `${$BnOnes}${BanglaDigit}${BanglaDigit}`
 	| `${$BnOnes}${BanglaDigit}${BanglaDigit}${BanglaDigit}`;
+
+type SeasonToken = 'S' | 'SS';
+
+export type DateWithSeasonToken =
+	| `${Exclude<MonthToken, 'M' | 'MM'>} ${DateToken}, ${YearToken} ${SeasonToken}`
+	| `${DateToken} ${Exclude<MonthToken, 'M' | 'MM'>}, ${YearToken} ${SeasonToken}`
+	| `${Exclude<MonthToken, 'M' | 'MM'>} ${DateToken} ${YearToken} ${SeasonToken}`
+	| `${DateToken} ${Exclude<MonthToken, 'M' | 'MM'>} ${YearToken} ${SeasonToken}`
+	| `${DayToken}, ${Exclude<MonthToken, 'M' | 'MM'>} ${DateToken}, ${YearToken}, ${SeasonToken}`
+	| `${DayToken}, ${DateToken} ${Exclude<MonthToken, 'M' | 'MM'>}, ${YearToken}, ${SeasonToken}`
+	| `${DayToken}, ${Exclude<MonthToken, 'M' | 'MM'>} ${DateToken} ${YearToken}, ${SeasonToken}`
+	| `${DayToken}, ${DateToken} ${Exclude<MonthToken, 'M' | 'MM'>} ${YearToken}, ${SeasonToken}`
+	| `${Exclude<DateToken, 'Do'>}/${Exclude<MonthToken, 'mmm' | 'mmmm'>}/${YearToken} (${SeasonToken})`
+	| `${Exclude<DateToken, 'Do'>}-${Exclude<MonthToken, 'mmm' | 'mmmm'>}-${YearToken} (${SeasonToken})`
+	| `${Exclude<MonthToken, 'mmm' | 'mmmm'>}/${Exclude<DateToken, 'Do'>}/${YearToken} (${SeasonToken})`
+	| `${Exclude<MonthToken, 'mmm' | 'mmmm'>}-${Exclude<DateToken, 'Do'>}-${YearToken} (${SeasonToken})`
+	| `${YearToken}-${Exclude<MonthToken, 'mmm' | 'mmmm'>}-${Exclude<DateToken, 'Do'>} (${SeasonToken})`
+	| `${YearToken}/${Exclude<MonthToken, 'mmm' | 'mmmm'>}/${Exclude<DateToken, 'Do'>} (${SeasonToken})`
+	| `${YearToken}-${Exclude<DateToken, 'Do'>}-${Exclude<MonthToken, 'mmm' | 'mmmm'>} (${SeasonToken})`
+	| `${YearToken}/${Exclude<DateToken, 'Do'>}/${Exclude<MonthToken, 'mmm' | 'mmmm'>} (${SeasonToken})`;
+
+export type BanglaDateFormat = LooseLiteral<DateFormatToken | DateWithSeasonToken>;
 
 export type BanglaDayName<Locale extends $BnEn = 'bn'> = (typeof BN_DAYS)[number][Locale];
 export type BanglaMonthName<Locale extends $BnEn = 'bn'> = (typeof BN_MONTHS)[number][Locale];

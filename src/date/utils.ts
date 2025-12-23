@@ -1,6 +1,11 @@
 import type { Numeric } from '../types/index';
 import { isValidUTCOffset } from './guards';
-import { _formatDate, _gmtToUtcOffset, _resolveNativeTzName } from './helpers';
+import {
+	_formatDate,
+	_gmtToUtcOffset,
+	_normalizeOffset,
+	_resolveNativeTzName,
+} from './helpers';
 import { NATIVE_TZ_IDS } from './timezone';
 import type {
 	$DateUnit,
@@ -8,6 +13,7 @@ import type {
 	ClockTime,
 	DateFormatOptions,
 	HourMinutes,
+	TimeFormatToken,
 	TimeZoneDetails,
 	TimeZoneIdNative,
 	UTCOffset,
@@ -210,4 +216,30 @@ export function formatDate(options?: DateFormatOptions): string {
 	const offset = useUTC ? 'Z' : formatUTCOffset(-$date.getTimezoneOffset()).slice(3);
 
 	return _formatDate(format, y, mo, d, dt, h, m, s, ms, offset);
+}
+
+/**
+ * * Formats a time-only string into a formatted time string.
+ *
+ * @param time - Time string to be formatted. Supported formats include:
+ * - `HH:mm` → e.g., `'14:50'`
+ * - `HH:mm:ss` → e.g., `'14:50:00'`
+ * - `HH:mm:ss.mss` → e.g., `'14:50:00.800'`
+ * - `HH:mm+TimeZoneOffset(HH)` → e.g., `'14:50+06'`
+ * - `HH:mm+TimeZoneOffset(HH:mm)` → e.g., `'14:50+06:00'`
+ * - `HH:mm:ss+TimeZoneOffset(HH)` → e.g., `'14:50:00+06'`
+ * - `HH:mm:ss+TimeZoneOffset(HH:mm)` → e.g., `'14:50:00+05:30'`
+ * - `HH:mm:ss.mss+TimeZoneOffset(HH)` → e.g., `'14:50:00.800+06'`
+ * - `HH:mm:ss.mss+TimeZoneOffset(HH:mm)` → e.g., `'14:50:00.800+06:30'`
+ *
+ * * *Input will default to today's date and assume local timezone if no offset is provided.*
+ *
+ * @param format - Format tokens accepted by {@link formatDate} method ({@link TimeFormatToken}) for time part only.
+ *                 Default: `hh:mm:ss a` → 02:33:36 pm.
+ * @returns Formatted time string in local (System) time.
+ */
+export function formatTimePart(time: string, format?: TimeFormatToken): string {
+	const timeWithDate = `${formatDate({ format: 'YYYY-MM-DD' })}T${_normalizeOffset(time)}`;
+
+	return formatDate({ date: timeWithDate, format: format || 'hh:mm:ss a' });
 }

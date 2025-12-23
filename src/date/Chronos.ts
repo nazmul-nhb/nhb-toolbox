@@ -4,7 +4,7 @@ import type { Enumerate, NumberRange } from '../number/types';
 import type { LooseLiteral, TupleOf } from '../utils/types';
 import { DAYS, INTERNALS, MONTHS, MS_PER_DAY } from './constants';
 import { isLeapYear } from './guards';
-import { _formatDate, _resolveNativeTzName } from './helpers';
+import { _formatDate, _normalizeOffset, _resolveNativeTzName } from './helpers';
 import type {
 	$DateUnit,
 	$NativeTzNameOrId,
@@ -29,7 +29,7 @@ import type {
 	RelativeDateRange,
 	RelativeRangeOptions,
 	StrictFormat,
-	TimeParts,
+	TimeFormatToken,
 	TimeUnit,
 	TimeUnitValue,
 	TimeZone,
@@ -1746,15 +1746,12 @@ export class Chronos {
 	 *
 	 * * *Input will default to today's date and assume local timezone if no offset is provided.*
 	 *
-	 * @param format - Format string accepted by `formatStrict()` method (`TimeParts`) for time part only. Default: `hh:mm:ss a` → 02:33:36 pm.
+	 * @param format - Format tokens accepted by {@link formatStrict()} method ({@link TimeFormatToken}) for time part only.
+	 *                 Default: `hh:mm:ss a` → 02:33:36 pm.
 	 * @returns Formatted time string in local (System) time.
 	 */
-	static formatTimePart(time: string, format?: TimeParts): string {
-		function normalizeOffset(timeStr: string): string {
-			return timeStr.replace(/([+-]\d{2})(?!:)/, '$1:00');
-		}
-
-		const timeWithDate = `${new Chronos().#format('YYYY-MM-DD')}T${normalizeOffset(time)}`;
+	static formatTimePart(time: string, format?: TimeFormatToken): string {
+		const timeWithDate = `${new Chronos().#format('YYYY-MM-DD')}T${_normalizeOffset(time)}`;
 
 		return new Chronos(timeWithDate).#format(format || 'hh:mm:ss a');
 	}
@@ -2019,8 +2016,8 @@ export class Chronos {
 	}
 }
 
-export { Chronos as Chronus };
 export { chronos, chronosjs, chronosts, chronus, chronusjs, chronusts } from './chronos-fn';
+export { Chronos as Chronus };
 
 // ! Chronos `INTERNALS` Symbol for plugin authors
 export { INTERNALS } from './constants';

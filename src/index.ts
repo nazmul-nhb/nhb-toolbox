@@ -284,6 +284,7 @@ export {
 	getTotalMinutes as extractTotalMinutesFromTime,
 	formatDate,
 	formatDate as formatDateTime,
+	formatTimePart,
 	formatUTCOffset,
 	getCurrentDateTime,
 	getCurrentDateTime as getCurrentTime,
