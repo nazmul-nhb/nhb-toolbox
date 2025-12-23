@@ -153,6 +153,7 @@ export function _extractDateUnits(date: Date) {
 		$gm: month as Enumerate<12>,
 		gm: (month + 1) as NumberRange<1, 12>,
 		gd: date.getDate() as NumberRange<1, 31>,
+		wd: date.getDay() as Enumerate<7>,
 	};
 }
 

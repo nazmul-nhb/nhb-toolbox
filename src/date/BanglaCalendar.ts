@@ -91,6 +91,9 @@ export class BanglaCalendar {
 	/** Gets the day of the week (0-6, where 0 is Sunday (রবিবার)). */
 	readonly weekDay: Enumerate<7>;
 
+	/** Gets ISO weekday: 1 = Monday, 7 = Sunday */
+	readonly isoWeekDay: NumberRange<1, 7>;
+
 	/**
 	 * * Creates a `BanglaCalendar` instance from the current date.
 	 *
@@ -226,35 +229,67 @@ export class BanglaCalendar {
 
 		const { year, month, monthDate } = this.#processDate(date);
 
-		this.year =
-			BanglaCalendar.isBanglaYear(dateBnYrOrCfg) ?
-				{ bn: dateBnYrOrCfg, en: banglaToDigit(dateBnYrOrCfg) }
+		let bnYear =
+			BanglaCalendar.isBanglaYear(dateBnYrOrCfg) ? banglaToDigit(dateBnYrOrCfg)
 			: isNumber(dateBnYrOrCfg) && BanglaCalendar.isBanglaYearEn(dateBnYrOrCfg) ?
-				{ bn: digitToBangla(dateBnYrOrCfg) as BanglaYear, en: dateBnYrOrCfg }
+				dateBnYrOrCfg
 			:	year;
 
-		this.month =
+		let bnMonth =
 			BanglaCalendar.isBanglaMonth(bnMonthOrCfg) ?
-				{ bn: bnMonthOrCfg, en: banglaToDigit(bnMonthOrCfg) as NumberRange<1, 12> }
-			: BanglaCalendar.isBanglaMonthEn(bnMonthOrCfg) ?
-				{ bn: digitToBangla(bnMonthOrCfg) as BanglaMonth, en: bnMonthOrCfg }
-			:	month;
+				(banglaToDigit(bnMonthOrCfg) as NumberRange<1, 12>)
+			: BanglaCalendar.isBanglaMonthEn(bnMonthOrCfg) ? bnMonthOrCfg
+			: month;
 
-		this.date =
+		let bnDate =
 			BanglaCalendar.isBanglaDate(bnDateOrCfg) ?
-				{ bn: bnDateOrCfg, en: banglaToDigit(bnDateOrCfg) as NumberRange<1, 31> }
-			: BanglaCalendar.isBanglaDateEn(bnDateOrCfg) ?
-				{ bn: digitToBangla(bnDateOrCfg) as BanglaDate, en: bnDateOrCfg }
-			:	monthDate;
+				(banglaToDigit(bnDateOrCfg) as NumberRange<1, 31>)
+			: BanglaCalendar.isBanglaDateEn(bnDateOrCfg) ? bnDateOrCfg
+			: monthDate;
 
-		const { gy, gm, gd } = _extractDateUnits(this.toDate());
+		const { gregYear } = this.#processGregYear(bnYear, bnMonth);
+
+		const { bnMonthTable } = this.#getGregYearBnMonthTable(gregYear, bnYear);
+
+		const monthRange = bnMonthTable[bnMonth - 1];
+
+		if (bnDate > monthRange) {
+			bnDate -= monthRange;
+
+			if (bnMonth === 12) {
+				bnMonth = 1;
+				bnYear += 1;
+			} else {
+				bnMonth += 1;
+			}
+		}
+
+		this.year = {
+			bn: digitToBangla(bnYear) as BanglaYear,
+			en: bnYear,
+		};
+
+		this.month = {
+			bn: digitToBangla(bnMonth) as BanglaMonth,
+			en: bnMonth as NumberRange<1, 12>,
+		};
+
+		this.date = {
+			bn: digitToBangla(bnDate) as BanglaDate,
+			en: bnDate as NumberRange<1, 31>,
+		};
+
+		const { gy, gm, gd, wd } = _extractDateUnits(this.toDate());
 
 		this.gregorian = { year: gy, month: gm, date: gd };
-		this.weekDay = this.toDate().getDay() as Enumerate<7>;
+
+		this.weekDay = wd;
+		this.isoWeekDay = wd === 0 ? 7 : wd;
 	}
 
 	/**
 	 * * Checks if the current Bangla year is a leap year.
+	 *
 	 * @returns `true` if the year is a leap year, `false` otherwise
 	 *
 	 * @example
@@ -269,7 +304,9 @@ export class BanglaCalendar {
 	 *   - **Revised-1966**: Leap year is determined solely by the Bangla year (`bnYear % 4 === 2`), no Gregorian rule applies.
 	 */
 	isLeapYear(): boolean {
-		return this.#getGregYearBnMonthTable().isBnLeapYear;
+		const { gregYear } = this.#processGregYear();
+
+		return this.#getGregYearBnMonthTable(gregYear).isBnLeapYear;
 	}
 
 	/**
@@ -284,10 +321,11 @@ export class BanglaCalendar {
 	 *
 	 * @remarks
 	 * - The conversion takes into account the calendar variant and leap year rules.
-	 * - Time component is set to `00:00:00` in UTC.
+	 * - Time component is always set to `00:00:00` in UTC.
 	 */
 	toDate(): Date {
-		const { baseGregYear, bnMonthTable } = this.#getGregYearBnMonthTable();
+		const { baseGregYear, gregYear } = this.#processGregYear();
+		const { bnMonthTable } = this.#getGregYearBnMonthTable(gregYear);
 
 		const epoch = Date.UTC(baseGregYear, 3, 13);
 
@@ -366,20 +404,50 @@ export class BanglaCalendar {
 		return (locale === 'en' ? DAY.en : DAY.bn) as BanglaDayName<Locale>;
 	}
 
+	startOfMonth(): BanglaCalendar {
+		const { year, month, variant } = this;
+
+		return new BanglaCalendar(year.en, month.en, 1, { variant });
+	}
+
+	endOfMonth(): BanglaCalendar {
+		const { year, month, variant } = this;
+		const { gregYear } = this.#processGregYear();
+		const { bnMonthTable } = this.#getGregYearBnMonthTable(gregYear);
+
+		return new BanglaCalendar(year.en, month.en, bnMonthTable[month.en - 1], { variant });
+	}
+
+	startOfYear(): BanglaCalendar {
+		const { year, variant } = this;
+
+		return new BanglaCalendar(year.en, 1, 1, { variant });
+	}
+
+	endOfYear(): BanglaCalendar {
+		const { year, variant } = this;
+
+		return new BanglaCalendar(year.en, 12, 30, { variant });
+	}
+
+	#processGregYear(bnYear?: number, bnMonth?: NumberRange<1, 12>) {
+		const baseGregYear = bnYear ?? this.year.en + BN_YEAR_OFFSET;
+
+		const gregYear = (bnMonth ?? this.month.en) > 10 ? baseGregYear + 1 : baseGregYear;
+
+		return { baseGregYear, gregYear };
+	}
+
 	/** Get the Gregorian year(s), Bangla month table and leap year flag based on calendar variant */
-	#getGregYearBnMonthTable() {
-		const baseGregYear = this.year.en + BN_YEAR_OFFSET;
-
-		const gregYear = this.month.en > 10 ? baseGregYear + 1 : baseGregYear;
-
-		const isBnLeapYear = _isBnLeapYear(this.year.en, gregYear, this.variant);
+	#getGregYearBnMonthTable(gregYear: number, bnYear?: number) {
+		const isBnLeapYear = _isBnLeapYear(bnYear ?? this.year.en, gregYear, this.variant);
 
 		const bnMonthTable =
 			isBnLeapYear ?
 				BN_MONTH_TABLES?.[this.variant].leap
 			:	BN_MONTH_TABLES?.[this.variant].normal;
 
-		return { baseGregYear, gregYear, bnMonthTable, isBnLeapYear };
+		return { bnMonthTable, isBnLeapYear };
 	}
 
 	/** Process variant from the config */
@@ -400,15 +468,9 @@ export class BanglaCalendar {
 		const { days, monthIdx } = _bnDaysMonthIdx(date, this.variant);
 
 		return {
-			year: { bn: digitToBangla(bnYear) as BanglaYear, en: bnYear },
-			month: { bn: digitToBangla(monthIdx + 1), en: monthIdx + 1 } as {
-				bn: BanglaMonth;
-				en: NumberRange<1, 12>;
-			},
-			monthDate: { bn: digitToBangla(days + 1), en: days + 1 } as {
-				bn: BanglaDate;
-				en: NumberRange<1, 31>;
-			},
+			year: bnYear,
+			month: (monthIdx + 1) as NumberRange<1, 12>,
+			monthDate: (days + 1) as NumberRange<1, 31>,
 		};
 	}
 
