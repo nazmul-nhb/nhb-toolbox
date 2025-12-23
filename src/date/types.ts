@@ -744,8 +744,10 @@ export type BanglaYear =
 	| `${$BnOnes}${BanglaDigit}${BanglaDigit}`
 	| `${$BnOnes}${BanglaDigit}${BanglaDigit}${BanglaDigit}`;
 
+/** Token for Bangla season format */
 type SeasonToken = 'S' | 'SS';
 
+/** Standard format tokens for Bangla date with seasons */
 export type DateWithSeasonToken =
 	| `${Exclude<MonthToken, 'M' | 'MM'>} ${DateToken}, ${YearToken} ${SeasonToken}`
 	| `${DateToken} ${Exclude<MonthToken, 'M' | 'MM'>}, ${YearToken} ${SeasonToken}`
@@ -764,38 +766,56 @@ export type DateWithSeasonToken =
 	| `${YearToken}-${Exclude<DateToken, 'Do'>}-${Exclude<MonthToken, 'mmm' | 'mmmm'>} (${SeasonToken})`
 	| `${YearToken}/${Exclude<DateToken, 'Do'>}/${Exclude<MonthToken, 'mmm' | 'mmmm'>} (${SeasonToken})`;
 
+/** Standard format tokens for Bangla date along with any string */
 export type BanglaDateFormat = LooseLiteral<DateFormatToken | DateWithSeasonToken>;
 
+/** Bangla name of the weekday either in Bangla or Latin */
 export type BanglaDayName<Locale extends $BnEn = 'bn'> = (typeof BN_DAYS)[number][Locale];
+/** Bangla name of the month either in Bangla or Latin */
 export type BanglaMonthName<Locale extends $BnEn = 'bn'> = (typeof BN_MONTHS)[number][Locale];
+/** Bangla name of the season either in Bangla or Latin */
 export type BanglaSeasonName<Locale extends $BnEn = 'bn'> = (typeof BN_SEASONS)[number][Locale];
 
+/** Represents Bangla year either in Bangla digit or Latin from 1-12 */
 export type $BanglaYear<Locale extends $BnEn = 'bn'> =
 	Locale extends 'en' ? number : BanglaYear;
 
+/** Represents Bangla month either in Bangla digit or Latin from 0-9999 */
 export type $BanglaMonth<Locale extends $BnEn = 'bn'> =
 	Locale extends 'en' ? NumberRange<1, 12> : BanglaMonth;
 
+/** Represents Bangla date of the month either in Bangla digit or Latin from 1-31 */
 export type $BanglaMonthDate<Locale extends $BnEn = 'bn'> =
 	Locale extends 'en' ? NumberRange<1, 31> : BanglaDate;
 
+/** Represents a Bangla date object for `Chronos` plugin */
 export type BanglaDateObject<Locale extends $BnEn = 'bn'> = {
+	/** Represents Bangla year either in Bangla digit or Latin from 1-12 */
 	year: $BanglaYear<Locale>;
+	/** Represents Bangla month either in Bangla digit or Latin from 1-12 */
 	month: $BanglaMonth<Locale>;
+	/** Represents Bangla date of the month either in Bangla digit or Latin from 1-31 */
 	date: $BanglaMonthDate<Locale>;
+	/** Bangla name of the weekday either in Bangla or Latin */
 	dayName: BanglaDayName<Locale>;
+	/** Bangla name of the month either in Bangla or Latin */
 	monthName: BanglaMonthName<Locale>;
+	/** Bangla name of the season either in Bangla or Latin */
 	seasonName: BanglaSeasonName<Locale>;
+	/** Leap year status of the current year */
 	isLeapYear: boolean;
 };
 
+/** Variant of Bangla calendar system */
 export type BnCalendarVariant = keyof typeof BN_MONTH_TABLES;
 
+/** Configuration object for Bangla Calendar system */
 export interface BnCalendarConfig {
 	/** - Calendar variant to use. Defaults to `'revised-2019'`. */
 	variant?: BnCalendarVariant;
 }
 
+/** Bangla date options for `Chronos` plugin (`banglaPlugin`) */
 export interface BanglaDateOptions<Locale extends $BnEn> extends BnCalendarConfig {
 	/** - Locale to use for output values. Defaults to `'bn'`. */
 	locale?: Locale | $BnEn;

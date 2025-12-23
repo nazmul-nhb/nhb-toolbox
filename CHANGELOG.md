@@ -5,6 +5,15 @@
 All notable changes to the package will be documented here.
 
 ---
+<!-- 
+## [4.28.50] - [Future]
+
+- **Added** *new* `Chronos` plugin: `banglaPlugin`
+- **Added** *new* class: `BanglaCalendar`
+- **Added** *new* number conversion utils: `banglaToDigit` and `digitToBangla`
+- **Added** *new* date/time util: `formatTimePart`
+- **Fixed** minor *issues* and **improved** *type system* for date and number related utils
+ -->
 
 ## [4.28.44] - 2025-12-19
 
