@@ -1,422 +1,439 @@
 {
-  "name": "nhb-toolbox",
-  "version": "4.28.44",
-  "description": "A versatile collection of smart, efficient, and reusable utility functions, classes and types for everyday development needs.",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/dts/index.d.ts",
-  "sideEffects": false,
-  "scripts": {
-    "test": "jest --coverage --verbose",
-    "test:watch": "jest --onlyChanged --verbose --watch",
-    "start": "start coverage/lcov-report/index.html",
-    "prepublishOnly": "nhb-build",
-    "format": "nhb-format",
-    "lint": "nhb-lint",
-    "fix": "nhb-fix",
-    "build": "nhb-build",
-    "commit": "nhb-commit",
-    "module": "nhb-module",
-    "plugin": "nhb-module -t chronos-plugin -d src/date/plugins",
-    "count": "nhb-count",
-    "delete": "nhb-delete",
-    "prepare": "husky"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "files": [
-    "dist",
-    "LICENSE",
-    "README.md",
-    "CHANGELOG.md",
-    "package.json"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nazmul-nhb/nhb-toolbox.git"
-  },
-  "homepage": "https://toolbox.nazmul-nhb.dev",
-  "author": {
-    "name": "Nazmul Hassan",
-    "email": "nazmulnhb@gmail.com",
-    "url": "https://nazmul-nhb.dev"
-  },
-  "contributors": [
-    {
-      "name": "Nazmul Hassan",
-      "email": "nazmulnhb007@yahoo.com",
-      "url": "https://github.com/nazmul-nhb"
-    },
-    {
-      "name": "Nazmul Hassan",
-      "email": "nazmulnhb@gmail.com",
-      "url": "https://github.com/nhb-nazmul"
-    }
-  ],
-  "bugs": {
-    "url": "https://github.com/nazmul-nhb/nhb-toolbox/issues",
-    "email": "nazmulnhb@gmail.com"
-  },
-  "license": "Apache-2.0",
-  "packageManager": "pnpm@10.26.1+sha512.664074abc367d2c9324fdc18037097ce0a8f126034160f709928e9e9f95d98714347044e5c3164d65bd5da6c59c6be362b107546292a8eecb7999196e5ce58fa",
-  "devDependencies": {
-    "@eslint/js": "^9.39.2",
-    "@types/jest": "^30.0.0",
-    "@types/node": "^25.0.3",
-    "@typescript-eslint/eslint-plugin": "^8.50.0",
-    "@typescript-eslint/parser": "^8.50.0",
-    "eslint": "^9.39.2",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.4",
-    "globals": "^16.5.0",
-    "husky": "^9.1.7",
-    "jest": "^30.2.0",
-    "lint-staged": "^16.2.7",
-    "nhb-scripts": "^1.9.2",
-    "prettier": "^3.7.4",
-    "ts-jest": "^29.4.6",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.50.0"
-  },
-  "keywords": [
-    "toolbox",
-    "utility",
-    "functions",
-    "class",
-    "form",
-    "random-id",
-    "id",
-    "parse",
-    "format",
-    "generate",
-    "generator",
-    "data",
-    "form-data",
-    "development",
-    "tools",
-    "helpers",
-    "utils",
-    "nhb",
-    "color",
-    "chronos",
-    "time",
-    "date-fns",
-    "javascript",
-    "typescript",
-    "moment",
-    "dayjs",
-    "pluralize",
-    "pluralizer",
-    "singularize",
-    "singularizer",
-    "verbalize",
-    "verbalizer",
-    "date",
-    "day",
-    "chalk",
-    "console",
-    "style",
-    "stylog",
-    "log styler",
-    "log",
-    "status-codes",
-    "http-status",
-    "http-status-codes",
-    "nhb-toolbox"
-  ],
-  "exports": {
-    "./package.json": "./package.json",
-    ".": {
-      "types": "./dist/dts/index.d.ts",
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
-    },
-    "./types": {
-      "types": "./dist/dts/types/index.d.ts",
-      "default": "./dist/dts/types/index.d.ts"
-    },
-    "./constants": {
-      "types": "./dist/dts/constants.d.ts",
-      "import": "./dist/esm/constants.js",
-      "require": "./dist/cjs/constants.js"
-    },
-    "./change-case": {
-      "types": "./dist/dts/string/case.d.ts",
-      "import": "./dist/esm/string/case.js",
-      "require": "./dist/cjs/string/case.js"
-    },
-    "./bn-calendar": {
-      "types": "./dist/dts/date/BanglaCalendar.d.ts",
-      "import": "./dist/esm/date/BanglaCalendar.js",
-      "require": "./dist/cjs/date/BanglaCalendar.js"
-    },
-    "./chronos": {
-      "types": "./dist/dts/date/Chronos.d.ts",
-      "import": "./dist/esm/date/Chronos.js",
-      "require": "./dist/cjs/date/Chronos.js"
-    },
-    "./color": {
-      "types": "./dist/dts/colors/Color.d.ts",
-      "import": "./dist/esm/colors/Color.js",
-      "require": "./dist/cjs/colors/Color.js"
-    },
-    "./converter": {
-      "types": "./dist/dts/converter/Converter.d.ts",
-      "import": "./dist/esm/converter/Converter.js",
-      "require": "./dist/cjs/converter/Converter.js"
-    },
-    "./hash": {
-      "types": "./dist/dts/hash/index.d.ts",
-      "import": "./dist/esm/hash/index.js",
-      "require": "./dist/cjs/hash/index.js"
-    },
-    "./pluralizer": {
-      "types": "./dist/dts/pluralizer/Pluralizer.d.ts",
-      "import": "./dist/esm/pluralizer/Pluralizer.js",
-      "require": "./dist/cjs/pluralizer/Pluralizer.js"
-    },
-    "./verbalizer": {
-      "types": "./dist/dts/verbalizer/Verbalizer.d.ts",
-      "import": "./dist/esm/verbalizer/Verbalizer.js",
-      "require": "./dist/cjs/verbalizer/Verbalizer.js"
-    },
-    "./http-status": {
-      "types": "./dist/dts/http-status/HttpStatus.d.ts",
-      "import": "./dist/esm/http-status/HttpStatus.js",
-      "require": "./dist/cjs/http-status/HttpStatus.js"
-    },
-    "./stylog": {
-      "types": "./dist/dts/stylog/Stylog.d.ts",
-      "import": "./dist/esm/stylog/Stylog.js",
-      "require": "./dist/cjs/stylog/Stylog.js"
-    },
-    "./array/types": {
-      "types": "./dist/dts/array/types.d.ts",
-      "default": "./dist/dts/array/types.d.ts"
-    },
-    "./colors/types": {
-      "types": "./dist/dts/colors/types.d.ts",
-      "default": "./dist/dts/colors/types.d.ts"
-    },
-    "./converter/types": {
-      "types": "./dist/dts/converter/types.d.ts",
-      "default": "./dist/dts/converter/types.d.ts"
-    },
-    "./date/types": {
-      "types": "./dist/dts/date/types.d.ts",
-      "default": "./dist/dts/date/types.d.ts"
-    },
-    "./form/types": {
-      "types": "./dist/dts/form/types.d.ts",
-      "default": "./dist/dts/form/types.d.ts"
-    },
-    "./hash/types": {
-      "types": "./dist/dts/hash/types.d.ts",
-      "default": "./dist/dts/hash/types.d.ts"
-    },
-    "./http-status/types": {
-      "types": "./dist/dts/http-status/types.d.ts",
-      "default": "./dist/dts/http-status/types.d.ts"
-    },
-    "./number/types": {
-      "types": "./dist/dts/number/types.d.ts",
-      "default": "./dist/dts/number/types.d.ts"
-    },
-    "./object/types": {
-      "types": "./dist/dts/object/types.d.ts",
-      "default": "./dist/dts/object/types.d.ts"
-    },
-    "./pluralizer/types": {
-      "types": "./dist/dts/pluralizer/types.d.ts",
-      "default": "./dist/dts/pluralizer/types.d.ts"
-    },
-    "./string/types": {
-      "types": "./dist/dts/string/types.d.ts",
-      "default": "./dist/dts/string/types.d.ts"
-    },
-    "./utils/types": {
-      "types": "./dist/dts/utils/types.d.ts",
-      "default": "./dist/dts/utils/types.d.ts"
-    },
-    "./verbalizer/types": {
-      "types": "./dist/dts/verbalizer/types.d.ts",
-      "default": "./dist/dts/verbalizer/types.d.ts"
-    },
-    "./plugins/banglaPlugin": {
-      "types": "./dist/dts/date/plugins/banglaPlugin.d.ts",
-      "import": "./dist/esm/date/plugins/banglaPlugin.js",
-      "require": "./dist/cjs/date/plugins/banglaPlugin.js"
-    },
-    "./plugins/businessPlugin": {
-      "types": "./dist/dts/date/plugins/businessPlugin.d.ts",
-      "import": "./dist/esm/date/plugins/businessPlugin.js",
-      "require": "./dist/cjs/date/plugins/businessPlugin.js"
-    },
-    "./plugins/dayPartPlugin": {
-      "types": "./dist/dts/date/plugins/dayPartPlugin.d.ts",
-      "import": "./dist/esm/date/plugins/dayPartPlugin.js",
-      "require": "./dist/cjs/date/plugins/dayPartPlugin.js"
-    },
-    "./plugins/durationPlugin": {
-      "types": "./dist/dts/date/plugins/durationPlugin.d.ts",
-      "import": "./dist/esm/date/plugins/durationPlugin.js",
-      "require": "./dist/cjs/date/plugins/durationPlugin.js"
-    },
-    "./plugins/fromNowPlugin": {
-      "types": "./dist/dts/date/plugins/fromNowPlugin.d.ts",
-      "import": "./dist/esm/date/plugins/fromNowPlugin.js",
-      "require": "./dist/cjs/date/plugins/fromNowPlugin.js"
-    },
-    "./plugins/greetingPlugin": {
-      "types": "./dist/dts/date/plugins/greetingPlugin.d.ts",
-      "import": "./dist/esm/date/plugins/greetingPlugin.js",
-      "require": "./dist/cjs/date/plugins/greetingPlugin.js"
-    },
-    "./plugins/palindromePlugin": {
-      "types": "./dist/dts/date/plugins/palindromePlugin.d.ts",
-      "import": "./dist/esm/date/plugins/palindromePlugin.js",
-      "require": "./dist/cjs/date/plugins/palindromePlugin.js"
-    },
-    "./plugins/relativeTimePlugin": {
-      "types": "./dist/dts/date/plugins/relativeTimePlugin.d.ts",
-      "import": "./dist/esm/date/plugins/relativeTimePlugin.js",
-      "require": "./dist/cjs/date/plugins/relativeTimePlugin.js"
-    },
-    "./plugins/roundPlugin": {
-      "types": "./dist/dts/date/plugins/roundPlugin.d.ts",
-      "import": "./dist/esm/date/plugins/roundPlugin.js",
-      "require": "./dist/cjs/date/plugins/roundPlugin.js"
-    },
-    "./plugins/seasonPlugin": {
-      "types": "./dist/dts/date/plugins/seasonPlugin.d.ts",
-      "import": "./dist/esm/date/plugins/seasonPlugin.js",
-      "require": "./dist/cjs/date/plugins/seasonPlugin.js"
-    },
-    "./plugins/timeZonePlugin": {
-      "types": "./dist/dts/date/plugins/timeZonePlugin.d.ts",
-      "import": "./dist/esm/date/plugins/timeZonePlugin.js",
-      "require": "./dist/cjs/date/plugins/timeZonePlugin.js"
-    },
-    "./plugins/zodiacPlugin": {
-      "types": "./dist/dts/date/plugins/zodiacPlugin.d.ts",
-      "import": "./dist/esm/date/plugins/zodiacPlugin.js",
-      "require": "./dist/cjs/date/plugins/zodiacPlugin.js"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      "types": [
-        "dist/dts/types/index.d.ts"
-      ],
-      "constants": [
-        "dist/dts/constants.d.ts"
-      ],
-      "change-case": [
-        "dist/dts/string/case.d.ts"
-      ],
-      "bn-calendar": [
-        "dist/dts/date/BanglaCalendar.d.ts"
-      ],
-      "chronos": [
-        "dist/dts/date/Chronos.d.ts"
-      ],
-      "color": [
-        "dist/dts/colors/Color.d.ts"
-      ],
-      "converter": [
-        "dist/dts/converter/Converter.d.ts"
-      ],
-      "hash": [
-        "dist/dts/hash/index.d.ts"
-      ],
-      "pluralizer": [
-        "dist/dts/pluralizer/Pluralizer.d.ts"
-      ],
-      "verbalizer": [
-        "dist/dts/verbalizer/Verbalizer.d.ts"
-      ],
-      "http-status": [
-        "dist/dts/http-status/HttpStatus.d.ts"
-      ],
-      "stylog": [
-        "dist/dts/stylog/Stylog.d.ts"
-      ],
-      "array/types": [
-        "dist/dts/array/types.d.ts"
-      ],
-      "colors/types": [
-        "dist/dts/colors/types.d.ts"
-      ],
-      "converter/types": [
-        "dist/dts/converter/types.d.ts"
-      ],
-      "date/types": [
-        "dist/dts/date/types.d.ts"
-      ],
-      "form/types": [
-        "dist/dts/form/types.d.ts"
-      ],
-      "hash/types": [
-        "dist/dts/hash/types.d.ts"
-      ],
-      "http-status/types": [
-        "dist/dts/http-status/types.d.ts"
-      ],
-      "number/types": [
-        "dist/dts/number/types.d.ts"
-      ],
-      "object/types": [
-        "dist/dts/object/types.d.ts"
-      ],
-      "pluralizer/types": [
-        "dist/dts/pluralizer/types.d.ts"
-      ],
-      "string/types": [
-        "dist/dts/string/types.d.ts"
-      ],
-      "utils/types": [
-        "dist/dts/utils/types.d.ts"
-      ],
-      "verbalizer/types": [
-        "dist/dts/verbalizer/types.d.ts"
-      ],
-      "plugins/banglaPlugin": [
-        "dist/dts/date/plugins/banglaPlugin.d.ts"
-      ],
-      "plugins/businessPlugin": [
-        "dist/dts/date/plugins/businessPlugin.d.ts"
-      ],
-      "plugins/dayPartPlugin": [
-        "dist/dts/date/plugins/dayPartPlugin.d.ts"
-      ],
-      "plugins/durationPlugin": [
-        "dist/dts/date/plugins/durationPlugin.d.ts"
-      ],
-      "plugins/fromNowPlugin": [
-        "dist/dts/date/plugins/fromNowPlugin.d.ts"
-      ],
-      "plugins/greetingPlugin": [
-        "dist/dts/date/plugins/greetingPlugin.d.ts"
-      ],
-      "plugins/palindromePlugin": [
-        "dist/dts/date/plugins/palindromePlugin.d.ts"
-      ],
-      "plugins/relativeTimePlugin": [
-        "dist/dts/date/plugins/relativeTimePlugin.d.ts"
-      ],
-      "plugins/roundPlugin": [
-        "dist/dts/date/plugins/roundPlugin.d.ts"
-      ],
-      "plugins/seasonPlugin": [
-        "dist/dts/date/plugins/seasonPlugin.d.ts"
-      ],
-      "plugins/timeZonePlugin": [
-        "dist/dts/date/plugins/timeZonePlugin.d.ts"
-      ],
-      "plugins/zodiacPlugin": [
-        "dist/dts/date/plugins/zodiacPlugin.d.ts"
-      ]
-    }
-  }
+	"name": "nhb-toolbox",
+	"version": "4.28.44",
+	"description": "A versatile collection of smart, efficient, and reusable utility functions, classes and types for everyday development needs.",
+	"main": "dist/cjs/index.js",
+	"module": "dist/esm/index.js",
+	"types": "dist/dts/index.d.ts",
+	"sideEffects": false,
+	"scripts": {
+		"test": "jest --coverage --verbose",
+		"test:watch": "jest --onlyChanged --verbose --watch",
+		"start": "start coverage/lcov-report/index.html",
+		"prepublishOnly": "nhb-build",
+		"format": "nhb-format",
+		"lint": "nhb-lint",
+		"fix": "nhb-fix",
+		"build": "nhb-build",
+		"commit": "nhb-commit",
+		"module": "nhb-module",
+		"plugin": "nhb-module -t chronos-plugin -d src/date/plugins",
+		"count": "nhb-count",
+		"delete": "nhb-delete",
+		"prepare": "husky"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"files": [
+		"dist",
+		"LICENSE",
+		"README.md",
+		"CHANGELOG.md",
+		"package.json"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/nazmul-nhb/nhb-toolbox.git"
+	},
+	"homepage": "https://toolbox.nazmul-nhb.dev",
+	"author": {
+		"name": "Nazmul Hassan",
+		"email": "nazmulnhb@gmail.com",
+		"url": "https://nazmul-nhb.dev"
+	},
+	"contributors": [
+		{
+			"name": "Nazmul Hassan",
+			"email": "nazmulnhb007@yahoo.com",
+			"url": "https://github.com/nazmul-nhb"
+		},
+		{
+			"name": "Nazmul Hassan",
+			"email": "nazmulnhb@gmail.com",
+			"url": "https://github.com/nhb-nazmul"
+		}
+	],
+	"bugs": {
+		"url": "https://github.com/nazmul-nhb/nhb-toolbox/issues",
+		"email": "nazmulnhb@gmail.com"
+	},
+	"license": "Apache-2.0",
+	"packageManager": "pnpm@10.26.1+sha512.664074abc367d2c9324fdc18037097ce0a8f126034160f709928e9e9f95d98714347044e5c3164d65bd5da6c59c6be362b107546292a8eecb7999196e5ce58fa",
+	"devDependencies": {
+		"@eslint/js": "^9.39.2",
+		"@types/jest": "^30.0.0",
+		"@types/node": "^25.0.3",
+		"@typescript-eslint/eslint-plugin": "^8.50.0",
+		"@typescript-eslint/parser": "^8.50.0",
+		"eslint": "^9.39.2",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-plugin-prettier": "^5.5.4",
+		"globals": "^16.5.0",
+		"husky": "^9.1.7",
+		"jest": "^30.2.0",
+		"lint-staged": "^16.2.7",
+		"nhb-scripts": "^1.9.2",
+		"prettier": "^3.7.4",
+		"ts-jest": "^29.4.6",
+		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.50.0"
+	},
+	"keywords": [
+		"toolbox",
+		"utility",
+		"functions",
+		"class",
+		"form",
+		"random-id",
+		"id",
+		"parse",
+		"format",
+		"generate",
+		"generator",
+		"data",
+		"form-data",
+		"development",
+		"tools",
+		"helpers",
+		"utils",
+		"nhb",
+		"color",
+		"chronos",
+		"bangla-calendar",
+		"bengali-calendar",
+		"bn-calendar",
+		"bangla-date",
+		"bangla-calendar-revised",
+		"bangla-date-revised",
+		"time",
+		"date-fns",
+		"javascript",
+		"typescript",
+		"moment",
+		"dayjs",
+		"pluralize",
+		"pluralizer",
+		"singularize",
+		"singularizer",
+		"verbalize",
+		"verbalizer",
+		"date",
+		"day",
+		"chalk",
+		"console",
+		"style",
+		"stylog",
+		"log styler",
+		"log",
+		"hash",
+		"md5",
+		"sha1",
+		"sha256",
+		"text-codec",
+		"encrypt",
+		"decrypt",
+		"uuid",
+		"token",
+		"cipher",
+		"signet",
+		"status-codes",
+		"http-status",
+		"http-status-codes",
+		"nhb-toolbox"
+	],
+	"exports": {
+		"./package.json": "./package.json",
+		".": {
+			"types": "./dist/dts/index.d.ts",
+			"import": "./dist/esm/index.js",
+			"require": "./dist/cjs/index.js"
+		},
+		"./types": {
+			"types": "./dist/dts/types/index.d.ts",
+			"default": "./dist/dts/types/index.d.ts"
+		},
+		"./constants": {
+			"types": "./dist/dts/constants.d.ts",
+			"import": "./dist/esm/constants.js",
+			"require": "./dist/cjs/constants.js"
+		},
+		"./change-case": {
+			"types": "./dist/dts/string/case.d.ts",
+			"import": "./dist/esm/string/case.js",
+			"require": "./dist/cjs/string/case.js"
+		},
+		"./bn-calendar": {
+			"types": "./dist/dts/date/BanglaCalendar.d.ts",
+			"import": "./dist/esm/date/BanglaCalendar.js",
+			"require": "./dist/cjs/date/BanglaCalendar.js"
+		},
+		"./chronos": {
+			"types": "./dist/dts/date/Chronos.d.ts",
+			"import": "./dist/esm/date/Chronos.js",
+			"require": "./dist/cjs/date/Chronos.js"
+		},
+		"./color": {
+			"types": "./dist/dts/colors/Color.d.ts",
+			"import": "./dist/esm/colors/Color.js",
+			"require": "./dist/cjs/colors/Color.js"
+		},
+		"./converter": {
+			"types": "./dist/dts/converter/Converter.d.ts",
+			"import": "./dist/esm/converter/Converter.js",
+			"require": "./dist/cjs/converter/Converter.js"
+		},
+		"./hash": {
+			"types": "./dist/dts/hash/index.d.ts",
+			"import": "./dist/esm/hash/index.js",
+			"require": "./dist/cjs/hash/index.js"
+		},
+		"./pluralizer": {
+			"types": "./dist/dts/pluralizer/Pluralizer.d.ts",
+			"import": "./dist/esm/pluralizer/Pluralizer.js",
+			"require": "./dist/cjs/pluralizer/Pluralizer.js"
+		},
+		"./verbalizer": {
+			"types": "./dist/dts/verbalizer/Verbalizer.d.ts",
+			"import": "./dist/esm/verbalizer/Verbalizer.js",
+			"require": "./dist/cjs/verbalizer/Verbalizer.js"
+		},
+		"./http-status": {
+			"types": "./dist/dts/http-status/HttpStatus.d.ts",
+			"import": "./dist/esm/http-status/HttpStatus.js",
+			"require": "./dist/cjs/http-status/HttpStatus.js"
+		},
+		"./stylog": {
+			"types": "./dist/dts/stylog/Stylog.d.ts",
+			"import": "./dist/esm/stylog/Stylog.js",
+			"require": "./dist/cjs/stylog/Stylog.js"
+		},
+		"./array/types": {
+			"types": "./dist/dts/array/types.d.ts",
+			"default": "./dist/dts/array/types.d.ts"
+		},
+		"./colors/types": {
+			"types": "./dist/dts/colors/types.d.ts",
+			"default": "./dist/dts/colors/types.d.ts"
+		},
+		"./converter/types": {
+			"types": "./dist/dts/converter/types.d.ts",
+			"default": "./dist/dts/converter/types.d.ts"
+		},
+		"./date/types": {
+			"types": "./dist/dts/date/types.d.ts",
+			"default": "./dist/dts/date/types.d.ts"
+		},
+		"./form/types": {
+			"types": "./dist/dts/form/types.d.ts",
+			"default": "./dist/dts/form/types.d.ts"
+		},
+		"./hash/types": {
+			"types": "./dist/dts/hash/types.d.ts",
+			"default": "./dist/dts/hash/types.d.ts"
+		},
+		"./http-status/types": {
+			"types": "./dist/dts/http-status/types.d.ts",
+			"default": "./dist/dts/http-status/types.d.ts"
+		},
+		"./number/types": {
+			"types": "./dist/dts/number/types.d.ts",
+			"default": "./dist/dts/number/types.d.ts"
+		},
+		"./object/types": {
+			"types": "./dist/dts/object/types.d.ts",
+			"default": "./dist/dts/object/types.d.ts"
+		},
+		"./pluralizer/types": {
+			"types": "./dist/dts/pluralizer/types.d.ts",
+			"default": "./dist/dts/pluralizer/types.d.ts"
+		},
+		"./string/types": {
+			"types": "./dist/dts/string/types.d.ts",
+			"default": "./dist/dts/string/types.d.ts"
+		},
+		"./utils/types": {
+			"types": "./dist/dts/utils/types.d.ts",
+			"default": "./dist/dts/utils/types.d.ts"
+		},
+		"./verbalizer/types": {
+			"types": "./dist/dts/verbalizer/types.d.ts",
+			"default": "./dist/dts/verbalizer/types.d.ts"
+		},
+		"./plugins/banglaPlugin": {
+			"types": "./dist/dts/date/plugins/banglaPlugin.d.ts",
+			"import": "./dist/esm/date/plugins/banglaPlugin.js",
+			"require": "./dist/cjs/date/plugins/banglaPlugin.js"
+		},
+		"./plugins/businessPlugin": {
+			"types": "./dist/dts/date/plugins/businessPlugin.d.ts",
+			"import": "./dist/esm/date/plugins/businessPlugin.js",
+			"require": "./dist/cjs/date/plugins/businessPlugin.js"
+		},
+		"./plugins/dayPartPlugin": {
+			"types": "./dist/dts/date/plugins/dayPartPlugin.d.ts",
+			"import": "./dist/esm/date/plugins/dayPartPlugin.js",
+			"require": "./dist/cjs/date/plugins/dayPartPlugin.js"
+		},
+		"./plugins/durationPlugin": {
+			"types": "./dist/dts/date/plugins/durationPlugin.d.ts",
+			"import": "./dist/esm/date/plugins/durationPlugin.js",
+			"require": "./dist/cjs/date/plugins/durationPlugin.js"
+		},
+		"./plugins/fromNowPlugin": {
+			"types": "./dist/dts/date/plugins/fromNowPlugin.d.ts",
+			"import": "./dist/esm/date/plugins/fromNowPlugin.js",
+			"require": "./dist/cjs/date/plugins/fromNowPlugin.js"
+		},
+		"./plugins/greetingPlugin": {
+			"types": "./dist/dts/date/plugins/greetingPlugin.d.ts",
+			"import": "./dist/esm/date/plugins/greetingPlugin.js",
+			"require": "./dist/cjs/date/plugins/greetingPlugin.js"
+		},
+		"./plugins/palindromePlugin": {
+			"types": "./dist/dts/date/plugins/palindromePlugin.d.ts",
+			"import": "./dist/esm/date/plugins/palindromePlugin.js",
+			"require": "./dist/cjs/date/plugins/palindromePlugin.js"
+		},
+		"./plugins/relativeTimePlugin": {
+			"types": "./dist/dts/date/plugins/relativeTimePlugin.d.ts",
+			"import": "./dist/esm/date/plugins/relativeTimePlugin.js",
+			"require": "./dist/cjs/date/plugins/relativeTimePlugin.js"
+		},
+		"./plugins/roundPlugin": {
+			"types": "./dist/dts/date/plugins/roundPlugin.d.ts",
+			"import": "./dist/esm/date/plugins/roundPlugin.js",
+			"require": "./dist/cjs/date/plugins/roundPlugin.js"
+		},
+		"./plugins/seasonPlugin": {
+			"types": "./dist/dts/date/plugins/seasonPlugin.d.ts",
+			"import": "./dist/esm/date/plugins/seasonPlugin.js",
+			"require": "./dist/cjs/date/plugins/seasonPlugin.js"
+		},
+		"./plugins/timeZonePlugin": {
+			"types": "./dist/dts/date/plugins/timeZonePlugin.d.ts",
+			"import": "./dist/esm/date/plugins/timeZonePlugin.js",
+			"require": "./dist/cjs/date/plugins/timeZonePlugin.js"
+		},
+		"./plugins/zodiacPlugin": {
+			"types": "./dist/dts/date/plugins/zodiacPlugin.d.ts",
+			"import": "./dist/esm/date/plugins/zodiacPlugin.js",
+			"require": "./dist/cjs/date/plugins/zodiacPlugin.js"
+		}
+	},
+	"typesVersions": {
+		"*": {
+			"types": [
+				"dist/dts/types/index.d.ts"
+			],
+			"constants": [
+				"dist/dts/constants.d.ts"
+			],
+			"change-case": [
+				"dist/dts/string/case.d.ts"
+			],
+			"bn-calendar": [
+				"dist/dts/date/BanglaCalendar.d.ts"
+			],
+			"chronos": [
+				"dist/dts/date/Chronos.d.ts"
+			],
+			"color": [
+				"dist/dts/colors/Color.d.ts"
+			],
+			"converter": [
+				"dist/dts/converter/Converter.d.ts"
+			],
+			"hash": [
+				"dist/dts/hash/index.d.ts"
+			],
+			"pluralizer": [
+				"dist/dts/pluralizer/Pluralizer.d.ts"
+			],
+			"verbalizer": [
+				"dist/dts/verbalizer/Verbalizer.d.ts"
+			],
+			"http-status": [
+				"dist/dts/http-status/HttpStatus.d.ts"
+			],
+			"stylog": [
+				"dist/dts/stylog/Stylog.d.ts"
+			],
+			"array/types": [
+				"dist/dts/array/types.d.ts"
+			],
+			"colors/types": [
+				"dist/dts/colors/types.d.ts"
+			],
+			"converter/types": [
+				"dist/dts/converter/types.d.ts"
+			],
+			"date/types": [
+				"dist/dts/date/types.d.ts"
+			],
+			"form/types": [
+				"dist/dts/form/types.d.ts"
+			],
+			"hash/types": [
+				"dist/dts/hash/types.d.ts"
+			],
+			"http-status/types": [
+				"dist/dts/http-status/types.d.ts"
+			],
+			"number/types": [
+				"dist/dts/number/types.d.ts"
+			],
+			"object/types": [
+				"dist/dts/object/types.d.ts"
+			],
+			"pluralizer/types": [
+				"dist/dts/pluralizer/types.d.ts"
+			],
+			"string/types": [
+				"dist/dts/string/types.d.ts"
+			],
+			"utils/types": [
+				"dist/dts/utils/types.d.ts"
+			],
+			"verbalizer/types": [
+				"dist/dts/verbalizer/types.d.ts"
+			],
+			"plugins/banglaPlugin": [
+				"dist/dts/date/plugins/banglaPlugin.d.ts"
+			],
+			"plugins/businessPlugin": [
+				"dist/dts/date/plugins/businessPlugin.d.ts"
+			],
+			"plugins/dayPartPlugin": [
+				"dist/dts/date/plugins/dayPartPlugin.d.ts"
+			],
+			"plugins/durationPlugin": [
+				"dist/dts/date/plugins/durationPlugin.d.ts"
+			],
+			"plugins/fromNowPlugin": [
+				"dist/dts/date/plugins/fromNowPlugin.d.ts"
+			],
+			"plugins/greetingPlugin": [
+				"dist/dts/date/plugins/greetingPlugin.d.ts"
+			],
+			"plugins/palindromePlugin": [
+				"dist/dts/date/plugins/palindromePlugin.d.ts"
+			],
+			"plugins/relativeTimePlugin": [
+				"dist/dts/date/plugins/relativeTimePlugin.d.ts"
+			],
+			"plugins/roundPlugin": [
+				"dist/dts/date/plugins/roundPlugin.d.ts"
+			],
+			"plugins/seasonPlugin": [
+				"dist/dts/date/plugins/seasonPlugin.d.ts"
+			],
+			"plugins/timeZonePlugin": [
+				"dist/dts/date/plugins/timeZonePlugin.d.ts"
+			],
+			"plugins/zodiacPlugin": [
+				"dist/dts/date/plugins/zodiacPlugin.d.ts"
+			]
+		}
+	}
 }
