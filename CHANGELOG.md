@@ -4,16 +4,15 @@
 
 All notable changes to the package will be documented here.
 
----
-<!-- 
-## [4.28.50] - [Future]
+## [4.28.50] - 2025-12-24
 
-- **Added** *new* `Chronos` plugin: `banglaPlugin`
-- **Added** *new* class: `BanglaCalendar`
-- **Added** *new* number conversion utils: `banglaToDigit` and `digitToBangla`
-- **Added** *new* date/time util: `formatTimePart`
-- **Fixed** minor *issues* and **improved** *type system* for date and number related utils
- -->
+### ✨ New Class, Chronos Plugin, and Utilities
+
+- **Added** a *new* class: `BanglaCalendar` for creating, manipulating, and converting dates between the Bangla and Gregorian calendar systems.
+- **Introduced** a *new* `Chronos` *plugin*: `banglaPlugin`, enabling Bangla calendar support within `Chronos`.
+- **Added** *new* numeric conversion utilities: `banglaToDigit` and `digitToBangla`, for working with Bangla numerals.
+- **Added** a *new* date/time utility: `formatTimePart` for formatting a string that only has the time component.
+- **Fixed** minor *issues* in `Chronos` and **improved** *type system* for date and number related utilities.
 
 ## [4.28.44] - 2025-12-19
 
