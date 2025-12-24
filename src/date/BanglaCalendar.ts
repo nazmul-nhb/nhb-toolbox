@@ -39,8 +39,8 @@ import type {
  * const date0 = new BanglaCalendar('১৪৩২-১১-০৮');
  *
  * // Create from Gregorian date
- * const date1 = new BanglaCalendar('2023-04-14');
- * const date2 = new BanglaCalendar(new Date('2023-04-14'));
+ * const date1 = new BanglaCalendar('2023-04-14'); // Latin digit
+ * const date2 = new BanglaCalendar(new Date('2023-04-14')); // Date object
  *
  * // Create with specific Bangla date using Latin digits
  * const date3 = new BanglaCalendar(1430, 1, 1);
@@ -380,7 +380,7 @@ export class BanglaCalendar {
 	 * @example
 	 * const bnCal = new BanglaCalendar('2023-04-14');
 	 * bnCal.getSeasonName(); // Returns: 'গ্রীষ্ম'
-	 * bnCal.getSeasonName({ locale: 'en' }); // Returns: 'Grisma (Summer)'
+	 * bnCal.getSeasonName('en'); // Returns: 'Grisma (Summer)'
 	 *
 	 * @remarks
 	 * Bangla calendar is traditionally divided into 6 seasons (ঋতু):

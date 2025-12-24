@@ -226,6 +226,37 @@ chronos('2025-01-01').addDays(3).format('YYYY-MM-DD'); // "2025-01-04"
 
 ---
 
+### 🕰️ Bangla Calendar (Revised: 1966 & 2019)
+
+**`BanglaCalendar`** - The class to create, manipulate, and convert dates between the Bangla and Gregorian calendar systems.
+
+> It supports two calendar variants: `'revised-2019'` (default) and `'revised-1966'`.
+
+```typescript
+// Create from current date
+const today = new BanglaCalendar();
+
+// Create from Bangla date string (Bangla digit)
+const date0 = new BanglaCalendar('১৪৩২-১১-০৮');
+
+// Create from Gregorian date
+const date1 = new BanglaCalendar('2023-04-14'); // Latin digit
+const date2 = new BanglaCalendar(new Date('2023-04-14')); // Date object
+
+// Create with specific Bangla date using Latin digits
+const date3 = new BanglaCalendar(1430, 1, 1);
+
+// Create with specific Bangla date using Bangla digits
+const date4 = new BanglaCalendar('১৪৩০', '১', '১');
+
+// Create with specific variant
+const date5 = new BanglaCalendar('১৪৩০', '১', '১', { variant: 'revised-1966' });
+```
+
+[Documentation →](https://toolbox.nazmul-nhb.dev/docs/classes/BanglaCalendar)
+
+---
+
 ### 🎨 Professional Color Manipulation
 
 **`Color`** - Convert between color formats, generate palettes, check accessibility contrast, and perform advanced color math with perfect type safety.
