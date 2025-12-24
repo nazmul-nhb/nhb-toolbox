@@ -207,6 +207,9 @@ export type TimeFormatToken =
 type DateTimeISO = 'YYYY-MM-DDTHH:mm:ss.mssZZ';
 type TokenConnector = ' ' | ', ' | '; ' | ' - ';
 
+/** Format tokens for time only string */
+export type TimeOnlyFormat = LooseLiteral<TimeFormatToken>;
+
 /** Pre-defined literal types for formatting date and time. Optionally can pass any string. */
 export type StrictFormat = LooseLiteral<
 	| DateTimeISO

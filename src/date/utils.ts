@@ -14,7 +14,7 @@ import type {
 	ClockTime,
 	DateFormatOptions,
 	HourMinutes,
-	TimeFormatToken,
+	TimeOnlyFormat,
 	TimeZoneDetails,
 	TimeZoneIdNative,
 	UTCOffset,
@@ -238,11 +238,11 @@ export function formatDate(options?: DateFormatOptions): string {
  *
  * - *Input will default to today's date and assume local timezone if no offset is provided.*
  *
- * @param format - Format tokens accepted by {@link formatDate} method ({@link TimeFormatToken}) for time part only.
+ * @param format - Format tokens accepted by {@link formatDate} method ({@link TimeOnlyFormat}) for time part only.
  *                 Default: `hh:mm:ss a` → 02:33:36 pm.
  * @returns Formatted time string in local (System) time.
  */
-export function formatTimePart(time: string, format?: TimeFormatToken): string {
+export function formatTimePart(time: string, format?: TimeOnlyFormat): string {
 	const timeWithDate = `${formatDate({ format: 'YYYY-MM-DD' })}T${_normalizeOffset(time)}`;
 
 	return formatDate({ date: timeWithDate, format: format || 'hh:mm:ss a' });

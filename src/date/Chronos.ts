@@ -29,7 +29,7 @@ import type {
 	RelativeDateRange,
 	RelativeRangeOptions,
 	StrictFormat,
-	TimeFormatToken,
+	TimeOnlyFormat,
 	TimeUnit,
 	TimeUnitValue,
 	TimeZone,
@@ -1749,11 +1749,11 @@ export class Chronos {
 	 *
 	 * - *Input will default to today's date and assume local timezone if no offset is provided.*
 	 *
-	 * @param format - Format tokens accepted by {@link formatStrict()} method ({@link TimeFormatToken}) for time part only.
+	 * @param format - Format tokens accepted by {@link formatStrict()} method ({@link TimeOnlyFormat}) for time part only.
 	 *                 Default: `hh:mm:ss a` → 02:33:36 pm.
 	 * @returns Formatted time string in local (System) time.
 	 */
-	static formatTimePart(time: string, format?: TimeFormatToken): string {
+	static formatTimePart(time: string, format?: TimeOnlyFormat): string {
 		const timeWithDate = `${new Chronos().#format('YYYY-MM-DD')}T${_normalizeOffset(time)}`;
 
 		return new Chronos(timeWithDate).#format(format || 'hh:mm:ss a');
