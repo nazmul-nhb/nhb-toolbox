@@ -1,6 +1,6 @@
 import type { $BnOnes, BanglaDigit, Enumerate, LocaleCode, NumberRange } from '../number/types';
 import type { Maybe } from '../types/index';
-import type { LooseLiteral, RangeTuple, Split } from '../utils/types';
+import type { LooseLiteral, RangeTuple, Repeat, Split } from '../utils/types';
 import type { Chronos } from './Chronos';
 import type { ChronosStatics } from './chronos-statics';
 import type {
@@ -731,40 +731,54 @@ export type TimeWithUnit = `${number}${$UnitAnyCase}` | `${number} ${$UnitAnyCas
 
 export type $BnEn = 'bn' | 'en';
 
+type $BnOnesPadded = `০${$BnOnes}`;
+
 /** Bangla month from `১-১২` */
-export type BanglaMonth = $BnOnes | '১০' | '১১' | '১২';
+export type BanglaMonth = $BnOnes | $BnOnesPadded | '১০' | '১১' | '১২';
 
 /** Bangla date of month from `১-৩১` */
-export type BanglaDate = $BnOnes | `১${BanglaDigit}` | `২${BanglaDigit}` | '৩০' | '৩১';
+export type BanglaDate =
+	| $BnOnes
+	| $BnOnesPadded
+	| `১${BanglaDigit}`
+	| `২${BanglaDigit}`
+	| '৩০'
+	| '৩১';
+
+export type $BnYearPadded = Repeat<BanglaDigit, 4>;
+export type $BnMonthPadded = $BnOnesPadded | '১০' | '১১' | '১২';
+export type $BnDatePadded = $BnOnesPadded | `১${BanglaDigit}` | `২${BanglaDigit}` | '৩০' | '৩১';
+
+// export type BnDateString = `${$BanglaYearPadded}-${$BanglaMonthPadded}-${$BanglaDatePadded}`;
 
 /** Bangla year from `০-৯৯৯৯` */
 export type BanglaYear =
 	| BanglaDigit
 	| `${$BnOnes}${BanglaDigit}`
 	| `${$BnOnes}${BanglaDigit}${BanglaDigit}`
-	| `${$BnOnes}${BanglaDigit}${BanglaDigit}${BanglaDigit}`;
+	| Repeat<BanglaDigit, 4>;
 
 /** Token for Bangla season format */
-type SeasonToken = 'S' | 'SS';
+type $SeasonToken = 'S' | 'SS';
 
 /** Standard format tokens for Bangla date with seasons */
 export type DateWithSeasonToken =
-	| `${Exclude<MonthToken, 'M' | 'MM'>} ${DateToken}, ${YearToken} ${SeasonToken}`
-	| `${DateToken} ${Exclude<MonthToken, 'M' | 'MM'>}, ${YearToken} ${SeasonToken}`
-	| `${Exclude<MonthToken, 'M' | 'MM'>} ${DateToken} ${YearToken} ${SeasonToken}`
-	| `${DateToken} ${Exclude<MonthToken, 'M' | 'MM'>} ${YearToken} ${SeasonToken}`
-	| `${DayToken}, ${Exclude<MonthToken, 'M' | 'MM'>} ${DateToken}, ${YearToken}, ${SeasonToken}`
-	| `${DayToken}, ${DateToken} ${Exclude<MonthToken, 'M' | 'MM'>}, ${YearToken}, ${SeasonToken}`
-	| `${DayToken}, ${Exclude<MonthToken, 'M' | 'MM'>} ${DateToken} ${YearToken}, ${SeasonToken}`
-	| `${DayToken}, ${DateToken} ${Exclude<MonthToken, 'M' | 'MM'>} ${YearToken}, ${SeasonToken}`
-	| `${Exclude<DateToken, 'Do'>}/${Exclude<MonthToken, 'mmm' | 'mmmm'>}/${YearToken} (${SeasonToken})`
-	| `${Exclude<DateToken, 'Do'>}-${Exclude<MonthToken, 'mmm' | 'mmmm'>}-${YearToken} (${SeasonToken})`
-	| `${Exclude<MonthToken, 'mmm' | 'mmmm'>}/${Exclude<DateToken, 'Do'>}/${YearToken} (${SeasonToken})`
-	| `${Exclude<MonthToken, 'mmm' | 'mmmm'>}-${Exclude<DateToken, 'Do'>}-${YearToken} (${SeasonToken})`
-	| `${YearToken}-${Exclude<MonthToken, 'mmm' | 'mmmm'>}-${Exclude<DateToken, 'Do'>} (${SeasonToken})`
-	| `${YearToken}/${Exclude<MonthToken, 'mmm' | 'mmmm'>}/${Exclude<DateToken, 'Do'>} (${SeasonToken})`
-	| `${YearToken}-${Exclude<DateToken, 'Do'>}-${Exclude<MonthToken, 'mmm' | 'mmmm'>} (${SeasonToken})`
-	| `${YearToken}/${Exclude<DateToken, 'Do'>}/${Exclude<MonthToken, 'mmm' | 'mmmm'>} (${SeasonToken})`;
+	| `${Exclude<MonthToken, 'M' | 'MM'>} ${DateToken}, ${YearToken} ${$SeasonToken}`
+	| `${DateToken} ${Exclude<MonthToken, 'M' | 'MM'>}, ${YearToken} ${$SeasonToken}`
+	| `${Exclude<MonthToken, 'M' | 'MM'>} ${DateToken} ${YearToken} ${$SeasonToken}`
+	| `${DateToken} ${Exclude<MonthToken, 'M' | 'MM'>} ${YearToken} ${$SeasonToken}`
+	| `${DayToken}, ${Exclude<MonthToken, 'M' | 'MM'>} ${DateToken}, ${YearToken}, ${$SeasonToken}`
+	| `${DayToken}, ${DateToken} ${Exclude<MonthToken, 'M' | 'MM'>}, ${YearToken}, ${$SeasonToken}`
+	| `${DayToken}, ${Exclude<MonthToken, 'M' | 'MM'>} ${DateToken} ${YearToken}, ${$SeasonToken}`
+	| `${DayToken}, ${DateToken} ${Exclude<MonthToken, 'M' | 'MM'>} ${YearToken}, ${$SeasonToken}`
+	| `${Exclude<DateToken, 'Do'>}/${Exclude<MonthToken, 'mmm' | 'mmmm'>}/${YearToken} (${$SeasonToken})`
+	| `${Exclude<DateToken, 'Do'>}-${Exclude<MonthToken, 'mmm' | 'mmmm'>}-${YearToken} (${$SeasonToken})`
+	| `${Exclude<MonthToken, 'mmm' | 'mmmm'>}/${Exclude<DateToken, 'Do'>}/${YearToken} (${$SeasonToken})`
+	| `${Exclude<MonthToken, 'mmm' | 'mmmm'>}-${Exclude<DateToken, 'Do'>}-${YearToken} (${$SeasonToken})`
+	| `${YearToken}-${Exclude<MonthToken, 'mmm' | 'mmmm'>}-${Exclude<DateToken, 'Do'>} (${$SeasonToken})`
+	| `${YearToken}/${Exclude<MonthToken, 'mmm' | 'mmmm'>}/${Exclude<DateToken, 'Do'>} (${$SeasonToken})`
+	| `${YearToken}-${Exclude<DateToken, 'Do'>}-${Exclude<MonthToken, 'mmm' | 'mmmm'>} (${$SeasonToken})`
+	| `${YearToken}/${Exclude<DateToken, 'Do'>}/${Exclude<MonthToken, 'mmm' | 'mmmm'>} (${$SeasonToken})`;
 
 /** Standard format tokens for Bangla date along with any string */
 export type BanglaDateFormat = LooseLiteral<DateFormatToken | DateWithSeasonToken>;

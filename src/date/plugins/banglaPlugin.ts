@@ -87,7 +87,7 @@ declare module '../Chronos' {
 		 * // Returns: '০২:৩০:০০ অপরাহ্ণ'
 		 *
 		 * @remarks
-		 *- Supported format tokens include: `YYYY`, `YY`, `mmmm`, `mmm`, `MM`, `M`, `DD`, `D`, `dd`, `ddd`, `Do`, `HH`, `H`, `hh`, `h`, `mm`, `m`, `ss`, `s`, `ms`, `mss`, `a`, `A`, `ZZ`, `Z`. `SS`, `S` and.
+		 * - Supported format tokens include: `YYYY`, `YY`, `mmmm`, `mmm`, `MM`, `M`, `DD`, `D`, `dd`, `ddd`, `Do`, `HH`, `H`, `hh`, `h`, `mm`, `m`, `ss`, `s`, `ms`, `mss`, `a`, `A`, `ZZ`, `Z`. `SS`, `S` and.
 		 *   - **Year**: `YYYY/yyyy` (full year), `YY/yy` (last 2 digits)
 		 *   - **Month**: `M/MM`(padded), `mmm` (short name), `mmmm` (full name)
 		 *   - **Day**: `D/DD`(padded), Do (results same as cardinal for Bangla dates)
@@ -336,7 +336,7 @@ export const banglaPlugin = ($Chronos: $Chronos): void => {
 	};
 
 	$Chronos.prototype.formatBangla = function (fmt, opts) {
-		const { hour, minute, second, millisecond } = this.toObject();
+		const { hour, minute, second, millisecond } = this;
 
 		const D_NAME = BN_DAYS[this.weekDay];
 

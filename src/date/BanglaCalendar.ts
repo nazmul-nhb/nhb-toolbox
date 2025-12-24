@@ -35,6 +35,9 @@ import type {
  * // Create from current date
  * const today = new BanglaCalendar();
  *
+ * // Create from Bangla date string (Bangla digit)
+ * const date0 = new BanglaCalendar('১৪৩২-১১-০৮');
+ *
  * // Create from Gregorian date
  * const date1 = new BanglaCalendar('2023-04-14');
  * const date2 = new BanglaCalendar(new Date('2023-04-14'));
@@ -49,7 +52,7 @@ import type {
  * const date5 = new BanglaCalendar('১৪৩০', '১', '১', { variant: 'revised-1966' });
  *
  * @remarks
- * - The Bangla calendar year starts on April 14th (১ বৈশাখ) in the Gregorian calendar.
+ * - The Bangla calendar year starts on `April 14th (১ বৈশাখ)` in the Gregorian calendar.
  * - The class automatically handles leap years according to the selected variant.
  */
 export class BanglaCalendar {
@@ -109,7 +112,9 @@ export class BanglaCalendar {
 	 * @param date - Bangla or Gregorian (should be parsable by {@link Date} ) date string
 	 * @param config - Calendar configuration options
 	 *
-	 * @remarks For Bangla date string validates internally using {@link isBanglaDateString} method
+	 * @remarks
+	 * - Bangla date string must be in `YYYY-MM-DD` format (padded with `০` or non-padded) in Bangla digit
+	 * - Bangla date string is validated internally using {@link isBanglaDateString} method
 	 *
 	 * @example
 	 * const fromBanglaString = new BanglaCalendar('১৪৩২-১১-০৮');
@@ -272,7 +277,7 @@ export class BanglaCalendar {
 			bnDate = banglaToDigit(parts[2]);
 		}
 
-		const { gregYear } = this.#processGregYear(bnYear, bnMonth as NumberRange<1, 12>);
+		const { gregYear } = this.#processGregYear(bnYear, bnMonth);
 
 		const { bnMonthTable } = this.#getGregYearBnMonthTable(gregYear, bnYear);
 
@@ -600,7 +605,7 @@ export class BanglaCalendar {
 	}
 
 	/**
-	 * @instance Formats the current date as a Bangla calendar date string using customizable tokens.
+	 * @instance Formats the current date as a Bangla calendar date string (no time) using customizable tokens.
 	 *
 	 * @param format - Format string using tokens (default: `'ddd, DD mmmm (SS), YYYY বঙ্গাব্দ'`)
 	 * @returns Formatted Bangla date string according to the specified format
@@ -618,7 +623,8 @@ export class BanglaCalendar {
 	 * // Returns: 'বৈশাখ ০১, ১৪৩০'
 	 *
 	 * @remarks
-	 *- Supported format tokens include: `YYYY`, `YY`, `mmmm`, `mmm`, `MM`, `M`, `DD`, `D`, `dd`, `ddd`, `Do`, `SS` and `S`.
+	 * - **Important:** Does not allow time formatting tokens!
+	 * - Supported format tokens include: `YYYY`, `YY`, `mmmm`, `mmm`, `MM`, `M`, `DD`, `D`, `dd`, `ddd`, `Do`, `SS` and `S`.
 	 *   - **Year**: `YYYY/yyyy` (full year), `YY/yy` (last 2 digits)
 	 *   - **Month**: `M/MM`(padded), `mmm` (short name), `mmmm` (full name)
 	 *   - **Day**: `D/DD`(padded), Do (results same as cardinal for Bangla dates)
@@ -661,7 +667,7 @@ export class BanglaCalendar {
 	}
 
 	/** Process Gregorian base year and calculated year from optional Bangla year and month */
-	#processGregYear(bnYear?: number, bnMonth?: NumberRange<1, 12>) {
+	#processGregYear(bnYear?: number, bnMonth?: number) {
 		const baseGregYear = bnYear ?? this.year.en + BN_YEAR_OFFSET;
 
 		const gregYear = (bnMonth ?? this.month.en) > 10 ? baseGregYear + 1 : baseGregYear;
@@ -684,10 +690,10 @@ export class BanglaCalendar {
 	/** Process variant from the config */
 	#processVariants(v1: unknown, v2: unknown, v3: unknown, v4: unknown) {
 		return (
-			this.#isConfig(v1) ? v1.variant
-			: this.#isConfig(v2) ? v2.variant
-			: this.#isConfig(v3) ? v3.variant
-			: this.#isConfig(v4) ? v4.variant
+			this.$hasVariantConfig(v1) ? v1.variant
+			: this.$hasVariantConfig(v2) ? v2.variant
+			: this.$hasVariantConfig(v3) ? v3.variant
+			: this.$hasVariantConfig(v4) ? v4.variant
 			: 'revised-2019'
 		);
 	}
@@ -712,8 +718,12 @@ export class BanglaCalendar {
 		return `${this.getDayName(lcl)}, ${date[lcl]} ${this.getMonthName(lcl)}, ${year[lcl]} [${this.getSeasonName(lcl)}]`;
 	}
 
-	/** Check if a value is a configuration object */
-	#isConfig(value: unknown): value is Required<BnCalendarConfig> {
+	/**
+	 * @static Check if a value is a configuration object that contains a valid {@link variant}
+	 * @param value Value to check
+	 * @returns `true` if the value contains a valid {@link variant} property, `false` otherwise
+	 */
+	$hasVariantConfig(value: unknown): value is { variant: BnCalendarVariant } {
 		return (
 			isObjectWithKeys(value, ['variant']) &&
 			isNonEmptyString(value.variant) &&
@@ -823,7 +833,7 @@ export class BanglaCalendar {
 	}
 
 	/**
-	 * @static Checks whether a string follows the Bangla date format pattern (YYYY-MM-DD with Bangla digits).
+	 * @static Checks whether a string follows the Bangla date format pattern (`YYYY-MM-DD` with Bangla digits).
 	 *
 	 * @param value - String value to check
 	 * @returns `true` if the string matches the pattern `"বছর-মাস-দিন"` with Bangla digits, `false` otherwise
