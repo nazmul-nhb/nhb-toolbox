@@ -279,7 +279,7 @@ export class BanglaCalendar {
 
 		const { gregYear } = this.#processGregYear(bnYear, bnMonth);
 
-		const { bnMonthTable } = this.#getGregYearBnMonthTable(gregYear, bnYear);
+		const { bnMonthTable } = this.#getBnMonthTableLeap(gregYear, bnYear);
 
 		const monthRange = bnMonthTable[bnMonth - 1];
 
@@ -340,7 +340,7 @@ export class BanglaCalendar {
 	isLeapYear(): boolean {
 		const { gregYear } = this.#processGregYear();
 
-		return this.#getGregYearBnMonthTable(gregYear).isBnLeapYear;
+		return this.#getBnMonthTableLeap(gregYear).isBnLeapYear;
 	}
 
 	/**
@@ -359,7 +359,7 @@ export class BanglaCalendar {
 	 */
 	toDate(): Date {
 		const { baseGregYear, gregYear } = this.#processGregYear();
-		const { bnMonthTable } = this.#getGregYearBnMonthTable(gregYear);
+		const { bnMonthTable } = this.#getBnMonthTableLeap(gregYear);
 
 		const epoch = Date.UTC(baseGregYear, 3, 13);
 
@@ -436,6 +436,166 @@ export class BanglaCalendar {
 		const DAY = BN_DAYS[this.weekDay];
 
 		return (locale === 'en' ? DAY.en : DAY.bn) as BanglaDayName<Locale>;
+	}
+
+	/**
+	 * @instance Adds days to the current Bangla date.
+	 *
+	 * @param days - Number of days to add (can be negative to subtract days)
+	 * @returns New `BanglaCalendar` instance with the adjusted date
+	 *
+	 * @example
+	 * const bnCal = new BanglaCalendar('১৪৩০', '১', '১'); // ১ বৈশাখ ১৪৩০
+	 *
+	 * // Add days
+	 * bnCal.addDays(7); // Returns: ৮ বৈশাখ ১৪৩০
+	 *
+	 * // Subtract days
+	 * bnCal.addDays(-3); // Returns: ২৯ চৈত্র ১৪২৯
+	 *
+	 * // Add days crossing month boundary
+	 * bnCal.addDays(35); // Returns: ৬ জ্যৈষ্ঠ ১৪৩০
+	 *
+	 * // Add days crossing year boundary
+	 * const lateDate = new BanglaCalendar('১৪৩০', '১২', '২৫');
+	 * lateDate.addDays(10); // Returns: ৫ বৈশাখ ১৪৩১
+	 *
+	 * @remarks
+	 * - The resulting instance preserves the calendar variant of the original
+	 * - Handles month and year transitions automatically
+	 * - Accounts for varying month lengths and leap years
+	 * - Time component remains at midnight UTC in the Gregorian conversion
+	 * - Negative values subtract days from the current date
+	 */
+	addDays(days: number): BanglaCalendar {
+		const date = this.toDate();
+
+		return new BanglaCalendar(date.setDate(date.getDate() + days), {
+			variant: this.variant,
+		});
+	}
+
+	/**
+	 * @instance Adds weeks to the current Bangla date.
+	 *
+	 * @param weeks - Number of weeks to add (can be negative to subtract weeks)
+	 * @returns New `BanglaCalendar` instance with the adjusted date
+	 *
+	 * @example
+	 * const bnCal = new BanglaCalendar('১৪৩০', '১', '১'); // ১ বৈশাখ ১৪৩০
+	 *
+	 * // Add weeks
+	 * bnCal.addWeeks(2); // Returns: ১৫ বৈশাখ ১৪৩০
+	 *
+	 * // Subtract weeks
+	 * bnCal.addWeeks(-1); // Returns: ২৪ চৈত্র ১৪২৯
+	 *
+	 * // Add weeks crossing month boundary
+	 * bnCal.addWeeks(5); // Returns: ৬ জ্যৈষ্ঠ ১৪৩০
+	 *
+	 * @remarks
+	 * - Each week is treated as 7 days
+	 * - The resulting instance preserves the calendar variant of the original
+	 * - Handles month and year transitions automatically
+	 * - Negative values subtract weeks from the current date
+	 * - Useful for scheduling recurring weekly events
+	 */
+	addWeeks(weeks: number): BanglaCalendar {
+		const date = this.toDate();
+
+		return new BanglaCalendar(date.setDate(date.getDate() + weeks * 7), {
+			variant: this.variant,
+		});
+	}
+
+	/**
+	 * @instance Adds months to the current Bangla date.
+	 *
+	 * @param months - Number of months to add (can be negative to subtract months)
+	 * @returns New `BanglaCalendar` instance with the adjusted date
+	 *
+	 * @example
+	 * const bnCal = new BanglaCalendar('১৪৩০', '১', '১৫'); // ১৫ বৈশাখ ১৪৩০
+	 *
+	 * // Add months
+	 * bnCal.addMonths(1); // Returns: ১৫ জ্যৈষ্ঠ ১৪৩০
+	 *
+	 * // Subtract months
+	 * bnCal.addMonths(-1); // Returns: ১৫ চৈত্র ১৪২৯
+	 *
+	 * // Add months crossing year boundary
+	 * bnCal.addMonths(12); // Returns: ১৫ বৈশাখ ১৪৩১
+	 *
+	 * @remarks
+	 * - The resulting instance preserves the calendar variant of the original
+	 * - Handles year transitions automatically
+	 * - Adjusts the day of month if necessary (e.g., ৩১ → ৩০ for shorter months)
+	 * - Negative values subtract months from the current date
+	 * - Month addition follows Bangla calendar months, not Gregorian months
+	 */
+	addMonths(months: number): BanglaCalendar {
+		const { variant, year, month, date } = this;
+
+		// Calculate target month and year
+		let targetMonth = month.en + months;
+		let targetYear = year.en;
+
+		// Adjust for month overflow/underflow
+		while (targetMonth > 12) {
+			targetMonth -= 12;
+			targetYear += 1;
+		}
+		while (targetMonth < 1) {
+			targetMonth += 12;
+			targetYear -= 1;
+		}
+
+		// Get the month length for the target month/year
+		const { gregYear } = this.#processGregYear(targetYear, targetMonth);
+		const { bnMonthTable } = this.#getBnMonthTableLeap(gregYear, targetYear);
+		const targetMonthLength = bnMonthTable[targetMonth - 1];
+
+		// Adjust date if it exceeds the target month length
+		const targetDate = Math.min(date.en, targetMonthLength) as NumberRange<1, 31>;
+
+		return new BanglaCalendar(targetYear, targetMonth as NumberRange<1, 12>, targetDate, {
+			variant,
+		});
+	}
+
+	/**
+	 * @instance Adds years to the current Bangla date.
+	 *
+	 * @param years - Number of years to add (can be negative to subtract years)
+	 * @returns New BanglaCalendar instance with the adjusted date
+	 *
+	 * @example
+	 * const bnCal = new BanglaCalendar('১৪৩০', '১', '১৫'); // ১৫ বৈশাখ ১৪৩০
+	 *
+	 * // Add years
+	 * bnCal.addYears(1); // Returns: ১৫ বৈশাখ ১৪৩১
+	 *
+	 * // Subtract years
+	 * bnCal.addYears(-1); // Returns: ১৫ বৈশাখ ১৪২৯
+	 *
+	 * // Leap year adjustment for চৈত্র
+	 * const leapYearDate = new BanglaCalendar('১৪২৬', '১২', '৩১'); // Leap year
+	 * leapYearDate.addYears(1); // Returns: ৩০ চৈত্র ১৪২৭ (adjusted from ৩১)
+	 *
+	 * // Multiple years
+	 * bnCal.addYears(5); // Returns: ১৫ বৈশাখ ১৪৩৫
+	 *
+	 * @remarks
+	 * - The resulting instance preserves the calendar variant of the original
+	 * - Negative values subtract years from the current date
+	 * - Year addition follows Bangla calendar years
+	 * - The month and day generally remain the same unless affected by leap year rules
+	 */
+
+	addYears(years: number): BanglaCalendar {
+		const { variant, year, month, date } = this;
+
+		return new BanglaCalendar(year.en + years, month.en, date.en, { variant });
 	}
 
 	/**
@@ -542,7 +702,7 @@ export class BanglaCalendar {
 	 */
 	daysInMonth(month?: NumberRange<1, 12>): NumberRange<29, 31> {
 		const { gregYear } = this.#processGregYear();
-		const { bnMonthTable } = this.#getGregYearBnMonthTable(gregYear);
+		const { bnMonthTable } = this.#getBnMonthTableLeap(gregYear);
 
 		return bnMonthTable[(month ?? this.month.en) - 1];
 	}
@@ -675,8 +835,8 @@ export class BanglaCalendar {
 		return { baseGregYear, gregYear };
 	}
 
-	/** Get the Gregorian year(s), Bangla month table and leap year flag based on calendar variant */
-	#getGregYearBnMonthTable(gregYear: number, bnYear?: number) {
+	/** Get the Bangla month table and leap year flag based on calendar variant */
+	#getBnMonthTableLeap(gregYear: number, bnYear?: number) {
 		const isBnLeapYear = _isBnLeapYear(bnYear ?? this.year.en, gregYear, this.variant);
 
 		const bnMonthTable =
