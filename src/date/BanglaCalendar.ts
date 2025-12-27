@@ -107,9 +107,9 @@ export class BanglaCalendar {
 	constructor(config?: BnCalendarConfig);
 
 	/**
-	 * * Creates a `BanglaCalendar` instance from a **Bangla** or **Gregorian** date string.
+	 * * Creates a `BanglaCalendar` instance from a **Gregorian** or **Bangla** date string.
 	 *
-	 * @param date - Bangla or Gregorian (should be parsable by {@link Date} ) date string
+	 * @param date - Gregorian (should be parsable by {@link Date}) or Bangla date string
 	 * @param config - Calendar configuration options
 	 *
 	 * @remarks
@@ -512,62 +512,72 @@ export class BanglaCalendar {
 	 * @instance Adds months to the current Bangla date.
 	 *
 	 * @param months - Number of months to add (can be negative to subtract months)
+	 * @param overflow - If `true`, allows date overflow to next month when day doesn't exist;
+	 *                   if `false`, clamps to last day of target month (default: `true`)
 	 * @returns New `BanglaCalendar` instance with the adjusted date
 	 *
 	 * @example
-	 * const bnCal = new BanglaCalendar('১৪৩০', '১', '১৫'); // ১৫ বৈশাখ ১৪৩০
+	 * // Normal case: day exists in target month
+	 * const normal = new BanglaCalendar('১৪৩০', '২', '১৫');
+	 * normal.addMonths(1); // Returns: ১৫ জ্যৈষ্ঠ ১৪৩০
+	 * normal.addMonths(1, false); // Returns: ১৫ জ্যৈষ্ঠ ১৪৩০ (same behavior for both)
 	 *
-	 * // Add months
-	 * bnCal.addMonths(1); // Returns: ১৫ জ্যৈষ্ঠ ১৪৩০
+	 * // Edge case: day does not exist in target month
+	 * const edgeCase = new BanglaCalendar('১৪৩০', '৬', '৩১'); // ৩১ আশ্বিন ১৪৩০
+	 *
+	 * // With overflow (default): 31st doesn't exist in কার্তিক (30 days)
+	 * edgeCase.addMonths(1); // Returns: ১ অগ্রহায়ণ ১৪৩০ (overflows to next month)
+	 *
+	 * // Without overflow: clamps to last day of target month
+	 * edgeCase.addMonths(1, false); // Returns: ৩০ কার্তিক ১৪৩০ (clamped)
 	 *
 	 * // Subtract months
-	 * bnCal.addMonths(-1); // Returns: ১৫ চৈত্র ১৪২৯
-	 *
-	 * // Add months crossing year boundary
-	 * bnCal.addMonths(12); // Returns: ১৫ বৈশাখ ১৪৩১
+	 * edgeCase.addMonths(-1); // Returns: ১ আশ্বিন ১৪৩০
+	 * edgeCase.addMonths(-1, false); // Returns: ৩১ ভাদ্র ১৪৩০
 	 *
 	 * @remarks
+	 * - When `overflow=true` (default):
+	 *   Follows JavaScript Date behavior where invalid dates overflow to the next month (e.g., ৩১ আষাঢ় + 1 month → ১ ভাদ্র)
+	 * - When `overflow=false`:
+	 *   Clamps to the last valid day of the target month (e.g., ৩১ আষাঢ় + 1 month → ৩০ শ্রাবণ)
 	 * - The resulting instance preserves the calendar variant of the original
 	 * - Handles year transitions automatically
-	 * - Adjusts the day of month if necessary (e.g., ৩১ → ৩০ for shorter months)
 	 * - Negative values subtract months from the current date
-	 * - Month addition follows Bangla calendar months, not Gregorian months
 	 */
-	addMonths(months: number): BanglaCalendar {
-		const { variant, year, month, date } = this;
+	addMonths(months: number, overflow = true): BanglaCalendar {
+		if (overflow) {
+			const current = this.toDate();
 
-		// Calculate target month and year
-		let targetMonth = month.en + months;
-		let targetYear = year.en;
+			return new BanglaCalendar(current.setMonth(current.getMonth() + months), {
+				variant: this.variant,
+			});
+		} else {
+			const { variant, year, month, date } = this;
 
-		// Adjust for month overflow/underflow
-		while (targetMonth > 12) {
-			targetMonth -= 12;
-			targetYear += 1;
+			let targetMonth = month.en + months;
+			let targetYear = year.en;
+
+			while (targetMonth > 12) {
+				targetMonth -= 12;
+				targetYear += 1;
+			}
+
+			while (targetMonth < 1) {
+				targetMonth += 12;
+				targetYear -= 1;
+			}
+
+			return this.#getClampedBnCal(targetYear, targetMonth, date.en, variant);
 		}
-		while (targetMonth < 1) {
-			targetMonth += 12;
-			targetYear -= 1;
-		}
-
-		// Get the month length for the target month/year
-		const { gregYear } = this.#processGregYear(targetYear, targetMonth);
-		const { bnMonthTable } = this.#getBnMonthTableLeap(gregYear, targetYear);
-		const targetMonthLength = bnMonthTable[targetMonth - 1];
-
-		// Adjust date if it exceeds the target month length
-		const targetDate = Math.min(date.en, targetMonthLength) as NumberRange<1, 31>;
-
-		return new BanglaCalendar(targetYear, targetMonth as NumberRange<1, 12>, targetDate, {
-			variant,
-		});
 	}
 
 	/**
 	 * @instance Adds years to the current Bangla date.
 	 *
 	 * @param years - Number of years to add (can be negative to subtract years)
-	 * @returns New BanglaCalendar instance with the adjusted date
+	 * @param overflow - If `true`, allows date overflow when day doesn't exist in target year;
+	 *                   if `false`, clamps to last valid day of month (default: `true`)
+	 * @returns New `BanglaCalendar` instance with the adjusted date
 	 *
 	 * @example
 	 * const bnCal = new BanglaCalendar('১৪৩০', '১', '১৫'); // ১৫ বৈশাখ ১৪৩০
@@ -578,12 +588,12 @@ export class BanglaCalendar {
 	 * // Subtract years
 	 * bnCal.addYears(-1); // Returns: ১৫ বৈশাখ ১৪২৯
 	 *
-	 * // Leap year adjustment for চৈত্র
-	 * const leapYearDate = new BanglaCalendar('১৪২৬', '১২', '৩১'); // Leap year
-	 * leapYearDate.addYears(1); // Returns: ৩০ চৈত্র ১৪২৭ (adjusted from ৩১)
-	 *
 	 * // Multiple years
 	 * bnCal.addYears(5); // Returns: ১৫ বৈশাখ ১৪৩৫
+	 *
+	 * // Edge case: day adjustment for ফাল্গুন (accounting leap year)
+	 * const leapDay = new BanglaCalendar('১৪৩১', '১১', '৩০'); // ১৪৩১ is a leap year
+	 * console.log(leapDay.addYears(1, false)); // Returns: ২৯ ফাল্গুন ১৪৩২ (non-leap years have 29 days in ফাল্গুন)
 	 *
 	 * @remarks
 	 * - The resulting instance preserves the calendar variant of the original
@@ -591,11 +601,16 @@ export class BanglaCalendar {
 	 * - Year addition follows Bangla calendar years
 	 * - The month and day generally remain the same unless affected by leap year rules
 	 */
-
-	addYears(years: number): BanglaCalendar {
+	addYears(years: number, overflow = true): BanglaCalendar {
 		const { variant, year, month, date } = this;
 
-		return new BanglaCalendar(year.en + years, month.en, date.en, { variant });
+		const targetYear = year.en + years;
+
+		if (overflow) {
+			return new BanglaCalendar(targetYear, month.en, date.en, { variant });
+		} else {
+			return this.#getClampedBnCal(targetYear, month.en, date.en, variant);
+		}
 	}
 
 	/**
@@ -845,6 +860,28 @@ export class BanglaCalendar {
 			:	BN_MONTH_TABLES?.[this.variant].normal;
 
 		return { bnMonthTable, isBnLeapYear };
+	}
+
+	/**
+	 * @internal Get new `BanglaCalendar` instance with clamped date
+	 * @param tyBn - Target Bangla year
+	 * @param tmBn - Target Bangla month
+	 * @param cdBn - Current Bangla date of the month
+	 * @param variant - Calendar variant to preserve
+	 * @returns New `BanglaCalendar` instance with date clamped to valid range
+	 *
+	 * @remarks
+	 * - Clamps the date to not exceed the number of days in the target month
+	 * - Used internally for non-overflow date arithmetic
+	 * - Ensures dates like ৩১ don't become invalid in months with only 30 days
+	 */
+	#getClampedBnCal(tyBn: number, tmBn: number, cdBn: number, variant: BnCalendarVariant) {
+		const { gregYear } = this.#processGregYear(tyBn, tmBn);
+		const { bnMonthTable } = this.#getBnMonthTableLeap(gregYear, tyBn);
+
+		const tdBn = Math.min(cdBn, bnMonthTable[tmBn - 1]) as NumberRange<1, 31>;
+
+		return new BanglaCalendar(tyBn, tmBn as NumberRange<1, 12>, tdBn, { variant });
 	}
 
 	/** Process variant from the config */
