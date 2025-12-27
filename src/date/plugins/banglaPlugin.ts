@@ -6,6 +6,7 @@ import {
 	_getBnSeason,
 	_getBnYear,
 	_isBnLeapYear,
+	_padShunno,
 } from '../helpers';
 import type {
 	$BanglaMonth,
@@ -344,7 +345,7 @@ export const banglaPlugin = ($Chronos: $Chronos): void => {
 		const M_NAME = BN_MONTHS[monthIdx];
 
 		const month = this.getBanglaMonth();
-		const year = this.getBanglaYear().padStart(4, '০');
+		const year = _padShunno(this.getBanglaYear(), 4);
 		const date = this.getBanglaDay();
 		const seasonName = this.getBanglaSeasonName();
 
@@ -356,25 +357,25 @@ export const banglaPlugin = ($Chronos: $Chronos): void => {
 			yyyy: year,
 			yy: year.slice(-2),
 			M: month,
-			MM: month.padStart(2, '০'),
+			MM: _padShunno(month),
 			mmm: M_NAME.short,
 			mmmm: M_NAME.bn,
 			d: D_NAME.short,
 			dd: D_NAME.bn.replace('বার', ''),
 			ddd: D_NAME.bn,
 			D: date,
-			DD: date.padStart(2, '০'),
+			DD: _padShunno(date),
 			Do: date,
 			H: digitToBangla(hour),
-			HH: digitToBangla(hour).padStart(2, '০'),
+			HH: _padShunno(digitToBangla(hour)),
 			h: digitToBangla(hour % 12 || 12),
-			hh: digitToBangla(hour % 12 || 12).padStart(2, '০'),
+			hh: _padShunno(digitToBangla(hour % 12 || 12)),
 			m: digitToBangla(minute),
-			mm: digitToBangla(minute).padStart(2, '০'),
+			mm: _padShunno(digitToBangla(minute)),
 			s: digitToBangla(second),
-			ss: digitToBangla(second).padStart(2, '০'),
+			ss: _padShunno(digitToBangla(second)),
 			ms: digitToBangla(millisecond),
-			mss: digitToBangla(millisecond).padStart(3, '০'),
+			mss: _padShunno(digitToBangla(millisecond), 3),
 			a: hour < 12 ? 'পূর্বাহ্ণ' : 'অপরাহ্ণ',
 			A: hour < 12 ? 'পূর্বাহ্ণ' : 'অপরাহ্ণ',
 			Z: offset,

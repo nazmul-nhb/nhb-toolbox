@@ -68,7 +68,7 @@ export function _formatDate(
 	milliseconds: number,
 	offset: string
 ) {
-	const paddedYear = String(year).padStart(4, '0');
+	const paddedYear = _padZero(year, 4);
 
 	const dateComponents: Record<FormatToken, string> = {
 		YYYY: paddedYear,
@@ -76,25 +76,25 @@ export function _formatDate(
 		yyyy: paddedYear,
 		yy: paddedYear.slice(-2),
 		M: String(month + 1),
-		MM: String(month + 1).padStart(2, '0'),
+		MM: _padZero(month + 1),
 		mmm: MONTHS[month].slice(0, 3),
 		mmmm: MONTHS[month],
 		d: DAYS[day].slice(0, 2),
 		dd: DAYS[day].slice(0, 3),
 		ddd: DAYS[day],
 		D: String(date),
-		DD: String(date).padStart(2, '0'),
+		DD: _padZero(date),
 		Do: getOrdinal(date),
 		H: String(hours),
-		HH: String(hours).padStart(2, '0'),
+		HH: _padZero(hours),
 		h: String(hours % 12 || 12),
-		hh: String(hours % 12 || 12).padStart(2, '0'),
+		hh: _padZero(hours % 12 || 12),
 		m: String(minutes),
-		mm: String(minutes).padStart(2, '0'),
+		mm: _padZero(minutes),
 		s: String(seconds),
-		ss: String(seconds).padStart(2, '0'),
+		ss: _padZero(seconds),
 		ms: String(milliseconds),
-		mss: String(milliseconds).padStart(3, '0'),
+		mss: _padZero(milliseconds, 3),
 		a: hours < 12 ? 'am' : 'pm',
 		A: hours < 12 ? 'AM' : 'PM',
 		Z: offset,
@@ -201,4 +201,24 @@ export function _bnDaysMonthIdx(date: Date, variant?: BnCalendarVariant) {
 	}
 
 	return { days, monthIdx };
+}
+
+/**
+ * Convert number to string and pad at the start with zero (`'0'`)
+ * @param value Value to convert and pad with
+ * @param length Maximum length to pad, default is `2`
+ * @returns The padded string
+ */
+export function _padZero(value: number, length = 2) {
+	return String(value).padStart(length, '0');
+}
+
+/**
+ * Pad at the start of a string with Bangla zero (`'০'`)
+ * @param str String to pad with
+ * @param length Maximum length to pad, default is `2`
+ * @returns The padded string
+ */
+export function _padShunno(str: string, length = 2) {
+	return str.padStart(length, '০');
 }

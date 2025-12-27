@@ -11,6 +11,7 @@ import {
 	_getBnSeason,
 	_getBnYear,
 	_isBnLeapYear,
+	_padShunno,
 } from './helpers';
 import type {
 	$BnEn,
@@ -348,7 +349,7 @@ export class BanglaCalendar {
 	toJSON(): string {
 		const { year, month, date } = this;
 
-		return `${year.bn.padStart(4, '০')}-${month.bn.padStart(2, '০')}-${date.bn.padStart(2, '০')}`;
+		return `${_padShunno(year.bn, 4)}-${_padShunno(month.bn)}-${_padShunno(date.bn)}`;
 	}
 
 	/**
@@ -826,7 +827,7 @@ export class BanglaCalendar {
 		const M_NAME = BN_MONTHS[month.en - 1];
 		const D_NAME = BN_DAYS[weekDay];
 
-		const paddedYear = year.bn.padStart(4, '০');
+		const paddedYear = _padShunno(year.bn, 4);
 
 		const dateComponents: Record<string, string> = {
 			YYYY: paddedYear,
@@ -834,14 +835,14 @@ export class BanglaCalendar {
 			yyyy: paddedYear,
 			yy: paddedYear.slice(-2),
 			M: month.bn,
-			MM: month.bn.padStart(2, '০'),
+			MM: _padShunno(month.bn),
 			mmm: M_NAME.short,
 			mmmm: M_NAME.bn,
 			d: D_NAME.short,
 			dd: D_NAME.bn.replace('বার', ''),
 			ddd: D_NAME.bn,
 			D: date.bn,
-			DD: date.bn.padStart(2, '০'),
+			DD: _padShunno(date.bn),
 			Do: date.bn,
 			S: seasonName,
 			SS: seasonName + 'কাল',
