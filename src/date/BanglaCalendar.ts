@@ -317,8 +317,38 @@ export class BanglaCalendar {
 		this.isoWeekDay = wd === 0 ? 7 : wd;
 	}
 
+	[Symbol.toPrimitive](hint: string): string | number {
+		if (hint === 'number') return this.valueOf();
+		return this.toJSON();
+	}
+
 	get [Symbol.toStringTag](): string {
 		return this.toJSON();
+	}
+
+	/** @instance Get timestamp in milliseconds for the current date. Calls {@link toDate()} method and returns timestamp. */
+	valueOf(): number {
+		return this.toDate().getTime();
+	}
+
+	/**
+	 * @instance Returns a string representation of the Bangla date in ISO-like format (YYYY-MM-DD with Bangla digits).
+	 *
+	 * @returns Bangla date string in the format: "YYYY-MM-DD" (e.g., "১৪৩০-০১-০১")
+	 *
+	 * @example
+	 * const bnCal = new BanglaCalendar('2023-04-14');
+	 * console.log(bnCal.toJSON()); // "১৪৩০-০১-০১"
+	 *
+	 * @remarks
+	 * - This method is automatically called by {@link JSON.stringify()} method
+	 * - Output follows the pattern: `"বছর-মাস-দিন"` with zero-padded Bangla digits
+	 * - Month and date are padded to 2 digits, year to 4 digits
+	 */
+	toJSON(): string {
+		const { year, month, date } = this;
+
+		return `${year.bn.padStart(4, '০')}-${month.bn.padStart(2, '০')}-${date.bn.padStart(2, '০')}`;
 	}
 
 	/**
@@ -723,26 +753,6 @@ export class BanglaCalendar {
 	}
 
 	/**
-	 * @instance Returns a string representation of the Bangla date in ISO-like format (YYYY-MM-DD with Bangla digits).
-	 *
-	 * @returns Bangla date string in the format: "YYYY-MM-DD" (e.g., "১৪৩০-০১-০১")
-	 *
-	 * @example
-	 * const bnCal = new BanglaCalendar('2023-04-14');
-	 * console.log(bnCal.toJSON()); // "১৪৩০-০১-০১"
-	 *
-	 * @remarks
-	 * - This method is automatically called by {@link JSON.stringify()} method
-	 * - Output follows the pattern: `"বছর-মাস-দিন"` with zero-padded Bangla digits
-	 * - Month and date are padded to 2 digits, year to 4 digits
-	 */
-	toJSON(): string {
-		const { year, month, date } = this;
-
-		return `${year.bn.padStart(4, '০')}-${month.bn.padStart(2, '০')}-${date.bn.padStart(2, '০')}`;
-	}
-
-	/**
 	 * @instance Returns a string representation of the Bangla date in Bengali format.
 	 *
 	 * @returns Bangla date string in the format: "শুক্রবার, ১৫ জ্যৈষ্ঠ, ১৪৩০ [গ্রীষ্ম]"
@@ -752,7 +762,6 @@ export class BanglaCalendar {
 	 * console.log(bnCal.toString()); // "শুক্রবার, ১ বৈশাখ, ১৪৩০ [গ্রীষ্ম]"
 	 *
 	 * @remarks
-	 * - This method is automatically called by {@link String.prototype.toString()} method
 	 * - Equivalent to calling {@link toStringEn()} with 'bn' locale
 	 * - Format includes day name, date, month name, year, and season in brackets
 	 * - Uses Bengali digits and Bengali month/day names
