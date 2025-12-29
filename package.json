@@ -76,6 +76,7 @@
     "nhb-scripts": "^1.9.2",
     "prettier": "^3.7.4",
     "ts-jest": "^29.4.6",
+    "tsdown": "^0.18.3",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.50.1"
   },
