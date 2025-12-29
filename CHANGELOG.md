@@ -4,6 +4,10 @@
 
 All notable changes to the package will be documented here.
 
+## [4.28.52] - 2025-12-30
+
+- **Added** *new* methods for `BanglaCalendar`: `addDays`, `addWeeks`, `addMonths`, `addYears`, `valueOf` and `[Symbol.toPrimitive]`.
+
 ## [4.28.51] - 2025-12-24
 
 - **Removed** strictness from *format* parameter of `formatTimePart` utility and `Chronos.formatTimePart` static method.

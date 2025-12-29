@@ -315,6 +315,7 @@ export class BanglaCalendar {
 		this.gregorian = { year: gy, month: gm, date: gd };
 
 		this.weekDay = wd;
+
 		this.isoWeekDay = wd === 0 ? 7 : wd;
 	}
 
@@ -327,7 +328,13 @@ export class BanglaCalendar {
 		return this.toJSON();
 	}
 
-	/** @instance Get timestamp in milliseconds for the current date. Calls {@link toDate()} method and returns timestamp. */
+	/**
+	 * @instance Get timestamp in milliseconds for the current date.
+	 * @remarks
+	 * - Converts the current Bangla date to a Gregorian {@link Date} using {@link toDate()}.
+	 * - Returns the Unix timestamp (in milliseconds) of the converted date.
+	 * - The time component is normalized to midnight UTC during the conversion process.
+	 */
 	valueOf(): number {
 		return this.toDate().getTime();
 	}
@@ -482,10 +489,10 @@ export class BanglaCalendar {
 	 * bnCal.addDays(7); // Returns: ৮ বৈশাখ ১৪৩০
 	 *
 	 * // Subtract days
-	 * bnCal.addDays(-3); // Returns: ২৯ চৈত্র ১৪২৯
+	 * bnCal.addDays(-3); // Returns: ২৮ চৈত্র ১৪২৯
 	 *
 	 * // Add days crossing month boundary
-	 * bnCal.addDays(35); // Returns: ৬ জ্যৈষ্ঠ ১৪৩০
+	 * bnCal.addDays(35); // Returns: ৫ জ্যৈষ্ঠ ১৪৩০
 	 *
 	 * // Add days crossing year boundary
 	 * const lateDate = new BanglaCalendar('১৪৩০', '১২', '২৫');
@@ -495,7 +502,7 @@ export class BanglaCalendar {
 	 * - The resulting instance preserves the calendar variant of the original
 	 * - Handles month and year transitions automatically
 	 * - Accounts for varying month lengths and leap years
-	 * - Time component remains at midnight UTC in the Gregorian conversion
+	 * - Time component remains at midnight UTC in the Gregorian conversion (using {@link BanglaCalendar.toDate()} method)
 	 * - Negative values subtract days from the current date
 	 */
 	addDays(days: number): BanglaCalendar {
@@ -522,12 +529,13 @@ export class BanglaCalendar {
 	 * bnCal.addWeeks(-1); // Returns: ২৪ চৈত্র ১৪২৯
 	 *
 	 * // Add weeks crossing month boundary
-	 * bnCal.addWeeks(5); // Returns: ৬ জ্যৈষ্ঠ ১৪৩০
+	 * bnCal.addWeeks(5); // Returns: ৫ জ্যৈষ্ঠ ১৪৩০
 	 *
 	 * @remarks
 	 * - Each week is treated as 7 days
 	 * - The resulting instance preserves the calendar variant of the original
 	 * - Handles month and year transitions automatically
+	 * - Time component remains at midnight UTC in the Gregorian conversion (using {@link BanglaCalendar.toDate()} method)
 	 * - Negative values subtract weeks from the current date
 	 * - Useful for scheduling recurring weekly events
 	 */
@@ -550,8 +558,8 @@ export class BanglaCalendar {
 	 * @example
 	 * // Normal case: day exists in target month
 	 * const normal = new BanglaCalendar('১৪৩০', '২', '১৫');
-	 * normal.addMonths(1); // Returns: ১৫ জ্যৈষ্ঠ ১৪৩০
-	 * normal.addMonths(1, false); // Returns: ১৫ জ্যৈষ্ঠ ১৪৩০ (same behavior for both)
+	 * normal.addMonths(1); // Returns: ১৫ আষাঢ় ১৪৩০
+	 * normal.addMonths(1, false); // Returns: ১৫ আষাঢ় ১৪৩০ (same behavior for both)
 	 *
 	 * // Edge case: day does not exist in target month
 	 * const edgeCase = new BanglaCalendar('১৪৩০', '৬', '৩১'); // ৩১ আশ্বিন ১৪৩০
@@ -568,11 +576,12 @@ export class BanglaCalendar {
 	 *
 	 * @remarks
 	 * - When `overflow=true` (default):
-	 *   Follows JavaScript Date behavior where invalid dates overflow to the next month (e.g., ৩১ আষাঢ় + 1 month → ১ ভাদ্র)
+	 *   Follows JavaScript {@link Date} behavior where invalid dates overflow to the next month (e.g., ৩১ আশ্বিন + 1 month → ১ অগ্রহায়ণ)
 	 * - When `overflow=false`:
-	 *   Clamps to the last valid day of the target month (e.g., ৩১ আষাঢ় + 1 month → ৩০ শ্রাবণ)
+	 *   Clamps to the last valid day of the target month (e.g., ৩১ আশ্বিন + 1 month → ৩০ কার্তিক)
 	 * - The resulting instance preserves the calendar variant of the original
 	 * - Handles year transitions automatically
+	 * - Time component remains at midnight UTC in the Gregorian conversion (using {@link BanglaCalendar.toDate()} method)
 	 * - Negative values subtract months from the current date
 	 */
 	addMonths(months: number, overflow = true): BanglaCalendar {
@@ -624,12 +633,13 @@ export class BanglaCalendar {
 	 *
 	 * // Edge case: day adjustment for ফাল্গুন (accounting leap year)
 	 * const leapDay = new BanglaCalendar('১৪৩১', '১১', '৩০'); // ১৪৩১ is a leap year
-	 * console.log(leapDay.addYears(1, false)); // Returns: ২৯ ফাল্গুন ১৪৩২ (non-leap years have 29 days in ফাল্গুন)
+	 * leapDay.addYears(1, false); // Returns: ২৯ ফাল্গুন ১৪৩২ (non-leap years have 29 days in ফাল্গুন)
 	 *
 	 * @remarks
 	 * - The resulting instance preserves the calendar variant of the original
 	 * - Negative values subtract years from the current date
 	 * - Year addition follows Bangla calendar years
+	 * - Time component remains at midnight UTC in the Gregorian conversion (using {@link BanglaCalendar.toDate()} method)
 	 * - The month and day generally remain the same unless affected by leap year rules
 	 */
 	addYears(years: number, overflow = true): BanglaCalendar {
@@ -655,8 +665,8 @@ export class BanglaCalendar {
 	 *
 	 * @remarks
 	 * - The resulting instance preserves the calendar variant of the original
-	 * - Time component is set to midnight UTC in the resulting Gregorian date
 	 * - Useful for date range calculations and month-based operations
+	 * - Time component remains at midnight UTC in the Gregorian conversion (using {@link BanglaCalendar.toDate()} method)
 	 */
 	startOfMonth(): BanglaCalendar {
 		const { year, month, variant } = this;
@@ -676,7 +686,7 @@ export class BanglaCalendar {
 	 * @remarks
 	 * - The resulting instance preserves the calendar variant of the original
 	 * - Accounts for month length variations (29/30/31 days) including leap years
-	 * - Time component is set to midnight UTC in the resulting Gregorian date
+	 * - Time component remains at midnight UTC in the Gregorian conversion (using {@link BanglaCalendar.toDate()} method)
 	 */
 	endOfMonth(): BanglaCalendar {
 		const { year, month, variant } = this;
@@ -696,7 +706,7 @@ export class BanglaCalendar {
 	 * @remarks
 	 * - The resulting instance preserves the calendar variant of the original
 	 * - Always returns the 1st day of the 1st month (বৈশাখ)
-	 * - Time component is set to midnight UTC in the resulting Gregorian date
+	 * - Time component remains at midnight UTC in the Gregorian conversion (using {@link BanglaCalendar.toDate()} method)
 	 */
 	startOfYear(): BanglaCalendar {
 		const { year, variant } = this;
@@ -716,7 +726,7 @@ export class BanglaCalendar {
 	 * @remarks
 	 * - The resulting instance preserves the calendar variant of the original
 	 * - Always returns the 30th day of the 12th month (চৈত্র)
-	 * - Time component is set to midnight UTC in the resulting Gregorian date
+	 * - Time component remains at midnight UTC in the Gregorian conversion (using {@link BanglaCalendar.toDate()} method)
 	 */
 	endOfYear(): BanglaCalendar {
 		const { year, variant } = this;
