@@ -489,10 +489,10 @@ export class BanglaCalendar {
 	 * bnCal.addDays(7); // Returns: ৮ বৈশাখ ১৪৩০
 	 *
 	 * // Subtract days
-	 * bnCal.addDays(-3); // Returns: ২৯ চৈত্র ১৪২৯
+	 * bnCal.addDays(-3); // Returns: ২৮ চৈত্র ১৪২৯
 	 *
 	 * // Add days crossing month boundary
-	 * bnCal.addDays(35); // Returns: ৬ জ্যৈষ্ঠ ১৪৩০
+	 * bnCal.addDays(35); // Returns: ৫ জ্যৈষ্ঠ ১৪৩০
 	 *
 	 * // Add days crossing year boundary
 	 * const lateDate = new BanglaCalendar('১৪৩০', '১২', '২৫');
@@ -529,7 +529,7 @@ export class BanglaCalendar {
 	 * bnCal.addWeeks(-1); // Returns: ২৪ চৈত্র ১৪২৯
 	 *
 	 * // Add weeks crossing month boundary
-	 * bnCal.addWeeks(5); // Returns: ৬ জ্যৈষ্ঠ ১৪৩০
+	 * bnCal.addWeeks(5); // Returns: ৫ জ্যৈষ্ঠ ১৪৩০
 	 *
 	 * @remarks
 	 * - Each week is treated as 7 days
@@ -558,8 +558,8 @@ export class BanglaCalendar {
 	 * @example
 	 * // Normal case: day exists in target month
 	 * const normal = new BanglaCalendar('১৪৩০', '২', '১৫');
-	 * normal.addMonths(1); // Returns: ১৫ জ্যৈষ্ঠ ১৪৩০
-	 * normal.addMonths(1, false); // Returns: ১৫ জ্যৈষ্ঠ ১৪৩০ (same behavior for both)
+	 * normal.addMonths(1); // Returns: ১৫ আষাঢ় ১৪৩০
+	 * normal.addMonths(1, false); // Returns: ১৫ আষাঢ় ১৪৩০ (same behavior for both)
 	 *
 	 * // Edge case: day does not exist in target month
 	 * const edgeCase = new BanglaCalendar('১৪৩০', '৬', '৩১'); // ৩১ আশ্বিন ১৪৩০
@@ -576,9 +576,9 @@ export class BanglaCalendar {
 	 *
 	 * @remarks
 	 * - When `overflow=true` (default):
-	 *   Follows JavaScript `Date` behavior where invalid dates overflow to the next month (e.g., ৩১ আষাঢ় + 1 month → ১ ভাদ্র)
+	 *   Follows JavaScript {@link Date} behavior where invalid dates overflow to the next month (e.g., ৩১ আশ্বিন + 1 month → ১ অগ্রহায়ণ)
 	 * - When `overflow=false`:
-	 *   Clamps to the last valid day of the target month (e.g., ৩১ আষাঢ় + 1 month → ৩০ শ্রাবণ)
+	 *   Clamps to the last valid day of the target month (e.g., ৩১ আশ্বিন + 1 month → ৩০ কার্তিক)
 	 * - The resulting instance preserves the calendar variant of the original
 	 * - Handles year transitions automatically
 	 * - Time component remains at midnight UTC in the Gregorian conversion (using {@link BanglaCalendar.toDate()} method)
@@ -633,7 +633,7 @@ export class BanglaCalendar {
 	 *
 	 * // Edge case: day adjustment for ফাল্গুন (accounting leap year)
 	 * const leapDay = new BanglaCalendar('১৪৩১', '১১', '৩০'); // ১৪৩১ is a leap year
-	 * console.log(leapDay.addYears(1, false)); // Returns: ২৯ ফাল্গুন ১৪৩২ (non-leap years have 29 days in ফাল্গুন)
+	 * leapDay.addYears(1, false); // Returns: ২৯ ফাল্গুন ১৪৩২ (non-leap years have 29 days in ফাল্গুন)
 	 *
 	 * @remarks
 	 * - The resulting instance preserves the calendar variant of the original
