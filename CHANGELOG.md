@@ -4,6 +4,10 @@
 
 All notable changes to the package will be documented here.
 
+## [4.28.53] - 2026-01-01
+
+- **Optimized** *internal utilities* to enhance **runtime performance** and **editor IntelliSense**.
+
 ## [4.28.52] - 2025-12-30
 
 - **Added** *new* methods for `BanglaCalendar`: `addDays`, `addWeeks`, `addMonths`, `addYears`, `valueOf` and `[Symbol.toPrimitive]`.
