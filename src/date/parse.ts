@@ -17,15 +17,13 @@ import type { $TimeUnitVar, TimeWithUnit } from './types';
  * - If you use time value with unit ({@link TimeWithUnit}) be sure you provide the time units (days, hours, etc.), otherwise it will return `NaN`, e.g., `'120 unknown'` will return `NaN`.
  */
 export function parseMSec(value: TimeWithUnit | Numeric, sec = false): number {
-	if (isNumericString(value)) {
+	if (isNumber(value) || isNumericString(value)) {
 		return _parse(`${value}s`, sec);
 	} else if (isTimeWithUnit(value)) {
 		return _parse(value, sec);
-	} else if (isNumber(value)) {
-		return _parse(`${value}s`, sec);
+	} else {
+		return NaN;
 	}
-
-	return NaN;
 }
 
 /**
