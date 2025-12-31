@@ -22,7 +22,7 @@ import type {
 	UTCOffset,
 } from './types';
 
-/** Core formatting logic shared by `formatDate` and `Chronos` class */
+/** Core formatting logic shared by `formatDate` and `Chronos`, `BanglaCalendar` classes */
 export function _formatDateCore(format: string, dateComponents: Record<string, string>) {
 	const tokenRegex = new RegExp(`^(${SORTED_TIME_FORMATS.join('|')})`);
 
@@ -104,7 +104,7 @@ export function _formatDate(
 	return _formatDateCore(format, dateComponents);
 }
 
-/** Normalize a time string with by adding offset at the end */
+/** Normalize a time string by adding offset at the end */
 export function _normalizeOffset(timeStr: string): string {
 	return timeStr.replace(/([+-]\d{2})(?!:)/, '$1:00');
 }
@@ -142,16 +142,19 @@ export function _gmtToUtcOffset(gmt: Maybe<string>) {
 	return gmt === 'GMT' ? 'UTC+00:00' : (gmt?.replace(/^GMT/, 'UTC') as Maybe<UTCOffset>);
 }
 
+/** Get Bangla season name by month index (`0-11`) */
 export function _getBnSeason<L extends $BnEn = 'bn'>(month: number, locale?: L | $BnEn) {
 	const season = BN_SEASONS[Math.floor(month / 2)];
 
 	return (locale === 'en' ? season.en : season.bn) as BanglaSeasonName<L>;
 }
 
+/** Check whether a Bangla year is leap by Gregorian and Bangla years and calendar variant */
 export function _isBnLeapYear(by: number, gy: number, v?: BnCalendarVariant) {
 	return v === 'revised-1966' ? by % 4 === 2 : isLeapYear(gy);
 }
 
+/** Extract selective unit values from {@link Date} object */
 export function _extractDateUnits(date: Date) {
 	const month = date.getMonth();
 
@@ -164,26 +167,31 @@ export function _extractDateUnits(date: Date) {
 	};
 }
 
+/** Get Gregorian base year from {@link Date} object for Bangla year */
 export function _getGregBaseYear(date: Date): number {
 	const { gy, gm, gd } = _extractDateUnits(date);
 
 	return gm < 4 || (gm === 4 && gd < 14) ? gy - 1 : gy;
 }
 
+/** Get Bangla year from {@link Date} object */
 export function _getBnYear(date: Date): number {
 	return _getGregBaseYear(date) - BN_YEAR_OFFSET;
 }
 
+/** Get timestamp in milliseconds between midnight, January 1, 1970 (UTC) and the specified {@link Date} object */
 export function _getUtcTs(date: Date): number {
 	const { gy, $gm, gd } = _extractDateUnits(date);
 
 	return Date.UTC(gy, $gm, gd);
 }
 
+/** Get number of days elapsed since midnight April 14, 1970 (UTC) for specific {@link Date} */
 export function _getElapsedDays(date: Date): number {
 	return Math.floor((_getUtcTs(date) - Date.UTC(_getGregBaseYear(date), 3, 14)) / MS_PER_DAY);
 }
 
+/** Get number of days elapsed since midnight April 14, 1970 (UTC) and month index for specific `Date` and Bangla calendar variant */
 export function _bnDaysMonthIdx(date: Date, variant?: BnCalendarVariant) {
 	const v = variant ?? 'revised-2019';
 
