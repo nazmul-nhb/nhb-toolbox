@@ -22,16 +22,18 @@ import type {
 import { extractAlphaColorValues, extractSolidColorValues } from './utils';
 
 /**
- * * Class representing a color and its conversions among `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` and `HSLA` formats.
- * * It has 13 instance methods to manipulate and play with the color values.
- * * It has 7 static methods that can be used to check if a color is in `Hex`, `Hex8` `RGB`, `RGBA`, `HSL` or `HSLA` format.
+ * * Represents a color in {@link Hex6 Hex}, {@link Hex8}, {@link RGB}, {@link RGBA}, {@link HSL}, and {@link HSLA} formats.
  *
- * @property hex - The color in `Hex` format.
- * @property hex8 - The color in `Hex8` format.
- * @property rgb - The color in `RGB` format.
- * @property rgba - The color in `RGBA` format.
- * @property hsl - The color in `HSL` format.
- * @property hsla - The color in `HSLA` format.
+ * @remarks
+ * - Instance methods allow transforming, adjusting, and deriving new colors.
+ * - Static methods provide format validation and type-guard–style checks for supported color representations.
+ *
+ * @property `hex`  - {@link Hex6 Hex} color representation (without alpha).
+ * @property `hex8` - {@link Hex8} color representation including alpha.
+ * @property `rgb`  - {@link RGB} color representation (without alpha).
+ * @property `rgba` - {@link RGBA} color representation including alpha.
+ * @property `hsl`  - {@link HSL} color representation (without alpha).
+ * @property `hsla` - {@link HSLA} color representation including alpha.
  */
 export class Color {
 	public hex: Hex6;
@@ -42,20 +44,20 @@ export class Color {
 	public hsla: HSLA;
 
 	/**
-	 * * Creates a new `Color` instance with a random color and automatically converts the generated color to all other supported formats: `Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, and `HSLA`.
+	 * * Creates a new `Color` instance with a random color and automatically converts the generated color to all other supported formats: {@link Hex6 Hex}, {@link Hex8}, {@link RGB}, {@link RGBA}, {@link HSL}, and {@link HSLA}.
 	 *
 	 * @description
 	 * The `Color` class generates a random color in six common color representations:
-	 * - `Hex` (e.g., `#ff5733`)
-	 * - `Hex8` (Hex with opacity, e.g., `#ff573380`)
-	 * - `RGB` (e.g., `rgb(255, 87, 51)`)
-	 * - `RGBA` (e.g., `rgba(255, 87, 51, 1)`)
-	 * - `HSL` (e.g., `hsl(14, 100%, 60%)`)
-	 * - `HSLA` (e.g., `hsla(14, 100%, 60%, 1)`)
+	 * - {@link Hex6 Hex} (e.g., `#ff5733`)
+	 * - {@link Hex8} (Hex with opacity, e.g., `#ff573380`)
+	 * - {@link RGB} (e.g., `rgb(255, 87, 51)`)
+	 * - {@link RGBA} (e.g., `rgba(255, 87, 51, 1)`)
+	 * - {@link HSL} (e.g., `hsl(14, 100%, 60%)`)
+	 * - {@link HSLA} (e.g., `hsla(14, 100%, 60%, 1)`)
 	 *
-	 * Additionally:
-	 * - It has 13 instance methods to manipulate and play with the color values.
-	 * - Use static methods like `Color.isHex6(color)` to validate color strings.
+	 * @remarks
+	 * - Instance methods allow transforming, adjusting, and deriving new colors.
+	 * - Static methods provide format validation and type-guard–style checks for supported color representations.
 	 *
 	 * @example
 	 * // Generate a random color
@@ -67,22 +69,22 @@ export class Color {
 	constructor();
 
 	/**
-	 * * Creates a new `Color` instance with the input color and automatically converts it to all other supported formats: `Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, and `HSLA`.
+	 * * Creates a new `Color` instance with the input color and automatically converts it to all other supported formats: {@link Hex6 Hex}, {@link Hex8}, {@link RGB}, {@link RGBA}, {@link HSL}, and {@link HSLA}.
 	 *
 	 * @description
 	 * The `Color` class allows seamless transformation between six common color representations:
-	 * - `Hex` (e.g., `#ff5733`)
-	 * - `Hex8` (Hex with opacity, e.g., `#ff573380`)
-	 * - `RGB` (e.g., `rgb(255, 87, 51)`)
-	 * - `RGBA` (e.g., `rgba(255, 87, 51, 1)`)
-	 * - `HSL` (e.g., `hsl(14, 100%, 60%)`)
-	 * - `HSLA` (e.g., `hsla(14, 100%, 60%, 1)`)
+	 * - {@link Hex6 Hex} (e.g., `#ff5733`)
+	 * - {@link Hex8} (Hex with opacity, e.g., `#ff573380`)
+	 * - {@link RGB} (e.g., `rgb(255, 87, 51)`)
+	 * - {@link RGBA} (e.g., `rgba(255, 87, 51, 1)`)
+	 * - {@link HSL} (e.g., `hsl(14, 100%, 60%)`)
+	 * - {@link HSLA} (e.g., `hsla(14, 100%, 60%, 1)`)
 	 *
 	 * You can create a color from any of these formats, and the class will populate the rest.
 	 *
-	 * Additionally:
-	 * - It has 13 instance methods to manipulate and play with the color values.
-	 * - Use available 7 static methods like `Color.isHex6(color)` to validate color strings.
+	 * @remarks
+	 * - Instance methods allow transforming, adjusting, and deriving new colors.
+	 * - Static methods provide format validation and type-guard–style checks for supported color representations.
 	 *
 	 * @param color - A color string in any supported format (`Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, or `HSLA`) to convert in all other formats (includes the current format).
 	 *
@@ -124,23 +126,23 @@ export class Color {
 	constructor(color: CSSColor);
 
 	/**
-	 * * Creates a new `Color` instance and automatically converts the input color to all other supported formats: `Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, and `HSLA`.
+	 * * Creates a new `Color` instance and automatically converts the input color to all other supported formats: {@link Hex6 Hex}, {@link Hex8}, {@link RGB}, {@link RGBA}, {@link HSL}, and {@link HSLA}.
 	 *
 	 * @description
 	 * The `Color` class allows seamless transformation between six common color representations:
-	 * - `Hex` (e.g., `#ff5733`)
-	 * - `Hex8` (Hex with opacity, e.g., `#ff573380`)
-	 * - `RGB` (e.g., `rgb(255, 87, 51)`)
-	 * - `RGBA` (e.g., `rgba(255, 87, 51, 1)`)
-	 * - `HSL` (e.g., `hsl(14, 100%, 60%)`)
-	 * - `HSLA` (e.g., `hsla(14, 100%, 60%, 1)`)
+	 * - {@link Hex6 Hex} (e.g., `#ff5733`)
+	 * - {@link Hex8} (Hex with opacity, e.g., `#ff573380`)
+	 * - {@link RGB} (e.g., `rgb(255, 87, 51)`)
+	 * - {@link RGBA} (e.g., `rgba(255, 87, 51, 1)`)
+	 * - {@link HSL} (e.g., `hsl(14, 100%, 60%)`)
+	 * - {@link HSLA} (e.g., `hsla(14, 100%, 60%, 1)`)
 	 *
 	 * You can create a color from any of these formats, and the class will populate the rest.
 	 * If no color is passed, a random color will be generated.
 	 *
-	 * Additionally:
-	 * - It has 13 instance methods to manipulate and play with the color values.
-	 * - Use static methods like `Color.isHex6(color)` to validate color strings.
+	 * @remarks
+	 * - Instance methods allow transforming, adjusting, and deriving new colors.
+	 * - Static methods provide format validation and type-guard–style checks for supported color representations.
 	 *
 	 * @param color - An optional input color string in any supported format (`Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, or `HSLA`) to convert in all other (includes the current format) formats.
 	 *
