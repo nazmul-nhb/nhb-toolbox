@@ -220,7 +220,7 @@ export {
 
 export { isHex6, isHex8, isHSL, isHSLA, isRGB, isRGBA } from './colors/guards';
 
-export { Color, Color as Colour } from './colors/Color';
+export { Color, Colour } from './colors/Color';
 
 export { extractAlphaColorValues, extractSolidColorValues } from './colors/utils';
 

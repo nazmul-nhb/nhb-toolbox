@@ -4,6 +4,10 @@
 
 All notable changes to the package will be documented here.
 
+## [4.28.54] - 2026-01-02
+
+- **Optimized** `Color.applyOpacity` and **updated** its behavior to return a *new* `Color` instance instead of mutating the original.
+
 ## [4.28.53] - 2026-01-01
 
 - **Optimized** *internal utilities* to enhance **runtime performance** and **editor IntelliSense**.

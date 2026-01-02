@@ -1,16 +1,10 @@
 import { convertHexToRgb, convertHslToRgb } from '../colors/convert';
 import { CSS_COLORS } from '../colors/css-colors';
-import {
-	_isHex6,
-	_isRGB,
-	_isValidHue,
-	_isValidPercentage,
-	_isValidRGBComponent,
-} from '../colors/helpers';
+import { isHex6, isRGB } from '../colors/guards';
+import { _isValidHue, _isValidPercentage, _isValidRGBComponent } from '../colors/helpers';
+import type { CSSColor, Hex, Hex6, RGB, SolidValues } from '../colors/types';
 import { isNumber, isString } from '../guards/primitives';
 import { isBrowser } from '../guards/specials';
-
-import type { CSSColor, Hex, Hex6, RGB, SolidValues } from '../colors/types';
 import { ANSI_16_COLORS, ANSI_TEXT_STYLES, CSS_TEXT_STYLES } from './constants';
 import {
 	_css16ToHex,
@@ -418,7 +412,7 @@ export class LogStyler {
 	#isValidHexOrRGB(color: string): color is Hex6 | RGB | `bg-${Hex6}` | `bg-${RGB}` {
 		const pure = color?.replace('bg-', '');
 
-		return _isHex6(pure) || _isRGB(pure);
+		return isHex6(pure) || isRGB(pure);
 	}
 
 	#sanitizeHex(code: string): string {
@@ -428,7 +422,7 @@ export class LogStyler {
 	#handleHex(code: string, isBg = false): StylogChain {
 		const sanitized = this.#sanitizeHex(code);
 
-		if (!_isHex6(sanitized)) {
+		if (!isHex6(sanitized)) {
 			return this.#applyStyles();
 		}
 

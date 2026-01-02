@@ -114,7 +114,11 @@ export class Color {
 	 * @description
 	 * This allows you to use any valid named color from standard `150+ `CSS color names (e.g., `"red"`, `"blue"`, `"rebeccapurple"`)
 	 *
-	 * @param color - A named color string from standard `150+ `CSS color names.
+	 * @param color - A named color string from standard `150+ `CSS color names ({@link CSSColor}).
+	 *
+	 * @remarks
+	 * - Instance methods allow transforming, adjusting, and deriving new colors.
+	 * - Static methods provide format validation and type-guard–style checks for supported color representations.
 	 *
 	 * @example
 	 * // Using a CSS named color
@@ -145,7 +149,7 @@ export class Color {
 	 * - Instance methods allow transforming, adjusting, and deriving new colors.
 	 * - Static methods provide format validation and type-guard–style checks for supported color representations.
 	 *
-	 * @param color - An optional input color string in any supported format (`Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, or `HSLA`) to convert in all other (includes the current format) formats.
+	 * @param color - An optional input color string in any supported format (`Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, or `HSLA`) or a named color string from standard `150+ `CSS color names ({@link CSSColor}) to convert in all other (includes the current format) formats.
 	 *
 	 * @example
 	 * // Convert an existing Hex color to all other formats
@@ -167,7 +171,19 @@ export class Color {
 	 * const randomColor = new Color();
 	 * console.log(randomColor.hex, randomColor.rgb, randomColor.hsl);
 	 *
+	 * @example
+	 * // Using a CSS named color
+	 * const sky = new Color("skyblue");
+	 * console.log(sky.hex); // '#87CEEB'
+	 * console.log(sky.rgba); // 'rgba(135, 206, 235, 1)'
+	 *
 	 * @returns Instance of `Color`.
+	 */
+	constructor(color?: ColorType | CSSColor);
+
+	/**
+	 * * Creates a new `Color` instance and automatically converts the input color to all other supported formats: {@link Hex6 Hex}, {@link Hex8}, {@link RGB}, {@link RGBA}, {@link HSL}, and {@link HSLA}.
+	 * @param color - An optional input color string in any supported format (`Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, or `HSLA`) or a named color string from standard `150+ `CSS color names ({@link CSSColor}) to convert in all other (includes the current format) formats.
 	 */
 	constructor(color?: ColorType | CSSColor) {
 		if (color) {
@@ -592,3 +608,5 @@ export class Color {
 		});
 	}
 }
+
+export { Color as Colour };
