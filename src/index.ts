@@ -218,14 +218,7 @@ export {
 	convertRgbToRgba,
 } from './colors/convert';
 
-export {
-	_isHex6 as isHex6,
-	_isHex8 as isHex8,
-	_isHSL as isHSL,
-	_isHSLA as isHSLA,
-	_isRGB as isRGB,
-	_isRGBA as isRGBA,
-} from './colors/helpers';
+export { isHex6, isHex8, isHSL, isHSLA, isRGB, isRGBA } from './colors/guards';
 
 export { Color, Color as Colour } from './colors/Color';
 

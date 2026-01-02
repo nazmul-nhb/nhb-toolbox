@@ -1,14 +1,6 @@
 import type { Percent } from '../number/types';
-import {
-	_isHex6,
-	_isHex8,
-	_isHSL,
-	_isHSLA,
-	_isRGB,
-	_isRGBA,
-	_isValidAlpha,
-	_percentToHex,
-} from './helpers';
+import { isHex6, isHex8, isHSL, isHSLA, isRGB, isRGBA } from './guards';
+import { _isValidAlpha, _percentToHex } from './helpers';
 import type {
 	ColorType,
 	ConvertedColors,
@@ -411,14 +403,14 @@ export function convertColorCode(color: HSLA): {
 export function convertColorCode(color: ColorType): ConvertedColors<ColorType> {
 	const trimmedColor = color?.trim();
 
-	if (_isHex6(trimmedColor)) {
+	if (isHex6(trimmedColor)) {
 		return {
 			rgb: convertHexToRgb(trimmedColor),
 			hsl: convertHexToHsl(trimmedColor),
 		} as ConvertedColors<Hex6>;
 	}
 
-	if (_isRGB(trimmedColor)) {
+	if (isRGB(trimmedColor)) {
 		const rgbValues = extractSolidColorValues(trimmedColor);
 
 		return {
@@ -427,7 +419,7 @@ export function convertColorCode(color: ColorType): ConvertedColors<ColorType> {
 		} as ConvertedColors<RGB>;
 	}
 
-	if (_isHSL(trimmedColor)) {
+	if (isHSL(trimmedColor)) {
 		const hslValues = extractSolidColorValues(trimmedColor);
 
 		return {
@@ -436,14 +428,14 @@ export function convertColorCode(color: ColorType): ConvertedColors<ColorType> {
 		} as ConvertedColors<HSL>;
 	}
 
-	if (_isHex8(trimmedColor)) {
+	if (isHex8(trimmedColor)) {
 		return {
 			rgba: convertHex8ToRgba(trimmedColor),
 			hsla: convertHex8ToHsla(trimmedColor),
 		} as ConvertedColors<Hex8>;
 	}
 
-	if (_isRGBA(trimmedColor)) {
+	if (isRGBA(trimmedColor)) {
 		const rgbaValues = extractAlphaColorValues(trimmedColor);
 
 		return {
@@ -452,7 +444,7 @@ export function convertColorCode(color: ColorType): ConvertedColors<ColorType> {
 		} as ConvertedColors<RGBA>;
 	}
 
-	if (_isHSLA(trimmedColor)) {
+	if (isHSLA(trimmedColor)) {
 		const hslaValues = extractAlphaColorValues(trimmedColor);
 
 		return {

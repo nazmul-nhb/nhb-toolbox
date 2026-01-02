@@ -1,4 +1,4 @@
-import { _isHSL, _isHSLA, _isRGB, _isRGBA } from './helpers';
+import { isHSL, isHSLA, isRGB, isRGBA } from './guards';
 import type { AlphaValues, HSL, HSLA, RGB, RGBA, SolidValues } from './types';
 
 /**
@@ -11,7 +11,7 @@ import type { AlphaValues, HSL, HSLA, RGB, RGBA, SolidValues } from './types';
  * @remarks If the input color is not in `HSL` or `RGB` format, it will return `[0, 0, 0]`
  */
 export const extractSolidColorValues = (color: HSL | RGB): SolidValues => {
-	if (_isHSL(color) || _isRGB(color)) {
+	if (isHSL(color) || isRGB(color)) {
 		return (color?.trim()?.match(/[\d.]+%?/g) || [])?.map((value) =>
 			parseFloat(value)
 		) as SolidValues;
@@ -30,7 +30,7 @@ export const extractSolidColorValues = (color: HSL | RGB): SolidValues => {
  * @remarks If the input color is not in `HSLA` or `RGBA` format, it will return `[0, 0, 0, 0]`
  */
 export const extractAlphaColorValues = (color: HSLA | RGBA): AlphaValues => {
-	if (_isHSLA(color) || _isRGBA(color)) {
+	if (isHSLA(color) || isRGBA(color)) {
 		return (color?.trim()?.match(/[\d.]+%?/g) || [])?.map((value) =>
 			parseFloat(value)
 		) as AlphaValues;

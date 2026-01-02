@@ -1,7 +1,9 @@
+import { isNonEmptyString } from '../guards/primitives';
 import type { Percent } from '../number/types';
 import { convertColorCode } from './convert';
 import { CSS_COLORS } from './css-colors';
-import { _isHSL, _isHSLA, _isRGB, _isRGBA, _percentToHex } from './helpers';
+import { isHSL, isHSLA, isRGB, isRGBA } from './guards';
+import { _percentToHex } from './helpers';
 import { generateRandomHSLColor } from './random';
 import type {
 	AlphaColors,
@@ -511,7 +513,7 @@ export class Color {
 	 * @returns `true` if it's a {@link RGB} color, `false` if not.
 	 */
 	static isRGB(color: string): color is RGB {
-		return _isRGB(color);
+		return isRGB(color);
 	}
 
 	/**
@@ -521,7 +523,7 @@ export class Color {
 	 * @returns `true` if it's a {@link RGBA} color, `false` if not.
 	 */
 	static isRGBA(color: string): color is RGBA {
-		return _isRGBA(color);
+		return isRGBA(color);
 	}
 
 	/**
@@ -531,7 +533,7 @@ export class Color {
 	 * @returns `true` if it's a {@link HSL} color, `false` if not.
 	 */
 	static isHSL(color: string): color is HSL {
-		return _isHSL(color);
+		return isHSL(color);
 	}
 
 	/**
@@ -541,7 +543,7 @@ export class Color {
 	 * @returns `true` if it's a {@link HSLA} color, `false` if not.
 	 */
 	static isHSLA(color: string): color is HSLA {
-		return _isHSLA(color);
+		return isHSLA(color);
 	}
 
 	/**
@@ -555,15 +557,7 @@ export class Color {
 	 * @returns `true` if the color is a valid CSS color name, `false` otherwise.
 	 */
 	static isCSSColor(color: string): color is CSSColor {
-		return (
-			!Color.isHex6(color) &&
-			!Color.isHex8(color) &&
-			!_isRGB(color) &&
-			!_isRGBA(color) &&
-			!_isHSL(color) &&
-			!_isHSLA(color) &&
-			color in CSS_COLORS
-		);
+		return isNonEmptyString(color) && color in CSS_COLORS;
 	}
 
 	/**
