@@ -109,12 +109,12 @@ export class Color {
 	constructor(color: ColorType);
 
 	/**
-	 * * Creates a new `Color` instance using a standard (CSS) named color and automatically converts it to all other supported formats: `Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, and `HSLA`.
+	 * * Creates a new `Color` instance using a standard (CSS) named color and automatically converts it to all other supported formats: {@link Hex6 Hex}, {@link Hex8}, {@link RGB}, {@link RGBA}, {@link HSL}, and {@link HSLA}.
 	 *
 	 * @description
-	 * This allows you to use any valid named color from standard `150+ `CSS color names (e.g., `"red"`, `"blue"`, `"rebeccapurple"`)
+	 * This allows you to use any valid named color from standard `150+` CSS color names (e.g., `"red"`, `"blue"`, `"rebeccapurple"`)
 	 *
-	 * @param color - A named color string from standard `150+ `CSS color names ({@link CSSColor}).
+	 * @param color - A named color string from standard `150+` CSS color names ({@link CSSColor}).
 	 *
 	 * @remarks
 	 * - Instance methods allow transforming, adjusting, and deriving new colors.
@@ -149,7 +149,7 @@ export class Color {
 	 * - Instance methods allow transforming, adjusting, and deriving new colors.
 	 * - Static methods provide format validation and type-guard–style checks for supported color representations.
 	 *
-	 * @param color - An optional input color string in any supported format (`Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, or `HSLA`) or a named color string from standard `150+ `CSS color names ({@link CSSColor}) to convert in all other (includes the current format) formats.
+	 * @param color - An optional input color string in any supported format (`Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, or `HSLA`) or a named color string from standard `150+` CSS color names ({@link CSSColor}) to convert in all other (includes the current format) formats.
 	 *
 	 * @example
 	 * // Convert an existing Hex color to all other formats
@@ -183,7 +183,8 @@ export class Color {
 
 	/**
 	 * * Creates a new `Color` instance and automatically converts the input color to all other supported formats: {@link Hex6 Hex}, {@link Hex8}, {@link RGB}, {@link RGBA}, {@link HSL}, and {@link HSLA}.
-	 * @param color - An optional input color string in any supported format (`Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, or `HSLA`) or a named color string from standard `150+ `CSS color names ({@link CSSColor}) to convert in all other (includes the current format) formats.
+	 *
+	 * @param color - An optional input color string in any supported format (`Hex`, `Hex8`, `RGB`, `RGBA`, `HSL`, or `HSLA`) or a named color string from standard `150+` CSS color names ({@link CSSColor}) to convert in all other (includes the current format) formats.
 	 */
 	constructor(color?: ColorType | CSSColor) {
 		if (color) {
