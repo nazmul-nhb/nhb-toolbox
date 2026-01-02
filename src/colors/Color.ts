@@ -1,12 +1,11 @@
 import type { Percent } from '../number/types';
 import { convertColorCode } from './convert';
 import { CSS_COLORS } from './css-colors';
-import { _convertOpacityToHex, _isHSL, _isHSLA, _isRGB, _isRGBA } from './helpers';
+import { _isHSL, _isHSLA, _isRGB, _isRGBA, _percentToHex } from './helpers';
 import { generateRandomHSLColor } from './random';
 import type {
 	AlphaColors,
 	Analogous,
-	Colors,
 	ColorType,
 	CSSColor,
 	Hex6,
@@ -36,12 +35,12 @@ import { extractAlphaColorValues, extractSolidColorValues } from './utils';
  * @property `hsla` - {@link HSLA} color representation including alpha.
  */
 export class Color {
-	public hex: Hex6;
-	public hex8: Hex8;
-	public rgb: RGB;
-	public rgba: RGBA;
-	public hsl: HSL;
-	public hsla: HSLA;
+	readonly hex: Hex6;
+	readonly hex8: Hex8;
+	readonly rgb: RGB;
+	readonly rgba: RGBA;
+	readonly hsl: HSL;
+	readonly hsla: HSLA;
 
 	/**
 	 * * Creates a new `Color` instance with a random color and automatically converts the generated color to all other supported formats: {@link Hex6 Hex}, {@link Hex8}, {@link RGB}, {@link RGBA}, {@link HSL}, and {@link HSLA}.
@@ -184,47 +183,45 @@ export class Color {
 
 				if ('hex8' in colors) {
 					// Extract alpha color values (Hex8, RGBA, HSLA)
-					const rgbaValues = extractAlphaColorValues(colors.rgba);
-					const hslaValues = extractAlphaColorValues(colors.hsla);
+					const [r, g, b] = extractAlphaColorValues(colors.rgba);
+					const [h, s, l] = extractAlphaColorValues(colors.hsla);
 
 					this.hex = colors.hex8.toUpperCase().slice(0, 7) as Hex6;
 					this.hex8 = colors.hex8.toUpperCase() as Hex8;
-					this.rgb = `rgb(${rgbaValues[0]}, ${rgbaValues[1]}, ${rgbaValues[2]})`;
+					this.rgb = `rgb(${r}, ${g}, ${b})`;
 					this.rgba = colors.rgba;
-					this.hsl = `hsl(${hslaValues[0]}, ${hslaValues[1]}%, ${hslaValues[2]}%)`;
+					this.hsl = `hsl(${h}, ${s}%, ${l}%)`;
 					this.hsla = colors.hsla;
 				} else {
 					// Extract solid color values (Hex, RGB, HSL)
-					const rgbValues = extractSolidColorValues(colors.rgb);
-					const hslValues = extractSolidColorValues(colors.hsl);
+					const [r, g, b] = extractSolidColorValues(colors.rgb);
+					const [h, s, l] = extractSolidColorValues(colors.hsl);
 
 					this.hex = colors.hex.toUpperCase() as Hex6;
-					this.hex8 =
-						`${colors.hex.toUpperCase()}${_convertOpacityToHex(100)}` as Hex8;
+					this.hex8 = `${colors.hex.toUpperCase()}${_percentToHex(100)}` as Hex8;
 					this.rgb = colors.rgb;
-					this.rgba = `rgba(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]}, 1)`;
+					this.rgba = `rgba(${r}, ${g}, ${b}, 1)`;
 					this.hsl = colors.hsl;
-					this.hsla = `hsla(${hslValues[0]}, ${hslValues[1]}%, ${hslValues[2]}%, 1)`;
+					this.hsla = `hsla(${h}, ${s}%, ${l}%, 1)`;
 				}
 			}
 		} else {
 			const hsl = generateRandomHSLColor();
 			const { hex, rgb } = convertColorCode(hsl);
 
-			const rgbValues = extractSolidColorValues(rgb);
-			const hslValues = extractSolidColorValues(hsl);
+			const [r, g, b] = extractSolidColorValues(rgb);
+			const [h, s, l] = extractSolidColorValues(hsl);
 
-			// Generate random colors
 			this.hex = hex.toUpperCase() as Hex6;
-			this.hex8 = `${hex.toUpperCase()}${_convertOpacityToHex(100)}` as Hex8;
+			this.hex8 = `${hex.toUpperCase()}${_percentToHex(100)}` as Hex8;
 			this.rgb = rgb;
-			this.rgba = `rgba(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]}, 1)`;
+			this.rgba = `rgba(${r}, ${g}, ${b}, 1)`;
 			this.hsl = hsl;
-			this.hsla = `hsla(${hslValues[0]}, ${hslValues[1]}%, ${hslValues[2]}%, 1)`;
+			this.hsla = `hsla(${h}, ${s}%, ${l}%, 1)`;
 		}
 	}
 
-	/** - Iterates over the color representations (Hex, RGB, HSL). */
+	/** Iterates over the color representations (`Hex`, `RGB`, `HSL`). */
 	*[Symbol.iterator]() {
 		yield this.hex;
 		yield this.hex8;
@@ -235,11 +232,13 @@ export class Color {
 	}
 
 	/**
-	 * @instance Applies or modifies the opacity of a color. Mutate the original instance.
-	 * - For solid colors (Hex6/RGB/HSL): Adds an alpha channel with the specified opacity.
-	 * - For alpha colors (Hex8/RGBA/HSLA): Updates the existing alpha channel.
+	 * @instance Applies or modifies the opacity of a color and returns a new instance.
 	 *
-	 * @param opacity - A number between 0-100 representing the opacity percentage.
+	 * @remarks
+	 * - For solid colors ({@link Hex6}/{@link RGB}/{@link HSL}): Adds an alpha channel with the specified opacity.
+	 * - For alpha colors ({@link Hex8}/{@link RGBA}/{@link HSLA}): Updates the existing alpha channel.
+	 *
+	 * @param opacity - A number between `0-100` representing the opacity percentage.
 	 * @returns A new instance of `Color` containing all color formats with the applied opacity.
 	 *
 	 * @example
@@ -253,26 +252,14 @@ export class Color {
 	 * console.log(alpha75.hex8); // #FF0000BF
 	 */
 	applyOpacity(opacity: Percent): Color {
-		const validOpacity = Math.min(100, Math.max(0, opacity));
-		const alphaHex = _convertOpacityToHex(opacity);
-		const alphaDecimal = validOpacity / 100;
+		const hex8 = `${this.hex.slice(0, 7)}${_percentToHex(opacity)}`.toUpperCase() as Hex8;
 
-		const rgbValues = extractSolidColorValues(this.rgb);
-		const hslValues = extractSolidColorValues(this.hsl);
-
-		return Color.#fromParts({
-			hex: this.hex.slice(0, 7).toUpperCase() as Hex6,
-			hex8: `${this.hex.slice(0, 7)}${alphaHex}`.toUpperCase() as Hex8,
-			rgb: `rgb(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]})`,
-			rgba: `rgba(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]}, ${alphaDecimal})`,
-			hsl: `hsl(${hslValues[0]}, ${hslValues[1]}%, ${hslValues[2]}%)`,
-			hsla: `hsla(${hslValues[0]}, ${hslValues[1]}%, ${hslValues[2]}%, ${alphaDecimal})`,
-		});
+		return new Color(hex8);
 	}
 
 	/**
 	 * @instance Darkens the color by reducing the lightness by the given percentage.
-	 * @param percent - The percentage to darken (0–100).
+	 * @param percent - The percentage to darken (`0–100`).
 	 * @returns A new `Color` instance with the modified darkness.
 	 */
 	applyDarkness(percent: Percent): Color {
@@ -287,7 +274,7 @@ export class Color {
 
 	/**
 	 * @instance Lightens the color by increasing the lightness by the given percentage.
-	 * @param percent - The percentage to brighten (0–100).
+	 * @param percent - The percentage to brighten (`0–100`).
 	 * @returns A new `Color` instance with the modified lightness.
 	 */
 	applyBrightness(percent: Percent): Color {
@@ -302,7 +289,7 @@ export class Color {
 
 	/**
 	 * @instance Reduces the saturation of the color to make it appear duller.
-	 * @param percent - The percentage to reduce saturation (0–100).
+	 * @param percent - The percentage to reduce saturation (`0–100`).
 	 * @returns A new `Color` instance with the modified saturation.
 	 */
 	applyDullness(percent: Percent): Color {
@@ -317,8 +304,11 @@ export class Color {
 
 	/**
 	 * @instance Softens the color toward white by reducing saturation and increasing lightness based on a percentage.
-	 * - *This creates a soft UI-like white shade effect (similar to some UI libraries' light color scale).*
-	 * @param percent - Value from 0 to 100 representing how far to push the color toward white.
+	 *
+	 * @remarks
+	 * This creates a soft UI-like white shade effect (similar to some UI libraries' light color scale).
+	 *
+	 * @param percent - Value from `0` to `100` representing how far to push the color toward white.
 	 * @returns A new `Color` instance shifted toward white.
 	 */
 	applyWhiteShade(percent: Percent): Color {
@@ -336,13 +326,14 @@ export class Color {
 	/**
 	 * @instance Blends the current color with another color based on the given weight.
 	 *
-	 * - **NOTE:** *If any of the input colors has opacity (alpha channel), it might be lost or distorted from the generated alpha variants of the respective color formats.*
+	 * @remarks
+	 * If any of the input colors has opacity (alpha channel), it might be lost or distorted from the generated alpha variants of the respective color formats.
 	 *
-	 * @param other - The color in any 6 `(Hex, Hex8 RGB, RGBA, HSL or HSLA)` format to blend with.
-	 * @param weight - A number from 0 to 1 indicating the weight of the other color. Defaults to `0.5`.
-	 *                  - `weight = 0` → only the original color.
-	 *                  - `weight = 1` → only the other color.
-	 *                  - `weight = 0.5` → equal blend between the two.
+	 * @param other - The color in any of 6 ({@link Hex6 Hex}, {@link Hex8}, {@link RGB}, {@link RGBA}, {@link HSL} or {@link HSLA}) formats or a {@link CSSColor} to blend with.
+	 * @param weight - A number from `0` to `1` indicating the weight of the other color. Defaults to `0.5`.
+	 *               - `weight = 0` → only the original color.
+	 *               - `weight = 1` → only the other color.
+	 *               - `weight = 0.5` → equal blend between the two.
 	 * @returns A new `Color` instance representing the blended result, with proper alpha blending.
 	 */
 	blendWith(other: ColorType | CSSColor, weight = 0.5): Color {
@@ -398,7 +389,7 @@ export class Color {
 
 	/**
 	 * @instance Returns the complementary color by rotating the hue 180 degrees.
-	 * @returns A new Color that is the complement of the current color.
+	 * @returns A new `Color` that is the complement of the current color.
 	 */
 	getComplementaryColor(): Color {
 		const [h, s, l, a] = extractAlphaColorValues(this.hsla);
@@ -412,8 +403,11 @@ export class Color {
 
 	/**
 	 * @instance Generates a color scheme of analogous colors, including the base color.
+	 *
+	 * @remarks
 	 * Analogous colors are next to each other on the color wheel (±30°).
-	 * @returns An array of three Color instances: [base, left, right].
+	 *
+	 * @returns An array of three `Color` instances: `[base, left, right]`.
 	 */
 	getAnalogousColors(): Analogous {
 		const [h, s, l, a] = extractAlphaColorValues(this.hsla);
@@ -428,8 +422,11 @@ export class Color {
 
 	/**
 	 * @instance Generates a color triad scheme including the base color.
+	 *
+	 * @remarks
 	 * Triadic colors are evenly spaced (120° apart) on the color wheel.
-	 * @returns An array of three Color instances: [base, triad1, triad2].
+	 *
+	 * @returns An array of three `Color` instances: `[base, triad1, triad2]`.
 	 */
 	getTriadColors(): Triad {
 		const [h, s, l, a] = extractAlphaColorValues(this.hsla);
@@ -444,8 +441,11 @@ export class Color {
 
 	/**
 	 * @instance Generates a tetradic color scheme including the base color.
+	 *
+	 * @remarks
 	 * Tetradic colors form a rectangle on the color wheel (90° apart).
-	 * @returns An array of four Color instances: [base, tetrad1, tetrad2, tetrad3].
+	 *
+	 * @returns An array of four `Color` instances: `[base, tetrad1, tetrad2, tetrad3]`.
 	 */
 	getTetradColors(): Tetrad {
 		const [h, s, l, a] = extractAlphaColorValues(this.hsla);
@@ -462,7 +462,7 @@ export class Color {
 	/**
 	 * @instance Gets the `WCAG` accessibility rating between this and another color.
 	 * @param other - The other color to test contrast against.
-	 * @returns 'Fail', 'AA', or 'AAA' based on `WCAG 2.1` contrast standards.
+	 * @returns `'Fail'`, `'AA'`, or `'AAA'` based on `WCAG 2.1` contrast standards.
 	 */
 	getWCAGRating(other: ColorType | CSSColor): 'Fail' | 'AA' | 'AAA' {
 		const ratio = this.contrastRatio(other);
@@ -485,69 +485,71 @@ export class Color {
 	}
 
 	/**
-	 * @static Checks if a color is in `Hex6` format.
+	 * @static Checks if a color is in {@link Hex6} format.
 	 *
 	 * @param color Color to check.
-	 * @returns Boolean: `true` if it's a `Hex6` color, `false` if not.
+	 * @returns Boolean: `true` if it's a {@link Hex6} color, `false` if not.
 	 */
 	static isHex6(color: string): color is Hex6 {
 		return /^#[0-9A-Fa-f]{6}$/.test(color?.trim());
 	}
 
 	/**
-	 * @static Checks if a color is in `Hex8` format.
+	 * @static Checks if a color is in {@link Hex8} format.
 	 *
 	 * @param color Color to check.
-	 * @returns Boolean: `true` if it's a `Hex8` color, `false` if not.
+	 * @returns Boolean: `true` if it's a {@link Hex8} color, `false` if not.
 	 */
 	static isHex8(color: string): color is Hex8 {
 		return /^#[0-9A-Fa-f]{8}$/.test(color?.trim());
 	}
 
 	/**
-	 * @static Checks if a color is in `RGB` format and within valid ranges.
+	 * @static Checks if a color is in {@link RGB} format and within valid ranges.
 	 *
 	 * @param color Color to check.
-	 * @returns `true` if it's a `RGB` color, `false` if not.
+	 * @returns `true` if it's a {@link RGB} color, `false` if not.
 	 */
 	static isRGB(color: string): color is RGB {
 		return _isRGB(color);
 	}
 
 	/**
-	 * @static Checks if a color is in `RGBA` format and within valid ranges.
+	 * @static Checks if a color is in {@link RGBA} format and within valid ranges.
 	 *
 	 * @param color Color to check.
-	 * @returns `true` if it's a `RGBA` color, `false` if not.
+	 * @returns `true` if it's a {@link RGBA} color, `false` if not.
 	 */
 	static isRGBA(color: string): color is RGBA {
 		return _isRGBA(color);
 	}
 
 	/**
-	 * @static Checks if a color is in `HSL` format and within valid ranges.
+	 * @static Checks if a color is in {@link HSL} format and within valid ranges.
 	 *
 	 * @param color Color to check.
-	 * @returns `true` if it's a `HSL` color, `false` if not.
+	 * @returns `true` if it's a {@link HSL} color, `false` if not.
 	 */
 	static isHSL(color: string): color is HSL {
 		return _isHSL(color);
 	}
 
 	/**
-	 * @static Checks if a color is in `HSLA` format and within valid ranges.
+	 * @static Checks if a color is in {@link HSLA} format and within valid ranges.
 	 *
 	 * @param color Color to check.
-	 * @returns `true` if it's a `HSLA` color, `false` if not.
+	 * @returns `true` if it's a {@link HSLA} color, `false` if not.
 	 */
 	static isHSLA(color: string): color is HSLA {
 		return _isHSLA(color);
 	}
 
 	/**
-	 * @static Checks if a color is a valid CSS color name.
+	 * @static Checks if a color is a valid CSS color name ({@link CSSColor}).
+	 *
+	 * @remarks
 	 * - This method checks against a predefined list of CSS color names.
-	 * - It does not validate format types like Hex, RGB, or HSL or their alpha channels.
+	 * - It does not validate format types like `Hex`, `RGB`, or `HSL` or their alpha channels.
 	 *
 	 * @param color - The color to check.
 	 * @returns `true` if the color is a valid CSS color name, `false` otherwise.
@@ -594,23 +596,5 @@ export class Color {
 		throw new TypeError(`${color} is not a valid color!`, {
 			cause: 'Unrecognized Color Format',
 		});
-	}
-
-	/**
-	 * @private @static Internal factory to create a Color instance from parsed parts.
-	 * @param parts All the color parts as object.
-	 * @returns An instance of `Color`.
-	 */
-	static #fromParts(parts: Colors): Color {
-		const color = Object.create(Color.prototype) as Color;
-
-		color.hex = parts.hex;
-		color.hex8 = parts.hex8;
-		color.rgb = parts.rgb;
-		color.rgba = parts.rgba;
-		color.hsl = parts.hsl;
-		color.hsla = parts.hsla;
-
-		return color;
 	}
 }

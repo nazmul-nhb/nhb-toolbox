@@ -1,6 +1,6 @@
 import type { Percent } from '../number/types';
 import { ALPHABET_COLOR_PALETTE, NUMBER_COLOR_PALETTE } from './constants';
-import { _applyOpacity, _convertOpacityToHex } from './helpers';
+import { _applyOpacity, _percentToHex } from './helpers';
 import type { ColorInput, ColorInputArray, Hex8 } from './types';
 
 /**
@@ -45,7 +45,7 @@ export function getColorForInitial(
 ): Hex8 | Hex8[] {
 	let initial: string;
 
-	const hexOpacity = _convertOpacityToHex(opacity);
+	const hexOpacity = _percentToHex(opacity);
 
 	const NUMBERS = '0123456789';
 

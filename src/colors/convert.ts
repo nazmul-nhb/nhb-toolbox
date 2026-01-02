@@ -1,6 +1,5 @@
 import type { Percent } from '../number/types';
 import {
-	_convertOpacityToHex,
 	_isHex6,
 	_isHex8,
 	_isHSL,
@@ -8,6 +7,7 @@ import {
 	_isRGB,
 	_isRGBA,
 	_isValidAlpha,
+	_percentToHex,
 } from './helpers';
 import type {
 	ColorType,
@@ -218,9 +218,9 @@ export const convertRgbaToHex8 = (r: number, g: number, b: number, a: number = 1
 		console.warn(`Alpha value must be between 0-1, ${a} converted to 1!`);
 	}
 
-	const hex = convertRgbToHex(r, g, b);
+	const alphaHex = _percentToHex(Math.round(newAlpha * 100) as Percent);
 
-	const alphaHex = _convertOpacityToHex(Math.round(newAlpha * 100) as Percent);
+	const hex = convertRgbToHex(r, g, b);
 
 	return `${hex}${alphaHex}` as Hex8;
 };
@@ -244,14 +244,9 @@ export const convertHslaToRgba = (h: number, s: number, l: number, a: number = 1
 	}
 
 	const rgb = convertHslToRgb(h, s, l);
-	const rgbNumbers = extractSolidColorValues(rgb);
+	const [r, g, b] = extractSolidColorValues(rgb);
 
-	return convertRgbToRgba(
-		rgbNumbers[0],
-		rgbNumbers[1],
-		rgbNumbers[2],
-		parseFloat(newAlpha.toFixed(1))
-	);
+	return convertRgbToRgba(r, g, b, parseFloat(newAlpha.toFixed(1)));
 };
 
 /**
@@ -273,9 +268,9 @@ export const convertRgbaToHsla = (r: number, g: number, b: number, a: number = 1
 	}
 
 	const hsl = convertRgbToHsl(r, g, b);
-	const hslNumbers = extractSolidColorValues(hsl);
+	const [h, s, l] = extractSolidColorValues(hsl);
 
-	return `hsla(${hslNumbers[0]}, ${hslNumbers[1]}%, ${hslNumbers[2]}%, ${parseFloat(newAlpha.toFixed(1))})`;
+	return `hsla(${h}, ${s}%, ${l}%, ${parseFloat(newAlpha.toFixed(1))})`;
 };
 
 /**
@@ -315,9 +310,9 @@ export const convertHslaToHex8 = (h: number, s: number, l: number, a: number = 1
 		console.warn(`Alpha value must be between 0-1, ${a} converted to 1!`);
 	}
 
-	const hex = convertHslToHex(h, s, l);
+	const alphaHex = _percentToHex(Math.round(newAlpha * 100) as Percent);
 
-	const alphaHex = _convertOpacityToHex(Math.round(newAlpha * 100) as Percent);
+	const hex = convertHslToHex(h, s, l);
 
 	return `${hex}${alphaHex}` as Hex8;
 };
