@@ -863,7 +863,7 @@ export class BanglaCalendar {
 
 	/** Process Gregorian base year and calculated year from optional Bangla year and month */
 	#processGregYear(bnYear?: number, bnMonth?: number) {
-		const baseGregYear = bnYear ?? this.year.en + BN_YEAR_OFFSET;
+		const baseGregYear = (bnYear ?? this.year.en) + BN_YEAR_OFFSET;
 
 		const gregYear = (bnMonth ?? this.month.en) > 10 ? baseGregYear + 1 : baseGregYear;
 
