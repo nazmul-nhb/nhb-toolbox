@@ -10,7 +10,7 @@ import type {
 } from './types';
 
 /**
- * * Utility class for retrieving and managing HTTP status codes with rich MDN-based metadata.
+ * @class Utility class for retrieving and managing HTTP status codes with rich MDN-based metadata.
  *
  * @remarks
  * - Supports lookup by code or name (both `SOME_NAME` and `Some Name` formats).

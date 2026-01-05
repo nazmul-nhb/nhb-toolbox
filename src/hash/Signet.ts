@@ -18,8 +18,9 @@ import type {
 import { base64ToBytes, bytesToBase64, bytesToUtf8, hmacSha256, utf8ToBytes } from './utils';
 
 /**
- * * A lightweight, secure implementation of JWT-like tokens using `HMAC-SHA256` signatures.
- *   - This class provides methods to create, verify, and decode tokens with a simple API similar to JSON Web Tokens (`JWT`) but with a smaller footprint and zero dependencies.
+ * @class A lightweight, secure implementation of JWT-like tokens using `HMAC-SHA256` signatures.
+ *      - This class provides methods to create, verify, and decode tokens with a simple API similar to JSON Web Tokens (`JWT`)
+ *        but with a smaller footprint and zero dependencies.
  *
  * @remarks
  * - **Features:**

@@ -54,10 +54,9 @@ type $DateParts = {
 };
 
 /**
- * * Creates a new immutable `Chronos` instance.
- *
- * **Note**:
- * - *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC and convert it to the **equivalent local time** using the current environment's UTC offset.*
+ * @class Creates a new immutable `Chronos` instance.
+ *      - **Note**: *If a date is provided **without a time component**, the instance will default to `00:00:00.000` UTC
+ *        and convert it to the **equivalent local time** using the current environment's UTC offset.*
  *
  * @param value - A date value (`number`, `string`, `Date`, or `Chronos` object).
  *

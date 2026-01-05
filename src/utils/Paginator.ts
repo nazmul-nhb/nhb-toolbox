@@ -5,7 +5,7 @@ import type {
 	PaginatorOptions,
 } from './types';
 
-/** * Generates pagination logic, offsets, metadata and other pagination logic(s) for APIs and UIs. */
+/** @class Generates pagination logic, offsets, metadata and other pagination logic(s) for APIs and UIs. */
 export class Paginator {
 	readonly #totalItems: number;
 	readonly #perPage: number;

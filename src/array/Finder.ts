@@ -7,8 +7,8 @@ type KeySelector<T> = Extract<OwnKeys<T>, string | number> | ((item: T) => strin
 type CacheEntry<T> = { result: T[]; timestamp: number };
 
 /**
- * The `Finder` class performs optimized searching on arrays.
- * It supports binary search, fuzzy search, and smart caching with TTL.
+ * @class `Finder` performs optimized searching on arrays.
+ *      - It supports binary search, fuzzy search, and smart caching with TTL.
  */
 export class Finder<T extends GenericObject> {
 	static readonly #DEFAULT_TTL = 1000 * 60 * 5;

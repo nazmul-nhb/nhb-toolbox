@@ -3,14 +3,14 @@ import { baseRules, irregularVerbs, pastParticipleRules, pastRules } from './rul
 import type { IrregularEntry, VerbRule } from './types';
 
 /**
- * * Handles English verb conjugation between base, past tense, and past participle forms.
+ * @class Handles English verb conjugation between base, past tense, and past participle forms.
  *
- * - Provides methods to convert verbs between base, past, and past participle forms, check verb forms, and manage custom conjugation rules.
- * - Supports adding custom conjugation rules and irregular verbs.
- * - Automatically handles common irregular verbs like "go" to "went" (past) and "gone" (past participle).
- * - Automatically loads common irregular verbs and conjugation rules.
- * - Preserves case sensitivity of input verbs.
- * - This class is useful for natural language processing tasks, such as chatbots, text analysis, or content generation systems requiring accurate verb conjugation.
+ *      - Provides methods to convert verbs between base, past, and past participle forms, check verb forms, and manage custom conjugation rules.
+ *      - Supports adding custom conjugation rules and irregular verbs.
+ *      - Automatically handles common irregular verbs like "go" to "went" (past) and "gone" (past participle).
+ *      - Automatically loads common irregular verbs and conjugation rules.
+ *      - Preserves case sensitivity of input verbs.
+ *      - This class is useful for natural language processing tasks, such as chatbots, text analysis, or content generation systems requiring accurate verb conjugation.
  *
  * @remarks
  * For ready to use instance, please refer to {@link https://toolbox.nazmul-nhb.dev/docs/utilities/string/verbalizer verbalizer} instead.

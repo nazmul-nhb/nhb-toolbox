@@ -4,14 +4,14 @@ import { irregularRules, pluralRules, singularRules, uncountables } from './rule
 import type { IrregularMap, PluralizeOptions, PluralizeRule } from './types';
 
 /**
- * * Handles English word pluralization and singularization with support for irregular forms and uncountable nouns.
+ * @class Handles English word pluralization and singularization with support for irregular forms and uncountable nouns.
  *
- * - Provides methods to convert words between singular and plural forms, check if a word is plural or singular, and manage custom pluralization rules.
- * - Supports adding custom pluralization and singularization rules, as well as uncountable nouns.
- * - Automatically handles common irregular forms like "child" to "children"
- * - Automatically loads common irregular forms and uncountable nouns.
- * - Supports options for count-based pluralization, allowing for inclusive formatting.
- * - This class is useful for applications that need to handle natural language processing, such as chatbots, content management systems, or any text processing tasks that require accurate pluralization.
+ *      - Provides methods to convert words between singular and plural forms, check if a word is plural or singular, and manage custom pluralization rules.
+ *      - Supports adding custom pluralization and singularization rules, as well as uncountable nouns.
+ *      - Automatically handles common irregular forms like "child" to "children"
+ *      - Automatically loads common irregular forms and uncountable nouns.
+ *      - Supports options for count-based pluralization, allowing for inclusive formatting.
+ *      - This class is useful for applications that need to handle natural language processing, such as chatbots, content management systems, or any text processing tasks that require accurate pluralization.
  *
  * @remarks
  * - For simpler pluralization (plural with only 's'), please refer to {@link https://toolbox.nazmul-nhb.dev/docs/utilities/string/formatUnitWithPlural formatUnitWithPlural} instead.

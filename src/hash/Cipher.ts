@@ -13,8 +13,8 @@ import {
 } from './utils';
 
 /**
- * * Lightweight stream-cipher–style encryption utility using `HMAC-SHA256` for keystream generation and authentication.
- *   - The class derives separate encryption and MAC keys from the provided secret.
+ * @class Lightweight stream-cipher–style encryption utility using `HMAC-SHA256` for keystream generation and authentication.
+ *      - The class derives separate encryption and MAC keys from the provided secret.
  *
  * @remarks
  * - **The encryption scheme is:**

@@ -27,10 +27,9 @@ import type {
 } from './types';
 
 /**
- * * Represents a date in the Bangla calendar system with support for different variants.
- *
- * - This class provides functionality to create, manipulate, and convert dates between the Bangla and Gregorian calendar systems.
- * - It supports two calendar variants: `'revised-2019'` (default) and `'revised-1966'`.
+ * @class Represents a date in the Bangla calendar system with support for different variants.
+ *      - This class provides functionality to create, manipulate, convert dates between the Bangla and Gregorian calendar systems.
+ *      - It supports two Bangla calendar variants: `'revised-2019'` (default) and `'revised-1966'`.
  *
  * @example
  * // Create from current date

@@ -23,7 +23,7 @@ import type {
 import { extractAlphaColorValues, extractSolidColorValues } from './utils';
 
 /**
- * * Represents a color in {@link Hex6 Hex}, {@link Hex8}, {@link RGB}, {@link RGBA}, {@link HSL}, and {@link HSLA} formats.
+ * @class Represents a color in {@link Hex6 Hex}, {@link Hex8}, {@link RGB}, {@link RGBA}, {@link HSL}, and {@link HSLA} formats.
  *
  * @remarks
  * - Instance methods allow transforming, adjusting, and deriving new colors.

@@ -128,7 +128,7 @@ export function isTextStyle(value: string): value is TextStyle {
 // ! ======= Implementation of LogStyler ======= ! //
 
 /**
- * * Utility class for styling console log output with `ANSI` (`Node.js`) or `CSS` (Browser).
+ * @class Utility class for styling console log output with `ANSI` (`Node.js`) or `CSS` (Browser).
  *
  * @remarks
  * - Allows chaining of style methods or initializing with predefined styles.

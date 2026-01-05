@@ -4,6 +4,10 @@
 
 All notable changes to the package will be documented here.
 
+## [4.28.56] - 2026-01-05
+
+- **Resolved** an *issue affecting the conversion of Gregorian date strings to Bangla dates*.
+
 ## [4.28.54] - 2026-01-02
 
 - **Optimized** `Color.applyOpacity` and **updated** its behavior to return a *new* `Color` instance instead of mutating the original.
