@@ -4,9 +4,14 @@
 
 All notable changes to the package will be documented here.
 
+## [4.28.57] - 2026-01-07
+
+- **Enhanced** `Color.isLightColor` with an *optional brightness threshold* for custom light/dark detection.
+- **Refined** `TSDoc` to *improve* **IDE IntelliSense** for selected methods in `Color` and `Stylog`.
+
 ## [4.28.56] - 2026-01-05
 
-- **Resolved** an *issue affecting the conversion of Gregorian date strings to Bangla dates*.
+- **Resolved** an *issue affecting the conversion of Gregorian date strings to Bangla dates* in `BanglaCalendar`.
 
 ## [4.28.54] - 2026-01-02
 

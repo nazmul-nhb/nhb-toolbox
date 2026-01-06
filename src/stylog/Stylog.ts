@@ -47,12 +47,11 @@ export type AnsiSequence = [string, string];
 /**
  * * Type representing a fully chainable `LogStyler` instance.
  *
- * @remarks - Each property corresponds to a style (foreground color, background color, or text effect) and returns a new `Stylog` instance, allowing fluent chaining like:
- *
- * **This type combines:**
- * - The methods of `LogStyler` (e.g., `.style()`, `.log()`)
- * - Dynamically generated properties for all available `Styles`
- *   that return another `Stylog` instance for chaining.
+ * @remarks
+ * - Each property corresponds to a style and returns a new `Stylog` instance, allowing fluent chaining.
+ * - **This type combines:**
+ *   - The methods of `LogStyler` (e.g., `.style()`, `.log()`)
+ *   - Dynamically generated properties for all available `Styles` that return another `Stylog` instance for chaining.
  *
  * @example
  * Stylog.green.bold.bgBlue.log('Hello World');
@@ -434,7 +433,7 @@ export class LogStyler {
 	/**
 	 * * Apply a HEX color to the text foreground.
 	 *
-	 * @param code - HEX color string (e.g., '#4682B4' or '4682B4').
+	 * @param code - HEX color string (e.g., `'#4682B4'` or `'4682B4'`).
 	 * @returns A new `StylogChain` instance with the HEX color applied.
 	 *
 	 * @example
@@ -462,7 +461,7 @@ export class LogStyler {
 	/**
 	 * * Apply a HEX color to the text background.
 	 *
-	 * @param code - HEX color string (e.g., '#4682B4' or '4682B4').
+	 * @param code - HEX color string (e.g., `'#4682B4'` or `'4682B4'`).
 	 * @returns A new StylogChain instance with the HEX background color applied.
 	 *
 	 * @example
@@ -534,7 +533,7 @@ export class LogStyler {
 	/**
 	 * * Apply an RGB color to the text foreground using a CSS-like string.
 	 *
-	 * @param code - RGB color string (e.g., 'rgb(11, 45, 1)' or '11, 45, 1').
+	 * @param code - RGB color string (e.g., `'rgb(11, 45, 1)'` or `'11, 45, 1'`).
 	 * @returns A new `StylogChain` instance with the RGB color applied.
 	 *
 	 * @example
@@ -587,7 +586,7 @@ export class LogStyler {
 	/**
 	 * * Apply an RGB color to the text background using a CSS-like string.
 	 *
-	 * @param code - RGB color string (e.g., 'rgb(225, 169, 196)' or '225, 169, 196').
+	 * @param code - RGB color string (e.g., `'rgb(225, 169, 196)'` or `'225, 169, 196'`).
 	 * @returns A new `StylogChain` instance with the RGB background color applied.
 	 *
 	 * @example
@@ -674,7 +673,7 @@ export class LogStyler {
 	/**
 	 * * Apply an HSL color to the text foreground using a CSS-like string.
 	 *
-	 * @param code - HSL color string (e.g., 'hsl(50 80.5% 40%)').
+	 * @param code - HSL color string (e.g., `'hsl(50 80.5% 40%)'`).
 	 * @returns A new `StylogChain` instance with the HSL color applied.
 	 *
 	 * @example
@@ -700,9 +699,9 @@ export class LogStyler {
 	/**
 	 * * Apply an HSL color to the text foreground using individual components.
 	 *
-	 * @param hue - Hue component (0-360).
-	 * @param saturation - Saturation component (0-100 or 0-100%).
-	 * @param lightness - Lightness component (0-100 or 0-100%).
+	 * @param hue - Hue component (`0-360`).
+	 * @param saturation - Saturation component (`0-100`).
+	 * @param lightness - Lightness component (`0-100`).
 	 * @returns A new `StylogChain` instance with the HSL color applied.
 	 *
 	 * @example
@@ -727,7 +726,7 @@ export class LogStyler {
 	/**
 	 * * Apply an HSL color to the text background using a CSS-like string.
 	 *
-	 * @param code - HSL color string (e.g., 'hsl(50 80.5% 40%)').
+	 * @param code - HSL color string (e.g., `'hsl(50 80.5% 40%)'`).
 	 * @returns A new `StylogChain` instance with the HSL background color applied.
 	 *
 	 * @example
@@ -753,9 +752,9 @@ export class LogStyler {
 	/**
 	 * * Apply an HSL color to the text background using individual components.
 	 *
-	 * @param hue - Hue component (0-360).
-	 * @param saturation - Saturation component (0-100 or 0-100%).
-	 * @param lightness - Lightness component (0-100 or 0-100%).
+	 * @param hue - Hue component (`0-360`).
+	 * @param saturation - Saturation component (`0-100`).
+	 * @param lightness - Lightness component (`0-100`).
 	 * @returns A new StylogChain instance with the HSL background color applied.
 	 *
 	 * @example

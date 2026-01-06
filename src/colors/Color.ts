@@ -513,14 +513,16 @@ export class Color {
 
 	/**
 	 * @instance Determines if the color is light based on its perceived brightness.
+	 * @param threshold Optional brightness threshold (`0–255`). Defaults to `127.5`.
+	 * @remarks The brightness {@link threshold} is clamped to the valid *RGB range* (`0–255`) to prevent invalid comparisons.
 	 * @returns `true` if light, `false` if dark.
 	 */
-	isLightColor(): boolean {
+	isLightColor(threshold = 127.5): boolean {
 		const [r, g, b] = extractSolidColorValues(this.rgb);
 
 		const brightness = (r * 299 + g * 587 + b * 114) / 1000;
 
-		return brightness > 127.5;
+		return brightness > Math.min(255, Math.max(0, threshold));
 	}
 
 	/**
