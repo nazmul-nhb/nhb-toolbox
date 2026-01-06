@@ -188,7 +188,7 @@ export class Color {
 	 */
 	constructor(color?: ColorType | CSSColor) {
 		if (color) {
-			const $color = color.trim() as ColorType | CSSColor;
+			const $color = color.trim();
 
 			if (Color.isCSSColor($color)) {
 				const { hex, hex8, rgb, rgba, hsl, hsla } = new Color(CSS_COLORS[$color]);
@@ -213,30 +213,24 @@ export class Color {
 					this.hsl = `hsl(${h}, ${s}%, ${l}%)`;
 					this.hsla = colors.hsla;
 				} else {
-					const [r, g, b] = extractSolidColorValues(colors.rgb);
-					const [h, s, l] = extractSolidColorValues(colors.hsl);
-
 					this.hex = colors.hex.toUpperCase() as Hex6;
-					this.hex8 = `${colors.hex.toUpperCase()}${_percentToHex(100)}` as Hex8;
+					this.hex8 = this.#hex6ToHex8(colors.hex);
 					this.rgb = colors.rgb;
-					this.rgba = `rgba(${r}, ${g}, ${b}, 1)`;
+					this.rgba = this.#rgbToRGBA(colors.rgb);
 					this.hsl = colors.hsl;
-					this.hsla = `hsla(${h}, ${s}%, ${l}%, 1)`;
+					this.hsla = this.#hslToHSLA(colors.hsl);
 				}
 			}
 		} else {
 			const hsl = generateRandomHSLColor();
 			const { hex, rgb } = convertColorCode(hsl);
 
-			const [r, g, b] = extractSolidColorValues(rgb);
-			const [h, s, l] = extractSolidColorValues(hsl);
-
 			this.hex = hex.toUpperCase() as Hex6;
-			this.hex8 = `${hex.toUpperCase()}${_percentToHex(100)}` as Hex8;
+			this.hex8 = this.#hex6ToHex8(hex);
 			this.rgb = rgb;
-			this.rgba = `rgba(${r}, ${g}, ${b}, 1)`;
+			this.rgba = this.#rgbToRGBA(rgb);
 			this.hsl = hsl;
-			this.hsla = `hsla(${h}, ${s}%, ${l}%, 1)`;
+			this.hsla = this.#hslToHSLA(hsl);
 		}
 	}
 
@@ -248,6 +242,32 @@ export class Color {
 		yield this.rgba;
 		yield this.hsl;
 		yield this.hsla;
+	}
+
+	/**
+	 * @private Convert `Hex6` color format to `Hex8` by applying `100%` opacity.
+	 * @param hex `Hex6` color to convert to `Hex8`.
+	 */
+	#hex6ToHex8(hex: Hex6): Hex8 {
+		return `${hex.toUpperCase()}${_percentToHex(100)}` as Hex8;
+	}
+
+	/**
+	 * @private Convert `RGB` color format to `RGBA`.
+	 * @param rgb `RGB` color to convert to `RGBA`.
+	 */
+	#rgbToRGBA(rgb: RGB): RGBA {
+		const [r, g, b] = extractSolidColorValues(rgb);
+		return `rgba(${r}, ${g}, ${b}, 1)`;
+	}
+
+	/**
+	 * @private Convert `HSL` color format to `HSLA`.
+	 * @param hsl `HSL` color to convert to `HSLA`.
+	 */
+	#hslToHSLA(hsl: HSL): HSLA {
+		const [h, s, l] = extractSolidColorValues(hsl);
+		return `hsla(${h}, ${s}%, ${l}%, 1)`;
 	}
 
 	/**
@@ -581,9 +601,9 @@ export class Color {
 	 * @private Converts the given color to all other formats while preserving the original.
 	 *
 	 * @param color - The color to convert.
-	 * @returns An object containing Hex, RGB, and HSL representations.
+	 * @returns An object containing `Hex`, `RGB`, and `HSL` representations.
 	 */
-	#convertColorToOthers(color: ColorType): SolidColors | AlphaColors {
+	#convertColorToOthers(color: string): SolidColors | AlphaColors {
 		if (Color.isHex6(color)) {
 			const { rgb, hsl } = convertColorCode(color);
 			return { hex: color, rgb, hsl };
