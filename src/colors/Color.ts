@@ -188,20 +188,21 @@ export class Color {
 	 */
 	constructor(color?: ColorType | CSSColor) {
 		if (color) {
-			if (Color.isCSSColor(color)) {
-				const newColor = new Color(CSS_COLORS[color?.trim() as CSSColor]);
+			const $color = color.trim() as ColorType | CSSColor;
 
-				this.hex = newColor.hex;
-				this.hex8 = newColor.hex8;
-				this.rgb = newColor.rgb;
-				this.rgba = newColor.rgba;
-				this.hsl = newColor.hsl;
-				this.hsla = newColor.hsla;
+			if (Color.isCSSColor($color)) {
+				const { hex, hex8, rgb, rgba, hsl, hsla } = new Color(CSS_COLORS[$color]);
+
+				this.hex = hex;
+				this.hex8 = hex8;
+				this.rgb = rgb;
+				this.rgba = rgba;
+				this.hsl = hsl;
+				this.hsla = hsla;
 			} else {
-				const colors = this.#convertColorToOthers(color?.trim() as ColorType);
+				const colors = this.#convertColorToOthers($color);
 
 				if ('hex8' in colors) {
-					// Extract alpha color values (Hex8, RGBA, HSLA)
 					const [r, g, b] = extractAlphaColorValues(colors.rgba);
 					const [h, s, l] = extractAlphaColorValues(colors.hsla);
 
@@ -212,7 +213,6 @@ export class Color {
 					this.hsl = `hsl(${h}, ${s}%, ${l}%)`;
 					this.hsla = colors.hsla;
 				} else {
-					// Extract solid color values (Hex, RGB, HSL)
 					const [r, g, b] = extractSolidColorValues(colors.rgb);
 					const [h, s, l] = extractSolidColorValues(colors.hsl);
 

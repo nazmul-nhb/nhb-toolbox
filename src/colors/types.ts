@@ -18,7 +18,7 @@ export type Hex = `#${string}`;
  * * Represents a hexadecimal color code.
  * * Format: `#3C6945`
  */
-export type Hex6 = Branded<`#${string}`, 'Hex6'>;
+export type Hex6 = Branded<Hex, 'Hex6'>;
 
 /**
  * * Represents an RGB color string.
@@ -46,7 +46,7 @@ export type HSL =
  * * Represents a hexadecimal color code with optional alpha channel.
  * * Format: `#3C6945FF`
  */
-export type Hex8 = Branded<`#${string}`, 'Hex8'>;
+export type Hex8 = Branded<Hex, 'Hex8'>;
 
 /**
  * * Represents an RGBA color string, now includes optional alpha (opacity).
