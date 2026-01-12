@@ -486,23 +486,26 @@ export type Quarter = 1 | 2 | 3 | 4;
 /** Academic year, e.g. `2024-2025` */
 export type AcademicYear = `${number}-${number}`;
 
-/** Names of Zodiac signs */
+/** Names of standard Zodiac signs */
 export type ZodiacSign = (typeof WESTERN_ZODIAC_SIGNS)[number][0];
 
 /** Presets for Zodiac Sign Configuration */
 export type ZodiacPreset = keyof typeof ZODIAC_PRESETS;
 
 /** Shape of Zodiac signs array */
-export type ZodiacArray = Array<[ZodiacSign, [NumberRange<1, 12>, NumberRange<1, 31>]]>;
+export type ZodiacArray<Sign extends string = ZodiacSign> = Array<
+	| [Sign, [NumberRange<1, 12>, NumberRange<1, 31>]]
+	| Readonly<[Sign, Readonly<[NumberRange<1, 12>, NumberRange<1, 31>]>]>
+>;
 
 /** Options for configuring Zodiac sign getter */
-export interface ZodiacOptions {
+export interface ZodiacOptions<Sign extends string = ZodiacSign> {
 	/** - Optional birthdate in `MM-DD` format (1-based month). */
 	birthDate?: MonthDateString;
 	/** Optional Zodiac preset to use. Default is `western`. `western` and `tropical`, `vedic` and `sidereal` are same. */
 	preset?: ZodiacPreset;
-	/** Custom Zodiac date ranges. */
-	custom?: ZodiacArray;
+	/** Custom Zodiac date ranges. Overrides presets. */
+	custom?: ZodiacArray<Sign> | Readonly<ZodiacArray<Sign>>;
 }
 
 /** - Represents the full name of a weekday, e.g., 'Monday', 'Tuesday' etc. */

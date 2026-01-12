@@ -1,6 +1,6 @@
 import type { NumberRange } from '../../number/types';
 import { ZODIAC_PRESETS } from '../constants';
-import type { $Chronos, ZodiacOptions, ZodiacSign } from '../types';
+import type { $Chronos, ZodiacArray, ZodiacOptions, ZodiacSign } from '../types';
 
 declare module '../Chronos' {
 	interface Chronos {
@@ -9,7 +9,7 @@ declare module '../Chronos' {
 		 * @param options Optional config to choose preset or provide custom zodiac date ranges.
 		 * @returns The matching zodiac sign from preset/custom list.
 		 */
-		getZodiacSign(options?: ZodiacOptions): ZodiacSign;
+		getZodiacSign<Sign extends string = ZodiacSign>(options?: ZodiacOptions<Sign>): Sign;
 
 		/**
 		 * @instance Returns the zodiac sign based on current date or `birthDate` option.
@@ -18,13 +18,15 @@ declare module '../Chronos' {
 		 * @param options Optional config to choose preset or provide custom zodiac date ranges.
 		 * @returns The matching zodiac sign from preset/custom list.
 		 */
-		zodiac(options?: ZodiacOptions): ZodiacSign;
+		zodiac<Sign extends string = ZodiacSign>(options?: ZodiacOptions<Sign>): Sign;
 	}
 }
 
 /** * Plugin to inject `zodiac` related methods */
 export const zodiacPlugin = ($Chronos: $Chronos): void => {
-	$Chronos.prototype.getZodiacSign = function (options) {
+	$Chronos.prototype.getZodiacSign = function <Sign extends string = ZodiacSign>(
+		options?: ZodiacOptions<Sign>
+	) {
 		const { birthDate, preset = 'western', custom } = options ?? {};
 
 		let month: NumberRange<1, 12>;
@@ -46,7 +48,7 @@ export const zodiacPlugin = ($Chronos: $Chronos): void => {
 
 		const signs = [...(custom ?? ZODIAC_PRESETS[preset])].sort(
 			(a, b) => _toHundreds(a[1]) - _toHundreds(b[1])
-		);
+		) as ZodiacArray<Sign>;
 
 		for (let i = signs.length - 1; i >= 0; i--) {
 			const [sign, [m, d]] = signs[i];

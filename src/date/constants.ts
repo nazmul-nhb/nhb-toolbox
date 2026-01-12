@@ -97,7 +97,7 @@ export const WESTERN_ZODIAC_SIGNS = /* @__PURE__ */ Object.freeze([
 	['Libra', [9, 23]],
 	['Scorpio', [10, 23]],
 	['Sagittarius', [11, 22]],
-	['Capricorn', [12, 22]],
+	// ['Capricorn', [12, 22]],
 ] as const);
 
 /** Vedic Zodiac Sign */
@@ -105,16 +105,16 @@ export const VEDIC_ZODIAC_SIGNS = /* @__PURE__ */ Object.freeze([
 	['Capricorn', [1, 14]],
 	['Aquarius', [2, 13]],
 	['Pisces', [3, 14]],
-	['Aries', [4, 13]],
-	['Taurus', [5, 14]],
-	['Gemini', [6, 14]],
+	['Aries', [4, 14]],
+	['Taurus', [5, 15]],
+	['Gemini', [6, 15]],
 	['Cancer', [7, 16]],
-	['Leo', [8, 16]],
-	['Virgo', [9, 16]],
-	['Libra', [10, 16]],
-	['Scorpio', [11, 15]],
-	['Sagittarius', [12, 15]],
-	['Capricorn', [1, 14]],
+	['Leo', [8, 17]],
+	['Virgo', [9, 17]],
+	['Libra', [10, 17]],
+	['Scorpio', [11, 16]],
+	['Sagittarius', [12, 16]],
+	// ['Capricorn', [1, 14]],
 ] as const);
 
 /** Zodiac Signs Presets */

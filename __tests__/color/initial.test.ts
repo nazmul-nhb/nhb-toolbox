@@ -1,9 +1,6 @@
 import { getColorForInitial } from '../../src';
-import {
-	ALPHABET_COLOR_PALETTE,
-	NUMBER_COLOR_PALETTE,
-} from '../../src/colors/constants';
-import { _convertOpacityToHex } from '../../src/colors/helpers';
+import { ALPHABET_COLOR_PALETTE, NUMBER_COLOR_PALETTE } from '../../src/colors/constants';
+import { _percentToHex } from '../../src/colors/helpers';
 
 describe('getColorForInitial', () => {
 	test('returns correct color for single alphabet input', () => {
@@ -27,12 +24,8 @@ describe('getColorForInitial', () => {
 	});
 
 	test('returns correct color with opacity applied', () => {
-		expect(getColorForInitial('A', 50)).toBe(
-			ALPHABET_COLOR_PALETTE[0] + _convertOpacityToHex(50),
-		);
-		expect(getColorForInitial('9', 75)).toBe(
-			NUMBER_COLOR_PALETTE[9] + _convertOpacityToHex(75),
-		);
+		expect(getColorForInitial('A', 50)).toBe(ALPHABET_COLOR_PALETTE[0] + _percentToHex(50));
+		expect(getColorForInitial('9', 75)).toBe(NUMBER_COLOR_PALETTE[9] + _percentToHex(75));
 	});
 
 	test('returns correct colors for an array of inputs', () => {
@@ -53,9 +46,7 @@ describe('getColorForInitial', () => {
 
 	test('returns all colors when empty array is provided', () => {
 		expect(getColorForInitial([])).toEqual(
-			[...ALPHABET_COLOR_PALETTE, ...NUMBER_COLOR_PALETTE].map(
-				(color) => color + 'FF',
-			),
+			[...ALPHABET_COLOR_PALETTE, ...NUMBER_COLOR_PALETTE].map((color) => color + 'FF')
 		);
 	});
 
