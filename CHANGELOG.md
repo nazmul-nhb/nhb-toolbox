@@ -4,6 +4,12 @@
 
 All notable changes to the package will be documented here.
 
+## [4.28.60] - 2026-01-13
+
+- **Fixed** `Chronos.getZodiacSign` boundary handling to correctly wrap across year transitions for *zodiac presets*.
+- **Improved** zodiac resolution logic to ensure consistent results for early-January dates without altering existing zodiac presets.
+- **Updated** `ZodiacArray` and `ZodiacOptions` types to support custom zodiac definitions with *correctly inferred sign names*.
+
 ## [4.28.57] - 2026-01-07
 
 - **Enhanced** `Color.isLightColor` with an *optional brightness threshold* for custom light/dark detection.

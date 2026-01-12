@@ -81,6 +81,16 @@ describe('Chronos.getZodiacSign – Vedic boundaries', () => {
 	});
 });
 
+describe('Chronos.zodiac – Vedic December wrap', () => {
+	it('returns Scorpio on Dec 15', () => {
+		expect(new Chronos('2026-12-15').zodiac({ preset: 'vedic' })).toBe('Scorpio');
+	});
+
+	it('returns Sagittarius on Dec 16 (boundary)', () => {
+		expect(new Chronos('2026-12-16').zodiac({ preset: 'vedic' })).toBe('Sagittarius');
+	});
+});
+
 describe('Chronos.getZodiacSign – birthDate option', () => {
 	it('respects MM-DD format (Western)', () => {
 		expect(new Chronos('2026-06-01').getZodiacSign({ birthDate: '01-12' })).toBe(

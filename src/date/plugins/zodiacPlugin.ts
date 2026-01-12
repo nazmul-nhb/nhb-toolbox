@@ -42,7 +42,7 @@ export const zodiacPlugin = ($Chronos: $Chronos): void => {
 			date = this.date;
 		}
 
-		const _toHundreds = (range: readonly [NumberRange<1, 12>, NumberRange<1, 31>]) => {
+		const _toHundreds = (range: readonly [number, number]) => {
 			return range[0] * 100 + range[1];
 		};
 
