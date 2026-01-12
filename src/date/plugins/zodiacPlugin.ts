@@ -22,7 +22,7 @@ declare module '../Chronos' {
 	}
 }
 
-/** * Plugin to inject `getZodiacSign`/`zodiac` method */
+/** * Plugin to inject `zodiac` related methods */
 export const zodiacPlugin = ($Chronos: $Chronos): void => {
 	$Chronos.prototype.getZodiacSign = function (options) {
 		const { birthDate, preset = 'western', custom } = options ?? {};
@@ -40,14 +40,23 @@ export const zodiacPlugin = ($Chronos: $Chronos): void => {
 			date = this.date;
 		}
 
+		const _toHundreds = (range: readonly [NumberRange<1, 12>, NumberRange<1, 31>]) => {
+			return range[0] * 100 + range[1];
+		};
+
 		const signs = [...(custom ?? ZODIAC_PRESETS[preset])].sort(
-			(a, b) => a[1][0] * 100 + a[1][1] - (b[1][0] * 100 + b[1][1])
+			(a, b) => _toHundreds(a[1]) - _toHundreds(b[1])
 		);
 
 		for (let i = signs.length - 1; i >= 0; i--) {
 			const [sign, [m, d]] = signs[i];
+
 			if (month > m || (month === m && date >= d)) {
 				return sign;
+			}
+
+			if (i === 0) {
+				return signs.at(-1)![0];
 			}
 		}
 
