@@ -1,6 +1,14 @@
 import type { NumberRange } from '../../number/types';
 import { ZODIAC_PRESETS } from '../constants';
-import type { $Chronos, ZodiacArray, ZodiacOptions, ZodiacSign } from '../types';
+import { _padZero } from '../helpers';
+import type {
+	$Chronos,
+	ZodiacArray,
+	ZodiacMeta,
+	ZodiacMetaOptions,
+	ZodiacOptions,
+	ZodiacSign,
+} from '../types';
 
 declare module '../Chronos' {
 	interface Chronos {
@@ -19,6 +27,28 @@ declare module '../Chronos' {
 		 * @returns The matching zodiac sign from preset/custom list.
 		 */
 		zodiac<Sign extends string = ZodiacSign>(options?: ZodiacOptions<Sign>): Sign;
+
+		/**
+		 * @instance Returns detailed metadata for a given zodiac sign based on the selected `preset` or custom ranges.
+		 *
+		 * @remarks
+		 * - The metadata includes the sign's index within the normalized zodiac order, its inclusive start and end dates (wrap-aware).
+		 * - The returned index represents the chronological position of the zodiac sign based on Gregorian month–day ordering and may vary between different zodiac presets.
+		 * - Handles year-boundary wrapping correctly (e.g. Capricorn, Sagittarius).
+		 * - Works with built-in presets (`western`, `vedic`, etc.) and custom zodiac definitions.
+		 * - The returned range is represented in `MM-DD` format.
+		 *
+		 * @param sign The zodiac sign to retrieve metadata for.
+		 * @param options Optional configuration to select a zodiac preset or provide custom ranges.
+		 *
+		 * @throws A {@link RangeError} if the provided sign does not exist in the resolved zodiac set.
+		 *
+		 * @returns A metadata object describing the zodiac sign's position and date range.
+		 */
+		getZodiacMeta<Sign extends string = ZodiacSign>(
+			sign: Sign,
+			options?: ZodiacMetaOptions<Sign>
+		): ZodiacMeta<Sign>;
 	}
 }
 
@@ -28,18 +58,18 @@ export const zodiacPlugin = ($Chronos: $Chronos): void => {
 		return range[0] * 100 + range[1];
 	}
 
-	function _getSortedSigns<Sign extends string = ZodiacSign>(options?: ZodiacOptions<Sign>) {
+	function _getSortedSigns<Z extends string = ZodiacSign>(options?: ZodiacMetaOptions<Z>) {
 		const { preset = 'western', custom } = options ?? {};
 
 		const sorted = [...(custom ?? ZODIAC_PRESETS[preset])].sort(
 			(a, b) => _toHundreds(a[1]) - _toHundreds(b[1])
 		);
 
-		return sorted as ZodiacArray<Sign>;
+		return sorted as ZodiacArray<Z>;
 	}
 
-	$Chronos.prototype.getZodiacSign = function <Sign extends string = ZodiacSign>(
-		options?: ZodiacOptions<Sign>
+	$Chronos.prototype.getZodiacSign = function <Z extends string = ZodiacSign>(
+		options?: ZodiacOptions<Z>
 	) {
 		const { birthDate } = options ?? {};
 
@@ -75,5 +105,29 @@ export const zodiacPlugin = ($Chronos: $Chronos): void => {
 
 	$Chronos.prototype.zodiac = function (options) {
 		return this.getZodiacSign(options);
+	};
+
+	$Chronos.prototype.getZodiacMeta = function <Z extends string = ZodiacSign>(
+		sign: Z,
+		options?: ZodiacMetaOptions<Z>
+	) {
+		const sortedSigns = _getSortedSigns(options);
+
+		const index = sortedSigns.findIndex(([s]) => s === sign);
+
+		if (index === -1) {
+			throw new RangeError(`Zodiac sign "${sign}" not found!`);
+		}
+
+		const [startMonth, startDate] = sortedSigns[index][1];
+
+		const next = (sortedSigns[index + 1] ?? sortedSigns[0])[1];
+
+		return {
+			index,
+			sign,
+			start: `${_padZero(startMonth)}-${_padZero(startDate)}`,
+			end: `${_padZero(next[0])}-${_padZero(next[1] - 1)}`,
+		} as ZodiacMeta<Z>;
 	};
 };

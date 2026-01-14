@@ -498,14 +498,41 @@ export type ZodiacArray<Sign extends string = ZodiacSign> = Array<
 	| Readonly<[Sign, Readonly<[NumberRange<1, 12>, NumberRange<1, 31>]>]>
 >;
 
-/** Options for configuring Zodiac sign getter */
-export interface ZodiacOptions<Sign extends string = ZodiacSign> {
-	/** - Optional birthdate in `MM-DD` format (1-based month). */
-	birthDate?: MonthDateString;
-	/** Optional Zodiac preset to use. Default is `western`. `western` and `tropical`, `vedic` and `sidereal` are same. */
+/** Zodiac metadata options */
+export interface ZodiacMetaOptions<Sign extends string = ZodiacSign> {
+	/**
+	 * Optional Zodiac preset to use. Default is `western`.
+	 * - **Note:** `western` and `tropical`, `vedic` and `sidereal` are same.
+	 */
 	preset?: ZodiacPreset;
 	/** Custom Zodiac date ranges. Overrides presets. */
 	custom?: ZodiacArray<Sign> | Readonly<ZodiacArray<Sign>>;
+}
+
+/** Options for configuring Zodiac sign getter */
+export interface ZodiacOptions<
+	Sign extends string = ZodiacSign,
+> extends ZodiacMetaOptions<Sign> {
+	/** - Optional birthdate in `MM-DD` format (1-based month). */
+	birthDate?: MonthDateString;
+}
+
+/** Represents resolved metadata for a zodiac sign. */
+export interface ZodiacMeta<Sign extends string = ZodiacSign> {
+	/**
+	 * Zero-based index of the zodiac sign within the resolved and chronologically sorted zodiac list.
+	 *
+	 * ⚠️ The index is determined by the Gregorian month–day order of zodiac start dates and may differ between presets (e.g. Western vs Vedic).
+	 *
+	 * **Note** This index should not be interpreted as a traditional or mythological zodiac ordering.
+	 */
+	index: number;
+	/** The zodiac sign name. */
+	sign: Sign;
+	/** Inclusive start date of the zodiac sign in `MM-DD` format. */
+	start: MonthDateString;
+	/** Inclusive end date of the zodiac sign in `MM-DD` format. */
+	end: MonthDateString;
 }
 
 /** - Represents the full name of a weekday, e.g., 'Monday', 'Tuesday' etc. */
