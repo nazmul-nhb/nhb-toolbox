@@ -121,13 +121,13 @@ export const zodiacPlugin = ($Chronos: $Chronos): void => {
 
 		const [startMonth, startDate] = sortedSigns[index][1];
 
-		const next = (sortedSigns[index + 1] ?? sortedSigns[0])[1];
+		const [endMonth, endDate] = (sortedSigns[index + 1] ?? sortedSigns[0])[1];
 
 		return {
 			index,
 			sign,
 			start: `${_padZero(startMonth)}-${_padZero(startDate)}`,
-			end: `${_padZero(next[0])}-${_padZero(next[1] - 1)}`,
+			end: `${_padZero(endMonth)}-${_padZero(endDate - 1)}`,
 		} as ZodiacMeta<Z>;
 	};
 };

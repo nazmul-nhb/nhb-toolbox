@@ -4,6 +4,10 @@
 
 All notable changes to the package will be documented here.
 
+## [4.28.Future] - 2026-Future
+
+- **Added** new `zodiacPlugin` method: `getZodiacMeta` to get zodiac *metadata* for a given *zodiac sign*.
+
 ## [4.28.60] - 2026-01-13
 
 - **Fixed** `Chronos.getZodiacSign` boundary handling to correctly wrap across year transitions for *zodiac presets*.
