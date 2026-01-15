@@ -32,11 +32,9 @@ declare module '../Chronos' {
 		 * @instance Returns detailed metadata for a given zodiac sign based on the selected `preset` or custom ranges.
 		 *
 		 * @remarks
-		 * - The metadata includes the sign's index within the normalized zodiac order, its inclusive start and end dates (wrap-aware).
-		 * - The returned index represents the chronological position of the zodiac sign based on Gregorian month–day ordering and may vary between different zodiac presets.
+		 * - The metadata includes the sign's `index` within the normalized zodiac order, its inclusive start and end dates.
+		 *   - **Note:** The returned `index` represents the chronological position of the zodiac sign based on Gregorian month–day ordering and may vary between different zodiac variants.
 		 * - Handles year-boundary wrapping correctly (e.g. Capricorn, Sagittarius).
-		 * - Works with built-in presets (`western`, `vedic`, etc.) and custom zodiac definitions.
-		 * - The returned range is represented in `MM-DD` format.
 		 *
 		 * @param sign The zodiac sign to retrieve metadata for.
 		 * @param options Optional configuration to select a zodiac preset or provide custom ranges.
@@ -58,7 +56,7 @@ export const zodiacPlugin = ($Chronos: $Chronos): void => {
 		return range[0] * 100 + range[1];
 	}
 
-	function _getSortedSigns<Z extends string = ZodiacSign>(options?: ZodiacMetaOptions<Z>) {
+	function _resolveSigns<Z extends string = ZodiacSign>(options?: ZodiacMetaOptions<Z>) {
 		const { preset = 'western', custom } = options ?? {};
 
 		const sorted = [...(custom ?? ZODIAC_PRESETS[preset])].sort(
@@ -86,7 +84,7 @@ export const zodiacPlugin = ($Chronos: $Chronos): void => {
 			date = this.date;
 		}
 
-		const sortedSigns = _getSortedSigns(options);
+		const sortedSigns = _resolveSigns(options);
 
 		for (let i = sortedSigns.length - 1; i >= 0; i--) {
 			const [sign, [m, d]] = sortedSigns[i];
@@ -111,12 +109,12 @@ export const zodiacPlugin = ($Chronos: $Chronos): void => {
 		sign: Z,
 		options?: ZodiacMetaOptions<Z>
 	) {
-		const sortedSigns = _getSortedSigns(options);
+		const sortedSigns = _resolveSigns(options);
 
 		const index = sortedSigns.findIndex(([s]) => s === sign);
 
 		if (index === -1) {
-			throw new RangeError(`Zodiac sign "${sign}" not found!`);
+			throw new RangeError(`Invalid zodiac sign: "${sign}"`);
 		}
 
 		const [startMonth, startDate] = sortedSigns[index][1];

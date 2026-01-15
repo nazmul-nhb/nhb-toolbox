@@ -505,7 +505,7 @@ export interface ZodiacMetaOptions<Sign extends string = ZodiacSign> {
 	 * - **Note:** `western` and `tropical`, `vedic` and `sidereal` are same.
 	 */
 	preset?: ZodiacPreset;
-	/** Custom Zodiac date ranges. Overrides presets. */
+	/** Custom Zodiac date ranges, overrides {@link preset presets}. */
 	custom?: ZodiacArray<Sign> | Readonly<ZodiacArray<Sign>>;
 }
 
@@ -513,18 +513,18 @@ export interface ZodiacMetaOptions<Sign extends string = ZodiacSign> {
 export interface ZodiacOptions<
 	Sign extends string = ZodiacSign,
 > extends ZodiacMetaOptions<Sign> {
-	/** - Optional birthdate in `MM-DD` format (1-based month). */
+	/** - Optional birthdate in `MM-DD` format (`1`-based month). */
 	birthDate?: MonthDateString;
 }
 
-/** Represents resolved metadata for a zodiac sign. */
+/** Represents resolved metadata for a zodiac sign */
 export interface ZodiacMeta<Sign extends string = ZodiacSign> {
 	/**
-	 * Zero-based index of the zodiac sign within the resolved and chronologically sorted zodiac list.
+	 * Index (`0`-based) of the zodiac sign within the resolved and chronologically sorted zodiac list.
 	 *
-	 * ⚠️ The index is determined by the Gregorian month–day order of zodiac start dates and may differ between presets (e.g. Western vs Vedic).
-	 *
-	 * **Note** This index should not be interpreted as a traditional or mythological zodiac ordering.
+	 * ⚠️ **Notes:**
+	 * - The `index` is determined by the Gregorian month–day order of zodiac start dates and may differ between variants (e.g. Western vs Vedic).
+	 * - This `index` should not be interpreted as a traditional or mythological zodiac ordering.
 	 */
 	index: number;
 	/** The zodiac sign name. */
