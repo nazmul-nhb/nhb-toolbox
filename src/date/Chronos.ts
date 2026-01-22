@@ -142,7 +142,7 @@ export class Chronos {
 	/**
 	 * Represents the current timezone context, which can be a single identifier, an array of equivalent identifiers, or a UTC offset.
 	 *
-	 * - **{@link $TimeZoneIdentifier}** — e.g., `"Asia/Dhaka"`. Returned when the {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/conversion#timezone timeZone} method has not been invoked. It is default behaviour.
+	 * - **{@link $TimeZoneIdentifier}** — e.g., `"Asia/Dhaka"`. Returned when the {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/conversion#timezone timeZone} method has not been invoked. It is default behavior.
 	 * - **Array of {@link $TimeZoneIdentifier}** — e.g., `[ 'Asia/Calcutta', 'Asia/Colombo' ]`, used when multiple timezones share the same UTC offset such as `"UTC+05:30"`.
 	 * - **{@link UTCOffset}** — e.g., `"UTC+06:45"` or `"UTC+02:15"`, returned when no named timezone corresponds to a given offset.
 	 *
@@ -157,9 +157,7 @@ export class Chronos {
 	protected $tzTracker?: $TimeZoneIdentifier | TimeZone | UTCOffset;
 
 	/**
-	 * * Creates a new immutable `Chronos` instance.
-	 *
-	 * Accepts no arguments (defaults to now).
+	 * * Creates a new immutable `Chronos` instance from current date & time (UTC).
 	 *
 	 * @returns Instance of `Chronos` with all methods and properties.
 	 */
