@@ -4,6 +4,10 @@
 
 All notable changes to the package will be documented here.
 
+## [4.28.66] - 2026-01-23
+
+- **Refined** `TSDoc` to *improve* **IDE IntelliSense** for `Chronos` constructor.
+
 ## [4.28.64] - 2026-01-15
 
 - **Added** new `zodiacPlugin` method: `getZodiacMeta` to retrieve zodiac *metadata* for a given *zodiac sign*.
@@ -105,7 +109,7 @@ All notable changes to the package will be documented here.
 - **Updated** *implementation* and *tsdoc* for:
   - `cloneObject`: used `structuredClone` and `stableStringify` (optionally force to use *deterministic serialization*) internally and falls back to *shallow cloning* if serialization fails.
   - `stableStringify`: stringified value of *Date-like objects* (`Date`, `Chronos`, `Moment.js`, `Day.js`, `Luxon`, `JS-Joda`, `Temporal`) is converted to string representation (in the same way that `JSON.stringify` would serialize them).
-- **Updated** `convertObjectValues` behaviour: *fields* configured for *number conversion* now return `NaN` when *parsing fails*.
+- **Updated** `convertObjectValues` behavior: *fields* configured for *number conversion* now return `NaN` when *parsing fails*.
 - **Updated** *reference links* in *tsdoc* of some *hash* utilities.
 
 ## [4.28.1] - 2025-12-02
@@ -720,7 +724,7 @@ All notable changes to the package will be documented here.
 
 ## [4.12.41] - 2025-06-17
 
-- **Updated** `getDatesInRange()` and `getDatesForDay()` `Chronos` methods' options to change the date rounding behaviour.
+- **Updated** `getDatesInRange()` and `getDatesForDay()` `Chronos` methods' options to change the date rounding behavior.
 
 ## [4.12.40] - 2025-06-17
 
