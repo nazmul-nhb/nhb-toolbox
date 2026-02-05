@@ -273,7 +273,7 @@ export type LooseLiteral<T extends string | number> =
 /**
  * * Extracts an object type containing only the optional keys from `T`.
  *
- * @template T - The original object type
+ * @typeParam T - The original object type
  * @returns A new object type with only optional keys from `T`
  * @example
  * type Example = { a: string; b?: number; c?: boolean };
@@ -287,7 +287,7 @@ export type ExtractOptional<T> = {
 /**
  * * Extracts an object type containing only the required keys from `T`.
  *
- * @template T - The original object type
+ * @typeParam T - The original object type
  * @returns A new object type with only required keys from `T`
  * @example
  * type Example = { a: string; b?: number; c: boolean };
@@ -301,7 +301,7 @@ export type ExtractRequired<T> = {
 /**
  * * Converts a readonly tuple to a union of its element types.
  *
- * @template T - A tuple type (must be readonly if using `as const`)
+ * @typeParam T - A tuple type (must be readonly if using `as const`)
  * @example
  * const roles = ['admin', 'user', 'guest'] as const;
  * type Role = TupleToUnion<typeof roles>; // "admin" | "user" | "guest"
@@ -358,8 +358,8 @@ export type RangeTuple<T, Min extends number, Max extends number> =
  * If `K` is provided, only those properties' values become optional (keys remain required).
  * If `K` is omitted, all property values become optional.
  *
- * @template O - The original object type.
- * @template K - Optional union of keys in `O` whose values should become optional.
+ * @typeParam O - The original object type.
+ * @typeParam K - Optional union of keys in `O` whose values should become optional.
  *
  * @example
  * type A = { name: string; age: number };
@@ -379,8 +379,8 @@ export type $Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 /**
  * * Creates a type that is either `T` or `U`, but not both at the same time.
  * * This is useful for defining types that can be one of two options, but not both.
- * * @template T - First type option.
- * @template U - Second type option.
+ * @typeParam T - First type option.
+ * @typeParam U - Second type option.
  * @example
  * type A = { a: string };
  * type B = { b: number };
@@ -392,7 +392,7 @@ export type OneOf<T, U> = (T & $Without<U, T>) | (U & $Without<T, U>);
 /**
  * * Checks whether a type is a strict object (excluding functions).
  *
- * @template T - The type to test.
+ * @typeParam T - The type to test.
  *
  * @example
  * type A = IsStrictObject<{}>;          // false
@@ -411,7 +411,7 @@ export type IsStrictObject<T> =
  * * Returns the keyof `T` only if `T` is a non-function object, otherwise `null`.
  * * Prevents extracting keys from primitives or functions.
  *
- * @template T - The input type.
+ * @typeParam T - The input type.
  *
  * @example
  * type A = Keyof<{ x: number }>; // "x"
@@ -422,7 +422,7 @@ export type Keyof<T> = IsStrictObject<T> extends true ? keyof T : null;
 /**
  * * Recursively generates dot-separated keys from a nested object.
  *
- * @template T - The input nested object type.
+ * @typeParam T - The input nested object type.
  *
  * @example
  * type Obj = { user: { name: string; meta: { id: number } } };
@@ -443,8 +443,8 @@ export type DeepKeyof<T> =
 /**
  * * Creates a new type by picking properties from `T` whose values extend type `V`.
  *
- * @template T - The object type.
- * @template V - The value type to filter by.
+ * @typeParam T - The object type.
+ * @typeParam V - The value type to filter by.
  *
  * @example
  * type T = { name: string; age: number; active: boolean };
@@ -457,8 +457,8 @@ export type PickByValue<T, V> = {
 /**
  * * Maps all values of object `T` to a fixed type `R`, keeping original keys.
  *
- * @template T - The source object type.
- * @template R - The replacement value type.
+ * @typeParam T - The source object type.
+ * @typeParam R - The replacement value type.
  *
  * @example
  * type T = { name: string; age: number };
@@ -472,7 +472,7 @@ export type MapObjectValues<T, R> = {
  * * Removes properties from object `T` whose type is `never`.
  * * Typically useful after conditional filtering.
  *
- * @template T - The input object type.
+ * @typeParam T - The input object type.
  *
  * @example
  * type T = { a: string; b: never; c: number };
@@ -485,8 +485,8 @@ export type RemoveNever<T> = {
 /**
  * * Renames the keys of `T` using the mapping `R`.
  *
- * @template T - Original object type.
- * @template R - Mapping from original keys to new key names.
+ * @typeParam T - Original object type.
+ * @typeParam R - Mapping from original keys to new key names.
  *
  * @example
  * type Original = { first: string; last: string };
@@ -509,8 +509,8 @@ export type $Forbid<T, K extends keyof T> = {
 /**
  * * Enforces that at least `N` properties of type `T` are required.
  *
- * @template T - The base object type.
- * @template N - The minimum number of required properties.
+ * @typeParam T - The base object type.
+ * @typeParam N - The minimum number of required properties.
  *
  * @example
  * interface User {
@@ -546,8 +546,8 @@ export type RequireAtLeast<
  * * Enforces that exactly `N` properties of type `T` are required.
  * * All other properties remain forbidden.
  *
- * @template T - The base object type.
- * @template N - The exact number of required properties.
+ * @typeParam T - The base object type.
+ * @typeParam N - The exact number of required properties.
  *
  * @example
  * interface Config {
@@ -578,9 +578,9 @@ export type RequireExactly<T extends GenericObject, N extends number> = {
 /**
  * * Enforces that between `Min` and `Max` properties of type `T` are required.
  *
- * @template T - The base object type.
- * @template Min - The minimum number of required properties.
- * @template Max - The maximum number of required properties.
+ * @typeParam T - The base object type.
+ * @typeParam Min - The minimum number of required properties.
+ * @typeParam Max - The maximum number of required properties.
  *
  * @example
  * interface Settings {

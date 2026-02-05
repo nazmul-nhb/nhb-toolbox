@@ -367,7 +367,7 @@ export function stripJsonEdgeGarbage(str: string): string {
 /**
  * * Parses any valid JSON string, optionally converting stringified primitives inside (nested) arrays or objects.
  *
- * @template T - Expected return type (default is unknown).
+ * @typeParam T - Expected return type (default is unknown).
  * @param value - The JSON string to parse.
  * @param parsePrimitives - Whether to convert stringified primitives (default: `true`).
  * @returns The parsed JSON value typed as `T`, or the original parsed value with optional primitive conversion.
@@ -393,7 +393,7 @@ export const parseJSON = <T = unknown>(value: string, parsePrimitives = true): T
 /**
  * * Recursively parses primitive values inside objects and arrays.
  *
- * @template T - Expected return type after parsing (default is unknown).
+ * @typeParam T - Expected return type after parsing (default is unknown).
  * @param input - Any input value to parse recursively.
  * @returns Input with primitives (strings like "true", "123") converted, typed as `T`.
  */
