@@ -1,4 +1,4 @@
-import { isNonEmptyString, isString } from '../guards/primitives';
+import { isNonEmptyString, isNumber, isString } from '../guards/primitives';
 import type { Numeric } from '../types/index';
 import { isValidUTCOffset } from './guards';
 import {
@@ -12,8 +12,10 @@ import type {
 	$DateUnit,
 	$TimeZoneIdentifier,
 	ClockTime,
+	DateArgs,
 	DateFormatOptions,
 	HourMinutes,
+	ISODateFormat,
 	TimeOnlyFormat,
 	TimeZoneDetails,
 	TimeZoneIdNative,
@@ -63,6 +65,30 @@ export function getCurrentDateTime(): Date {
 /**
  * * Get timestamp in ISO 8601 format.
  *
+ * @param value Options to control input and output format.
+ *
+ * @remarks If the provided value is invalid, the current date and time will be used.
+ *
+ * @returns Timestamp string in ISO 8601 format.
+ */
+export function getTimestamp(): Timestamp;
+
+/**
+ * * Get timestamp in ISO 8601 format.
+ *
+ * @param value Options to control input and output format.
+ *
+ * @remarks
+ * - If the provided value is invalid, the current date and time will be used.
+ * - Use `format: 'local'` to include the current system timezone offset.
+ *
+ * @returns Timestamp string in ISO 8601 format.
+ */
+export function getTimestamp(value: DateArgs, format?: ISODateFormat): Timestamp;
+
+/**
+ * * Get timestamp in ISO 8601 format.
+ *
  * @param options Options to control input and output format.
  *
  * @remarks
@@ -71,8 +97,19 @@ export function getCurrentDateTime(): Date {
  *
  * @returns Timestamp string in ISO 8601 format.
  */
-export function getTimestamp(options?: TimestampOptions): Timestamp {
-	const { value = new Date(), format = 'utc' } = options ?? {};
+export function getTimestamp(options?: TimestampOptions): Timestamp;
+
+export function getTimestamp(options?: DateArgs | TimestampOptions, isoFormat?: ISODateFormat) {
+	let value: DateArgs | undefined;
+	let format: ISODateFormat = 'utc';
+
+	if (isNonEmptyString(options) || options instanceof Date || isNumber(options)) {
+		value = options;
+		format = isoFormat || 'utc';
+	} else if (options) {
+		value = options.value;
+		format = options.format || 'utc';
+	}
 
 	let date =
 		value instanceof Date ? value : (

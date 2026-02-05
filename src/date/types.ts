@@ -98,7 +98,7 @@ export type TimeZoneDetails = {
 /** Options for `formatDate` utility */
 export interface DateFormatOptions extends FormatOptions {
 	/** - Date to format, must be parsable by {@link Date} constructor. Can be string, number or `Date`. Defaults to current time. */
-	date?: string | number | Date;
+	date?: DateArgs;
 	format?: StrictFormat;
 }
 
@@ -460,19 +460,25 @@ export type $GMTOffset = `GMT${$UTCOffset}` | 'GMT';
 /** Timestamp string type in ISO 8601 format */
 export type Timestamp = Branded<string, 'Timestamp'>;
 
+/** Valid argument type accepted by `Date` constructor */
+export type DateArgs = string | number | Date;
+
+/** Type for ISO date format options */
+export type ISODateFormat = 'local' | 'utc';
+
 /** Options for `getTimestamp` utility */
 export interface TimestampOptions {
 	/**
 	 * Optional date input (string, number, or `Date` object).
 	 * Defaults to {@link Date new Date()}.
 	 */
-	value?: string | number | Date;
+	value?: DateArgs;
 	/**
 	 * Output format for the timestamp.
 	 * - `'utc'` (default) → returns ISO string in UTC (`...Z`).
 	 * - `'local'` → returns ISO string with current system offset (`...+05:30`).
 	 */
-	format?: 'local' | 'utc';
+	format?: ISODateFormat;
 }
 
 /** `Chronos` Date Format options */
@@ -562,7 +568,7 @@ export type MonthName = (typeof MONTHS)[number];
 /** Common options for formatting and rounding dates */
 interface $CommonRangeOptions {
 	/** - Output format: return ISO strings in `'local'` or `'utc'` format. Defaults to `'local'`. */
-	format?: 'local' | 'utc';
+	format?: ISODateFormat;
 
 	/** - Whether to round the dates in the range to the start of the day. Default is `false`. */
 	roundDate?: boolean;
