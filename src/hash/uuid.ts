@@ -46,8 +46,9 @@ import { randomHex } from './utils';
  * - This utility provides a complete, engine-agnostic UUID generator with full RFC compliance, predictable formatting, and reliable uniqueness characteristics, suitable for browsers, Node.js, and restricted JavaScript runtimes.
  * - **Notes**
  *   - `v1` and `v6` use a generated pseudo-node identifier.
- *   - `v4`, `v7`, `v8` **do not rely on crypto APIs**, preserving engine-agnostic behavior.
+ *   - `v4` and `v8` uses {@link Math.random} when {@link crypto.getRandomValues} is unavailable, ensuring broad compatibility.
  *   - `v3` and `v5` use internal `MD5`/`SHA-1` implementations and remain fully deterministic.
+ *   - `v7` **do not rely on crypto APIs**, preserving engine-agnostic behavior.
  *
  * - **Limitations**
  *   - `v1`/`v6`: Node identifier is pseudo-random, not derived from real MAC addresses (for privacy).
@@ -93,8 +94,12 @@ export function uuid<V extends SupportedVersion = 'v4'>(options?: UUIDOptions<V>
 		case 'v4': {
 			const bytes = new Uint8Array(16);
 
-			for (let i = 0; i < 16; i++) {
-				bytes[i] = Math.floor(Math.random() * 256);
+			if (crypto.getRandomValues) {
+				crypto.getRandomValues(bytes);
+			} else {
+				for (let i = 0; i < 16; i++) {
+					bytes[i] = Math.floor(Math.random() * 256);
+				}
 			}
 
 			// Convert to hex
@@ -150,8 +155,12 @@ export function uuid<V extends SupportedVersion = 'v4'>(options?: UUIDOptions<V>
 				temp >>= 8n;
 			}
 
-			for (let i = 6; i < 16; i++) {
-				bytes[i] = Math.floor(Math.random() * 256);
+			if (crypto.getRandomValues) {
+				crypto.getRandomValues(bytes);
+			} else {
+				for (let i = 6; i < 16; i++) {
+					bytes[i] = Math.floor(Math.random() * 256);
+				}
 			}
 
 			// Convert full 16 bytes into one contiguous 32-hex string
