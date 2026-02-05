@@ -3,15 +3,15 @@
 > “I solve problems you face daily”
 
 <p>
-  <!-- NPM Info -->
+  <!-- Package Info -->
   <a href="https://www.npmjs.com/package/nhb-toolbox" aria-label="NPM Downloads">
     <img src="https://img.shields.io/npm/dm/nhb-toolbox.svg?label=DOWNLOADS&style=flat&color=red&logo=npm" alt="Downloads" />
   </a>
   <a href="https://www.npmjs.com/package/nhb-toolbox" aria-label="Latest Version">
     <img src="https://img.shields.io/npm/v/nhb-toolbox.svg?label=NPM&style=flat&color=teal&logo=npm" alt="Latest Version" />
   </a>
-  <a href="https://bundlephobia.com/result?p=nhb-toolbox" aria-label="Bundle Size">
-    <img src="https://img.shields.io/bundlephobia/minzip/nhb-toolbox?style=flat&color=purple&label=SIZE&logo=nodedotjs" alt="Bundle Size" />
+  <a href="https://bundlejs.com/?q=nhb-toolbox" aria-label="Bundle Size">
+    <img src="https://deno.bundlejs.com/badge?q=nhb-toolbox" alt="Bundle Size" />
   </a>
 
   <!-- Project Metadata -->
