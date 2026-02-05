@@ -281,6 +281,7 @@ export {
 	formatUTCOffset,
 	getCurrentDateTime,
 	getCurrentDateTime as getCurrentTime,
+	getTimestamp,
 	convertMinutesToTime as getHourMinutesFromMinutes,
 	extractMinutesFromUTC as getMinutesFromUTC,
 	getNativeTimeZoneId,

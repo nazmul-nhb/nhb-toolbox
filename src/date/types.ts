@@ -1,5 +1,5 @@
 import type { $BnOnes, BanglaDigit, Enumerate, LocaleCode, NumberRange } from '../number/types';
-import type { Maybe } from '../types/index';
+import type { Branded, Maybe } from '../types/index';
 import type { LooseLiteral, RangeTuple, Repeat, Split } from '../utils/types';
 import type { Chronos } from './Chronos';
 import type { ChronosStatics } from './chronos-statics';
@@ -456,6 +456,24 @@ export type UTCOffset = `UTC${$UTCOffset}`;
 
 /** GMT offset in `GMT±HH:mm` or simply `GMT` format */
 export type $GMTOffset = `GMT${$UTCOffset}` | 'GMT';
+
+/** Timestamp string type in ISO 8601 format */
+export type Timestamp = Branded<string, 'Timestamp'>;
+
+/** Options for `getTimestamp` utility */
+export interface TimestampOptions {
+	/**
+	 * Optional date input (string, number, or `Date` object).
+	 * Defaults to {@link Date new Date()}.
+	 */
+	value?: string | number | Date;
+	/**
+	 * Output format for the timestamp.
+	 * - `'utc'` (default) → returns ISO string in UTC (`...Z`).
+	 * - `'local'` → returns ISO string with current system offset (`...+05:30`).
+	 */
+	format?: 'local' | 'utc';
+}
 
 /** `Chronos` Date Format options */
 export interface FormatOptions {

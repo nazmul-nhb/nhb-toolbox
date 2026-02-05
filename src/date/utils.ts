@@ -1,4 +1,4 @@
-import { isString } from '../guards/primitives';
+import { isNonEmptyString, isString } from '../guards/primitives';
 import type { Numeric } from '../types/index';
 import { isValidUTCOffset } from './guards';
 import {
@@ -17,6 +17,8 @@ import type {
 	TimeOnlyFormat,
 	TimeZoneDetails,
 	TimeZoneIdNative,
+	Timestamp,
+	TimestampOptions,
 	UTCOffset,
 } from './types';
 
@@ -56,6 +58,40 @@ export function getTotalMinutes(time: `-${ClockTime}` | ClockTime): number {
  */
 export function getCurrentDateTime(): Date {
 	return new Date();
+}
+
+/**
+ * * Get timestamp in ISO 8601 format.
+ *
+ * @param options Options to control input and output format.
+ *
+ * @remarks
+ * - If the provided value is invalid, the current date and time will be used.
+ * - Use `format: 'local'` to include the current system timezone offset.
+ *
+ * @returns Timestamp string in ISO 8601 format.
+ */
+export function getTimestamp(options?: TimestampOptions): Timestamp {
+	const { value = new Date(), format = 'utc' } = options ?? {};
+
+	let date =
+		value instanceof Date ? value : (
+			new Date(isNonEmptyString(value) ? value.replace(/['"]/g, '') : value || Date.now())
+		);
+
+	if (isNaN(date.getTime())) {
+		date = new Date();
+	}
+
+	const isoString = date.toISOString() as Timestamp;
+
+	if (format === 'utc') {
+		return isoString as Timestamp;
+	}
+
+	const offset = formatUTCOffset(-date.getTimezoneOffset()).slice(3);
+
+	return isoString.replace('Z', offset) as Timestamp;
 }
 
 /**
