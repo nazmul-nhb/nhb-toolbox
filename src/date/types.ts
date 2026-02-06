@@ -404,6 +404,15 @@ export type ChronosMethods = $InstanceMethods | $StaticMethods | $PluginMethods;
  */
 export type ChronosInput = number | string | Date | Chronos;
 
+export interface ChronosProperties {
+	origin: LooseLiteral<ChronosMethods>;
+	native: Date | string;
+	utcOffset: UTCOffset;
+	timeZoneName: LooseLiteral<TimeZoneName>;
+	timeZoneId: TimeZoneId;
+	$tzTracker?: $TimeZoneIdentifier | TimeZone | UTCOffset;
+}
+
 /** Represents key of `ChronosStatics` (each static method and property) */
 export type ChronosStaticKey = keyof ChronosStatics;
 

@@ -1,3 +1,6 @@
+import { isDate, isObjectWithKeys } from '../guards/non-primitives';
+import { isString } from '../guards/primitives';
+import { isDateString } from '../guards/specials';
 import type { Enumerate, NumberRange } from '../number/types';
 import { getOrdinal } from '../number/utilities';
 import type { Maybe } from '../types/index';
@@ -10,13 +13,15 @@ import {
 	MS_PER_DAY,
 	SORTED_TIME_FORMATS,
 } from './constants';
-import { isLeapYear } from './guards';
+import { isLeapYear, isValidUTCOffset } from './guards';
 import type {
 	$BnEn,
 	$GMTOffset,
 	$TimeZoneIdentifier,
 	BanglaSeasonName,
 	BnCalendarVariant,
+	ChronosProperties,
+	DateArgs,
 	FormatToken,
 	TimeZoneNameNative,
 	UTCOffset,
@@ -229,4 +234,38 @@ export function _padZero(value: number, length = 2) {
  */
 export function _padShunno(str: string, length = 2) {
 	return str.padStart(length, '০');
+}
+
+/**
+ * Convert a string, number, or `Date` object to a `Date` object.
+ * - If the input is already a `Date`, it is returned as is.
+ * - If it's a string, it is parsed into a `Date`.
+ * - If it's a number or undefined, it is treated as a timestamp and converted to a `Date`.
+ * @param value The date input to convert, which can be a `Date` object, a date string, a timestamp number, or undefined (which defaults to the current date and time).
+ * @returns A `Date` object representing the input date.
+ */
+export function _dateArgsToDate(value: Maybe<DateArgs>): Date {
+	return isDate(value) ? value : (
+			new Date(isString(value) ? value.replace(/['"]/g, '') : (value ?? Date.now()))
+		);
+}
+
+/**
+ * Type guard to check if a value has the necessary properties to be reconstructed into a `Chronos` instance.
+ * - Validates that the value is an object with the required keys and that the `native` property is a valid date or date string, and that the `utcOffset` is valid.
+ * @param value The value to check for reconstructability.
+ * @returns `true` if the value has the required properties for reconstruction, otherwise `false`.
+ */
+export function _hasChronosProperties(value: unknown): value is ChronosProperties {
+	return (
+		isObjectWithKeys(value, [
+			'origin',
+			'native',
+			'utcOffset',
+			'timeZoneName',
+			'timeZoneId',
+		]) &&
+		(isDate(value.native) || isDateString(value.native)) &&
+		isValidUTCOffset(value.utcOffset)
+	);
 }

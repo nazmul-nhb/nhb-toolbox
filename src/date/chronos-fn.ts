@@ -135,6 +135,8 @@ function _isChronosStaticKey(prop: string): prop is ChronosStaticKey {
  * chronos.isValidDate(value: unknown): boolean;
  * chronos.isDateString(value: unknown): boolean;
  * chronos.isValidChronos(value: unknown): boolean;
+ * chronos.isReconstructable(value: unknown): value is ChronosProperties;
+ * chronos.reconstruct(value: ChronosProperties): Chronos;
  * chronos.formatTimePart(time: string, format?: TimeParts): string;
  * chronos.getDatesForDay(day: WeekDay, options?: WeekdayOptions): string[];
  * chronos.use(plugin: ChronosPlugin): void;

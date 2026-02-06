@@ -4,6 +4,12 @@
 
 All notable changes to the package will be documented here.
 
+## [4.28.70] - 2026-02-06
+
+- **Added** *new static methods*: `isReconstructable` and `reconstruct` to `Chronos` class for *validating* and *reconstructing* instances from plain objects.
+- **Added** `getTimestamp` utility for generating ISO 8601 timestamps with options to control input date and output format.
+- **Improved** `UUID v4/v8` generation to prefer `crypto.getRandomValues` with a `Math.random` fallback when unavailable.
+
 ## [4.28.66] - 2026-01-23
 
 - **Refined** `TSDoc` to *improve* **IDE IntelliSense** for `Chronos` constructor.

@@ -1,7 +1,8 @@
-import { isNonEmptyString, isNumber, isString } from '../guards/primitives';
+import { isObject } from '../guards/non-primitives';
 import type { Numeric } from '../types/index';
 import { isValidUTCOffset } from './guards';
 import {
+	_dateArgsToDate,
 	_formatDate,
 	_gmtToUtcOffset,
 	_normalizeOffset,
@@ -56,79 +57,12 @@ export function getTotalMinutes(time: `-${ClockTime}` | ClockTime): number {
  * * Returns the current date and time as `Date` object.
  * - All the methods and properties of `new Date()` are accessible.
  *
+ * @remarks This function is a simple wrapper around `new Date()` and is provided for consistency and potential future enhancements.
+ *
  * @returns The current date and time as a `Date` object.
  */
 export function getCurrentDateTime(): Date {
 	return new Date();
-}
-
-/**
- * * Get timestamp in ISO 8601 format.
- *
- * @param value Options to control input and output format.
- *
- * @remarks If the provided value is invalid, the current date and time will be used.
- *
- * @returns Timestamp string in ISO 8601 format.
- */
-export function getTimestamp(): Timestamp;
-
-/**
- * * Get timestamp in ISO 8601 format.
- *
- * @param value Options to control input and output format.
- *
- * @remarks
- * - If the provided value is invalid, the current date and time will be used.
- * - Use `format: 'local'` to include the current system timezone offset.
- *
- * @returns Timestamp string in ISO 8601 format.
- */
-export function getTimestamp(value: DateArgs, format?: ISODateFormat): Timestamp;
-
-/**
- * * Get timestamp in ISO 8601 format.
- *
- * @param options Options to control input and output format.
- *
- * @remarks
- * - If the provided value is invalid, the current date and time will be used.
- * - Use `format: 'local'` to include the current system timezone offset.
- *
- * @returns Timestamp string in ISO 8601 format.
- */
-export function getTimestamp(options?: TimestampOptions): Timestamp;
-
-export function getTimestamp(options?: DateArgs | TimestampOptions, isoFormat?: ISODateFormat) {
-	let value: DateArgs | undefined;
-	let format: ISODateFormat = 'utc';
-
-	if (isNonEmptyString(options) || options instanceof Date || isNumber(options)) {
-		value = options;
-		format = isoFormat || 'utc';
-	} else if (options) {
-		value = options.value;
-		format = options.format || 'utc';
-	}
-
-	let date =
-		value instanceof Date ? value : (
-			new Date(isNonEmptyString(value) ? value.replace(/['"]/g, '') : value || Date.now())
-		);
-
-	if (isNaN(date.getTime())) {
-		date = new Date();
-	}
-
-	const isoString = date.toISOString() as Timestamp;
-
-	if (format === 'utc') {
-		return isoString as Timestamp;
-	}
-
-	const offset = formatUTCOffset(-date.getTimezoneOffset()).slice(3);
-
-	return isoString.replace('Z', offset) as Timestamp;
 }
 
 /**
@@ -251,7 +185,7 @@ export function getTimeZoneIds(offset: UTCOffset): TimeZoneIdNative[] {
  *
  * @remarks
  * - If no date is provided, the current date and time will be used.
- * - If the provided date is invalid, the function will return `"Invalid Date!"`.
+ * - If the provided date is invalid, the function will return `'Invalid Date!'`.
  * - The default format is `'dd, mmm DD, YYYY HH:mm:ss'` (e.g., `'Sun, Apr 06, 2025 16:11:55'`).
  * - By default, local time is used; set `useUTC` to `true` to format in UTC.
  * - The format string supports various tokens for date and time components, as well as literal text enclosed in square brackets.
@@ -267,10 +201,7 @@ export function formatDate(options?: DateFormatOptions): string {
 		useUTC = false,
 	} = options ?? {};
 
-	const $date =
-		date instanceof Date ? date : (
-			new Date(isString(date) ? date.replace(/['"]/g, '') : date)
-		);
+	const $date = _dateArgsToDate(date);
 
 	if (isNaN($date.getTime())) {
 		return 'Invalid Date!';
@@ -319,4 +250,84 @@ export function formatTimePart(time: string, format?: TimeOnlyFormat): string {
 	const timeWithDate = `${formatDate({ format: 'YYYY-MM-DD' })}T${_normalizeOffset(time)}`;
 
 	return formatDate({ date: timeWithDate, format: format || 'hh:mm:ss a' });
+}
+
+/**
+ * * Get timestamp in ISO 8601 format.
+ *
+ * @param value - Date value to convert to timestamp. Supported formats include:
+ * - `Date` object → e.g., `new Date()`
+ * - Date string → e.g., `'2025-04-06'`, `'2025-04-06 16:11:55'`, `'April 6, 2025 16:11:55'` etc.
+ * - Timestamp number → e.g., `1712748715000`
+ *
+ * @remarks If the provided {@link value} is invalid, the current date and time will be used.
+ *
+ * @returns Timestamp string in ISO 8601 format.
+ */
+export function getTimestamp(): Timestamp;
+
+/**
+ * * Get timestamp in ISO 8601 format.
+ *
+ * @param value - Date value to convert to timestamp. Supported formats include:
+ * - `Date` object → e.g., `new Date()`
+ * - Date string → e.g., `'2025-04-06'`, `'2025-04-06 16:11:55'`, `'April 6, 2025 16:11:55'` etc.
+ * - Timestamp number → e.g., `1712748715000`
+ * @param format - Format of the output timestamp.
+ * - Use `format: 'local'` to include the current system timezone offset.
+ * - Default is `'utc'` which returns timestamp in UTC format (ending with 'Z').
+ *
+ * @remarks If the provided {@link value} is invalid, the current date and time will be used.
+ *
+ * @returns Timestamp string in ISO 8601 format.
+ */
+export function getTimestamp(value: DateArgs, format?: ISODateFormat): Timestamp;
+
+/**
+ * * Get timestamp in ISO 8601 format.
+ *
+ * @param options Options to control date input and output format.
+ *
+ * @remarks
+ * - If the provided {@link TimestampOptions.value value} is invalid, the current date and time will be used.
+ * - Use `format: 'local'` to include the current system timezone offset.
+ *
+ * @returns Timestamp string in ISO 8601 format.
+ */
+export function getTimestamp(options?: TimestampOptions): Timestamp;
+
+/** Get timestamp in ISO 8601 format. */
+export function getTimestamp(args?: DateArgs | TimestampOptions, format?: ISODateFormat) {
+	let $value: DateArgs;
+	let $format: ISODateFormat;
+
+	const _isTsOptions = (opt: unknown): opt is TimestampOptions => {
+		return isObject(opt) && ('value' in opt || 'format' in opt);
+	};
+
+	if (_isTsOptions(args)) {
+		$value = args.value || new Date();
+		$format = args.format || 'utc';
+	} else {
+		$value = args || new Date();
+		$format = format || 'utc';
+	}
+
+	let date = _dateArgsToDate($value);
+
+	if (isNaN(date.getTime())) {
+		date = new Date();
+	}
+
+	if ($format === 'local') {
+		const offsetMins = date.getTimezoneOffset();
+
+		const localDate = new Date(date.getTime() - offsetMins * 60000);
+
+		const offset = formatUTCOffset(-offsetMins).slice(3);
+
+		return localDate.toISOString().replace('Z', offset) as Timestamp;
+	}
+
+	return date.toISOString() as Timestamp;
 }

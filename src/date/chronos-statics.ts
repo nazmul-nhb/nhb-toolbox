@@ -2,6 +2,7 @@ import type { Chronos } from './Chronos';
 import type {
 	ChronosInput,
 	ChronosPlugin,
+	ChronosProperties,
 	ChronosWithOptions,
 	DateRangeOptions,
 	FormatOptions,
@@ -345,4 +346,23 @@ export interface ChronosStatics {
 	 * @returns `true` if the value is an instance of `Chronos`, otherwise `false`.
 	 */
 	isValidChronos(value: unknown): value is Chronos;
+
+	/**
+	 * * Checks if the given value has the necessary properties to be reconstructed into a `Chronos` instance.
+	 * - Can be used for validating objects that may represent serialized `Chronos` data.
+	 * @param value - The value to check.
+	 * @returns `true` if the value has the required properties for reconstruction, otherwise `false`.
+	 */
+	isReconstructable(value: unknown): value is ChronosProperties;
+
+	/**
+	 * * Reconstructs a `Chronos` instance from an object containing the necessary properties.
+	 * - The input object must have the properties defined in {@link ChronosProperties} interface.
+	 * - If the input is not reconstructable, an error is thrown.
+	 *
+	 * @param value - An object containing the properties required to reconstruct a `Chronos` instance.
+	 * @returns A new `Chronos` instance created from the provided properties.
+	 * @throws `TypeError` if the input value does not have the necessary properties for reconstruction.
+	 */
+	reconstruct(value: ChronosProperties): Chronos;
 }

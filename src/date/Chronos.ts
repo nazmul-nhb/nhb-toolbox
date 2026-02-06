@@ -4,7 +4,13 @@ import type { Enumerate, NumberRange } from '../number/types';
 import type { LooseLiteral, TupleOf } from '../utils/types';
 import { DAYS, INTERNALS, MONTHS, MS_PER_DAY } from './constants';
 import { isLeapYear } from './guards';
-import { _formatDate, _normalizeOffset, _resolveNativeTzName } from './helpers';
+import {
+	_dateArgsToDate,
+	_formatDate,
+	_hasChronosProperties,
+	_normalizeOffset,
+	_resolveNativeTzName,
+} from './helpers';
 import type {
 	$DateUnit,
 	$NativeTzNameOrId,
@@ -16,6 +22,7 @@ import type {
 	ChronosMethods,
 	ChronosObject,
 	ChronosPlugin,
+	ChronosProperties,
 	ChronosWithOptions,
 	DateRangeOptions,
 	DatesInRangeOptions,
@@ -389,10 +396,7 @@ export class Chronos {
 	 * @returns Instance of native `Date` object.
 	 */
 	#toNewDate(value?: ChronosInput): Date {
-		const date =
-			value instanceof Chronos ?
-				value.toDate()
-			:	new Date(isString(value) ? value.replace(/['"]/g, '') : (value ?? Date.now()));
+		const date = value instanceof Chronos ? value.toDate() : _dateArgsToDate(value);
 
 		// Check if the date is invalid
 		if (isNaN(date.getTime())) {
@@ -1974,6 +1978,41 @@ export class Chronos {
 	 */
 	static isValidChronos(value: unknown): value is Chronos {
 		return value instanceof Chronos;
+	}
+
+	/**
+	 * @static Checks if the given value has the necessary properties to be reconstructed into a `Chronos` instance.
+	 * - Can be used for validating objects that may represent serialized `Chronos` data.
+	 * @param value - The value to check.
+	 * @returns `true` if the value has the required properties for reconstruction, otherwise `false`.
+	 */
+	static isReconstructable(value: unknown): value is ChronosProperties {
+		return _hasChronosProperties(value);
+	}
+
+	/**
+	 * @static Reconstructs a `Chronos` instance from an object containing the necessary properties.
+	 * - The input object must have the properties defined in {@link ChronosProperties} interface.
+	 * - If the input is not reconstructable, an error is thrown.
+	 *
+	 * @param value - An object containing the properties required to reconstruct a `Chronos` instance.
+	 * @returns A new `Chronos` instance created from the provided properties.
+	 * @throws `TypeError` if the input value does not have the necessary properties for reconstruction.
+	 */
+	static reconstruct(value: ChronosProperties): Chronos {
+		if (!_hasChronosProperties(value)) {
+			throw new TypeError('Invalid input for reconstruction!');
+		}
+
+		const { native, origin, utcOffset, timeZoneName, timeZoneId, $tzTracker } = value;
+
+		return new Chronos(native).#withOrigin(
+			origin as ChronosMethods,
+			utcOffset,
+			timeZoneName,
+			timeZoneId,
+			$tzTracker
+		);
 	}
 
 	/**
