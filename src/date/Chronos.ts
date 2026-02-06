@@ -2006,7 +2006,16 @@ export class Chronos {
 
 		const { native, origin, utcOffset, timeZoneName, timeZoneId, $tzTracker } = value;
 
-		return new Chronos(native).#withOrigin(
+		const offsetMins = extractMinutesFromUTC(utcOffset);
+
+		const instance = new Chronos(native);
+
+		const diffMins = instance.getTimeZoneOffsetMinutes() - offsetMins;
+
+		const target =
+			instance.utcOffset === utcOffset ? instance : instance.add(-diffMins, 'minute');
+
+		return target.#withOrigin(
 			origin as ChronosMethods,
 			utcOffset,
 			timeZoneName,

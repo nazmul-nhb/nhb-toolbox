@@ -4,6 +4,10 @@
 
 All notable changes to the package will be documented here.
 
+## [4.28.71] - 2026-02-06
+
+- **Fixed** an *issue* in `reconstruct` method of `Chronos` class where the *internal state* of the reconstructed instance was not properly when the timezone offset is different from the local system's timezone offset.
+
 ## [4.28.70] - 2026-02-06
 
 - **Added** *new static methods*: `isReconstructable` and `reconstruct` to `Chronos` class for *validating* and *reconstructing* instances from plain objects.

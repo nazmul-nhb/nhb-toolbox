@@ -404,12 +404,19 @@ export type ChronosMethods = $InstanceMethods | $StaticMethods | $PluginMethods;
  */
 export type ChronosInput = number | string | Date | Chronos;
 
+/** Properties required to reconstruct a `Chronos` instance. */
 export interface ChronosProperties {
+	/** The method or plugin name from which the instance was created. */
 	origin: LooseLiteral<ChronosMethods>;
+	/** The native date value, either as a `Date` object or a date string. */
 	native: Date | string;
+	/** The UTC offset in `UTC±HH:mm` format. */
 	utcOffset: UTCOffset;
+	/** The full time zone name (e.g., `"Pacific Standard Time"`). */
 	timeZoneName: LooseLiteral<TimeZoneName>;
+	/** The time zone identifier(s) associated with the instance (e.g., `"Asia/Dhaka"`). */
 	timeZoneId: TimeZoneId;
+	/** Optional tracker to identify the instance created by `timeZone` method. */
 	$tzTracker?: $TimeZoneIdentifier | TimeZone | UTCOffset;
 }
 

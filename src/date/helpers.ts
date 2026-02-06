@@ -1,5 +1,5 @@
-import { isDate, isObjectWithKeys } from '../guards/non-primitives';
-import { isString } from '../guards/primitives';
+import { isDate, isObjectWithKeys, isValidArray } from '../guards/non-primitives';
+import { isNonEmptyString, isString } from '../guards/primitives';
 import { isDateString } from '../guards/specials';
 import type { Enumerate, NumberRange } from '../number/types';
 import { getOrdinal } from '../number/utilities';
@@ -265,7 +265,10 @@ export function _hasChronosProperties(value: unknown): value is ChronosPropertie
 			'timeZoneName',
 			'timeZoneId',
 		]) &&
+		isNonEmptyString(value.origin) &&
 		(isDate(value.native) || isDateString(value.native)) &&
-		isValidUTCOffset(value.utcOffset)
+		isValidUTCOffset(value.utcOffset) &&
+		isNonEmptyString(value.timeZoneName) &&
+		(isNonEmptyString(value.timeZoneId) || isValidArray<string>(value.timeZoneId))
 	);
 }
