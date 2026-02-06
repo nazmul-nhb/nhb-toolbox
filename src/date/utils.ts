@@ -253,14 +253,7 @@ export function formatTimePart(time: string, format?: TimeOnlyFormat): string {
 }
 
 /**
- * * Get timestamp in ISO 8601 format.
- *
- * @param value - Date value to convert to timestamp. Supported formats include:
- * - `Date` object → e.g., `new Date()`
- * - Date string → e.g., `'2025-04-06'`, `'2025-04-06 16:11:55'`, `'April 6, 2025 16:11:55'` etc.
- * - Timestamp number → e.g., `1712748715000`
- *
- * @remarks If the provided {@link value} is invalid, the current date and time will be used.
+ * * Get timestamp in ISO 8601 format for the current date and time.
  *
  * @returns Timestamp string in ISO 8601 format.
  */
@@ -290,11 +283,11 @@ export function getTimestamp(value: DateArgs, format?: ISODateFormat): Timestamp
  *
  * @remarks
  * - If the provided {@link TimestampOptions.value value} is invalid, the current date and time will be used.
- * - Use `format: 'local'` to include the current system timezone offset.
+ * - Use {@link TimestampOptions.format format}: `'local'` to include the current system time & timezone offset.
  *
  * @returns Timestamp string in ISO 8601 format.
  */
-export function getTimestamp(options?: TimestampOptions): Timestamp;
+export function getTimestamp(options: TimestampOptions): Timestamp;
 
 /** Get timestamp in ISO 8601 format. */
 export function getTimestamp(args?: DateArgs | TimestampOptions, format?: ISODateFormat) {

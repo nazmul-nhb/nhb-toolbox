@@ -4,6 +4,10 @@
 
 All notable changes to the package will be documented here.
 
+## [4.28.72] - 2026-02-06
+
+- **Updated** *tsdoc* for the overload signatures of `getTimestamp` utility to clarify the behavior.
+
 ## [4.28.71] - 2026-02-06
 
 - **Fixed** an *issue* in `reconstruct` method of `Chronos` class where the *internal state* of the reconstructed instance was not properly when the timezone offset is different from the local system's timezone offset.
