@@ -473,8 +473,8 @@ export type UTCOffset = `UTC${$UTCOffset}`;
 /** GMT offset in `GMT±HH:mm` or simply `GMT` format */
 export type $GMTOffset = `GMT${$UTCOffset}` | 'GMT';
 
-/** Timestamp string type in ISO 8601 format */
-export type Timestamp =
+/** ISO timestamp string type in ISO 8601 format */
+export type ISOTimeString =
 	`${number}-${number}-${number}T${number}:${number}:${number}.${number}${'Z' | $UTCOffset}`;
 
 /** Valid argument type accepted by `Date` constructor */

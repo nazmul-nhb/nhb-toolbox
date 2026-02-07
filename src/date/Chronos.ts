@@ -26,6 +26,7 @@ import type {
 	DateRangeOptions,
 	DateTimeFormatOptions,
 	FormatOptions,
+	ISOTimeString,
 	LocalesArguments,
 	Milliseconds,
 	MonthName,
@@ -611,13 +612,13 @@ export class Chronos {
 	}
 
 	/** @instance Returns ISO time string in appropriate time zone with offset. */
-	toLocalISOString(): string {
-		return this.#format('YYYY-MM-DDTHH:mm:ss.mssZZ');
+	toLocalISOString(): ISOTimeString {
+		return this.#format('YYYY-MM-DDTHH:mm:ss.mssZZ') as ISOTimeString;
 	}
 
 	/** @instance Returns a date as a string value in ISO format (UTC). */
-	toISOString(): string {
-		return this.toDate().toISOString();
+	toISOString(): ISOTimeString {
+		return this.toDate().toISOString() as ISOTimeString;
 	}
 
 	/**

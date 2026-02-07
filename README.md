@@ -515,31 +515,31 @@ debounceAction(fetchResults, 300);
 
 ## 🔗 Related Packages
 
-<div title="React Hooks: nhb-hooks" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
   <a target="_blank" href="https://www.npmjs.com/package/nhb-hooks">
     <img src="https://img.shields.io/badge/React_Hooks-nhb--hooks-blue" alt="nhb-hooks" />
   </a>
 </div>
 
-<div title="IndexedDB ORM: locality-idb" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
   <a target="_blank" href="https://www.npmjs.com/package/locality-idb">
     <img src="https://img.shields.io/badge/IndexedDB_ORM-locality--idb-darkviolet" alt="locality-idb" />
   </a>
 </div>
 
-<div title="Development Scripts: nhb-scripts" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
   <a target="_blank" href="https://www.npmjs.com/package/nhb-scripts">
     <img src="https://img.shields.io/badge/Development_Scripts-nhb--scripts-red" alt="nhb-scripts" />
   </a>
 </div>
 
-<div title="Express Server Scaffolder: nhb-express" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
   <a target="_blank" href="https://www.npmjs.com/package/nhb-express">
     <img src="https://img.shields.io/badge/Express_Server_Scaffolder-nhb--express-orange" alt="nhb-express" />
   </a>
 </div>
 
-<div title="Anagram Generator: nhb-anagram-generator" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
   <a target="_blank" href="https://www.npmjs.com/package/nhb-anagram-generator">
     <img src="https://img.shields.io/badge/Anagram_Generator-nhb--anagram--generator-teal" alt="nhb-anagram-generator" />
   </a>

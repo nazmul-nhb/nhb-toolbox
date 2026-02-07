@@ -2,19 +2,19 @@ import { isValidArray } from '../../guards/non-primitives';
 import { isNumber } from '../../guards/primitives';
 import { INTERNALS } from '../Chronos';
 import { DAYS, MS_PER_DAY } from '../constants';
-import type { $Chronos, RangeWithDates, RelativeDateRange } from '../types';
+import type { $Chronos, ISOTimeString, RangeWithDates, RelativeDateRange } from '../types';
 
 declare module '../Chronos' {
 	interface Chronos {
 		/**
-		 * @instance Returns an array of ISO date strings within a specific date range.
+		 * @instance Returns an array of ISO date-time strings within a specific date range.
 		 *
 		 * - If the input is a fixed range (`from` and `to`), it includes all dates between them.
 		 * - If the input is a relative range (`span` and `unit`), it starts from current date and goes forward.
 		 * - If `skipDays` are provided, matching weekdays are excluded from the result.
 		 *
 		 * @param options - Configuration for the date range. Accepts a fixed (`RangeWithDates`) format.
-		 * @returns Array of ISO date strings in either local or UTC format, excluding any skipped weekdays if specified.
+		 * @returns Array of ISO date-time strings in either local or UTC format, excluding any skipped weekdays if specified.
 		 *
 		 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/calculation#getdatesinrange docs} for details.
 		 *
@@ -37,17 +37,17 @@ declare module '../Chronos' {
 		 * new Chronos().getDatesInRange({ span: 2, unit: 'day', format: 'utc' });
 		 * // → ['2025-06-16T00:00:00.000Z', '2025-06-17T00:00:00.000Z']
 		 */
-		getDatesInRange(options?: RangeWithDates): string[];
+		getDatesInRange(options?: RangeWithDates): ISOTimeString[];
 
 		/**
-		 * @instance Returns an array of ISO date strings within a specific date range.
+		 * @instance Returns an array of ISO date-time strings within a specific date range.
 		 *
 		 * - If the input is a fixed range (`from` and `to`), it includes all dates between them.
 		 * - If the input is a relative range (`span` and `unit`), it starts from current date and goes forward.
 		 * - If `skipDays` are provided, matching weekdays are excluded from the result.
 		 *
 		 * @param options - Configuration for the date range. Accepts a relative (`RelativeDateRange`) format.
-		 * @returns Array of ISO date strings in either local or UTC format, excluding any skipped weekdays if specified.
+		 * @returns Array of ISO date-time strings in either local or UTC format, excluding any skipped weekdays if specified.
 		 *
 		 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/calculation#getdatesinrange docs} for details.
 		 *
@@ -66,7 +66,7 @@ declare module '../Chronos' {
 		 * new Chronos().getDatesInRange({ from: '2025-01-01', to: '2025-01-03' });
 		 * // → ['2025-01-01T00:00:00+06:00', '2025-01-02T00:00:00+06:00', '2025-01-03T00:00:00+06:00']
 		 */
-		getDatesInRange(options?: RelativeDateRange): string[];
+		getDatesInRange(options?: RelativeDateRange): ISOTimeString[];
 	}
 }
 
@@ -104,7 +104,7 @@ export const dateRangePlugin = ($Chronos: $Chronos): void => {
 			skippedDays.map((day) => (isNumber(day) ? day : DAYS.indexOf(day)))
 		);
 
-		const dates: string[] = [];
+		const dates: ISOTimeString[] = [];
 
 		const startTime = $Date(startDate).getTime();
 		const endTime = $Date(endDate).getTime();

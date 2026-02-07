@@ -17,11 +17,11 @@ import type {
 	DateFormatOptions,
 	HourMinutes,
 	ISODateFormat,
+	ISOTimeString,
 	TimeOnlyFormat,
+	TimestampOptions,
 	TimeZoneDetails,
 	TimeZoneIdNative,
-	Timestamp,
-	TimestampOptions,
 	UTCOffset,
 } from './types';
 
@@ -257,7 +257,7 @@ export function formatTimePart(time: string, format?: TimeOnlyFormat): string {
  *
  * @returns Timestamp string in ISO 8601 format.
  */
-export function getTimestamp(): Timestamp;
+export function getTimestamp(): ISOTimeString;
 
 /**
  * * Get timestamp in ISO 8601 format.
@@ -274,7 +274,7 @@ export function getTimestamp(): Timestamp;
  *
  * @returns Timestamp string in ISO 8601 format.
  */
-export function getTimestamp(value: DateArgs, format?: ISODateFormat): Timestamp;
+export function getTimestamp(value: DateArgs, format?: ISODateFormat): ISOTimeString;
 
 /**
  * * Get timestamp in ISO 8601 format.
@@ -287,7 +287,7 @@ export function getTimestamp(value: DateArgs, format?: ISODateFormat): Timestamp
  *
  * @returns Timestamp string in ISO 8601 format.
  */
-export function getTimestamp(options: TimestampOptions): Timestamp;
+export function getTimestamp(options: TimestampOptions): ISOTimeString;
 
 /** Get timestamp in ISO 8601 format. */
 export function getTimestamp(args?: DateArgs | TimestampOptions, format?: ISODateFormat) {
@@ -319,8 +319,8 @@ export function getTimestamp(args?: DateArgs | TimestampOptions, format?: ISODat
 
 		const offset = formatUTCOffset(-offsetMins).slice(3);
 
-		return localDate.toISOString().replace('Z', offset) as Timestamp;
+		return localDate.toISOString().replace('Z', offset) as ISOTimeString;
 	}
 
-	return date.toISOString() as Timestamp;
+	return date.toISOString() as ISOTimeString;
 }
