@@ -1877,12 +1877,11 @@ export class Chronos {
 
 		const offsetMins = extractMinutesFromUTC(utcOffset);
 
-		const instance = new Chronos(native);
+		const chr = new Chronos(native);
 
-		const diffMins = instance.getTimeZoneOffsetMinutes() - offsetMins;
+		const diffMins = chr.getTimeZoneOffsetMinutes() - offsetMins;
 
-		const target =
-			instance.utcOffset === utcOffset ? instance : instance.add(-diffMins, 'minute');
+		const target = chr.utcOffset === utcOffset ? chr : chr.add(-diffMins, 'minute');
 
 		return target.#withOrigin(
 			origin as ChronosMethods,

@@ -4,6 +4,13 @@
 
 All notable changes to the package will be documented here.
 
+## [4.28.80] - 2026-02-07
+
+- **Moved** `getDatesInRange` method to `Chronos` *plugin system*, usable via `dateRangePlugin`.
+- **Updated** `Timestamp` type to `ISOTimeString` and removed *branding* for better clarity and consistency across the codebase.
+  - `Chronos` methods `toISOString()` and `toLocalISOString()`; and `getTimestamp` utility now return `ISOTimeString` type.
+  - `Chronos` method `getDatesInRange(...)` now return `ISOTimeString[]` instead of `string[]`.
+
 ## [4.28.72] - 2026-02-06
 
 - **Updated** *tsdoc* for the overload signatures of `getTimestamp` utility to clarify the behavior.
