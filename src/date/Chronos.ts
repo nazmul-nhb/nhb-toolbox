@@ -1,4 +1,3 @@
-import { isValidArray } from '../guards/non-primitives';
 import { isNumber, isString } from '../guards/primitives';
 import type { Enumerate, NumberRange } from '../number/types';
 import type { LooseLiteral, TupleOf } from '../utils/types';
@@ -25,15 +24,12 @@ import type {
 	ChronosProperties,
 	ChronosWithOptions,
 	DateRangeOptions,
-	DatesInRangeOptions,
 	DateTimeFormatOptions,
 	FormatOptions,
 	LocalesArguments,
 	Milliseconds,
 	MonthName,
 	Quarter,
-	RangeWithDates,
-	RelativeDateRange,
 	RelativeRangeOptions,
 	StrictFormat,
 	TimeOnlyFormat,
@@ -1385,134 +1381,6 @@ export class Chronos {
 	 */
 	monthName(index?: Enumerate<12>): MonthName {
 		return MONTHS[index ?? this.month];
-	}
-
-	/**
-	 * @instance Returns an array of ISO date strings within a specific date range.
-	 *
-	 * - If the input is a fixed range (`from` and `to`), it includes all dates between them.
-	 * - If the input is a relative range (`span` and `unit`), it starts from current date and goes forward.
-	 * - If `skipDays` are provided, matching weekdays are excluded from the result.
-	 *
-	 * @param options - Configuration for the date range. Accepts a fixed (`RangeWithDates`) format.
-	 * @returns Array of ISO date strings in either local or UTC format, excluding any skipped weekdays if specified.
-	 *
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/calculation#getdatesinrange docs} for details.
-	 *
-	 * @remarks
-	 * - When using `Chronos` instances for `from` and/or `to`, ensure both are created in the **same time zone** to avoid mismatched boundaries.
-	 * - Mixing zones may shift the interpreted start or end by several hours, which can cause the range to include or exclude incorrect weekdays.
-	 *
-	 * @example
-	 * // Using a fixed date range:
-	 * new Chronos().getDatesInRange({ from: '2025-01-01', to: '2025-01-03' });
-	 * // → ['2025-01-01T00:00:00+06:00', '2025-01-02T00:00:00+06:00', '2025-01-03T00:00:00+06:00']
-	 *
-	 * @example
-	 * // Using a relative date range with skipDays:
-	 * new Chronos().getDatesInRange({ span: 7, unit: 'day', skipDays: ['Saturday', 'Sunday'] });
-	 * // → Array of 7 dates excluding weekends
-	 *
-	 * @example
-	 * // UTC format:
-	 * new Chronos().getDatesInRange({ span: 2, unit: 'day', format: 'utc' });
-	 * // → ['2025-06-16T00:00:00.000Z', '2025-06-17T00:00:00.000Z']
-	 */
-	getDatesInRange(options?: RangeWithDates): string[];
-
-	/**
-	 * @instance Returns an array of ISO date strings within a specific date range.
-	 *
-	 * - If the input is a fixed range (`from` and `to`), it includes all dates between them.
-	 * - If the input is a relative range (`span` and `unit`), it starts from current date and goes forward.
-	 * - If `skipDays` are provided, matching weekdays are excluded from the result.
-	 *
-	 * @param options - Configuration for the date range. Accepts a relative (`RelativeDateRange`) format.
-	 * @returns Array of ISO date strings in either local or UTC format, excluding any skipped weekdays if specified.
-	 *
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/calculation#getdatesinrange docs} for details.
-	 *
-	 * @example
-	 * // Using a relative date range with skipDays:
-	 * new Chronos().getDatesInRange({ span: 7, unit: 'day', skipDays: ['Saturday', 'Sunday'] });
-	 * // → Array of 7 dates excluding weekends
-	 *
-	 * @example
-	 * // UTC format:
-	 * new Chronos().getDatesInRange({ span: 2, unit: 'day', format: 'utc' });
-	 * // → ['2025-06-16T00:00:00.000Z', '2025-06-17T00:00:00.000Z']
-	 *
-	 * @example
-	 * // Using a fixed date range:
-	 * new Chronos().getDatesInRange({ from: '2025-01-01', to: '2025-01-03' });
-	 * // → ['2025-01-01T00:00:00+06:00', '2025-01-02T00:00:00+06:00', '2025-01-03T00:00:00+06:00']
-	 */
-	getDatesInRange(options?: RelativeDateRange): string[];
-
-	/**
-	 * @instance Generates a list of ISO date strings within a specified range.
-	 *
-	 * - Accepts either an explicit date range (`from` and `to`) or a relative range (`span` and `unit`).
-	 * - If `skipDays` are provided, matching weekdays are excluded from the result.
-	 *
-	 * @param options - Optional configuration object defining either a fixed or relative date range.
-	 * @returns An array of ISO date strings in local or UTC format, depending on the `format` option.
-	 */
-	getDatesInRange(options?: DatesInRangeOptions): string[] {
-		let startDate = this.clone(),
-			endDate = this.addWeeks(4);
-
-		const { format = 'local', onlyDays, skipDays, roundDate = false } = options ?? {};
-
-		if (options) {
-			if ('from' in options || 'to' in options) {
-				if (options?.from) startDate = Chronos.#cast(options.from);
-				if (options?.to) endDate = Chronos.#cast(options.to);
-			} else if ('span' in options || 'unit' in options) {
-				const { span = 4, unit = 'week' } = options;
-				endDate = startDate.add(span, unit);
-			}
-		}
-
-		if (roundDate) {
-			startDate = startDate.startOf('day');
-			endDate = endDate.startOf('day');
-		}
-
-		const skipSet = new Set<number>(
-			(isValidArray(onlyDays) ? onlyDays
-			: isValidArray(skipDays) ? skipDays
-			: []
-			).map((day) => (isNumber(day) ? day : DAYS.indexOf(day)))
-		);
-
-		const dates: string[] = [];
-
-		const startTime = startDate.#timestamp;
-		const endTime = endDate.#timestamp;
-		const step = (startTime <= endTime ? 1 : -1) * MS_PER_DAY;
-		const totalDays = Math.floor(Math.abs(endTime - startTime) / MS_PER_DAY);
-
-		for (let i = 0; i <= totalDays; i++) {
-			const ts = startTime + i * step;
-			const wDay = new Date(ts).getDay(); // temporary, just for weekday
-
-			const include = isValidArray(onlyDays) ? skipSet.has(wDay) : !skipSet.has(wDay);
-
-			if (include) {
-				const chr = new Chronos(ts).#withOrigin(
-					'clone',
-					startDate.#offset,
-					startDate.timeZoneName,
-					startDate.timeZoneId,
-					startDate.$tzTracker
-				);
-
-				dates.push(format === 'local' ? chr.toLocalISOString() : chr.toISOString());
-			}
-		}
-
-		return dates;
 	}
 
 	// ! ======= Static Methods ======= //

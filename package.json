@@ -270,6 +270,11 @@
       "import": "./dist/esm/date/plugins/businessPlugin.js",
       "require": "./dist/cjs/date/plugins/businessPlugin.js"
     },
+    "./plugins/dateRangePlugin": {
+      "types": "./dist/dts/date/plugins/dateRangePlugin.d.ts",
+      "import": "./dist/esm/date/plugins/dateRangePlugin.js",
+      "require": "./dist/cjs/date/plugins/dateRangePlugin.js"
+    },
     "./plugins/dayPartPlugin": {
       "types": "./dist/dts/date/plugins/dayPartPlugin.d.ts",
       "import": "./dist/esm/date/plugins/dayPartPlugin.js",
@@ -403,6 +408,9 @@
       ],
       "plugins/businessPlugin": [
         "dist/dts/date/plugins/businessPlugin.d.ts"
+      ],
+      "plugins/dateRangePlugin": [
+        "dist/dts/date/plugins/dateRangePlugin.d.ts"
       ],
       "plugins/dayPartPlugin": [
         "dist/dts/date/plugins/dayPartPlugin.d.ts"
