@@ -1,5 +1,5 @@
 import type { $BnOnes, BanglaDigit, Enumerate, LocaleCode, NumberRange } from '../number/types';
-import type { Branded, Maybe } from '../types/index';
+import type { Maybe } from '../types/index';
 import type { LooseLiteral, RangeTuple, Repeat, Split } from '../utils/types';
 import type { Chronos } from './Chronos';
 import type { ChronosStatics } from './chronos-statics';
@@ -474,7 +474,8 @@ export type UTCOffset = `UTC${$UTCOffset}`;
 export type $GMTOffset = `GMT${$UTCOffset}` | 'GMT';
 
 /** Timestamp string type in ISO 8601 format */
-export type Timestamp = Branded<string, 'Timestamp'>;
+export type Timestamp =
+	`${number}-${number}-${number}T${number}:${number}:${number}.${number}${'Z' | $UTCOffset}`;
 
 /** Valid argument type accepted by `Date` constructor */
 export type DateArgs = string | number | Date;
