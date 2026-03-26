@@ -1,8 +1,15 @@
 {
 	"compilerOptions": {
 		"target": "ES2023",
-		"lib": ["DOM", "ESNext"],
-		"paths": { "*": ["./*"] },
+		"lib": [
+			"DOM",
+			"ESNext"
+		],
+		"paths": {
+			"*": [
+				"./*"
+			]
+		},
 		"rootDir": "./src",
 		"outDir": "./dist",
 		"declaration": false,
@@ -10,7 +17,7 @@
 		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
 		"preserveSymlinks": true,
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"strict": true,
 		"noImplicitAny": true,
 		"useUnknownInCatchVariables": true,
@@ -22,8 +29,19 @@
 		"allowJs": true,
 		"pretty": true,
 		"checkJs": true,
-		"preserveWatchOutput": true
+		"preserveWatchOutput": true,
+		"types": [
+			"node",
+			"jest"
+		]
 	},
-	"include": ["src/**/*.ts", "src/**/*.d.ts"],
-	"exclude": ["node_modules", "**/*.test.ts", "**/__tests__/**/*"]
+	"include": [
+		"src/**/*.ts",
+		"src/**/*.d.ts"
+	],
+	"exclude": [
+		"node_modules",
+		"**/*.test.ts",
+		"**/__tests__/**/*"
+	]
 }
