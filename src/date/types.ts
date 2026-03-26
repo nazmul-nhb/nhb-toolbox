@@ -473,9 +473,13 @@ export type UTCOffset = `UTC${$UTCOffset}`;
 /** GMT offset in `GMT±HH:mm` or simply `GMT` format */
 export type $GMTOffset = `GMT${$UTCOffset}` | 'GMT';
 
+export type $ISOTimeString =
+	`${number}-${number}-${number}T${number}:${number}:${number}.${number}`;
+
+export type ISODateTimeString = `${$ISOTimeString}Z`;
+
 /** ISO timestamp string type in ISO 8601 format */
-export type ISOTimeString =
-	`${number}-${number}-${number}T${number}:${number}:${number}.${number}${'Z' | $UTCOffset}`;
+export type ISOTimeString = `${$ISOTimeString}${'Z' | $UTCOffset}`;
 
 /** Valid argument type accepted by `Date` constructor */
 export type DateArgs = string | number | Date;

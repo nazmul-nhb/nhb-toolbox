@@ -26,6 +26,7 @@ import type {
 	DateRangeOptions,
 	DateTimeFormatOptions,
 	FormatOptions,
+	ISODateTimeString,
 	ISOTimeString,
 	LocalesArguments,
 	Milliseconds,
@@ -617,8 +618,8 @@ export class Chronos {
 	}
 
 	/** @instance Returns a date as a string value in ISO format (UTC). */
-	toISOString(): ISOTimeString {
-		return this.toDate().toISOString() as ISOTimeString;
+	toISOString(): ISODateTimeString {
+		return this.toDate().toISOString() as ISODateTimeString;
 	}
 
 	/**
