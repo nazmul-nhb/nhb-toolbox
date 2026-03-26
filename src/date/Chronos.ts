@@ -492,7 +492,7 @@ export class Chronos {
 	 */
 	#removeUTCFromISO(local = true): string {
 		const search = /\.\d+(Z|[+-]\d{2}:\d{2})?$/;
-		console.info();
+
 		return local
 			? this.toLocalISOString().replace(search, '')
 			: this.toISOString().replace(search, '');

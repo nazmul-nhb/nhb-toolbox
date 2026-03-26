@@ -202,18 +202,6 @@
 		{
 			"includes": ["**/*.extensions.ts"],
 			"linter": { "rules": { "complexity": { "noBannedTypes": "off" } } }
-		},
-		{
-			"includes": [
-				"**/*.ts",
-				"**/*.tsx",
-				"**/*.js",
-				"**/*.jsx",
-				"!**/__ideas__/**",
-				"!**/__dump__/**",
-				"!__test.*"
-			],
-			"linter": { "rules": { "suspicious": { "noConsole": "off" } } }
 		}
 	],
 	"assist": { "enabled": true, "actions": { "source": { "organizeImports": "on" } } }
