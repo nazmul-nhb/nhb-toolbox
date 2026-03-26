@@ -35,8 +35,8 @@ describe('shuffleArray', () => {
 		const array = [1, 'a', null, { key: 'value' }, [1, 2]];
 		const shuffled = shuffleArray(array);
 		expect(shuffled).toHaveLength(array.length);
-		expect(
-			shuffled.sort((a, b) => (String(a) > String(b) ? 1 : -1)),
-		).toEqual(array.sort((a, b) => (String(a) > String(b) ? 1 : -1)));
+		expect(shuffled.sort((a, b) => (String(a) > String(b) ? 1 : -1))).toEqual(
+			array.sort((a, b) => (String(a) > String(b) ? 1 : -1))
+		);
 	});
 });

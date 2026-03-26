@@ -49,9 +49,7 @@ describe('_isSimilarToLast', () => {
 
 	test('should return false for significantly different colors', () => {
 		const recentColors = ['hsl(50, 40%, 30%)'];
-		expect(_isSimilarToLast(recentColors, 'hsl(200, 80%, 60%)')).toBe(
-			false,
-		);
+		expect(_isSimilarToLast(recentColors, 'hsl(200, 80%, 60%)')).toBe(false);
 	});
 });
 

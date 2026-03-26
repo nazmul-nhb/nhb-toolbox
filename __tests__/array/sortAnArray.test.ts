@@ -14,9 +14,11 @@ describe('sortAnArray', () => {
 	});
 
 	test('should sort an array of strings in descending order', () => {
-		expect(
-			sortAnArray(['banana', 'apple', 'cherry'], { sortOrder: 'desc' }),
-		).toEqual(['cherry', 'banana', 'apple']);
+		expect(sortAnArray(['banana', 'apple', 'cherry'], { sortOrder: 'desc' })).toEqual([
+			'cherry',
+			'banana',
+			'apple',
+		]);
 	});
 
 	test('should sort an array of numbers in ascending order (default)', () => {
@@ -24,24 +26,20 @@ describe('sortAnArray', () => {
 	});
 
 	test('should sort an array of numbers in descending order', () => {
-		expect(sortAnArray([3, 1, 2], { sortOrder: 'desc' })).toEqual([
-			3, 2, 1,
-		]);
+		expect(sortAnArray([3, 1, 2], { sortOrder: 'desc' })).toEqual([3, 2, 1]);
 	});
 
 	test('should sort an array of booleans in ascending order (false -> true)', () => {
-		expect(sortAnArray([true, false, true, false])).toEqual([
-			false,
-			false,
-			true,
-			true,
-		]);
+		expect(sortAnArray([true, false, true, false])).toEqual([false, false, true, true]);
 	});
 
 	test('should sort an array of booleans in descending order (true -> false)', () => {
-		expect(
-			sortAnArray([true, false, true, false], { sortOrder: 'desc' }),
-		).toEqual([true, true, false, false]);
+		expect(sortAnArray([true, false, true, false], { sortOrder: 'desc' })).toEqual([
+			true,
+			true,
+			false,
+			false,
+		]);
 	});
 
 	test('should sort an array of objects by a string field in ascending order (default)', () => {
@@ -65,9 +63,7 @@ describe('sortAnArray', () => {
 			{ name: 'Bob', age: 22 },
 		];
 
-		expect(
-			sortAnArray(data, { sortByField: 'name', sortOrder: 'desc' }),
-		).toEqual([
+		expect(sortAnArray(data, { sortByField: 'name', sortOrder: 'desc' })).toEqual([
 			{ name: 'John', age: 25 },
 			{ name: 'Bob', age: 22 },
 			{ name: 'Alice', age: 30 },
@@ -99,7 +95,7 @@ describe('sortAnArray', () => {
 			sortAnArray(data, {
 				sortByField: 'age',
 				sortOrder: 'desc',
-			}),
+			})
 		).toEqual([
 			{ name: 'Alice', age: 30 },
 			{ name: 'John', age: 25 },

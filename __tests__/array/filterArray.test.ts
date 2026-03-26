@@ -23,9 +23,7 @@ describe('filterArrayOfObjects', () => {
 			age: (age) => age! > 25,
 			active: (active) => active === true,
 		});
-		expect(result).toEqual([
-			{ id: 3, name: 'Charlie', age: 35, active: true },
-		]);
+		expect(result).toEqual([{ id: 3, name: 'Charlie', age: 35, active: true }]);
 	});
 
 	it('should return all objects if conditions object is empty', () => {
@@ -54,7 +52,7 @@ describe('filterArrayOfObjects', () => {
 	it('should throw an error if input is not an array', () => {
 		// @ts-expect-error Intentional wrong input for test
 		expect(() => filterArrayOfObjects(null, {})).toThrow(
-			'The provided input is not a valid array!',
+			'The provided input is not a valid array!'
 		);
 	});
 });

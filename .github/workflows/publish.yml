@@ -1,183 +1,183 @@
 name: Publish to NPM & GitHub Packages and Release with Tag
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
 
 permissions:
-  contents: write
-  id-token: write
-  packages: write
+    contents: write
+    id-token: write
+    packages: write
 
 jobs:
-  publish:
-    runs-on: ubuntu-latest
+    publish:
+        runs-on: ubuntu-latest
 
-    steps:
-      # Checkout Repository
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # <- important to get full commit history
-          fetch-tags: true
+        steps:
+            # Checkout Repository
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0 # <- important to get full commit history
+                  fetch-tags: true
 
-      # Get the current version from package.json
-      - name: Get version from package.json
-        id: get_version
-        run: |
-          VERSION=$(jq -r .version package.json)
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+            # Get the current version from package.json
+            - name: Get version from package.json
+              id: get_version
+              run: |
+                  VERSION=$(jq -r .version package.json)
+                  echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
-      # Get the latest Git tag (fetch first to ensure remote tags are available)
-      - name: Get latest Git tag
-        id: get_latest_tag
-        run: |
-          git fetch --tags
-          LATEST_TAG=$(git tag -l 'v*' --sort=-v:refname | head -n 1)
-          echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
-          echo "Latest tag found: $LATEST_TAG"
+            # Get the latest Git tag (fetch first to ensure remote tags are available)
+            - name: Get latest Git tag
+              id: get_latest_tag
+              run: |
+                  git fetch --tags
+                  LATEST_TAG=$(git tag -l 'v*' --sort=-v:refname | head -n 1)
+                  echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
+                  echo "Latest tag found: $LATEST_TAG"
 
-      # Compare versions and skip if same
-      - name: Check if version changed
-        id: check_version
-        run: |
-          if [ "v${{ env.VERSION }}" = "${{ env.LATEST_TAG }}" ]; then
-              echo "VERSION_UNCHANGED=true" >> $GITHUB_ENV
-              echo "No new version to publish"
-              exit 0  # Exit early if version is unchanged
-          else
-              echo "VERSION_UNCHANGED=false" >> $GITHUB_ENV
-              echo "New version detected: v${{ env.VERSION }}"
-          fi
+            # Compare versions and skip if same
+            - name: Check if version changed
+              id: check_version
+              run: |
+                  if [ "v${{ env.VERSION }}" = "${{ env.LATEST_TAG }}" ]; then
+                      echo "VERSION_UNCHANGED=true" >> $GITHUB_ENV
+                      echo "No new version to publish"
+                      exit 0  # Exit early if version is unchanged
+                  else
+                      echo "VERSION_UNCHANGED=false" >> $GITHUB_ENV
+                      echo "New version detected: v${{ env.VERSION }}"
+                  fi
 
-      # Install PNPM, Setup Node.js, and Install Dependencies only if version changed
-      - name: Install PNPM
-        if: env.VERSION_UNCHANGED == 'false'
-        run: npm install -g pnpm
+            # Install PNPM, Setup Node.js, and Install Dependencies only if version changed
+            - name: Install PNPM
+              if: env.VERSION_UNCHANGED == 'false'
+              run: npm install -g pnpm
 
-      - name: Setup Node.js
-        if: env.VERSION_UNCHANGED == 'false'
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          # registry-url: "https://registry.npmjs.org/"
+            - name: Setup Node.js
+              if: env.VERSION_UNCHANGED == 'false'
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  # registry-url: "https://registry.npmjs.org/"
 
-      # Install Dependencies
-      - name: Install Dependencies
-        if: env.VERSION_UNCHANGED == 'false'
-        run: pnpm install --frozen-lockfile --store-dir ~/.pnpm-store
+            # Install Dependencies
+            - name: Install Dependencies
+              if: env.VERSION_UNCHANGED == 'false'
+              run: pnpm install --frozen-lockfile --store-dir ~/.pnpm-store
 
-      # Publish to NPM Registry
-      - name: Publish to NPM Registry
-        if: env.VERSION_UNCHANGED == 'false'
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-          if [[ "$VERSION" =~ -(alpha|beta|rc) ]]; then
-            echo "Pre-release detected, tag 'next'"
-            pnpm publish --access public --tag next --registry https://registry.npmjs.org
-          else
-            echo "Stable release, tag 'latest'"
-            pnpm publish --access public --registry https://registry.npmjs.org
-          fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+            # Publish to NPM Registry
+            - name: Publish to NPM Registry
+              if: env.VERSION_UNCHANGED == 'false'
+              run: |
+                  echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+                  if [[ "$VERSION" =~ -(alpha|beta|rc) ]]; then
+                    echo "Pre-release detected, tag 'next'"
+                    pnpm publish --access public --tag next --registry https://registry.npmjs.org
+                  else
+                    echo "Stable release, tag 'latest'"
+                    pnpm publish --access public --registry https://registry.npmjs.org
+                  fi
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      # Publish to GitHub Packages
-      - name: Publish to GitHub Packages
-        if: env.VERSION_UNCHANGED == 'false'
-        run: |
-          echo "@nazmul-nhb:registry=https://npm.pkg.github.com" > ~/.npmrc
-          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> ~/.npmrc
+            # Publish to GitHub Packages
+            - name: Publish to GitHub Packages
+              if: env.VERSION_UNCHANGED == 'false'
+              run: |
+                  echo "@nazmul-nhb:registry=https://npm.pkg.github.com" > ~/.npmrc
+                  echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> ~/.npmrc
 
-          ORIGINAL_NAME=$(jq -r .name package.json)
-          npm pkg set name="@nazmul-nhb/nhb-toolbox"
+                  ORIGINAL_NAME=$(jq -r .name package.json)
+                  npm pkg set name="@nazmul-nhb/nhb-toolbox"
 
-          if [[ "$VERSION" =~ -(alpha|beta|rc) ]]; then
-            echo "Pre-release detected, tag 'next'"
-            pnpm publish --access public --tag next --registry https://npm.pkg.github.com --no-git-checks
-          else
-            echo "Stable release, tag 'latest'"
-            pnpm publish --access public --registry https://npm.pkg.github.com --no-git-checks
-          fi
+                  if [[ "$VERSION" =~ -(alpha|beta|rc) ]]; then
+                    echo "Pre-release detected, tag 'next'"
+                    pnpm publish --access public --tag next --registry https://npm.pkg.github.com --no-git-checks
+                  else
+                    echo "Stable release, tag 'latest'"
+                    pnpm publish --access public --registry https://npm.pkg.github.com --no-git-checks
+                  fi
 
-          # Restore original package.json name
-          npm pkg set name="$ORIGINAL_NAME"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  # Restore original package.json name
+                  npm pkg set name="$ORIGINAL_NAME"
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Generate release notes for the release
-      - name: Generate Release Notes
-        if: env.VERSION_UNCHANGED == 'false'
-        id: gen_notes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
+            # Generate release notes for the release
+            - name: Generate Release Notes
+              if: env.VERSION_UNCHANGED == 'false'
+              id: gen_notes
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  set -euo pipefail
 
-          echo "LATEST_TAG: $LATEST_TAG"
-          git fetch --tags --prune
+                  echo "LATEST_TAG: $LATEST_TAG"
+                  git fetch --tags --prune
 
-          # tag commit SHA
-          TAG_SHA=$(git rev-parse "$LATEST_TAG")
-          echo "TAG_SHA: $TAG_SHA"
+                  # tag commit SHA
+                  TAG_SHA=$(git rev-parse "$LATEST_TAG")
+                  echo "TAG_SHA: $TAG_SHA"
 
-          # show commits that are considered by the range (debug)
-          echo "Commits between $LATEST_TAG and HEAD:"
-          git --no-pager log --oneline "$LATEST_TAG..HEAD" || true
+                  # show commits that are considered by the range (debug)
+                  echo "Commits between $LATEST_TAG and HEAD:"
+                  git --no-pager log --oneline "$LATEST_TAG..HEAD" || true
 
-          # first commit after the tag (earliest in range)
-          FIRST_AFTER=$(git rev-list --reverse "$LATEST_TAG..HEAD" | head -n 1 || true)
+                  # first commit after the tag (earliest in range)
+                  FIRST_AFTER=$(git rev-list --reverse "$LATEST_TAG..HEAD" | head -n 1 || true)
 
-          if [ -z "$FIRST_AFTER" ]; then
-            echo "No commits after $LATEST_TAG -> release_notes.md will be empty"
-            printf "" > release_notes.md
-          else
-            echo "First commit after last tag: $FIRST_AFTER"
-            git show -s --format="%h %s" "$FIRST_AFTER"
+                  if [ -z "$FIRST_AFTER" ]; then
+                    echo "No commits after $LATEST_TAG -> release_notes.md will be empty"
+                    printf "" > release_notes.md
+                  else
+                    echo "First commit after last tag: $FIRST_AFTER"
+                    git show -s --format="%h %s" "$FIRST_AFTER"
 
-            # generate release notes starting from the first commit AFTER last tag
-            pnpm dlx changelog-maker --start-ref "$FIRST_AFTER" > release_notes.md
-          fi
+                    # generate release notes starting from the first commit AFTER last tag
+                    pnpm dlx changelog-maker --start-ref "$FIRST_AFTER" > release_notes.md
+                  fi
 
-          # sanity: ensure tag commit SHA is NOT included in generated notes
-          if [ -n "$TAG_SHA" ] && grep -q "$TAG_SHA" release_notes.md 2>/dev/null; then
-            echo "::warning::Tag commit SHA found inside release_notes.md — aborting to avoid including tagged commit"
-            echo "---- release_notes.md (top 60 lines) ----"
-            sed -n '1,60p' release_notes.md || true
-            echo "---- end ----"
-            exit 1
-          fi
+                  # sanity: ensure tag commit SHA is NOT included in generated notes
+                  if [ -n "$TAG_SHA" ] && grep -q "$TAG_SHA" release_notes.md 2>/dev/null; then
+                    echo "::warning::Tag commit SHA found inside release_notes.md — aborting to avoid including tagged commit"
+                    echo "---- release_notes.md (top 60 lines) ----"
+                    sed -n '1,60p' release_notes.md || true
+                    echo "---- end ----"
+                    exit 1
+                  fi
 
-          # export as multiline output
-          echo "body<<EOF" >> "$GITHUB_OUTPUT"
-          cat release_notes.md >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
+                  # export as multiline output
+                  echo "body<<EOF" >> "$GITHUB_OUTPUT"
+                  cat release_notes.md >> "$GITHUB_OUTPUT"
+                  echo "EOF" >> "$GITHUB_OUTPUT"
 
-      # Create a Git tag if version is different
-      - name: Create Git Tag
-        if: env.VERSION_UNCHANGED == 'false'
-        run: |
-          git tag v${{ env.VERSION }}
-          git push origin v${{ env.VERSION }}
+            # Create a Git tag if version is different
+            - name: Create Git Tag
+              if: env.VERSION_UNCHANGED == 'false'
+              run: |
+                  git tag v${{ env.VERSION }}
+                  git push origin v${{ env.VERSION }}
 
-      # Create GitHub Release if version is different
-      - name: Create Release
-        if: env.VERSION_UNCHANGED == 'false'
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: "v${{ env.VERSION }}"
-          name: "v${{ env.VERSION }}"
-          body: |
-            ## 📦 nhb-toolbox v${{ env.VERSION }}
-              
-            ### 🆕 Release Notes
-            ${{ steps.gen_notes.outputs.body }}
+            # Create GitHub Release if version is different
+            - name: Create Release
+              if: env.VERSION_UNCHANGED == 'false'
+              uses: softprops/action-gh-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: 'v${{ env.VERSION }}'
+                  name: 'v${{ env.VERSION }}'
+                  body: |
+                      ## 📦 nhb-toolbox v${{ env.VERSION }}
+                        
+                      ### 🆕 Release Notes
+                      ${{ steps.gen_notes.outputs.body }}
 
-            **Compare Changes:** [${{ env.LATEST_TAG }} vs v${{ env.VERSION }}](https://github.com/${{ github.repository }}/compare/${{ env.LATEST_TAG }}...v${{ env.VERSION }})
+                      **Compare Changes:** [${{ env.LATEST_TAG }} vs v${{ env.VERSION }}](https://github.com/${{ github.repository }}/compare/${{ env.LATEST_TAG }}...v${{ env.VERSION }})
 
-            ---
-            **[Full CHANGELOG](./CHANGELOG.md) • [Docs](https://toolbox.nazmul-nhb.dev) • [NPM](https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }}) • [GitHub Packages](https://github.com/${{ github.repository }}/pkgs/npm/nhb-toolbox)**
+                      ---
+                      **[Full CHANGELOG](./CHANGELOG.md) • [Docs](https://toolbox.nazmul-nhb.dev) • [NPM](https://www.npmjs.com/package/nhb-toolbox/v/${{ env.VERSION }}) • [GitHub Packages](https://github.com/${{ github.repository }}/pkgs/npm/nhb-toolbox)**

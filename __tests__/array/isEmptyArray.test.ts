@@ -40,8 +40,6 @@ describe('isValidEmptyArray', () => {
 	});
 
 	test('should return false for an array with at least one meaningful value', () => {
-		expect(isValidEmptyArray([null, undefined, {}, [], 'valid'])).toBe(
-			false,
-		);
+		expect(isValidEmptyArray([null, undefined, {}, [], 'valid'])).toBe(false);
 	});
 });

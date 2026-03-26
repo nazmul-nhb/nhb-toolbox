@@ -2,45 +2,31 @@ import { convertStringCase } from '../../src/string/case';
 
 describe('convertStringCase - basic conversions', () => {
 	test('camelCase from dashed/underscored input', () => {
-		expect(convertStringCase('my-example_string', 'camelCase')).toBe(
-			'myExampleString'
-		);
+		expect(convertStringCase('my-example_string', 'camelCase')).toBe('myExampleString');
 	});
 
 	test('snake_case from camel input', () => {
-		expect(convertStringCase('myExampleString', 'snake_case')).toBe(
-			'my_example_string'
-		);
+		expect(convertStringCase('myExampleString', 'snake_case')).toBe('my_example_string');
 	});
 
 	test('kebab-case from camel/pascal with numbers', () => {
-		expect(convertStringCase('v2ApiEndpoint', 'kebab-case')).toBe(
-			'v2-api-endpoint'
-		);
+		expect(convertStringCase('v2ApiEndpoint', 'kebab-case')).toBe('v2-api-endpoint');
 	});
 
 	test('PascalCase from kebab', () => {
-		expect(convertStringCase('xml-http-request', 'PascalCase')).toBe(
-			'XmlHttpRequest'
-		);
+		expect(convertStringCase('xml-http-request', 'PascalCase')).toBe('XmlHttpRequest');
 	});
 
 	test('preserves leading/trailing punctuation', () => {
-		expect(convertStringCase('++foo_bar++', 'camelCase')).toBe(
-			'++fooBar++'
-		);
+		expect(convertStringCase('++foo_bar++', 'camelCase')).toBe('++fooBar++');
 	});
 
 	test('Convert normal spaced string to Title Case', () => {
-		expect(convertStringCase('hello from world', 'Title Case')).toBe(
-			'Hello from World'
-		);
+		expect(convertStringCase('hello from world', 'Title Case')).toBe('Hello from World');
 	});
 
 	test('Convert special cased string to Title Case', () => {
-		expect(convertStringCase('xml-http_request', 'Title Case')).toBe(
-			'Xml-http Request'
-		);
+		expect(convertStringCase('xml-http_request', 'Title Case')).toBe('Xml-http Request');
 	});
 
 	test('Convert special cased string to Title Case', () => {
@@ -54,15 +40,11 @@ describe('convertStringCase - basic conversions', () => {
 
 describe('convertStringCase - unicode and boundaries', () => {
 	test('handles unicode letters like ü', () => {
-		expect(convertStringCase('Ümlaut-test', 'camelCase')).toBe(
-			'ümlautTest'
-		);
+		expect(convertStringCase('Ümlaut-test', 'camelCase')).toBe('ümlautTest');
 	});
 
 	test('splits letter-number boundaries', () => {
-		expect(convertStringCase('v2ApiEndpoint', 'snake_case')).toBe(
-			'v2_api_endpoint'
-		);
+		expect(convertStringCase('v2ApiEndpoint', 'snake_case')).toBe('v2_api_endpoint');
 	});
 });
 

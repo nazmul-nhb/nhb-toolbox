@@ -412,4 +412,8 @@ export type $Countries = (typeof COUNTRIES)[number];
  * @remarks Unlike the built-in `Record<K, T>`, this type ensures that all properties are explicitly defined and expanded.
  */
 export type $Record<Key extends PropertyKey = string, T = any> =
-	{ [K in Key]: T } extends infer O ? { [K in keyof O]: O[K] } : { [K in Key]: T };
+	{
+		[K in Key]: T;
+	} extends infer O ?
+		{ [K in keyof O]: O[K] }
+	:	{ [K in Key]: T };
