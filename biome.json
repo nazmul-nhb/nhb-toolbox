@@ -204,5 +204,9 @@
 			"linter": { "rules": { "complexity": { "noBannedTypes": "off" } } }
 		}
 	],
-	"assist": { "enabled": true, "actions": { "source": { "organizeImports": "on" } } }
+	"assist": {
+		"includes": ["**", "!src/index.ts", "!src/constants.ts"],
+		"enabled": true,
+		"actions": { "source": { "organizeImports": "on" } }
+	}
 }

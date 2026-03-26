@@ -365,3 +365,48 @@ export type IsAlphabet<T extends string> = T extends `${infer Head}${infer Tail}
 
 /** Restricts a string to Latin-only characters; otherwise resolves to never. */
 export type Alphabet<T extends string> = IsAlphabet<T> extends true ? T : never;
+
+/** Types related to string diffing and similarity calculations. */
+export type DiffLineType = 'added' | 'removed' | 'unchanged' | 'modified';
+
+/** A single line difference between two strings, including the type of difference and the content of the line in both original and modified strings. */
+export interface DiffLine {
+	/** The type of difference: 'added', 'removed', 'unchanged', or 'modified'. */
+	type: DiffLineType;
+	/** The content of the original line. Undefined for added lines. */
+	original?: string;
+	/** The content of the modified line. Undefined for removed lines. */
+	modified?: string;
+	/** The line number in the original string (1-based). Undefined for added lines. */
+	originalLineNum?: number;
+	/** The line number in the modified string (1-based). Undefined for removed lines. */
+	modifiedLineNum?: number;
+}
+
+/** The result of a line-level diff operation, including an array of line differences and summary statistics. */
+export interface DiffResult {
+	/** An array of line differences, where each line is categorized as 'added', 'removed', 'unchanged', or 'modified'. */
+	lines: DiffLine[];
+	/** Statistics summarizing the diff results, including counts of added, removed, changed, and unchanged lines. */
+	stats: {
+		/** Total number of lines that were added in the modified string compared to the original. */
+		linesAdded: number;
+		/** Total number of lines that were removed from the original string in the modified version. */
+		linesRemoved: number;
+		/** Total number of lines that were modified (changed content) between the original and modified strings. */
+		linesChanged: number;
+		/** Total number of lines that remained unchanged between the original and modified strings. */
+		linesUnchanged: number;
+	};
+}
+
+/** A single character annotated with a `highlighted` flag indicating whether it differs from the other string in a diff operation. */
+export type HighlightedText = { text: string; highlighted: boolean };
+
+/** Result of a character-level diff, mapping each character in both strings to a `highlighted` flag. */
+export type CharDiffResult = {
+	/** An array of characters from the original string, each annotated with a `highlighted` flag indicating whether it differs from the modified string. */
+	original: HighlightedText[];
+	/** An array of characters from the modified string, each annotated with a `highlighted` flag indicating whether it differs from the original string. */
+	modified: HighlightedText[];
+};

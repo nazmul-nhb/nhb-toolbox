@@ -43,6 +43,8 @@ export {
 	slugifyString,
 } from './string/convert';
 
+export { computeTextDiff, getCharacterDifferences } from './string/diff';
+
 export {
 	countWords,
 	countWords as countWordsInString,

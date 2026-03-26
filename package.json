@@ -137,7 +137,6 @@
   "lint-staged": {
     "*.+((c|m)?js(x)?|(c|m)?ts(x)?)": [
       "biome format --write --diagnostic-level=error",
-      "biome check --write --diagnostic-level=error",
       "biome lint --diagnostic-level=error"
     ]
   },
