@@ -39,15 +39,23 @@ export type CategoryUnits<Cat extends Category> = UnitMap[Cat];
 
 /** * Type for the returned converter instance based on the provided unit `U`. */
 export type Converted<U extends $Unit> =
-	InferCategory<U> extends never ? $BaseConverter<U>
-	: InferCategory<U> extends 'area' ? $Area
-	: InferCategory<U> extends 'time' ? $Time
-	: InferCategory<U> extends 'length' ? $Length
-	: InferCategory<U> extends 'mass' ? $Mass
-	: InferCategory<U> extends 'data' ? $Data
-	: InferCategory<U> extends 'temp' ? $Temperature
-	: InferCategory<U> extends 'volume' ? $Volume
-	: $BaseConverter<U>;
+	InferCategory<U> extends never
+		? $BaseConverter<U>
+		: InferCategory<U> extends 'area'
+			? $Area
+			: InferCategory<U> extends 'time'
+				? $Time
+				: InferCategory<U> extends 'length'
+					? $Length
+					: InferCategory<U> extends 'mass'
+						? $Mass
+						: InferCategory<U> extends 'data'
+							? $Data
+							: InferCategory<U> extends 'temp'
+								? $Temperature
+								: InferCategory<U> extends 'volume'
+									? $Volume
+									: $BaseConverter<U>;
 
 /** * Options for formatting converted values for unit converter method(s). */
 export type FormatToOptions = {

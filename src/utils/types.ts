@@ -130,9 +130,11 @@ export type KeysOfUnion<T> = T extends T ? keyof T : never;
  * // { a?: string; nested?: { b?: number } }
  */
 export type DeepPartial<T> = Prettify<{
-	[K in keyof T]?: T[K] extends AdvancedTypes ? T[K]
-	: T[K] extends object ? DeepPartial<T[K]>
-	: T[K];
+	[K in keyof T]?: T[K] extends AdvancedTypes
+		? T[K]
+		: T[K] extends object
+			? DeepPartial<T[K]>
+			: T[K];
 }>;
 
 /**
@@ -149,9 +151,11 @@ export type DeepPartial<T> = Prettify<{
  * // { a?: string; nested?: { b?: number; }[]; }
  */
 export type $DeepPartial<T> = Prettify<{
-	[K in keyof T]?: T[K] extends Array<infer El> ? Array<$DeepPartial<El>>
-	: T[K] extends AdvancedTypes ? T[K]
-	: $DeepPartial<T[K]>;
+	[K in keyof T]?: T[K] extends Array<infer El>
+		? Array<$DeepPartial<El>>
+		: T[K] extends AdvancedTypes
+			? T[K]
+			: $DeepPartial<T[K]>;
 }>;
 
 /**
@@ -163,8 +167,9 @@ export type $DeepPartial<T> = Prettify<{
  * // { a?: string; nested?: { b?: number } }
  */
 export type DeepPartialAll<T> =
-	T extends Array<infer El> ? Array<DeepPartialAll<El>>
-	:	Prettify<{ [K in keyof T]?: DeepPartialAll<T[K]> }>;
+	T extends Array<infer El>
+		? Array<DeepPartialAll<El>>
+		: Prettify<{ [K in keyof T]?: DeepPartialAll<T[K]> }>;
 
 /**
  * * Removes `readonly` modifiers from all properties of an object type.
@@ -200,9 +205,7 @@ export type Immutable<T> = {
  * // { id: number; name: boolean; active: boolean }
  */
 export type Merge<T, U> = {
-	[K in keyof T | keyof U]: K extends keyof U ? U[K]
-	: K extends keyof T ? T[K]
-	: never;
+	[K in keyof T | keyof U]: K extends keyof U ? U[K] : K extends keyof T ? T[K] : never;
 };
 
 /**
@@ -321,12 +324,14 @@ export type TupleToUnion<T extends readonly unknown[]> = T[number];
  * type FiveStrings = TupleOf<string, 5>; // [string, string, string, string, string]
  * type EmptyTuple = TupleOf<boolean, 0>; // []
  */
-export type TupleOf<T, N extends number, R extends unknown[] = []> =
-	R['length'] extends N ? R : TupleOf<T, N, [...R, T]>;
+export type TupleOf<T, N extends number, R extends unknown[] = []> = R['length'] extends N
+	? R
+	: TupleOf<T, N, [...R, T]>;
 
 /** * Build a tuple of given length (helper for type-level arithmetic). */
-export type $BuildTuple<L extends number, T extends unknown[] = []> =
-	T['length'] extends L ? T : $BuildTuple<L, [...T, unknown]>;
+export type $BuildTuple<L extends number, T extends unknown[] = []> = T['length'] extends L
+	? T
+	: $BuildTuple<L, [...T, unknown]>;
 
 /** * Produce a union of numbers `From | From+1 | ... | To`. */
 export type $Range<
@@ -334,9 +339,9 @@ export type $Range<
 	To extends number,
 	Arr extends unknown[] = $BuildTuple<From>,
 	Result = never,
-> =
-	Arr['length'] extends To ? Result | To
-	:	$Range<From, To, [...Arr, unknown], Result | Arr['length']>;
+> = Arr['length'] extends To
+	? Result | To
+	: $Range<From, To, [...Arr, unknown], Result | Arr['length']>;
 
 /**
  * * Creates a tuple with length between `Min` and `Max` (inclusive).
@@ -346,11 +351,7 @@ export type $Range<
  * // Ranged -> [string, string] | [string, string, string] | [string, string, string, string]
  */
 export type RangeTuple<T, Min extends number, Max extends number> =
-	$Range<Min, Max> extends infer N ?
-		N extends number ?
-			TupleOf<T, N>
-		:	never
-	:	never;
+	$Range<Min, Max> extends infer N ? (N extends number ? TupleOf<T, N> : never) : never;
 
 /**
  * * Makes selected or all properties of an object type optional (only the values, not the keys).
@@ -400,12 +401,13 @@ export type OneOf<T, U> = (T & $Without<U, T>) | (U & $Without<T, U>);
  * type C = IsStrictObject<string>;      // false
  * type D = IsStrictObject<{name: string}>; // true
  */
-export type IsStrictObject<T> =
-	T extends object ?
-		T extends AdvancedTypes ? false
-		: T extends Array<unknown> ? false
-		: true
-	:	false;
+export type IsStrictObject<T> = T extends object
+	? T extends AdvancedTypes
+		? false
+		: T extends Array<unknown>
+			? false
+			: true
+	: false;
 
 /**
  * * Returns the keyof `T` only if `T` is a non-function object, otherwise `null`.
@@ -430,15 +432,15 @@ export type Keyof<T> = IsStrictObject<T> extends true ? keyof T : null;
  * // "user" | "user.name" | "user.meta" | "user.meta.id"
  */
 export type DeepKeyof<T> =
-	IsStrictObject<T> extends true ?
-		{
-			[K in keyof T]: K extends string ?
-				IsStrictObject<T[K]> extends true ?
-					K | `${K}.${DeepKeyof<T[K]>}`
-				:	K
-			:	never;
-		}[keyof T]
-	:	never;
+	IsStrictObject<T> extends true
+		? {
+				[K in keyof T]: K extends string
+					? IsStrictObject<T[K]> extends true
+						? K | `${K}.${DeepKeyof<T[K]>}`
+						: K
+					: never;
+			}[keyof T]
+		: never;
 
 /**
  * * Creates a new type by picking properties from `T` whose values extend type `V`.
@@ -498,8 +500,12 @@ export type RenameKeys<T, R extends Partial<Record<keyof T, string>>> = {
 };
 
 /** * Subtracts `B` from `A` (helper for type-level arithmetic). */
-export type $Subtract<A extends number, B extends number> =
-	[...$BuildTuple<A>] extends [...$BuildTuple<B>, ...infer R] ? R['length'] : never;
+export type $Subtract<A extends number, B extends number> = [...$BuildTuple<A>] extends [
+	...$BuildTuple<B>,
+	...infer R,
+]
+	? R['length']
+	: never;
 
 /** * Forbids all properties not in `K`. */
 export type $Forbid<T, K extends keyof T> = {
@@ -536,9 +542,9 @@ export type RequireAtLeast<
 	T extends GenericObject,
 	N extends number,
 	Keys extends keyof T = keyof T,
-> =
-	N extends 1 ? { [K in Keys]-?: Required<Pick<T, K>> & Partial<Omit<T, K>> }[Keys]
-	:	{
+> = N extends 1
+	? { [K in Keys]-?: Required<Pick<T, K>> & Partial<Omit<T, K>> }[Keys]
+	: {
 			[K in Keys]-?: Required<Pick<T, K>> & RequireAtLeast<Omit<T, K>, $Subtract<N, 1>>;
 		}[Keys];
 
@@ -634,14 +640,21 @@ export type Cast<A1, A2> = A1 extends A2 ? A1 : A2;
  * type T1 = Pop<[]>;           // []
  * type T2 = Pop<['a']>;        // []
  */
-export type Pop<L extends List> =
-	L extends readonly [...infer El, any] | readonly [...infer El, any?] ? El : L;
+export type Pop<L extends List> = L extends
+	| readonly [...infer El, any]
+	| readonly [...infer El, any?]
+	? El
+	: L;
 
-type _Split<S extends string, D extends string, T extends string[] = []> =
-	S extends `${infer BS}${D}${infer AS}` ? _Split<AS, D, [...T, BS]> : [...T, S];
+type _Split<
+	S extends string,
+	D extends string,
+	T extends string[] = [],
+> = S extends `${infer BS}${D}${infer AS}` ? _Split<AS, D, [...T, BS]> : [...T, S];
 
-type $Split<S extends string, D extends string = ''> =
-	D extends '' ? Pop<_Split<S, D>> : _Split<S, D>;
+type $Split<S extends string, D extends string = ''> = D extends ''
+	? Pop<_Split<S, D>>
+	: _Split<S, D>;
 
 /**
  * ✂️ Split a string literal by a given delimiter into a list of strings.
@@ -661,11 +674,13 @@ type $Split<S extends string, D extends string = ''> =
 export type Split<S extends string, D extends string = ''> =
 	$Split<S, D> extends infer X ? Cast<X, string[]> : never;
 
-type $Join<T extends List, D extends string> =
-	T extends [] ? ''
-	: T extends [NormalPrimitive] ? `${T[0]}`
-	: T extends [NormalPrimitive, ...infer R] ? `${T[0]}${D}${$Join<R, D>}`
-	: string;
+type $Join<T extends List, D extends string> = T extends []
+	? ''
+	: T extends [NormalPrimitive]
+		? `${T[0]}`
+		: T extends [NormalPrimitive, ...infer R]
+			? `${T[0]}${D}${$Join<R, D>}`
+			: string;
 
 /**
  * * Join a list of string/number/boolean literals into a single string.
@@ -686,16 +701,20 @@ export type Join<T extends List<NormalPrimitive>, D extends string = ' '> =
 	$Join<T, D> extends infer X ? Cast<X, string> : never;
 
 /** Turns a union into an intersection */
-export type $UnionToIntersection<U> =
-	(U extends any ? (arg: U) => void : never) extends (arg: infer I) => void ? I : never;
+export type $UnionToIntersection<U> = (U extends any ? (arg: U) => void : never) extends (
+	arg: infer I
+) => void
+	? I
+	: never;
 
 /** Gets the "last" item of a union */
 type $LastOf<T> =
 	$UnionToIntersection<T extends any ? () => T : never> extends () => infer R ? R : never;
 
 /** Converts a union to a tuple */
-type $UnionToTuple<T, L = $LastOf<T>> =
-	[T] extends [never] ? [] : [...$UnionToTuple<Exclude<T, L>>, L];
+type $UnionToTuple<T, L = $LastOf<T>> = [T] extends [never]
+	? []
+	: [...$UnionToTuple<Exclude<T, L>>, L];
 
 /**
  * * Converts an array type containing a union of literals into a tuple of those literals.
@@ -713,8 +732,9 @@ type $UnionToTuple<T, L = $LastOf<T>> =
  * type T1 = ArrayToTuple<(1 | 2 | 3)[]>; // [1, 2, 3]
  * type T2 = ArrayToTuple<never[]>; // []
  */
-export type ArrayToTuple<T extends readonly unknown[]> =
-	T[number] extends infer U ? $UnionToTuple<U> : never;
+export type ArrayToTuple<T extends readonly unknown[]> = T[number] extends infer U
+	? $UnionToTuple<U>
+	: never;
 
 /**
  * * Converts a type into a tuple form.
@@ -742,8 +762,12 @@ export type $Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : T;
  * Recursively join the string S for each element in the tuple A.
  * Returns an empty string for an empty tuple.
  */
-export type $JoinRepeat<S extends string, A extends unknown[]> =
-	A extends [unknown, ...infer Rest] ? `${S}${$JoinRepeat<S, Rest>}` : '';
+export type $JoinRepeat<S extends string, A extends unknown[]> = A extends [
+	unknown,
+	...infer Rest,
+]
+	? `${S}${$JoinRepeat<S, Rest>}`
+	: '';
 
 /**
  * * Repeat string `S`, `N` times.
@@ -778,14 +802,13 @@ export type Replace<
 	Str extends string,
 	Search extends string = ' ',
 	With extends string = '-',
-> =
-	Str extends `${infer First}${Search}${infer Rest}` ?
-		Replace<Rest, Search, With> extends infer Refined ?
-			Refined extends string ?
-				`${First}${With}${Refined}`
-			:	never
-		:	never
-	:	Str;
+> = Str extends `${infer First}${Search}${infer Rest}`
+	? Replace<Rest, Search, With> extends infer Refined
+		? Refined extends string
+			? `${First}${With}${Refined}`
+			: never
+		: never
+	: Str;
 
 /**
  * * Replace the **first occurrence** of substring `Search` in `Str` with `With`.

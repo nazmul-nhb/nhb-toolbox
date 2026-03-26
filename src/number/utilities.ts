@@ -101,9 +101,5 @@ export const getOrdinal = (num: Numeric, withNumber = true): string => {
  * @returns The normalized number or `undefined` if the input is not a valid number or numeric string.
  */
 export function normalizeNumber(num: unknown): Maybe<number> {
-	return (
-		isNumber(num) ? num
-		: isNumericString(num) ? Number(num)
-		: undefined
-	);
+	return isNumber(num) ? num : isNumericString(num) ? Number(num) : undefined;
 }

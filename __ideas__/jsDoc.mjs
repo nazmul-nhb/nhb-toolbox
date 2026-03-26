@@ -12,9 +12,7 @@ function analyzeFile(filePath) {
 		/^\s*(?:public|private|protected)?\s*(?:static\s*)?(?:async\s*)?(get\s+|set\s+)?([a-zA-Z0-9_[\]$]+)\s*\(.*?\)\s*{/gm;
 
 	const jsdocRegex = /\/\*\*[^]*?\*\//g;
-	const jsdocMatches = [...content.matchAll(jsdocRegex)].map(
-		(m) => m.index ?? -1,
-	);
+	const jsdocMatches = [...content.matchAll(jsdocRegex)].map((m) => m.index ?? -1);
 
 	const methods = [...content.matchAll(methodRegex)];
 
@@ -24,7 +22,7 @@ function analyzeFile(filePath) {
 	for (const match of methods) {
 		const methodIndex = match.index ?? -1;
 		const hasJsDoc = jsdocMatches.some(
-			(i) => i >= 0 && i < methodIndex && methodIndex - i < 300,
+			(i) => i >= 0 && i < methodIndex && methodIndex - i < 300
 		);
 		total++;
 		if (hasJsDoc) documented++;

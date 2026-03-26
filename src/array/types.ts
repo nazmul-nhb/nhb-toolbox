@@ -85,12 +85,11 @@ export type FirstFieldValue<
 	K1 extends string = 'value',
 	K2 extends string = 'label',
 	V extends boolean = false,
-> =
-	V extends true ?
-		FirstFieldKey<T, K1, K2, V> extends Exclude<FirstFieldKey<T, K1, K2, V>, number> ?
-			string
-		:	number
-	:	string;
+> = V extends true
+	? FirstFieldKey<T, K1, K2, V> extends Exclude<FirstFieldKey<T, K1, K2, V>, number>
+		? string
+		: number
+	: string;
 
 /** Type of values for the option fields */
 export type FieldValue<

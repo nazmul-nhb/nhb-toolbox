@@ -33,9 +33,9 @@ export function createOptionsArray<
 	if (data && data?.length) {
 		return data?.map((datum) => {
 			const firstValue =
-				retainNumberValue && isNumber(datum[firstFieldKey]) ?
-					datum[firstFieldKey]
-				:	String(datum[firstFieldKey] ?? '');
+				retainNumberValue && isNumber(datum[firstFieldKey])
+					? datum[firstFieldKey]
+					: String(datum[firstFieldKey] ?? '');
 
 			return {
 				[firstFieldName]: firstValue,

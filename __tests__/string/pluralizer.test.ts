@@ -85,22 +85,13 @@ describe('Pluralizer round‑trip tests', () => {
 		['reef', 'reefs'],
 	];
 
-	it.each(cases.map(([s, p]) => [s, p, s]))(
-		'%s → %p → %s',
-		(singular, plural, back) => {
-			expect(pluralizer.toPlural(singular)).toBe(plural);
-			expect(pluralizer.toSingular(plural)).toBe(back);
-		}
-	);
+	it.each(cases.map(([s, p]) => [s, p, s]))('%s → %p → %s', (singular, plural, back) => {
+		expect(pluralizer.toPlural(singular)).toBe(plural);
+		expect(pluralizer.toSingular(plural)).toBe(back);
+	});
 
 	it('handles uncountables correctly', () => {
-		const uncountables = [
-			'series',
-			'species',
-			'news',
-			'equipment',
-			'information',
-		];
+		const uncountables = ['series', 'species', 'news', 'equipment', 'information'];
 		for (const word of uncountables) {
 			expect(pluralizer.toPlural(word)).toBe(word);
 			expect(pluralizer.toSingular(word)).toBe(word);
@@ -208,15 +199,15 @@ describe('Pluralizer instance extended tests', () => {
 		// });
 
 		test(`pluralize('${singular}', { count: 1, inclusive: true }) should be '1 ${singular}'`, () => {
-			expect(
-				pluralizer.pluralize(singular, { count: 1, inclusive: true })
-			).toBe(`1 ${singular}`);
+			expect(pluralizer.pluralize(singular, { count: 1, inclusive: true })).toBe(
+				`1 ${singular}`
+			);
 		});
 
 		test(`pluralize('${singular}', { count: 5, inclusive: true }) should be '5 ${plural}'`, () => {
-			expect(
-				pluralizer.pluralize(singular, { count: 5, inclusive: true })
-			).toBe(`5 ${plural}`);
+			expect(pluralizer.pluralize(singular, { count: 5, inclusive: true })).toBe(
+				`5 ${plural}`
+			);
 		});
 	});
 
@@ -279,19 +270,13 @@ describe('Pluralizer extra casing and edge‑case tests', () => {
 	});
 
 	it('inclusive flag works for both singular and plural', () => {
-		expect(
-			pluralizer.pluralize('child', { count: 1, inclusive: true })
-		).toBe('1 child');
-		expect(
-			pluralizer.pluralize('child', { count: 2, inclusive: true })
-		).toBe('2 children');
+		expect(pluralizer.pluralize('child', { count: 1, inclusive: true })).toBe('1 child');
+		expect(pluralizer.pluralize('child', { count: 2, inclusive: true })).toBe('2 children');
 		// even starting from plural form should normalize
-		expect(
-			pluralizer.pluralize('children', { count: 1, inclusive: true })
-		).toBe('1 child');
-		expect(
-			pluralizer.pluralize('children', { count: 3, inclusive: true })
-		).toBe('3 children');
+		expect(pluralizer.pluralize('children', { count: 1, inclusive: true })).toBe('1 child');
+		expect(pluralizer.pluralize('children', { count: 3, inclusive: true })).toBe(
+			'3 children'
+		);
 	});
 });
 

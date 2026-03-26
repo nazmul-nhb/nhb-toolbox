@@ -20,10 +20,9 @@ export function serializeForm<T extends boolean = false>(
 	formData?.forEach((value, key) => {
 		// If the key already exists, we make it an array to handle multiple selections
 		if (data[key]) {
-			data[key] =
-				Array.isArray(data[key]) ?
-					[...data[key], value.toString()]
-				:	[data[key], value.toString()];
+			data[key] = Array.isArray(data[key])
+				? [...data[key], value.toString()]
+				: [data[key], value.toString()];
 		} else {
 			data[key] = value.toString();
 		}

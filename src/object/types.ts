@@ -28,10 +28,11 @@ export type Objects = readonly [GenericObject, ...GenericObject[]];
  *
  * @note It is recommended to use it only with `MergeAll<T>`, `FlattenValue<T>` and/or `FlattenLeafValue<T>`. For other other cases use {@link https://toolbox.nazmul-nhb.dev/docs/types/utility-types#prettifyt Prettify<T>}
  */
-export type ExpandAll<T> =
-	T extends AdvancedTypes ? T
-	: T extends GenericObject ? { [K in keyof T]: ExpandAll<T[K]> }
-	: T;
+export type ExpandAll<T> = T extends AdvancedTypes
+	? T
+	: T extends GenericObject
+		? { [K in keyof T]: ExpandAll<T[K]> }
+		: T;
 
 /** - Merges all properties of the input objects into a single object type. */
 export type MergeAll<T extends readonly GenericObject[]> = {
@@ -39,28 +40,30 @@ export type MergeAll<T extends readonly GenericObject[]> = {
 };
 
 /** - Dot-notation keys for flattened nested objects with `any` value (including optional properties) */
-export type FlattenDotKey<T> =
-	T extends AdvancedTypes ? never
-	: T extends GenericObject ?
-		{
-			[K in keyof T & string]: NonNullable<T[K]> extends Function ? never
-			: NonNullable<T[K]> extends AdvancedTypes ? K
-			: NonNullable<T[K]> extends GenericObject ?
-				`${K}.${FlattenDotKey<NonNullable<T[K]>>}`
-			:	`${K}`;
-		}[keyof T & string]
-	:	never;
+export type FlattenDotKey<T> = T extends AdvancedTypes
+	? never
+	: T extends GenericObject
+		? {
+				[K in keyof T & string]: NonNullable<T[K]> extends Function
+					? never
+					: NonNullable<T[K]> extends AdvancedTypes
+						? K
+						: NonNullable<T[K]> extends GenericObject
+							? `${K}.${FlattenDotKey<NonNullable<T[K]>>}`
+							: `${K}`;
+			}[keyof T & string]
+		: never;
 
 /** - Gets the value at a dot-notation key path */
-export type DotValue<T, K extends string> =
-	K extends `${infer P}.${infer Rest}` ?
-		P extends keyof T ?
-			undefined extends T[P] ?
-				Maybe<DotValue<NonNullable<T[P]>, Rest>>
-			:	DotValue<T[P], Rest>
-		:	never
-	: K extends keyof T ? T[K]
-	: never;
+export type DotValue<T, K extends string> = K extends `${infer P}.${infer Rest}`
+	? P extends keyof T
+		? undefined extends T[P]
+			? Maybe<DotValue<NonNullable<T[P]>, Rest>>
+			: DotValue<T[P], Rest>
+		: never
+	: K extends keyof T
+		? T[K]
+		: never;
 
 /** - Flattens the values of a nested object into a single level against the dot-notation key */
 export type FlattenDotValue<T> = {
@@ -68,27 +71,30 @@ export type FlattenDotValue<T> = {
 };
 
 /** - Extracts only leaf-level key names (excluding objects/functions) */
-export type FlattenLeafKey<T> =
-	T extends AdvancedTypes ? never
-	: T extends GenericObject ?
-		{
-			[K in keyof T & string]: NonNullable<T[K]> extends Function ? never
-			: NonNullable<T[K]> extends AdvancedTypes ? K
-			: NonNullable<T[K]> extends GenericObject ? FlattenLeafKey<T[K]>
-			: K;
-		}[keyof T & string]
-	:	never;
+export type FlattenLeafKey<T> = T extends AdvancedTypes
+	? never
+	: T extends GenericObject
+		? {
+				[K in keyof T & string]: NonNullable<T[K]> extends Function
+					? never
+					: NonNullable<T[K]> extends AdvancedTypes
+						? K
+						: NonNullable<T[K]> extends GenericObject
+							? FlattenLeafKey<T[K]>
+							: K;
+			}[keyof T & string]
+		: never;
 
 /** - Gets value for a flat leaf key (assumes there are no duplicates! Duplicates are merged into one), */
-export type LeafValue<T, K extends string> =
-	K extends keyof T ? T[K]
-	: T extends GenericObject ?
-		{
-			[P in keyof T & string]: NonNullable<T[P]> extends GenericObject ?
-				LeafValue<NonNullable<T[P]>, K>
-			:	never;
-		}[keyof T & string]
-	:	never;
+export type LeafValue<T, K extends string> = K extends keyof T
+	? T[K]
+	: T extends GenericObject
+		? {
+				[P in keyof T & string]: NonNullable<T[P]> extends GenericObject
+					? LeafValue<NonNullable<T[P]>, K>
+					: never;
+			}[keyof T & string]
+		: never;
 
 /** - Final flattened object with only leaf keys */
 export type FlattenLeafValue<T> = {
@@ -114,115 +120,133 @@ export type ParsedQueryGeneric = Record<string, NormalPrimitive | NormalPrimitiv
 type $QueryPairs<Q extends string> = Split<Q extends `?${infer Rest}` ? Rest : Q, '&'>;
 
 /** If a provided key has multiple values, convert the values into a separate tuple, e.g. `$ValuesOfKey<['hello=hi', 'hello=bye'], 'hello'>` to `["hi", "bye"]` */
-type $ValuesOfKey<Pairs extends string[], K extends string> =
-	Pairs extends [infer Head extends string, ...infer Tail extends string[]] ?
-		Head extends `${K}=${infer V}` ?
-			[V, ...$ValuesOfKey<Tail, K>]
-		:	$ValuesOfKey<Tail, K>
-	:	[];
+type $ValuesOfKey<Pairs extends string[], K extends string> = Pairs extends [
+	infer Head extends string,
+	...infer Tail extends string[],
+]
+	? Head extends `${K}=${infer V}`
+		? [V, ...$ValuesOfKey<Tail, K>]
+		: $ValuesOfKey<Tail, K>
+	: [];
 
 /** Query object parsed from a literal string */
 export type ParsedQuery<Q extends string> = Prettify<{
 	[K in $QueryPairs<Q>[number] extends `${infer Key}=${string}` ? Key : never]: $ValuesOfKey<
 		$QueryPairs<Q>,
 		K
-	> extends [infer Only] ?
-		Only
-	:	$ValuesOfKey<$QueryPairs<Q>, K>;
+	> extends [infer Only]
+		? Only
+		: $ValuesOfKey<$QueryPairs<Q>, K>;
 }>;
 
 /** - Object type with string or number or boolean as value for each key. */
 export type GenericObjectPrimitive = Record<string, string | number | boolean>;
 
 /** - Dot-notation keys for nested objects with unknown value (including optional properties) */
-export type DotNotationKeyStrict<T> =
-	T extends AdvancedTypes ? never
-	: T extends StrictObject ?
-		{
-			[K in keyof T & string]: T[K] extends Function ? never
-			: T[K] extends StrictObject ? `${K}` | `${K}.${DotNotationKey<T[K]>}`
-			: `${K}`;
-		}[keyof T & string]
-	:	never;
+export type DotNotationKeyStrict<T> = T extends AdvancedTypes
+	? never
+	: T extends StrictObject
+		? {
+				[K in keyof T & string]: T[K] extends Function
+					? never
+					: T[K] extends StrictObject
+						? `${K}` | `${K}.${DotNotationKey<T[K]>}`
+						: `${K}`;
+			}[keyof T & string]
+		: never;
 
 /** - Dot-notation keys for nested objects with `any` value (including optional properties) */
-export type DotNotationKey<T> =
-	T extends AdvancedTypes ? never
-	: T extends GenericObject ?
-		{
-			[K in keyof T & string]: T[K] extends Function ? never
-			: T[K] extends GenericObject ? `${K}` | `${K}.${DotNotationKey<T[K]>}`
-			: `${K}`;
-		}[keyof T & string]
-	:	never;
+export type DotNotationKey<T> = T extends AdvancedTypes
+	? never
+	: T extends GenericObject
+		? {
+				[K in keyof T & string]: T[K] extends Function
+					? never
+					: T[K] extends GenericObject
+						? `${K}` | `${K}.${DotNotationKey<T[K]>}`
+						: `${K}`;
+			}[keyof T & string]
+		: never;
 
 /** - Object keys where the value is an array (including optional properties) */
-export type KeyForArray<T> =
-	T extends GenericObject ?
-		{
-			[K in keyof T & string]: T[K] extends Function ? never
-			: T[K] extends Array<unknown> ? K
-			: never;
+export type KeyForArray<T> = T extends GenericObject
+	? {
+			[K in keyof T & string]: T[K] extends Function
+				? never
+				: T[K] extends Array<unknown>
+					? K
+					: never;
 		}[keyof T & string]
-	:	never;
+	: never;
 
 /** - Object keys where the value is a non-array/non-advanced type object (including optional properties) */
-export type KeyForObject<T> =
-	T extends AdvancedTypes ? never
-	: T extends GenericObject ?
-		{
-			[K in keyof T & string]: T[K] extends Function ? never
-			: T[K] extends GenericObject ?
-				T[K] extends AdvancedTypes ?
-					never
-				:	K
-			:	never;
-		}[keyof T & string]
-	:	never;
+export type KeyForObject<T> = T extends AdvancedTypes
+	? never
+	: T extends GenericObject
+		? {
+				[K in keyof T & string]: T[K] extends Function
+					? never
+					: T[K] extends GenericObject
+						? T[K] extends AdvancedTypes
+							? never
+							: K
+						: never;
+			}[keyof T & string]
+		: never;
 
 /** - Extract only keys with string values from an object, including nested dot-notation keys. */
-export type NestedKeyString<T> =
-	T extends AdvancedTypes ? never
-	: T extends GenericObject ?
-		{
-			[K in keyof T & string]: T[K] extends Function ? never
-			: T[K] extends string ? K
-			: T[K] extends GenericObject ? `${K}.${NestedKeyString<T[K]>}`
-			: never;
-		}[keyof T & string]
-	:	never;
+export type NestedKeyString<T> = T extends AdvancedTypes
+	? never
+	: T extends GenericObject
+		? {
+				[K in keyof T & string]: T[K] extends Function
+					? never
+					: T[K] extends string
+						? K
+						: T[K] extends GenericObject
+							? `${K}.${NestedKeyString<T[K]>}`
+							: never;
+			}[keyof T & string]
+		: never;
 
 /** - Extract only primitive keys from an object, including nested dot-notation keys. */
-export type NestedPrimitiveKey<T> =
-	T extends AdvancedTypes ? never
-	: T extends GenericObject ?
-		{
-			[K in keyof T & string]: T[K] extends Function ? never
-			: T[K] extends NormalPrimitive ? K
-			: T[K] extends GenericObject ? `${K}.${NestedPrimitiveKey<T[K]>}`
-			: never;
-		}[keyof T & string]
-	:	never;
+export type NestedPrimitiveKey<T> = T extends AdvancedTypes
+	? never
+	: T extends GenericObject
+		? {
+				[K in keyof T & string]: T[K] extends Function
+					? never
+					: T[K] extends NormalPrimitive
+						? K
+						: T[K] extends GenericObject
+							? `${K}.${NestedPrimitiveKey<T[K]>}`
+							: never;
+			}[keyof T & string]
+		: never;
 
 /** - Extract only number, string, undefined and null keys from an object, including nested dot-notation keys.  */
-export type NumericDotKey<T> =
-	T extends AdvancedTypes ? never
-	: T extends GenericObject ?
-		{
-			[K in keyof T & string]: T[K] extends Function ? never
-			: T[K] extends Exclude<NormalPrimitive, boolean> ? K
-			: T[K] extends GenericObject ? `${K}.${NumericDotKey<T[K]>}`
-			: never;
-		}[keyof T & string]
-	:	never;
+export type NumericDotKey<T> = T extends AdvancedTypes
+	? never
+	: T extends GenericObject
+		? {
+				[K in keyof T & string]: T[K] extends Function
+					? never
+					: T[K] extends Exclude<NormalPrimitive, boolean>
+						? K
+						: T[K] extends GenericObject
+							? `${K}.${NumericDotKey<T[K]>}`
+							: never;
+			}[keyof T & string]
+		: never;
 
 /** - Recursively extracts all keys of an object (includes nested keys) as a union. */
-export type DeepKeys<T extends GenericObject> =
-	T extends AdvancedTypes ? never
-	:	| keyof T
-		| {
-				[K in keyof T]: T[K] extends GenericObject ? DeepKeys<T[K]> : never;
-		  }[keyof T];
+export type DeepKeys<T extends GenericObject> = T extends AdvancedTypes
+	? never
+	:
+			| keyof T
+			| {
+					[K in keyof T]: T[K] extends GenericObject ? DeepKeys<T[K]> : never;
+			  }[keyof T];
 
 /** - Converts the union of keys from {@link DeepKeys<T>} into a tuple. */
 export type DeepKeysTuple<T extends GenericObject> = Tuple<DeepKeys<T>>;
@@ -297,8 +321,9 @@ export type ExtractStringKey<T> = Extract<keyof T, string>;
  * type A = $JoinDotKey<'', 'user'>;          // "user"
  * type B = $JoinDotKey<'settings', 'theme'>; // "settings.theme"
  */
-export type $JoinDotKey<Parent extends string, Key extends string> =
-	Parent extends '' ? Key : `${Parent}.${Key}`;
+export type $JoinDotKey<Parent extends string, Key extends string> = Parent extends ''
+	? Key
+	: `${Parent}.${Key}`;
 
 /**
  * * Checks whether a dot-notation path starts with the specified prefix.
@@ -311,17 +336,21 @@ export type $JoinDotKey<Parent extends string, Key extends string> =
  * type B = $DoesPathStartWith<'settings', 'settings'>;         // true
  * type C = $DoesPathStartWith<'user.name', 'settings'>;        // false
  */
-export type $DoesPathStartWith<Path extends string, Prefix extends string> =
-	Path extends Prefix | `${Prefix}.${string}` ? true : false;
+export type $DoesPathStartWith<Path extends string, Prefix extends string> = Path extends
+	| Prefix
+	| `${Prefix}.${string}`
+	? true
+	: false;
 
 /** Recursive utility that removes a specific dot-notation path from an object. */
 type $OmitPath<T extends GenericObject, I extends string, P extends string = ''> = Prettify<{
-	[K in ExtractStringKey<T> as $DoesPathStartWith<$JoinDotKey<P, K>, I> extends true ? never
-	:	K]: T[K] extends GenericObject ?
-		T[K] extends AdvancedTypes ?
-			T[K]
-		:	$OmitPath<T[K], I, $JoinDotKey<P, K>>
-	:	T[K];
+	[K in ExtractStringKey<T> as $DoesPathStartWith<$JoinDotKey<P, K>, I> extends true
+		? never
+		: K]: T[K] extends GenericObject
+		? T[K] extends AdvancedTypes
+			? T[K]
+			: $OmitPath<T[K], I, $JoinDotKey<P, K>>
+		: T[K];
 }>;
 
 /**
@@ -368,27 +397,30 @@ export interface ConvertObjectOptions<
 }
 
 /** Transform a single property */
-type $ConvertProp<V, C extends 'string' | 'number'> =
-	C extends 'string' ?
-		V extends string | number ?
-			string
-		:	V
-	: C extends 'number' ?
-		V extends string ?
-			number
-		:	V
-	:	V;
+type $ConvertProp<V, C extends 'string' | 'number'> = C extends 'string'
+	? V extends string | number
+		? string
+		: V
+	: C extends 'number'
+		? V extends string
+			? number
+			: V
+		: V;
 
 /** Extract sub-keys after prefix like `"props."` */
-type $SubKey<S extends string, P extends string> =
-	S extends `${P}.${infer Rest}` ? Rest : never;
+type $SubKey<S extends string, P extends string> = S extends `${P}.${infer Rest}`
+	? Rest
+	: never;
 
 /** Transformed shape of the return type of `convertObjectValues` */
 export type ConvertedObject<T, Keys extends string, C extends 'string' | 'number'> = Prettify<{
-	[K in Extract<keyof T, string>]: K extends Keys ? $ConvertProp<T[K], C>
-	: T[K] extends AdvancedTypes ? T[K]
-	: T[K] extends GenericObject ? ConvertedObject<T[K], $SubKey<Keys, K>, C>
-	: T[K];
+	[K in Extract<keyof T, string>]: K extends Keys
+		? $ConvertProp<T[K], C>
+		: T[K] extends AdvancedTypes
+			? T[K]
+			: T[K] extends GenericObject
+				? ConvertedObject<T[K], $SubKey<Keys, K>, C>
+				: T[K];
 }>;
 
 /** Array of country information (as object) */
@@ -411,5 +443,8 @@ export type $Countries = (typeof COUNTRIES)[number];
  *
  * @remarks Unlike the built-in `Record<K, T>`, this type ensures that all properties are explicitly defined and expanded.
  */
-export type $Record<Key extends PropertyKey = string, T = any> =
-	{ [K in Key]: T } extends infer O ? { [K in keyof O]: O[K] } : { [K in Key]: T };
+export type $Record<Key extends PropertyKey = string, T = any> = {
+	[K in Key]: T;
+} extends infer O
+	? { [K in keyof O]: O[K] }
+	: { [K in Key]: T };

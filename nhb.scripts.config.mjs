@@ -1,17 +1,17 @@
 // @ts-check
 
-import { defineScriptConfig, fixJsExtensions, fixTypeExports, mimicClack } from 'nhb-scripts';
 import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join as joinPath } from 'node:path';
+import { defineScriptConfig, fixJsExtensions, fixTypeExports, mimicClack } from 'nhb-scripts';
 
 export default defineScriptConfig({
-	format: {
-		args: ['--write'],
-		files: ['src', 'nhb.scripts.config.mjs'],
-		ignorePath: '.prettierignore',
-	},
-	lint: { folders: ['src'], patterns: ['**/*.ts'] },
-	fix: { folders: ['src'], patterns: ['**/*.ts'] },
+	// format: {
+	// 	args: ['--write'],
+	// 	files: ['src', 'nhb.scripts.config.mjs'],
+	// 	ignorePath: '.prettierignore',
+	// },
+	// lint: { folders: ['src'], patterns: ['**/*.ts'] },
+	// fix: { folders: ['src'], patterns: ['**/*.ts'] },
 	build: {
 		distFolder: 'dist',
 		waitingMessage: ' 📦 Building Package: nhb-toolbox...',

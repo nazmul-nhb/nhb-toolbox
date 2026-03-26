@@ -35,23 +35,23 @@ export function generateQueryParams<T extends QueryObject>(params: T = {} as T):
 				!(typeof value === 'string' && value?.trim() === '')
 		)
 		?.flatMap(([key, value]) =>
-			Array.isArray(value) ?
-				value
-					?.filter(
-						(v) =>
-							v !== undefined &&
-							v !== null &&
-							!(typeof v === 'string' && v.trim() === '')
-					)
-					?.map(
-						(v) =>
-							`${encodeURIComponent(key)}=${encodeURIComponent(
-								typeof v === 'boolean' ? String(v) : String(v)
-							)}`
-					)
-			:	`${encodeURIComponent(key)}=${encodeURIComponent(
-					typeof value === 'boolean' ? String(value) : String(value)
-				)}`
+			Array.isArray(value)
+				? value
+						?.filter(
+							(v) =>
+								v !== undefined &&
+								v !== null &&
+								!(typeof v === 'string' && v.trim() === '')
+						)
+						?.map(
+							(v) =>
+								`${encodeURIComponent(key)}=${encodeURIComponent(
+									typeof v === 'boolean' ? String(v) : String(v)
+								)}`
+						)
+				: `${encodeURIComponent(key)}=${encodeURIComponent(
+						typeof value === 'boolean' ? String(value) : String(value)
+					)}`
 		)
 		.join('&');
 

@@ -31,9 +31,9 @@ export function _convertLessThanThousand(num: number, isLast: boolean): string {
 	if (num >= 100) {
 		const hundredsPart = `${ONES[Math.floor(num / 100)]} hundred`;
 
-		return num % 100 === 0 ?
-				hundredsPart
-			:	`${hundredsPart} ${isLast ? 'and' : ''} ${_convertLessThanThousand(num % 100, false)}`;
+		return num % 100 === 0
+			? hundredsPart
+			: `${hundredsPart} ${isLast ? 'and' : ''} ${_convertLessThanThousand(num % 100, false)}`;
 	}
 
 	return result;

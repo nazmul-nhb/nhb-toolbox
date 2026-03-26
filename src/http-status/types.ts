@@ -12,13 +12,13 @@ export type StatusCategory = $HttpStatusMap['category'];
 
 /** - Extracts standard HTTP status codes by the given `Category` name. Defaults to all {@link StatusCategory categories}. */
 export type HttpStatusCode<Category extends StatusCategory = StatusCategory> =
-	$HttpStatusMap extends infer Target ?
-		Target extends $HttpStatusMap ?
-			Target['category'] extends Category ?
-				Target['code']
-			:	never
-		:	never
-	:	never;
+	$HttpStatusMap extends infer Target
+		? Target extends $HttpStatusMap
+			? Target['category'] extends Category
+				? Target['code']
+				: never
+			: never
+		: never;
 
 /** Standard HTTP Status Code, e.g. `404`, `500` etc. + any number */
 export type StatusCode = LooseLiteral<HttpStatusCode>;
@@ -35,14 +35,13 @@ export type StatusCode = LooseLiteral<HttpStatusCode>;
 export type HttpStatusName<
 	Name extends $StatusNameVar = $StatusNameVar,
 	Category extends StatusCategory = StatusCategory,
-> =
-	$HttpStatusMap extends infer Target ?
-		Target extends $HttpStatusMap ?
-			Target['category'] extends Category ?
-				Target[Name]
-			:	never
-		:	never
-	:	never;
+> = $HttpStatusMap extends infer Target
+	? Target extends $HttpStatusMap
+		? Target['category'] extends Category
+			? Target[Name]
+			: never
+		: never
+	: never;
 
 /** Standard HTTP status name in `CONSTANT_CASE`, e.g. `"INTERNAL_SERVER_ERROR"` + any string */
 export type StatusName = LooseLiteral<HttpStatusName>;

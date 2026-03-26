@@ -505,10 +505,9 @@ export const businessPlugin = ($Chronos: $Chronos): void => {
 
 	/** Build weekend mask (array of booleans) based on `week definition` or weekend `length` */
 	const _buildWeekendMask = (weekDef: number | number[], length: number) => {
-		const weekendDays =
-			isValidArray<number>(weekDef) ?
-				[...weekDef].sort()
-			:	Array.from({ length }, (_, i) => (weekDef + 7 - 1 - i) % 7).sort();
+		const weekendDays = isValidArray<number>(weekDef)
+			? [...weekDef].sort()
+			: Array.from({ length }, (_, i) => (weekDef + 7 - 1 - i) % 7).sort();
 
 		// ! Build 7-element boolean mask: true = workday, false = weekend
 		const mask = new Array<boolean>(7).fill(true);

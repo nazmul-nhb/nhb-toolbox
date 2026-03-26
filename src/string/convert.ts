@@ -21,9 +21,9 @@ export const replaceAllInString = (
 	const trimmedString = trimString(input);
 
 	const regex =
-		typeof find === 'string' ?
-			new RegExp(find, 'g')
-		:	new RegExp(find, find?.flags.includes('g') ? find?.flags : find?.flags + 'g');
+		typeof find === 'string'
+			? new RegExp(find, 'g')
+			: new RegExp(find, find?.flags.includes('g') ? find?.flags : find?.flags + 'g');
 
 	return trimmedString?.replace(regex, replace);
 };

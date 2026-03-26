@@ -117,14 +117,19 @@ export type TimeUnit =
 export type FromNowUnit = Exclude<TimeUnit, 'week'>;
 
 /** Conditional value for {@link TimeUnit} */
-export type TimeUnitValue<Unit extends TimeUnit> =
-	Unit extends 'month' ? NumberRange<1, 12>
-	: Unit extends 'week' ? NumberRange<1, 53>
-	: Unit extends 'day' ? NumberRange<1, 31>
-	: Unit extends 'hour' ? Enumerate<24>
-	: Unit extends 'minute' | 'second' ? Enumerate<60>
-	: Unit extends 'millisecond' ? Milliseconds
-	: number;
+export type TimeUnitValue<Unit extends TimeUnit> = Unit extends 'month'
+	? NumberRange<1, 12>
+	: Unit extends 'week'
+		? NumberRange<1, 53>
+		: Unit extends 'day'
+			? NumberRange<1, 31>
+			: Unit extends 'hour'
+				? Enumerate<24>
+				: Unit extends 'minute' | 'second'
+					? Enumerate<60>
+					: Unit extends 'millisecond'
+						? Milliseconds
+						: number;
 
 /** Year in either 4 or 2 digits format */
 export type YearToken = (typeof YEAR_FORMATS)[number];
@@ -367,18 +372,18 @@ export type $Chronos = typeof Chronos;
 export type $InstanceMethods = {
 	[Method in keyof WithoutOrigin]: Chronos extends {
 		[Instance in Method]: (...args: any[]) => Chronos;
-	} ?
-		Method
-	:	never;
+	}
+		? Method
+		: never;
 }[keyof WithoutOrigin];
 
 /** * Static methods that return `Chronos` instance */
 export type $StaticMethods = {
 	[Method in keyof $Chronos]: $Chronos extends {
 		[Instance in Method]: (...args: any[]) => Chronos;
-	} ?
-		Method
-	:	never;
+	}
+		? Method
+		: never;
 }[keyof $Chronos];
 
 /** * Plugin methods that return `Chronos` instance */
@@ -555,9 +560,8 @@ export interface ZodiacMetaOptions<Sign extends string = ZodiacSign> {
 }
 
 /** Options for configuring Zodiac sign getter */
-export interface ZodiacOptions<
-	Sign extends string = ZodiacSign,
-> extends ZodiacMetaOptions<Sign> {
+export interface ZodiacOptions<Sign extends string = ZodiacSign>
+	extends ZodiacMetaOptions<Sign> {
 	/** - Optional birthdate in `MM-DD` format (`1`-based month). */
 	birthDate?: MonthDateString;
 }
@@ -869,16 +873,19 @@ export type BanglaMonthName<Locale extends $BnEn = 'bn'> = (typeof BN_MONTHS)[nu
 export type BanglaSeasonName<Locale extends $BnEn = 'bn'> = (typeof BN_SEASONS)[number][Locale];
 
 /** Represents Bangla year either in Bangla digit or Latin from 1-12 */
-export type $BanglaYear<Locale extends $BnEn = 'bn'> =
-	Locale extends 'en' ? number : BanglaYear;
+export type $BanglaYear<Locale extends $BnEn = 'bn'> = Locale extends 'en'
+	? number
+	: BanglaYear;
 
 /** Represents Bangla month either in Bangla digit or Latin from 0-9999 */
-export type $BanglaMonth<Locale extends $BnEn = 'bn'> =
-	Locale extends 'en' ? NumberRange<1, 12> : BanglaMonth;
+export type $BanglaMonth<Locale extends $BnEn = 'bn'> = Locale extends 'en'
+	? NumberRange<1, 12>
+	: BanglaMonth;
 
 /** Represents Bangla date of the month either in Bangla digit or Latin from 1-31 */
-export type $BanglaMonthDate<Locale extends $BnEn = 'bn'> =
-	Locale extends 'en' ? NumberRange<1, 31> : BanglaDate;
+export type $BanglaMonthDate<Locale extends $BnEn = 'bn'> = Locale extends 'en'
+	? NumberRange<1, 31>
+	: BanglaDate;
 
 /** Represents a Bangla date object for `Chronos` plugin */
 export type BanglaDateObject<Locale extends $BnEn = 'bn'> = {

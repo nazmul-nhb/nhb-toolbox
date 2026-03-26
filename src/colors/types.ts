@@ -84,11 +84,13 @@ export interface RandomColorOptions<C extends $ColorType> {
 }
 
 /** Infers random color type (`Hex6`, `RGB`, or `HSL`) based on the provided color type `C`. */
-export type RandomColor<C extends Maybe<$ColorType> = undefined> =
-	C extends undefined | 'hex' ? Hex6
-	: C extends 'hsl' ? HSL
-	: C extends 'rgb' ? RGB
-	: Hex6;
+export type RandomColor<C extends Maybe<$ColorType> = undefined> = C extends undefined | 'hex'
+	? Hex6
+	: C extends 'hsl'
+		? HSL
+		: C extends 'rgb'
+			? RGB
+			: Hex6;
 
 /** * Union type representing a color in Hex6, RGB, or HSL format. */
 export type ColorTypeSolid = Hex6 | RGB | HSL;

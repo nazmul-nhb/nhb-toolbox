@@ -15,9 +15,9 @@ declare global {
 		 * - This augmentation only affects TypeScript type inference.
 		 * - Runtime behavior remains identical to the standard `toLowerCase()` method.
 		 */
-		toLowerCase<Lower extends 'T' | Lowercase<string>>(): Lower extends 'T' ?
-			Lowercase<string>
-		:	Lower;
+		toLowerCase<Lower extends 'T' | Lowercase<string>>(): Lower extends 'T'
+			? Lowercase<string>
+			: Lower;
 
 		toUpperCase(): string;
 		/**
@@ -29,9 +29,9 @@ declare global {
 		 * - This augmentation only affects TypeScript type inference.
 		 * - Runtime behavior remains identical to the standard `toUpperCase()` method.
 		 */
-		toUpperCase<Upper extends 'T' | Uppercase<string>>(): Upper extends 'T' ?
-			Uppercase<string>
-		:	Upper;
+		toUpperCase<Upper extends 'T' | Uppercase<string>>(): Upper extends 'T'
+			? Uppercase<string>
+			: Upper;
 	}
 }
 
@@ -148,8 +148,10 @@ export type $LowerCaseWord = (typeof LOWERCASE)[number];
 export type $EnsureString<Str> = Str extends string ? Str : never;
 
 /** Check if a string literal `Str` contains a substring `SubStr` */
-export type Includes<Str extends string, SubStr extends string> =
-	Str extends `${string}${SubStr}${string}` ? true : false;
+export type Includes<
+	Str extends string,
+	SubStr extends string,
+> = Str extends `${string}${SubStr}${string}` ? true : false;
 
 /** Trim leading space from a string literal */
 export type $TrimLeft<Str extends string> = Str extends ` ${infer R}` ? $TrimLeft<R> : Str;
@@ -164,24 +166,25 @@ export type Trim<Str extends string> = $TrimRight<$TrimLeft<Str>>;
 type $DefaultDelimiters = ' ' | '-' | '_' | '.' | '/';
 
 /** Turn user delim string like "*+," into '*, +, ,' union */
-type $UserDelimiters<Del extends string> =
-	Del extends '' ? never
-	: Del extends `${infer C}${infer R}` ? C | $UserDelimiters<R>
-	: never;
+type $UserDelimiters<Del extends string> = Del extends ''
+	? never
+	: Del extends `${infer C}${infer R}`
+		? C | $UserDelimiters<R>
+		: never;
 
 /** Is char `C` a delimiter (either default or user-provided)? */
-type $IsDelimiter<C extends string, Del extends string> =
-	C extends $DefaultDelimiters ? true
-	: C extends $UserDelimiters<Del> ? true
-	: false;
+type $IsDelimiter<C extends string, Del extends string> = C extends $DefaultDelimiters
+	? true
+	: C extends $UserDelimiters<Del>
+		? true
+		: false;
 
 /** Insert space before capital letters: "helloWorld" -> "hello World" */
-type $SpaceBeforeCaps<Str extends string> =
-	Str extends `${infer F}${infer R}` ?
-		R extends Uncapitalize<R> ?
-			`${F}${$SpaceBeforeCaps<R>}`
-		:	`${F} ${$SpaceBeforeCaps<R>}`
-	:	Str;
+type $SpaceBeforeCaps<Str extends string> = Str extends `${infer F}${infer R}`
+	? R extends Uncapitalize<R>
+		? `${F}${$SpaceBeforeCaps<R>}`
+		: `${F} ${$SpaceBeforeCaps<R>}`
+	: Str;
 
 /** Replace delimiter(s) with space(s) */
 type $ReplaceDelimiters<
@@ -189,19 +192,16 @@ type $ReplaceDelimiters<
 	Del extends string,
 	Acc extends string = '',
 	LastWasSpace extends boolean = false,
-> =
-	Str extends `${infer F}${infer R}` ?
-		$IsDelimiter<F, Del> extends true ?
-			$ReplaceDelimiters<
+> = Str extends `${infer F}${infer R}`
+	? $IsDelimiter<F, Del> extends true
+		? $ReplaceDelimiters<
 				R,
 				Del,
-				Acc extends '' ? ' '
-				: LastWasSpace extends true ? Acc
-				: `${Acc} `,
+				Acc extends '' ? ' ' : LastWasSpace extends true ? Acc : `${Acc} `,
 				true
 			>
-		:	$ReplaceDelimiters<R, Del, `${Acc}${F}`, false>
-	:	Acc;
+		: $ReplaceDelimiters<R, Del, `${Acc}${F}`, false>
+	: Acc;
 
 /** Normalize {@link $DefaultDelimiters} or {@link $UserDelimiters} `Del` in a string literal `Str` with space(s) */
 export type $NormalizeString<Str extends string, Del extends string = ''> = Trim<
@@ -209,42 +209,51 @@ export type $NormalizeString<Str extends string, Del extends string = ''> = Trim
 >;
 
 /** Lowercase all the words in a tuple */
-export type $LowercaseWords<T extends readonly string[]> =
-	T extends [infer H extends string, ...infer R extends string[]] ?
-		[Lowercase<H>, ...$LowercaseWords<R>]
-	:	[];
+export type $LowercaseWords<T extends readonly string[]> = T extends [
+	infer H extends string,
+	...infer R extends string[],
+]
+	? [Lowercase<H>, ...$LowercaseWords<R>]
+	: [];
 
 /** Uppercase all the words in a tuple */
-export type $UppercaseWords<T extends readonly string[]> =
-	T extends [infer H extends string, ...infer R extends string[]] ?
-		[Uppercase<Lowercase<H>>, ...$UppercaseWords<R>]
-	:	[];
+export type $UppercaseWords<T extends readonly string[]> = T extends [
+	infer H extends string,
+	...infer R extends string[],
+]
+	? [Uppercase<Lowercase<H>>, ...$UppercaseWords<R>]
+	: [];
 
 /** Capitalize (first letter capital) all the words in a tuple */
-export type $CapitalizeWords<T extends readonly string[]> =
-	T extends [infer H extends string, ...infer R extends string[]] ?
-		[Capitalize<Lowercase<H>>, ...$CapitalizeWords<R>]
-	:	[];
+export type $CapitalizeWords<T extends readonly string[]> = T extends [
+	infer H extends string,
+	...infer R extends string[],
+]
+	? [Capitalize<Lowercase<H>>, ...$CapitalizeWords<R>]
+	: [];
 
 /** Capitalize (first letter capital) all the words in a tuple */
-export type $TitleCaseWords<T extends readonly string[]> =
-	T extends [infer H extends string, ...infer R extends string[]] ?
-		[
+export type $TitleCaseWords<T extends readonly string[]> = T extends [
+	infer H extends string,
+	...infer R extends string[],
+]
+	? [
 			H extends $LowerCaseWord ? Lowercase<H> : Capitalize<Lowercase<H>>,
 			...$TitleCaseWords<R>,
 		]
-	:	[];
+	: [];
 
 /**
  * - Converts a string literal `Str` into `camelCase`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}.
  * @remarks TypeScript supports up to ~45 characters for reliable literal inference.
  */
 export type CamelCase<Str extends string, Del extends string = ''> =
-	Split<$NormalizeString<Str, Del>, ' '> extends (
-		[infer F extends string, ...infer R extends string[]]
-	) ?
-		`${Lowercase<F>}${Join<$CapitalizeWords<R>, ''>}`
-	:	'';
+	Split<$NormalizeString<Str, Del>, ' '> extends [
+		infer F extends string,
+		...infer R extends string[],
+	]
+		? `${Lowercase<F>}${Join<$CapitalizeWords<R>, ''>}`
+		: '';
 
 /**
  * - Converts a string literal `Str` into `snake_case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}.
@@ -325,33 +334,34 @@ export type PathCase<Str extends string, Del extends string = ''> = Join<
  * - Lowercase auxiliaries, prepositions, articles and conjunctions unless they are at the beginning.
  */
 export type TitleCase<Str extends string, Del extends string = ''> =
-	Split<$NormalizeString<Str, Del>, ' '> extends (
-		[infer F extends string, ...infer R extends string[]]
-	) ?
-		`${Capitalize<Lowercase<F>>} ${Join<$TitleCaseWords<R>, ' '>}`
-	:	' ';
+	Split<$NormalizeString<Str, Del>, ' '> extends [
+		infer F extends string,
+		...infer R extends string[],
+	]
+		? `${Capitalize<Lowercase<F>>} ${Join<$TitleCaseWords<R>, ' '>}`
+		: ' ';
 
 /**
  * - Converts a string literal `Str` into `Sentence case`, using optional custom delimiters `Del` alongside {@link $DefaultDelimiters}.
  * @remarks It will lowercase: auxiliaries, prepositions, articles and conjunctions unless they are at the beginning.
  */
 export type SentenceCase<Str extends string, Del extends string = ''> =
-	Split<$NormalizeString<Str, Del>, ' '> extends (
-		[infer F extends string, ...infer R extends string[]]
-	) ?
-		`${Capitalize<Lowercase<F>>} ${Join<$LowercaseWords<R>, ' '>}`
-	:	' ';
+	Split<$NormalizeString<Str, Del>, ' '> extends [
+		infer F extends string,
+		...infer R extends string[],
+	]
+		? `${Capitalize<Lowercase<F>>} ${Join<$LowercaseWords<R>, ' '>}`
+		: ' ';
 
 /** Matches any non-Latin character. */
 export type SpecialCharacter = Lowercase<string> & Uppercase<string>;
 
 /** Evaluates whether a string consists only of Latin alphabet characters. */
-export type IsAlphabet<T extends string> =
-	T extends `${infer Head}${infer Tail}` ?
-		Head extends SpecialCharacter ?
-			false
-		:	IsAlphabet<Tail>
-	:	true;
+export type IsAlphabet<T extends string> = T extends `${infer Head}${infer Tail}`
+	? Head extends SpecialCharacter
+		? false
+		: IsAlphabet<Tail>
+	: true;
 
 /** Restricts a string to Latin-only characters; otherwise resolves to never. */
 export type Alphabet<T extends string> = IsAlphabet<T> extends true ? T : never;

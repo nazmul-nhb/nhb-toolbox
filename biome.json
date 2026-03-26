@@ -1,0 +1,220 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.4.9/schema.json",
+	"vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+	"files": { "includes": ["**", "!!**/dist"] },
+	"formatter": {
+		"enabled": true,
+		"formatWithErrors": false,
+		"indentStyle": "tab",
+		"indentWidth": 4,
+		"lineEnding": "lf",
+		"lineWidth": 96,
+		"attributePosition": "auto",
+		"bracketSameLine": false,
+		"bracketSpacing": true,
+		"expand": "auto",
+		"useEditorconfig": true,
+		"includes": ["**", "!**/dist", "!**/node_modules", "!**/.estimator", "!**/*.md"]
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": false,
+			"complexity": {
+				"noAdjacentSpacesInRegex": "error",
+				"noExtraBooleanCast": "error",
+				"noUselessCatch": "error",
+				"noUselessEscapeInRegex": "error",
+				"noUselessTypeConstraint": "error"
+			},
+			"correctness": {
+				"noConstAssign": "error",
+				"noConstantCondition": "error",
+				"noEmptyCharacterClassInRegex": "info",
+				"noEmptyPattern": "error",
+				"noGlobalObjectCalls": "error",
+				"noInvalidBuiltinInstantiation": "error",
+				"noInvalidConstructorSuper": "error",
+				"noNonoctalDecimalEscape": "error",
+				"noPrecisionLoss": "error",
+				"noSelfAssign": "error",
+				"noSetterReturn": "error",
+				"noSwitchDeclarations": "error",
+				"noUndeclaredVariables": "error",
+				"noUnreachable": "error",
+				"noUnreachableSuper": "error",
+				"noUnsafeFinally": "error",
+				"noUnsafeOptionalChaining": "error",
+				"noUnusedLabels": "error",
+				"noUnusedPrivateClassMembers": "error",
+				"noUnusedVariables": "error",
+				"useIsNan": "error",
+				"useValidForDirection": "error",
+				"useValidTypeof": "error",
+				"useYield": "error"
+			},
+			"style": {
+				"noCommonJs": "error",
+				"noNamespace": "error",
+				"useArrayLiterals": "error",
+				"useAsConstAssertion": "error",
+				"useBlockStatements": "off",
+				"useConst": "warn"
+			},
+			"suspicious": {
+				"noAsyncPromiseExecutor": "error",
+				"noCatchAssign": "error",
+				"noClassAssign": "error",
+				"noCompareNegZero": "error",
+				"noConstantBinaryExpressions": "error",
+				"noControlCharactersInRegex": "info",
+				"noDebugger": "error",
+				"noDuplicateCase": "error",
+				"noDuplicateClassMembers": "error",
+				"noDuplicateElseIf": "error",
+				"noDuplicateObjectKeys": "error",
+				"noDuplicateParameters": "error",
+				"noEmptyBlockStatements": "error",
+				"noExplicitAny": "error",
+				"noExtraNonNullAssertion": "error",
+				"noFallthroughSwitchClause": "error",
+				"noFunctionAssign": "error",
+				"noGlobalAssign": "error",
+				"noImportAssign": "error",
+				"noIrregularWhitespace": "error",
+				"noMisleadingCharacterClass": "error",
+				"noMisleadingInstantiator": "error",
+				"noNonNullAssertedOptionalChain": "error",
+				"noPrototypeBuiltins": "info",
+				"noRedeclare": "error",
+				"noShadowRestrictedNames": "error",
+				"noSparseArray": "error",
+				"noUnsafeDeclarationMerging": "error",
+				"noUnsafeNegation": "error",
+				"noUnusedExpressions": "off",
+				"noUselessRegexBackrefs": "error",
+				"noWith": "error",
+				"useGetterReturn": "error",
+				"useNamespaceKeyword": "error",
+				"noConsole": {
+					"fix": "safe",
+					"level": "warn",
+					"options": {
+						"allow": [
+							"warn",
+							"table",
+							"error",
+							"info",
+							"dir",
+							"dirxml",
+							"group",
+							"groupCollapsed",
+							"groupEnd",
+							"time",
+							"timeEnd",
+							"trace",
+							"assert",
+							"clear"
+						]
+					}
+				}
+			}
+		},
+		"includes": [
+			"**",
+			"!node_modules/*",
+			"!dist/*",
+			"!coverage/*",
+			"!**/*.test.ts",
+			"!**/__tests__/**/*",
+			"!.VSCodeCounter/*"
+		]
+	},
+	"javascript": {
+		"formatter": {
+			"jsxQuoteStyle": "double",
+			"quoteProperties": "asNeeded",
+			"trailingCommas": "es5",
+			"semicolons": "always",
+			"arrowParentheses": "always",
+			"bracketSameLine": false,
+			"quoteStyle": "single",
+			"attributePosition": "auto",
+			"bracketSpacing": true
+		}
+	},
+	"html": {
+		"formatter": { "indentScriptAndStyle": false, "selfCloseVoidElements": "always" }
+	},
+	"overrides": [
+		{
+			"includes": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
+			"linter": {
+				"rules": {
+					"complexity": { "noArguments": "error" },
+					"correctness": {
+						"noConstAssign": "off",
+						"noGlobalObjectCalls": "off",
+						"noInvalidBuiltinInstantiation": "off",
+						"noInvalidConstructorSuper": "off",
+						"noSetterReturn": "off",
+						"noUndeclaredVariables": "off",
+						"noUnreachable": "off",
+						"noUnreachableSuper": "off"
+					},
+					"style": { "useConst": "error" },
+					"suspicious": {
+						"noClassAssign": "off",
+						"noDuplicateClassMembers": "off",
+						"noDuplicateObjectKeys": "off",
+						"noDuplicateParameters": "off",
+						"noFunctionAssign": "off",
+						"noImportAssign": "off",
+						"noRedeclare": "off",
+						"noUnsafeNegation": "off",
+						"noVar": "error",
+						"noWith": "off",
+						"useGetterReturn": "off"
+					}
+				}
+			}
+		},
+		{
+			"includes": ["src/**/utils/*.ts", "src/**/*types.ts", "src/**/types/*.ts"],
+			"linter": { "rules": { "complexity": { "noBannedTypes": "off" } } }
+		},
+		{
+			"includes": ["__ideas__/**/*.ts", "__*.ts"],
+			"linter": { "rules": { "correctness": { "noUnusedVariables": "off" } } }
+		},
+		{
+			"includes": ["src/**/*types.ts", "src/**/*interfaces.ts"],
+			"linter": { "rules": { "correctness": { "noUnusedVariables": "off" } } }
+		},
+		{
+			"includes": ["src/**/*types.ts", "src/**/types/*.ts", "__ideas__/**/*.ts"],
+			"linter": { "rules": { "suspicious": { "noExplicitAny": "off" } } }
+		},
+		{
+			"includes": ["**/*.js", "**/*.cjs"],
+			"linter": { "rules": { "style": { "noCommonJs": "off" } } }
+		},
+		{
+			"includes": ["**/*.extensions.ts"],
+			"linter": { "rules": { "complexity": { "noBannedTypes": "off" } } }
+		},
+		{
+			"includes": [
+				"**/*.ts",
+				"**/*.tsx",
+				"**/*.js",
+				"**/*.jsx",
+				"!**/__ideas__/**",
+				"!**/__dump__/**",
+				"!__test.*"
+			],
+			"linter": { "rules": { "suspicious": { "noConsole": "off" } } }
+		}
+	],
+	"assist": { "enabled": true, "actions": { "source": { "organizeImports": "on" } } }
+}

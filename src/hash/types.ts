@@ -34,8 +34,9 @@ export interface $UUIDOptions<V extends SupportedVersion = 'v4'> {
 }
 
 /** * Options for generating UUID */
-export type UUIDOptions<V extends SupportedVersion = 'v4'> =
-	V extends 'v3' | 'v5' ? $UUIDOptionsV3V5<V> : $UUIDOptions<V>;
+export type UUIDOptions<V extends SupportedVersion = 'v4'> = V extends 'v3' | 'v5'
+	? $UUIDOptionsV3V5<V>
+	: $UUIDOptions<V>;
 
 /** Type representing decoded UUID info */
 export interface DecodedUUID {
@@ -154,4 +155,4 @@ export type DecodedToken<T extends GenericObject = GenericObject> = {
 	signingInput: `${string}.${string}`;
 };
 
-export type { SignetPayload as TokenPayload, SignetHeader as TokenHeader };
+export type { SignetHeader as TokenHeader, SignetPayload as TokenPayload };

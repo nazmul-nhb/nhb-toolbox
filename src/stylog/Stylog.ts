@@ -321,8 +321,9 @@ export class LogStyler {
 				} else if (_isCSS16Color(style)) {
 					const color = _css16ToHex(style);
 
-					const colorValue =
-						style.startsWith('css-bg') ? `background: ${color}` : `color: ${color}`;
+					const colorValue = style.startsWith('css-bg')
+						? `background: ${color}`
+						: `color: ${color}`;
 
 					cssList.push(colorValue);
 				}
@@ -507,9 +508,9 @@ export class LogStyler {
 			if (this.#isValidRGB(...rgb)) {
 				return this.#applyStyles(
 					rgbToAnsi(...rgb, isBg),
-					isBg ?
-						`bg-rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
-					:	`rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
+					isBg
+						? `bg-rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
+						: `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
 				);
 			} else {
 				return this.#applyStyles();
@@ -518,9 +519,9 @@ export class LogStyler {
 			if (this.#isValidRGB(code, green, blue)) {
 				return this.#applyStyles(
 					rgbToAnsi(code, green, blue, isBg),
-					isBg ?
-						`bg-rgb(${code}, ${green}, ${blue})`
-					:	`rgb(${code}, ${green}, ${blue})`
+					isBg
+						? `bg-rgb(${code}, ${green}, ${blue})`
+						: `rgb(${code}, ${green}, ${blue})`
 				);
 			} else {
 				return this.#applyStyles();

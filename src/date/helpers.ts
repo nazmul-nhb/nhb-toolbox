@@ -123,9 +123,7 @@ export const _secToDate = (sec: number) => new Date(sec * 1000);
 type $TzNameType = Intl.DateTimeFormatOptions['timeZoneName'];
 type $TzId = Maybe<$TimeZoneIdentifier>;
 type $ResolvedTzName<T extends $TzNameType> = Maybe<
-	T extends 'long' ? TimeZoneNameNative
-	: T extends 'longOffset' ? $GMTOffset
-	: string
+	T extends 'long' ? TimeZoneNameNative : T extends 'longOffset' ? $GMTOffset : string
 >;
 
 /** Resolve `timeZoneName` value from `Intl.DateTimeFormat` */
@@ -200,10 +198,9 @@ export function _getElapsedDays(date: Date): number {
 export function _bnDaysMonthIdx(date: Date, variant?: BnCalendarVariant) {
 	const v = variant ?? 'revised-2019';
 
-	const table =
-		_isBnLeapYear(_getBnYear(date), date.getFullYear(), v) ?
-			BN_MONTH_TABLES?.[v].leap
-		:	BN_MONTH_TABLES?.[v].normal;
+	const table = _isBnLeapYear(_getBnYear(date), date.getFullYear(), v)
+		? BN_MONTH_TABLES?.[v].leap
+		: BN_MONTH_TABLES?.[v].normal;
 
 	let days = _getElapsedDays(date);
 	let monthIdx = 0;
@@ -245,9 +242,9 @@ export function _padShunno(str: string, length = 2) {
  * @returns A `Date` object representing the input date.
  */
 export function _dateArgsToDate(value: Maybe<DateArgs>): Date {
-	return isDate(value) ? value : (
-			new Date(isString(value) ? value.replace(/['"]/g, '') : (value ?? Date.now()))
-		);
+	return isDate(value)
+		? value
+		: new Date(isString(value) ? value.replace(/['"]/g, '') : (value ?? Date.now()));
 }
 
 /**

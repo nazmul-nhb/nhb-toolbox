@@ -111,10 +111,11 @@ export interface FileError extends Error {
 }
 
 /** THe return type of `serializeForm` wither as object or query string. */
-export type SerializedForm<T extends boolean> =
-	T extends false ? Record<string, string | string[]> : QueryString;
+export type SerializedForm<T extends boolean> = T extends false
+	? Record<string, string | string[]>
+	: QueryString;
 
 /** * Represents the parsed form data. */
-export type ParsedFormData<T> =
-	T extends string ? Record<string, string | string[]>
-	:	Record<string, string | string[] | File | File[]>;
+export type ParsedFormData<T> = T extends string
+	? Record<string, string | string[]>
+	: Record<string, string | string[] | File | File[]>;

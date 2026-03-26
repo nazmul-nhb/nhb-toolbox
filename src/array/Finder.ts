@@ -82,9 +82,9 @@ export class Finder<T extends GenericObject> {
 		if (!source?.length) return [];
 
 		const rawGetKey =
-			typeof keySelector === 'function' ? keySelector : (
-				(item: T) => item[keySelector] as string | number
-			);
+			typeof keySelector === 'function'
+				? keySelector
+				: (item: T) => item[keySelector] as string | number;
 
 		const getKey = Finder.#createMemoizedKeyGetter(rawGetKey);
 
@@ -124,9 +124,9 @@ export class Finder<T extends GenericObject> {
 				const baseKey = getKey(firstMatch);
 
 				const base =
-					caseInsensitive && typeof baseKey === 'string' ?
-						baseKey.toLowerCase()
-					:	baseKey;
+					caseInsensitive && typeof baseKey === 'string'
+						? baseKey.toLowerCase()
+						: baseKey;
 
 				results = sorted.filter((item) => {
 					const key = getKey(item);
@@ -144,9 +144,9 @@ export class Finder<T extends GenericObject> {
 				const rawKey = getKey(item);
 
 				const key =
-					caseInsensitive && typeof rawKey === 'string' ?
-						rawKey.toLowerCase()
-					:	String(rawKey);
+					caseInsensitive && typeof rawKey === 'string'
+						? rawKey.toLowerCase()
+						: String(rawKey);
 
 				return this.#match(key, normalizedMatcher);
 			});
@@ -187,9 +187,9 @@ export class Finder<T extends GenericObject> {
 		if (!source?.length) return undefined;
 
 		const rawGetKey =
-			typeof keySelector === 'function' ? keySelector : (
-				(item: T) => item[keySelector] as string | number
-			);
+			typeof keySelector === 'function'
+				? keySelector
+				: (item: T) => item[keySelector] as string | number;
 
 		const getKey = Finder.#createMemoizedKeyGetter(rawGetKey);
 
@@ -324,9 +324,9 @@ export class Finder<T extends GenericObject> {
 		for (const item of array) {
 			const rawKey = keySelector(item);
 			const key =
-				caseInsensitive && typeof rawKey === 'string' ?
-					rawKey.toLowerCase()
-				:	String(rawKey);
+				caseInsensitive && typeof rawKey === 'string'
+					? rawKey.toLowerCase()
+					: String(rawKey);
 			if (this.#match(key, matcher)) return item;
 		}
 
@@ -372,11 +372,7 @@ export class Finder<T extends GenericObject> {
 		const sorted = [...data].sort((a, b) => {
 			const keyA = getKey(a);
 			const keyB = getKey(b);
-			return (
-				keyA < keyB ? -1
-				: keyA > keyB ? 1
-				: 0
-			);
+			return keyA < keyB ? -1 : keyA > keyB ? 1 : 0;
 		});
 
 		if (cacheKey) {

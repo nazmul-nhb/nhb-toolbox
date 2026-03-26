@@ -31,10 +31,7 @@ describe('wordsToNumber — valid cardinal conversions', () => {
 		['twelve thousand three hundred forty-five', 12345],
 		// millions
 		['one million', 1_000_000],
-		[
-			'one million two hundred thirty-four thousand five hundred sixty-seven',
-			1_234_567,
-		],
+		['one million two hundred thirty-four thousand five hundred sixty-seven', 1_234_567],
 		// mixed whitespace and commas
 		['1,234', 1234],
 		['042', 42],

@@ -59,9 +59,9 @@ class HolidayRegistry {
 		const defs = this.registry.get(country) ?? [];
 		for (const def of defs) {
 			out.push(
-				...(isArray<MonthDateString>(def.dates) ?
-					def.dates.map((d) => new Date(`${currentYear}-${d}`))
-				:	def.dates(year))
+				...(isArray<MonthDateString>(def.dates)
+					? def.dates.map((d) => new Date(`${currentYear}-${d}`))
+					: def.dates(year))
 			);
 		}
 		// (optional) sort & dedupe

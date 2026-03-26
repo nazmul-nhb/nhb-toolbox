@@ -18,9 +18,13 @@ describe('flattenArray', () => {
 	});
 
 	test('should handle mixed data types', () => {
-		expect(
-			flattenArray([1, 'a', [true, [null, [{ key: 'value' }]]]]),
-		).toEqual([1, 'a', true, null, { key: 'value' }]);
+		expect(flattenArray([1, 'a', [true, [null, [{ key: 'value' }]]]])).toEqual([
+			1,
+			'a',
+			true,
+			null,
+			{ key: 'value' },
+		]);
 	});
 
 	test('should handle an array with a single element', () => {

@@ -10,8 +10,7 @@ function expectNumberApproximately(got: number, expected: number) {
 	const absExp = Math.abs(expected);
 
 	// If it's a decimal or beyond safe integer, use scaled close-to
-	const needsApprox =
-		!Number.isInteger(expected) || absExp > Number.MAX_SAFE_INTEGER;
+	const needsApprox = !Number.isInteger(expected) || absExp > Number.MAX_SAFE_INTEGER;
 
 	if (!needsApprox) {
 		expect(got).toBe(expected);
@@ -20,10 +19,7 @@ function expectNumberApproximately(got: number, expected: number) {
 
 	// Choose a scale so ULPs don't dominate—keep it simple.
 	// 1e18 works well for 10^18–10^20; 1e15 for 10^15–10^18, else 1.
-	const scale =
-		absExp >= 1e18 ? 1e18
-		: absExp >= 1e15 ? 1e15
-		: 1;
+	const scale = absExp >= 1e18 ? 1e18 : absExp >= 1e15 ? 1e15 : 1;
 
 	// precision=1 => within 0.5 of scaled value, which is generous enough
 	// to accommodate float rounding at huge magnitudes.
@@ -95,10 +91,7 @@ describe('wordsToNumber — negatives at scale', () => {
 	test.each<[string, number]>([
 		['minus one trillion', -1_000_000_000_000],
 		['negative two quadrillion three hundred', -2_000_000_000_000_300],
-		[
-			'minus one quintillion two hundred thirty-four thousand',
-			-1_000_000_000_000_234_000,
-		],
+		['minus one quintillion two hundred thirty-four thousand', -1_000_000_000_000_234_000],
 	])('parses negative "%s"', (input, expected) => {
 		const got = wordsToNumber(input);
 		expectNumberApproximately(got, expected);

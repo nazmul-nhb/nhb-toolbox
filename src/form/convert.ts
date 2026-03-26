@@ -30,20 +30,18 @@ export const createControlledFormData = <T extends GenericObject>(
 
 	/** - Helper to check if a key should be lowercase */
 	const _shouldLowercaseKeys = (key: string) => {
-		return Array.isArray(configs?.lowerCaseKeys) ?
-				configs?.lowerCaseKeys?.some(
-					(path) => key === path || key.startsWith(`${path}.`)
-				)
-			:	configs?.lowerCaseKeys === '*';
+		return Array.isArray(configs?.lowerCaseKeys)
+			? configs?.lowerCaseKeys?.some((path) => key === path || key.startsWith(`${path}.`))
+			: configs?.lowerCaseKeys === '*';
 	};
 
 	/** - Helper to check if a key should be lowercase */
 	const _shouldLowercaseValue = (key: string) => {
-		return Array.isArray(configs?.lowerCaseValues) ?
-				configs.lowerCaseValues?.some(
+		return Array.isArray(configs?.lowerCaseValues)
+			? configs.lowerCaseValues?.some(
 					(path) => key === path || key?.startsWith(`${path}.`)
 				)
-			:	configs?.lowerCaseValues === '*';
+			: configs?.lowerCaseValues === '*';
 	};
 
 	/** - Transforms key to lowercase if needed */
@@ -55,38 +53,38 @@ export const createControlledFormData = <T extends GenericObject>(
 	const _isRequiredKey = (key: string) => {
 		const transformedKey = _transformKey(key);
 
-		return Array.isArray(configs?.requiredKeys) ?
-				configs?.requiredKeys?.some(
+		return Array.isArray(configs?.requiredKeys)
+			? configs?.requiredKeys?.some(
 					(path) => transformedKey === path || transformedKey?.startsWith(`${path}.`)
 				)
-			:	configs?.requiredKeys === '*';
+			: configs?.requiredKeys === '*';
 	};
 
 	/** - Helper function to check if a key matches a dotNotation path to preserve. */
 	const _shouldDotNotate = (key: string) => {
 		const transformedKey = _transformKey(key);
 
-		return Array.isArray(configs?.dotNotateNested) ?
-				configs.dotNotateNested.includes(transformedKey as KeyForObject<T>)
-			:	configs?.dotNotateNested === '*';
+		return Array.isArray(configs?.dotNotateNested)
+			? configs.dotNotateNested.includes(transformedKey as KeyForObject<T>)
+			: configs?.dotNotateNested === '*';
 	};
 
 	/** - Helper function to check if a key matches a stringifyNested key. */
 	const _shouldStringify = (key: string) => {
 		const transformedKey = _transformKey(key);
 
-		return Array.isArray(stringifyNested) ?
-				stringifyNested.includes(transformedKey as KeyForObject<T>)
-			:	stringifyNested === '*';
+		return Array.isArray(stringifyNested)
+			? stringifyNested.includes(transformedKey as KeyForObject<T>)
+			: stringifyNested === '*';
 	};
 
 	/** - Helper function to check if a key matches a breakArray key. */
 	const _shouldBreakArray = (key: string) => {
 		const transformedKey = _transformKey(key);
 
-		return Array.isArray(configs?.breakArray) ?
-				configs.breakArray.includes(transformedKey as KeyForObject<T>)
-			:	configs?.breakArray === '*';
+		return Array.isArray(configs?.breakArray)
+			? configs.breakArray.includes(transformedKey as KeyForObject<T>)
+			: configs?.breakArray === '*';
 	};
 
 	/** - Helper to clean object by removing null/undefined/empty values while respecting required keys */

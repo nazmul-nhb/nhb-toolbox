@@ -95,10 +95,11 @@ export const dateRangePlugin = ($Chronos: $Chronos): void => {
 			endDate = endDate.startOf('day');
 		}
 
-		const skippedDays =
-			isValidArray(onlyDays) ? onlyDays
-			: isValidArray(skipDays) ? skipDays
-			: [];
+		const skippedDays = isValidArray(onlyDays)
+			? onlyDays
+			: isValidArray(skipDays)
+				? skipDays
+				: [];
 
 		const skipSet = new Set<number>(
 			skippedDays.map((day) => (isNumber(day) ? day : DAYS.indexOf(day)))

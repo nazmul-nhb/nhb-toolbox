@@ -492,10 +492,10 @@ export class Chronos {
 	 */
 	#removeUTCFromISO(local = true): string {
 		const search = /\.\d+(Z|[+-]\d{2}:\d{2})?$/;
-
-		return local ?
-				this.toLocalISOString().replace(search, '')
-			:	this.toISOString().replace(search, '');
+		console.info();
+		return local
+			? this.toLocalISOString().replace(search, '')
+			: this.toISOString().replace(search, '');
 	}
 
 	// ! ======= Getter Methods ======= //
@@ -1528,9 +1528,11 @@ export class Chronos {
 		return new Chronos(
 			year ?? now.year,
 			month ?? now.isoMonth,
-			date ? date
-			: now.isLastDayOfMonth() && now.date >= nextLDoM() ? nextLDoM()
-			: now.date,
+			date
+				? date
+				: now.isLastDayOfMonth() && now.date >= nextLDoM()
+					? nextLDoM()
+					: now.date,
 			hour ?? now.hour,
 			minute ?? now.minute,
 			second ?? now.second,
@@ -1934,7 +1936,6 @@ export class Chronos {
 }
 
 export { chronos, chronosjs, chronosts, chronus, chronusjs, chronusts } from './chronos-fn';
-export { Chronos as Chronus };
-
 // ! Chronos `INTERNALS` Symbol for plugin authors
 export { INTERNALS } from './constants';
+export { Chronos as Chronus };

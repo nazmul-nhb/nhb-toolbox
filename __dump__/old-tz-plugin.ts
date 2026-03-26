@@ -1,7 +1,7 @@
 import type { LooseLiteral } from '../../utils/types';
 import { INTERNALS } from '../constants';
 import { isValidTimeZoneId, isValidUTCOffset } from '../guards';
-import { TIME_ZONES, TIME_ZONE_IDS, TIME_ZONE_LABELS } from '../timezone';
+import { TIME_ZONE_IDS, TIME_ZONE_LABELS, TIME_ZONES } from '../timezone';
 import type {
 	$TZLabelKey,
 	TimeZone,
@@ -145,9 +145,9 @@ export const timeZonePlugin = (ChronosClass: MainChronos): void => {
 
 			return tzName || priorityName || resolvedName || tzNameLong;
 		} else {
-			return zone in TIME_ZONES ?
-					TIME_ZONES[zone].tzName
-				:	_resolveTzName(TIME_ZONES[zone]?.offset);
+			return zone in TIME_ZONES
+				? TIME_ZONES[zone].tzName
+				: _resolveTzName(TIME_ZONES[zone]?.offset);
 		}
 	};
 

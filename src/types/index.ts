@@ -113,9 +113,11 @@ export type AdvancedTypes =
 	| symbol;
 
 /** Helper to detect if a type has methods */
-export type HasMethods<T> =
-	{ [K in keyof T]: T[K] extends Function ? true : never }[keyof T] extends never ? false
-	:	true;
+export type HasMethods<T> = {
+	[K in keyof T]: T[K] extends Function ? true : never;
+}[keyof T] extends never
+	? false
+	: true;
 
 /** * Represents detailed information about a class's methods. */
 export interface ClassDetails {

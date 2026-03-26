@@ -177,9 +177,9 @@ export function numberToWordsOrdinal(number: Numeric | string) {
 	};
 
 	const wordNumber =
-		isNumericString(number) || isNumber(number) ?
-			numberToWords(number)
-		:	number?.trim()?.toLowerCase();
+		isNumericString(number) || isNumber(number)
+			? numberToWords(number)
+			: number?.trim()?.toLowerCase();
 
 	if (TEEN_OR_HUNDRED.test(wordNumber)) {
 		return wordNumber + 'th';

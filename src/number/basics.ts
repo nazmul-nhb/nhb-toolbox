@@ -71,9 +71,9 @@ export const convertToDecimal = <T extends Maybe<boolean> = false>(
 
 	const number = typeof input === 'number' ? input : Number(input);
 
-	return isString ?
-			(number.toFixed(decimalPlaces) as ConvertedDecimal<T>)
-		:	(Number(number.toFixed(decimalPlaces)) as ConvertedDecimal<T>);
+	return isString
+		? (number.toFixed(decimalPlaces) as ConvertedDecimal<T>)
+		: (Number(number.toFixed(decimalPlaces)) as ConvertedDecimal<T>);
 };
 
 /**

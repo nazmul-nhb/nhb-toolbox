@@ -103,7 +103,7 @@ export function getNumbersInRange<T extends boolean = false>(
 		output = _applyMultiples(output, multiplesOf);
 	}
 
-	return getAsString ?
-			(convertArrayToString(output, { separator }) as RangedNumbers<T>)
-		:	(output as RangedNumbers<T>);
+	return getAsString
+		? (convertArrayToString(output, { separator }) as RangedNumbers<T>)
+		: (output as RangedNumbers<T>);
 }

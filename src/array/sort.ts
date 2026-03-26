@@ -168,9 +168,9 @@ export function sortAnArray<T extends BasicPrimitive | GenericObject>(
 			}
 
 			if (isString(keyA) && isString(keyB)) {
-				return options?.sortOrder === 'desc' ?
-						naturalSort(keyB, keyA)
-					:	naturalSort(keyA, keyB);
+				return options?.sortOrder === 'desc'
+					? naturalSort(keyB, keyA)
+					: naturalSort(keyA, keyB);
 			}
 
 			if (isNumber(keyA) && isNumber(keyB)) {
@@ -178,9 +178,9 @@ export function sortAnArray<T extends BasicPrimitive | GenericObject>(
 			}
 
 			if (isBoolean(keyA) && isBoolean(keyB)) {
-				return options?.sortOrder === 'desc' ?
-						Number(keyB) - Number(keyA)
-					:	Number(keyA) - Number(keyB);
+				return options?.sortOrder === 'desc'
+					? Number(keyB) - Number(keyA)
+					: Number(keyA) - Number(keyB);
 			}
 
 			return 0;

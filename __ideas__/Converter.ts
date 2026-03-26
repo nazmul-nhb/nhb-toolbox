@@ -93,11 +93,15 @@ class Temperature extends Base<UnitMap['temp']> {
 type T = InferCategory<'celsius'>;
 
 export type Converted<U extends Unit> =
-	InferCategory<U> extends 'time' ? Time
-	: InferCategory<U> extends 'length' ? Length
-	: InferCategory<U> extends 'data' ? Data
-	: InferCategory<U> extends 'temp' ? Temperature
-	: never;
+	InferCategory<U> extends 'time'
+		? Time
+		: InferCategory<U> extends 'length'
+			? Length
+			: InferCategory<U> extends 'data'
+				? Data
+				: InferCategory<U> extends 'temp'
+					? Temperature
+					: never;
 
 /**
  * * Factory function that returns appropriate converter instance

@@ -234,18 +234,17 @@ export class BanglaCalendar {
 		this.variant = this.#processVariants(dateBnYrOrCfg, bnMonthOrCfg, bnDateOrCfg, config);
 
 		let date =
-			dateBnYrOrCfg instanceof Date ? dateBnYrOrCfg : (
-				new Date(
-					(
+			dateBnYrOrCfg instanceof Date
+				? dateBnYrOrCfg
+				: new Date(
 						isDateString(dateBnYrOrCfg) &&
 							!BanglaCalendar.isBanglaDateString(dateBnYrOrCfg)
-					) ?
-						dateBnYrOrCfg
-					: isNumber(dateBnYrOrCfg) && !BanglaCalendar.isBanglaYearEn(dateBnYrOrCfg) ?
-						dateBnYrOrCfg
-					:	Date.now()
-				)
-			);
+							? dateBnYrOrCfg
+							: isNumber(dateBnYrOrCfg) &&
+									!BanglaCalendar.isBanglaYearEn(dateBnYrOrCfg)
+								? dateBnYrOrCfg
+								: Date.now()
+					);
 
 		if (isNaN(date.getTime())) {
 			date = new Date();
@@ -253,21 +252,23 @@ export class BanglaCalendar {
 
 		const { year, month, monthDate } = this.#processDate(date);
 
-		let bnYear =
-			BanglaCalendar.isBanglaYear(dateBnYrOrCfg) ? banglaToDigit(dateBnYrOrCfg)
-			: isNumber(dateBnYrOrCfg) && BanglaCalendar.isBanglaYearEn(dateBnYrOrCfg) ?
-				dateBnYrOrCfg
-			:	year;
+		let bnYear = BanglaCalendar.isBanglaYear(dateBnYrOrCfg)
+			? banglaToDigit(dateBnYrOrCfg)
+			: isNumber(dateBnYrOrCfg) && BanglaCalendar.isBanglaYearEn(dateBnYrOrCfg)
+				? dateBnYrOrCfg
+				: year;
 
-		let bnMonth =
-			BanglaCalendar.isBanglaMonth(bnMonthOrCfg) ? banglaToDigit(bnMonthOrCfg)
-			: BanglaCalendar.isBanglaMonthEn(bnMonthOrCfg) ? bnMonthOrCfg
-			: month;
+		let bnMonth = BanglaCalendar.isBanglaMonth(bnMonthOrCfg)
+			? banglaToDigit(bnMonthOrCfg)
+			: BanglaCalendar.isBanglaMonthEn(bnMonthOrCfg)
+				? bnMonthOrCfg
+				: month;
 
-		let bnDate =
-			BanglaCalendar.isBanglaDate(bnDateOrCfg) ? banglaToDigit(bnDateOrCfg)
-			: BanglaCalendar.isBanglaDateEn(bnDateOrCfg) ? bnDateOrCfg
-			: monthDate;
+		let bnDate = BanglaCalendar.isBanglaDate(bnDateOrCfg)
+			? banglaToDigit(bnDateOrCfg)
+			: BanglaCalendar.isBanglaDateEn(bnDateOrCfg)
+				? bnDateOrCfg
+				: monthDate;
 
 		if (BanglaCalendar.isBanglaDateString(dateBnYrOrCfg)) {
 			const parts = dateBnYrOrCfg.replace(/['"]/g, '').split('-');
@@ -873,10 +874,9 @@ export class BanglaCalendar {
 	#getBnMonthTableLeap(gregYear: number, bnYear?: number) {
 		const isBnLeapYear = _isBnLeapYear(bnYear ?? this.year.en, gregYear, this.variant);
 
-		const bnMonthTable =
-			isBnLeapYear ?
-				BN_MONTH_TABLES?.[this.variant].leap
-			:	BN_MONTH_TABLES?.[this.variant].normal;
+		const bnMonthTable = isBnLeapYear
+			? BN_MONTH_TABLES?.[this.variant].leap
+			: BN_MONTH_TABLES?.[this.variant].normal;
 
 		return { bnMonthTable, isBnLeapYear };
 	}
@@ -905,13 +905,15 @@ export class BanglaCalendar {
 
 	/** Process variant from the config */
 	#processVariants(v1: unknown, v2: unknown, v3: unknown, v4: unknown) {
-		return (
-			this.$hasVariantConfig(v1) ? v1.variant
-			: this.$hasVariantConfig(v2) ? v2.variant
-			: this.$hasVariantConfig(v3) ? v3.variant
-			: this.$hasVariantConfig(v4) ? v4.variant
-			: 'revised-2019'
-		);
+		return this.$hasVariantConfig(v1)
+			? v1.variant
+			: this.$hasVariantConfig(v2)
+				? v2.variant
+				: this.$hasVariantConfig(v3)
+					? v3.variant
+					: this.$hasVariantConfig(v4)
+						? v4.variant
+						: 'revised-2019';
 	}
 
 	/** Process {@link Date} and extract Bangla year, month and dates in both Bangla and Latin */

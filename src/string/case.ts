@@ -212,9 +212,11 @@ export function convertStringCase(
 						return token
 							.split('-')
 							.map((sub) =>
-								isAcronym(sub) ? sub
-								: idx === 0 ? capitalize(sub)
-								: sub.toLowerCase()
+								isAcronym(sub)
+									? sub
+									: idx === 0
+										? capitalize(sub)
+										: sub.toLowerCase()
 							)
 							.join('-');
 					}
@@ -380,9 +382,8 @@ export function toPascalCase<Str extends string, Del extends string = ''>(
 	...del: Del[]
 ): PascalCase<Str, Del> {
 	return (
-		isNonEmptyString(str) ?
-			_normalizeDelimiters(str, del).map(_capitalize).join('')
-		:	'') as PascalCase<Str>;
+		isNonEmptyString(str) ? _normalizeDelimiters(str, del).map(_capitalize).join('') : ''
+	) as PascalCase<Str>;
 }
 
 /**
@@ -409,11 +410,12 @@ export function toSnakeCase<Str extends string, Del extends string = ''>(
 	...del: Del[]
 ): SnakeCase<Str, Del> {
 	return (
-		isNonEmptyString(str) ?
-			_normalizeDelimiters(str, del)
-				.map((w) => w.toLowerCase())
-				.join('_')
-		:	'') as SnakeCase<Str, Del>;
+		isNonEmptyString(str)
+			? _normalizeDelimiters(str, del)
+					.map((w) => w.toLowerCase())
+					.join('_')
+			: ''
+	) as SnakeCase<Str, Del>;
 }
 
 /**
@@ -440,11 +442,12 @@ export function toKebabCase<Str extends string, Del extends string = ''>(
 	...del: Del[]
 ): KebabCase<Str, Del> {
 	return (
-		isNonEmptyString(str) ?
-			_normalizeDelimiters(str, del)
-				.map((w) => w.toLowerCase())
-				.join('-')
-		:	'') as KebabCase<Str, Del>;
+		isNonEmptyString(str)
+			? _normalizeDelimiters(str, del)
+					.map((w) => w.toLowerCase())
+					.join('-')
+			: ''
+	) as KebabCase<Str, Del>;
 }
 
 /**
@@ -470,9 +473,8 @@ export function toTrainCase<Str extends string, Del extends string = ''>(
 	...del: Del[]
 ): TrainCase<Str, Del> {
 	return (
-		isNonEmptyString(str) ?
-			_normalizeDelimiters(str, del).map(_capitalize).join('-')
-		:	'') as TrainCase<Str, Del>;
+		isNonEmptyString(str) ? _normalizeDelimiters(str, del).map(_capitalize).join('-') : ''
+	) as TrainCase<Str, Del>;
 }
 
 /**
@@ -526,11 +528,12 @@ export function toPathCase<Str extends string, Del extends string = ''>(
 	...del: Del[]
 ): PathCase<Str, Del> {
 	return (
-		isNonEmptyString(str) ?
-			_normalizeDelimiters(str, del)
-				.map((w) => w.toLowerCase())
-				.join('/')
-		:	'') as PathCase<Str, Del>;
+		isNonEmptyString(str)
+			? _normalizeDelimiters(str, del)
+					.map((w) => w.toLowerCase())
+					.join('/')
+			: ''
+	) as PathCase<Str, Del>;
 }
 
 /**
@@ -556,11 +559,12 @@ export function toConstantCase<Str extends string, Del extends string = ''>(
 	...del: Del[]
 ): ConstantCase<Str, Del> {
 	return (
-		isNonEmptyString(str) ?
-			_normalizeDelimiters(str, del)
-				.map((w) => w.toUpperCase())
-				.join('_')
-		:	'') as ConstantCase<Str, Del>;
+		isNonEmptyString(str)
+			? _normalizeDelimiters(str, del)
+					.map((w) => w.toUpperCase())
+					.join('_')
+			: ''
+	) as ConstantCase<Str, Del>;
 }
 
 /**
@@ -586,9 +590,8 @@ export function toPascalSnakeCase<Str extends string, Del extends string = ''>(
 	...del: Del[]
 ): PascalSnakeCase<Str, Del> {
 	return (
-		isNonEmptyString(str) ?
-			_normalizeDelimiters(str, del).map(_capitalize).join('_')
-		:	'') as PascalSnakeCase<Str, Del>;
+		isNonEmptyString(str) ? _normalizeDelimiters(str, del).map(_capitalize).join('_') : ''
+	) as PascalSnakeCase<Str, Del>;
 }
 
 /**
@@ -616,15 +619,16 @@ export function toTitleCase<Str extends string, Del extends string = ''>(
 	...del: Del[]
 ): TitleCase<Str, Del> {
 	return (
-		isNonEmptyString(str) ?
-			_normalizeDelimiters(str, del)
-				.map((w, i) =>
-					i !== 0 && smallSet.has(w as $LowerCaseWord) ?
-						w.toLowerCase()
-					:	_capitalize(w)
-				)
-				.join(' ')
-		:	'') as TitleCase<Str, Del>;
+		isNonEmptyString(str)
+			? _normalizeDelimiters(str, del)
+					.map((w, i) =>
+						i !== 0 && smallSet.has(w as $LowerCaseWord)
+							? w.toLowerCase()
+							: _capitalize(w)
+					)
+					.join(' ')
+			: ''
+	) as TitleCase<Str, Del>;
 }
 
 /**
@@ -652,9 +656,10 @@ export function toSentenceCase<Str extends string, Del extends string = ''>(
 	...del: Del[]
 ): SentenceCase<Str, Del> {
 	return (
-		isNonEmptyString(str) ?
-			_normalizeDelimiters(str, del)
-				.map((w, i) => (i === 0 ? _capitalize(w) : w.toLowerCase()))
-				.join(' ')
-		:	'') as SentenceCase<Str, Del>;
+		isNonEmptyString(str)
+			? _normalizeDelimiters(str, del)
+					.map((w, i) => (i === 0 ? _capitalize(w) : w.toLowerCase()))
+					.join(' ')
+			: ''
+	) as SentenceCase<Str, Del>;
 }

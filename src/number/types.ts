@@ -12,8 +12,9 @@ import type {
 import type { Unit } from './Unit';
 
 /** Enumerate & Enumerate Internal: builds a union of all numbers from 0 to N - 1 */
-type $EnumerateInternal<N extends number, Acc extends number[] = []> =
-	Acc['length'] extends N ? Acc[number] : $EnumerateInternal<N, [...Acc, Acc['length']]>;
+type $EnumerateInternal<N extends number, Acc extends number[] = []> = Acc['length'] extends N
+	? Acc[number]
+	: $EnumerateInternal<N, [...Acc, Acc['length']]>;
 
 /**
  * * Builds a union of numeric literals from `0` to `N - 1`.
@@ -27,8 +28,9 @@ type $EnumerateInternal<N extends number, Acc extends number[] = []> =
 export type Enumerate<N extends number> = $EnumerateInternal<N>;
 
 /** Helper: Add 1 to a number */
-type $AddOne<N extends number, Acc extends unknown[] = []> =
-	Acc['length'] extends N ? [...Acc, unknown]['length'] : $AddOne<N, [...Acc, unknown]>;
+type $AddOne<N extends number, Acc extends unknown[] = []> = Acc['length'] extends N
+	? [...Acc, unknown]['length']
+	: $AddOne<N, [...Acc, unknown]>;
 
 /**
  *

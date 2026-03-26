@@ -96,9 +96,9 @@ export function sanitizeData<
 	 * @returns `true` if the key is required, otherwise `false`.
 	 */
 	const _isRequiredKey = (key: string) => {
-		return Array.isArray(requiredKeys) ?
-				requiredKeys?.some((path) => key === path || key.startsWith(`${path}.`))
-			:	requiredKeys === '*';
+		return Array.isArray(requiredKeys)
+			? requiredKeys?.some((path) => key === path || key.startsWith(`${path}.`))
+			: requiredKeys === '*';
 	};
 
 	/**

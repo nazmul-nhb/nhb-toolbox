@@ -171,10 +171,6 @@ export const durationPlugin = ($Chronos: $Chronos): void => {
 			.slice(0, maxUnits)
 			.map(([unit, value]) => _formatUnit(unit, value));
 
-		return (
-			parts.length ? parts.join(separator)
-			: style === 'short' ? '0s'
-			: '0 seconds'
-		);
+		return parts.length ? parts.join(separator) : style === 'short' ? '0s' : '0 seconds';
 	};
 };
