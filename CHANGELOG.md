@@ -4,6 +4,11 @@
 
 All notable changes to the package will be documented here.
 
+## [4.29.0] - 2026-03-26
+
+- **Added** new *string utilities* `computeTextDiff` and `getCharacterDifferences` for computing differences between two strings at both *line* and *character* levels.
+- **Added** new type `ISODateTimeString` (only includes `Z`) for `Chronos.toISOString()` method which is a subset of `ISOTimeString` that includes both `Z` and timezone offset formats.
+
 ## [4.28.80] - 2026-02-07
 
 - **Moved** `getDatesInRange` method to `Chronos` *plugin system*, usable via `dateRangePlugin`.
