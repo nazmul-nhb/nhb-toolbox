@@ -224,7 +224,7 @@ export { isHex6, isHex8, isHSL, isHSLA, isRGB, isRGBA } from './colors/guards';
 
 export { Color, Colour } from './colors/Color';
 
-export { extractAlphaColorValues, extractSolidColorValues } from './colors/utils';
+export { extractAlphaColorValues, extractSolidColorValues, percentToHex } from './colors/utils';
 
 // ! Date & Time Utilities
 export {

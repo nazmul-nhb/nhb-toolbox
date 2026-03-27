@@ -1,20 +1,4 @@
-import type { Percent } from '../number/types';
 import type { AlphaValue, Hex, Hex8, HSL } from './types';
-
-/**
- * * Converts percentage (0-100) to a 2-digit hex string.
- *
- * @param percent - The percentage (0-100) value.
- * @returns A 2-digit hex string representing the percentage (0-100) value.
- */
-export const _percentToHex = (percent: Percent): string => {
-	// Ensure opacity is between 0 and 100
-	const validOpacity = Math.min(100, Math.max(0, percent));
-	// Convert to a value between 0 and 255, then to a hex string
-	const alpha = Math.round((validOpacity / 100) * 255);
-	// Ensure it's 2 digits (e.g., 0x0A instead of 0xA)
-	return alpha.toString(16).padStart(2, '0').toUpperCase();
-};
 
 /**
  * * Applies an opacity value to a color string.

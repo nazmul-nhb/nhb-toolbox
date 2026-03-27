@@ -1,6 +1,6 @@
 import type { Percent } from '../number/types';
 import { isHex6, isHex8, isHSL, isHSLA, isRGB, isRGBA } from './guards';
-import { _isValidAlpha, _percentToHex } from './helpers';
+import { _isValidAlpha } from './helpers';
 import type {
 	ColorType,
 	ConvertedColors,
@@ -12,7 +12,7 @@ import type {
 	RGB,
 	RGBA,
 } from './types';
-import { extractAlphaColorValues, extractSolidColorValues } from './utils';
+import { extractAlphaColorValues, extractSolidColorValues, percentToHex } from './utils';
 
 /**
  * * Converts HSL to RGB color format.
@@ -210,7 +210,7 @@ export const convertRgbaToHex8 = (r: number, g: number, b: number, a: number = 1
 		console.warn(`Alpha value must be between 0-1, ${a} converted to 1!`);
 	}
 
-	const alphaHex = _percentToHex(Math.round(newAlpha * 100) as Percent);
+	const alphaHex = percentToHex(Math.round(newAlpha * 100) as Percent);
 
 	const hex = convertRgbToHex(r, g, b);
 
@@ -302,7 +302,7 @@ export const convertHslaToHex8 = (h: number, s: number, l: number, a: number = 1
 		console.warn(`Alpha value must be between 0-1, ${a} converted to 1!`);
 	}
 
-	const alphaHex = _percentToHex(Math.round(newAlpha * 100) as Percent);
+	const alphaHex = percentToHex(Math.round(newAlpha * 100) as Percent);
 
 	const hex = convertHslToHex(h, s, l);
 

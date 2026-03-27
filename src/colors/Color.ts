@@ -3,7 +3,6 @@ import type { Percent } from '../number/types';
 import { convertColorCode } from './convert';
 import { CSS_COLORS } from './css-colors';
 import { isHSL, isHSLA, isRGB, isRGBA } from './guards';
-import { _percentToHex } from './helpers';
 import { generateRandomHSLColor } from './random';
 import type {
 	AlphaColors,
@@ -20,7 +19,7 @@ import type {
 	Tetrad,
 	Triad,
 } from './types';
-import { extractAlphaColorValues, extractSolidColorValues } from './utils';
+import { extractAlphaColorValues, extractSolidColorValues, percentToHex } from './utils';
 
 /**
  * @class Represents a color in {@link Hex6 Hex}, {@link Hex8}, {@link RGB}, {@link RGBA}, {@link HSL}, and {@link HSLA} formats.
@@ -249,7 +248,7 @@ export class Color {
 	 * @param hex `Hex6` color to convert to `Hex8`.
 	 */
 	#hex6ToHex8(hex: Hex6): Hex8 {
-		return `${hex.toUpperCase()}${_percentToHex(100)}` as Hex8;
+		return `${hex.toUpperCase()}${percentToHex(100)}` as Hex8;
 	}
 
 	/**
@@ -291,7 +290,7 @@ export class Color {
 	 * console.log(alpha75.hex8); // #FF0000BF
 	 */
 	applyOpacity(opacity: Percent): Color {
-		const hex8 = `${this.hex.slice(0, 7)}${_percentToHex(opacity)}`.toUpperCase() as Hex8;
+		const hex8 = `${this.hex.slice(0, 7)}${percentToHex(opacity)}`.toUpperCase() as Hex8;
 
 		return new Color(hex8);
 	}
