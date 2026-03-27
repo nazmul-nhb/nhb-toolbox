@@ -4,6 +4,11 @@
 
 All notable changes to the package will be documented here.
 
+## [4.29.10] - 2026-03-27
+
+- **Added** new *color utlities* `applyOpacityToHex` and `percentToHex` for working with *hex colors* and *opacity*.
+- **Added** new *date utility* `formatDateRelative` to format a date as a relative time string (e.g., `"5m ago"`, `"2h from now"`, etc.) with an optional *custom format* for dates older than a week.
+
 ## [4.29.1] - 2026-03-27
 
 - **Updated** `getLevenshteinDistance` utility to be more *efficient* by using a *single-dimensional array* instead of a *matrix* for storing intermediate distances.
