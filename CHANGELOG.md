@@ -4,6 +4,10 @@
 
 All notable changes to the package will be documented here.
 
+## [4.29.1] - 2026-03-27
+
+- **Updated** `getLevenshteinDistance` utility to be more *efficient* by using a *single-dimensional array* instead of a *matrix* for storing intermediate distances.
+
 ## [4.29.0] - 2026-03-26
 
 - **Added** new *string utilities* `computeTextDiff` and `getCharacterDifferences` for computing differences between two strings at both *line* and *character* levels.

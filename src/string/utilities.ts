@@ -9,38 +9,38 @@ export const extractNumbersFromString = (input: string): number[] => {
 
 /**
  * * Computes the Levenshtein distance between two strings (space optimized).
- * @param a - First string.
- * @param b - Second string.
+ * @param str1 - First string to compare.
+ * @param str2 - Second string to compare.
  * @returns The Levenshtein distance between the two strings.
  *
  * @remarks
  * - The Levenshtein distance is the minimum number of single-character edits (insertions, deletions, or substitutions) required to change one string into the other.
- * - This implementation uses dynamic programming to efficiently compute the distance.
+ * - This implementation uses only O(min(len(a), len(b))) space by keeping only the current and previous rows of the distance matrix.
  *
  * @example
  * const distance = getLevenshteinDistance('kitten', 'sitting');
  * console.log(distance); // Output: 3
  */
-export const getLevenshteinDistance = (a: string, b: string): number => {
-	if (a === b) return 0;
+export const getLevenshteinDistance = (str1: string, str2: string): number => {
+	if (str1 === str2) return 0;
 
-	const lenA = a?.length;
-	const lenB = b?.length;
+	const lenA = str1?.length;
+	const lenB = str2?.length;
 
 	if (lenA < lenB) {
 		// Always use smaller string for columns → less memory
-		return getLevenshteinDistance(b, a);
+		return getLevenshteinDistance(str2, str1);
 	}
 
 	let prev: number[] = Array.from({ length: lenB + 1 }, (_, j) => j);
-	let curr: number[] = new Array(lenB + 1);
+	let curr: number[] = new Array<number>(lenB + 1);
 
 	for (let i = 1; i <= lenA; i++) {
 		curr[0] = i;
 
 		for (let j = 1; j <= lenB; j++) {
 			curr[j] =
-				a[i - 1] === b[j - 1]
+				str1[i - 1] === str2[j - 1]
 					? prev[j - 1]
 					: 1 + Math.min(prev[j], curr[j - 1], prev[j - 1]);
 		}
