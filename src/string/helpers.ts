@@ -1,3 +1,6 @@
+import type { TupleOf } from '../utils/types';
+import { getLevenshteinDistance } from './utilities';
+
 /**
  * Calculates the similarity between two strings using the Levenshtein edit distance.
  *
@@ -6,35 +9,15 @@
  * @returns A score between `0` and `1`, where `1` means identical and `0` means completely different.
  */
 export function _calculateSimilarity(str1: string, str2: string): number {
-	const len1 = str1.length;
-	const len2 = str2.length;
-	const maxLen = Math.max(len1, len2);
-
-	if (maxLen === 0) return 1;
-
 	// Quick check for identical strings
 	if (str1 === str2) return 1;
 
-	// Calculate edit distance
-	const matrix: number[][] = Array(len1 + 1)
-		.fill(null)
-		.map(() => Array(len2 + 1).fill(0));
+	const maxLen = Math.max(str1.length, str2.length);
 
-	for (let i = 0; i <= len1; i++) matrix[i][0] = i;
-	for (let j = 0; j <= len2; j++) matrix[0][j] = j;
+	if (maxLen === 0) return 1;
 
-	for (let i = 1; i <= len1; i++) {
-		for (let j = 1; j <= len2; j++) {
-			const cost = str1[i - 1] === str2[j - 1] ? 0 : 1;
-			matrix[i][j] = Math.min(
-				matrix[i - 1][j] + 1,
-				matrix[i][j - 1] + 1,
-				matrix[i - 1][j - 1] + cost
-			);
-		}
-	}
+	const distance = getLevenshteinDistance(str1, str2);
 
-	const distance = matrix[len1][len2];
 	return 1 - distance / maxLen;
 }
 
@@ -49,7 +32,7 @@ export function _buildCharLcsTable(original: string, modified: string): number[]
 	const origLen = original.length;
 	const modLen = modified.length;
 
-	const lcs = Array(origLen + 1)
+	const lcs: number[][] = Array(origLen + 1)
 		.fill(null)
 		.map(() => Array(modLen + 1).fill(0));
 
@@ -74,11 +57,7 @@ export function _buildCharLcsTable(original: string, modified: string): number[]
  * @param lcs The precomputed LCS table from {@link buildCharLcsTable}.
  * @returns A tuple `[origMatched, modMatched]` — sets of matched character indices for the original and modified strings respectively.
  */
-export function _getLcsIndices(
-	original: string,
-	modified: string,
-	lcs: number[][]
-): Set<number>[] {
+export function _getLcsIndices(original: string, modified: string, lcs: number[][]) {
 	const origLen = original.length;
 	const modLen = modified.length;
 
@@ -101,5 +80,5 @@ export function _getLcsIndices(
 		}
 	}
 
-	return [origMatched, modMatched];
+	return [origMatched, modMatched] as TupleOf<Set<number>, 2>;
 }

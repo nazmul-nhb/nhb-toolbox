@@ -8,28 +8,48 @@ export const extractNumbersFromString = (input: string): number[] => {
 };
 
 /**
- * * Computes the Levenshtein distance between two strings.
+ * * Computes the Levenshtein distance between two strings (space optimized).
  * @param a - First string.
  * @param b - Second string.
  * @returns The Levenshtein distance between the two strings.
+ *
+ * @remarks
+ * - The Levenshtein distance is the minimum number of single-character edits (insertions, deletions, or substitutions) required to change one string into the other.
+ * - This implementation uses dynamic programming to efficiently compute the distance.
+ *
+ * @example
+ * const distance = getLevenshteinDistance('kitten', 'sitting');
+ * console.log(distance); // Output: 3
  */
 export const getLevenshteinDistance = (a: string, b: string): number => {
+	if (a === b) return 0;
+
 	const lenA = a?.length;
 	const lenB = b?.length;
-	const dp: number[][] = Array.from({ length: lenA + 1 }, (_, i) =>
-		Array.from({ length: lenB + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
-	);
 
-	for (let i = 1; i <= lenA; i++) {
-		for (let j = 1; j <= lenB; j++) {
-			dp[i][j] =
-				a[i - 1] === b[j - 1]
-					? dp[i - 1][j - 1]
-					: 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
-		}
+	if (lenA < lenB) {
+		// Always use smaller string for columns → less memory
+		return getLevenshteinDistance(b, a);
 	}
 
-	return dp[lenA][lenB];
+	let prev: number[] = Array.from({ length: lenB + 1 }, (_, j) => j);
+	let curr: number[] = new Array(lenB + 1);
+
+	for (let i = 1; i <= lenA; i++) {
+		curr[0] = i;
+
+		for (let j = 1; j <= lenB; j++) {
+			curr[j] =
+				a[i - 1] === b[j - 1]
+					? prev[j - 1]
+					: 1 + Math.min(prev[j], curr[j - 1], prev[j - 1]);
+		}
+
+		// swap rows (no reallocation)
+		[prev, curr] = [curr, prev];
+	}
+
+	return prev[lenB];
 };
 
 /**

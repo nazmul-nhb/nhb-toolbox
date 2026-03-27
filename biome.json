@@ -1,7 +1,10 @@
 {
 	"$schema": "https://biomejs.dev/schemas/2.4.9/schema.json",
-	"vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
-	"files": { "includes": ["**", "!!**/dist"] },
+	"vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": false },
+	"files": {
+		"includes": ["**", "!!**/dist", "!!**/node_modules"],
+		"ignoreUnknown": true
+	},
 	"formatter": {
 		"enabled": true,
 		"formatWithErrors": false,
@@ -185,7 +188,12 @@
 		},
 		{
 			"includes": ["__ideas__/**/*.ts", "__*.ts"],
-			"linter": { "rules": { "correctness": { "noUnusedVariables": "off" } } }
+			"linter": {
+				"rules": {
+					"correctness": { "noUnusedVariables": "off" },
+					"suspicious": { "noConsole": "off" }
+				}
+			}
 		},
 		{
 			"includes": ["src/**/*types.ts", "src/**/*interfaces.ts"],

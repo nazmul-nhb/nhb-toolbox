@@ -311,6 +311,11 @@ export type ExtractRequired<T> = {
  */
 export type TupleToUnion<T extends readonly unknown[]> = T[number];
 
+/** Internal helper type to build a tuple of length N. */
+type $TupleOf<T, N extends number, R extends unknown[] = []> = R['length'] extends N
+	? R
+	: $TupleOf<T, N, [...R, T]>;
+
 /**
  * * Creates a tuple type of a given length with elements of type T
  *
@@ -324,9 +329,7 @@ export type TupleToUnion<T extends readonly unknown[]> = T[number];
  * type FiveStrings = TupleOf<string, 5>; // [string, string, string, string, string]
  * type EmptyTuple = TupleOf<boolean, 0>; // []
  */
-export type TupleOf<T, N extends number, R extends unknown[] = []> = R['length'] extends N
-	? R
-	: TupleOf<T, N, [...R, T]>;
+export type TupleOf<T, N extends number> = $TupleOf<T, N>;
 
 /** * Build a tuple of given length (helper for type-level arithmetic). */
 export type $BuildTuple<L extends number, T extends unknown[] = []> = T['length'] extends L
