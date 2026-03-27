@@ -224,7 +224,12 @@ export { isHex6, isHex8, isHSL, isHSLA, isRGB, isRGBA } from './colors/guards';
 
 export { Color, Colour } from './colors/Color';
 
-export { extractAlphaColorValues, extractSolidColorValues, percentToHex } from './colors/utils';
+export {
+	applyOpacityToHex,
+	extractAlphaColorValues,
+	extractSolidColorValues,
+	percentToHex,
+} from './colors/utils';
 
 // ! Date & Time Utilities
 export {
@@ -235,6 +240,7 @@ export {
 
 export { parseMSec as parseMs, parseMSec } from './date/parse';
 
+// ! Date & Time Guards
 export {
 	isDateLike,
 	isLeapYear,
@@ -279,6 +285,9 @@ export {
 	getTotalMinutes as extractTotalMinutesFromTime,
 	formatDate,
 	formatDate as formatDateTime,
+	formatDateRelative,
+	formatDateRelative as formatRelativeDate,
+	formatDateRelative as formatRelativeTime,
 	formatTimePart,
 	formatUTCOffset,
 	getCurrentDateTime,

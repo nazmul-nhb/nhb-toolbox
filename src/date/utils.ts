@@ -1,5 +1,5 @@
 import { isObject } from '../guards/non-primitives';
-import type { Numeric } from '../types/index';
+import type { Maybe, Numeric } from '../types/index';
 import { isValidUTCOffset } from './guards';
 import {
 	_dateArgsToDate,
@@ -18,6 +18,7 @@ import type {
 	HourMinutes,
 	ISODateFormat,
 	ISOTimeString,
+	StrictFormat,
 	TimeOnlyFormat,
 	TimestampOptions,
 	TimeZoneDetails,
@@ -250,6 +251,50 @@ export function formatTimePart(time: string, format?: TimeOnlyFormat): string {
 	const timeWithDate = `${formatDate({ format: 'YYYY-MM-DD' })}T${_normalizeOffset(time)}`;
 
 	return formatDate({ date: timeWithDate, format: format || 'hh:mm:ss a' });
+}
+
+/**
+ * * Formats a date as a relative time string (e.g., "5m ago", "2h from now").
+ *
+ * @param date - The date to format, which can be a `Date` object, a date string, or a timestamp number.
+ * @param format - Optional format string for dates older than 7 days. Defaults to `'mmm D, yyyy hh:mm a'`.
+ * @returns A relative time string if the date is within the last 7 days, otherwise a formatted date string.
+ *
+ * @remarks
+ * - If date is provided but `undefined`, current date and time will be used.
+ * - If the provided date is invalid, the function will return `'Invalid Date!'`.
+ * - For dates within the last 7 days, the output will be in the format of "Xm ago" or "Xh from now".
+ * - For dates older than 7 days, the output will be formatted using the provided `format` string or the default format if none is provided.
+ *
+ * @example
+ * formatDateRelative(Date.now() - 5 * 60000); // "5m ago"
+ * formatDateRelative(Date.now() + 2 * 3600000); // "2h from now"
+ * formatDateRelative(Date.now() - 10 * 86400000); // "Apr 6, 2026 04:11 PM" (formatted date string)
+ */
+export function formatDateRelative(date: Maybe<DateArgs>, format?: StrictFormat): string {
+	const $date = _dateArgsToDate(date);
+
+	if (isNaN($date.getTime())) {
+		return 'Invalid Date!';
+	}
+
+	const now = Date.now();
+	const then = $date.getTime();
+
+	const diff = Math.abs(now - then);
+
+	const minutes = Math.floor(diff / 60000);
+	const hours = Math.floor(diff / 3600000);
+	const days = Math.floor(diff / 86400000);
+
+	const suffix = then < now ? 'ago' : 'from now';
+
+	if (minutes < 1) return 'Just now';
+	if (minutes < 60) return `${minutes}m ${suffix}`;
+	if (hours < 24) return `${hours}h ${suffix}`;
+	if (days < 7) return `${days}d ${suffix}`;
+
+	return formatDate({ date, format: format || 'mmm D, yyyy hh:mm a' });
 }
 
 /**
