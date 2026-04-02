@@ -4,6 +4,11 @@
 
 All notable changes to the package will be documented here.
 
+## [4.29.20] - 2026-04-03
+
+- **Updated** `isEven` and `isOdd` utilities to accept *numeric string* and return `false` for `NaN` and *non-integer* values.
+- **Replaced** manual type checks with *type guards* internally for better *type safety* and *code readability*.
+
 ## [4.29.10] - 2026-03-27
 
 - **Added** new *color utlities* `applyOpacityToHex` and `percentToHex` for working with *hex colors* and *opacity*.

@@ -41,7 +41,7 @@ function defineMethod<
 		writable?: boolean;
 	}
 ): void {
-	const alreadyExists = Object.prototype.hasOwnProperty.call(proto, name);
+	const alreadyExists = Object.hasOwn(proto, name);
 
 	if (alreadyExists && !options?.overwrite) return;
 

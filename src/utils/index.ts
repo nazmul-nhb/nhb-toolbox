@@ -480,7 +480,7 @@ export function definePrototypeMethod<Proto extends object, Name extends keyof P
 	impl: (...args: unknown[]) => unknown,
 	options?: ProtoMethodOptions
 ): void {
-	const alreadyExists = Object.prototype.hasOwnProperty.call(proto, name);
+	const alreadyExists = Object.hasOwn(proto, name);
 
 	if (alreadyExists && !options?.overwrite) return;
 

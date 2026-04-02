@@ -53,8 +53,6 @@ function scrapTimeZone() {
 	return result;
 }
 
-console.log(scrapTimeZone());
-
 /** Scrap timezone data from {@link https://en.wikipedia.org/wiki/List_of_time_zone_abbreviations time zone abbreviations on Wikipedia} */
 function scrapTzAbbreviation() {
 	const zoneContainer =
@@ -90,7 +88,7 @@ function scrapTzAbbreviation() {
 		let count = 1;
 
 		// Incrementally suffix duplicates as “ABBR-1”, “ABBR-2”, etc.
-		while (Object.prototype.hasOwnProperty.call(result, abbr)) {
+		while (Object.hasOwn(result, abbr)) {
 			abbr = baseAbbr.concat('-', String(count++));
 		}
 
@@ -99,5 +97,3 @@ function scrapTzAbbreviation() {
 
 	return result;
 }
-
-console.log(scrapTzAbbreviation());

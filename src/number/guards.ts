@@ -1,21 +1,33 @@
+import { isUndefined } from '../guards/primitives';
+import type { Numeric } from '../types/index';
+import { normalizeNumber } from './utilities';
+
 /**
  * * Check if a number is even or not.
  *
- * @param input The number to check.
+ * @param input The number or numeric string to check.
  * @returns Boolean: `true` if even and `false` if not even.
  */
-export const isEven = (input: number): boolean => {
-	return input % 2 === 0;
+export const isEven = (input: Numeric): boolean => {
+	const parsed = normalizeNumber(input);
+
+	if (isUndefined(parsed)) return false;
+
+	return parsed % 2 === 0;
 };
 
 /**
  * * Checks if a number is odd or not.
  *
- * @param input The number to check.
+ * @param input The number or numeric string to check.
  * @returns Boolean: `true` if odd and `false` if not odd.
  */
-export const isOdd = (input: number): boolean => {
-	return input % 2 !== 0;
+export const isOdd = (input: Numeric): boolean => {
+	const parsed = normalizeNumber(input);
+
+	if (isUndefined(parsed)) return false;
+
+	return parsed % 2 !== 0;
 };
 
 /**

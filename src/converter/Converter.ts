@@ -61,11 +61,11 @@ export function Converter<U extends $Unit>(value: Numeric, unit?: U): Converted<
 
 export {
 	$Area as AreaConverter,
-	Converter as converter,
 	$Data as DataConverter,
 	$Length as LengthConverter,
 	$Mass as MassConverter,
 	$Temperature as TemperatureConverter,
 	$Time as TimeConverter,
 	$Volume as VolumeConverter,
+	Converter as converter,
 };

@@ -1,5 +1,6 @@
-import type { LocaleCode } from '../src/number/types';
 import type { DateTimeFormatOptions } from '../src/date/types';
+import type { LocaleCode } from '../src/number/types';
+
 type DateTimePreset = 'date' | 'dateTime' | 'time' | 'short' | 'long' | 'isoLike';
 
 /**

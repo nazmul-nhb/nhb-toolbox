@@ -72,5 +72,3 @@ function scrapTimeZone() {
 
 	return result;
 }
-
-console.log(scrapTimeZone());

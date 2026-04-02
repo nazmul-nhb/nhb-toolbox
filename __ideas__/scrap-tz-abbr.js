@@ -55,5 +55,3 @@ function scrapTzAbbreviation() {
 
 	return result;
 }
-
-console.log(scrapTzAbbreviation());

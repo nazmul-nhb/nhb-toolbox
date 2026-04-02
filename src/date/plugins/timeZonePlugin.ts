@@ -3,11 +3,11 @@ import type { LooseLiteral } from '../../utils/types';
 import { INTERNALS } from '../constants';
 import { isValidUTCOffset } from '../guards';
 import { _gmtToUtcOffset, _resolveNativeTzName } from '../helpers';
-import { NATIVE_TZ_IDS, TIME_ZONES, TIME_ZONE_LABELS } from '../timezone';
+import { NATIVE_TZ_IDS, TIME_ZONE_LABELS, TIME_ZONES } from '../timezone';
 import type {
 	$Chronos,
-	$TZLabelKey,
 	$TimeZoneIdentifier,
+	$TZLabelKey,
 	TimeZone,
 	TimeZoneId,
 	TimeZoneIdentifier,

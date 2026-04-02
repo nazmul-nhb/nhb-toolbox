@@ -131,8 +131,8 @@ export function applyOpacityToHex(color: Hex, opacity: string | Percent): Hex8 {
 			return _applyOpacity(upperColor, percentToHex(100));
 		}
 	} else {
-		throw new TypeError(
-			'Invalid color value. Must be a hex color string in the format #RRGGBB or #RRGGBBAA.'
-		);
+		throw new TypeError('Invalid color value!', {
+			cause: 'Value must be a hex color string in the format #RRGGBB or #RRGGBBAA.',
+		});
 	}
 }

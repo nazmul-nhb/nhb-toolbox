@@ -1,5 +1,5 @@
-import { utf8ToBytes, bytesToUtf8 } from '../src/hash/utils';
 import { isNonEmptyString } from '../src/guards/primitives';
+import { bytesToUtf8, utf8ToBytes } from '../src/hash/utils';
 
 /**
  * @class `Splitter` provides deterministic utilities to split strings and byte arrays into fixed-size or logical chunks.

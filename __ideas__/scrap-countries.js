@@ -24,5 +24,3 @@ function getCountries() {
 
 	return results;
 }
-
-console.log(getCountries());
