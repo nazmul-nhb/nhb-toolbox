@@ -1,3 +1,4 @@
+import { isNumber, isString } from '../guards/primitives';
 import type { Percent } from '../number/types';
 import { ALPHABET_COLOR_PALETTE, NUMBER_COLOR_PALETTE } from './constants';
 import { _applyOpacity } from './helpers';
@@ -56,7 +57,7 @@ export function getColorForInitial(
 	if (!input) return _applyOpacity(DEFAULT, hexOpacity);
 
 	// Handle string input
-	if (typeof input === 'string') {
+	if (isString(input)) {
 		initial = input[0];
 
 		// Handle number as string
@@ -73,7 +74,7 @@ export function getColorForInitial(
 		}
 
 		return _applyOpacity(DEFAULT, hexOpacity);
-	} else if (typeof input === 'number' && !isNaN(input)) {
+	} else if (isNumber(input)) {
 		// Handle number input
 		initial = input.toString()[0];
 

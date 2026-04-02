@@ -1,4 +1,6 @@
 import { isObject } from '../guards/non-primitives';
+import { isUndefined } from '../guards/primitives';
+import { normalizeNumber } from '../number/utilities';
 import type { Maybe, Numeric } from '../types/index';
 import { isValidUTCOffset } from './guards';
 import {
@@ -99,7 +101,15 @@ export function extractMinutesFromUTC(utc: UTCOffset): number {
  * convertMinutesToTime(-45); // "0:45"
  */
 export function convertMinutesToTime(minutes: Numeric): HourMinutes {
-	const numMIn = Math.abs(typeof minutes === 'number' ? minutes : Number(minutes));
+	const parsed = normalizeNumber(minutes);
+
+	if (isUndefined(parsed)) {
+		throw new TypeError(`Invalid numeric input!`, {
+			cause: `${minutes} cannot be converted to a number.`,
+		});
+	}
+
+	const numMIn = Math.abs(parsed);
 
 	return `${String(Math.floor(numMIn / 60))}:${String(numMIn % 60).padStart(2, '0')}` as HourMinutes;
 }
@@ -111,10 +121,16 @@ export function convertMinutesToTime(minutes: Numeric): HourMinutes {
  * @returns A formatted UTC offset string like `UTC+05:30` or `UTC-04:00`.
  */
 export function formatUTCOffset(minutes: Numeric): UTCOffset {
-	const numMIn = typeof minutes === 'number' ? minutes : Number(minutes);
+	const parsed = normalizeNumber(minutes);
 
-	const sign = numMIn < 0 ? '-' : '+';
-	const abs = Math.abs(numMIn);
+	if (isUndefined(parsed)) {
+		throw new TypeError(`Invalid numeric input!`, {
+			cause: `${minutes} cannot be converted to a number.`,
+		});
+	}
+
+	const sign = parsed < 0 ? '-' : '+';
+	const abs = Math.abs(parsed);
 	const hours = String(Math.floor(abs / 60)).padStart(2, '0');
 	const mins = String(abs % 60).padStart(2, '0');
 

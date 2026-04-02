@@ -1,4 +1,4 @@
-import { isNonEmptyString } from '../guards/primitives';
+import { isNonEmptyString, isString, isUndefined } from '../guards/primitives';
 import { normalizeNumber } from '../number/utilities';
 import { irregularRules, pluralRules, singularRules, uncountables } from './rules';
 import type { IrregularMap, PluralizeOptions, PluralizeRule } from './types';
@@ -127,7 +127,7 @@ export class Pluralizer {
 	 */
 	#isUncountable(word: string): boolean {
 		for (const entry of this.#uncountables) {
-			if (typeof entry === 'string') {
+			if (isString(entry)) {
 				if (entry.toLowerCase() === word) return true;
 			} else {
 				if (entry?.test(word)) return true;
@@ -167,7 +167,7 @@ export class Pluralizer {
 	 * pluralizer.addUncountable(/pok[eé]mon$/i);
 	 */
 	addUncountable(word: string | RegExp): void {
-		this.#uncountables.add(typeof word === 'string' ? word?.toLowerCase() : word);
+		this.#uncountables.add(isString(word) ? word?.toLowerCase() : word);
 	}
 
 	/**
@@ -196,7 +196,7 @@ export class Pluralizer {
 	pluralize(word: string, options: PluralizeOptions = {}): string {
 		const count = normalizeNumber(options?.count);
 
-		if (typeof count === 'number') {
+		if (!isUndefined(count)) {
 			const pluralized = count === 1 ? this.toSingular(word) : this.toPlural(word);
 			return options?.inclusive ? `${count} ${pluralized}` : pluralized;
 		}

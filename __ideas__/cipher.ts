@@ -9,6 +9,7 @@
  * For production, use platform crypto RNG for IV.
  */
 
+import { isNonEmptyString } from '../src/guards/primitives';
 import { bytesToUtf8, hmacSha256, sha256Bytes, utf8ToBytes } from '../src/hash/utils';
 
 /* ------------------ Base64 (pure JS) ------------------ */
@@ -105,8 +106,7 @@ export class CipherExperiment {
 	 * conclusion: Use instance to encrypt/decrypt without passing secret again.
 	 */
 	constructor(secret: string) {
-		if (typeof secret !== 'string' || secret.length === 0)
-			throw new Error('secret must be non-empty string');
+		if (!isNonEmptyString(secret)) throw new Error('secret must be non-empty string');
 		this.#secretBytes = utf8ToBytes(secret);
 		// derive enc and mac keys
 		this.#encKey = hmacSha256(this.#secretBytes, utf8ToBytes('enc'));
@@ -173,7 +173,7 @@ export class CipherExperiment {
 	 * conclusion: returns plaintext string when tag passes.
 	 */
 	decrypt(token: string): string {
-		if (typeof token !== 'string') throw new Error('token must be a base64 string');
+		if (!isNonEmptyString(token)) throw new Error('token must be a base64 string');
 		const blob = base64Decode(token);
 		if (blob.length < 16 + 32) throw new Error('malformed token');
 

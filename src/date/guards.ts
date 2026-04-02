@@ -1,4 +1,5 @@
-import { isNonEmptyString, isString } from '../guards/primitives';
+import { isFunction, isObject } from '../guards/non-primitives';
+import { isBoolean, isNonEmptyString, isString } from '../guards/primitives';
 import { isNumericString } from '../guards/specials';
 import { normalizeNumber } from '../number/utilities';
 import type { Numeric } from '../types/index';
@@ -91,42 +92,36 @@ export function isLeapYear(year: Numeric): boolean {
 export function isDateLike(value: unknown): boolean {
 	if (value instanceof Date) return true;
 
-	if (value && typeof value === 'object') {
-		const v = value as Record<string, unknown>;
-
+	if (isObject(value)) {
 		// Chronos, Moment or Day.js
 		if (
-			typeof v.format === 'function' &&
-			typeof v.toJSON === 'function' &&
-			typeof v.toISOString === 'function'
+			isFunction(value.format) &&
+			isFunction(value.toJSON) &&
+			isFunction(value.toISOString)
 		) {
 			return true;
 		}
 
 		// Luxon
-		if (
-			typeof v.toISO === 'function' &&
-			typeof v.toFormat === 'function' &&
-			typeof v.isValid === 'boolean'
-		) {
+		if (isFunction(value.toISO) && isFunction(value.toFormat) && isBoolean(value.isValid)) {
 			return true;
 		}
 
 		// JS-Joda
 		if (
-			typeof v.plus === 'function' &&
-			typeof v.minus === 'function' &&
-			typeof v.equals === 'function' &&
-			typeof v.getClass === 'function'
+			isFunction(value.plus) &&
+			isFunction(value.minus) &&
+			isFunction(value.equals) &&
+			isFunction(value.getClass)
 		) {
 			return true;
 		}
 
 		// Temporal
 		if (
-			typeof v.toJSON === 'function' &&
-			typeof v.toString === 'function' &&
-			['PlainDate', 'ZonedDateTime', 'Instant'].includes(v.constructor?.name ?? '')
+			isFunction(value.toJSON) &&
+			isFunction(value.toString) &&
+			['PlainDate', 'ZonedDateTime', 'Instant'].includes(value.constructor?.name ?? '')
 		) {
 			return true;
 		}

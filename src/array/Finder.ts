@@ -1,3 +1,5 @@
+import { isFunction } from '../guards/non-primitives';
+import { isString } from '../guards/primitives';
 import type { GenericObject } from '../object/types';
 import type { Maybe, OwnKeys } from '../types/index';
 import type { FindOptions } from './types';
@@ -42,7 +44,7 @@ export class Finder<T extends GenericObject> {
 	 */
 	constructor(data: T[] | (() => T[]), ttl: number = Finder.#DEFAULT_TTL) {
 		this.#ttl = ttl;
-		this.#items = typeof data === 'function' ? data() : data;
+		this.#items = isFunction(data) ? data() : data;
 	}
 
 	/**
@@ -77,7 +79,7 @@ export class Finder<T extends GenericObject> {
 			data,
 		} = options ?? {};
 
-		const source = typeof data === 'function' ? data() : (data ?? this.#items);
+		const source = isFunction(data) ? data() : (data ?? this.#items);
 
 		if (!source?.length) return [];
 
@@ -89,7 +91,7 @@ export class Finder<T extends GenericObject> {
 		const getKey = Finder.#createMemoizedKeyGetter(rawGetKey);
 
 		const normalizedMatcher =
-			caseInsensitive && typeof matcher === 'string' ? matcher.toLowerCase() : matcher;
+			caseInsensitive && isString(matcher) ? matcher.toLowerCase() : matcher;
 
 		if (cacheKey) {
 			const entry = this.#cachedResult.get(cacheKey);
@@ -106,8 +108,7 @@ export class Finder<T extends GenericObject> {
 		if (source.length < 100 && !forceBinary) {
 			results = source.filter((item) => {
 				const key = getKey(item);
-				const value =
-					caseInsensitive && typeof key === 'string' ? key.toLowerCase() : key;
+				const value = caseInsensitive && isString(key) ? key.toLowerCase() : key;
 				return value === normalizedMatcher;
 			});
 		} else {
@@ -124,29 +125,24 @@ export class Finder<T extends GenericObject> {
 				const baseKey = getKey(firstMatch);
 
 				const base =
-					caseInsensitive && typeof baseKey === 'string'
-						? baseKey.toLowerCase()
-						: baseKey;
+					caseInsensitive && isString(baseKey) ? baseKey.toLowerCase() : baseKey;
 
 				results = sorted.filter((item) => {
 					const key = getKey(item);
 
-					const value =
-						caseInsensitive && typeof key === 'string' ? key.toLowerCase() : key;
+					const value = caseInsensitive && isString(key) ? key.toLowerCase() : key;
 
 					return value === base;
 				});
 			}
 		}
 
-		if (!results.length && fuzzy && typeof normalizedMatcher === 'string') {
+		if (!results.length && fuzzy && isString(normalizedMatcher)) {
 			results = source.filter((item) => {
 				const rawKey = getKey(item);
 
 				const key =
-					caseInsensitive && typeof rawKey === 'string'
-						? rawKey.toLowerCase()
-						: String(rawKey);
+					caseInsensitive && isString(rawKey) ? rawKey.toLowerCase() : String(rawKey);
 
 				return this.#match(key, normalizedMatcher);
 			});
@@ -182,7 +178,7 @@ export class Finder<T extends GenericObject> {
 			data,
 		} = options ?? {};
 
-		const source = typeof data === 'function' ? data() : (data ?? this.#items);
+		const source = isFunction(data) ? data() : (data ?? this.#items);
 
 		if (!source?.length) return undefined;
 
@@ -194,7 +190,7 @@ export class Finder<T extends GenericObject> {
 		const getKey = Finder.#createMemoizedKeyGetter(rawGetKey);
 
 		const normalizedMatcher =
-			caseInsensitive && typeof matcher === 'string' ? matcher.toLowerCase() : matcher;
+			caseInsensitive && isString(matcher) ? matcher.toLowerCase() : matcher;
 
 		if (cacheKey) {
 			const entry = this.#cachedResult.get(cacheKey);
@@ -211,8 +207,7 @@ export class Finder<T extends GenericObject> {
 		if (source?.length < 100 && !forceBinary) {
 			result = source?.find((item) => {
 				const key = getKey(item);
-				const value =
-					caseInsensitive && typeof key === 'string' ? key.toLowerCase() : key;
+				const value = caseInsensitive && isString(key) ? key.toLowerCase() : key;
 				return value === normalizedMatcher;
 			});
 		} else {
@@ -224,7 +219,7 @@ export class Finder<T extends GenericObject> {
 			);
 		}
 
-		if (!result && fuzzy && typeof normalizedMatcher === 'string') {
+		if (!result && fuzzy && isString(normalizedMatcher)) {
 			return this.fuzzySearch(source, normalizedMatcher, getKey, caseInsensitive);
 		}
 
@@ -295,8 +290,7 @@ export class Finder<T extends GenericObject> {
 		while (min <= max) {
 			const mid = Math.floor((min + max) / 2);
 			const midKey = keySelector(sorted[mid]);
-			const key =
-				caseInsensitive && typeof midKey === 'string' ? midKey.toLowerCase() : midKey;
+			const key = caseInsensitive && isString(midKey) ? midKey.toLowerCase() : midKey;
 
 			if (key === matcher) return sorted[mid];
 			if (key < matcher) min = mid + 1;
@@ -324,9 +318,7 @@ export class Finder<T extends GenericObject> {
 		for (const item of array) {
 			const rawKey = keySelector(item);
 			const key =
-				caseInsensitive && typeof rawKey === 'string'
-					? rawKey.toLowerCase()
-					: String(rawKey);
+				caseInsensitive && isString(rawKey) ? rawKey.toLowerCase() : String(rawKey);
 			if (this.#match(key, matcher)) return item;
 		}
 

@@ -1,4 +1,5 @@
 import { generateQueryParams } from '../dom/query';
+import { isString } from '../guards/primitives';
 import { parseObjectValues } from '../object/sanitize';
 import type { ParsedFormData, SerializedForm } from './types';
 
@@ -49,13 +50,13 @@ export function parseFormData<T extends FormData | string>(
 ): ParsedFormData<T> {
 	const parsed: Record<string, unknown> = {};
 
-	if (typeof data === 'string') {
+	if (isString(data)) {
 		const params = new URLSearchParams(data);
 
 		params?.forEach((value, key) => {
 			const existing = parsed[key];
 
-			if (typeof existing === 'string') {
+			if (isString(existing)) {
 				parsed[key] = [existing, value];
 			} else if (Array.isArray(existing)) {
 				parsed[key] = [...existing, value];
@@ -76,7 +77,7 @@ export function parseFormData<T extends FormData | string>(
 					parsed[key] = value;
 				}
 			} else {
-				if (typeof existing === 'string') {
+				if (isString(existing)) {
 					parsed[key] = [existing, value];
 				} else if (Array.isArray(existing)) {
 					parsed[key] = [...existing, value];

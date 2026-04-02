@@ -1,6 +1,6 @@
 import { isDateLike } from '../date/guards';
 import { isEmptyObject, isNotEmptyObject, isValidArray } from '../guards/non-primitives';
-import { isNonEmptyString } from '../guards/primitives';
+import { isNonEmptyString, isString } from '../guards/primitives';
 import type { DotNotationKey, GenericObject, KeyForObject } from '../object/types';
 import {
 	isCustomFile,
@@ -119,7 +119,7 @@ export const createControlledFormData = <T extends GenericObject>(
 						}
 					}
 				} else {
-					if (typeof value === 'string') {
+					if (isString(value)) {
 						if (isNonEmptyString(value)) {
 							let cleanString = value;
 
@@ -215,7 +215,7 @@ export const createControlledFormData = <T extends GenericObject>(
 			const isNotNullish = value != null && value !== '';
 
 			if (isNotNullish || _isRequiredKey(key)) {
-				if (typeof value === 'string' && _shouldLowercaseValue(key)) {
+				if (isString(value) && _shouldLowercaseValue(key)) {
 					formData.append(transformedKey, value?.toLowerCase());
 				} else {
 					formData.append(transformedKey, value as Blob);

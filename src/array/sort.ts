@@ -60,23 +60,23 @@ export function naturalSort(a: string, b: string, options?: SortNature): number 
 		let bChunk = bChunks[i];
 
 		// Normalize string chunks if case-insensitive
-		if (caseInsensitive && typeof aChunk === 'string' && typeof bChunk === 'string') {
+		if (caseInsensitive && isString(aChunk) && isString(bChunk)) {
 			aChunk = aChunk?.toLowerCase();
 			bChunk = bChunk?.toLowerCase();
 		}
 
 		// Compare types: number vs string
 		if (typeof aChunk !== typeof bChunk) {
-			return typeof aChunk === 'string' ? 1 : -1;
+			return isString(aChunk) ? 1 : -1;
 		}
 
 		// Compare same-type chunks
 		if (aChunk !== bChunk) {
-			if (typeof aChunk === 'number' && typeof bChunk === 'number') {
+			if (isNumber(aChunk) && isNumber(bChunk)) {
 				return aChunk - bChunk;
 			}
 
-			if (typeof aChunk === 'string' && typeof bChunk === 'string') {
+			if (isString(aChunk) && isString(bChunk)) {
 				if (localeAware) {
 					const cmp = aChunk.localeCompare(bChunk, undefined, {
 						sensitivity: caseInsensitive ? 'accent' : 'variant',

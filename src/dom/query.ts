@@ -1,3 +1,4 @@
+import { isString } from '../guards/primitives';
 import { flattenObjectKeyValue } from '../object/objectify';
 import { parseObjectValues } from '../object/sanitize';
 import type {
@@ -28,30 +29,15 @@ export function generateQueryParams<T extends QueryObject>(params: T = {} as T):
 
 	// Generate the query string
 	const queryParams = Object.entries(flattenedParams)
-		?.filter(
-			([_, value]) =>
-				value !== undefined &&
-				value !== null &&
-				!(typeof value === 'string' && value?.trim() === '')
-		)
+		?.filter(([_, value]) => value != null && !(isString(value) && value?.trim() === ''))
 		?.flatMap(([key, value]) =>
 			Array.isArray(value)
 				? value
-						?.filter(
-							(v) =>
-								v !== undefined &&
-								v !== null &&
-								!(typeof v === 'string' && v.trim() === '')
-						)
+						?.filter((v) => v != null && !(isString(v) && v.trim() === ''))
 						?.map(
-							(v) =>
-								`${encodeURIComponent(key)}=${encodeURIComponent(
-									typeof v === 'boolean' ? String(v) : String(v)
-								)}`
+							(v) => `${encodeURIComponent(key)}=${encodeURIComponent(String(v))}`
 						)
-				: `${encodeURIComponent(key)}=${encodeURIComponent(
-						typeof value === 'boolean' ? String(value) : String(value)
-					)}`
+				: `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`
 		)
 		.join('&');
 

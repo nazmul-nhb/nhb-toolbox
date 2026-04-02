@@ -1,4 +1,4 @@
-import { isNumber } from '../guards/primitives';
+import { isNumber, isUndefined } from '../guards/primitives';
 import type { Maybe, Numeric } from '../types/index';
 import { _find2NumbersHCF, _find2NumbersLCM } from './helpers';
 import type { ConvertedDecimal, DecimalOptions, RandomNumberOptions } from './types';
@@ -69,11 +69,17 @@ export const convertToDecimal = <T extends Maybe<boolean> = false>(
 ): ConvertedDecimal<T> => {
 	const { decimalPlaces = 2, isString = false } = options || {};
 
-	const number = typeof input === 'number' ? input : Number(input);
+	const parsed = normalizeNumber(input);
 
-	return isString
-		? (number.toFixed(decimalPlaces) as ConvertedDecimal<T>)
-		: (Number(number.toFixed(decimalPlaces)) as ConvertedDecimal<T>);
+	if (isUndefined(parsed)) {
+		throw new TypeError(`Invalid numeric input!`, {
+			cause: `${input} cannot be converted to a number.`,
+		});
+	}
+
+	return (
+		isString ? parsed.toFixed(decimalPlaces) : Number(parsed.toFixed(decimalPlaces))
+	) as ConvertedDecimal<T>;
 };
 
 /**
@@ -237,7 +243,7 @@ export function getAverage(...numbers: Numeric[]): number {
 
 	for (const n of numbers) {
 		const num = Number(n);
-		if (typeof num === 'number' && !isNaN(num)) {
+		if (isNumber(num)) {
 			sum += num;
 			count++;
 		}

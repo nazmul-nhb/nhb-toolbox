@@ -1,3 +1,5 @@
+import { isFunction } from '../guards/non-primitives';
+import { isNumber } from '../guards/primitives';
 import { Chronos } from './Chronos';
 import type { ChronosInput, ChronosStaticKey, ChronosStatics } from './types';
 
@@ -63,7 +65,7 @@ const $chronos = (
 	seconds?: number,
 	ms?: number
 ) => {
-	if (typeof valueOrYear === 'number' && typeof month === 'number') {
+	if (isNumber(valueOrYear) && isNumber(month)) {
 		return new Chronos(
 			valueOrYear,
 			month,
@@ -90,7 +92,7 @@ function _isChronosStaticKey(prop: string): prop is ChronosStaticKey {
 		prop !== 'prototype' &&
 		prop !== 'name' &&
 		prop !== 'length' &&
-		typeof Chronos[prop as ChronosStaticKey] === 'function'
+		isFunction(Chronos[prop as ChronosStaticKey])
 	);
 }
 

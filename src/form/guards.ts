@@ -1,3 +1,4 @@
+import { isString } from '../guards/primitives';
 import type { CustomFile, FileUpload, OriginFileObj } from './types';
 
 /**
@@ -34,7 +35,7 @@ export function isOriginFileObj(value: unknown): value is OriginFileObj {
 
 	const obj = value as Record<string, unknown>;
 
-	return typeof obj.uid === 'string';
+	return isString(obj.uid);
 }
 
 /**

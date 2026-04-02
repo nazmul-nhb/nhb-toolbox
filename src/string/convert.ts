@@ -1,3 +1,4 @@
+import { isString } from '../guards/primitives';
 import { trimString } from './basics';
 import type { MaskOptions } from './types';
 
@@ -20,10 +21,9 @@ export const replaceAllInString = (
 ): string => {
 	const trimmedString = trimString(input);
 
-	const regex =
-		typeof find === 'string'
-			? new RegExp(find, 'g')
-			: new RegExp(find, find?.flags.includes('g') ? find?.flags : find?.flags + 'g');
+	const regex = isString(find)
+		? new RegExp(find, 'g')
+		: new RegExp(find, find?.flags.includes('g') ? find?.flags : find?.flags + 'g');
 
 	return trimmedString?.replace(regex, replace);
 };
