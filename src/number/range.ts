@@ -1,4 +1,5 @@
 import { shuffleArray } from '../array/basics';
+import { isUndefined } from '../guards/primitives';
 import { convertArrayToString } from '../utils/index';
 import { getRandomNumber } from './basics';
 import { isEven, isOdd } from './guards';
@@ -7,12 +8,13 @@ import { isPrime } from './prime';
 import type { NumberType, RangedNumbers, RangeOptions } from './types';
 
 /**
- * * Function to get numbers within a range based on the provided `NumberType` and options.
- * * Returns either a string or an array of numbers based on the `getAs` property in options.
+ * * Function to get numbers within a range based on the provided {@link NumberType} and options.
+ *
+ * @remarks Returns either string or array of numbers based on the {@link RangeOptions.getAsString getAsString} option.
  *
  * @param type - The type of numbers to generate ('random', 'prime', etc.).
  * @param options - Options to configure number generation, including range and formatting.
- * @returns Either a string or an array of numbers.
+ * @returns The numbers in the range based on {@link type} and {@link options} either as string or array of numbers.
  */
 export function getNumbersInRange<T extends boolean = false>(
 	type: NumberType = 'any',
@@ -60,7 +62,7 @@ export function getNumbersInRange<T extends boolean = false>(
 		return numbers;
 	};
 
-	if (type === 'prime' && multiplesOf !== undefined) {
+	if (type === 'prime' && !isUndefined(multiplesOf)) {
 		console.warn('Warning: The "multiplesOf" option is ignored when the type is "prime"!');
 	}
 
@@ -103,7 +105,7 @@ export function getNumbersInRange<T extends boolean = false>(
 		output = _applyMultiples(output, multiplesOf);
 	}
 
-	return getAsString
-		? (convertArrayToString(output, { separator }) as RangedNumbers<T>)
-		: (output as RangedNumbers<T>);
+	return (
+		getAsString ? convertArrayToString(output, { separator }) : output
+	) as RangedNumbers<T>;
 }
