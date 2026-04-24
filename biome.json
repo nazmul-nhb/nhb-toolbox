@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.4.10/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.4.12/schema.json",
 	"vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": false },
 	"files": {
 		"includes": ["**", "!!**/dist", "!!**/node_modules", "!!__dump__", "!!__ideas__"],
@@ -187,7 +187,7 @@
 			"linter": { "rules": { "complexity": { "noBannedTypes": "off" } } }
 		},
 		{
-			"includes": ["__ideas__/**/*.ts", "__*.ts"],
+			"includes": ["__ideas__/**/*.ts", "__*.ts", "src/**/*log.ts"],
 			"linter": {
 				"rules": {
 					"correctness": { "noUnusedVariables": "off" },

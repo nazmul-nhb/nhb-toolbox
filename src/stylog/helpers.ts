@@ -47,5 +47,5 @@ export function _isCSS16Color(value: string): value is CSS16Color {
  * @returns Converted `CSS16Color` value in `Hex6` format
  */
 export function _css16ToHex(value: CSS16Color): Hex6 {
-	return CSS_16_COLORS?.[value?.replace('css-', '') as Ansi16Color];
+	return CSS_16_COLORS?.[value?.replace('css-', '') as Ansi16Color] as Hex6;
 }

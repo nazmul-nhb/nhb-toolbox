@@ -99,15 +99,13 @@ export const UNITS = /* @__PURE__ */ Object.freeze({
 	],
 } as const);
 
-export const IRREGULAR_PLURALS: Record<string, string> = /* @__PURE__ */ {
+export const IRREGULAR_PLURALS = /* @__PURE__ */ Object.freeze({
 	millennium: 'millennia',
 	century: 'centuries',
-};
+} as Record<string, string>);
 
-export const INVARIANT_UNITS: Set<string> = /* @__PURE__ */ new Set([
-	'celsius',
-	'fahrenheit',
-	'kelvin',
-]);
+export const INVARIANT_UNITS = /* @__PURE__ */ Object.freeze(
+	new Set(['celsius', 'fahrenheit', 'kelvin'])
+);
 
-export const Y_TO_IES = /* @__PURE__ */ new Set(['century']);
+export const Y_TO_IES = /* @__PURE__ */ Object.freeze(new Set(['century']));

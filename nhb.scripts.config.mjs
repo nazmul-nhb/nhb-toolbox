@@ -175,7 +175,7 @@ export const ${pluginName}Plugin = ($Chronos: $Chronos): void => {
 // ! ============= Post Build Hooks ============= ! //
 
 /**
- * Recursively processes target JS files and inserts `@__PURE__` before each Object.freeze(...) expression.
+ * Recursively processes target JS files and inserts `@__PURE__` before each {@link Object.freeze Object.freeze(...)} expression.
  * @param {string} dir Directory to traverse and find target files to fix.
  */
 function restorePureTags(dir) {
@@ -210,6 +210,7 @@ function restorePureTags(dir) {
 			const updated = code.replace(/([^/])(?=(Object\.freeze\s*\())/g, (match, p1) => {
 				// If already tagged before, skip
 				if (p1.includes('@__PURE__')) return match;
+
 				return p1 + '/* @__PURE__ */ ';
 			});
 
@@ -222,5 +223,20 @@ function restorePureTags(dir) {
 
 	traverse(dir);
 
-	mimicClack(`✓ Restored /* @__PURE__ */ tags in ${totalFiles} files in ${dir} directory!`);
+	mimicClack(
+		`${formatText('✓ Restored')} ${formatText('/* @__PURE__ */', 'yellow')} ${formatText('tags in')} ${formatText(totalFiles, 'yellow', true)} ${formatText('files in')} ${formatText(dir, 'yellow')} ${formatText('directory!')}`
+	);
+}
+
+/**
+ * Format text with ANSI escape codes for colored and bold output in the console.
+ * @param {string | number} text - Text to format.
+ * @param {'green' | 'yellow'} color - Color to apply (default: 'green').
+ * @param {boolean} bold - Whether to bold the formatted text.
+ * @returns The formatted text string with ANSI codes for the specified color and boldness.
+ */
+function formatText(text, color = 'green', bold = false) {
+	const colorOnly = `\x1B[${color === 'green' ? 32 : 33}m${text}\x1B[39m`;
+
+	return bold ? `\x1B[1m${colorOnly}\x1B[22m` : colorOnly;
 }

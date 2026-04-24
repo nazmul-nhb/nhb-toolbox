@@ -1,8 +1,8 @@
-import type { Hex6 } from '../colors/types';
+import type { Hex } from '../colors/types';
 import type { Ansi16Color, AnsiSequence, TextStyle } from './Stylog';
 
 /** ANSI styles for non-color text effects */
-export const ANSI_TEXT_STYLES: Record<TextStyle, AnsiSequence> = /* @__PURE__ */ Object.freeze({
+export const ANSI_TEXT_STYLES = /* @__PURE__ */ Object.freeze({
 	bold: ['\x1b[1m', '\x1b[22m'],
 	bolder: ['\x1b[1m', '\x1b[22m'],
 	dim: ['\x1b[2m', '\x1b[22m'],
@@ -10,10 +10,10 @@ export const ANSI_TEXT_STYLES: Record<TextStyle, AnsiSequence> = /* @__PURE__ */
 	underline: ['\x1b[4m', '\x1b[24m'],
 	strikethrough: ['\x1b[9m', '\x1b[29m'],
 	inverse: ['\x1b[7m', '\x1b[27m'],
-});
+} satisfies Record<TextStyle, AnsiSequence>);
 
 /** Browser CSS equivalents */
-export const CSS_TEXT_STYLES: Record<TextStyle, string> = /* @__PURE__ */ Object.freeze({
+export const CSS_TEXT_STYLES = /* @__PURE__ */ Object.freeze({
 	bold: 'font-weight: bold',
 	bolder: 'font-weight: bolder',
 	dim: 'opacity: 0.7',
@@ -21,7 +21,7 @@ export const CSS_TEXT_STYLES: Record<TextStyle, string> = /* @__PURE__ */ Object
 	underline: 'text-decoration: underline',
 	strikethrough: 'text-decoration: line-through',
 	inverse: 'filter: invert(1)',
-});
+} satisfies Record<TextStyle, string>);
 
 /** Records of ANSI-16 colors with values */
 export const ANSI_16_COLORS = /* @__PURE__ */ Object.freeze({
@@ -107,4 +107,4 @@ export const CSS_16_COLORS = /* @__PURE__ */ Object.freeze({
 	bgPurpleBright: '#ff00ff',
 	bgCyanBright: '#00ffff',
 	bgWhiteBright: '#ffffff',
-} as unknown as Record<Ansi16Color, Hex6>);
+} satisfies Record<Ansi16Color, Hex>);

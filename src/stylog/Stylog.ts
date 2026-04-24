@@ -5,6 +5,7 @@ import { _isValidHue, _isValidPercentage, _isValidRGBComponent } from '../colors
 import type { CSSColor, Hex, Hex6, RGB, SolidValues } from '../colors/types';
 import { isNumber, isString } from '../guards/primitives';
 import { isBrowser } from '../guards/specials';
+import { _logToConsole } from './console.log';
 import { ANSI_16_COLORS, ANSI_TEXT_STYLES, CSS_TEXT_STYLES } from './constants';
 import {
 	_css16ToHex,
@@ -329,6 +330,7 @@ export class LogStyler {
 				}
 			}
 		}
+
 		return [`%c${stringified}`, cssList];
 	}
 
@@ -403,9 +405,9 @@ export class LogStyler {
 	log(input: unknown, stringify = false): void {
 		if (isBrowser()) {
 			const [fmt, cssList] = this.toCSS(input, stringify);
-			console.info(fmt, cssList.join(';'));
+			_logToConsole(fmt, cssList.join(';'));
 		} else {
-			console.info(this.toANSI(input, stringify));
+			_logToConsole(this.toANSI(input, stringify));
 		}
 	}
 

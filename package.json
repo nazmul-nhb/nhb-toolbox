@@ -61,15 +61,15 @@
   "license": "Apache-2.0",
   "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319",
   "devDependencies": {
-    "@biomejs/biome": "^2.4.10",
+    "@biomejs/biome": "^2.4.12",
     "@types/jest": "^30.0.0",
-    "@types/node": "^25.5.0",
+    "@types/node": "^25.6.0",
     "husky": "^9.1.7",
     "jest": "^30.3.0",
     "lint-staged": "^16.4.0",
     "nhb-scripts": "^1.9.2",
     "ts-jest": "^29.4.9",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.3"
   },
   "keywords": [
     "toolbox",
