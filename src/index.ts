@@ -470,6 +470,8 @@ export {
 
 export { Paginator } from './utils/Paginator';
 
+export { getCountryByPhone } from './utils/xtras';
+
 // ! Primitive Type Guards
 export {
 	isBigInt,

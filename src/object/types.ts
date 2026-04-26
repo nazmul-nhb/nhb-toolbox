@@ -448,3 +448,8 @@ export type $Record<Key extends PropertyKey = string, T = any> = {
 } extends infer O
 	? { [K in keyof O]: O[K] }
 	: { [K in Key]: T };
+
+/** * Represents the details (read-only) of a country, including its name, country code, and ISO codes. */
+export type CountryDetails = Readonly<
+	$Record<'country_name' | 'country_code' | 'iso_code_short' | 'iso_code', string>
+>;
