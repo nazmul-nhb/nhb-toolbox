@@ -3,7 +3,7 @@ import { COUNTRIES } from '../object/countries';
 import type { CountryDetails } from '../object/types';
 
 /**
- * @function `getCountryByPhone` Get country details by phone number
+ * @function `getCountryByPhone` Get country details by matching the country code in the given phone number.
  * @param phone - The phone number to look up, can be a string or a number. It will be normalized by removing any non-digit character before matching against the country codes.
  * @returns An array of country details that match the provided phone number. Each country detail includes the country name, country code, ISO short code, and ISO code. If the input is invalid (not a primitive value or an empty string), an empty array will be returned.
  *

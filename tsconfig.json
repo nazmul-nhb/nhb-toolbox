@@ -5,7 +5,7 @@
 		"paths": {
 			"*": ["./*"]
 		},
-		"rootDir": "./src",
+		"rootDir": ".",
 		"outDir": "./dist",
 		"declaration": false,
 		"declarationMap": false,
@@ -27,6 +27,13 @@
 		"preserveWatchOutput": true,
 		"types": ["node", "jest"]
 	},
-	"include": ["src/**/*.ts", "src/**/*.d.ts"],
-	"exclude": ["node_modules", "**/*.test.ts", "**/__tests__/**/*"]
+	"include": [
+		"src/**/*.ts",
+		"src/**/*.d.ts",
+		"__tests__/**/*.ts",
+		"__test.ts",
+		"jest.config.ts",
+		"nhb.scripts.config.mjs"
+	],
+	"exclude": ["node_modules", "dist", "coverage", "__dump__", "__ideas__"]
 }

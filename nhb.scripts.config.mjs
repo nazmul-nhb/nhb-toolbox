@@ -76,6 +76,11 @@ export default defineScriptConfig({
 							import: './dist/esm/converter/Converter.js',
 							require: './dist/cjs/converter/Converter.js',
 						},
+						'./dom': {
+							types: './dist/dts/dom/index.d.ts',
+							import: './dist/esm/dom/index.js',
+							require: './dist/cjs/dom/index.js',
+						},
 						'./hash': {
 							types: './dist/dts/hash/index.d.ts',
 							import: './dist/esm/hash/index.js',
@@ -224,7 +229,9 @@ function restorePureTags(dir) {
 	traverse(dir);
 
 	mimicClack(
-		`${formatText('✓ Restored')} ${formatText('/* @__PURE__ */', 'yellow')} ${formatText('tags in')} ${formatText(totalFiles, 'yellow', true)} ${formatText('files in')} ${formatText(dir, 'yellow')} ${formatText('directory!')}`
+		formatText(
+			`✓ Restored ${highlightText('/* @__PURE__ */')} tags in ${highlightText(totalFiles, true)} files in ${highlightText(dir)} directory!`
+		)
 	);
 }
 
@@ -233,10 +240,27 @@ function restorePureTags(dir) {
  * @param {string | number} text - Text to format.
  * @param {'green' | 'yellow'} color - Color to apply (default: 'green').
  * @param {boolean} bold - Whether to bold the formatted text.
+ * @param {'green' | 'default'} resetColor - Color to restore after formatting.
  * @returns The formatted text string with ANSI codes for the specified color and boldness.
  */
-function formatText(text, color = 'green', bold = false) {
-	const colorOnly = `\x1B[${color === 'green' ? 32 : 33}m${text}\x1B[39m`;
+function formatText(text, color = 'green', bold = false, resetColor = 'default') {
+	const colorCodes = {
+		default: 39,
+		green: 32,
+		yellow: 33,
+	};
+
+	const colorOnly = `\x1B[${colorCodes[color]}m${text}\x1B[${colorCodes[resetColor]}m`;
 
 	return bold ? `\x1B[1m${colorOnly}\x1B[22m` : colorOnly;
+}
+
+/**
+ * Highlight text in yellow and restore the surrounding green afterward.
+ * @param {string | number} text - Text to highlight.
+ * @param {boolean} bold - Whether the highlighted text should be bold.
+ * @returns The highlighted text string with ANSI codes.
+ */
+function highlightText(text, bold = false) {
+	return formatText(text, 'yellow', bold, 'green');
 }

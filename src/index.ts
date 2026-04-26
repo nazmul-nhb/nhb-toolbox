@@ -420,28 +420,26 @@ export {
 
 // ! DOM Utilities
 export {
-	generateQueryParams as createQueryParams,
-	generateQueryParams as formatQueryParams,
+	createQueryParams,
+	formatQueryParams,
 	generateQueryParams,
 	getQueryParams,
-	parseQueryString as getQueryStringAsObject,
-	parseQueryStringLiteral as literalQueryStringToObject,
+	getQueryStringAsObject,
+	literalQueryStringToObject,
 	parseQueryString,
 	parseQueryStringLiteral,
-	parseQueryString as queryStringToObject,
+	queryStringToObject,
 	updateQueryParam,
-} from './dom/query';
-
-export { copyToClipboard, smoothScrollTo, toggleFullScreen } from './dom/utils';
-
-export {
+	copyToClipboard,
+	smoothScrollTo,
+	toggleFullScreen,
 	getFromLocalStorage,
 	getFromSessionStorage,
 	removeFromLocalStorage,
 	removeFromSessionStorage,
 	saveToLocalStorage,
 	saveToSessionStorage,
-} from './dom/storage';
+} from './dom/index';
 
 // ! Other Utilities
 export {

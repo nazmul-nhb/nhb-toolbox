@@ -1,6 +1,6 @@
 {
   "name": "nhb-toolbox",
-  "version": "4.29.21",
+  "version": "4.30.0",
   "description": "A versatile collection of smart, efficient, and reusable utility functions, classes and types for everyday development needs.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -181,6 +181,11 @@
       "import": "./dist/esm/converter/Converter.js",
       "require": "./dist/cjs/converter/Converter.js"
     },
+    "./dom": {
+      "types": "./dist/dts/dom/index.d.ts",
+      "import": "./dist/esm/dom/index.js",
+      "require": "./dist/cjs/dom/index.js"
+    },
     "./hash": {
       "types": "./dist/dts/hash/index.d.ts",
       "import": "./dist/esm/hash/index.js",
@@ -346,6 +351,9 @@
       ],
       "converter": [
         "dist/dts/converter/Converter.d.ts"
+      ],
+      "dom": [
+        "dist/dts/dom/index.d.ts"
       ],
       "hash": [
         "dist/dts/hash/index.d.ts"

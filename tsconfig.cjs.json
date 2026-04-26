@@ -1,9 +1,11 @@
 {
 	"extends": "./tsconfig.json",
 	"compilerOptions": {
+		"rootDir": "./src",
 		"removeComments": true,
 		"emitDeclarationOnly": false,
 		"outDir": "./dist/cjs",
 		"module": "CommonJS"
-	}
+	},
+	"include": ["src/**/*.ts", "src/**/*.d.ts"]
 }
