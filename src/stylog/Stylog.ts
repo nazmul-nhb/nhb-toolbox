@@ -298,7 +298,7 @@ export class LogStyler {
 	 * // format: "%c{\"id\":123}"
 	 * // cssList: ["color: #008000"]
 	 */
-	toCSS(input: unknown, stringify = false): [string, string[]] {
+	toCSS(input: unknown, stringify = false): [`%c${string}`, string[]] {
 		const stringified = stringify === true ? JSON.stringify(input) : `${input}`;
 
 		const cssList: string[] = [];
@@ -361,6 +361,10 @@ export class LogStyler {
 		const stringified = stringify === true ? JSON.stringify(input) : `${input}`;
 		let openSeq = '',
 			closeSeq = '';
+		let fgOpenSeq = '',
+			bgOpenSeq = '';
+
+		const reopenSequences = new Map<string, string>();
 
 		for (const style of this.#styles) {
 			if (isString(style)) {
@@ -368,31 +372,64 @@ export class LogStyler {
 					const [open, close] = ANSI_TEXT_STYLES[style];
 					openSeq += open;
 					closeSeq = close + closeSeq;
+					reopenSequences.set(close, (reopenSequences.get(close) ?? '') + open);
 				} else if (isBGColor(style)) {
 					const hex = CSS_COLORS[_extractColorName(style)];
 					const [open, close] = hexToAnsi(hex, true);
 					openSeq += open;
 					closeSeq = close + closeSeq;
+					bgOpenSeq = open;
 				} else if (isCSSColor(style)) {
 					const hex = CSS_COLORS[style];
 					const [open, close] = hexToAnsi(hex, false);
 					openSeq += open;
 					closeSeq = close + closeSeq;
+					fgOpenSeq = open;
 				}
 			} else if (_isAnsiSequence(style)) {
 				openSeq += style[0];
 				closeSeq = style[1] + closeSeq;
+				if (style[1] === '\x1b[49m') {
+					bgOpenSeq = style[0];
+				} else if (style[1] === '\x1b[39m') {
+					fgOpenSeq = style[0];
+				}
 			} else if (_isAnsi16ColorValue(style)) {
 				const [open, close] = style.map((s) => `\x1b[${s}m`);
 				openSeq += open;
 				closeSeq = close + closeSeq;
+				if (close === '\x1b[49m') {
+					bgOpenSeq = open;
+				} else if (close === '\x1b[39m') {
+					fgOpenSeq = open;
+				}
 			}
 		}
 
 		if (!detectColorSupport()) {
 			return stringified;
 		} else {
-			return openSeq.concat(stringified, closeSeq);
+			let nestedStr = stringified;
+
+			if (nestedStr.includes('\x1b[')) {
+				if (fgOpenSeq) {
+					nestedStr = nestedStr.replaceAll('\x1b[39m', `\x1b[39m${fgOpenSeq}`);
+				}
+
+				if (bgOpenSeq) {
+					nestedStr = nestedStr.replaceAll('\x1b[49m', `\x1b[49m${bgOpenSeq}`);
+				}
+
+				for (const [close, reopen] of reopenSequences) {
+					nestedStr = nestedStr.replaceAll(close, `${close}${reopen}`);
+				}
+
+				if (openSeq) {
+					nestedStr = nestedStr.replaceAll('\x1b[0m', `\x1b[0m${openSeq}`);
+				}
+			}
+
+			return openSeq.concat(nestedStr, closeSeq);
 		}
 	}
 
