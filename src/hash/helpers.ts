@@ -177,6 +177,29 @@ export function _randomNode48(): string {
 	return modified + node.slice(2).join('');
 }
 
+/**
+ * Generates random hex string of given byte length using crypto API if available, otherwise falls back to Math.random.
+ * @param bytes Instance of {@link Uint8Array} to fill with random values.
+ * @returns Hex string representation of the random bytes.
+ */
+export function _bytesToRandomHex(bytes: Uint8Array<ArrayBuffer>): string {
+	if (crypto?.getRandomValues) {
+		crypto.getRandomValues(bytes);
+	} else {
+		for (let i = 0; i < bytes.length; i++) {
+			bytes[i] = Math.floor(Math.random() * 256);
+		}
+	}
+
+	let hex = '';
+
+	for (let i = 0; i < bytes.length; i++) {
+		hex += bytes[i].toString(16).padStart(2, '0');
+	}
+
+	return hex;
+}
+
 /** * Generates a 14-bit clock sequence (2 bytes, but only 14 bits used). */
 export function _clockSeq14(): string {
 	const seq = parseInt(randomHex(4), 16) & 0x3fff; // mask to 14 bits

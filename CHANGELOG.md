@@ -4,6 +4,10 @@
 
 All notable changes to the package will be documented here.
 
+## [4.30.1] - 2026-04-27
+
+- **Updated** *random hex generation* logic in `randomHex` and `uuid` utilities to use `crypto.getRandomValues` for better performance and security when available, with a fallback to `Math.random` for environments where `crypto` is not available.
+
 ## [4.30.0] - 2026-04-27
 
 - **Added** new utility `getCountryByPhone` to get country details (country name, country code, ISO short code, and ISO code) by matching the country code in the given phone number.

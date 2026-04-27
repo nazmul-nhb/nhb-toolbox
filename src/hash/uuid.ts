@@ -1,6 +1,7 @@
 import { isUUID } from '../guards/specials';
 import { md5, sha1 } from './core';
 import {
+	_bytesToRandomHex,
 	_checkUUIDVersion,
 	_clockSeq14,
 	_formatUUID,
@@ -92,21 +93,7 @@ export function uuid<V extends SupportedVersion = 'v4'>(options?: UUIDOptions<V>
 			throw new Error('v3 requires valid namespace (uuid) and name!');
 		}
 		case 'v4': {
-			const bytes = new Uint8Array(16);
-
-			if (crypto.getRandomValues) {
-				crypto.getRandomValues(bytes);
-			} else {
-				for (let i = 0; i < 16; i++) {
-					bytes[i] = Math.floor(Math.random() * 256);
-				}
-			}
-
-			// Convert to hex
-			let hex = '';
-			for (let i = 0; i < 16; i++) {
-				hex += bytes[i].toString(16).padStart(2, '0');
-			}
+			const hex = _bytesToRandomHex(new Uint8Array(16));
 
 			return _formatUUID(hex, 4, uppercase);
 		}
@@ -155,19 +142,8 @@ export function uuid<V extends SupportedVersion = 'v4'>(options?: UUIDOptions<V>
 				temp >>= 8n;
 			}
 
-			if (crypto.getRandomValues) {
-				crypto.getRandomValues(bytes);
-			} else {
-				for (let i = 6; i < 16; i++) {
-					bytes[i] = Math.floor(Math.random() * 256);
-				}
-			}
-
 			// Convert full 16 bytes into one contiguous 32-hex string
-			let hex = '';
-			for (let i = 0; i < 16; i++) {
-				hex += bytes[i].toString(16).padStart(2, '0');
-			}
+			const hex = _bytesToRandomHex(bytes);
 
 			return _formatUUID(hex, 8, uppercase);
 		}

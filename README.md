@@ -11,7 +11,7 @@
     <img src="https://img.shields.io/npm/v/nhb-toolbox.svg?label=NPM&style=flat&color=teal&logo=npm" alt="Latest Version" />
   </a>
   <a href="https://bundlejs.com/?q=nhb-toolbox" aria-label="Bundle Size">
-    <img src="https://deno.bundlejs.com/badge?q=nhb-toolbox" alt="Bundle Size" />
+    <img src="https://img.shields.io/bundlejs/size/nhb-toolbox?label=Bundle%20Size&style=flat&color=blue&logo=npm" alt="Bundle Size" />
   </a>
 
   <!-- Project Metadata -->

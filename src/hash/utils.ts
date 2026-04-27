@@ -1,13 +1,19 @@
 import { isHexString } from '../guards/specials';
-import { _splitByCharLength } from './helpers';
+import { _bytesToRandomHex, _splitByCharLength } from './helpers';
 
 /**
  * * Generates a random hexadecimal string of the specified length.
  *
  * @param length - Number of hex characters to generate.
- * @param uppercase - Whether to return uppercase `A–F` characters.
+ * @param uppercase - Whether to return uppercase `A–F` characters. Defaults to `false` (lowercase).
  *
  * @returns A randomly generated hexadecimal string.
+ *
+ * @remarks
+ * - This function generates a random hexadecimal string of the specified length.
+ * - It uses {@link crypto.getRandomValues} when available for secure randomness, and falls back to {@link Math.random} if not.
+ * - The output is a string of hex characters (`0–9`, `a–f` or `A–F`) with no prefixes or separators.
+ * - If `length` is `0` or negative, an empty string is returned.
  *
  * @example
  * // 16-character lowercase hex
@@ -18,10 +24,13 @@ import { _splitByCharLength } from './helpers';
  * const token = randomHex(8, true);
  */
 export function randomHex(length: number, uppercase = false): string {
-	const genHex = () => Math.floor(Math.random() * 16).toString(16);
-	const hex = Array.from({ length }, genHex).join('');
+	if (length <= 0) return '';
 
-	return uppercase ? hex.toUpperCase() : hex;
+	const bytes = new Uint8Array(Math.ceil(length / 2));
+
+	const expected = _bytesToRandomHex(bytes).slice(0, length);
+
+	return uppercase ? expected.toUpperCase() : expected;
 }
 
 // ! UTF-8 Utilities
