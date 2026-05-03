@@ -5,7 +5,7 @@
 		"paths": {
 			"*": ["./*"]
 		},
-		"rootDir": ".",
+		"rootDir": "../../packages",
 		"outDir": "./dist",
 		"declaration": false,
 		"declarationMap": false,

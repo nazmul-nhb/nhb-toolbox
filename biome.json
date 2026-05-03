@@ -1,8 +1,14 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.4.12/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.4.14/schema.json",
 	"vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": false },
 	"files": {
-		"includes": ["**", "!!**/dist", "!!**/node_modules", "!!__dump__", "!!__ideas__"],
+		"includes": [
+			"**",
+			"!!**/dist",
+			"!!**/node_modules",
+			"!!*/**/__dump__",
+			"!!*/**/__ideas__"
+		],
 		"ignoreUnknown": true
 	},
 	"formatter": {
@@ -183,11 +189,15 @@
 			}
 		},
 		{
-			"includes": ["src/**/utils/*.ts", "src/**/*types.ts", "src/**/types/*.ts"],
+			"includes": [
+				"packages/nhb-toolbox/src/**/utils/*.ts",
+				"packages/nhb-toolbox/src/**/*types.ts",
+				"packages/nhb-toolbox/src/**/types/*.ts"
+			],
 			"linter": { "rules": { "complexity": { "noBannedTypes": "off" } } }
 		},
 		{
-			"includes": ["__ideas__/**/*.ts", "__*.ts", "src/**/*log.ts"],
+			"includes": ["__ideas__/**/*.ts", "__*.ts", "packages/nhb-toolbox/src/**/*log.ts"],
 			"linter": {
 				"rules": {
 					"correctness": { "noUnusedVariables": "off" },
@@ -196,11 +206,18 @@
 			}
 		},
 		{
-			"includes": ["src/**/*types.ts", "src/**/*interfaces.ts"],
+			"includes": [
+				"packages/nhb-toolbox/src/**/*types.ts",
+				"packages/nhb-toolbox/src/**/*interfaces.ts"
+			],
 			"linter": { "rules": { "correctness": { "noUnusedVariables": "off" } } }
 		},
 		{
-			"includes": ["src/**/*types.ts", "src/**/types/*.ts", "__ideas__/**/*.ts"],
+			"includes": [
+				"packages/nhb-toolbox/src/**/*types.ts",
+				"packages/nhb-toolbox/src/**/types/*.ts",
+				"__ideas__/**/*.ts"
+			],
 			"linter": { "rules": { "suspicious": { "noExplicitAny": "off" } } }
 		},
 		{
@@ -213,7 +230,11 @@
 		}
 	],
 	"assist": {
-		"includes": ["**", "!src/index.ts", "!src/constants.ts"],
+		"includes": [
+			"**",
+			"!packages/nhb-toolbox/src/index.ts",
+			"!packages/nhb-toolbox/src/constants.ts"
+		],
 		"enabled": true,
 		"actions": { "source": { "organizeImports": "on" } }
 	}

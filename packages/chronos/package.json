@@ -1,0 +1,27 @@
+{
+  "name": "@nhb-toolbox/chronos",
+  "version": "4.30.1",
+  "description": "Chronos: A lightweight and powerful date utility from nhb-toolbox",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsdown"
+  },
+  "devDependencies": {
+    "nhb-toolbox": "workspace:*",
+    "tsdown": "latest",
+    "typescript": "^6.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
