@@ -8,6 +8,10 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     },
+    "./constants": {
+      "import": "./dist/constants.mjs",
+      "require": "./dist/constants.cjs"
+    },
     "./plugins/banglaPlugin": {
       "import": "./dist/plugins/banglaPlugin.mjs",
       "require": "./dist/plugins/banglaPlugin.cjs"
