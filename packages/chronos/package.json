@@ -5,14 +5,74 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
+      "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
-    }
+    },
+    "./plugins/banglaPlugin": {
+      "import": "./dist/plugins/banglaPlugin.mjs",
+      "require": "./dist/plugins/banglaPlugin.cjs"
+    },
+    "./plugins/businessPlugin": {
+      "import": "./dist/plugins/businessPlugin.mjs",
+      "require": "./dist/plugins/businessPlugin.cjs"
+    },
+    "./plugins/dateRangePlugin": {
+      "import": "./dist/plugins/dateRangePlugin.mjs",
+      "require": "./dist/plugins/dateRangePlugin.cjs"
+    },
+    "./plugins/dayPartPlugin": {
+      "import": "./dist/plugins/dayPartPlugin.mjs",
+      "require": "./dist/plugins/dayPartPlugin.cjs"
+    },
+    "./plugins/durationPlugin": {
+      "import": "./dist/plugins/durationPlugin.mjs",
+      "require": "./dist/plugins/durationPlugin.cjs"
+    },
+    "./plugins/fromNowPlugin": {
+      "import": "./dist/plugins/fromNowPlugin.mjs",
+      "require": "./dist/plugins/fromNowPlugin.cjs"
+    },
+    "./plugins/greetingPlugin": {
+      "import": "./dist/plugins/greetingPlugin.mjs",
+      "require": "./dist/plugins/greetingPlugin.cjs"
+    },
+    "./plugins/palindromePlugin": {
+      "import": "./dist/plugins/palindromePlugin.mjs",
+      "require": "./dist/plugins/palindromePlugin.cjs"
+    },
+    "./plugins/relativeTimePlugin": {
+      "import": "./dist/plugins/relativeTimePlugin.mjs",
+      "require": "./dist/plugins/relativeTimePlugin.cjs"
+    },
+    "./plugins/roundPlugin": {
+      "import": "./dist/plugins/roundPlugin.mjs",
+      "require": "./dist/plugins/roundPlugin.cjs"
+    },
+    "./plugins/seasonPlugin": {
+      "import": "./dist/plugins/seasonPlugin.mjs",
+      "require": "./dist/plugins/seasonPlugin.cjs"
+    },
+    "./plugins/timeZonePlugin": {
+      "import": "./dist/plugins/timeZonePlugin.mjs",
+      "require": "./dist/plugins/timeZonePlugin.cjs"
+    },
+    "./plugins/zodiacPlugin": {
+      "import": "./dist/plugins/zodiacPlugin.mjs",
+      "require": "./dist/plugins/zodiacPlugin.cjs"
+    },
+    "./types": {
+      "import": "./dist/types.mjs",
+      "require": "./dist/types.cjs"
+    },
+    "./utils": {
+      "import": "./dist/utils.mjs",
+      "require": "./dist/utils.cjs"
+    },
+    "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.cts",
   "scripts": {
     "build": "tsdown"
   },
