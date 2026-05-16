@@ -100,7 +100,14 @@ export const roundPlugin = ($Chronos: $Chronos): void => {
 
 				const rounded = diffToEnd < diffToStart ? endOfWeek : startOfWeek;
 
-				return withOrigin(new $Chronos(rounded), 'round');
+				return withOrigin(
+					new $Chronos(rounded),
+					'round',
+					offset(this),
+					this.timeZoneName,
+					this.timeZoneId,
+					this.$tzTracker
+				);
 			}
 
 			case 'month': {

@@ -4,6 +4,11 @@
 
 All notable changes to the package will be documented here.
 
+## [4.30.10] - 2026-05-16
+
+- **Added** new *utility types*: `PropertyOptional<T, Keys>` and `PropertyRequired<T, Keys>`.
+- **Fixed** *Chronos plugin method* `round()` not preserving the *metadata* of the *original* instance.
+
 ## [4.30.1] - 2026-04-27
 
 - **Updated** *random hex generation* logic in `randomHex` and `uuid` utilities to use `crypto.getRandomValues` for better performance and security when available, with a fallback to `Math.random` for environments where `crypto` is not available.

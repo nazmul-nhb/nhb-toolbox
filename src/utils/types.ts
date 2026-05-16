@@ -378,6 +378,40 @@ export type ValueOptional<O, K extends keyof O = keyof O> = {
 	[P in keyof O]: P extends K ? O[P] | undefined : O[P];
 };
 
+/**
+ * Makes selected properties optional while keeping the rest required
+ * @remarks By default all properties are optional, same as {@link Partial<T>}
+ *
+ * @example
+ * type A = { name: string; age: number };
+ * type B = PropertyOptional<A, 'name'>;
+ * // Equivalent to: { name?: string | undefined; age: number }
+ *
+ * @example
+ * type C = PropertyOptional<A>;
+ * // Equivalent to: { name?: string | undefined; age?: number | undefined }
+ */
+export type PropertyOptional<O, K extends keyof O = keyof O> = Prettify<
+	Omit<O, K> & Partial<Pick<O, K>>
+>;
+
+/**
+ * Makes selected properties required while keeping the rest unchanged
+ * @remarks By default all properties are required, same as {@link Required<T>}
+ *
+ * @example
+ * type A = { name?: string; age: number };
+ * type B = PropertyRequired<A, 'name'>;
+ * // Equivalent to: { name: string; age: number | undefined }
+ *
+ * @example
+ * type C = PropertyRequired<A>;
+ * // Equivalent to: { name: string; age: number }
+ */
+export type PropertyRequired<O, K extends keyof O = keyof O> = Prettify<
+	Omit<O, K> & Required<Pick<O, K>>
+>;
+
 export type $Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 
 /**
