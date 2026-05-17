@@ -4,6 +4,10 @@
 
 All notable changes to the package will be documented here.
 
+## [4.30.11] - 2026-05-17
+
+- **Updated** the *time-zone* abbreviation matching logic of *Chronos plugin method* `getTimeZoneNameShort()` (alias: `getTimeZoneNameAbbr()`) and fixed the caching issue.
+
 ## [4.30.10] - 2026-05-16
 
 - **Added** new *utility types*: `PropertyOptional<T, Keys>` and `PropertyRequired<T, Keys>`.

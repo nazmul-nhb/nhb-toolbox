@@ -185,13 +185,18 @@ export const timeZonePlugin = ($Chronos: $Chronos): void => {
 		}, new Map<UTCOffset, $TimeZoneIdentifier[]>())
 	);
 
+	const _buildTzNameAbbrMap = () => {
+		const result: [UTCOffset, $TZNameAbbr][] = [];
+
+		for (const [tzAbbr, { offset, tzName }] of Object.entries(TIME_ZONES)) {
+			result.unshift([offset, { tzAbbr, tzName } as $TZNameAbbr]);
+		}
+
+		return result;
+	};
+
 	/** Cache to store time zone name and abbreviation against UTC offset from {@link TIME_ZONES} */
-	const TZ_NAME_ABBR_MAP = new Map<UTCOffset, $TZNameAbbr>(
-		Object.entries(TIME_ZONES).map(([tzAbbr, { offset, tzName }]) => [
-			offset,
-			{ tzAbbr, tzName } as $TZNameAbbr,
-		])
-	);
+	const TZ_NAME_ABBR_MAP = new Map<UTCOffset, $TZNameAbbr>(_buildTzNameAbbrMap());
 
 	/** Get time zone identifier from {@link TZ_ID_MAP} using UTC offset */
 	const _getTimeZoneId = (utc: UTCOffset) => {
@@ -219,7 +224,6 @@ export const timeZonePlugin = ($Chronos: $Chronos): void => {
 			return TIME_ZONES[zone].tzName;
 		} else {
 			const { offset, tzName } = _getTimeZoneDetails(zone, date);
-
 			return tzName || _resolveTzName(offset);
 		}
 	};
@@ -239,7 +243,7 @@ export const timeZonePlugin = ($Chronos: $Chronos): void => {
 			tzId = zone;
 		}
 
-		// ! in case zone has empty string
+		// ! In case zone has empty string
 		const $zone = zone || offset;
 		const tzName = _getTimeZoneName($zone, $Date(this)) ?? offset;
 
@@ -280,13 +284,16 @@ export const timeZonePlugin = ($Chronos: $Chronos): void => {
 		if (!utc && tracker && _isValidTzAbbr(tracker)) return tracker;
 
 		if (isValidUTCOffset(tzMapKey)) {
-			if (TZ_ABBR_CACHE.has(tzMapKey)) return TZ_ABBR_CACHE.get(tzMapKey)!;
-
-			if (TZ_NAME_ABBR_MAP.has(tzMapKey)) {
-				return TZ_NAME_ABBR_MAP.get(tzMapKey)?.tzAbbr as TimeZone;
+			if (TZ_ABBR_CACHE.has(tzMapKey)) {
+				return TZ_ABBR_CACHE.get(tzMapKey) as string;
 			}
 
 			const tzName = _resolveTzName(tzMapKey);
+
+			if (!tzName && TZ_NAME_ABBR_MAP.has(tzMapKey)) {
+				return TZ_NAME_ABBR_MAP.get(tzMapKey)?.tzAbbr as TimeZone;
+			}
+
 			if (tzName) {
 				const tzAbbr = _abbreviate(tzName);
 				TZ_ABBR_CACHE.set(tzMapKey, tzAbbr);
@@ -296,11 +303,15 @@ export const timeZonePlugin = ($Chronos: $Chronos): void => {
 
 		const zone = _getTimeZoneName(tzMapKey, $Date(this)) ?? UTC;
 
-		if (TZ_ABBR_CACHE.has(`name-${zone}`)) return TZ_ABBR_CACHE.get(zone)!;
+		const fallbackKey = `name-${zone}`;
+
+		if (TZ_ABBR_CACHE.has(fallbackKey)) {
+			return TZ_ABBR_CACHE.get(fallbackKey) as string;
+		}
 
 		const customAbbr = isValidUTCOffset(zone) ? zone : _abbreviate(zone);
 
-		TZ_ABBR_CACHE.set(`name-${zone}`, customAbbr);
+		TZ_ABBR_CACHE.set(fallbackKey, customAbbr);
 
 		return customAbbr;
 	};
