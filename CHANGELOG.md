@@ -4,6 +4,10 @@
 
 All notable changes to the package will be documented here.
 
+## [4.30.13] - 2026-05-19
+
+- **Fixed** *Chronos plugin method* `formatBangla()` to use `variant` from options properly to handle variant dependent calculations.
+
 ## [4.30.11] - 2026-05-17
 
 - **Updated** the *time-zone* abbreviation matching logic of *Chronos plugin method* `getTimeZoneNameShort()` (alias: `getTimeZoneNameAbbr()`) and fixed the caching issue.

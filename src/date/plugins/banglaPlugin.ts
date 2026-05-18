@@ -337,17 +337,18 @@ export const banglaPlugin = ($Chronos: $Chronos): void => {
 	};
 
 	$Chronos.prototype.formatBangla = function (fmt, opts) {
+		const { variant } = opts ?? {};
 		const { hour, minute, second, millisecond } = this;
 
 		const D_NAME = BN_DAYS[this.weekDay];
 
-		const { monthIdx } = $bnDaysMonthIdx($Date(this), opts?.variant);
+		const { monthIdx } = $bnDaysMonthIdx($Date(this), variant);
 		const M_NAME = BN_MONTHS[monthIdx];
 
-		const month = this.getBanglaMonth();
+		const month = this.getBanglaMonth({ variant });
 		const year = _padShunno(this.getBanglaYear(), 4);
-		const date = this.getBanglaDay();
-		const seasonName = this.getBanglaSeasonName();
+		const date = this.getBanglaDay({ variant });
+		const seasonName = this.getBanglaSeasonName({ variant });
 
 		const offset = digitToBangla(this.getTimeZoneOffset());
 
