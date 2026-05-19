@@ -4,6 +4,10 @@
 
 All notable changes to the package will be documented here.
 
+## [4.30.14] - 2026-05-19
+
+- **Updated** *signature* of `Chronos` plugin method `isPalindromeDate()`: now accepts `shortYear` parameter as optional (default `false`).
+
 ## [4.30.13] - 2026-05-19
 
 - **Fixed** *Chronos plugin method* `formatBangla()` to use `variant` from options properly to handle variant dependent calculations.

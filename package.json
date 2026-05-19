@@ -1,6 +1,6 @@
 {
   "name": "nhb-toolbox",
-  "version": "4.30.13",
+  "version": "4.30.14",
   "description": "A versatile collection of smart, efficient, and reusable utility functions, classes and types for everyday development needs.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -63,7 +63,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.4.15",
     "@types/jest": "^30.0.0",
-    "@types/node": "^25.8.0",
+    "@types/node": "^25.9.0",
     "husky": "^9.1.7",
     "jest": "^30.4.2",
     "lint-staged": "^17.0.5",

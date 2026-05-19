@@ -29,7 +29,7 @@ declare module '../Chronos' {
 		 * new Chronos('2011-1-11').isPalindromeDate(true); // true (from '11111')
 		 * new Chronos('2024-04-11').isPalindromeDate(); // false
 		 */
-		isPalindromeDate(shortYear: boolean): boolean;
+		isPalindromeDate(shortYear?: boolean): boolean;
 	}
 }
 
