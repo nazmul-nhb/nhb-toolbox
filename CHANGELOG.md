@@ -4,6 +4,11 @@
 
 All notable changes to the package will be documented here.
 
+## [4.30.16] - 2026-05-24
+
+- **Fixed** multiple issues with `createFormData`: Now handles configuration options properly and it is more reliable now.
+- **Updated** `isDateLike` utility to correctly identify `Temporal` instances while making the return type `value is DateLike` to improve type-safety, previously it was returning `boolean`.
+
 ## [4.30.14] - 2026-05-19
 
 - **Updated** *signature* of `Chronos` plugin method `isPalindromeDate()`: now accepts `shortYear` parameter as optional (default `false`).
