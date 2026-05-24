@@ -351,17 +351,19 @@ getColorForInitial('Banana', 50); // '#00376E80' (50% opacity)
 ```typescript
 import { createFormData } from 'nhb-toolbox';
 
-const formData = createFormData({
+const data = {
   user: {
     name: ' John Doe ',
     age: 30,
     preferences: { theme: 'dark' }
   },
   files: [file1, file2]
-}, {
+};
+
+const formData = createFormData(data, {
   trimStrings: true,
   lowerCaseValues: ['user.name'],
-  dotNotateNested: ['user.preferences'],
+  dotNotateNested: ['user'],
   breakArray: ['files']
 });
 

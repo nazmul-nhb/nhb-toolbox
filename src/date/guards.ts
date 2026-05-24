@@ -7,6 +7,7 @@ import { IANA_TZ_IDS, NATIVE_TZ_IDS } from './timezone';
 import type {
 	$TimeZoneIdentifier,
 	ClockTime,
+	DateLike,
 	TimeWithUnit,
 	TimeZoneIdNative,
 	UTCOffset,
@@ -89,7 +90,7 @@ export function isLeapYear(year: Numeric): boolean {
  * @param value Value to check if it is date-like object.
  * @returns `true` if the value is date-like object, otherwise `false`.
  */
-export function isDateLike(value: unknown): boolean {
+export function isDateLike(value: unknown): value is DateLike {
 	if (value instanceof Date) return true;
 
 	if (isObject(value)) {
@@ -117,11 +118,22 @@ export function isDateLike(value: unknown): boolean {
 			return true;
 		}
 
+		const temporals = [
+			'Instant',
+			'Duration',
+			'PlainDate',
+			'PlainTime',
+			'PlainDateTime',
+			'PlainMonthDay',
+			'PlainYearMonth',
+			'ZonedDateTime',
+		];
+
 		// Temporal
 		if (
 			isFunction(value.toJSON) &&
 			isFunction(value.toString) &&
-			['PlainDate', 'ZonedDateTime', 'Instant'].includes(value.constructor?.name ?? '')
+			temporals.includes(value.constructor?.name ?? '')
 		) {
 			return true;
 		}
