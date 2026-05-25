@@ -4,9 +4,9 @@
 
 All notable changes to the package will be documented here.
 
-## [4.30.20] - 2026-05-26
+## [4.30.21] - 2026-05-26
 
-- **Fixed** token audience(s) validation issue in `Signet` class.
+- **Fixed** token audience(s) validation issue in `Signet` class, previously it was returning false even for valid tokens.
 
 ## [4.30.16] - 2026-05-24
 

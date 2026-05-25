@@ -45,6 +45,15 @@
   </a>
 </p>
 
+>[!Info] Notice
+>`nhb-toolbox` is now split into 3 packages for better maintenance, organization and user experience.
+>It will not receive any new features, only critical bug fixes will be provided in the future updates.
+>
+>The new packages are:
+> <a target="_blank" href="https://toolbox-x.nazmul-nhb.dev"> <img src="https://img.shields.io/badge/Toolbox--X-toolbox--x-steelblue" alt="toolbox-x" /> </a>
+> <a target="_blank" href="https://chronos.nazmul-nhb.dev"> <img src="https://img.shields.io/badge/Chronos--Date-chronos--date-teal" alt="chronos-date" /> </a>
+> <a target="_blank" href="https://github.com/nazmul-nhb/bn-calendar"> <img src="https://img.shields.io/badge/Bangla_Calendar-bn--calendar-red" alt="bn-calendar" /> </a>
+
 ## JavaScript/TypeScript Utility Library
 
 **NHB Toolbox** provides battle-tested utilities for professional JavaScript/TypeScript development. Carefully crafted to solve common challenges with elegant, production-ready solutions:
@@ -520,6 +529,12 @@ debounceAction(fetchResults, 300);
 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
   <a target="_blank" href="https://www.npmjs.com/package/toolbox-x">
     <img src="https://img.shields.io/badge/Toolbox--X-toolbox--x-steelblue" alt="toolbox-x" />
+  </a>
+</div>
+
+<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+  <a target="_blank" href="https://www.npmjs.com/package/chronos-date">
+    <img src="https://img.shields.io/badge/Chronos--Date-chronos--date-teal" alt="chronos-date" />
   </a>
 </div>
 
