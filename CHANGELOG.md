@@ -4,6 +4,10 @@
 
 All notable changes to the package will be documented here.
 
+## [4.30.20] - 2026-05-26
+
+- **Fixed** token audience(s) validation issue in `Signet` class.
+
 ## [4.30.16] - 2026-05-24
 
 - **Fixed** multiple issues with `createFormData`: Now handles configuration options properly and it is more reliable now.
