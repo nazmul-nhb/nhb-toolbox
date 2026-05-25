@@ -417,7 +417,7 @@ export class Signet {
 
 		const expectedAud = Array.isArray(expected) ? expected : [expected];
 
-		return payloadAud.some((tokenAud) => expectedAud.includes(tokenAud));
+		return !payloadAud.some((tokenAud) => expectedAud.includes(tokenAud));
 	}
 
 	/**
@@ -541,7 +541,7 @@ export class Signet {
 			}
 
 			if (this.isInvalidAudience(token, audience)) {
-				throw new Error('Invalid token audience(s!');
+				throw new Error('Invalid token audience(s)!');
 			}
 
 			if (this.isInvalidSubject(token, subject)) {
