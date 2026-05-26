@@ -4,6 +4,10 @@
 
 All notable changes to the package will be documented here.
 
+## [4.30.20-24] - 2026-05-26
+
+- **Updated** `isValidUTCOffset`: Strict matching of offset format `+HH:MM` or `-HH:MM` (00-14h, 00/15/30/45m).
+
 ## [4.30.20-22] - 2026-05-26
 
 - **Fixed** token audience(s) validation issue in `Signet` class, previously it was returning `false` even for valid tokens.
