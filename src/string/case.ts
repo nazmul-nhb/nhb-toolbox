@@ -2,6 +2,7 @@ import { isNonEmptyString } from '../guards/primitives';
 import { LOWERCASE } from './constants';
 import type {
 	$LowerCaseWord,
+	$WidenEmpty,
 	CamelCase,
 	CapitalizeOptions,
 	CaseFormat,
@@ -170,12 +171,12 @@ export function convertStringCase(
 		}
 
 		case 'snake_case': {
-			const body = tokens.map((token) => lowerCase(token)).join('_');
+			const body = tokens.map(lowerCase).join('_');
 			return start.concat(body, end);
 		}
 
 		case 'kebab-case': {
-			const body = tokens.map((token) => lowerCase(token)).join('-');
+			const body = tokens.map(lowerCase).join('-');
 			return start.concat(body, end);
 		}
 
@@ -251,7 +252,7 @@ export function convertStringCase(
  *
  * @param string String to be capitalized.
  * @param options Options to customize the capitalization.
- * @returns Capitalized string or fully uppercased string depending on `capitalizeAll` option.
+ * @returns Capitalized string or fully upper-cased string depending on `capitalizeAll` option.
  */
 export function capitalizeString(string: string, options?: CapitalizeOptions): string {
 	if (!isNonEmptyString(string)) return '';
@@ -310,7 +311,7 @@ function _normalizeDelimiters(str: string, delims: string[]): string[] {
 	const delRegExp = _getDelimiterRegex(delims);
 
 	return str
-		.replace(/(\p{Ll}?\d+|(?<=\p{Lu}))(\p{Lu})/gu, '$1 $2')
+		.replace(/(\p{Ll}?\d+|(?<=\p{Lu}|\p{Ll}))(\p{Lu})/gu, '$1 $2')
 		.replace(delRegExp, ' ')
 		.replace(/\s+/g, ' ')
 		.trim()
@@ -346,14 +347,13 @@ function _capitalize(str: string): string {
 export function toCamelCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
-): CamelCase<Str, Del> {
-	if (!isNonEmptyString(str)) return '' as CamelCase<Str, Del>;
+): $WidenEmpty<CamelCase<Str, Del>> {
+	if (!isNonEmptyString(str)) return '' as $WidenEmpty<CamelCase<Str, Del>>;
 
 	const parts = _normalizeDelimiters(str, del);
 
-	return (parts[0].toLowerCase() + parts.slice(1).map(_capitalize).join('')) as CamelCase<
-		Str,
-		Del
+	return (parts[0].toLowerCase() + parts.slice(1).map(_capitalize).join('')) as $WidenEmpty<
+		CamelCase<Str, Del>
 	>;
 }
 
@@ -380,10 +380,10 @@ export function toCamelCase<Str extends string, Del extends string = ''>(
 export function toPascalCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
-): PascalCase<Str, Del> {
+): $WidenEmpty<PascalCase<Str, Del>> {
 	return (
 		isNonEmptyString(str) ? _normalizeDelimiters(str, del).map(_capitalize).join('') : ''
-	) as PascalCase<Str>;
+	) as $WidenEmpty<PascalCase<Str>>;
 }
 
 /**
@@ -408,14 +408,14 @@ export function toPascalCase<Str extends string, Del extends string = ''>(
 export function toSnakeCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
-): SnakeCase<Str, Del> {
+): $WidenEmpty<SnakeCase<Str, Del>> {
 	return (
 		isNonEmptyString(str)
 			? _normalizeDelimiters(str, del)
 					.map((w) => w.toLowerCase())
 					.join('_')
 			: ''
-	) as SnakeCase<Str, Del>;
+	) as $WidenEmpty<SnakeCase<Str, Del>>;
 }
 
 /**
@@ -440,14 +440,14 @@ export function toSnakeCase<Str extends string, Del extends string = ''>(
 export function toKebabCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
-): KebabCase<Str, Del> {
+): $WidenEmpty<KebabCase<Str, Del>> {
 	return (
 		isNonEmptyString(str)
 			? _normalizeDelimiters(str, del)
 					.map((w) => w.toLowerCase())
 					.join('-')
 			: ''
-	) as KebabCase<Str, Del>;
+	) as $WidenEmpty<KebabCase<Str, Del>>;
 }
 
 /**
@@ -471,10 +471,10 @@ export function toKebabCase<Str extends string, Del extends string = ''>(
 export function toTrainCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
-): TrainCase<Str, Del> {
+): $WidenEmpty<TrainCase<Str, Del>> {
 	return (
 		isNonEmptyString(str) ? _normalizeDelimiters(str, del).map(_capitalize).join('-') : ''
-	) as TrainCase<Str, Del>;
+	) as $WidenEmpty<TrainCase<Str, Del>>;
 }
 
 /**
@@ -498,11 +498,10 @@ export function toTrainCase<Str extends string, Del extends string = ''>(
 export function toDotCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
-): DotCase<Str, Del> {
-	return (isNonEmptyString(str) ? _normalizeDelimiters(str, del).join('.') : '') as DotCase<
-		Str,
-		Del
-	>;
+): $WidenEmpty<DotCase<Str, Del>> {
+	return (
+		isNonEmptyString(str) ? _normalizeDelimiters(str, del).join('.') : ''
+	) as $WidenEmpty<DotCase<Str, Del>>;
 }
 
 /**
@@ -526,14 +525,14 @@ export function toDotCase<Str extends string, Del extends string = ''>(
 export function toPathCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
-): PathCase<Str, Del> {
+): $WidenEmpty<PathCase<Str, Del>> {
 	return (
 		isNonEmptyString(str)
 			? _normalizeDelimiters(str, del)
 					.map((w) => w.toLowerCase())
 					.join('/')
 			: ''
-	) as PathCase<Str, Del>;
+	) as $WidenEmpty<PathCase<Str, Del>>;
 }
 
 /**
@@ -557,14 +556,14 @@ export function toPathCase<Str extends string, Del extends string = ''>(
 export function toConstantCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
-): ConstantCase<Str, Del> {
+): $WidenEmpty<ConstantCase<Str, Del>> {
 	return (
 		isNonEmptyString(str)
 			? _normalizeDelimiters(str, del)
 					.map((w) => w.toUpperCase())
 					.join('_')
 			: ''
-	) as ConstantCase<Str, Del>;
+	) as $WidenEmpty<ConstantCase<Str, Del>>;
 }
 
 /**
@@ -588,10 +587,10 @@ export function toConstantCase<Str extends string, Del extends string = ''>(
 export function toPascalSnakeCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
-): PascalSnakeCase<Str, Del> {
+): $WidenEmpty<PascalSnakeCase<Str, Del>> {
 	return (
 		isNonEmptyString(str) ? _normalizeDelimiters(str, del).map(_capitalize).join('_') : ''
-	) as PascalSnakeCase<Str, Del>;
+	) as $WidenEmpty<PascalSnakeCase<Str, Del>>;
 }
 
 /**
@@ -617,7 +616,7 @@ export function toPascalSnakeCase<Str extends string, Del extends string = ''>(
 export function toTitleCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
-): TitleCase<Str, Del> {
+): $WidenEmpty<TitleCase<Str, Del>> {
 	return (
 		isNonEmptyString(str)
 			? _normalizeDelimiters(str, del)
@@ -628,7 +627,7 @@ export function toTitleCase<Str extends string, Del extends string = ''>(
 					)
 					.join(' ')
 			: ''
-	) as TitleCase<Str, Del>;
+	) as $WidenEmpty<TitleCase<Str, Del>>;
 }
 
 /**
@@ -654,12 +653,12 @@ export function toTitleCase<Str extends string, Del extends string = ''>(
 export function toSentenceCase<Str extends string, Del extends string = ''>(
 	str: Str,
 	...del: Del[]
-): SentenceCase<Str, Del> {
+): $WidenEmpty<SentenceCase<Str, Del>> {
 	return (
 		isNonEmptyString(str)
 			? _normalizeDelimiters(str, del)
 					.map((w, i) => (i === 0 ? _capitalize(w) : w.toLowerCase()))
 					.join(' ')
 			: ''
-	) as SentenceCase<Str, Del>;
+	) as $WidenEmpty<SentenceCase<Str, Del>>;
 }

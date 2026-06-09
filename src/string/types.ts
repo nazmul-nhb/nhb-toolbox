@@ -353,6 +353,9 @@ export type SentenceCase<Str extends string, Del extends string = ''> =
 		? `${Capitalize<Lowercase<F>>} ${Join<$LowercaseWords<R>, ' '>}`
 		: ' ';
 
+/** Helper type to convert an empty string to `string` while maintaining the literal type otherwise. */
+export type $WidenEmpty<T extends string> = T extends '' ? string : T;
+
 /** Matches any non-Latin character. */
 export type SpecialCharacter = Lowercase<string> & Uppercase<string>;
 
