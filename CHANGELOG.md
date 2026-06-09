@@ -4,6 +4,10 @@
 
 All notable changes to the package will be documented here.
 
+## [4.30.26] - 2026-06-09
+
+- **Fixed** issues with *delimiter normalizer* and *updated return types* for *non-literal strings* in *string case converter* utilities.
+
 ## [4.30.20-24] - 2026-05-26
 
 - **Updated** `isValidUTCOffset`: Strict matching of offset format `+HH:MM` or `-HH:MM` (00-14h, 00/15/30/45m).

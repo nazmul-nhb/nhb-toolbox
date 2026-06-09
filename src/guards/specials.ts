@@ -133,7 +133,7 @@ export function isIPAddress(value: unknown): value is string {
 /**
  * * Type guard to check if the current environment matches a given string.
  * @param env - The expected environment (e.g., "production", "development").
- * @returns `true` if the value is a numeric string parsable by `Number()`, otherwise `false`.
+ * @returns `true` if the value equals to `process.env.NODE_ENV`, otherwise `false`.
  */
 export function isEnvironment(env: string): boolean {
 	return process.env.NODE_ENV === env;
