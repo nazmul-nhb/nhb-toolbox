@@ -1,6 +1,6 @@
 import { getColorForInitial } from '../../src';
 import { ALPHABET_COLOR_PALETTE, NUMBER_COLOR_PALETTE } from '../../src/colors/constants';
-import { _percentToHex } from '../../src/colors/helpers';
+import { percentToHex } from '../../src/colors/utils';
 
 describe('getColorForInitial', () => {
 	test('returns correct color for single alphabet input', () => {
@@ -24,8 +24,8 @@ describe('getColorForInitial', () => {
 	});
 
 	test('returns correct color with opacity applied', () => {
-		expect(getColorForInitial('A', 50)).toBe(ALPHABET_COLOR_PALETTE[0] + _percentToHex(50));
-		expect(getColorForInitial('9', 75)).toBe(NUMBER_COLOR_PALETTE[9] + _percentToHex(75));
+		expect(getColorForInitial('A', 50)).toBe(ALPHABET_COLOR_PALETTE[0] + percentToHex(50));
+		expect(getColorForInitial('9', 75)).toBe(NUMBER_COLOR_PALETTE[9] + percentToHex(75));
 	});
 
 	test('returns correct colors for an array of inputs', () => {

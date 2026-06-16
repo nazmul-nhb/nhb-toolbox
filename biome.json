@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.4.15/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
 	"vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": false },
 	"files": {
 		"includes": ["**", "!!**/dist", "!!**/node_modules", "!!__dump__", "!!__ideas__"],
@@ -20,9 +20,8 @@
 		"includes": ["**", "!**/dist", "!**/node_modules", "!**/.estimator", "!**/*.md"]
 	},
 	"linter": {
-		"enabled": true,
 		"rules": {
-			"recommended": false,
+			"preset": "recommended",
 			"complexity": {
 				"noAdjacentSpacesInRegex": "error",
 				"noExtraBooleanCast": "error",

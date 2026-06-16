@@ -36,11 +36,17 @@ import { extractAlphaColorValues, extractSolidColorValues, percentToHex } from '
  * @property `hsla` - {@link HSLA} color representation including alpha.
  */
 export class Color {
+	/** {@link Hex6 Hex} color representation (without alpha). */
 	readonly hex: Hex6;
+	/** {@link Hex8} color representation including alpha. */
 	readonly hex8: Hex8;
+	/** {@link RGB} color representation (without alpha). */
 	readonly rgb: RGB;
+	/** {@link RGBA} color representation including alpha. */
 	readonly rgba: RGBA;
+	/** {@link HSL} color representation (without alpha). */
 	readonly hsl: HSL;
+	/** {@link HSLA} color representation including alpha. */
 	readonly hsla: HSLA;
 
 	/**
@@ -244,6 +250,22 @@ export class Color {
 	}
 
 	/**
+	 * Allows the color to be used in string and number contexts.
+	 * @param hint The hint to determine the conversion type.
+	 */
+	[Symbol.toPrimitive](hint: string) {
+		if (hint === 'string') {
+			return this.hex8;
+		} else if (hint === 'number') {
+			const hex = this.hex8.endsWith('FF') ? this.hex : this.hex8;
+
+			return parseInt(hex.replace('#', '0x'), 16);
+		}
+
+		return this;
+	}
+
+	/**
 	 * @private Convert `Hex6` color format to `Hex8` by applying `100%` opacity.
 	 * @param hex `Hex6` color to convert to `Hex8`.
 	 */
@@ -267,6 +289,30 @@ export class Color {
 	#hslToHSLA(hsl: HSL): HSLA {
 		const [h, s, l] = extractSolidColorValues(hsl);
 		return `hsla(${h}, ${s}%, ${l}%, 1)`;
+	}
+
+	/**
+	 * @instance Convert the color to string.
+	 * @returns The `Hex8` representation of the color.
+	 *
+	 * @remarks
+	 * - Called by `String()`, `Object.prototype.toString()` or in template literals.
+	 * - Uses the same implementation as `toJSON()`.
+	 */
+	toString() {
+		return this.hex8;
+	}
+
+	/**
+	 * @instance Convert the color to JSON.
+	 * @returns The `Hex8` representation of the color.
+	 *
+	 * @remarks
+	 * - Called by `JSON.stringify()`.
+	 * - It uses the same implementation as `toString()`.
+	 */
+	toJSON() {
+		return this.hex8;
 	}
 
 	/**
@@ -377,20 +423,20 @@ export class Color {
 	blendWith(other: ColorType | CSSColor, weight = 0.5): Color {
 		const w = Math.max(0, Math.min(1, weight));
 
-		const converted = Color.isCSSColor(other) ? new Color(other) : new Color(other);
+		const otherColor = new Color(other);
 
-		const [r1, b1, g1, a1] = extractAlphaColorValues(this.rgba);
-		const [r2, b2, g2, a2] = extractAlphaColorValues(converted.rgba);
+		const [r1, g1, b1, a1] = extractAlphaColorValues(this.rgba);
+		const [r2, g2, b2, a2] = extractAlphaColorValues(otherColor.rgba);
 
 		const alpha = Math.round((a1 * (1 - w) + a2 * w) * 100) / 100;
 
-		const blendChannel = (c1: number, c2: number): number => {
+		const _blendChannel = (c1: number, c2: number): number => {
 			return Math.round((c1 * a1 * (1 - w) + c2 * a2 * w) / alpha);
 		};
 
-		const r = blendChannel(r1, r2);
-		const g = blendChannel(g1, g2);
-		const b = blendChannel(b1, b2);
+		const r = _blendChannel(r1, r2);
+		const g = _blendChannel(g1, g2);
+		const b = _blendChannel(b1, b2);
 
 		const blended = `rgba(${r}, ${g}, ${b}, ${alpha})`;
 
@@ -403,19 +449,19 @@ export class Color {
 	 * @returns A number representing the contrast ratio (rounded to 2 decimal places).
 	 */
 	contrastRatio(other: ColorType | CSSColor): number {
-		const newColor = Color.isCSSColor(other) ? new Color(other) : new Color(other);
+		const otherColor = new Color(other);
 
-		const luminance = (rgb: RGB): number => {
+		const _luminance = (rgb: RGB): number => {
 			const [r, g, b] = extractSolidColorValues(rgb).map((v) => {
 				const c = v / 255;
-				return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+				return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
 			});
 
 			return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 		};
 
-		const lum1 = luminance(this.rgb);
-		const lum2 = luminance(newColor.rgb);
+		const lum1 = _luminance(this.rgb);
+		const lum2 = _luminance(otherColor.rgb);
 
 		const brighter = Math.max(lum1, lum2);
 		const darker = Math.min(lum1, lum2);

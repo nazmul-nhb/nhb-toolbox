@@ -102,7 +102,7 @@ export const convertRgbToHsl = (r: number, g: number, b: number): HSL => {
  * @returns A string representing the color in Hex format (e.g., `#FF0000`).
  */
 export const convertHslToHex = (h: number, s: number, l: number): Hex6 => {
-	const rgb = convertHslToRgb(h, s, l).match(/\d+/g)!.map(Number);
+	const rgb = convertHslToRgb(h, s, l).match(/\d+/g)?.map(Number) ?? [0, 0, 0];
 
 	return convertRgbToHex(rgb[0], rgb[1], rgb[2]);
 };

@@ -43,7 +43,10 @@ export function getFibonacciSeriesMemo(limit: Numeric): number[] {
 	]);
 
 	const fib = (n: number): number => {
-		if (memo.has(n)) return memo.get(n)!;
+		if (memo.has(n)) {
+			return memo.get(n) as number;
+		}
+
 		const val = fib(n - 1) + fib(n - 2);
 		memo.set(n, val);
 		return val;

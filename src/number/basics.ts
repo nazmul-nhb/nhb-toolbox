@@ -265,7 +265,7 @@ export function getAverage(...numbers: Numeric[]): number {
  * roundNumber(1234.56, 1);  // 1234.6
  */
 export function roundNumber(number: Numeric, roundTo = 2): number {
-	const factor = Math.pow(10, roundTo);
+	const factor = 10 ** roundTo;
 
 	const num = isNumber(number) ? number : Number(number);
 

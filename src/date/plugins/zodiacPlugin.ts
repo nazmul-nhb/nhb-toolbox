@@ -74,7 +74,7 @@ export const zodiacPlugin = ($Chronos: $Chronos): void => {
 		let month: NumberRange<1, 12>;
 		let date: NumberRange<1, 31>;
 
-		if (birthDate && birthDate?.includes('-')) {
+		if (birthDate?.includes('-')) {
 			[month, date] = birthDate.split('-').map(Number) as [
 				NumberRange<1, 12>,
 				NumberRange<1, 31>,
@@ -94,7 +94,7 @@ export const zodiacPlugin = ($Chronos: $Chronos): void => {
 			}
 
 			if (i === 0) {
-				return sortedSigns.at(-1)![0];
+				return sortedSigns.at(-1)?.[0] as Z;
 			}
 		}
 
@@ -105,10 +105,10 @@ export const zodiacPlugin = ($Chronos: $Chronos): void => {
 		return this.getZodiacSign(options);
 	};
 
-	$Chronos.prototype.getZodiacMeta = function <Z extends string = ZodiacSign>(
+	$Chronos.prototype.getZodiacMeta = <Z extends string = ZodiacSign>(
 		sign: Z,
 		options?: ZodiacMetaOptions<Z>
-	) {
+	) => {
 		const sortedSigns = _resolveSigns(options);
 
 		const index = sortedSigns.findIndex(([s]) => s === sign);

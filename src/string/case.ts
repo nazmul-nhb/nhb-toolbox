@@ -303,7 +303,7 @@ function _getDelimiterRegex(delims: string[]) {
 		REGEX_CACHE.set(key, new RegExp(`[-_./${delims.join('')}]`, 'g'));
 	}
 
-	return REGEX_CACHE.get(key)!;
+	return REGEX_CACHE.get(key) as RegExp;
 }
 
 /** Normalizes delimiters + splits the string */

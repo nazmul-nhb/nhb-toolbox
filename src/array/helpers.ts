@@ -14,6 +14,8 @@ export function _resolveNestedKey(obj: unknown, path: string): unknown {
 			if (isNotEmptyObject(acc)) {
 				return acc[key];
 			}
+
+			return undefined;
 		}, obj);
 	}
 }
@@ -27,15 +29,7 @@ export function _resolveNestedKey(obj: unknown, path: string): unknown {
  * @returns The numeric value at that path, or 0 if not valid.
  */
 export function _getNumericProp(obj: unknown, path: string): number {
-	if (isNotEmptyObject(obj)) {
-		const value = path?.split('.').reduce<unknown>((acc, key) => {
-			if (isNotEmptyObject(acc)) {
-				return acc[key];
-			}
-		}, obj);
+	const value = _resolveNestedKey(obj, path);
 
-		return normalizeNumber(value) ?? 0;
-	} else {
-		return 0;
-	}
+	return normalizeNumber(value) ?? 0;
 }

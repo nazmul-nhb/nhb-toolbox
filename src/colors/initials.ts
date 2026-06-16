@@ -90,14 +90,12 @@ export function getColorForInitial(
 				_applyOpacity(color, hexOpacity)
 			);
 
-		return input
-			.map((el) => {
-				if (Array.isArray(el)) {
-					return getColorForInitial(el, opacity);
-				}
+		return input.flatMap((el) => {
+			if (Array.isArray(el)) {
 				return getColorForInitial(el, opacity);
-			})
-			.flat();
+			}
+			return getColorForInitial(el, opacity);
+		});
 	}
 
 	return _applyOpacity(DEFAULT, hexOpacity);

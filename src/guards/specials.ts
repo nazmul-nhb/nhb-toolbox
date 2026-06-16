@@ -26,7 +26,7 @@ export function isEmailArray(value: unknown): value is string[] {
  * @returns `true` if the value is a valid date string, otherwise `false`.
  */
 export function isDateString(value: unknown): value is string {
-	return isString(value) && !isNaN(Date.parse(value));
+	return isString(value) && !Number.isNaN(Date.parse(value));
 }
 
 /**

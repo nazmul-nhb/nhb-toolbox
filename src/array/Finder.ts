@@ -387,7 +387,7 @@ export class Finder<T extends GenericObject> {
 		const cache = new Map<T, string | number>();
 
 		return (item: T): string | number => {
-			if (cache.has(item)) return cache.get(item)!;
+			if (cache.has(item)) return cache.get(item) as string | number;
 			const key = getKey(item);
 			cache.set(item, key);
 			return key;

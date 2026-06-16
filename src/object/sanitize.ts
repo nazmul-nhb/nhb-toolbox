@@ -284,7 +284,7 @@ export function parseObjectValues<T extends GenericObject>(
 					return null;
 				} else if (data === 'undefined') {
 					return undefined;
-				} else if (!isNaN(Number(data))) {
+				} else if (!Number.isNaN(Number(data))) {
 					return Number(data);
 				} else return data;
 			}

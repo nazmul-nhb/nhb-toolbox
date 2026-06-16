@@ -191,7 +191,7 @@ export class TextCodec {
 	 * TextCodec.base64ToHex('SGVsbG8=');
 	 */
 	static base64ToHex(b64: string, spaced = true) {
-		return this.utf8ToHex(this.base64ToUtf8(b64), spaced);
+		return TextCodec.utf8ToHex(TextCodec.base64ToUtf8(b64), spaced);
 	}
 
 	/**
@@ -205,7 +205,7 @@ export class TextCodec {
 	 * TextCodec.base64ToBinary('SGVsbG8=');
 	 */
 	static base64ToBinary(b64: string, spaced = true) {
-		return this.utf8ToBinary(this.base64ToUtf8(b64), spaced);
+		return TextCodec.utf8ToBinary(TextCodec.base64ToUtf8(b64), spaced);
 	}
 
 	/**
@@ -218,7 +218,7 @@ export class TextCodec {
 	 * TextCodec.hexToBase64('48 69');
 	 */
 	static hexToBase64(hex: string) {
-		return this.utf8ToBase64(this.hexToUtf8(hex));
+		return TextCodec.utf8ToBase64(TextCodec.hexToUtf8(hex));
 	}
 
 	/**
@@ -231,6 +231,6 @@ export class TextCodec {
 	 * TextCodec.binaryToBase64('01001000 01101001');
 	 */
 	static binaryToBase64(binary: string) {
-		return this.utf8ToBase64(this.binaryToUtf8(binary));
+		return TextCodec.utf8ToBase64(TextCodec.binaryToUtf8(binary));
 	}
 }

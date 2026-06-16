@@ -30,7 +30,7 @@ export function createOptionsArray<
 		retainNumberValue = false,
 	} = config || {};
 
-	if (data && data?.length) {
+	if (data?.length) {
 		return data?.map((datum) => {
 			const firstValue =
 				retainNumberValue && isNumber(datum[firstFieldKey])

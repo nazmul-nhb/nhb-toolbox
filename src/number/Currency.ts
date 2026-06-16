@@ -84,7 +84,7 @@ export class Currency<Code extends CurrencyCode> {
 		const key = `${this.#code}->${to}`;
 
 		if (!options?.forceRefresh && Currency.#RATE_CACHE.has(key)) {
-			const cachedRate = Currency.#RATE_CACHE.get(key)!;
+			const cachedRate = Currency.#RATE_CACHE.get(key) as number;
 
 			return new Currency(this.#amount * cachedRate, to);
 		}

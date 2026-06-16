@@ -258,8 +258,8 @@ export function bytesToBase64(bytes: Uint8Array): string {
 		out +=
 			_b64chars[h1] +
 			_b64chars[h2] +
-			_b64chars[isNaN(o2) ? 64 : h3] +
-			_b64chars[isNaN(o3) ? 64 : h4];
+			_b64chars[Number.isNaN(o2) ? 64 : h3] +
+			_b64chars[Number.isNaN(o3) ? 64 : h4];
 	}
 
 	return out;

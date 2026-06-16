@@ -62,7 +62,7 @@ export const _isSimilarToLast = (recentColors: string[], newColor: string): bool
  * @returns `true` if it's a valid alpha value, `false` if not.
  */
 export function _isValidAlpha(value: number): value is AlphaValue {
-	return value >= 0 && value <= 1 && !isNaN(value);
+	return value >= 0 && value <= 1 && !Number.isNaN(value);
 }
 
 /** @private Validates RGB component (0–255). */

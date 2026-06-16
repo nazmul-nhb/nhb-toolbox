@@ -246,7 +246,7 @@ export class BanglaCalendar {
 								: Date.now()
 					);
 
-		if (isNaN(date.getTime())) {
+		if (Number.isNaN(date.getTime())) {
 			date = new Date();
 		}
 

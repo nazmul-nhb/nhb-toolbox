@@ -89,7 +89,7 @@ export function generateRandomID(options?: RandomIdOptions): string {
 		Math.random().toString(36).slice(2, 3)
 	).join('');
 
-	const ID = [prefix && prefix.trim(), date, randomString, suffix && suffix.trim()]
+	const ID = [prefix?.trim(), date, randomString, suffix?.trim()]
 		.filter(Boolean)
 		.join(separator);
 

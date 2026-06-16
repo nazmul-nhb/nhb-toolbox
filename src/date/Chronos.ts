@@ -397,7 +397,7 @@ export class Chronos {
 		const date = value instanceof Chronos ? value.toDate() : _dateArgsToDate(value);
 
 		// Check if the date is invalid
-		if (isNaN(date.getTime())) {
+		if (Number.isNaN(date.getTime())) {
 			throw new Error('Provided date is invalid!');
 		}
 
@@ -1265,7 +1265,7 @@ export class Chronos {
 
 	/** @instance Converts to object with all date unit parts */
 	toObject(): ChronosObject {
-		return Object.fromEntries([...this]) as {} as ChronosObject;
+		return Object.fromEntries([...this]) as unknown as ChronosObject;
 	}
 
 	/** @instance Converts to array with all date unit parts */
@@ -1839,7 +1839,7 @@ export class Chronos {
 	 * @returns `true` if the value is a valid date string, otherwise `false`.
 	 */
 	static isDateString(value: unknown): value is string {
-		return isString(value) && !isNaN(Date.parse(value));
+		return isString(value) && !Number.isNaN(Date.parse(value));
 	}
 
 	/**

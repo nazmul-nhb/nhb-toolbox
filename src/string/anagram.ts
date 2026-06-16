@@ -3,11 +3,11 @@ import { isNonEmptyString } from '../guards/primitives';
 import type { AnagramOptions } from './types';
 
 /** `WeakMap` to cache user provided dictionary array */
-const DICT_CACHE = /* @__PURE__ */ new WeakMap<object, Set<string>>();
+const DICT_CACHE = /* @__PURE__ */ new WeakMap<string[], Set<string>>();
 
 /** Get cached dictionary `Set` */
 function _getDictSet(dict: string[]) {
-	if (DICT_CACHE.has(dict)) return DICT_CACHE.get(dict)!;
+	if (DICT_CACHE.has(dict)) return DICT_CACHE.get(dict) as Set<string>;
 
 	const dictSet = new Set(dict.map((w) => w.toLowerCase()));
 

@@ -24,7 +24,7 @@ import { normalizeNumber } from './utilities';
 export function numberToWords(num: Numeric): string {
 	let number = Math.trunc(Number(num));
 
-	if (!Number.isFinite(number) || isNaN(number)) {
+	if (!Number.isFinite(number) || Number.isNaN(number)) {
 		return 'Invalid Number!';
 	}
 
@@ -281,17 +281,17 @@ export function wordsToNumber(word: string): number {
 
 		// Handle direct maps
 		if (onesMap.has(token)) {
-			currentNumber += onesMap.get(token)!;
+			currentNumber += onesMap.get(token) as number;
 
 			continue;
 		}
 		if (teensMap.has(token)) {
-			currentNumber += teensMap.get(token)!;
+			currentNumber += teensMap.get(token) as number;
 
 			continue;
 		}
 		if (tensMap.has(token)) {
-			currentNumber += tensMap.get(token)!;
+			currentNumber += tensMap.get(token) as number;
 
 			continue;
 		}
@@ -305,7 +305,7 @@ export function wordsToNumber(word: string): number {
 
 		// Handle scale words (thousand, million, etc.)
 		if (scalesMap.has(token)) {
-			const scale = scalesMap.get(token)!;
+			const scale = scalesMap.get(token) as number;
 			if (scale > 1) {
 				total += (currentNumber || 1) * scale;
 				currentNumber = 0;
@@ -368,7 +368,7 @@ export function banglaToDigit<Force extends boolean = true>(
 		return Number(
 			digitStr
 				.split('')
-				.filter((dig) => !isNaN(Number(dig)))
+				.filter((dig) => !Number.isNaN(Number(dig)))
 				.join('')
 		) as BnDigitResult<Force>;
 	}

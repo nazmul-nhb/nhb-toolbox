@@ -26,7 +26,7 @@ export function calculatePercentage(options: PercentageOptions): number {
 	 * @returns The rounded number.
 	 */
 	const _roundNumber = (num: number) => {
-		const factor = Math.pow(10, roundTo);
+		const factor = 10 ** roundTo;
 
 		return Math.round(num * factor) / factor;
 	};

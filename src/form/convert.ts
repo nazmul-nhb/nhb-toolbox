@@ -183,12 +183,14 @@ export const createControlledFormData = <T extends GenericObject>(
 		}
 
 		if (isCustomFileArray(value)) {
-			value?.forEach((file) => formData.append(transformedKey, file?.originFileObj));
+			for (const file of value) {
+				formData.append(transformedKey, file?.originFileObj);
+			}
 		} else if (isFileUpload(value)) {
 			if (value?.fileList) {
-				value?.fileList.forEach((file) =>
-					formData.append(transformedKey, file?.originFileObj)
-				);
+				for (const file of value.fileList) {
+					formData.append(transformedKey, file?.originFileObj);
+				}
 			} else if (value?.file) {
 				if (isCustomFile(value?.file)) {
 					formData.append(transformedKey, value?.file?.originFileObj);
@@ -200,7 +202,7 @@ export const createControlledFormData = <T extends GenericObject>(
 			formData.append(transformedKey, value);
 		} else if (isFileList(value)) {
 			for (let i = 0; i < value?.length; i++) {
-				formData.append(transformedKey, value.item(i)!);
+				formData.append(transformedKey, value.item(i) as File);
 			}
 		} else if (Array.isArray(value)) {
 			if (isFileArray(value)) {
