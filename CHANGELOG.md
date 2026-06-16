@@ -4,6 +4,11 @@
 
 All notable changes to the package will be documented here.
 
+## [4.31.0] - 2026-06-16
+
+- **Added** new *methods* for `Color` class: `toString()`, `toJSON()`, `Symbol.toPrimitive`.
+- **Fixed** multiple bugs and lint errors/warnings across the codebase.
+
 ## [4.30.26] - 2026-06-09
 
 - **Fixed** issues with *delimiter normalizer* and *updated return types* for *non-literal strings* in *string case converter* utilities.
