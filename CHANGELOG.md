@@ -4,6 +4,10 @@
 
 All notable changes to the package will be documented here.
 
+## [4.31.1] - 2026-06-28
+
+- **Fixed** immutability issue with conversion to `Date` object for all the *date utilities* including `Chronos` constructor and plugins.
+
 ## [4.31.0] - 2026-06-16
 
 - **Added** new *methods* for `Color` class: `toString()`, `toJSON()`, `Symbol.toPrimitive`.

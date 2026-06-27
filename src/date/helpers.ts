@@ -242,9 +242,13 @@ export function _padShunno(str: string, length = 2) {
  * @returns A `Date` object representing the input date.
  */
 export function _dateArgsToDate(value: Maybe<DateArgs>): Date {
-	return isDate(value)
-		? value
-		: new Date(isString(value) ? value.replace(/['"]/g, '') : (value ?? Date.now()));
+	return new Date(
+		isDate(value)
+			? value
+			: isString(value)
+				? value.replace(/['"]/g, '')
+				: (value ?? Date.now())
+	);
 }
 
 /**

@@ -398,7 +398,7 @@ export class Chronos {
 
 		// Check if the date is invalid
 		if (Number.isNaN(date.getTime())) {
-			throw new Error('Provided date is invalid!');
+			throw new TypeError('Provided date is invalid!');
 		}
 
 		return date;
