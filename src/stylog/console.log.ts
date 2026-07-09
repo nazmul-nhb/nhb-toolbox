@@ -3,5 +3,5 @@
  * @param data Data to log in the console.
  */
 export function _logToConsole(...data: unknown[]) {
-	console.log(data);
+	console.log(...data);
 }

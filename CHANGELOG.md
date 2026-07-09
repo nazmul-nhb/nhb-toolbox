@@ -4,6 +4,10 @@
 
 All notable changes to the package will be documented here.
 
+## [4.31.3] - 2026-07-09
+
+- **Fixed** issue with `Stylog` not printing styles properly using `log()` method.
+
 ## [4.31.2] - 2026-06-28
 
 - **Updated** tsdoc for `relativeTimePlugin` `Chronos` instance methods.
