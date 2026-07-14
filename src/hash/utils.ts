@@ -1,4 +1,6 @@
+import { isUndefined } from '../guards/primitives';
 import { isHexString } from '../guards/specials';
+import type { Maybe } from '../types';
 import { _bytesToRandomHex, _splitByCharLength } from './helpers';
 
 /**
@@ -249,17 +251,19 @@ export function bytesToBase64(bytes: Uint8Array): string {
 	let i = 0;
 	while (i < bytes.length) {
 		const o1 = bytes[i++];
-		const o2 = bytes[i++];
-		const o3 = bytes[i++];
+		const o2: Maybe<number> = bytes[i++];
+		const o3: Maybe<number> = bytes[i++];
+
 		const h1 = o1 >> 2;
-		const h2 = ((o1 & 3) << 4) | (o2 >> 4);
-		const h3 = ((o2 & 15) << 2) | (o3 >> 6);
-		const h4 = o3 & 63;
+		const h2 = ((o1 & 3) << 4) | (!isUndefined(o2) ? o2 >> 4 : 0);
+		const h3 = !isUndefined(o2) ? ((o2 & 15) << 2) | (!isUndefined(o3) ? o3 >> 6 : 0) : 0;
+		const h4 = !isUndefined(o3) ? o3 & 63 : 0;
+
 		out +=
 			_b64chars[h1] +
 			_b64chars[h2] +
-			_b64chars[Number.isNaN(o2) ? 64 : h3] +
-			_b64chars[Number.isNaN(o3) ? 64 : h4];
+			_b64chars[isUndefined(o2) ? 64 : h3] +
+			_b64chars[isUndefined(o3) ? 64 : h4];
 	}
 
 	return out;

@@ -76,21 +76,19 @@ export class Cipher {
 	 */
 	encrypt(text: string): string {
 		const plain = utf8ToBytes(text);
-		const seed = utf8ToBytes(String(Date.now()) + '-' + String(Math.random()));
+		const seed = utf8ToBytes(`${Date.now()}-${Math.random()}`);
 		const ivFull = sha256Bytes(seed);
 		const iv = ivFull.subarray(0, 16); // 16 byte IV
 
 		const keystream = this.#genKeystream(plain, iv);
 
 		// XOR produce ciphertext
-		const ct = new Uint8Array(plain.length);
-		for (let i = 0; i < plain.length; i++) ct[i] = plain[i] ^ keystream[i];
+		const ct = plain.map((byte, i) => byte ^ keystream[i]);
 
 		// tag = HMAC(macKey, iv || ciphertext)
 		const tag = hmacSha256(this.#macKey, concatBytes(iv, ct)); // 32 bytes
 
-		const blob = concatBytes(iv, ct, tag);
-		return bytesToBase64(blob);
+		return bytesToBase64(concatBytes(iv, ct, tag));
 	}
 
 	/**
@@ -135,15 +133,14 @@ export class Cipher {
 
 		const expectedTag = hmacSha256(this.#macKey, concatBytes(iv, ct));
 		if (!_constantTimeEquals(expectedTag, tag)) {
-			throw new Error('Key in the token is tampered or invalid!)');
+			throw new Error('Key in the token is tampered or invalid!');
 		}
 
 		// regenerate keystream
 		const keystream = this.#genKeystream(ct, iv);
 
 		// XOR to recover plaintext
-		const pt = new Uint8Array(ct.length);
-		for (let i = 0; i < ct.length; i++) pt[i] = ct[i] ^ keystream[i];
+		const pt = ct.map((byte, i) => byte ^ keystream[i]);
 
 		return bytesToUtf8(pt);
 	}

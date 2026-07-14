@@ -4,6 +4,10 @@
 
 All notable changes to the package will be documented here.
 
+## [4.31.4] - 2026-07-14
+
+- **Fixed** issue with `bytesToBase64` utility not encoding bytes to base64 properly.
+
 ## [4.31.3] - 2026-07-09
 
 - **Fixed** issue with `Stylog` not printing styles properly using `log()` method.
