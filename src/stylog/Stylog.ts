@@ -132,7 +132,7 @@ export function isTextStyle(value: string): value is TextStyle {
  *
  * @remarks
  * - Allows chaining of style methods or initializing with predefined styles.
- * - For fluent, chainable styling with zero configuration use {@link https://toolbox.nazmul-nhb.dev/docs/utilities/misc/stylog Stylog} (`LogStyler` chainable wrapper).
+ * - For fluent, chainable styling with zero configuration use {@link https://nhb-toolbox.vercel.app/docs/utilities/misc/stylog Stylog} (`LogStyler` chainable wrapper).
  *
  * @example
  * const styled = new LogStyler(['red', 'bold']);
@@ -265,7 +265,7 @@ export class LogStyler {
 	 * @remarks
 	 * - This method is specifically designed for browser environments and returns a tuple containing the formatted string with `%c` placeholder and an array of CSS styles (`string[]`).
 	 * - Use this when you need direct access to the CSS styling for custom browser output.
-	 * - If you want to format with ANSI escape codes, consider using {@link https://toolbox.nazmul-nhb.dev/docs/classes/LogStyler#toansiinput-stringify toANSI} method.
+	 * - If you want to format with ANSI escape codes, consider using {@link https://nhb-toolbox.vercel.app/docs/classes/LogStyler#toansiinput-stringify toANSI} method.
 	 *
 	 * @param input - Input to style before printing in the shell.
 	 * @param stringify - Whether to apply `JSON.stringify()` before styling. Defaults to `false`.
@@ -339,7 +339,7 @@ export class LogStyler {
 	 *
 	 * @remarks
 	 * - This method returns ANSI-formatted strings suitable for environments that support ANSI escape codes (terminals, modern browser consoles, etc.).
-	 * - For unsupported browsers, consider using the {@link https://toolbox.nazmul-nhb.dev/docs/classes/LogStyler#loginput-stringify log} method to print directly or {@link https://toolbox.nazmul-nhb.dev/docs/classes/LogStyler#tocssinput-stringify toCSS} to get styled tuple `[format, cssList]` for Browser.
+	 * - For unsupported browsers, consider using the {@link https://nhb-toolbox.vercel.app/docs/classes/LogStyler#loginput-stringify log} method to print directly or {@link https://nhb-toolbox.vercel.app/docs/classes/LogStyler#tocssinput-stringify toCSS} to get styled tuple `[format, cssList]` for Browser.
 	 *
 	 * @param input - Input to style before printing in the shell.
 	 * @param stringify - Whether to apply `JSON.stringify()` before styling. Defaults to `false`.
@@ -854,7 +854,7 @@ function createStylogProxy(styler: LogStyler): StylogChain {
  * - In browsers, styles are applied using `CSS`; in `Node.js`, `ANSI` escape codes are used.
  * - When multiple styles of the same category are chained, the last one wins.
  * - Use `.log(value, stringify?)` to print; set `stringify` to `true` to serialize with `JSON.stringify`.
- * - If you need custom reusable style configurations, use {@link https://toolbox.nazmul-nhb.dev/docs/classes/LogStyler Stylog} class.
+ * - If you need custom reusable style configurations, use {@link https://nhb-toolbox.vercel.app/docs/classes/LogStyler Stylog} class.
  *
  * @example
  * // Simple color

@@ -13,7 +13,7 @@ import type { IrregularEntry, VerbRule } from './types';
  *      - This class is useful for natural language processing tasks, such as chatbots, text analysis, or content generation systems requiring accurate verb conjugation.
  *
  * @remarks
- * For ready to use instance, please refer to {@link https://toolbox.nazmul-nhb.dev/docs/utilities/string/verbalizer verbalizer} instead.
+ * For ready to use instance, please refer to {@link https://nhb-toolbox.vercel.app/docs/utilities/string/verbalizer verbalizer} instead.
  *
  * @example
  * const myVerbalizer = new Verbalizer();
@@ -305,7 +305,7 @@ export class Verbalizer {
 }
 
 /**
- * Default shared instance of {@link https://toolbox.nazmul-nhb.dev/docs/classes/Verbalizer Verbalizer}.
+ * Default shared instance of {@link https://nhb-toolbox.vercel.app/docs/classes/Verbalizer Verbalizer}.
  *
  * - Use this when you don’t need multiple configurations.
  * - It comes preloaded with standard conjugation rules and irregular verbs.

@@ -109,7 +109,7 @@ export class $BaseConverter<Unit extends $Unit> {
 	 *
 	 * @remarks
 	 * - This method is automatically called when the instance is used in a string context.
-	 * - For complex and versatile pluralization, please refer to {@link https://toolbox.nazmul-nhb.dev/docs/utilities/string/pluralizer pluralizer} or {@link https://toolbox.nazmul-nhb.dev/docs/classes/Pluralizer Pluralizer Class} instead.
+	 * - For complex and versatile pluralization, please refer to {@link https://nhb-toolbox.vercel.app/docs/utilities/string/pluralizer pluralizer} or {@link https://nhb-toolbox.vercel.app/docs/classes/Pluralizer Pluralizer Class} instead.
 	 */
 	toString(): string {
 		return this.$withPluralUnit();
@@ -213,7 +213,7 @@ export class $BaseConverter<Unit extends $Unit> {
 	 * @param decimals Number of decimal places for fractional value.
 	 * @returns Formatted string with proper unit pluralization.
 	 *
-	 * @remarks For complex and versatile pluralization, please refer to {@link https://toolbox.nazmul-nhb.dev/docs/utilities/string/pluralizer pluralizer} or {@link https://toolbox.nazmul-nhb.dev/docs/classes/Pluralizer Pluralizer Class} instead.
+	 * @remarks For complex and versatile pluralization, please refer to {@link https://nhb-toolbox.vercel.app/docs/utilities/string/pluralizer pluralizer} or {@link https://nhb-toolbox.vercel.app/docs/classes/Pluralizer Pluralizer Class} instead.
 	 */
 	format(decimals = 2): string {
 		return this.$withPluralUnit(this.$round(this.value, decimals));

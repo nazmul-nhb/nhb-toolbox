@@ -57,7 +57,7 @@ import { randomHex } from './utils';
  *   - `v7`: Millisecond precision; extremely high throughput may still cause rare collisions.
  *   - `v8`: Uses a simple timestamp + randomness layout; custom layouts are not supported here.
  *
- * - Use {@link https://toolbox.nazmul-nhb.dev/docs/utilities/string/generateRandomID generateRandomID} for customized id generation or {@link https://toolbox.nazmul-nhb.dev/docs/utilities/hash/randomHex randomHex} for hex-only random string with custom length.
+ * - Use {@link https://nhb-toolbox.vercel.app/docs/utilities/string/generateRandomID generateRandomID} for customized id generation or {@link https://nhb-toolbox.vercel.app/docs/utilities/hash/randomHex randomHex} for hex-only random string with custom length.
  */
 export function uuid<V extends SupportedVersion = 'v4'>(options?: UUIDOptions<V>): UUID<V> {
 	const { version = 'v4', uppercase = false } = options || {};

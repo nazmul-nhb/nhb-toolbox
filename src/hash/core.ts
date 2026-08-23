@@ -170,9 +170,9 @@ export function sha1(msg: string): string {
  * // Returns: '7037e204b825b83553ba336a6ec35b796d505599286ae864729ed6cb33ae9fe1'
  * ```
  *
- * @see {@link https://toolbox.nazmul-nhb.dev/docs/utilities/hash/encoding#sha256bytes sha256Bytes} for hashing raw bytes
- * @see {@link https://toolbox.nazmul-nhb.dev/docs/utilities/hash/encoding#utf8tobytes utf8ToBytes} for converting string to bytes
- * @see {@link https://toolbox.nazmul-nhb.dev/docs/utilities/hash/encoding#bytestohex bytesToHex} for converting bytes to a hexadecimal string
+ * @see {@link https://nhb-toolbox.vercel.app/docs/utilities/hash/encoding#sha256bytes sha256Bytes} for hashing raw bytes
+ * @see {@link https://nhb-toolbox.vercel.app/docs/utilities/hash/encoding#utf8tobytes utf8ToBytes} for converting string to bytes
+ * @see {@link https://nhb-toolbox.vercel.app/docs/utilities/hash/encoding#bytestohex bytesToHex} for converting bytes to a hexadecimal string
  */
 export function sha256(msg: string): string {
 	if (!isString(msg)) throw new TypeError('Input must be of type string!');

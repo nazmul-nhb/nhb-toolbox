@@ -607,7 +607,7 @@ All notable changes to the package will be documented here.
 
 ## [4.20.48] - 2025-09-22
 
-- **Wrapped** `ChronosMethods` type in `LooseLiteral` to allow passing *custom method names* without *type errors* when creating a custom [`Chronos Plugin`](https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/plugins#%EF%B8%8F-writing-your-own-custom-plugin).
+- **Wrapped** `ChronosMethods` type in `LooseLiteral` to allow passing *custom method names* without *type errors* when creating a custom [`Chronos Plugin`](https://nhb-toolbox.vercel.app/docs/classes/Chronos/plugins#%EF%B8%8F-writing-your-own-custom-plugin).
 - **Updated** *error message* in `convert` method in `Currency` class.
 
 ## [4.20.46] - 2025-09-22

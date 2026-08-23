@@ -139,7 +139,7 @@ export class Chronos {
 	 * Represents the current timezone name (e.g., `"Bangladesh Standard Time"`), or falls back to the corresponding timezone identifier (e.g., `"Asia/Dhaka"`) if no name can be resolved.
 	 *
 	 * @remarks
-	 * - Invoking the {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/conversion#timezone timeZone} method sets the timezone name that corresponds to the specified UTC offset, or the UTC offset itself if no name exists. For more details on this behavior, see {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/names#gettimezonename getTimeZoneName}.
+	 * - Invoking the {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/conversion#timezone timeZone} method sets the timezone name that corresponds to the specified UTC offset, or the UTC offset itself if no name exists. For more details on this behavior, see {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/names#gettimezonename getTimeZoneName}.
 	 * - To retrieve the local system's native timezone name (or its identifier if the name is unavailable), use the {@link $getNativeTimeZoneName} instance method.
 	 */
 	timeZoneName: LooseLiteral<TimeZoneName>;
@@ -147,18 +147,18 @@ export class Chronos {
 	/**
 	 * Represents the current timezone context, which can be a single identifier, an array of equivalent identifiers, or a UTC offset.
 	 *
-	 * - **{@link $TimeZoneIdentifier}** — e.g., `"Asia/Dhaka"`. Returned when the {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/conversion#timezone timeZone} method has not been invoked. It is default behavior.
+	 * - **{@link $TimeZoneIdentifier}** — e.g., `"Asia/Dhaka"`. Returned when the {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/conversion#timezone timeZone} method has not been invoked. It is default behavior.
 	 * - **Array of {@link $TimeZoneIdentifier}** — e.g., `[ 'Asia/Calcutta', 'Asia/Colombo' ]`, used when multiple timezones share the same UTC offset such as `"UTC+05:30"`.
 	 * - **{@link UTCOffset}** — e.g., `"UTC+06:45"` or `"UTC+02:15"`, returned when no named timezone corresponds to a given offset.
 	 *
 	 * @remarks
-	 * - By default, when {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/conversion#timezone timeZone} is not applied, a single {@link $TimeZoneIdentifier} string is provided.
+	 * - By default, when {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/conversion#timezone timeZone} is not applied, a single {@link $TimeZoneIdentifier} string is provided.
 	 * - When applied, it may instead return a single identifier string, an array of equivalent identifiers or a UTC offset string.
 	 * - To retrieve the local system's native timezone identifier, use the {@link $getNativeTimeZoneId} instance method.
 	 */
 	timeZoneId: TimeZoneId;
 
-	/** Tracker to identify the instance created by {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/conversion#timezone timeZone} method */
+	/** Tracker to identify the instance created by {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/conversion#timezone timeZone} method */
 	protected $tzTracker?: $TimeZoneIdentifier | TimeZone | UTCOffset;
 
 	/**
@@ -354,7 +354,7 @@ export class Chronos {
 	 *
 	 * @remarks
 	 * - This method always reflects the local machine's time zone if `tzId` is parameter is omitted.
-	 * - {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/conversion#timezone timeZone}, {@link utc}, or {@link toUTC} methods have no effects on this method.
+	 * - {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/conversion#timezone timeZone}, {@link utc}, or {@link toUTC} methods have no effects on this method.
 	 * - To access the time zone name of a modified or converted instance, use the {@link timeZoneName} public property instead.
 	 *
 	 * @param tzId Optional time zone identifier to get time zone name for that specific identifier if available.
@@ -372,7 +372,7 @@ export class Chronos {
 	 *
 	 * @remarks
 	 * - This method always returns the identifier of the local machine's time zone.
-	 * - {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/conversion#timezone timeZone}, {@link utc}, or {@link toUTC} methods have no effects on this method.
+	 * - {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/conversion#timezone timeZone}, {@link utc}, or {@link toUTC} methods have no effects on this method.
 	 * - To obtain the identifier(s) of a modified or converted instance, use the {@link timeZoneId} public property instead.
 	 *
 	 * @returns The local system's IANA time zone identifier.
@@ -411,7 +411,7 @@ export class Chronos {
 	 * @param offset Optional UTC offset in `UTC±HH:mm` format.
 	 * @param tzName Optional time zone name to set.
 	 * @param tzId Optional time zone identifier(s) to set.
-	 * @param tzTracker Optional tracker to identify the instance created by {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/conversion#timezone timeZone} method.
+	 * @param tzTracker Optional tracker to identify the instance created by {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/conversion#timezone timeZone} method.
 	 * @returns The `Chronos` instance with the specified origin and other properties.
 	 */
 	#withOrigin(
@@ -648,7 +648,7 @@ export class Chronos {
 	 *
 	 * - Supported format tokens include: `YYYY`, `YY`, `mmmm`, `mmm`, `MM`, `M`, `DD`, `D`, `dd`, `ddd`, `Do`, `HH`, `H`, `hh`, `h`, `mm`, `m`, `ss`, `s`, `ms`, `mss`, `a`, `A`, `ZZ` and `Z`.
 	 * - *Any token not wrapped in brackets will be parsed and replaced with its corresponding date component.*
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/format#format-tokens format tokens} for details.
+	 * - Please refer to {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/format#format-tokens format tokens} for details.
 	 *
 	 * @param useUTC - Optional boolean to format the date using UTC time.
 	 * When `true`, it behaves like `formatUTC()` and outputs time based on UTC offset. Defaults to `false`.
@@ -667,7 +667,7 @@ export class Chronos {
 	 *
 	 * @param format - The desired format string. Defaults to `'dd, mmm DD, YYYY HH:mm:ss'`
 	 *                 (e.g., `'Sun, Apr 06, 2025 16:11:55'`).
-	 *	- Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/format#format-tokens format tokens} for details.
+	 *	- Please refer to {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/format#format-tokens format tokens} for details.
 	 *
 	 * @param useUTC - If `true`, formats the date in UTC (equivalent to `formatUTC()`).
 	 *                 Defaults to `false` (local time).
@@ -687,7 +687,7 @@ export class Chronos {
 	 *
 	 * - Supported format tokens include: `YYYY`, `YY`, `mmmm`, `mmm`, `MM`, `M`, `DD`, `D`, `dd`, `ddd`, `Do`, `HH`, `H`, `hh`, `h`, `mm`, `m`, `ss`, `s`, `ms`, `mss`, `a`, `A`, `ZZ` and `Z`.
 	 * - *Any token not wrapped in brackets will be parsed and replaced with its corresponding date component.*
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/format#format-tokens format tokens} for details.
+	 * - Please refer to {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/format#format-tokens format tokens} for details.
 	 *
 	 * @returns Formatted date string in desired format (UTC time).
 	 */
@@ -1639,7 +1639,7 @@ export class Chronos {
 	 * @param options - Relative range (e.g., 7 days, 4 weeks) and output format (local with timezone or utc).
 	 * @returns Array of ISO date strings in the specified format. Returns empty array if no matches in the time span.
 	 *
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/statics#getdatesforday docs} for details.
+	 * - Please refer to {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/statics#getdatesforday docs} for details.
 	 *
 	 * @example
 	 * Chronos.getDatesForDay('Wednesday', { span: 7, unit: 'day' });
@@ -1662,7 +1662,7 @@ export class Chronos {
 	 * @param options - Date range (from/to, e.g. `'2025-06-30'`, ` new Date()`, `new Chronos()` etc.) and output format (local with timezone or utc).
 	 * @returns Array of ISO date strings in the specified format. Returns empty array if no matches in the range.
 	 *
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/statics#getdatesforday docs} for details.
+	 * - Please refer to {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/statics#getdatesforday docs} for details.
 	 *
 	 * @remarks
 	 * - When using `Chronos` instances for `from` and/or `to`, ensure both are created in the **same time zone** to avoid mismatched boundaries.
@@ -1685,7 +1685,7 @@ export class Chronos {
 	 * @param options - Relative range (e.g., 7 days, 4 weeks) or date range (from/to) and output format.
 	 * @returns Array of ISO date strings in the specified format.
 	 *
-	 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/statics#getdatesforday docs} for details.
+	 * - Please refer to {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/statics#getdatesforday docs} for details.
 	 */
 	static getDatesForDay(day: WeekDay, options?: WeekdayOptions): string[] {
 		let startDate = new Chronos(),
@@ -1904,7 +1904,7 @@ export class Chronos {
 	 * 	- To prevent this incorrect *linter error* in `React` projects, prefer using {@link register} method (alias `use` method).
 	 *
 	 * - **NOTE:** *Once a plugin is injected, all the registered methods for that plugin will be available for the whole project.*
-	 * - See {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/plugins#-official-plugins full list of plugins and the methods they register}.
+	 * - See {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/plugins#-official-plugins full list of plugins and the methods they register}.
 	 */
 	static use(plugin: ChronosPlugin): void {
 		if (!Chronos.#plugins.has(plugin)) {
@@ -1923,7 +1923,7 @@ export class Chronos {
 	 * 	- To prevent this incorrect *linter error* in `React` projects, prefer using this (`register`) method over {@link use} method.
 	 *
 	 * - **NOTE:** *Once a plugin is injected, all the registered methods for that plugin will be available for the whole project.*
-	 * - See {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/plugins#-official-plugins full list of plugins and the methods they register}.
+	 * - See {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/plugins#-official-plugins full list of plugins and the methods they register}.
 	 */
 	static register(plugin: ChronosPlugin): void {
 		Chronos.use(plugin);

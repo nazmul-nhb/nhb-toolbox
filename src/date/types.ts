@@ -323,7 +323,7 @@ export interface ChronosInternals {
 	 * @param offset Optional UTC offset in `UTC±HH:mm` format.
 	 * @param tzName Optional time zone name to set.
 	 * @param tzId Optional time zone identifier(s) to set.
-	 * @param tzTracker Optional tracker to identify the instance created by {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/conversion#timezone timeZone} method.
+	 * @param tzTracker Optional tracker to identify the instance created by {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/conversion#timezone timeZone} method.
 	 * @returns The `Chronos` instance with the specified origin and other properties.
 	 */
 	withOrigin(
@@ -517,7 +517,7 @@ export interface FormatOptions {
 	 *
 	 *   - Supported format tokens include: `YYYY`, `YY`, `mmmm`, `mmm`, `MM`, `M`, `DD`, `D`, `dd`, `ddd`, `Do`, `HH`, `H`, `hh`, `h`, `mm`, `m`, `ss`, `s`, `ms`, `mss`, `a`, `A`, and `ZZ`.
 	 *   - *Any token not wrapped in brackets will be parsed and replaced with its corresponding date component.*
-	 *   - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/format#format-tokens format tokens} for details.
+	 *   - Please refer to {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/format#format-tokens format tokens} for details.
 	 */
 	format?: string;
 	/** - Whether to use UTC time. Defaults to `false`. */

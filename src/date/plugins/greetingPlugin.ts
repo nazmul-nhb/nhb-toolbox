@@ -6,7 +6,7 @@ declare module '../Chronos' {
 		/**
 		 * @instance Returns a greeting message based on current instance of `Chronos` time or provided time in the `configs`.
 		 *
-		 * @remarks This method internally uses {@link https://toolbox.nazmul-nhb.dev/docs/utilities/date/getGreeting getGreeting} function.
+		 * @remarks This method internally uses {@link https://nhb-toolbox.vercel.app/docs/utilities/date/getGreeting getGreeting} function.
 		 *
 		 * @param configs - Configuration options for greeting times and messages.
 		 * @returns The appropriate greeting message.
@@ -16,7 +16,7 @@ declare module '../Chronos' {
 		/**
 		 * @instance Returns a greeting message based on current instance of `Chronos` time or provided time in the `configs`.
 		 *
-		 * @remarks This method is an alias for {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/format#getgreeting getGreeting} method.
+		 * @remarks This method is an alias for {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/format#getgreeting getGreeting} method.
 		 *
 		 * @param configs - Configuration options for greeting times and messages.
 		 * @returns The appropriate greeting message.

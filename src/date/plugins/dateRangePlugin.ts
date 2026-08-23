@@ -16,7 +16,7 @@ declare module '../Chronos' {
 		 * @param options - Configuration for the date range. Accepts a fixed (`RangeWithDates`) format.
 		 * @returns Array of ISO date-time strings in either local or UTC format, excluding any skipped weekdays if specified.
 		 *
-		 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/calculation#getdatesinrange docs} for details.
+		 * - Please refer to {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/calculation#getdatesinrange docs} for details.
 		 *
 		 * @remarks
 		 * - When using `Chronos` instances for `from` and/or `to`, ensure both are created in the **same time zone** to avoid mismatched boundaries.
@@ -49,7 +49,7 @@ declare module '../Chronos' {
 		 * @param options - Configuration for the date range. Accepts a relative (`RelativeDateRange`) format.
 		 * @returns Array of ISO date-time strings in either local or UTC format, excluding any skipped weekdays if specified.
 		 *
-		 * - Please refer to {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/calculation#getdatesinrange docs} for details.
+		 * - Please refer to {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/calculation#getdatesinrange docs} for details.
 		 *
 		 * @example
 		 * // Using a relative date range with skipDays:

@@ -373,12 +373,12 @@ export function stripJsonEdgeGarbage(str: string): string {
  * @returns The parsed JSON value typed as `T`, or the original parsed value with optional primitive conversion.
  * - Returns `{}` if parsing fails, such as when the input is malformed or invalid JSON or passing single quoted string.
  *
- * - *Unlike {@link https://toolbox.nazmul-nhb.dev/docs/utilities/object/parseJsonToObject parseJsonToObject}, which ensures the root value is an object,
+ * - *Unlike {@link https://nhb-toolbox.vercel.app/docs/utilities/object/parseJsonToObject parseJsonToObject}, which ensures the root value is an object,
  * this function returns any valid JSON structure such as arrays, strings, numbers, or objects.*
  *
  * This is useful when you're not sure of the root structure of the JSON, or when you expect something other than an object.
  *
- * @see {@link https://toolbox.nazmul-nhb.dev/docs/utilities/object/parseJsonToObject parseJsonToObject} for strict object-only parsing.
+ * @see {@link https://nhb-toolbox.vercel.app/docs/utilities/object/parseJsonToObject parseJsonToObject} for strict object-only parsing.
  */
 export const parseJSON = <T = unknown>(value: string, parsePrimitives = true): T => {
 	try {

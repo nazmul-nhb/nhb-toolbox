@@ -118,7 +118,7 @@ export interface ChronosStatics {
 	 * 	- To prevent this incorrect *linter error* in `React` projects, prefer using {@link register} method (alias `use` method).
 	 *
 	 * - **NOTE:** *Once a plugin is injected, all the registered methods for that plugin will be available for the whole project.*
-	 * - See {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/plugins#-official-plugins full list of plugins and the methods they register}.
+	 * - See {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/plugins#-official-plugins full list of plugins and the methods they register}.
 	 */
 	use(plugin: ChronosPlugin): void;
 
@@ -132,7 +132,7 @@ export interface ChronosStatics {
 	 * 	- To prevent this incorrect *linter error* in `React` projects, prefer using this (`register`) method over {@link use} method.
 	 *
 	 * - **NOTE:** *Once a plugin is injected, all the registered methods for that plugin will be available for the whole project.*
-	 * - See {@link https://toolbox.nazmul-nhb.dev/docs/classes/Chronos/plugins#-official-plugins full list of plugins and the methods they register}.
+	 * - See {@link https://nhb-toolbox.vercel.app/docs/classes/Chronos/plugins#-official-plugins full list of plugins and the methods they register}.
 	 */
 	register(plugin: ChronosPlugin): void;
 
